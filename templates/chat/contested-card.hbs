@@ -1,0 +1,21 @@
+<div class="var-borg-card contested-card">
+  <h3>{{title}}</h3>
+  {{#each sides}}
+  <div class="side {{#if won}}winner{{/if}}">
+    <p class="side-name"><strong>{{name}}</strong></p>
+    <div class="dice">
+      {{#each dice}}
+      <span class="die {{#unless kept}}dropped{{/unless}}">{{value}}</span>
+      {{/each}}
+      {{#if modeLabel}}<span class="mode">{{modeLabel}}</span>{{/if}}
+    </div>
+    <p class="sum">
+      {{localize "VARBORG.Test.KeptDie"}} {{kept}}
+      · {{abilityLabel}}{{#if ability}} {{ability}}{{/if}}
+      {{#if naturalNote}}· {{naturalNote}}{{/if}}
+    </p>
+    <p class="total"><strong>{{total}}</strong></p>
+  </div>
+  {{/each}}
+  <p class="verdict {{#if tie}}tie{{/if}}">{{verdict}}</p>
+</div>

@@ -98,7 +98,7 @@ function wholeCount(value) {
 }
 
 /** "+2", "0" or "−1" for the card. */
-function signed(number) {
+export function signed(number) {
   if (number > 0) return `+${number}`;
   if (number < 0) return `−${Math.abs(number)}`;
   return "0";

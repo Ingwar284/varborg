@@ -93,6 +93,12 @@
   white-space: nowrap;
 }
 
+.var-borg-sheet .other-rolls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 /* ---------- Test dialog ---------- */
 
 .var-borg-test-dialog .hint {
@@ -154,3 +160,26 @@
   text-align: center;
   font-style: italic;
 }
+
+/* Contested test card */
+
+.var-borg-card.contested-card .side {
+  padding: 0.25rem 0.4rem;
+  border-left: 3px solid transparent;
+}
+
+.var-borg-card.contested-card .side.winner {
+  border-left-color: #2e7d32;
+}
+
+.var-borg-card .verdict {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Chance Die card */
+
+.var-borg-card .chance-positive { color: #2e7d32; }
+.var-borg-card .chance-neutral { color: #1565c0; }
+.var-borg-card .chance-negative { color: #b71c1c; }

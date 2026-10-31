@@ -1,0 +1,11 @@
+<div class="var-borg-card chance-card">
+  <h3>{{title}}</h3>
+  <div class="dice">
+    {{#each dice}}
+    <span class="die">{{this}}</span>
+    {{/each}}
+  </div>
+  <p class="sum">{{localize "VARBORG.Sheet.Fortune"}} +{{fortune}}</p>
+  <p class="total"><strong>{{total}}</strong></p>
+  <p class="tier chance-{{outcome}}">{{outcomeLabel}}</p>
+</div>

@@ -69,6 +69,34 @@
       "Natural1": "Natural 1.",
       "Natural1Down": "Natural 1: {from} drops to {to}."
     },
+    "Contest": {
+      "Button": "Contested test",
+      "Tooltip": "Roll against an opponent: the higher total wins",
+      "DialogTitle": "Contested test: {name}",
+      "CardTitle": "Contested test",
+      "You": "You",
+      "Ability": "Your ability",
+      "Opponent": "Opponent",
+      "FoeOption": "A foe (plain d20)",
+      "FoeName": "Foe's name",
+      "FoeDefaultName": "Foe",
+      "FoeHint": "A foe rolls a plain d20 and adds nothing. Its name is only used on the card.",
+      "OpponentAbility": "Opponent's ability",
+      "CharacterHint": "The opponent's ability, Boon and Bane count only when the opponent is a character.",
+      "PlainD20": "Plain d20",
+      "Natural20": "Natural 20: +5",
+      "Natural1": "Natural 1: −5",
+      "Wins": "{name} wins",
+      "Tie": "A tie: no victor, the struggle goes on"
+    },
+    "Chance": {
+      "Button": "Chance Die",
+      "Tooltip": "Roll 2d6 + Fortune",
+      "CardTitle": "Chance Die",
+      "negative": "Negative",
+      "neutral": "Neutral",
+      "positive": "Positive"
+    },
     "Examples": {
       "MenuName": "Example content",
       "Label": "Import examples",

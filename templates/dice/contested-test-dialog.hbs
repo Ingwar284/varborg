@@ -1,0 +1,53 @@
+<div class="var-borg-test-dialog">
+  <h4>{{localize "VARBORG.Contest.You"}}</h4>
+  <div class="form-group">
+    <label for="var-borg-contest-ability">{{localize "VARBORG.Contest.Ability"}}</label>
+    <select id="var-borg-contest-ability" name="ability">
+      {{#each abilities}}
+      <option value="{{key}}">{{localize label}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-contest-boon">{{localize "VARBORG.Test.Boon"}}</label>
+    <input id="var-borg-contest-boon" type="checkbox" name="boon">
+  </div>
+  <div class="form-group">
+    <label for="var-borg-contest-bane">{{localize "VARBORG.Test.Bane"}}</label>
+    <input id="var-borg-contest-bane" type="checkbox" name="bane">
+  </div>
+
+  <h4>{{localize "VARBORG.Contest.Opponent"}}</h4>
+  <div class="form-group">
+    <label for="var-borg-contest-opponent">{{localize "VARBORG.Contest.Opponent"}}</label>
+    <select id="var-borg-contest-opponent" name="opponent">
+      <option value="{{foe}}" selected>{{localize "VARBORG.Contest.FoeOption"}}</option>
+      {{#each characters}}
+      <option value="{{id}}">{{name}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-contest-foe-name">{{localize "VARBORG.Contest.FoeName"}}</label>
+    <input id="var-borg-contest-foe-name" type="text" name="foeName"
+           placeholder="{{localize 'VARBORG.Contest.FoeDefaultName'}}">
+    <p class="hint">{{localize "VARBORG.Contest.FoeHint"}}</p>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-contest-opponent-ability">{{localize "VARBORG.Contest.OpponentAbility"}}</label>
+    <select id="var-borg-contest-opponent-ability" name="opponentAbility">
+      {{#each abilities}}
+      <option value="{{key}}">{{localize label}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-contest-opponent-boon">{{localize "VARBORG.Test.Boon"}}</label>
+    <input id="var-borg-contest-opponent-boon" type="checkbox" name="opponentBoon">
+  </div>
+  <div class="form-group">
+    <label for="var-borg-contest-opponent-bane">{{localize "VARBORG.Test.Bane"}}</label>
+    <input id="var-borg-contest-opponent-bane" type="checkbox" name="opponentBane">
+    <p class="hint">{{localize "VARBORG.Contest.CharacterHint"}}</p>
+  </div>
+</div>
