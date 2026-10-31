@@ -1,0 +1,17 @@
+<section class="var-borg-item-details">
+  <div class="field-grid">
+    <label>
+      <span>{{localize "VARBORG.Armour.CurrentTier"}}</span>
+      <select name="system.tier" data-dtype="Number">{{selectOptions tiers selected=system.tier localize=true}}</select>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Armour.OriginalTier"}}</span>
+      <select name="system.originalTier" data-dtype="Number">{{selectOptions tiers selected=system.originalTier localize=true}}</select>
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Armour.MetalHint'}}">
+      <input type="checkbox" name="system.metal" {{checked system.metal}}>
+      <span>{{localize "VARBORG.Armour.Metal"}}</span>
+    </label>
+  </div>
+  <p class="hint">{{localize "VARBORG.Armour.TierHint"}}</p>
+</section>

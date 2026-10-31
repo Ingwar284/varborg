@@ -1,0 +1,14 @@
+{
+  "_id": "vbExampleChainSh",
+  "name": "Chain shirt",
+  "type": "armour",
+  "img": "icons/equipment/chest/breastplate-scale-grey.webp",
+  "system": {
+    "description": "",
+    "price": 100,
+    "equipped": false,
+    "tier": 2,
+    "originalTier": 2,
+    "metal": true
+  }
+}

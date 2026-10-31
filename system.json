@@ -28,6 +28,11 @@
   "documentTypes": {
     "Actor": {
       "character": {}
+    },
+    "Item": {
+      "weapon": {},
+      "armour": {},
+      "shield": {}
     }
   },
   "grid": {

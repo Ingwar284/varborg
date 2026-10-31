@@ -52,6 +52,8 @@ None at the moment.
 | 38 | Initiative ties go to the players. What about a tie between two PCs, or two foes? | Decided at random. | Resolved |
 | 42 | What does losing a body part do in play? | The Dark Master decides. The system only records which part was lost. | Resolved |
 | 39 | Ammunition rolls its expendable die after a combat in which it was used. Automatic or by hand? | When combat ends, the system asks automatically for each ranged weapon fired during that combat. | Resolved |
+| 46 | Can a character have more than one armour, or more than one shield, equipped at once? | Yes, any number can be equipped, but only the strongest effect applies: the armour with the highest current tier counts (soak die, DR penalties, metal), and a heavy shield beats a light one. | Resolved |
+| 47 | Weapon groups (Weapon specialist feat): is there a fixed list? | No. Weapon groups are flavour, not a defined game term, so weapons don't store one. | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom

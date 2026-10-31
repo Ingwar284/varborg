@@ -97,7 +97,8 @@ working step, commit with Git.
    *Test:* roll Example Hero's Strength with Boon. The card shows two d20s,
    keeps the higher and names the tier. Check one roll by hand.
 
-7. **Contested test and chance die.** These go into the rules files with
+7. ~~**Contested test and chance die.**~~ Done: `module/rules/contested.mjs`,
+   `module/rules/chance-die.mjs` and their dice and cards. These go into the rules files with
    tests. Contested: the higher total wins, a natural 20 counts +5, a natural
    1 counts −5, and a tie has no victor. Chance die: 2d6 + Fortune, where 2–5
    is negative, 6–9 neutral and 10+ positive. Both get buttons on the sheet.
@@ -108,9 +109,12 @@ rules 3.2–3.3.
 
 ## Milestone 2: An equipped character
 
-8. **Weapons, armour and shields.** Item data and sheets. Weapon: damage,
-   kind (melee, shoot or throw), traits, reload, expendable die, weapon
-   group, suggested damage type. Armour: current tier, original tier, metal
+8. ~~**Weapons, armour and shields.**~~ Done: `module/data/equipment.mjs`,
+   `module/sheets/item-sheet.mjs`, `templates/item/`, `module/rules/equipment.mjs`
+   with `tests/equipment.test.mjs`, seven examples in `content/examples/items/`
+   and an Equipment section on the character sheet. Item data and sheets. Weapon: damage,
+   kind (melee, shoot or throw), traits, reload, expendable die,
+   suggested damage type. Armour: current tier, original tier, metal
    (true by default for tier 2 and up). Shield: light or heavy.
    *Examples:* dagger, flintlock pistol, greatsword, leather armour, chain
    shirt, breastplate, light shield.
@@ -127,7 +131,8 @@ rules 3.2–3.3.
 
 10. **Armour and Encumbered on tests.** The rule, with tests: armour adds to
     Agility test DRs (tier 1 +0, tier 2 +2, tier 3 +4, tier 4 +6).
-    Encumbered gives Bane on Strength and Agility tests.
+    Encumbered gives Bane on Strength and Agility tests. With several
+    armours equipped, only the highest current tier counts (GAPS 46).
     *Test:* with the breastplate equipped, an Agility test card lists +4 DR.
     Become Encumbered and a Strength test shows Bane.
 
@@ -177,7 +182,8 @@ prices, traits and tiers against 4.1.
     DR12. Tier 3 and 4 armour add +2 DR to defence; lower tiers add nothing.
     The armour soak die is subtracted from damage (t1 d2, t2 d4, t3 d6, t4
     d8), minimum 1 damage. Raising a shield (◈) gives light or heavy cover
-    (−2 or −4 DR to defend) until your next turn. On a
+    (−2 or −4 DR to defend) until your next turn. With several armours
+    or shields equipped, only the strongest counts (GAPS 46). On a
     Ruin the damage is doubled and the armour drops one tier, and armour
     below tier 1 is destroyed. A **Take damage** button applies it to HP.
     *Test:* tests pass. The Bellman attacks, Example Hero defends and HP

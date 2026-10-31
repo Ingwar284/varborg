@@ -9,6 +9,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { ABILITIES, clampAbility } from "../module/rules/abilities.mjs";
 import { capHp } from "../module/rules/health.mjs";
+import {
+  WEAPON_KINDS, DAMAGE_TYPES, EXPENDABLE_DICE, SHIELD_SIZES, ARMOUR_TIER_MIN, ARMOUR_TIER_MAX,
+  isDamageFormula, isMetalByDefault, capArmourTier
+} from "../module/rules/equipment.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -41,4 +45,46 @@ test("example characters follow the ability and HP rules", () => {
 
 test("Example Hero is in the examples", () => {
   assert.ok(examples.some(({ data }) => data.name === "Example Hero"));
+});
+
+const ofType = type => examples.filter(({ data }) => data.type === type);
+
+test("example weapons use real damage dice and allowed choices", () => {
+  for (const { file, data } of ofType("weapon")) {
+    const system = data.system;
+    assert.ok(isDamageFormula(system.damage), `${file}: damage "${system.damage}" is not a die`);
+    assert.ok(WEAPON_KINDS.includes(system.kind), `${file}: unknown kind`);
+    assert.ok(DAMAGE_TYPES.includes(system.damageType), `${file}: unknown damage type`);
+    assert.ok(EXPENDABLE_DICE.includes(system.expendable), `${file}: unknown expendable die`);
+  }
+});
+
+test("example armour follows the tier and metal rules", () => {
+  for (const { file, data } of ofType("armour")) {
+    const { tier, originalTier, metal } = data.system;
+    assert.ok(originalTier >= ARMOUR_TIER_MIN && originalTier <= ARMOUR_TIER_MAX, `${file}: tier must be t0 … t4`);
+    assert.equal(capArmourTier(tier, originalTier), tier, `${file}: tier above original tier`);
+    assert.equal(metal, isMetalByDefault(originalTier), `${file}: metal should follow its tier`);
+  }
+});
+
+test("example shields are light or heavy", () => {
+  for (const { file, data } of ofType("shield")) {
+    assert.ok(SHIELD_SIZES.includes(data.system.size), `${file}: unknown size`);
+  }
+});
+
+test("step 8 examples match the prices and stats in rules 4.1", () => {
+  const byName = name => examples.find(({ data }) => data.name === name)?.data.system;
+  assert.deepEqual(
+    ["Dagger", "Flintlock pistol", "Greatsword"].map(name => [byName(name).damage, byName(name).price]),
+    [["d4", 10], ["2d4", 50], ["d8", 40]]
+  );
+  assert.deepEqual(
+    ["Leather armour", "Chain shirt", "Breastplate"].map(name => [byName(name).tier, byName(name).price]),
+    [[1, 25], [2, 100], [3, 200]]
+  );
+  assert.equal(byName("Light shield").price, 20);
+  assert.equal(byName("Flintlock pistol").reload, 2);
+  assert.equal(byName("Flintlock pistol").expendable, "d4");
 });

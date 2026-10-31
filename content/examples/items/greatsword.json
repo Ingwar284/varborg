@@ -1,0 +1,24 @@
+{
+  "_id": "vbExampleGreatsw",
+  "name": "Greatsword",
+  "type": "weapon",
+  "img": "icons/weapons/swords/greatsword-crossguard-steel.webp",
+  "system": {
+    "description": "",
+    "equipped": false,
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": true,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "price": 40,
+    "damage": "d8",
+    "kind": "melee",
+    "damageType": "bleeding"
+  }
+}

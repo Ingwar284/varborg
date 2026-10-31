@@ -1,0 +1,16 @@
+<header class="var-borg-item-header">
+  <img class="item-img" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-edit="img">
+  <div class="item-title">
+    <input class="item-name" type="text" name="name" value="{{item.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+    <div class="item-meta">
+      <label>
+        <span>{{localize "VARBORG.Item.Price"}}</span>
+        <input type="number" name="system.price" value="{{system.price}}" min="0" step="1">
+      </label>
+      <label>
+        <input type="checkbox" name="system.equipped" {{checked system.equipped}}>
+        <span>{{localize "VARBORG.Item.Equipped"}}</span>
+      </label>
+    </div>
+  </div>
+</header>

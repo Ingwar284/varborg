@@ -1,5 +1,14 @@
 {
   "Actor": [
     "actors/example-hero.json"
+  ],
+  "Item": [
+    "items/dagger.json",
+    "items/flintlock-pistol.json",
+    "items/greatsword.json",
+    "items/leather-armour.json",
+    "items/chain-shirt.json",
+    "items/breastplate.json",
+    "items/light-shield.json"
   ]
 }

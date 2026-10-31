@@ -1,0 +1,14 @@
+{
+  "_id": "vbExampleLeather",
+  "name": "Leather armour",
+  "type": "armour",
+  "img": "icons/equipment/chest/breastplate-layered-leather-brown.webp",
+  "system": {
+    "description": "",
+    "price": 25,
+    "equipped": false,
+    "tier": 1,
+    "originalTier": 1,
+    "metal": false
+  }
+}

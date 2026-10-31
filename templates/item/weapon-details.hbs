@@ -1,0 +1,59 @@
+<section class="var-borg-item-details">
+  <div class="field-grid">
+    <label>
+      <span>{{localize "VARBORG.Weapon.Damage"}}</span>
+      <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d4">
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Weapon.KindLabel"}}</span>
+      <select name="system.kind">{{selectOptions kinds selected=system.kind localize=true}}</select>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Weapon.DamageType"}}</span>
+      <select name="system.damageType">{{selectOptions damageTypes selected=system.damageType localize=true}}</select>
+    </label>
+  </div>
+
+  <h3>{{localize "VARBORG.Weapon.Traits"}}</h3>
+  <div class="trait-flags">
+    <label data-tooltip="{{localize 'VARBORG.Trait.agileHint'}}">
+      <input type="checkbox" name="system.agile" {{checked system.agile}}> {{localize "VARBORG.Trait.agile"}}
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.finesseHint'}}">
+      <input type="checkbox" name="system.finesse" {{checked system.finesse}}> {{localize "VARBORG.Trait.finesse"}}
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.heavyHint'}}">
+      <input type="checkbox" name="system.heavy" {{checked system.heavy}}> {{localize "VARBORG.Trait.heavy"}}
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.twoHandedHint'}}">
+      <input type="checkbox" name="system.twoHanded" {{checked system.twoHanded}}> {{localize "VARBORG.Trait.twoHanded"}}
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.versatileHint'}}">
+      <input type="checkbox" name="system.versatile" {{checked system.versatile}}> {{localize "VARBORG.Trait.versatile"}}
+    </label>
+  </div>
+
+  <div class="field-grid">
+    <label data-tooltip="{{localize 'VARBORG.Trait.reachHint'}}">
+      <span>{{localize "VARBORG.Weapon.ReachFeet"}}</span>
+      <input type="number" name="system.reach" value="{{system.reach}}" min="0" step="5">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.thrownHint'}}">
+      <span>{{localize "VARBORG.Weapon.ThrownFeet"}}</span>
+      <input type="number" name="system.thrown" value="{{system.thrown}}" min="0" step="5">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.rangedHint'}}">
+      <span>{{localize "VARBORG.Weapon.RangedFeet"}}</span>
+      <input type="number" name="system.ranged" value="{{system.ranged}}" min="0" step="5">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.reloadHint'}}">
+      <span>{{localize "VARBORG.Weapon.ReloadActions"}}</span>
+      <input type="number" name="system.reload" value="{{system.reload}}" min="0" step="1">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Trait.expendableHint'}}">
+      <span>{{localize "VARBORG.Item.Expendable"}}</span>
+      <select name="system.expendable">{{selectOptions expendableDice selected=system.expendable localize=true}}</select>
+    </label>
+  </div>
+  <p class="hint">{{localize "VARBORG.Weapon.ZeroHint"}}</p>
+</section>

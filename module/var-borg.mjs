@@ -5,6 +5,8 @@
 
 import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
+import { WeaponData, ArmourData, ShieldData } from "./data/equipment.mjs";
+import { WeaponSheet, ArmourSheet, ShieldSheet } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 
 Hooks.once("init", () => {
@@ -19,6 +21,16 @@ Hooks.once("init", () => {
     makeDefault: true,
     label: "VARBORG.Sheet.Character"
   });
+
+  // Item data and sheets: weapons, armour and shields.
+  CONFIG.Item.dataModels.weapon = WeaponData;
+  CONFIG.Item.dataModels.armour = ArmourData;
+  CONFIG.Item.dataModels.shield = ShieldData;
+
+  const Items = foundry.documents.collections.Items;
+  Items.registerSheet("var-borg", WeaponSheet, { types: ["weapon"], makeDefault: true, label: "VARBORG.Sheet.Weapon" });
+  Items.registerSheet("var-borg", ArmourSheet, { types: ["armour"], makeDefault: true, label: "VARBORG.Sheet.Armour" });
+  Items.registerSheet("var-borg", ShieldSheet, { types: ["shield"], makeDefault: true, label: "VARBORG.Sheet.Shield" });
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

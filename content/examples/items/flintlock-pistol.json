@@ -1,0 +1,24 @@
+{
+  "_id": "vbExamplePistol0",
+  "name": "Flintlock pistol",
+  "type": "weapon",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "",
+    "equipped": false,
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 60,
+    "reload": 2,
+    "expendable": "d4",
+    "price": 50,
+    "damage": "2d4",
+    "kind": "shoot",
+    "damageType": "shot"
+  }
+}

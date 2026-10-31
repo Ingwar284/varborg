@@ -2,6 +2,11 @@
   "TYPES": {
     "Actor": {
       "character": "Character"
+    },
+    "Item": {
+      "weapon": "Weapon",
+      "armour": "Armour",
+      "shield": "Shield"
     }
   },
   "VARBORG": {
@@ -25,7 +30,109 @@
       "Personality": "Personality traits",
       "PhysicalMark": "Physical mark",
       "Idiosyncrasy": "Idiosyncrasy",
-      "CallToAdventure": "Call to adventure"
+      "CallToAdventure": "Call to adventure",
+      "Weapon": "VÅR BORG weapon sheet",
+      "Armour": "VÅR BORG armour sheet",
+      "Shield": "VÅR BORG shield sheet",
+      "Equipment": {
+        "Title": "Equipment",
+        "weapon": "Weapons",
+        "armour": "Armour",
+        "shield": "Shields",
+        "Equip": "Equip",
+        "Unequip": "Unequip",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "None": "None",
+        "DropHint": "Drag weapons, armour and shields from the Items sidebar onto this sheet."
+      }
+    },
+    "Item": {
+      "Price": "Price (s)",
+      "Equipped": "Equipped",
+      "Description": "Description",
+      "Expendable": "Expendable die"
+    },
+    "Weapon": {
+      "Damage": "Damage",
+      "KindLabel": "Attack",
+      "Kind": {
+        "melee": "Melee",
+        "shoot": "Shoot",
+        "throw": "Throw"
+      },
+      "DamageType": "Suggested damage type",
+      "Traits": "Traits",
+      "ReachFeet": "Reach (feet)",
+      "ThrownFeet": "Thrown (feet)",
+      "RangedFeet": "Ranged (feet)",
+      "ReloadActions": "Reload (actions)",
+      "ZeroHint": "Leave a number at 0 if the weapon does not have that trait."
+    },
+    "DamageType": {
+      "blunt": "Blunt force",
+      "bleeding": "Bleeding",
+      "shot": "(Gun)shot",
+      "fire": "Fire & explosives",
+      "gore": "Gore & massive"
+    },
+    "Expendable": {
+      "none": "None",
+      "d2": "d2",
+      "d4": "d4",
+      "d6": "d6",
+      "d8": "d8",
+      "d10": "d10",
+      "d12": "d12",
+      "d20": "d20"
+    },
+    "Trait": {
+      "agile": "Agile",
+      "finesse": "Finesse",
+      "heavy": "Heavy",
+      "twoHanded": "Two-handed",
+      "versatile": "Versatile",
+      "reach": "Reach",
+      "thrown": "Thrown",
+      "ranged": "Ranged",
+      "reload": "Reload",
+      "expendable": "Expendable",
+      "reachValue": "Reach ({value}′)",
+      "thrownValue": "Thrown ({value}′)",
+      "rangedValue": "Ranged ({value}′)",
+      "reloadValue": "Reload {value}",
+      "expendableValue": "Expendable {value}",
+      "agileHint": "The Bane for attacking more than once in a turn starts only after your second attack.",
+      "finesseHint": "Choose whether to attack with Agility or Strength.",
+      "heavyHint": "Attack with +2 DR.",
+      "twoHandedHint": "Needs both hands to attack.",
+      "versatileHint": "Can be used one-handed, but attacks are +2 DR.",
+      "reachHint": "Melee reach in feet instead of 5′.",
+      "thrownHint": "Can be thrown without Bane up to this many feet. It must be retrieved before it is used again.",
+      "rangedHint": "Bane when firing at something farther away than this many feet.",
+      "reloadHint": "Interact actions needed to reload.",
+      "expendableHint": "Roll this die after use (for ammunition, after a combat in which it was used). On a 1 it is used up."
+    },
+    "Armour": {
+      "CurrentTier": "Current tier",
+      "OriginalTier": "Original tier",
+      "Tier0": "t0 (clothing)",
+      "Tier1": "t1 (light)",
+      "Tier2": "t2 (medium)",
+      "Tier3": "t3 (heavy)",
+      "Tier4": "t4 (special)",
+      "TierOf": "Tier {tier} of {original}",
+      "Metal": "Metal",
+      "MetalHint": "Metal armour of tier 2 or heavier gives Bane on spellcasting. Tier 2 and up starts as metal; untick it for hide, leather and other non-metal armour.",
+      "TierHint": "Damage lowers the current tier. Repairs can never raise it above the original tier."
+    },
+    "Shield": {
+      "SizeLabel": "Size",
+      "Size": {
+        "light": "Light shield",
+        "heavy": "Heavy shield"
+      },
+      "Hint": "Use an action to gain light or heavy cover until the start of your next turn."
     },
     "DR": {
       "6": "Eyes closed",

@@ -1,0 +1,12 @@
+{
+  "_id": "vbExampleLightSh",
+  "name": "Light shield",
+  "type": "shield",
+  "img": "icons/equipment/shield/buckler-wooden-boss.webp",
+  "system": {
+    "description": "",
+    "price": 20,
+    "equipped": false,
+    "size": "light"
+  }
+}
