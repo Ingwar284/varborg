@@ -61,11 +61,14 @@ working step, commit with Git.
    *Test:* run `node --test tests/` and see every test pass. Foundry still
    loads with no errors.
 
-3. **Character data and sheet.** Character TypeDataModel (five abilities
-   limited to −3 … +6, HP, wounds, Fortune, silver, story fields) and a
-   first ApplicationV2 sheet.
+3. ~~**Character data and sheet.**~~ Done: `module/data/character.mjs`
+   (five abilities limited to −3 … +6, HP, wounds, Fortune, silver, story
+   fields), `module/sheets/character-sheet.mjs` (first ApplicationV2 sheet),
+   and `module/rules/abilities.mjs` and `module/rules/health.mjs` with tests.
+   HP is capped at max HP (GAPS 44).
    *Test:* create a character, fill in values, then close and reopen it. The
-   values are kept. An ability cannot go above +6 or below −3.
+   values are kept. An ability cannot go above +6 or below −3. HP cannot go
+   above max HP.
 
 4. **Example importer.** The `content/examples/` folder and a GM-only
    **Import examples** button in the game settings. The first example is a
