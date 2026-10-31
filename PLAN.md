@@ -70,9 +70,11 @@ working step, commit with Git.
    values are kept. An ability cannot go above +6 or below −3. HP cannot go
    above max HP.
 
-4. **Example importer.** The `content/examples/` folder and a GM-only
-   **Import examples** button in the game settings. The first example is a
-   plain character, "Example Hero".
+4. ~~**Example importer.**~~ Done: `content/examples/` (with `index.json`
+   listing the files), `module/examples.mjs` and a GM-only **Import
+   examples** button in the game settings. The first example is a plain
+   character, "Example Hero" (all abilities 0, HP 10, max wounds 3,
+   Fortune 2), checked by `tests/examples.test.mjs`.
    *Test:* press the button and Example Hero appears. Press it again and
    it is updated, not duplicated.
 

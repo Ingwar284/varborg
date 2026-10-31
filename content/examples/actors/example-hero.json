@@ -1,0 +1,30 @@
+{
+  "_id": "vbExampleHero000",
+  "name": "Example Hero",
+  "type": "character",
+  "system": {
+    "abilities": {
+      "strength": 0,
+      "agility": 0,
+      "toughness": 0,
+      "presence": 0,
+      "sanity": 0
+    },
+    "hp": {
+      "value": 10,
+      "max": 10
+    },
+    "wounds": {
+      "value": 0,
+      "max": 3
+    },
+    "fortune": 2,
+    "silver": 0,
+    "details": {
+      "personality": "",
+      "physicalMark": "",
+      "idiosyncrasy": "",
+      "callToAdventure": ""
+    }
+  }
+}

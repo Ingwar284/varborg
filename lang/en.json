@@ -26,6 +26,17 @@
       "PhysicalMark": "Physical mark",
       "Idiosyncrasy": "Idiosyncrasy",
       "CallToAdventure": "Call to adventure"
+    },
+    "Examples": {
+      "MenuName": "Example content",
+      "Label": "Import examples",
+      "Hint": "Create the example documents used to test the system, or reset them to their saved values if they are already in this world.",
+      "Title": "Import examples",
+      "Explanation": "This creates every example in the world. Examples that are already here are updated to their saved values, so any changes you made to them are lost.",
+      "Button": "Import",
+      "Done": "Examples imported: {created} created, {updated} updated.",
+      "GMOnly": "Only the GM can import examples.",
+      "Failed": "The examples could not be imported. Press F12 and look in the console for details."
     }
   }
 }
