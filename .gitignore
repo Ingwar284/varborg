@@ -1,0 +1,9 @@
+# Reference material
+_reference/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
