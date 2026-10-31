@@ -1,5 +1,31 @@
 {
+  "TYPES": {
+    "Actor": {
+      "character": "Character"
+    }
+  },
   "VARBORG": {
-    "SystemTitle": "VÅR BORG"
+    "SystemTitle": "VÅR BORG",
+    "Ability": {
+      "strength": "Strength",
+      "agility": "Agility",
+      "toughness": "Toughness",
+      "presence": "Presence",
+      "sanity": "Sanity"
+    },
+    "Sheet": {
+      "Character": "VÅR BORG character sheet",
+      "Name": "Name",
+      "Abilities": "Abilities",
+      "HP": "HP",
+      "Wounds": "Wounds",
+      "Fortune": "Fortune",
+      "Silver": "Silver (s)",
+      "Details": "Details",
+      "Personality": "Personality traits",
+      "PhysicalMark": "Physical mark",
+      "Idiosyncrasy": "Idiosyncrasy",
+      "CallToAdventure": "Call to adventure"
+    }
   }
 }

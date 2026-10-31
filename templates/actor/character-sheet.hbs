@@ -1,0 +1,65 @@
+<div class="var-borg-sheet">
+  <header class="sheet-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+  </header>
+
+  <section class="abilities">
+    <h2>{{localize "VARBORG.Sheet.Abilities"}}</h2>
+    <div class="ability-row">
+      {{#each abilities}}
+      <label class="ability">
+        <span>{{localize label}}</span>
+        <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1">
+      </label>
+      {{/each}}
+    </div>
+  </section>
+
+  <section class="resources">
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.HP"}}</span>
+      <span class="pair">
+        <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">
+        <span>/</span>
+        <input type="number" name="system.hp.max" value="{{system.hp.max}}" min="0" step="1">
+      </span>
+    </label>
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.Wounds"}}</span>
+      <span class="pair">
+        <input type="number" name="system.wounds.value" value="{{system.wounds.value}}" min="0" step="1">
+        <span>/</span>
+        <input type="number" name="system.wounds.max" value="{{system.wounds.max}}" min="0" step="1">
+      </span>
+    </label>
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.Fortune"}}</span>
+      <input type="number" name="system.fortune" value="{{system.fortune}}" min="0" step="1">
+    </label>
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.Silver"}}</span>
+      <input type="number" name="system.silver" value="{{system.silver}}" min="0" step="1">
+    </label>
+  </section>
+
+  <section class="details">
+    <h2>{{localize "VARBORG.Sheet.Details"}}</h2>
+    <label>
+      <span>{{localize "VARBORG.Sheet.Personality"}}</span>
+      <textarea name="system.details.personality" rows="2">{{system.details.personality}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.PhysicalMark"}}</span>
+      <textarea name="system.details.physicalMark" rows="2">{{system.details.physicalMark}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.Idiosyncrasy"}}</span>
+      <textarea name="system.details.idiosyncrasy" rows="2">{{system.details.idiosyncrasy}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.CallToAdventure"}}</span>
+      <textarea name="system.details.callToAdventure" rows="2">{{system.details.callToAdventure}}</textarea>
+    </label>
+  </section>
+</div>

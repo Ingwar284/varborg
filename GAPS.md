@@ -51,6 +51,7 @@ None at the moment.
 | 38 | Initiative ties go to the players. What about a tie between two PCs, or two foes? | Decided at random. | Resolved |
 | 42 | What does losing a body part do in play? | The Dark Master decides. The system only records which part was lost. | Resolved |
 | 39 | Ammunition rolls its expendable die after a combat in which it was used. Automatic or by hand? | When combat ends, the system asks automatically for each ranged weapon fired during that combat. | Resolved |
+| 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom
 

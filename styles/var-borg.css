@@ -1,1 +1,89 @@
-/* VÅR BORG system styles. Sheet styles are added from step 2 onwards. */
+/* VÅR BORG system styles. */
+
+/* ---------- Character sheet ---------- */
+
+.var-borg.character .window-content {
+  padding: 0.75rem;
+}
+
+.var-borg-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.var-borg-sheet h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  border-bottom: 1px solid currentColor;
+}
+
+.var-borg-sheet .sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.var-borg-sheet .portrait {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: none;
+  cursor: pointer;
+}
+
+.var-borg-sheet .actor-name {
+  flex: 1;
+  font-size: 1.5rem;
+  height: auto;
+}
+
+.var-borg-sheet .ability-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.var-borg-sheet .ability,
+.var-borg-sheet .resource {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.var-borg-sheet .ability input {
+  width: 3.5rem;
+  text-align: center;
+  font-size: 1.25rem;
+  height: auto;
+}
+
+.var-borg-sheet .resources {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.var-borg-sheet .resource input {
+  width: 3rem;
+  text-align: center;
+}
+
+.var-borg-sheet .pair {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.var-borg-sheet .details label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.var-borg-sheet .details textarea {
+  resize: vertical;
+}

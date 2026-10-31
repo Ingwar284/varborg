@@ -12,8 +12,12 @@
       "name": "Ingwar284"
     }
   ],
-  "esmodules": ["module/var-borg.mjs"],
-  "styles": ["styles/var-borg.css"],
+  "esmodules": [
+    "module/var-borg.mjs"
+  ],
+  "styles": [
+    "styles/var-borg.css"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -21,6 +25,11 @@
       "path": "lang/en.json"
     }
   ],
+  "documentTypes": {
+    "Actor": {
+      "character": {}
+    }
+  },
   "grid": {
     "distance": 5,
     "units": "ft"
