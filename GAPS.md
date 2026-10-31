@@ -31,6 +31,7 @@ None at the moment.
 | 10 | Contested tests: do tiers matter? | Highest total wins. A natural 20 counts as +5 and a natural 1 as −5. A tie means no victor. | Resolved |
 | 11 | Where do foe initiative bonuses come from? | From the foe's passives. | Resolved |
 | 33 | Do foes add anything to their d20 tests? | No. | Resolved |
+| 45 | Aid: are the +2 and −2 limits applied separately, or to the net total? | To the net total: add +1 per success and −1 per failure, then limit the result to −2 … +2. 3 successes and 2 failures give +1. | Resolved |
 
 ## Combat
 

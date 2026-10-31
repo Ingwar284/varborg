@@ -78,7 +78,8 @@ working step, commit with Git.
    *Test:* press the button and Example Hero appears. Press it again and
    it is updated, not duplicated.
 
-5. **Test maths.** In `module/rules/`, with tests: d20 + ability against
+5. ~~**Test maths.**~~ Done: `module/rules/test-roll.mjs` and
+   `tests/test-roll.test.mjs`. In `module/rules/`, with tests: d20 + ability against
    DR 6–26. Triumph means beating the DR by 10 or more, Success means meeting
    it, Failure means missing it, and Ruin means missing by 10 or more. A
    natural 20 moves the result one tier up and a natural 1 one tier down. Boon
