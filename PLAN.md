@@ -21,204 +21,358 @@ working step, commit with Git.
   reloading, morale, initiative, rest dialog, chat-card buttons, sockets,
   token HUD statuses.
 
-## Foundations
+## Working rules for the build
 
-1. **System skeleton.** `system.json` (id `var-borg`, title VÅR BORG, v14
-   only), an empty start-up script, `lang/en.json`, an empty stylesheet.
-   *Test:* VÅR BORG appears in Game Systems. Create a world with it and it
-   loads with no errors in the console (F12).
+- **Rules maths lives apart from Foundry.** Every calculation (test results,
+  Boon and Bane, DRs, armour soak, carrying, pools, persistent damage,
+  Death's Door) goes in plain files under `module/rules/`. These files know
+  nothing about Foundry, so they can be tested on their own.
+- **Automated tests.** Each rules file has a test file in `tests/`, run with
+  Node's built-in test runner (Node is already installed, so no new
+  packages):
 
-2. **Character data and sheet.** Character TypeDataModel (five abilities,
-   HP, wounds, Fortune, silver, story fields) and a first ApplicationV2 sheet.
-   *Test:* create a character, type in abilities and HP, close and reopen.
-   The values are kept. An ability can't be set above +6 or below −3.
+  ```bash
+  node --test tests/
+  ```
 
-3. **Ability test.** Click an ability → dialog (DR 6–26, default 12) →
-   d20 + ability → chat card showing Triumph, Success, Failure or Ruin, with
-   natural 20 and natural 1 moving the result one tier.
-   *Test:* roll a few times. Check the card's maths and the tier by hand.
-   Use the console to force a natural 20 and a natural 1.
+  A step that adds or changes maths adds its tests in the same step, and all
+  tests must pass before you commit.
+- **Example content is saved, not retyped.** Every example used to test a
+  step (the Warrior, the Ash-Choked Bellman, a dagger and so on) is saved
+  once as a JSON file in `content/examples/`. A GM-only **Import examples**
+  button creates or updates them in the world. The same files feed the
+  automated tests. Example text is taken from our own rules document.
+- **Milestones.** Steps are grouped into milestones. At the end of each
+  milestone the game can do something whole that you can play-test, and we
+  stop to review before going on.
+- **Nothing is used before it exists.** A step only relies on earlier steps.
+  Where a rule points ahead (for example a result that says "test Panic"),
+  the chat card shows the instruction as text until the feature arrives.
 
-4. **Boon, Bane and aid.** The test dialog gets Boon and Bane toggles
-   (2d20 keep highest or lowest, and they cancel) and an "allies aiding"
-   modifier (−2 to +2).
-   *Test:* roll with Boon and check that the card shows two dice and keeps
-   the higher. Boon + Bane rolls one die.
+---
 
-5. **Contested test and chance die.** Contested roll (natural 20 = +5,
-   natural 1 = −5, a tie means no victor). Chance die: 2d6 + Fortune →
-   negative, neutral or positive.
-   *Test:* run both from the sheet and check the results against the rules.
+## Milestone 1: A character can roll a test
 
-## Equipment
+1. ~~**System skeleton.**~~ Done: `system.json`, start-up script, language
+   file, empty stylesheet.
 
-6. **Gear items.** Data and item sheets for weapon, armour, shield, gear and
-   container. An inventory tab on the character with equip and carry
-   toggles. Heavy-item limit = Toughness (minimum 1). Above it you are
-   Encumbered; above twice the limit, movement is 0.
-   *Test:* create items, drag them onto a character, equip armour, and mark
-   items heavy until the sheet shows Encumbered.
+2. **Test harness.** Add `module/rules/` and `tests/` with one tiny rule
+   (the Ability Score Table: roll sum → −3 … +3) and its tests.
+   *Test:* run `node --test tests/` and see every test pass. Foundry still
+   loads with no errors.
 
-7. **Armour effects on tests.** The armour tier adds to Agility test DRs
-   (+2, +4 or +6), and Encumbered gives Bane on Strength and Agility.
-   *Test:* equip a breastplate and roll Agility. The card lists +4 DR.
+3. **Character data and sheet.** Character TypeDataModel (five abilities
+   limited to −3 … +6, HP, wounds, Fortune, silver, story fields) and a
+   first ApplicationV2 sheet.
+   *Test:* create a character, fill in values, then close and reopen it. The
+   values are kept. An ability cannot go above +6 or below −3.
 
-8. **Expendable dice and reload.** An "Expendable" button rolls the item's
-   die and uses it up on a 1. Weapons with reload track whether they are
-   loaded, and reloading takes the listed number of Interact actions.
-   *Test:* use a healing potion until it runs out. Fire a pistol, then
-   reload it.
+4. **Example importer.** The `content/examples/` folder and a GM-only
+   **Import examples** button in the game settings. The first example is a
+   plain character, "Example Hero".
+   *Test:* press the button and Example Hero appears. Press it again and
+   it is updated, not duplicated.
 
-## Combat
+5. **Test maths.** In `module/rules/`, with tests: d20 + ability against
+   DR 6–26. Triumph means beating the DR by 10 or more, Success means meeting
+   it, Failure means missing it, and Ruin means missing by 10 or more. A
+   natural 20 moves the result one tier up and a natural 1 one tier down. Boon
+   and Bane mean 2d20 keeping the higher or lower die, any Boon with any Bane
+   gives a plain roll, and the kept die decides a natural 20 or 1. Aid from
+   allies counts +1 per success and −1 per failure, from −2 to +2.
+   *Test:* `node --test tests/` passes. There is nothing new in Foundry yet.
 
-9. **Attack.** Melee (Strength), shoot (Presence) or throw (Agility) at
-   DR12. Weapon traits (finesse, heavy, versatile one-handed, ranged beyond
-   range). The multiple-attack Bane counter per turn, which starts later for
-   agile weapons. Damage roll; Triumph doubles it. Ruin sets "Bane on
-   attacks" with a **Recover** button.
-   *Test:* attack twice in one turn. The second attack shows Bane, or the
-   third with a dagger. Force a Ruin, then press Recover.
+6. **Ability test in Foundry.** Click an ability to open a dialog (DR,
+   default 12; Boon; Bane; aid) and get a chat card with the dice, the total
+   and the tier.
+   *Test:* roll Example Hero's Strength with Boon. The card shows two d20s,
+   keeps the higher and names the tier. Check one roll by hand.
 
-10. **Defence and taking damage.** A "Defend" button (Agility DR12, plus the
-    armour defence penalty, and Warrior Armour mastery later). The chat card
-    gets a "Take damage" button: armour soak die, minimum 1 damage, and
-    Ruin = double damage and armour drops a tier.
-    *Test:* defend, take a hit and check that HP falls by the damage minus
-    the armour roll. On a Ruin the armour tier goes down.
+7. **Contested test and chance die.** These go into the rules files with
+   tests. Contested: the higher total wins, a natural 20 counts +5, a natural
+   1 counts −5, and a tie has no victor. Chance die: 2d6 + Fortune, where 2–5
+   is negative, 6–9 neutral and 10+ positive. Both get buttons on the sheet.
+   *Test:* tests pass, and both buttons post correct cards.
 
-11. **Wounds and the Table of Agony.** At 0 HP: gain a wound, Toughness test
-    at DR12 (the GM can change it). On a failure the GM picks the column
-    (weapons suggest one) and d10 is rolled on the table. HP resets to max
+**Milestone 1 review:** play-test a few tests and check them against
+rules 3.2–3.3.
+
+## Milestone 2: An equipped character
+
+8. **Weapons, armour and shields.** Item data and sheets. Weapon: damage,
+   kind (melee, shoot or throw), traits, reload, expendable die, weapon
+   group, suggested damage type. Armour: current tier, original tier, metal
+   (true by default for tier 2 and up). Shield: light or heavy.
+   *Examples:* dagger, flintlock pistol, greatsword, leather armour, chain
+   shirt, breastplate, light shield.
+   *Test:* import the examples, drag them onto Example Hero and equip the
+   breastplate.
+
+9. **Gear, containers and carrying.** Gear and container items and an
+   inventory tab. The carrying maths, with tests: the heavy-item limit is
+   Toughness (minimum 1). Above it you are Encumbered. Above twice the limit
+   your movement is 0.
+   *Examples:* rope, torch, healing potion, medicine box, satchel.
+   *Test:* tests pass. Mark items heavy until the sheet shows Encumbered,
+   then movement 0.
+
+10. **Armour and Encumbered on tests.** The rule, with tests: armour adds to
+    Agility test DRs (tier 1 +0, tier 2 +2, tier 3 +4, tier 4 +6).
+    Encumbered gives Bane on Strength and Agility tests.
+    *Test:* with the breastplate equipped, an Agility test card lists +4 DR.
+    Become Encumbered and a Strength test shows Bane.
+
+11. **Expendable dice and reloading (by hand).** An **Expendable** button
+    rolls the item's die and uses the item up on a 1. A weapon with reload
+    tracks loaded or empty. Reloading spends its listed number of Interact
+    actions (counted on the card for now).
+    *Test:* use the healing potion (d2) until it runs out. Fire the pistol,
+    then reload it (2 actions).
+
+**Milestone 2 review:** kit out Example Hero from rules 2.6 and check the
+prices, traits and tiers against 4.1.
+
+## Milestone 3: The first fight (one PC against one foe)
+
+12. **Foe actor and feats.** Foe data (tier, category, HP, Morale 2–11 or
+    "–", armour die none/d2/d4/d6/d8, mook flag, initiative bonus) and
+    sheet. A basic **feat** item (source, description, "gained through
+    Improving" flag), used here for passives. Foe attacks are weapon items.
+    *Example:* the Ash-Choked Bellman (HP 15, Morale 7, −d2), without its
+    gloom ability for now.
+    *Test:* import the Bellman. Its sheet shows its HP, armour, attack and
+    passive.
+
+13. **Initiative and turns.** PCs roll d6 + Agility, foes d6 + their bonus.
+    Ties: PCs go first, then random among equals (tested). Each turn shows 3
+    action pips and 1 reaction pip that reset at the start of the turn.
+    *Test:* start combat with Example Hero and the Bellman. Check the order
+    and that the pips reset each turn.
+
+14. **Attack.** Rule, with tests: melee uses Strength, shoot Presence and
+    throw Agility, at DR12. Heavy adds +2 DR. Versatile used one-handed adds
+    +2 DR. Ranged beyond its range and thrown beyond its listed distance give
+    Bane. Finesse lets you choose Agility or Strength. From the second attack
+    in a turn you attack with Bane (with an agile weapon, from the third).
+    Reactions count only on your own turn. Damage is rolled; a Triumph
+    doubles it and steps the foe's armour die down one.
+    *Test:* tests pass. Attack the Bellman twice in a turn and the second
+    attack has Bane. A Triumph takes its armour from d2 to none.
+
+15. **Attack Ruin and Recover.** A Ruin gives Bane on attacks until you
+    press **Recover**, which spends one action.
+    *Test:* force a Ruin. Attacks show Bane, then press Recover and one
+    action pip is used.
+
+16. **Defence and taking damage.** Rule, with tests: defence is Agility
+    DR12. Tier 3 and 4 armour add +2 DR to defence; lower tiers add nothing.
+    The armour soak die is subtracted from damage (t1 d2, t2 d4, t3 d6, t4
+    d8), minimum 1 damage. Raising a shield (◈) gives light or heavy cover
+    (−2 or −4 DR to defend) until your next turn. On a
+    Ruin the damage is doubled and the armour drops one tier, and armour
+    below tier 1 is destroyed. A **Take damage** button applies it to HP.
+    *Test:* tests pass. The Bellman attacks, Example Hero defends and HP
+    falls by the damage minus the soak roll.
+
+17. **Damaging foes and Morale.** An **Inflict damage** button on attack
+    cards subtracts the foe's armour die (minimum 1). A **Morale** button
+    rolls 2d6; above the foe's Morale it is demoralised, then d6: 1–3 flees,
+    4–6 surrenders. A foe with Morale "–" never rolls.
+    *Test:* hit the Bellman until it is at a third of its HP, then roll
+    Morale.
+
+18. **Conditions.** Every 3.13 condition as a status effect with its PC
+    effect and its **Foe** line, applied to tests where a computer can (Bane,
+    DR changes, lost actions or reactions). A rule tested for each condition
+    that changes numbers.
+    *Test:* make Example Hero Prone. An attack shows +2 DR and a melee
+    defence +2 DR. Make the Bellman Prone and melee attacks against it show
+    −2 DR.
+
+19. **Persistent damage.** One effect per damage type. Of the same type,
+    only the one with the highest average damage applies (tested: 2d4 beats
+    d6). It deals damage at the end of the turn. A PC tests Toughness DR12
+    to end each one. For a foe the GM rolls a d20 and it ends on 12+.
+    *Test:* tests pass. Give Example Hero two fire effects and one poison,
+    end the turn, and check that one fire and the poison tick.
+
+20. **Panic.** A Panic test (Sanity DR12). Triumph restores any Sanity lost
+    for a while, Failure rolls 1d10 on the Panic table and Ruin rolls 2d10.
+    The timed results become effects (for example Sluggish means 2 actions).
+    *Test:* force a Ruin and get a 2d10 Panic result. A Sluggish character
+    starts its turn with two action pips.
+
+21. **Wounds and the Table of Agony.** At 0 HP: gain a wound and test
+    Toughness DR12 (the GM can change it). On a failure the GM picks the
+    damage type (the weapon suggests one) and rolls d10. The bands are 1
+    flesh, 2–5 minor, 6–7 major, 8–9 lethal and 10 fatal. HP returns to max
     and leftover damage is ignored.
-    *Test:* drop a character to 0 HP. You get a wound, a test, an Agony
+    *Test:* drop Example Hero to 0 HP. You see a wound, a test, an Agony
     result and full HP.
 
-12. **Death's Door and Dark Vessel.** At max wounds and 0 HP: roll 2d6 on
-    the Death's Door table. Row 2 uses DR10 + feats gained through Improving.
-    Dark Vessel applies (d8 HP, attack −2 DR, defend +2 DR). A second Dark
-    Vessel before a Long Rest kills. Any damage while at Death's Door kills.
-    *Test:* push a character past max wounds and check each table result.
+22. **Death's Door and Dark Vessel.** At max wounds and 0 HP, roll 2d6 on
+    the table. Row 2 is Sanity DR10 + 1 per feat gained through Improving
+    (tested). Rows 9–10 roll d10 for the lost body part (GAPS 36). Dark
+    Vessel: d8 HP, attack −2 DR, defend +2 DR. A second Dark Vessel before a
+    Long Rest kills. Until resting exists, the GM clears the count by hand.
+    Any damage at Death's Door kills.
+    *Test:* tests pass. Push Example Hero past max wounds and check each
+    table row with forced rolls.
 
-13. **Conditions.** All 3.13 conditions become status effects with their
-    rules applied to tests where a computer can (Bane, DR changes, actions).
-    Persistent damage: one per type, the strongest of a type, damage at the
-    end of the turn, and a Toughness DR12 test to end each one.
-    *Test:* apply Prone and roll an attack (+2 DR). Apply two persistent fire
-    and one poison, end the turn, and check that one fire and the poison
-    tick.
+23. **Ammunition after combat.** When combat ends, the system asks for an
+    expendable roll for each ranged weapon fired during that combat.
+    *Test:* fire the pistol in combat, end combat, and a roll prompt
+    appears.
 
-14. **Foe actor.** Foe data (tier, category, HP, Morale, armour die, mook
-    flag, initiative bonus) and sheet. Attacks are weapon items, passives
-    are feat items. Attack Triumph steps the foe's armour die down. A Morale
-    button (2d6 against Morale, then flee or surrender). Foe conditions use
-    their **Foe** lines.
-    *Test:* make the Ash-Choked Bellman example, attack it with a Triumph
-    and see its armour drop from d2 to none. Roll Morale.
+**Milestone 3 review:** run a full fight, Example Hero against the Bellman,
+from initiative to Morale.
 
-15. **Initiative and turns.** PCs roll d6 + Agility, foes d6 + their bonus.
-    A per-turn tracker for 3 actions and 1 reaction (Slowed, Quickened and
-    the Panic results change it). The multiple-attack counter resets each
-    turn.
-    *Test:* start combat with two PCs and a foe. Check the order and that the
-    action pips reset each turn.
+## Milestone 4: Character building
 
-## Ember, Gloom and powers
-
-16. **Ember and Gloom pools.** A shared panel that fills to round × 5 at the
-    start of each round, empties at the end of the round and when combat
-    ends. Players spend from Ember through the GM (sockets).
-    *Test:* run three rounds. The pool shows 5, 10, 15 and is empty after
-    combat. A player can spend from it.
-
-17. **Powers.** Power item (cost, actions, source, sustained, damage,
-    outcome texts). Test with the class key ability (the boosted ability)
-    against DR 11 + cost. Power attacks use the attack's ability. Failure
-    deals half damage. Outside combat: once per ability until combat, rest
-    or the GM's reset button.
-    *Test:* use Power strike in combat (DR12, Ember drops by 1). Outside
-    combat it works once, then stays locked until you press reset.
-
-18. **Gloom abilities.** The same power item with resource Gloom on foes.
-    Using one posts a card with a "Defend" button for each targeted PC:
-    Agility DR12 with the gloom-defence outcomes, or the ability's own test
-    and its Failure/Ruin text.
-    *Test:* the Bellman uses Toll for the Departed. A PC defends and takes
-    the right damage.
-
-## Character building
-
-19. **Ancestry, background, class and feats.** Dropping a class sets the
-    boosted ability (+1), HP (X + Toughness, fixed), max wounds and spell
-    list. A background rolls wealth. Feats track their source and whether
-    they were gained through Improving.
-    *Test:* drop a Warrior on a new character. Strength goes up by 1, HP is
+24. **Class, ancestry and background.** Item data and sheets. Dropping a
+    class sets the boosted ability (+1, after the table) and HP (X +
+    Toughness, fixed at creation), and records max wounds, the spell list and
+    the starting armour/weapon die. Its boosted ability is the key ability
+    for powers. A background rolls wealth (for example 2d6 × 10 s).
+    *Examples:* Warrior, Wizard, Human, Butcher.
+    *Test:* drop the Warrior on a new character. Strength goes up 1, HP is
     10 + Toughness and max wounds is 3.
 
-20. **Spells and scrolls.** Spell item. Sanity test at DR 11 + cost. Bane
-    for another spell list, metal armour (t2 and up unless marked not metal)
-    and a "foe in melee" toggle. −2 DR for 1 minute, Boon for 1 hour or for
-    several casters. Life force (Toughness, one d4 per wound, DR at least 6).
-    Ruin rolls on Shadowblight. Scrolls cast without ember and without the
-    other-list Bane, then are destroyed.
-    *Test:* cast And They Spoke of Fire in a chain shirt (Bane), then from a
-    scroll (no ember, scroll gone).
+25. **Fortune.** Start with d3 Fortune, with no cap. Spend buttons on cards:
+    Triumph → Success or Ruin → Failure, maximum damage, reroll, −d6 damage
+    taken, and Boon or Bane before rolling (in the test dialog). You can
+    spend several at once.
+    *Test:* reroll a failed test with Fortune. The count drops by 1.
 
-21. **Fortune.** Starts at d3, no cap. Spend buttons on chat cards: shift
-    Triumph or Ruin, maximum damage, reroll, −d6 damage taken, Boon or Bane
-    before rolling.
-    *Test:* spend Fortune to reroll a failed test. The count drops by 1.
+**Milestone 4 review:** build the example Warrior and Wizard by hand from
+rules 2.1 and compare them with the sheet.
 
-22. **Panic.** Panic test (Sanity DR12). Failure rolls 1d10 and Ruin 2d10 on
-    the Panic table, with the timed results applied as effects.
-    *Test:* force a Ruin and check that a 2d10 Panic result appears.
+## Milestone 5: Ember, Gloom and magic
 
-## Time and resting
+26. **Ember and Gloom pools.** A shared panel. Rule, with tests: at the start
+    of each round the pool fills to round × 5 (5, 10, 15…). What isn't spent
+    is lost at the end of the round, and both pools empty when combat ends.
+    Players spend Ember through the GM (sockets).
+    *Test:* tests pass. Run three rounds and see 5, 10 and 15, then an empty
+    pool after combat.
 
-23. **Days and resting.** Day counter and "New day" button. Short rest, Long
-    rest (it also starts a new day) and Downtime. Interrupted rest is a
-    Toughness DR12 test. Fatigued for no sleep. Starvation, Infected and
-    Doomed are applied. Fortune regains d3 only when it is 0. The Dark
-    Vessel count resets.
-    *Test:* make a Doomed character take a Long Rest. It gains no healing
-    and gets a wound at the new day.
+27. **Powers in combat.** Power item (cost, actions, source, sustained,
+    damage, outcome texts). Rule, with tests: DR 11 + listed cost, tested
+    with the key ability. A power that is an attack uses that attack's
+    ability, and it counts towards the multiple-attack Bane. Failure deals
+    half damage (rounded down) and nothing else. **Sustain** spends one
+    action each turn.
+    *Example:* Power strike (🟒1 ◈◈).
+    *Test:* tests pass. Use Power strike on the Bellman: it is DR12, Ember
+    drops by 1 and two action pips are used.
 
-24. **Light timer.** Real-time countdown for lit light sources. Extra lights
-    join the running timer. The GM can start, stop and restart it.
-    *Test:* light a torch (1 hour). The timer counts down and warns when the
-    light runs out.
+28. **Ember abilities outside combat.** With no combat running, each ember
+    ability (cantrips included) works once without spending Ember. It unlocks
+    after a combat or a rest, or when the GM presses **Reset ember
+    abilities**.
+    *Test:* use Power strike twice outside combat. The second use is blocked
+    until you press reset.
 
-## The rest
+29. **Gloom abilities.** A power with resource Gloom on foes. It posts a
+    card with a button for each target. By default that is Agility DR12
+    defence (Triumph no effect, Success half, Failure full, Ruin double);
+    otherwise it is the ability's own test with its Failure and Ruin text.
+    *Example:* the Bellman's Toll for the Departed (☾3, Presence DR12).
+    *Test:* the Bellman uses Toll. Example Hero tests Presence and on a
+    Failure takes d6 and becomes Deafened.
 
-25. **Minions.** Minion actor (HP, Morale, armour, owner). It tests at +0,
+30. **Spells.** Spell item. Rule, with tests: Sanity against DR 11 + cost.
+    Bane for another spell list, for tier 2+ metal armour and for "foe in
+    melee range". −2 DR for 1 minute of casting. Boon for 1 hour or for
+    several casters. Boon and Bane cancel as in step 5.
+    *Example:* And They Spoke of Fire (🟒3 ◈◈).
+    *Test:* tests pass. Cast it in the chain shirt: DR14 with Bane.
+
+31. **Shadowblight, life force and scrolls.** A Ruin on a spell rolls d20 on
+    Shadowblight. Life force: test Toughness instead, take the chosen wounds
+    (each tests Toughness, HP unchanged) and lower the DR by d4 per wound,
+    never below 6 (tested). Scrolls cast without Ember and without the
+    other-list Bane, and are destroyed either way.
+    *Example:* a scroll of And They Spoke of Fire.
+    *Test:* tests pass. Cast from the scroll: no Ember spent, and the scroll
+    is gone.
+
+**Milestone 5 review:** a fight with Ember and Gloom on both sides, with a
+Warrior and a Wizard against the Bellman.
+
+## Milestone 6: Time and rest
+
+32. **Days.** A day counter and a **New day** button. At each new day:
+    Doomed characters gain a wound, and a character without food for more
+    than 2 days takes d6 damage.
+    *Test:* make Example Hero Doomed and press New day. A wound is added.
+
+33. **Resting.** Short rest heals to full HP. Long rest heals HP and one
+    wound, starts a new day and resets the Dark Vessel count. Downtime heals
+    everything except Doomed and conditions that name their own cure. Any
+    rest unlocks ember abilities. An interrupted rest is a Toughness DR12
+    test. Not sleeping adds a level of Fatigued, and a Long Rest removes one.
+    Fortune regains d3 only when it is 0. Infected and Doomed characters get
+    no benefit, and Infected ones take d6.
+    *Test:* rest an Infected character. No healing, d6 damage.
+
+34. **Medicine box.** Using it costs one action. The character tests
+    Toughness DR12 to remove Infected, and the box's expendable die is rolled
+    either way.
+    *Test:* use the medicine box example on an Infected character.
+
+35. **Light timer.** A real-time countdown that pauses with the game. Other
+    lights lit while it runs join it. A lantern uses one hour of oil at a
+    time.
+    *Test:* light a torch (1 hour), pause the game and see the timer stop.
+
+**Milestone 6 review:** play a short trip with rests, days and torches.
+
+## Milestone 7: Minions, relics and vehicles
+
+36. **Minions.** Minion actor (HP, Morale, armour, owner). It tests at +0,
     has 2 actions and 0 reactions, acts on its owner's initiative right
-    after them, and the limit is Presence (minimum 1). There's a "Command a
-    minion" action.
-    *Test:* give a PC a small dog minion. In combat it sits right after its
-    owner.
+    after them, and the limit is Presence (minimum 1). There is a "Command a
+    minion" action (◈).
+    *Example:* a small vicious dog (Pitiful minion: HP 5, Morale 6, d4).
+    *Test:* in combat the dog sits right after its owner and acts when
+    commanded.
 
-26. **Relics.** Relic item: use (then roll expendable d20), daily roll for
-    always-on relics, Last Rite (always works, destroys it), and "if lost"
-    text shown when it is destroyed.
-    *Test:* use a relic until a 1 comes up. It is marked destroyed and its
-    drawback is shown.
+37. **Relics.** Relic item: use it (then roll the expendable d20, or daily
+    for always-on relics), its Last Rite (always works and destroys the
+    relic), and its "if lost" drawback shown when it is destroyed.
+    *Example:* Shard of the Great Brazier (+3 to the Ember pool).
+    *Test:* use the Shard. The pool goes up by 3 and the d20 is rolled.
 
-27. **Vehicles.** Vehicle actor (HP, armour, speeds, crew, passengers,
-    fuel). Driving tests by speed. Collision damage to the driver and
-    passengers, with armour applying.
-    *Test:* make a steam wagon, drive it fast and fail. The occupants take
-    collision damage minus their armour.
+38. **Vehicles.** Vehicle actor (HP, armour, three speeds, crew, passengers,
+    fuel). Driving tests by speed and situation (Agility DR10, 12 or 14).
+    Collision damage (1d6, 3d6 or 5d6) applies to the driver and passengers,
+    after armour.
+    *Example:* steam wagon.
+    *Test:* drive fast and force a Ruin. The occupants take 5d6 minus their
+    armour.
 
-28. **Improving.** A button that rolls each ability (d6), adds a feat,
-    rolls 6d10 for more HP and rolls the "you find…" d6.
-    *Test:* improve a character and check every step against rules 2.8.
+## Milestone 8: Growth and content
 
-29. **Character creation helper.** Optional guided creation: ability
-    method, ancestry, background, class, starting equipment by the class
-    die.
-    *Test:* make a full character with the helper and check it against 2.1.
+39. **Improving.** A button that runs rules 2.8. Each ability rolls d6: on a
+    1 or below the ability it goes down 1, otherwise up 1 (−3 … +6). Choose a
+    feat (marked "gained through Improving"). Roll 6d10, and if it is at
+    least your max HP, max HP goes up d6. Then roll the d6 find table.
+    Tested.
+    *Test:* tests pass. Improve the example Warrior and check each step.
 
-30. **Compendiums.** VÅR BORG content entered from the rules (our own text
-    only): classes, ancestries, feats, gear, spells, relics, tables and
-    foes.
-    *Test:* open each compendium, drag an entry onto a sheet and check that
-    it works.
+40. **Character creation helper.** Optional guided creation: the ability
+    method, ancestry feat, background, class, and starting equipment by the
+    class die.
+    *Test:* make a character with the helper and check it against 2.1.
+
+41. **Compendium packs.** Turn `content/` into real compendiums that ship
+    with the system. Building packs from JSON files needs Foundry's official
+    command-line tool (an npm package), so **I will ask before installing
+    it**.
+    *Test:* the compendiums appear in a new world and their entries work.
+
+42. **Full content.** Enter all classes, ancestries, backgrounds, feats,
+    gear, spells, relics, tables and foes from the rules into `content/`, a
+    few files per step.
+    *Test:* spot-check entries against the rules.

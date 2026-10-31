@@ -1,0 +1,28 @@
+{
+  "id": "var-borg",
+  "title": "VÅR BORG",
+  "description": "Foundry VTT system for VÅR BORG.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "authors": [
+    {
+      "name": "Ingwar284"
+    }
+  ],
+  "esmodules": ["module/var-borg.mjs"],
+  "styles": ["styles/var-borg.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "grid": {
+    "distance": 5,
+    "units": "ft"
+  }
+}
