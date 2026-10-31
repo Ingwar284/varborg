@@ -23,6 +23,12 @@ export const TIERS = ["ruin", "failure", "success", "triumph"];
 export const DR_MIN = 6;
 export const DR_MAX = 26;
 
+/** The named DRs of the table in rule 3.3 (6 Eyes closed ... 26 Godly). */
+export const DR_TABLE = [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26];
+
+/** The DR offered when nothing else is known: 12, Normal. */
+export const DR_DEFAULT = 12;
+
 /** How far past the DR a Triumph or Ruin lies. */
 const CRITICAL_MARGIN = 10;
 
@@ -79,6 +85,17 @@ export function diceMode(boons = 0, banes = 0) {
 export function diceCount(mode) {
   requireMode(mode);
   return mode === MODE.NORMAL ? 1 : 2;
+}
+
+/**
+ * The dice to roll in each mode, written as a dice formula:
+ * one d20, or two d20 keeping the higher (Boon) or the lower (Bane).
+ */
+export function diceFormula(mode) {
+  requireMode(mode);
+  if (mode === MODE.BOON) return "2d20kh";
+  if (mode === MODE.BANE) return "2d20kl";
+  return "1d20";
 }
 
 /**

@@ -88,7 +88,10 @@ working step, commit with Git.
    allies counts +1 per success and −1 per failure, from −2 to +2.
    *Test:* `node --test tests/` passes. There is nothing new in Foundry yet.
 
-6. **Ability test in Foundry.** Click an ability to open a dialog (DR,
+6. ~~**Ability test in Foundry.**~~ Done: `module/dice/ability-test.mjs`,
+   `templates/dice/ability-test-dialog.hbs`, `templates/chat/test-card.hbs`,
+   and the DR table and dice formula added to `module/rules/test-roll.mjs`
+   with tests. Click an ability to open a dialog (DR,
    default 12; Boon; Bane; aid) and get a chat card with the dice, the total
    and the tier.
    *Test:* roll Example Hero's Strength with Boon. The card shows two d20s,

@@ -4,6 +4,7 @@
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
+import { rollAbilityTest } from "../dice/ability-test.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -13,7 +14,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     classes: ["var-borg", "character"],
     position: { width: 560, height: 640 },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true },
+    actions: { rollAbility: CharacterSheet.#onRollAbility }
   };
 
   static PARTS = {
@@ -32,5 +34,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       value: system.abilities[key]
     }));
     return context;
+  }
+
+  /** Clicking an ability name opens the test dialog for that ability. */
+  static async #onRollAbility(event, button) {
+    await rollAbilityTest(this.document, button.dataset.ability);
   }
 }

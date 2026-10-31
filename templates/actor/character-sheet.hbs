@@ -8,10 +8,14 @@
     <h2>{{localize "VARBORG.Sheet.Abilities"}}</h2>
     <div class="ability-row">
       {{#each abilities}}
-      <label class="ability">
-        <span>{{localize label}}</span>
-        <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1">
-      </label>
+      <div class="ability">
+        <button type="button" class="ability-roll" data-action="rollAbility" data-ability="{{key}}"
+                data-tooltip="{{localize 'VARBORG.Test.RollTooltip'}}">
+          <i class="fa-solid fa-dice-d20"></i> {{localize label}}
+        </button>
+        <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1"
+               aria-label="{{localize label}}">
+      </div>
       {{/each}}
     </div>
   </section>

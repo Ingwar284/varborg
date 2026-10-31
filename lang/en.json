@@ -27,6 +27,48 @@
       "Idiosyncrasy": "Idiosyncrasy",
       "CallToAdventure": "Call to adventure"
     },
+    "DR": {
+      "6": "Eyes closed",
+      "8": "Simple",
+      "10": "Easy",
+      "12": "Normal",
+      "14": "Difficult",
+      "16": "Hard",
+      "18": "Arduous",
+      "20": "Heroic",
+      "22": "Unbelievable",
+      "24": "Impossible",
+      "26": "Godly"
+    },
+    "Tier": {
+      "triumph": "Triumph",
+      "success": "Success",
+      "failure": "Failure",
+      "ruin": "Ruin"
+    },
+    "Test": {
+      "RollTooltip": "Roll a test",
+      "DialogTitle": "{ability} test",
+      "CardTitle": "{ability} test",
+      "DR": "DR",
+      "DROption": "{dr}: {name}",
+      "Boon": "Boon",
+      "BoonHint": "Roll two d20 and keep the higher.",
+      "Bane": "Bane",
+      "BaneHint": "Roll two d20 and keep the lower. Boon and Bane together cancel out.",
+      "AidSuccesses": "Allies who succeeded",
+      "AidFailures": "Allies who failed",
+      "AidHint": "+1 for each ally who succeeded, −1 for each who failed, from −2 to +2 in total.",
+      "Aid": "Aid",
+      "Cancelled": "Boon and Bane cancel out",
+      "KeptDie": "Kept die",
+      "Versus": "against",
+      "Roll": "Roll",
+      "Natural20": "Natural 20.",
+      "Natural20Up": "Natural 20: {from} moves up to {to}.",
+      "Natural1": "Natural 1.",
+      "Natural1Down": "Natural 1: {from} drops to {to}."
+    },
     "Examples": {
       "MenuName": "Example content",
       "Label": "Import examples",

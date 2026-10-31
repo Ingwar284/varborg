@@ -5,8 +5,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  TIERS, DR_MIN, DR_MAX, MODE,
-  tierFromTotal, shiftTier, diceMode, diceCount, keptDie, aidModifier, resolveTest
+  TIERS, DR_MIN, DR_MAX, DR_TABLE, DR_DEFAULT, MODE,
+  tierFromTotal, shiftTier, diceMode, diceCount, diceFormula, keptDie, aidModifier, resolveTest
 } from "../module/rules/test-roll.mjs";
 
 // --- Tiers against a DR -----------------------------------------------------
@@ -165,4 +165,19 @@ test("with Boon or Bane, the kept die decides a natural 20 or 1 (GAPS 9)", () =>
 test("aid outside -2 to +2 is refused", () => {
   assert.throws(() => resolveTest({ dice: [10], ability: 0, dr: 12, aid: 3 }), RangeError);
   assert.throws(() => resolveTest({ dice: [10], ability: 0, dr: 12, aid: -3 }), RangeError);
+});
+
+// --- What the Foundry dialog offers and rolls -------------------------------
+
+test("the DR table runs 6, 8 ... 26, and the default is 12", () => {
+  assert.deepEqual(DR_TABLE, [6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26]);
+  assert.equal(DR_DEFAULT, 12);
+  for (const dr of DR_TABLE) assert.doesNotThrow(() => tierFromTotal(dr, dr));
+});
+
+test("the dice formula: one d20, or two keeping the higher or lower", () => {
+  assert.equal(diceFormula(MODE.NORMAL), "1d20");
+  assert.equal(diceFormula(MODE.BOON), "2d20kh");
+  assert.equal(diceFormula(MODE.BANE), "2d20kl");
+  assert.throws(() => diceFormula("sideways"), RangeError);
 });

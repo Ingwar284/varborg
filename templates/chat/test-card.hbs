@@ -1,0 +1,19 @@
+<div class="var-borg-card test-card">
+  <h3>{{title}}</h3>
+  <div class="dice">
+    {{#each dice}}
+    <span class="die {{#unless kept}}dropped{{/unless}}">{{value}}</span>
+    {{/each}}
+    {{#if modeLabel}}<span class="mode">{{modeLabel}}</span>{{/if}}
+  </div>
+  <p class="sum">
+    {{localize "VARBORG.Test.KeptDie"}} {{kept}}
+    · {{abilityLabel}} {{ability}}
+    {{#if aid}}· {{localize "VARBORG.Test.Aid"}} {{aid}}{{/if}}
+  </p>
+  <p class="total">
+    <strong>{{total}}</strong> {{localize "VARBORG.Test.Versus"}} <strong>{{localize "VARBORG.Test.DR"}} {{dr}}</strong>
+  </p>
+  <p class="tier tier-{{tier}}">{{tierLabel}}</p>
+  {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
+</div>

@@ -87,3 +87,70 @@
 .var-borg-sheet .details textarea {
   resize: vertical;
 }
+
+.var-borg-sheet .ability-roll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* ---------- Test dialog ---------- */
+
+.var-borg-test-dialog .hint {
+  flex-basis: 100%;
+  margin: 0.1rem 0 0;
+}
+
+/* ---------- Chat cards ---------- */
+
+.var-borg-card h3 {
+  margin: 0 0 0.4rem;
+  border-bottom: 1px solid currentColor;
+}
+
+.var-borg-card p {
+  margin: 0.25rem 0;
+}
+
+.var-borg-card .dice {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-card .die {
+  min-width: 2rem;
+  padding: 0.2rem 0.4rem;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.var-borg-card .die.dropped {
+  opacity: 0.4;
+  text-decoration: line-through;
+  border-style: dashed;
+}
+
+.var-borg-card .mode {
+  font-style: italic;
+}
+
+.var-borg-card .tier {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.var-borg-card .tier-triumph { color: #2e7d32; }
+.var-borg-card .tier-success { color: #1565c0; }
+.var-borg-card .tier-failure { color: #ef6c00; }
+.var-borg-card .tier-ruin { color: #b71c1c; }
+
+.var-borg-card .natural {
+  text-align: center;
+  font-style: italic;
+}
