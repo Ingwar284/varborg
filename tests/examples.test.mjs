@@ -13,6 +13,7 @@ import {
   WEAPON_KINDS, DAMAGE_TYPES, EXPENDABLE_DICE, SHIELD_SIZES, ARMOUR_TIER_MIN, ARMOUR_TIER_MAX,
   isDamageFormula, isMetalByDefault, capArmourTier
 } from "../module/rules/equipment.mjs";
+import { isCumbersomeByDefault } from "../module/rules/carrying.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -87,4 +88,30 @@ test("step 8 examples match the prices and stats in rules 4.1", () => {
   assert.equal(byName("Light shield").price, 20);
   assert.equal(byName("Flintlock pistol").reload, 2);
   assert.equal(byName("Flintlock pistol").expendable, "d4");
+});
+
+test("example items start with the system's cumbersome suggestion", () => {
+  for (const type of ["weapon", "armour", "shield", "gear", "container"]) {
+    for (const { file, data } of ofType(type)) {
+      assert.equal(data.system.cumbersome, isCumbersomeByDefault(type, data.system), `${file}: cumbersome`);
+      assert.equal(data.system.storedIn, "", `${file}: examples start carried loose`);
+    }
+  }
+});
+
+test("example gear uses allowed expendable dice", () => {
+  for (const { file, data } of ofType("gear")) {
+    assert.ok(EXPENDABLE_DICE.includes(data.system.expendable), `${file}: unknown expendable die`);
+  }
+});
+
+test("step 9 examples match the prices and effects in rules 4.1", () => {
+  const byName = name => examples.find(({ data }) => data.name === name)?.data.system;
+  assert.deepEqual(
+    ["Rope", "Torch", "Healing potion", "Medicine box", "Satchel"].map(name => byName(name).price),
+    [4, 2, 15, 50, 8]
+  );
+  assert.equal(byName("Healing potion").expendable, "d2");
+  assert.equal(byName("Medicine box").expendable, "d6");
+  assert.equal(byName("Satchel").capacity, 10);
 });

@@ -1,11 +1,11 @@
 /**
- * Item sheets (ApplicationV2) for weapons, armour and shields. They share a
- * header (picture, name, price, equipped) and a description; the middle
- * part changes with the item type. Every change is saved as soon as you
- * leave a field.
+ * Item sheets (ApplicationV2) for weapons, armour, shields, gear and
+ * containers. They share a header (picture, name, price, equipped, heavy
+ * item) and a description; the middle part changes with the item type.
+ * Every change is saved as soon as you leave a field.
  */
 
-import { WeaponData, ShieldData } from "../data/equipment.mjs";
+import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -37,6 +37,8 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     const context = await super._prepareContext(options);
     context.item = this.document;
     context.system = this.document.system;
+    // Gear and containers are carried, never equipped.
+    context.canEquip = "equipped" in this.document.system;
     return context;
   }
 }
@@ -77,4 +79,19 @@ export class ShieldSheet extends EquipmentSheet {
     context.sizes = ShieldData.SIZES;
     return context;
   }
+}
+
+export class GearSheet extends EquipmentSheet {
+  static detailsTemplate = `${TEMPLATES}/gear-details.hbs`;
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.expendableDice = GearData.EXPENDABLE_DICE;
+    return context;
+  }
+}
+
+export class ContainerSheet extends EquipmentSheet {
+  static detailsTemplate = `${TEMPLATES}/container-details.hbs`;
 }

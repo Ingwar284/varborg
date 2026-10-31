@@ -46,7 +46,8 @@ None at the moment.
 | 18 | Do reactions count towards the multiple-attack Bane? | Only when the reaction happens on the PC's own turn. | Resolved |
 | 19 | Persistent damage from several sources? | Exception to "Multiple Effects": different types all apply. Of the same type, only the strongest applies. Each one has its own Toughness test to end it. | Resolved |
 | 20 | Is there a maximum Fatigued level? | No. | Resolved |
-| 21 | Carrying more than twice the heavy-item limit "is the death of you". | Changed: movement becomes 0. | Resolved |
+| 21 | Carrying more than twice the heavy-item (cumbersome) limit "is the death of you". | Changed: movement becomes 0. | Resolved |
+| 48 | What counts as a heavy item for carrying, and is it the weapon trait Heavy? | The system calls the rules' "heavy items" **cumbersome**, so they are not confused with the weapon trait Heavy (+2 DR) or heavy shields. Every carried item has a separate "cumbersome" box. It starts ticked for weapons with the Heavy or Two-handed trait, heavy shields and armour of tier 1 and up, and the Dark Master can untick it. Armour you are wearing never counts. Encumbered does not lower movement (all terrain counts as difficult instead). | Resolved |
 | 36 | Death's Door 9–10 says "a random body part destroyed", but there is no body-part table. | Roll d10: 1 right hand, 2 left hand, 3 right arm, 4 left arm, 5 right leg, 6 left leg, 7 right foot, 8 left foot, 9 right eye, 10 left eye. The Dark Master decides what the loss does (question 42). | Resolved |
 | 37 | Persistent damage of the same type keeps "the strongest". How do we compare dice such as 2d4 and d6? | The one with the highest average damage (2d4 = 5 beats d6 = 3.5). | Resolved |
 | 38 | Initiative ties go to the players. What about a tie between two PCs, or two foes? | Decided at random. | Resolved |

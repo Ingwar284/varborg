@@ -1,9 +1,4 @@
-<div class="var-borg-sheet">
-  <header class="sheet-header">
-    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
-    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
-  </header>
-
+<section class="tab var-borg-sheet {{tabs.main.cssClass}}" data-group="primary" data-tab="main">
   <section class="abilities">
     <h2>{{localize "VARBORG.Sheet.Abilities"}}</h2>
     <div class="ability-row">
@@ -53,38 +48,11 @@
       <span>{{localize "VARBORG.Sheet.Silver"}}</span>
       <input type="number" name="system.silver" value="{{system.silver}}" min="0" step="1">
     </label>
-  </section>
-
-  <section class="equipment">
-    <h2>{{localize "VARBORG.Sheet.Equipment.Title"}}</h2>
-    {{#each equipment}}
-    <h3>{{localize label}}</h3>
-    <ul class="item-list">
-      {{#each items}}
-      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}" data-item-id="{{item.id}}">
-        <button type="button" class="icon-button" data-action="toggleEquipped"
-                data-tooltip="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}"
-                aria-label="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}">
-          <i class="{{#if item.system.equipped}}fa-solid fa-circle-check{{else}}fa-regular fa-circle{{/if}}"></i>
-        </button>
-        <img src="{{item.img}}" alt="">
-        <span class="item-name">{{item.name}}</span>
-        <span class="item-summary">{{summary}}</span>
-        <button type="button" class="icon-button" data-action="editItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="deleteItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
-      {{/each}}
-    </ul>
-    {{/each}}
-    <p class="hint">{{localize "VARBORG.Sheet.Equipment.DropHint"}}</p>
+    <div class="resource movement carrying-{{carrying.state}}" data-tooltip="{{localize (concat 'VARBORG.Carrying.Hint.' carrying.state)}}">
+      <span>{{localize "VARBORG.Carrying.Movement"}}</span>
+      <span class="movement-value">{{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
+      {{#unless (eq carrying.state "normal")}}<span class="carrying-state">{{localize carrying.stateLabel}}</span>{{/unless}}
+    </div>
   </section>
 
   <section class="details">
@@ -106,4 +74,4 @@
       <textarea name="system.details.callToAdventure" rows="2">{{system.details.callToAdventure}}</textarea>
     </label>
   </section>
-</div>
+</section>

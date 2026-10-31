@@ -121,12 +121,17 @@ rules 3.2–3.3.
    *Test:* import the examples, drag them onto Example Hero and equip the
    breastplate.
 
-9. **Gear, containers and carrying.** Gear and container items and an
-   inventory tab. The carrying maths, with tests: the heavy-item limit is
-   Toughness (minimum 1). Above it you are Encumbered. Above twice the limit
+9. ~~**Gear, containers and carrying.**~~ Done: gear and container data and
+   sheets in `module/data/equipment.mjs` and `module/sheets/item-sheet.mjs`,
+   `module/rules/carrying.mjs` with `tests/carrying.test.mjs`, five examples,
+   and Character and Inventory tabs on the character sheet. A "cumbersome"
+   box on every carried item (the rules' heavy items, GAPS 48) and a
+   "Stored in" choice per item. Gear and container items and an inventory
+   tab. The carrying maths, with tests: the cumbersome limit is Toughness
+   (minimum 1). Above it you are Encumbered. Above twice the limit
    your movement is 0.
    *Examples:* rope, torch, healing potion, medicine box, satchel.
-   *Test:* tests pass. Mark items heavy until the sheet shows Encumbered,
+   *Test:* tests pass. Mark items cumbersome until the sheet shows Encumbered,
    then movement 0.
 
 10. **Armour and Encumbered on tests.** The rule, with tests: armour adds to

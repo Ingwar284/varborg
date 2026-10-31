@@ -9,6 +9,8 @@
     "equipped": false,
     "tier": 1,
     "originalTier": 1,
-    "metal": false
+    "metal": false,
+    "cumbersome": true,
+    "storedIn": ""
   }
 }

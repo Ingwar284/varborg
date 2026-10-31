@@ -1,0 +1,13 @@
+{
+  "_id": "vbExampleMedBox0",
+  "name": "Medicine box",
+  "type": "gear",
+  "img": "icons/tools/medical/medkit-steel.webp",
+  "system": {
+    "description": "Heals d6 HP, or removes the Infected condition or persistent bleeding damage.",
+    "price": 50,
+    "cumbersome": false,
+    "storedIn": "",
+    "expendable": "d6"
+  }
+}

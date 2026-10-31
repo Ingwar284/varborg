@@ -1,6 +1,7 @@
 /**
  * The character sheet (ApplicationV2). Every change is saved as soon as
- * you leave a field.
+ * you leave a field. Two tabs: Character (abilities, resources, details)
+ * and Inventory (carrying, equipment, gear and containers).
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -8,15 +9,24 @@ import { rollAbilityTest } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
+import { carrying, isOverCapacity } from "../rules/carrying.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
-/** Item types shown in the Equipment section, in this order. */
-const EQUIPMENT_TYPES = ["weapon", "armour", "shield"];
+const TEMPLATES = "systems/var-borg/templates/actor";
 
-/** One short line about an item, such as "d4 · Melee · Agile, Thrown (20')". */
-function equipmentSummary(item) {
+/** Item types shown in the Inventory tab, in this order. */
+const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container"];
+
+/** Item types that can be equipped. */
+const EQUIPPABLE_TYPES = ["weapon", "armour", "shield"];
+
+/**
+ * One short line about an item, such as "d4 · Melee · Agile, Thrown (20')".
+ * `stored` counts the items kept in each container.
+ */
+function itemSummary(item, stored) {
   const i18n = game.i18n;
   const system = item.system;
   switch (item.type) {
@@ -33,6 +43,10 @@ function equipmentSummary(item) {
     }
     case "shield":
       return i18n.localize(`VARBORG.Shield.Size.${system.size}`);
+    case "gear":
+      return system.expendable ? i18n.format("VARBORG.Trait.expendableValue", { value: system.expendable }) : "";
+    case "container":
+      return i18n.format("VARBORG.Container.Holds", { count: stored.get(item.id) ?? 0, capacity: system.capacity });
   }
   return "";
 }
@@ -40,7 +54,7 @@ function equipmentSummary(item) {
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "character"],
-    position: { width: 560, height: 640 },
+    position: { width: 600, height: 680 },
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
@@ -49,33 +63,88 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollChance: CharacterSheet.#onRollChance,
       editItem: CharacterSheet.#onEditItem,
       deleteItem: CharacterSheet.#onDeleteItem,
-      toggleEquipped: CharacterSheet.#onToggleEquipped
+      toggleEquipped: CharacterSheet.#onToggleEquipped,
+      toggleCumbersome: CharacterSheet.#onToggleCumbersome
     }
   };
 
   static PARTS = {
-    sheet: { template: "systems/var-borg/templates/actor/character-sheet.hbs" }
+    header: { template: `${TEMPLATES}/character-header.hbs` },
+    tabs: { template: "templates/generic/tab-navigation.hbs" },
+    main: { template: `${TEMPLATES}/character-main.hbs`, scrollable: [""] },
+    inventory: { template: `${TEMPLATES}/character-inventory.hbs`, scrollable: [""] }
+  };
+
+  static TABS = {
+    primary: {
+      tabs: [
+        { id: "main", icon: "fa-solid fa-user" },
+        { id: "inventory", icon: "fa-solid fa-sack" }
+      ],
+      initial: "main",
+      labelPrefix: "VARBORG.Sheet.Tab"
+    }
   };
 
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
-    const system = this.document.system;
-    context.actor = this.document;
+    const actor = this.document;
+    const system = actor.system;
+    context.actor = actor;
     context.system = system;
     context.abilities = ABILITIES.map(key => ({
       key,
       label: `VARBORG.Ability.${key}`,
       value: system.abilities[key]
     }));
-    context.equipment = EQUIPMENT_TYPES.map(type => ({
+
+    // Containers on this character, and how many items each one holds.
+    // An item pointing at a container that is gone counts as loose.
+    const containers = actor.itemTypes.container;
+    const containerIds = new Set(containers.map(c => c.id));
+    const stored = new Map();
+    for (const item of actor.items) {
+      const id = item.system.storedIn;
+      if (containerIds.has(id) && id !== item.id) stored.set(id, (stored.get(id) ?? 0) + 1);
+    }
+    context.containerOptions = {
+      "": game.i18n.localize("VARBORG.Container.Loose"),
+      ...Object.fromEntries(containers.map(c => [c.id, c.name]))
+    };
+
+    context.inventory = INVENTORY_TYPES.map(type => ({
       type,
-      label: `VARBORG.Sheet.Equipment.${type}`,
-      items: this.document.itemTypes[type]
+      label: `VARBORG.Sheet.Inventory.${type}`,
+      canEquip: EQUIPPABLE_TYPES.includes(type),
+      canStore: type !== "container",
+      items: actor.itemTypes[type]
         .toSorted((a, b) => a.sort - b.sort)
-        .map(item => ({ item, summary: equipmentSummary(item) }))
+        .map(item => ({
+          item,
+          summary: itemSummary(item, stored),
+          storedIn: containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
+          overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
+        }))
     }));
+
+    const carried = carrying(
+      actor.items.map(item => ({ type: item.type, ...item.system })),
+      system.abilities.toughness
+    );
+    context.carrying = { ...carried, stateLabel: `VARBORG.Carrying.State.${carried.state}` };
     return context;
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    // The "Stored in" menus have no form name, so they change the item, not the character.
+    for (const select of this.element.querySelectorAll("select[data-stored-in]")) {
+      select.addEventListener("change", event => {
+        this.#itemFor(event.currentTarget)?.update({ "system.storedIn": event.currentTarget.value });
+      });
+    }
   }
 
   /** The pencil button opens the item's own sheet. */
@@ -94,9 +163,15 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     await item?.update({ "system.equipped": !item.system.equipped });
   }
 
-  /** The item a button in the equipment list belongs to. */
-  #itemFor(button) {
-    return this.document.items.get(button.closest("[data-item-id]")?.dataset.itemId);
+  /** The weight button marks the item cumbersome, or not. */
+  static async #onToggleCumbersome(event, button) {
+    const item = this.#itemFor(button);
+    await item?.update({ "system.cumbersome": !item.system.cumbersome });
+  }
+
+  /** The item a button in the inventory belongs to. */
+  #itemFor(element) {
+    return this.document.items.get(element.closest("[data-item-id]")?.dataset.itemId);
   }
 
   /** Clicking an ability name opens the test dialog for that ability. */

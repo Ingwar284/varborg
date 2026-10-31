@@ -9,6 +9,11 @@
     "items/leather-armour.json",
     "items/chain-shirt.json",
     "items/breastplate.json",
-    "items/light-shield.json"
+    "items/light-shield.json",
+    "items/rope.json",
+    "items/torch.json",
+    "items/healing-potion.json",
+    "items/medicine-box.json",
+    "items/satchel.json"
   ]
 }

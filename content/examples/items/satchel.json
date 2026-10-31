@@ -1,0 +1,13 @@
+{
+  "_id": "vbExampleSatchel",
+  "name": "Satchel",
+  "type": "container",
+  "img": "icons/containers/bags/pack-leather-brown.webp",
+  "system": {
+    "description": "",
+    "price": 8,
+    "cumbersome": false,
+    "storedIn": "",
+    "capacity": 10
+  }
+}

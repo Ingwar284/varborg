@@ -1,0 +1,13 @@
+{
+  "_id": "vbExampleHealPot",
+  "name": "Healing potion",
+  "type": "gear",
+  "img": "icons/consumables/potions/potion-bottle-corked-labeled-red.webp",
+  "system": {
+    "description": "Heals d6 HP.",
+    "price": 15,
+    "cumbersome": false,
+    "storedIn": "",
+    "expendable": "d2"
+  }
+}

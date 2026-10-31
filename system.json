@@ -32,7 +32,9 @@
     "Item": {
       "weapon": {},
       "armour": {},
-      "shield": {}
+      "shield": {},
+      "gear": {},
+      "container": {}
     }
   },
   "grid": {

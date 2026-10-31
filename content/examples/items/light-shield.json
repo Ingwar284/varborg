@@ -7,6 +7,8 @@
     "description": "",
     "price": 20,
     "equipped": false,
-    "size": "light"
+    "size": "light",
+    "cumbersome": false,
+    "storedIn": ""
   }
 }

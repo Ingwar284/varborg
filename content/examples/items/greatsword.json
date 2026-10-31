@@ -19,6 +19,8 @@
     "price": 40,
     "damage": "d8",
     "kind": "melee",
-    "damageType": "bleeding"
+    "damageType": "bleeding",
+    "cumbersome": true,
+    "storedIn": ""
   }
 }

@@ -6,7 +6,9 @@
     "Item": {
       "weapon": "Weapon",
       "armour": "Armour",
-      "shield": "Shield"
+      "shield": "Shield",
+      "gear": "Gear",
+      "container": "Container"
     }
   },
   "VARBORG": {
@@ -35,23 +37,34 @@
       "Armour": "VÅR BORG armour sheet",
       "Shield": "VÅR BORG shield sheet",
       "Equipment": {
-        "Title": "Equipment",
-        "weapon": "Weapons",
-        "armour": "Armour",
-        "shield": "Shields",
         "Equip": "Equip",
         "Unequip": "Unequip",
         "Edit": "Edit",
         "Delete": "Delete",
         "None": "None",
-        "DropHint": "Drag weapons, armour and shields from the Items sidebar onto this sheet."
+        "DropHint": "Drag weapons, armour, shields, gear and containers from the Items sidebar onto this sheet."
+      },
+      "Gear": "VÅR BORG gear sheet",
+      "Container": "VÅR BORG container sheet",
+      "Tab": {
+        "main": "Character",
+        "inventory": "Inventory"
+      },
+      "Inventory": {
+        "weapon": "Weapons",
+        "armour": "Armour",
+        "shield": "Shields",
+        "gear": "Gear",
+        "container": "Containers"
       }
     },
     "Item": {
       "Price": "Price (s)",
       "Equipped": "Equipped",
       "Description": "Description",
-      "Expendable": "Expendable die"
+      "Expendable": "Expendable die",
+      "Cumbersome": "Cumbersome",
+      "CumbersomeHint": "Counts towards your cumbersome limit: things too unwieldy to carry with ease, such as a two-handed weapon, a heavy shield, armour you are not wearing, a barrel or a body. The Dark Master decides what is cumbersome. Armour you are wearing never counts."
     },
     "Weapon": {
       "Damage": "Damage",
@@ -214,6 +227,31 @@
       "Done": "Examples imported: {created} created, {updated} updated.",
       "GMOnly": "Only the GM can import examples.",
       "Failed": "The examples could not be imported. Press F12 and look in the console for details."
+    },
+    "Container": {
+      "Capacity": "Holds (normal-sized items)",
+      "Hint": "A container lets you find what you need. It does not raise your cumbersome limit.",
+      "Holds": "{count}/{capacity} items",
+      "Loose": "Carried loose",
+      "StoredIn": "Stored in"
+    },
+    "Carrying": {
+      "Title": "Carrying",
+      "Movement": "Movement",
+      "Feet": "{value}′",
+      "CumbersomeCount": "Cumbersome items: {cumbersome} of {limit}",
+      "MarkCumbersome": "Mark as cumbersome",
+      "MarkNotCumbersome": "Mark as not cumbersome",
+      "State": {
+        "normal": "Not encumbered",
+        "encumbered": "Encumbered",
+        "overloaded": "Overloaded"
+      },
+      "Hint": {
+        "normal": "You can carry cumbersome items up to your Toughness (minimum 1). Other items do not count.",
+        "encumbered": "Encumbered: all terrain counts as difficult terrain, and Bane on Strength and Agility tests.",
+        "overloaded": "More than twice your cumbersome limit: your movement is 0."
+      }
     }
   }
 }

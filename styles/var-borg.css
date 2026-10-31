@@ -4,7 +4,21 @@
 
 .var-borg.character .window-content {
   padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+/* Only the open tab is shown, and it scrolls on its own. */
+.var-borg.character .tab.var-borg-sheet {
+  display: none;
+  flex: 1;
   overflow-y: auto;
+}
+
+.var-borg.character .tab.var-borg-sheet.active {
+  display: flex;
 }
 
 .var-borg-sheet {
@@ -63,7 +77,7 @@
 
 .var-borg-sheet .resources {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
 }
 
@@ -100,7 +114,29 @@
   margin-top: 0.5rem;
 }
 
-/* Equipment list */
+/* Carrying and movement */
+
+.var-borg-sheet .movement-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.var-borg-sheet .carrying-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+}
+
+.var-borg-sheet .carrying-state {
+  font-weight: bold;
+}
+
+.var-borg-sheet .carrying-encumbered .carrying-state { color: #ef6c00; }
+.var-borg-sheet .carrying-overloaded .carrying-state,
+.var-borg-sheet .carrying-overloaded .movement-value { color: #b71c1c; }
+
+/* Inventory list */
 
 .var-borg-sheet h3 {
   margin: 0.4rem 0 0.2rem;
@@ -146,6 +182,25 @@
   width: 1.8rem;
   height: 1.8rem;
   padding: 0;
+}
+
+.var-borg-sheet .cumbersome-toggle {
+  opacity: 0.35;
+}
+
+.var-borg-sheet .cumbersome-toggle.active {
+  opacity: 1;
+}
+
+.var-borg-sheet .item-row .stored-in {
+  flex: 0 0 8rem;
+  width: 8rem;
+}
+
+.var-borg-sheet .item-row.over-capacity .item-summary {
+  color: #b71c1c;
+  font-weight: bold;
+  opacity: 1;
 }
 
 .var-borg-sheet .item-list .empty {

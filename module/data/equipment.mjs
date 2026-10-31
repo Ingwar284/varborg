@@ -1,15 +1,19 @@
 /**
- * Data for weapons, armour and shields (item types "weapon", "armour",
- * "shield"). They share a description, a price in silver and whether the
- * character has the item equipped.
+ * Data for everything a character carries: weapons, armour, shields, gear
+ * and containers (item types "weapon", "armour", "shield", "gear",
+ * "container"). They all share a description, a price in silver, whether
+ * the item is cumbersome to carry and which container it is stored in.
+ * Weapons, armour and shields also record whether they are equipped.
  *
- * Rules: 4.1 Gear, 3.8 Armour and cover, GAPS 15 and 27.
+ * Rules: 4.1 Gear (including Carrying), 3.8 Armour and cover,
+ * GAPS 15, 27 and 48.
  */
 
 import {
   WEAPON_KINDS, DAMAGE_TYPES, EXPENDABLE_DICE, SHIELD_SIZES,
   ARMOUR_TIER_MIN, ARMOUR_TIER_MAX, isMetalByDefault, capArmourTier
 } from "../rules/equipment.mjs";
+import { isCumbersomeByDefault } from "../rules/carrying.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -28,12 +32,54 @@ function labels(keys, prefix) {
   return Object.fromEntries(keys.map(key => [key, `VARBORG.${prefix}.${key || "none"}`]));
 }
 
-/** Fields every piece of equipment has. */
-class EquipmentData extends foundry.abstract.TypeDataModel {
+/** Fields every item a character carries has. */
+class CarriedData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),
       price: wholeNumber(),
+      // Counts towards the cumbersome limit (the rules' "heavy items").
+      // The Dark Master decides (rules 4.1, GAPS 48).
+      cumbersome: new BooleanField({ initial: false }),
+      // The id of the container item (on the same character) this is kept in.
+      // Blank means carried loose.
+      storedIn: new StringField({ required: true, blank: true, initial: "" })
+    };
+  }
+
+  /**
+   * On creation: if nobody said whether the item is cumbersome, start with the
+   * system's suggestion (GAPS 48).
+   */
+  async _preCreate(data, options, user) {
+    const allowed = await super._preCreate(data, options, user);
+    if (allowed === false) return false;
+    if (data.system?.cumbersome === undefined) {
+      this.parent.updateSource({ "system.cumbersome": isCumbersomeByDefault(this.parent.type, this) });
+    }
+  }
+
+  /**
+   * When a change makes the item cumbersome by default (for example ticking the
+   * Heavy trait), tick "cumbersome" too. Unticking the trait leaves the box
+   * alone, so the Dark Master's choice is kept (GAPS 48).
+   */
+  async _preUpdate(changes, options, user) {
+    const allowed = await super._preUpdate(changes, options, user);
+    if (allowed === false) return false;
+    const system = changes.system;
+    if (!system || "cumbersome" in system) return;
+    const type = this.parent.type;
+    const after = foundry.utils.mergeObject(this.toObject(), system, { inplace: false });
+    if (!isCumbersomeByDefault(type, this) && isCumbersomeByDefault(type, after)) system.cumbersome = true;
+  }
+}
+
+/** Weapons, armour and shields can also be equipped. */
+class EquipmentData extends CarriedData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
       equipped: new BooleanField({ initial: false })
     };
   }
@@ -112,4 +158,28 @@ export class ShieldData extends EquipmentData {
   }
 
   static SIZES = labels(SHIELD_SIZES, "Shield.Size");
+}
+
+export class GearData extends CarriedData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      expendable: choice(EXPENDABLE_DICE, "")
+    };
+  }
+
+  static EXPENDABLE_DICE = labels(EXPENDABLE_DICE, "Expendable");
+}
+
+/**
+ * Bandoleer, satchel, backpack: holds that many normal-sized items. It does
+ * not raise the cumbersome limit (rules 4.1).
+ */
+export class ContainerData extends CarriedData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      capacity: wholeNumber()
+    };
+  }
 }

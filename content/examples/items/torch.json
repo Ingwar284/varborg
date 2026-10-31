@@ -1,0 +1,13 @@
+{
+  "_id": "vbExampleTorch00",
+  "name": "Torch",
+  "type": "gear",
+  "img": "icons/sundries/lights/torch-brown-lit.webp",
+  "system": {
+    "description": "1 hour, 40 feet.",
+    "price": 2,
+    "cumbersome": false,
+    "storedIn": "",
+    "expendable": ""
+  }
+}

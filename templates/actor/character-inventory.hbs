@@ -1,0 +1,56 @@
+<section class="tab var-borg-sheet {{tabs.inventory.cssClass}}" data-group="primary" data-tab="inventory">
+  <section class="carrying carrying-{{carrying.state}}">
+    <h2>{{localize "VARBORG.Carrying.Title"}}</h2>
+    <p class="carrying-line">
+      <span>{{localize "VARBORG.Carrying.CumbersomeCount" cumbersome=carrying.cumbersome limit=carrying.limit}}</span>
+      <span class="carrying-state">{{localize carrying.stateLabel}}</span>
+      <span>{{localize "VARBORG.Carrying.Movement"}}: {{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
+    </p>
+    <p class="hint">{{localize (concat "VARBORG.Carrying.Hint." carrying.state)}}</p>
+  </section>
+
+  {{#each inventory as |section|}}
+  <section class="inventory-section">
+    <h3>{{localize section.label}}</h3>
+    <ul class="item-list">
+      {{#each section.items}}
+      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}" data-item-id="{{item.id}}">
+        {{#if section.canEquip}}
+        <button type="button" class="icon-button" data-action="toggleEquipped"
+                data-tooltip="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}"
+                aria-label="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}">
+          <i class="{{#if item.system.equipped}}fa-solid fa-circle-check{{else}}fa-regular fa-circle{{/if}}"></i>
+        </button>
+        {{/if}}
+        <img src="{{item.img}}" alt="">
+        <span class="item-name">{{item.name}}</span>
+        <span class="item-summary">{{summary}}</span>
+        {{#if section.canStore}}
+        <select class="stored-in" data-stored-in aria-label="{{localize 'VARBORG.Container.StoredIn'}}"
+                data-tooltip="{{localize 'VARBORG.Container.StoredIn'}}">
+          {{selectOptions @root.containerOptions selected=storedIn}}
+        </select>
+        {{/if}}
+        <button type="button" class="icon-button cumbersome-toggle{{#if item.system.cumbersome}} active{{/if}}" data-action="toggleCumbersome"
+                data-tooltip="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
+                aria-label="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
+                aria-pressed="{{#if item.system.cumbersome}}true{{else}}false{{/if}}">
+          <i class="fa-solid fa-weight-hanging"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+  {{/each}}
+  <p class="hint">{{localize "VARBORG.Sheet.Equipment.DropHint"}}</p>
+</section>
