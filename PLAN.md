@@ -56,8 +56,8 @@ working step, commit with Git.
 1. ~~**System skeleton.**~~ Done: `system.json`, start-up script, language
    file, empty stylesheet.
 
-2. **Test harness.** Add `module/rules/` and `tests/` with one tiny rule
-   (the Ability Score Table: roll sum → −3 … +3) and its tests.
+2. ~~**Test harness.**~~ Done: `module/rules/ability-score.mjs` (the
+   Ability Score Table: roll sum → −3 … +3) and `tests/ability-score.test.mjs`.
    *Test:* run `node --test tests/` and see every test pass. Foundry still
    loads with no errors.
 
