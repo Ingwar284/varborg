@@ -32,11 +32,14 @@ export class VarBorgCombat extends foundry.documents.Combat {
     return compareInitiative(orderFacts(a), orderFacts(b));
   }
 
-  /** At the start of each turn: three actions and one reaction (rules 3.4). */
+  /**
+   * At the start of each turn: three actions and one reaction (rules 3.4),
+   * and no attacks made yet (for the multiple-attack Bane).
+   */
   async _onStartTurn(combatant, context) {
     await super._onStartTurn(combatant, context);
     const { actions, reactions } = freshTurn();
-    await combatant.update({ [`flags.${SYSTEM}`]: { actions, reactions } });
+    await combatant.update({ [`flags.${SYSTEM}`]: { actions, reactions, attacks: 0 } });
   }
 }
 
@@ -54,6 +57,16 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
   /** Reactions left this turn. */
   get reactionsLeft() {
     return this.getFlag(SYSTEM, "reactions") ?? REACTIONS_PER_TURN;
+  }
+
+  /** Attacks made on this combatant's own turn so far (rules 3.4, GAPS 18). */
+  get attacksThisTurn() {
+    return this.getFlag(SYSTEM, "attacks") ?? 0;
+  }
+
+  /** Count one more attack this turn. */
+  async recordAttack() {
+    return this.setFlag(SYSTEM, "attacks", this.attacksThisTurn + 1);
   }
 
   /**
@@ -84,6 +97,21 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
       this.updateSource({ [`flags.${SYSTEM}.tiebreak`]: Math.random() });
     }
   }
+}
+
+/**
+ * Where an actor stands in the running combat.
+ * @param {Actor} actor
+ * @returns {{combatant: Combatant|null, onOwnTurn: boolean}}
+ *   combatant is null when no combat has started or the actor is not in it.
+ */
+export function turnState(actor) {
+  const combat = game.combat;
+  if (!combat?.started) return { combatant: null, onOwnTurn: false };
+  const mine = combat.getCombatantsByActor(actor);
+  if (!mine.length) return { combatant: null, onOwnTurn: false };
+  const onOwnTurn = mine.includes(combat.combatant);
+  return { combatant: onOwnTurn ? combat.combatant : mine[0], onOwnTurn };
 }
 
 /**

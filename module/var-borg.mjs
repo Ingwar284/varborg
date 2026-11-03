@@ -12,6 +12,7 @@ import FeatData from "./data/feat.mjs";
 import { WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
+import { addAttackCardListeners } from "./dice/attack.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -49,6 +50,9 @@ Hooks.once("init", () => {
   CONFIG.Combat.documentClass = VarBorgCombat;
   CONFIG.Combatant.documentClass = VarBorgCombatant;
   Hooks.on("renderCombatTracker", addTrackerPips);
+
+  // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
+  Hooks.on("renderChatMessageHTML", addAttackCardListeners);
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

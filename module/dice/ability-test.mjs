@@ -124,7 +124,7 @@ async function askTestOptions(abilityLabel, automatic) {
 }
 
 /** An empty or odd number field counts as 0. */
-function wholeCount(value) {
+export function wholeCount(value) {
   const number = Math.floor(Number(value));
   return Number.isFinite(number) && number > 0 ? number : 0;
 }
@@ -145,7 +145,7 @@ export function modeLabel(mode, boons, banes) {
 }
 
 /** The line explaining a natural 20 or 1, or nothing. */
-function naturalNote(result) {
+export function naturalNote(result) {
   if (!result.natural) return null;
   const moved = result.tier !== result.baseTier;
   const key = result.natural === 20

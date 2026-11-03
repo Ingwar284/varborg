@@ -531,3 +531,19 @@
 .var-borg-pips .pip:disabled {
   cursor: default;
 }
+
+/* ---------- Attack card ---------- */
+
+.var-borg-card .outcome {
+  text-align: center;
+  font-style: italic;
+}
+
+.var-borg-card .damage-line {
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.var-borg-card .damage-total {
+  font-size: 1.4rem;
+}

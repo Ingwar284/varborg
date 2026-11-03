@@ -32,6 +32,12 @@
         {{#each states}}
         <span class="item-state {{key}}">{{localize label}}</span>
         {{/each}}
+        {{#if canAttack}}
+        <button type="button" class="icon-button" data-action="attack"
+                data-tooltip="{{localize 'VARBORG.Attack.Tooltip'}}" aria-label="{{localize 'VARBORG.Attack.Tooltip'}}">
+          <i class="fa-solid fa-khanda"></i>
+        </button>
+        {{/if}}
         {{#if canFire}}
         <button type="button" class="icon-button" data-action="fireWeapon"
                 data-tooltip="{{localize 'VARBORG.Reload.FireTooltip'}}" aria-label="{{localize 'VARBORG.Reload.FireTooltip'}}">

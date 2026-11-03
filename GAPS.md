@@ -32,6 +32,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 9 | With Boon or Bane, which die decides a natural 20 or 1? | The kept die. | Resolved |
 | 10 | Contested tests: do tiers matter? | Highest total wins. A natural 20 counts as +5 and a natural 1 as −5. A tie means no victor. | Resolved |
 | 11 | Where do foe initiative bonuses come from? | From the foe's passives. | Resolved |
+| 62 | Can allies aid an attack? Rules 3.3 "Aiding an ally" covers tests in general. | No. The attack dialog has no aid boxes. Other tests, such as a Strength test, can still be aided, in or out of combat. | Resolved |
 | 33 | Do foes add anything to their d20 tests? | No. | Resolved |
 | 45 | Aid: are the +2 and −2 limits applied separately, or to the net total? | To the net total: add +1 per success and −1 per failure, then limit the result to −2 … +2. 3 successes and 2 failures give +1. | Resolved |
 
@@ -63,6 +64,8 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 52 | When an expendable die rolls a 1, is the item deleted or kept? | Kept and marked **used up** (for a weapon: **out of ammunition**). Its Expendable button disappears. A weapon out of ammunition cannot be reloaded; a shot already loaded can still be fired. Unticking the mark refills it, for example after buying a new supply (rules 4.1, Ammunition). | Resolved |
 | 53 | Does a weapon with Reload start loaded? | Yes. Firing empties it; reloading costs its listed Interact actions and loads it. | Resolved |
 | 54 | Items bought or found in numbers (Sanity + 4 torches, 10 iron nails, dried food per day): should gear have a quantity, or is each one a separate item? | Gear has a quantity; weapons, armour and shields do not. Each piece counts: a stack of 3 cumbersome barrels is 3 cumbersome items, and 6 torches fill 6 places in a container. On an expendable 1, one of the stack is used up (quantity −1); the last one is marked used up. A use that is not a 1 (drinking one potion) is lowered by hand. | Resolved |
+| 60 | Multiple-attack Bane when a turn mixes weapons (for example a greatsword, then an agile dagger)? | Every attack made this turn counts. The weapon used now decides: an agile weapon has Bane from the 3rd attack, any other from the 2nd. Greatsword then dagger: no Bane. Dagger then greatsword: Bane. | Resolved |
+| 61 | Does pressing Attack in combat use a pip? | Yes. On your own turn it uses one action (◈) and counts for the multiple-attack Bane. On someone else's turn it uses your reaction (↻) and does not count (GAPS 18). | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom

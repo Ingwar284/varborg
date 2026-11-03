@@ -186,7 +186,11 @@ prices, traits and tiers against 4.1.
     *Test:* start combat with Example Hero and the Bellman. Check the order
     and that the pips reset each turn.
 
-14. **Attack.** Rule, with tests: melee uses Strength, shoot Presence and
+14. ~~**Attack.**~~ Done: `module/rules/attack.mjs` with `tests/attack.test.mjs`,
+    `module/dice/attack.mjs`, an attack dialog and card, an Attack button
+    on each weapon in the Inventory tab, and an attack count per turn in
+    `module/combat.mjs` (GAPS 60, 61). The target is your targeted token.
+    Rule, with tests: melee uses Strength, shoot Presence and
     throw Agility, at DR12. Heavy adds +2 DR. Versatile used one-handed adds
     +2 DR. Ranged beyond its range and thrown beyond its listed distance give
     Bane. Finesse lets you choose Agility or Strength. From the second attack

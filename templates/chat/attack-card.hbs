@@ -1,0 +1,45 @@
+<div class="var-borg-card test-card attack-card">
+  <h3>{{title}}</h3>
+  <p class="modifier">{{how}}{{#if target}} · {{target}}{{/if}}</p>
+  <div class="dice">
+    {{#each dice}}
+    <span class="die {{#unless kept}}dropped{{/unless}}">{{value}}</span>
+    {{/each}}
+    {{#if modeLabel}}<span class="mode">{{modeLabel}}</span>{{/if}}
+  </div>
+  <p class="sum">
+    {{localize "VARBORG.Test.KeptDie"}} {{kept}}
+    · {{abilityLabel}} {{ability}}
+  </p>
+  <p class="total">
+    <strong>{{total}}</strong> {{localize "VARBORG.Test.Versus"}} <strong>{{localize "VARBORG.Test.DR"}} {{dr}}</strong>
+    {{#if drNote}}<span class="modifier">{{drNote}}</span>{{/if}}
+  </p>
+  {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
+  <p class="tier tier-{{tier}}">{{tierLabel}}</p>
+  {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
+  <p class="outcome">{{outcomeText}}</p>
+  {{#if damage}}
+  <div class="damage">
+    {{#if damage.invalid}}
+    <p class="modifier">{{localize "VARBORG.Attack.BadDamage" formula=damage.formula}}</p>
+    {{else}}
+    <p class="damage-line">
+      {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
+      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
+    </p>
+    {{/if}}
+  </div>
+  {{/if}}
+  {{#if armour}}
+  {{#if armour.button}}
+  <button type="button" data-action="lowerArmour" data-uuid="{{armour.uuid}}">
+    <i class="fa-solid fa-shield-halved"></i> {{armour.button}}
+  </button>
+  {{else}}
+  <p class="modifier">{{armour.text}}</p>
+  {{/if}}
+  {{/if}}
+  {{#if thrownNote}}<p class="modifier">{{thrownNote}}</p>{{/if}}
+  {{#if pipNote}}<p class="modifier">{{pipNote}}</p>{{/if}}
+</div>

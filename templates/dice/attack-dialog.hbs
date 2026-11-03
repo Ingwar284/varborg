@@ -1,0 +1,57 @@
+<div class="var-borg-test-dialog attack-dialog">
+  <p class="hint automatic">{{target}}</p>
+  {{#if turnNote}}<p class="hint automatic">{{turnNote}}</p>{{/if}}
+  {{#if multipleNote}}<p class="hint automatic">{{multipleNote}}</p>{{/if}}
+  {{#if modes}}
+  <div class="form-group">
+    <label for="var-borg-attack-mode">{{localize "VARBORG.Attack.Mode"}}</label>
+    <select id="var-borg-attack-mode" name="mode">
+      {{#each modes}}<option value="{{value}}">{{localize label}}</option>{{/each}}
+    </select>
+  </div>
+  {{/if}}
+  {{#if abilities}}
+  <div class="form-group">
+    <label for="var-borg-attack-ability">{{localize "VARBORG.Attack.Ability"}}</label>
+    <select id="var-borg-attack-ability" name="ability">
+      {{#if usualAbility}}<option value="">{{usualAbility}}</option>{{/if}}
+      {{#each abilities}}<option value="{{value}}">{{localize label}}</option>{{/each}}
+    </select>
+    <p class="hint">{{localize "VARBORG.Trait.finesseHint"}}</p>
+  </div>
+  {{/if}}
+  {{#if versatile}}
+  <div class="form-group">
+    <label for="var-borg-attack-one-handed">{{localize "VARBORG.Attack.OneHanded"}}</label>
+    <input id="var-borg-attack-one-handed" type="checkbox" name="oneHanded">
+    <p class="hint">{{localize "VARBORG.Trait.versatileHint"}}</p>
+  </div>
+  {{/if}}
+  {{#if distance}}
+  <div class="form-group">
+    <label for="var-borg-attack-beyond">{{localize "VARBORG.Attack.BeyondRange"}}</label>
+    <input id="var-borg-attack-beyond" type="checkbox" name="beyondRange">
+    <p class="hint">{{localize "VARBORG.Attack.BeyondRangeHint" distance=distance}}</p>
+  </div>
+  {{/if}}
+  <div class="form-group">
+    <label for="var-borg-attack-dr">{{localize "VARBORG.Test.DR"}}</label>
+    <select id="var-borg-attack-dr" name="dr">
+      {{#each drs}}
+      <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+      {{/each}}
+    </select>
+    {{#if heavyNote}}<p class="hint automatic">{{heavyNote}}</p>{{/if}}
+    <p class="hint">{{localize "VARBORG.Attack.AutomaticHint"}}</p>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-attack-boon">{{localize "VARBORG.Test.Boon"}}</label>
+    <input id="var-borg-attack-boon" type="checkbox" name="boon">
+    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-attack-bane">{{localize "VARBORG.Test.Bane"}}</label>
+    <input id="var-borg-attack-bane" type="checkbox" name="bane">
+    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
+  </div>
+</div>
