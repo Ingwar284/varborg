@@ -31,9 +31,19 @@
       </button>
     </li>
     {{/each}}
-    {{#unless conditions.list.length}}{{#unless conditions.persistent.list.length}}{{#unless conditions.panic.list.length}}
+    {{#each conditions.injuries}}
+    <li class="condition-row injury-row">
+      <img src="{{img}}" alt="">
+      <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
+      <button type="button" class="icon-button" data-remove-injury="{{id}}"
+              data-tooltip="{{localize 'VARBORG.Agony.Remove'}}" aria-label="{{localize 'VARBORG.Agony.Remove'}}">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </li>
+    {{/each}}
+    {{#unless conditions.list.length}}{{#unless conditions.persistent.list.length}}{{#unless conditions.panic.list.length}}{{#unless conditions.injuries.length}}
     <li class="empty">{{localize "VARBORG.Condition.None"}}</li>
-    {{/unless}}{{/unless}}{{/unless}}
+    {{/unless}}{{/unless}}{{/unless}}{{/unless}}
   </ul>
   <div class="condition-controls">
     <select data-add-condition aria-label="{{localize 'VARBORG.Condition.Add'}}">

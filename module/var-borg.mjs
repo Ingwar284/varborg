@@ -18,6 +18,7 @@ import { addDefenceCardListeners } from "./dice/defence.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerConditions } from "./conditions.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
+import { registerAgony } from "./agony.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -61,6 +62,8 @@ Hooks.once("init", () => {
   registerConditions();
   // Persistent Damage: one effect per type, ticking at the end of the turn.
   registerPersistentDamage();
+  // Wounds at 0 HP: the wound test and the Table of Agony (rules 3.5).
+  registerAgony();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

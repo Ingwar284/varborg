@@ -72,7 +72,7 @@ export async function rollAttack(actor, item) {
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
   const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
-  const conditions = attackConditions(actor, target, mode);
+  const conditions = attackConditions(actor, target, mode, ability);
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
   const boonCount = (options.boon ? 1 : 0) + fromConditions.boons;
   const baneCount = [options.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length
@@ -211,14 +211,15 @@ export async function rollAttack(actor, item) {
 
 /**
  * The conditions on this attack: the attacker's own, and the target's Foe
- * lines when the target is a foe (rules 3.13).
+ * lines when the target is a foe (rules 3.13). Injuries count by the
+ * ability used (GAPS 88).
  * @returns {{own: object[], target: object[]}}
  */
-function attackConditions(actor, target, mode) {
+function attackConditions(actor, target, mode, ability) {
   const own = conditionsOf(actor);
   const against = target?.type === "foe" ? conditionsOf(target) : null;
   return {
-    own: attackerConditions(own.conditions, own.fatigue),
+    own: attackerConditions(own.conditions, own.fatigue, ability),
     target: against ? attackTargetConditions(against.conditions, against.fatigue, mode) : []
   };
 }
@@ -249,7 +250,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
   }
 
   // For the usual way of attacking; the card shows the final numbers.
-  const conditions = attackConditions(actor, target, modes[0]);
+  const conditions = attackConditions(actor, target, modes[0], abilities[0]);
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     modes: modes.length > 1 ? modes.map(mode => ({ value: mode, label: `VARBORG.Weapon.Kind.${mode}` })) : null,

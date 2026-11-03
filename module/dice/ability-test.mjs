@@ -7,7 +7,7 @@
  * and so is Fatigued (module/rules/conditions.mjs). Situational Bane from
  * other conditions is shown as a reminder (GAPS 75). The Panic results
  * Adrenaline Rush and Rattled give Boon or Bane and are then used up
- * (GAPS 80).
+ * (GAPS 80). Injuries from the Table of Agony count too (GAPS 88).
  * All the maths lives in the rules files; this file only asks, rolls and shows.
  */
 
@@ -40,7 +40,7 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
   const abilityLabel = game.i18n.localize(`VARBORG.Ability.${ability}`);
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = testConditions(conditions, fatigue);
+  const conditionMods = testConditions(conditions, fatigue, ability);
   const fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
   const options = await askTestOptions(abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose);

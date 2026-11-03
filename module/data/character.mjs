@@ -8,6 +8,8 @@
 
 import { ABILITIES, ABILITY_MIN, ABILITY_MAX } from "../rules/abilities.mjs";
 import { capHp } from "../rules/health.mjs";
+import { atZeroHp, strikesZero } from "../rules/agony.mjs";
+import { postWoundCard, WOUND_OPTION, AGONY_TYPE_OPTION } from "../agony.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
 
 const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
@@ -75,12 +77,31 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
   /**
    * When HP or max HP changes, keep HP at or below max HP (GAPS 44).
    * Lowering max HP below current HP lowers current HP too.
+   * When HP drops from above 0 to 0, below max wounds: gain a wound and HP
+   * returns to max in the same change; at max wounds HP stays at 0 (Death's
+   * Door). The card follows in _onUpdate (rules 3.5, GAPS 87).
    */
   async _preUpdate(changes, options, user) {
     const allowed = await super._preUpdate(changes, options, user);
     if (allowed === false) return false;
     const hp = changes.system?.hp;
     if (!hp || !("value" in hp || "max" in hp)) return;
-    hp.value = capHp(hp.value ?? this.hp.value, hp.max ?? this.hp.max);
+    const max = hp.max ?? this.hp.max;
+    hp.value = capHp(hp.value ?? this.hp.value, max);
+    if (!strikesZero(this.hp.value, hp.value)) return;
+
+    const wounds = changes.system.wounds ?? {};
+    const outcome = atZeroHp(wounds.value ?? this.wounds.value, wounds.max ?? this.wounds.max, max);
+    if (outcome.wounded) {
+      hp.value = outcome.hp;
+      foundry.utils.setProperty(changes, "system.wounds.value", outcome.wounds);
+    }
+    options[WOUND_OPTION] = { ...outcome, agonyType: options[AGONY_TYPE_OPTION] ?? null };
+  }
+
+  /** After HP struck zero, the client that made the change posts the wound card. */
+  _onUpdate(changed, options, userId) {
+    super._onUpdate(changed, options, userId);
+    if (userId === game.user.id && options[WOUND_OPTION]) postWoundCard(this.parent, options[WOUND_OPTION]);
   }
 }

@@ -35,6 +35,7 @@ import { turnState } from "../combat.mjs";
 import { defenderConditions, attackingFoeConditions, totalModifiers, carryingWithConditions } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
+import { AGONY_TYPE_OPTION } from "../agony.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -193,6 +194,8 @@ export async function rollDefence(actor, attack) {
     armourNote,
     shieldNote,
     actorUuid: actor.uuid,
+    // The weapon's damage type, suggested for the Table of Agony (GAPS 15).
+    agonyType: attack.system.damageType ?? "",
     takeLabel: damage && !damage.invalid ? i18n.format("VARBORG.Defence.TakeDamage", { damage: damage.taken }) : null
   });
 
@@ -362,7 +365,8 @@ export function addDefenceCardListeners(message, html) {
     const damage = Number(take.dataset.damage);
     const from = actor.system.hp.value;
     const to = hpAfterDamage(from, damage);
-    await actor.update({ "system.hp.value": to });
+    // At 0 HP the character data adds the wound (module/agony.mjs).
+    await actor.update({ "system.hp.value": to }, { [AGONY_TYPE_OPTION]: take.dataset.agonyType || null });
     await message.setFlag(SYSTEM, "damageTaken", true);
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),

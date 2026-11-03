@@ -26,6 +26,7 @@ import {
 } from "./rules/panic.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { turnState } from "./combat.mjs";
+import { AGONY_RESULTS } from "./rules/agony.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -219,15 +220,20 @@ export async function countDownPanic(actor) {
 
 /**
  * After an ability test, contest, attack or defence: Adrenaline Rush and
- * Rattled are used up (GAPS 80).
+ * Rattled are used up (GAPS 80), and so are Singed and Vomit from the
+ * Table of Agony (GAPS 88).
  * @param {Actor} actor
  */
 export async function useUpNextTest(actor) {
-  const used = panicEffects(actor).filter(({ result }) => PANIC_RESULTS[result]?.next);
+  const used = (actor?.effects ?? []).filter(effect => {
+    const panic = effect.getFlag(SYSTEM, "panic");
+    const agony = effect.getFlag(SYSTEM, "agony");
+    return PANIC_RESULTS[panic?.result]?.next || AGONY_RESULTS[agony?.result]?.next;
+  });
   if (!used.length) return;
-  await actor.deleteEmbeddedDocuments("ActiveEffect", used.map(({ id }) => id));
+  await actor.deleteEmbeddedDocuments("ActiveEffect", used.map(effect => effect.id));
   await postLine(actor, game.i18n.format("VARBORG.Panic.UsedUp", {
-    name: actor.name, result: used.map(({ result }) => panicName(result)).join(", ")
+    name: actor.name, result: used.map(effect => effect.name).join(", ")
   }));
 }
 

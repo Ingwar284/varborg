@@ -87,7 +87,7 @@ export async function rollContestedTest(actor) {
 function characterSide(actor, abilityKey, boon, bane) {
   const { encumberedBane, armourDr, armourName } = actorTestModifiers(actor, abilityKey);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = testConditions(conditions, fatigue);
+  const conditionMods = testConditions(conditions, fatigue, abilityKey);
   const fromConditions = totalModifiers(conditionMods);
   const boons = (boon ? 1 : 0) + fromConditions.boons;
   const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0) + fromConditions.banes;

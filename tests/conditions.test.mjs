@@ -129,3 +129,15 @@ test("arriving mid-turn: Stupefied takes the reaction, Death's Door everything",
   assert.deepEqual(lossOnArrival("deathsDoor"), { actions: 0, reactions: 0 });
   assert.deepEqual(lossOnArrival("prone"), {});
 });
+
+test("injuries from the Table of Agony count in tests, attacks and defences", () => {
+  assert.deepEqual(testConditions(["backBroken"], 0, "sanity"), [{ condition: "backBroken", bane: true }]);
+  assert.deepEqual(testConditions(["hairBurnt"], 0, "agility"), []);
+  assert.deepEqual(attackerConditions(["rippedFlesh"], 0, "strength"), [{ condition: "rippedFlesh", bane: true }]);
+  assert.deepEqual(defenderConditions(["majorBurn"], 0, "melee"), [{ condition: "majorBurn", dr: 2 }]);
+});
+
+test("situational injuries are reminders on the test dialog", () => {
+  assert.deepEqual(reminders(["blinded", "sprainedAnkle"], "test"), ["blinded", "sprainedAnkle"]);
+  assert.deepEqual(reminders(["sprainedAnkle"], "defence"), []);
+});

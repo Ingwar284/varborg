@@ -1,0 +1,9 @@
+<div class="var-borg-card wound-card">
+  <h3>{{title}}</h3>
+  {{#each lines}}<p class="sum">{{this}}</p>{{/each}}
+  {{#if test}}
+  <button type="button" data-action="woundTest" data-actor-uuid="{{test.actorUuid}}" data-agony-type="{{test.agonyType}}">
+    <i class="fa-solid fa-dice-d20"></i> {{test.label}}
+  </button>
+  {{/if}}
+</div>

@@ -677,8 +677,9 @@
   margin-top: 0.3rem;
 }
 
-/* Panic cards: the rules text of the result. */
-.var-borg-card.panic-card .panic-text {
+/* Panic and Table of Agony cards: the rules text of the result. */
+.var-borg-card.panic-card .panic-text,
+.var-borg-card.agony-card .agony-text {
   font-style: italic;
   margin: 0.2rem 0;
 }

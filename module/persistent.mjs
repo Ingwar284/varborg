@@ -25,6 +25,8 @@ import {
 import { hpAfterDamage } from "./rules/health.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
+import { agonyTypeForPersistent } from "./rules/agony.mjs";
+import { AGONY_TYPE_OPTION } from "./agony.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -164,7 +166,8 @@ async function tickOne(actor, type, formula, effect) {
   const damage = damageRoll.total;
   const from = actor.system.hp.value;
   const to = hpAfterDamage(from, damage);
-  await actor.update({ "system.hp.value": to });
+  // At 0 HP a character gains a wound; fire and bleeding suggest their column of the Table of Agony.
+  await actor.update({ "system.hp.value": to }, { [AGONY_TYPE_OPTION]: agonyTypeForPersistent(type) });
 
   let foeLine = null;
   let ends = false;

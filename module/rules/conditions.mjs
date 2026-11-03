@@ -15,7 +15,8 @@
  * Death's Door table and Dark Vessel's d8 HP come in step 22.
  *
  * Lasting Panic results (rules 3.12) are statuses too, and are counted
- * here where they change a turn or a test (module/rules/panic.mjs).
+ * here where they change a turn or a test (module/rules/panic.mjs). So are
+ * injuries from the Table of Agony (rules 3.5, module/rules/agony.mjs).
  *
  * Every function takes `conditions`: the condition ids an actor has (a Set
  * or an array), and `fatigue`: its level of fatigue.
@@ -55,6 +56,7 @@ export const REMINDERS = {
 export const ONE_TURN_CONDITIONS = ["quickened", "slowed"];
 
 import { nextTestModifiers } from "./panic.mjs";
+import { injuryModifiers, injuryReminders } from "./agony.mjs";
 
 const asSet = conditions => (conditions instanceof Set ? conditions : new Set(conditions ?? []));
 
@@ -102,20 +104,24 @@ function fatigueModifier(conditions, fatigue, sign) {
  * A character's ability test (and their side of a contest).
  * Encumbered Bane is left to testModifiers (see carryingWithConditions).
  * Adrenaline Rush and Rattled give Boon or Bane (GAPS 80).
+ * @param {string} [ability]  The ability tested, for injuries such as Hair burnt.
  */
-export function testConditions(conditions, fatigue = 0) {
+export function testConditions(conditions, fatigue = 0, ability = null) {
   const has = asSet(conditions);
-  return [...fatigueModifier(has, fatigue, +1), ...nextTestModifiers(has)];
+  return [...fatigueModifier(has, fatigue, +1), ...nextTestModifiers(has), ...injuryModifiers(has, "test", ability)];
 }
 
-/** A character attacking. */
-export function attackerConditions(conditions, fatigue = 0) {
+/**
+ * A character attacking.
+ * @param {string} [ability]  The ability the attack uses, for injuries.
+ */
+export function attackerConditions(conditions, fatigue = 0, ability = null) {
   const has = asSet(conditions);
   const mods = fatigueModifier(has, fatigue, +1);
   if (has.has("prone")) mods.push({ condition: "prone", dr: PRONE_DR });
   if (has.has("darkVessel")) mods.push({ condition: "darkVessel", dr: -DARK_VESSEL_DR });
   if (has.has("restrained")) mods.push({ condition: "restrained", bane: true });
-  return [...mods, ...nextTestModifiers(has)];
+  return [...mods, ...nextTestModifiers(has), ...injuryModifiers(has, "attack", ability)];
 }
 
 /**
@@ -142,7 +148,7 @@ export function defenderConditions(conditions, fatigue = 0, kind = "melee") {
   if (has.has("prone")) mods.push({ condition: "prone", dr: isRanged(kind) ? -PRONE_DR : PRONE_DR });
   if (has.has("darkVessel")) mods.push({ condition: "darkVessel", dr: DARK_VESSEL_DR });
   if (has.has("restrained")) mods.push({ condition: "restrained", bane: true });
-  return [...mods, ...nextTestModifiers(has)];
+  return [...mods, ...nextTestModifiers(has), ...injuryModifiers(has, "defence")];
 }
 
 /**
@@ -173,10 +179,10 @@ export function totalModifiers(mods) {
   };
 }
 
-/** The situational reminders to show for this kind of roll (GAPS 75). */
+/** The situational reminders to show for this kind of roll (GAPS 75), injuries included. */
 export function reminders(conditions, where) {
   const has = asSet(conditions);
-  return (REMINDERS[where] ?? []).filter(condition => has.has(condition));
+  return [...(REMINDERS[where] ?? []).filter(condition => has.has(condition)), ...injuryReminders(has, where)];
 }
 
 /**

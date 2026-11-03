@@ -282,7 +282,12 @@ prices, traits and tiers against 4.1.
     *Test:* force a Ruin and get a 2d10 Panic result. A Sluggish character
     starts its turn with two action pips.
 
-21. **Wounds and the Table of Agony.** At 0 HP: gain a wound and test
+21. ~~**Wounds and the Table of Agony.**~~ Done: `module/rules/agony.mjs`
+    with `tests/agony.test.mjs`, `module/agony.mjs` (wound card, Toughness
+    button, Table of Agony button and dialog, injury effects), the 0 HP
+    check in `module/data/character.mjs`, injuries in the condition
+    modifiers and Conditions section, and Singed/Vomit used up like
+    Rattled (GAPS 87–90). At 0 HP: gain a wound and test
     Toughness DR12 (the GM can change it). On a failure the GM picks the
     damage type (the weapon suggests one) and rolls d10. The bands are 1
     flesh, 2–5 minor, 6–7 major, 8–9 lethal and 10 fatal. HP returns to max

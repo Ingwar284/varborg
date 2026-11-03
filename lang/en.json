@@ -452,7 +452,7 @@
       "Minimum": "(a hit always deals at least 1)",
       "TakeDamage": "Take {damage} damage",
       "Took": "{name} takes {damage} damage: HP {from} → {to}.",
-      "ZeroHp": "0 HP. Wounds and the Table of Agony come in a later step; the Dark Master handles them by hand for now.",
+      "ZeroHp": "0 HP: see the wound card that follows.",
       "ArmourLowered": "{name}: tier {from} → {to}.",
       "ArmourDestroyed": "{name}: tier {from} → {to}. Damaged below tier 1, it is destroyed.",
       "Destroyed": "Destroyed",
@@ -561,7 +561,11 @@
           "blinded": "Blinded: tick Bane if this test relies on sight.",
           "deafened": "Deafened: tick Bane if this test relies on hearing.",
           "stupefied": "Stupefied: tick Bane if this test requires thought.",
-          "frightened": "Frightened: tick Bane if this test targets the source of your fear."
+          "frightened": "Frightened: tick Bane if this test targets the source of your fear.",
+          "sprainedAnkle": "Sprained ankle: tick Bane if this is a movement test.",
+          "concussion": "Concussion: tick Bane if this is a mental test.",
+          "legBruised": "Leg or foot bruised: tick Bane if this is a movement test.",
+          "armBruised": "Arm or hand bruised: tick Bane if this is a manual task."
         },
         "attack": {
           "blinded": "Blinded: tick Bane if this attack relies on sight.",
@@ -726,6 +730,244 @@
         "heartAttack": {
           "name": "Heart Attack",
           "text": "You die instantly."
+        }
+      }
+    },
+    "Agony": {
+      "Title": "Table of Agony",
+      "WoundedTitle": "{name} is wounded",
+      "GainsWound": "0 HP: gains a wound (wounds {wounds}/{max}).",
+      "HpReturns": "HP returns to its maximum ({hp}). Any leftover damage is negated.",
+      "TestButton": "Test Toughness DR{dr}",
+      "DeathsDoorTitle": "{name} is at Death's Door",
+      "AtMaxWounds": "0 HP with maximum wounds ({max}): no new wound, and HP stays at 0.",
+      "DeathsDoorLater": "Death's Door comes in a later step; the Dark Master handles it by hand for now.",
+      "Purpose": "Wound test: on a failure, roll on the Table of Agony. The Dark Master may change the DR.",
+      "ShrugsOff": "{name} takes the wound without further harm.",
+      "Cracks": "{name}'s body cracks: roll on the Table of Agony.",
+      "RollButton": "Table of Agony",
+      "GmRolls": "The Dark Master picks the damage type and rolls.",
+      "GmOnly": "Only the Dark Master rolls on the Table of Agony.",
+      "DialogTitle": "Table of Agony: {name}",
+      "TypeLabel": "Damage type",
+      "Suggested": "{type} (suggested)",
+      "TypeHint": "The weapon or persistent damage suggests a type. Choose the one that fits the source and severity of the harm.",
+      "NoSuggestion": "Nothing suggests a type. Choose the one that fits the source and severity of the harm.",
+      "Roll": "Roll d10",
+      "CardTitle": "{name}: Table of Agony",
+      "Rolled": "{type}, d10: {roll}",
+      "Severity": {
+        "flesh": "Flesh wound",
+        "minor": "Minor injury",
+        "major": "Major injury",
+        "lethal": "Lethal injury",
+        "fatal": "Fatal injury"
+      },
+      "Prone": "Prone added.",
+      "Persistent": "Persistent {type} damage ({formula}) added. It deals damage at the end of your turn.",
+      "Fortune": "Fortune {from} → {to}.",
+      "NextTest": "It counts for your next ability test, contest, attack or defence, and then ends.",
+      "Lasting": "A lasting injury, shown in Conditions. The Dark Master removes it when it heals or ends.",
+      "ReminderOnly": "The system cannot judge which tests this covers: the test dialog reminds you to tick Bane.",
+      "Dies": "The character dies. The Dark Master handles it.",
+      "ByHand": "The system does not apply this. The Dark Master decides what happens.",
+      "Remove": "Remove this injury",
+      "Result": {
+        "knockedProne": {
+          "name": "Knocked prone",
+          "text": "Knocked prone."
+        },
+        "dropHeldItem": {
+          "name": "Drop held item",
+          "text": "Drop held item."
+        },
+        "grazed": {
+          "name": "Grazed",
+          "text": "Grazed, knocked prone."
+        },
+        "singed": {
+          "name": "Singed",
+          "text": "Singed, bane on next action."
+        },
+        "vomit": {
+          "name": "Vomit",
+          "text": "Vomit, bane on next action."
+        },
+        "winded": {
+          "name": "Winded",
+          "text": "Winded, bane until short rest."
+        },
+        "lotsOfBlood": {
+          "name": "Lots of blood",
+          "text": "Lots of blood. Those close by test Panic."
+        },
+        "piercedSkin": {
+          "name": "Pierced skin",
+          "text": "Pierced skin, d4 persistent bleeding damage."
+        },
+        "awesomeScar": {
+          "name": "Awesome scar",
+          "text": "Awesome scar, +1 Fortune."
+        },
+        "sprainedAnkle": {
+          "name": "Sprained ankle",
+          "text": "Sprained ankle, bane on movement tests."
+        },
+        "bloodInEyes": {
+          "name": "Blood in eyes",
+          "text": "Blood in eyes, bane until wiped clean."
+        },
+        "brokenRib": {
+          "name": "Broken rib",
+          "text": "Broken rib."
+        },
+        "hairBurnt": {
+          "name": "Hair burnt",
+          "text": "Hair burnt, bane on Presence tests."
+        },
+        "digitMangled": {
+          "name": "Digit mangled",
+          "text": "Digit mangled."
+        },
+        "concussion": {
+          "name": "Concussion",
+          "text": "Concussion, bane on mental tests."
+        },
+        "laceration": {
+          "name": "Laceration",
+          "text": "Laceration, d4 persistent bleeding damage."
+        },
+        "fracturedExtremity": {
+          "name": "Fractured extremity",
+          "text": "Fractured extremity."
+        },
+        "largeBurn": {
+          "name": "Shrapnel/large burn",
+          "text": "Shrapnel/large burn."
+        },
+        "eyeGouged": {
+          "name": "Eye gouged out",
+          "text": "Eye gouged out."
+        },
+        "legBruised": {
+          "name": "Leg or foot bruised",
+          "text": "Leg or foot bruised, bane on movement tests."
+        },
+        "majorCut": {
+          "name": "Major cut",
+          "text": "Major cut, d4 persistent bleeding damage."
+        },
+        "internalBleeding": {
+          "name": "Internal bleeding",
+          "text": "Internal bleeding, d4 persistent bleeding damage."
+        },
+        "thirdDegreeBurns": {
+          "name": "3rd degree burns",
+          "text": "3rd degree burns."
+        },
+        "rippedFlesh": {
+          "name": "Ripped off flesh",
+          "text": "Ripped off flesh, bane on Strength tests."
+        },
+        "armBruised": {
+          "name": "Arm or hand bruised",
+          "text": "Arm or hand bruised, bane on manual tasks."
+        },
+        "fingersSevered": {
+          "name": "Finger/toes severed",
+          "text": "Finger/toes severed, d6 persistent bleeding damage."
+        },
+        "lodgedProjectile": {
+          "name": "Lodged projectile",
+          "text": "Lodged projectile, surgery required."
+        },
+        "majorBurn": {
+          "name": "Major burn",
+          "text": "Major burn, defence DR +2."
+        },
+        "paralysed": {
+          "name": "Paralysed waist down",
+          "text": "Paralysed waist down."
+        },
+        "snappedCollarbone": {
+          "name": "Snapped collarbone",
+          "text": "Snapped collarbone, bane on Strength tests."
+        },
+        "handSevered": {
+          "name": "Hand/foot severed",
+          "text": "Hand/foot severed, d6 persistent bleeding damage."
+        },
+        "shotInNeck": {
+          "name": "Shot in the neck",
+          "text": "Shot in the neck."
+        },
+        "skinGrafts": {
+          "name": "Skin grafts required",
+          "text": "Skin grafts required, defence DR +2."
+        },
+        "limbSeveredGore": {
+          "name": "Limb severed",
+          "text": "Limb severed, 2d6 persistent bleeding damage."
+        },
+        "backBroken": {
+          "name": "Back broken",
+          "text": "Back broken, bane on all tests."
+        },
+        "limbSevered": {
+          "name": "Limb severed",
+          "text": "Limb severed, 2d4 persistent bleeding damage."
+        },
+        "majorBloodLoss": {
+          "name": "Major blood loss",
+          "text": "Major blood loss, d8 persistent bleeding damage."
+        },
+        "limbOnFire": {
+          "name": "Limb on fire",
+          "text": "Limb on fire, 1d10 persistent fire damage."
+        },
+        "impaled": {
+          "name": "Impaled",
+          "text": "Impaled, 2d8 persistent bleeding damage."
+        },
+        "skullFracture": {
+          "name": "Skull fracture",
+          "text": "Skull fracture, bane on all tests."
+        },
+        "arteryCut": {
+          "name": "Major artery cut",
+          "text": "Major artery cut, 2d6 persistent bleeding damage."
+        },
+        "suckingChestWound": {
+          "name": "Sucking chest wound",
+          "text": "Sucking chest wound, d8 persistent bleeding damage."
+        },
+        "bodyOnFire": {
+          "name": "Body on fire",
+          "text": "Body on fire, 2d10 persistent fire damage."
+        },
+        "gutsSpooled": {
+          "name": "Guts spooled on floor",
+          "text": "Guts spooled on floor, 7 persistent bleeding damage."
+        },
+        "spineBroken": {
+          "name": "Spine or neck broken",
+          "text": "Spine or neck broken, death's door."
+        },
+        "throatSlit": {
+          "name": "Throat slit or heart pierced",
+          "text": "Throat slit or heart pierced, death's door."
+        },
+        "headshot": {
+          "name": "Headshot",
+          "text": "Headshot, death's door."
+        },
+        "engulfed": {
+          "name": "Engulfed in fiery explosion",
+          "text": "Engulfed in fiery explosion, death's door."
+        },
+        "headExplodes": {
+          "name": "Head explodes",
+          "text": "Head explodes. You die."
         }
       }
     }
