@@ -10,7 +10,7 @@ import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
-import { carrying, isOverCapacity } from "../rules/carrying.mjs";
+import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -128,7 +128,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const stored = new Map();
     for (const item of actor.items) {
       const id = item.system.storedIn;
-      if (containerIds.has(id) && id !== item.id) stored.set(id, (stored.get(id) ?? 0) + 1);
+      // A stack fills one place per piece (GAPS 54).
+      if (containerIds.has(id) && id !== item.id) stored.set(id, (stored.get(id) ?? 0) + itemCount(item.system));
     }
     context.containerOptions = {
       "": game.i18n.localize("VARBORG.Container.Loose"),
@@ -140,6 +141,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       label: `VARBORG.Sheet.Inventory.${type}`,
       canEquip: EQUIPPABLE_TYPES.includes(type),
       canStore: type !== "container",
+      hasQuantity: type === "gear",
       items: actor.itemTypes[type]
         .toSorted((a, b) => a.sort - b.sort)
         .map(item => ({
@@ -166,10 +168,17 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** @override */
   async _onRender(context, options) {
     await super._onRender(context, options);
-    // The "Stored in" menus have no form name, so they change the item, not the character.
+    // The "Stored in" menus and quantity boxes have no form name, so they
+    // change the item, not the character.
     for (const select of this.element.querySelectorAll("select[data-stored-in]")) {
       select.addEventListener("change", event => {
         this.#itemFor(event.currentTarget)?.update({ "system.storedIn": event.currentTarget.value });
+      });
+    }
+    for (const input of this.element.querySelectorAll("input[data-quantity]")) {
+      input.addEventListener("change", event => {
+        const quantity = Math.max(1, Math.floor(Number(event.currentTarget.value)) || 1);
+        this.#itemFor(event.currentTarget)?.update({ "system.quantity": quantity });
       });
     }
   }

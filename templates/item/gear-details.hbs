@@ -1,5 +1,9 @@
 <section class="var-borg-item-details">
   <div class="field-grid">
+    <label data-tooltip="{{localize 'VARBORG.Item.QuantityHint'}}">
+      <span>{{localize "VARBORG.Item.Quantity"}}</span>
+      <input type="number" name="system.quantity" value="{{system.quantity}}" min="1" step="1">
+    </label>
     <label data-tooltip="{{localize 'VARBORG.Trait.expendableHint'}}">
       <span>{{localize "VARBORG.Item.Expendable"}}</span>
       <select name="system.expendable">{{selectOptions expendableDice selected=system.expendable localize=true}}</select>

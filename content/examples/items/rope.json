@@ -8,6 +8,7 @@
     "price": 4,
     "cumbersome": false,
     "storedIn": "",
+    "quantity": 1,
     "expendable": "",
     "usedUp": false
   }

@@ -3,7 +3,7 @@
  * tested on its own.
  *
  * Rules: 4.1 Gear (Weapon Traits: Expendable, Reload; Ammunition),
- * 3.4 Actions (Interact), GAPS 52 and 53.
+ * 3.4 Actions (Interact), GAPS 52, 53 and 54.
  */
 
 /** The action symbol (rules 3.4). */
@@ -17,6 +17,19 @@ export function expendableFormula(die) {
 /** On a 1 the supplies run out and the item or its contents are used up. */
 export function isUsedUpRoll(result) {
   return result === 1;
+}
+
+/**
+ * What an expendable roll leaves. On a 1, one of a stack is used up: the
+ * quantity drops by one, and the last one is marked used up instead (its
+ * quantity stays 1, so unticking "used up" refills it). GAPS 52 and 54.
+ * Weapons have no quantity and count as 1.
+ * @returns {{quantity: number, usedUp: boolean, spent: boolean}}
+ */
+export function expendableOutcome(result, quantity = 1) {
+  if (!isUsedUpRoll(result)) return { quantity, usedUp: false, spent: false };
+  if (quantity > 1) return { quantity: quantity - 1, usedUp: false, spent: true };
+  return { quantity, usedUp: true, spent: true };
 }
 
 /** An item can roll its expendable die if it has one and is not used up. */

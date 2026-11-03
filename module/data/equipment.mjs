@@ -6,7 +6,7 @@
  * Weapons, armour and shields also record whether they are equipped.
  *
  * Rules: 4.1 Gear (including Carrying), 3.8 Armour and cover,
- * GAPS 15, 27, 48, 52 and 53.
+ * GAPS 15, 27, 48, 52, 53 and 54.
  */
 
 import {
@@ -168,6 +168,8 @@ export class GearData extends CarriedData {
   static defineSchema() {
     return {
       ...super.defineSchema(),
+      // How many of this item: 6 torches, 10 iron nails (GAPS 54).
+      quantity: wholeNumber({ min: 1, initial: 1 }),
       expendable: choice(EXPENDABLE_DICE, ""),
       // The expendable die rolled a 1. The item stays until someone deletes
       // or refills it (GAPS 52).

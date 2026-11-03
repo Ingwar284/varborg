@@ -1,15 +1,16 @@
 /**
  * Expendable dice, firing and reloading in Foundry (rules 4.1 Weapon Traits,
- * GAPS 52 and 53).
+ * GAPS 52, 53 and 54).
  *
- * The Expendable button rolls the item's die and marks it used up on a 1.
+ * The Expendable button rolls the item's die. On a 1 one of a stack is used
+ * up, and the last one (or a weapon's ammunition) is marked used up.
  * A weapon with Reload is loaded or empty: Fire empties it, Reload fills it
  * and the card lists the Interact actions it costs. The actions are counted
  * on the card only; action pips arrive with turns (PLAN step 13).
  */
 
 import {
-  expendableFormula, isUsedUpRoll, canRollExpendable, canFire, canReload, actionSymbols
+  expendableFormula, expendableOutcome, canRollExpendable, canFire, canReload, actionSymbols
 } from "../rules/expendable.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
@@ -18,8 +19,9 @@ const EXPENDABLE_TEMPLATE = "systems/var-borg/templates/chat/expendable-card.hbs
 const WEAPON_TEMPLATE = "systems/var-borg/templates/chat/weapon-card.hbs";
 
 /**
- * Roll an item's expendable die and post the chat card. On a 1 the item is
- * marked used up (for a weapon: out of ammunition).
+ * Roll an item's expendable die and post the chat card. On a 1 one of a
+ * stack is used up; the last one is marked used up (for a weapon: out of
+ * ammunition).
  * @param {Actor} actor  The character using the item.
  * @param {Item} item    The item with an expendable die.
  */
@@ -29,20 +31,21 @@ export async function rollExpendable(actor, item) {
   const roll = new Roll(expendableFormula(die));
   await roll.evaluate();
   const result = roll.total;
-  const usedUp = isUsedUpRoll(result);
-  if (usedUp) await item.update({ "system.usedUp": true });
+  const after = expendableOutcome(result, item.system.quantity ?? 1);
+  if (after.spent) {
+    const changes = { "system.usedUp": after.usedUp };
+    if ("quantity" in item.system) changes["system.quantity"] = after.quantity;
+    await item.update(changes);
+  }
 
   const i18n = game.i18n;
   const isWeapon = item.type === "weapon";
   const title = i18n.format("VARBORG.Expendable.CardTitle", { name: item.name, die });
-  const content = await renderTemplate(EXPENDABLE_TEMPLATE, {
-    title,
-    result,
-    usedUp,
-    outcome: i18n.localize(usedUp
-      ? (isWeapon ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp")
-      : (isWeapon ? "VARBORG.Expendable.AmmoLeft" : "VARBORG.Expendable.Remains"))
-  });
+  let outcome;
+  if (after.usedUp) outcome = i18n.localize(isWeapon ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp");
+  else if (after.spent) outcome = i18n.format("VARBORG.Expendable.OneUsedUp", { count: after.quantity });
+  else outcome = i18n.localize(isWeapon ? "VARBORG.Expendable.AmmoLeft" : "VARBORG.Expendable.Remains");
+  const content = await renderTemplate(EXPENDABLE_TEMPLATE, { title, result, spent: after.spent, outcome });
 
   await roll.toMessage({ speaker: ChatMessage.getSpeaker({ actor }), flavor: title, content });
 }

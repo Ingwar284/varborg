@@ -8,7 +8,9 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 
 ## Open questions
 
-None at the moment.
+| # | Question | Ruling | Status |
+|---|---|---|---|
+| 55 | Lockpicks have two expendable dice by test result (Failure d6, Ruin d2), but an item holds one expendable die. How should the system handle that? | | Open |
 
 ## Character creation and classes
 
@@ -60,6 +62,7 @@ None at the moment.
 | 47 | Weapon groups (Weapon specialist feat): is there a fixed list? | No. Weapon groups are flavour, not a defined game term, so weapons don't store one. | Resolved |
 | 52 | When an expendable die rolls a 1, is the item deleted or kept? | Kept and marked **used up** (for a weapon: **out of ammunition**). Its Expendable button disappears. A weapon out of ammunition cannot be reloaded; a shot already loaded can still be fired. Unticking the mark refills it, for example after buying a new supply (rules 4.1, Ammunition). | Resolved |
 | 53 | Does a weapon with Reload start loaded? | Yes. Firing empties it; reloading costs its listed Interact actions and loads it. | Resolved |
+| 54 | Items bought or found in numbers (Sanity + 4 torches, 10 iron nails, dried food per day): should gear have a quantity, or is each one a separate item? | Gear has a quantity; weapons, armour and shields do not. Each piece counts: a stack of 3 cumbersome barrels is 3 cumbersome items, and 6 torches fill 6 places in a container. On an expendable 1, one of the stack is used up (quantity −1); the last one is marked used up. A use that is not a 1 (drinking one potion) is lowered by hand. | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom

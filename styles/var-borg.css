@@ -436,3 +436,9 @@
 .var-borg-sheet .item-row .item-state.used-up {
   color: #b71c1c;
 }
+
+.var-borg-sheet .item-row .quantity {
+  flex: 0 0 3rem;
+  width: 3rem;
+  text-align: center;
+}

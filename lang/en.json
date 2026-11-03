@@ -63,6 +63,8 @@
       "Equipped": "Equipped",
       "Description": "Description",
       "Expendable": "Expendable die",
+      "Quantity": "Quantity",
+      "QuantityHint": "How many you carry, such as 6 torches or 10 iron nails. Each one counts towards cumbersome items and container space. Lower it by hand when you use one up.",
       "Cumbersome": "Cumbersome",
       "CumbersomeHint": "Counts towards your cumbersome limit: things too unwieldy to carry with ease, such as a two-handed weapon, a heavy shield, armour you are not wearing, a barrel or a body. The Dark Master decides what is cumbersome. Armour you are wearing never counts."
     },
@@ -226,7 +228,8 @@
       "UsedUp": "Used up",
       "AmmoLeft": "Ammunition remains",
       "OutOfAmmo": "Out of ammunition",
-      "UsedUpHint": "Ticked when the expendable die rolls a 1. Untick it if the item is refilled.",
+      "OneUsedUp": "One used up: {count} left",
+      "UsedUpHint": "Ticked when the expendable die rolls a 1 on the last one. Untick it if the item is refilled.",
       "OutOfAmmoHint": "Ticked when the expendable die rolls a 1. The weapon cannot be reloaded until you untick it, for example after buying a new supply of ammunition."
     },
     "Reload": {

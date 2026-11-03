@@ -7,7 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   BASE_MOVEMENT, cumbersomeLimit, carryingState, movement, countsAsCumbersome,
-  isCumbersomeByDefault, carrying, isOverCapacity
+  isCumbersomeByDefault, carrying, isOverCapacity, itemCount
 } from "../module/rules/carrying.mjs";
 
 test("the cumbersome limit is Toughness", () => {
@@ -83,4 +83,17 @@ test("Toughness 0 with two cumbersome items is Encumbered; with three, movement 
 test("a container is over capacity only when it holds more than it can", () => {
   assert.equal(isOverCapacity(10, 10), false);
   assert.equal(isOverCapacity(11, 10), true);
+});
+
+test("a stack counts once per piece; items without a quantity count as 1 (GAPS 54)", () => {
+  assert.equal(itemCount({ quantity: 6 }), 6);
+  assert.equal(itemCount({}), 1);
+  assert.equal(itemCount({ quantity: 0 }), 1);
+});
+
+test("three cumbersome barrels in one stack are three cumbersome items", () => {
+  const barrels = { type: "gear", cumbersome: true, quantity: 3 };
+  const torches = { type: "gear", cumbersome: false, quantity: 6 };
+  assert.deepEqual(carrying([barrels, torches], 2),
+    { cumbersome: 3, limit: 2, state: "encumbered", movement: 20 });
 });

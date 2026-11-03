@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  expendableFormula, isUsedUpRoll, canRollExpendable, needsReload, canFire, canReload, actionSymbols
+  expendableFormula, isUsedUpRoll, expendableOutcome, canRollExpendable, needsReload, canFire, canReload, actionSymbols
 } from "../module/rules/expendable.mjs";
 
 test("an expendable die becomes a one-die formula", () => {
@@ -56,4 +56,19 @@ test("a reload shows one action symbol per Interact action", () => {
   assert.equal(actionSymbols(2), "◈◈");
   assert.equal(actionSymbols(3), "◈◈◈");
   assert.equal(actionSymbols(0), "");
+});
+
+test("on a 2 or more nothing is used up, whatever the quantity", () => {
+  assert.deepEqual(expendableOutcome(2, 3), { quantity: 3, usedUp: false, spent: false });
+  assert.deepEqual(expendableOutcome(2), { quantity: 1, usedUp: false, spent: false });
+});
+
+test("on a 1, one of a stack is used up (GAPS 54)", () => {
+  assert.deepEqual(expendableOutcome(1, 3), { quantity: 2, usedUp: false, spent: true });
+  assert.deepEqual(expendableOutcome(1, 2), { quantity: 1, usedUp: false, spent: true });
+});
+
+test("on a 1, the last one (or a weapon's ammunition) is marked used up", () => {
+  assert.deepEqual(expendableOutcome(1, 1), { quantity: 1, usedUp: true, spent: true });
+  assert.deepEqual(expendableOutcome(1), { quantity: 1, usedUp: true, spent: true });
 });

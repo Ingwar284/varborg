@@ -23,6 +23,10 @@
         </button>
         {{/if}}
         <img src="{{item.img}}" alt="">
+        {{#if section.hasQuantity}}
+        <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="1" step="1"
+               aria-label="{{localize 'VARBORG.Item.Quantity'}}" data-tooltip="{{localize 'VARBORG.Item.Quantity'}}">
+        {{/if}}
         <span class="item-name">{{item.name}}</span>
         <span class="item-summary">{{summary}}</span>
         {{#each states}}

@@ -2,7 +2,7 @@
  * Carrying: cumbersome items, Encumbered and movement. Plain JavaScript, no
  * Foundry, so it can be tested on its own.
  *
- * Rules: 4.1 Gear (Carrying), 3.7 Movement, 3.13 Encumbered, GAPS 21 and 48.
+ * Rules: 4.1 Gear (Carrying), 3.7 Movement, 3.13 Encumbered, GAPS 21, 48 and 54.
  *
  * The rules call these "heavy items". The system says "cumbersome" so they
  * are not confused with the weapon trait Heavy or heavy shields (GAPS 48).
@@ -41,6 +41,15 @@ export function movement(state) {
 }
 
 /**
+ * How many things one item stands for: its quantity (gear only, GAPS 54),
+ * otherwise 1. A stack of 3 cumbersome barrels counts as 3, and 6 torches
+ * fill 6 places in a container.
+ */
+export function itemCount(item) {
+  return Math.max(1, item.quantity ?? 1);
+}
+
+/**
  * Does this item count towards the limit? Only items marked cumbersome
  * count, and armour you are wearing does not (rules 4.1: "a suit of armour
  * you are not wearing").
@@ -74,7 +83,7 @@ export function isCumbersomeByDefault(type, system) {
  * @returns {{cumbersome: number, limit: number, state: string, movement: number}}
  */
 export function carrying(items, toughness) {
-  const cumbersome = items.filter(countsAsCumbersome).length;
+  const cumbersome = items.filter(countsAsCumbersome).reduce((sum, item) => sum + itemCount(item), 0);
   const limit = cumbersomeLimit(toughness);
   const state = carryingState(cumbersome, limit);
   return { cumbersome, limit, state, movement: movement(state) };

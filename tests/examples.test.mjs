@@ -119,6 +119,7 @@ test("step 9 examples match the prices and effects in rules 4.1", () => {
 test("step 11 examples start ready to use: weapons loaded, nothing used up", () => {
   for (const { file, data } of [...ofType("weapon"), ...ofType("gear")]) {
     assert.equal(data.system.usedUp, false, `${file}: should not start used up`);
+    if (data.type === "gear") assert.ok(data.system.quantity >= 1, `${file}: quantity must be 1 or more`);
     if (data.type === "weapon") assert.equal(data.system.loaded, true, `${file}: should start loaded (GAPS 53)`);
   }
   const byName = name => examples.find(({ data }) => data.name === name)?.data.system;
