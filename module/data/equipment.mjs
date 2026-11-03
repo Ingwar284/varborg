@@ -6,7 +6,7 @@
  * Weapons, armour and shields also record whether they are equipped.
  *
  * Rules: 4.1 Gear (including Carrying), 3.8 Armour and cover,
- * GAPS 15, 27 and 48.
+ * GAPS 15, 27, 48, 52 and 53.
  */
 
 import {
@@ -104,7 +104,11 @@ export class WeaponData extends EquipmentData {
       ranged: wholeNumber(),
       // Number of Interact actions to reload. 0 means no reload.
       reload: wholeNumber(),
-      expendable: choice(EXPENDABLE_DICE, "")
+      // Only matters with reload above 0. A new weapon starts loaded (GAPS 53).
+      loaded: new BooleanField({ initial: true }),
+      expendable: choice(EXPENDABLE_DICE, ""),
+      // Out of ammunition: the expendable die rolled a 1 (GAPS 52).
+      usedUp: new BooleanField({ initial: false })
     };
   }
 
@@ -164,7 +168,10 @@ export class GearData extends CarriedData {
   static defineSchema() {
     return {
       ...super.defineSchema(),
-      expendable: choice(EXPENDABLE_DICE, "")
+      expendable: choice(EXPENDABLE_DICE, ""),
+      // The expendable die rolled a 1. The item stays until someone deletes
+      // or refills it (GAPS 52).
+      usedUp: new BooleanField({ initial: false })
     };
   }
 

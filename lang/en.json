@@ -89,16 +89,6 @@
       "fire": "Fire & explosives",
       "gore": "Gore & massive"
     },
-    "Expendable": {
-      "none": "None",
-      "d2": "d2",
-      "d4": "d4",
-      "d6": "d6",
-      "d8": "d8",
-      "d10": "d10",
-      "d12": "d12",
-      "d20": "d20"
-    },
     "Trait": {
       "agile": "Agile",
       "finesse": "Finesse",
@@ -220,6 +210,35 @@
       "negative": "Negative",
       "neutral": "Neutral",
       "positive": "Positive"
+    },
+    "Expendable": {
+      "none": "None",
+      "d2": "d2",
+      "d4": "d4",
+      "d6": "d6",
+      "d8": "d8",
+      "d10": "d10",
+      "d12": "d12",
+      "d20": "d20",
+      "Tooltip": "Roll the expendable die ({die}): on a 1 it is used up",
+      "CardTitle": "{name}: expendable {die}",
+      "Remains": "Supplies remain",
+      "UsedUp": "Used up",
+      "AmmoLeft": "Ammunition remains",
+      "OutOfAmmo": "Out of ammunition",
+      "UsedUpHint": "Ticked when the expendable die rolls a 1. Untick it if the item is refilled.",
+      "OutOfAmmoHint": "Ticked when the expendable die rolls a 1. The weapon cannot be reloaded until you untick it, for example after buying a new supply of ammunition."
+    },
+    "Reload": {
+      "Loaded": "Loaded",
+      "Empty": "Empty",
+      "LoadedHint": "A weapon with Reload must be reloaded after each shot.",
+      "FireTooltip": "Fire: the weapon is empty until reloaded",
+      "FireTitle": "{name} fired",
+      "NowEmpty": "The weapon is now empty.",
+      "ReloadTooltip": "Reload ({count} Interact actions)",
+      "ReloadTitle": "{name} reloaded",
+      "ActionsSpent": "Spend {count} Interact actions to reload. The weapon is loaded."
     },
     "Examples": {
       "MenuName": "Example content",

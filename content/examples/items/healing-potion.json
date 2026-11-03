@@ -8,6 +8,7 @@
     "price": 15,
     "cumbersome": false,
     "storedIn": "",
-    "expendable": "d2"
+    "expendable": "d2",
+    "usedUp": false
   }
 }

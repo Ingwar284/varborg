@@ -8,8 +8,10 @@ import { ABILITIES } from "../rules/abilities.mjs";
 import { rollAbilityTest } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
+import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
 import { carrying, isOverCapacity } from "../rules/carrying.mjs";
+import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -51,6 +53,23 @@ function itemSummary(item, stored) {
   return "";
 }
 
+/**
+ * The short tag after an item's summary: "Loaded" or "Empty" for a weapon
+ * with Reload, and "Used up" (or "Out of ammo") once its expendable die
+ * rolled a 1. Returns [{ key, label }].
+ */
+function itemStates(item) {
+  const system = item.system;
+  const states = [];
+  if (item.type === "weapon" && needsReload(system)) {
+    states.push(system.loaded ? { key: "loaded", label: "VARBORG.Reload.Loaded" } : { key: "unloaded", label: "VARBORG.Reload.Empty" });
+  }
+  if (system.usedUp) {
+    states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
+  }
+  return states;
+}
+
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "character"],
@@ -64,7 +83,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       editItem: CharacterSheet.#onEditItem,
       deleteItem: CharacterSheet.#onDeleteItem,
       toggleEquipped: CharacterSheet.#onToggleEquipped,
-      toggleCumbersome: CharacterSheet.#onToggleCumbersome
+      toggleCumbersome: CharacterSheet.#onToggleCumbersome,
+      rollExpendable: CharacterSheet.#onRollExpendable,
+      fireWeapon: CharacterSheet.#onFireWeapon,
+      reloadWeapon: CharacterSheet.#onReloadWeapon
     }
   };
 
@@ -124,6 +146,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           item,
           summary: itemSummary(item, stored),
           storedIn: containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
+          states: itemStates(item),
+          canExpendable: canRollExpendable(item.system),
+          canFire: item.type === "weapon" && canFire(item.system),
+          canReload: item.type === "weapon" && canReload(item.system),
+          reloadTooltip: game.i18n.format("VARBORG.Reload.ReloadTooltip", { count: item.system.reload ?? 0 }),
           overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
         }))
     }));
@@ -167,6 +194,24 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onToggleCumbersome(event, button) {
     const item = this.#itemFor(button);
     await item?.update({ "system.cumbersome": !item.system.cumbersome });
+  }
+
+  /** The dice button rolls the item's expendable die. */
+  static async #onRollExpendable(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await rollExpendable(this.document, item);
+  }
+
+  /** The Fire button empties a loaded weapon with Reload. */
+  static async #onFireWeapon(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await fireWeapon(this.document, item);
+  }
+
+  /** The Reload button loads an empty weapon and counts its Interact actions. */
+  static async #onReloadWeapon(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await reloadWeapon(this.document, item);
   }
 
   /** The item a button in the inventory belongs to. */

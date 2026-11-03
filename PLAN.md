@@ -145,7 +145,10 @@ rules 3.2–3.3.
     *Test:* with the breastplate equipped, an Agility test card lists +4 DR.
     Become Encumbered and a Strength test shows Bane.
 
-11. **Expendable dice and reloading (by hand).** An **Expendable** button
+11. ~~**Expendable dice and reloading (by hand).**~~ Done:
+    `module/rules/expendable.mjs` with `tests/expendable.test.mjs`,
+    `module/dice/expendable.mjs`, two chat cards, and Expendable, Fire and
+    Reload buttons in the Inventory tab (GAPS 52, 53). An **Expendable** button
     rolls the item's die and uses the item up on a 1. A weapon with reload
     tracks loaded or empty. Reloading spends its listed number of Interact
     actions (counted on the card for now).

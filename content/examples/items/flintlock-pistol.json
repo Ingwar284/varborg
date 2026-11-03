@@ -21,6 +21,8 @@
     "kind": "shoot",
     "damageType": "shot",
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "loaded": true,
+    "usedUp": false
   }
 }

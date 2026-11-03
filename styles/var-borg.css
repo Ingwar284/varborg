@@ -405,3 +405,34 @@
 .var-borg-card .chance-positive { color: #2e7d32; }
 .var-borg-card .chance-neutral { color: #1565c0; }
 .var-borg-card .chance-negative { color: #b71c1c; }
+
+/* Expendable and reload cards */
+
+.var-borg-card .expendable-remains { color: #2e7d32; }
+.var-borg-card .expendable-used-up { color: #b71c1c; }
+
+.var-borg-card .action-symbols {
+  text-align: center;
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+}
+
+/* Inventory: used-up items and the loaded/empty tag */
+
+.var-borg-sheet .item-row.used-up img,
+.var-borg-sheet .item-row.used-up .item-name {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+.var-borg-sheet .item-row .item-state {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.var-borg-sheet .item-row .item-state.unloaded,
+.var-borg-sheet .item-row .item-state.used-up {
+  color: #b71c1c;
+}

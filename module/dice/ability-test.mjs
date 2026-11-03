@@ -137,7 +137,7 @@ export function signed(number) {
 }
 
 /** "Boon", "Bane", "Boon and Bane cancel" or nothing. */
-function modeLabel(mode, boons, banes) {
+export function modeLabel(mode, boons, banes) {
   if (mode === MODE.BOON) return game.i18n.localize("VARBORG.Test.Boon");
   if (mode === MODE.BANE) return game.i18n.localize("VARBORG.Test.Bane");
   if (boons > 0 && banes > 0) return game.i18n.localize("VARBORG.Test.Cancelled");

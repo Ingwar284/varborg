@@ -56,4 +56,17 @@
     </label>
   </div>
   <p class="hint">{{localize "VARBORG.Weapon.ZeroHint"}}</p>
+
+  <div class="trait-flags">
+    {{#if system.reload}}
+    <label data-tooltip="{{localize 'VARBORG.Reload.LoadedHint'}}">
+      <input type="checkbox" name="system.loaded" {{checked system.loaded}}> {{localize "VARBORG.Reload.Loaded"}}
+    </label>
+    {{/if}}
+    {{#if system.expendable}}
+    <label data-tooltip="{{localize 'VARBORG.Expendable.OutOfAmmoHint'}}">
+      <input type="checkbox" name="system.usedUp" {{checked system.usedUp}}> {{localize "VARBORG.Expendable.OutOfAmmo"}}
+    </label>
+    {{/if}}
+  </div>
 </section>

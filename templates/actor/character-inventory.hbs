@@ -14,7 +14,7 @@
     <h3>{{localize section.label}}</h3>
     <ul class="item-list">
       {{#each section.items}}
-      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}" data-item-id="{{item.id}}">
+      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}" data-item-id="{{item.id}}">
         {{#if section.canEquip}}
         <button type="button" class="icon-button" data-action="toggleEquipped"
                 data-tooltip="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}"
@@ -25,6 +25,28 @@
         <img src="{{item.img}}" alt="">
         <span class="item-name">{{item.name}}</span>
         <span class="item-summary">{{summary}}</span>
+        {{#each states}}
+        <span class="item-state {{key}}">{{localize label}}</span>
+        {{/each}}
+        {{#if canFire}}
+        <button type="button" class="icon-button" data-action="fireWeapon"
+                data-tooltip="{{localize 'VARBORG.Reload.FireTooltip'}}" aria-label="{{localize 'VARBORG.Reload.FireTooltip'}}">
+          <i class="fa-solid fa-burst"></i>
+        </button>
+        {{/if}}
+        {{#if canReload}}
+        <button type="button" class="icon-button" data-action="reloadWeapon"
+                data-tooltip="{{reloadTooltip}}" aria-label="{{reloadTooltip}}">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        {{/if}}
+        {{#if canExpendable}}
+        <button type="button" class="icon-button" data-action="rollExpendable"
+                data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"
+                aria-label="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}">
+          <i class="fa-solid fa-dice-six"></i>
+        </button>
+        {{/if}}
         {{#if section.canStore}}
         <select class="stored-in" data-stored-in aria-label="{{localize 'VARBORG.Container.StoredIn'}}"
                 data-tooltip="{{localize 'VARBORG.Container.StoredIn'}}">

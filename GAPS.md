@@ -58,6 +58,8 @@ None at the moment.
 | 50 | Two equipped armours with the same current tier but different original tiers (one damaged): which one's Agility penalty counts? | The one with the highest original tier. | Resolved |
 | 51 | Does armour's "+DR on Agility tests" change a contested Agility test, which has no DR? | Yes, it applies to all Agility tests. In a contested test, which has no DR, the penalty is taken off the character's total instead (+4 DR becomes −4). | Resolved |
 | 47 | Weapon groups (Weapon specialist feat): is there a fixed list? | No. Weapon groups are flavour, not a defined game term, so weapons don't store one. | Resolved |
+| 52 | When an expendable die rolls a 1, is the item deleted or kept? | Kept and marked **used up** (for a weapon: **out of ammunition**). Its Expendable button disappears. A weapon out of ammunition cannot be reloaded; a shot already loaded can still be fired. Unticking the mark refills it, for example after buying a new supply (rules 4.1, Ammunition). | Resolved |
+| 53 | Does a weapon with Reload start loaded? | Yes. Firing empties it; reloading costs its listed Interact actions and loads it. | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom

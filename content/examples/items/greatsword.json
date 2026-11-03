@@ -21,6 +21,8 @@
     "kind": "melee",
     "damageType": "bleeding",
     "cumbersome": true,
-    "storedIn": ""
+    "storedIn": "",
+    "loaded": true,
+    "usedUp": false
   }
 }

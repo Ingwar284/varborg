@@ -4,5 +4,11 @@
       <span>{{localize "VARBORG.Item.Expendable"}}</span>
       <select name="system.expendable">{{selectOptions expendableDice selected=system.expendable localize=true}}</select>
     </label>
+    {{#if system.expendable}}
+    <label data-tooltip="{{localize 'VARBORG.Expendable.UsedUpHint'}}">
+      <span>{{localize "VARBORG.Expendable.UsedUp"}}</span>
+      <input type="checkbox" name="system.usedUp" {{checked system.usedUp}}>
+    </label>
+    {{/if}}
   </div>
 </section>

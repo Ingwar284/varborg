@@ -115,3 +115,13 @@ test("step 9 examples match the prices and effects in rules 4.1", () => {
   assert.equal(byName("Medicine box").expendable, "d6");
   assert.equal(byName("Satchel").capacity, 10);
 });
+
+test("step 11 examples start ready to use: weapons loaded, nothing used up", () => {
+  for (const { file, data } of [...ofType("weapon"), ...ofType("gear")]) {
+    assert.equal(data.system.usedUp, false, `${file}: should not start used up`);
+    if (data.type === "weapon") assert.equal(data.system.loaded, true, `${file}: should start loaded (GAPS 53)`);
+  }
+  const byName = name => examples.find(({ data }) => data.name === name)?.data.system;
+  assert.equal(byName("Healing potion").expendable, "d2");
+  assert.equal(byName("Flintlock pistol").reload, 2);
+});
