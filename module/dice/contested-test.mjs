@@ -5,14 +5,17 @@
  * plain d20, or another character with an ability), rolls both sides with
  * Foundry, lets module/rules/contested.mjs pick the winner, and posts one
  * chat card. An Encumbered character gets Bane on Strength and Agility
- * (rules 3.13), and armour's Agility penalty comes off the total (GAPS 51).
+ * (rules 3.13), and armour's Agility penalty comes off the total (GAPS 51),
+ * as does Fatigued's +2 DR per level.
  * All the maths lives in the rules files.
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
 import { MODE, diceMode, diceFormula } from "../rules/test-roll.mjs";
 import { WINNER, resolveContest } from "../rules/contested.mjs";
+import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
+import { conditionsOf } from "../conditions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -39,7 +42,7 @@ export async function rollContestedTest(actor) {
   // A foe rolls its d20 plain and adds nothing (GAPS 33).
   const second = opponentActor
     ? characterSide(opponentActor, options.opponentAbility, options.opponentBoon, options.opponentBane)
-    : { name: opponentName, abilityKey: null, ability: 0, modifier: 0, mode: MODE.NORMAL, boons: 0, banes: 0 };
+    : { name: opponentName, abilityKey: null, ability: 0, modifier: 0, armourDr: 0, conditionMods: [], mode: MODE.NORMAL, boons: 0, banes: 0 };
 
   const firstRoll = await rollSide(first);
   const secondRoll = await rollSide(second);
@@ -74,19 +77,23 @@ export async function rollContestedTest(actor) {
 }
 
 /**
- * One character's side: its ability, Boon and Bane, plus Bane if Encumbered
- * and minus armour's Agility penalty.
+ * One character's side: its ability, Boon and Bane, plus Bane if Encumbered,
+ * minus armour's Agility penalty and minus Fatigued's DR.
  */
 function characterSide(actor, abilityKey, boon, bane) {
   const { encumberedBane, armourDr, armourName } = actorTestModifiers(actor, abilityKey);
+  const { conditions, fatigue } = conditionsOf(actor);
+  const conditionMods = testConditions(conditions, fatigue);
   const boons = boon ? 1 : 0;
   const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0);
   return {
     name: actor.name,
     abilityKey,
     ability: actor.system.abilities[abilityKey],
-    modifier: -armourDr,
+    modifier: -armourDr - totalModifiers(conditionMods).dr,
+    armourDr,
     armourName,
+    conditionMods,
     mode: diceMode(boons, banes),
     boons,
     banes,
@@ -120,8 +127,13 @@ function cardSide(side, roll, result, won) {
       ? game.i18n.localize(`VARBORG.Ability.${side.abilityKey}`)
       : game.i18n.localize("VARBORG.Contest.PlainD20"),
     ability: side.abilityKey ? signed(side.ability) : null,
-    armour: side.modifier ? signed(side.modifier) : null,
+    armour: side.armourDr ? signed(-side.armourDr) : null,
     armourName: side.armourName,
+    // Such as "Fatigued 1 −2".
+    conditions: side.conditionMods.map(mod => game.i18n.format("VARBORG.Contest.ConditionPart", {
+      condition: game.i18n.format("VARBORG.Condition.WithLevel", { name: game.i18n.localize(`VARBORG.Condition.${mod.condition}`), level: mod.level }),
+      value: signed(-mod.dr)
+    })),
     naturalNote: result.natural === 20 ? game.i18n.localize("VARBORG.Contest.Natural20")
       : result.natural === 1 ? game.i18n.localize("VARBORG.Contest.Natural1")
       : null,

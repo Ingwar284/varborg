@@ -19,6 +19,10 @@
  *
  * A Ruin marks the character (system.attackRuin): Bane on every attack until
  * they press Recover on the sheet, which spends one action (GAPS 17, 63).
+ *
+ * Conditions (rules 3.13): the attacker's own (Prone, Restrained, Fatigued,
+ * Dark Vessel) and the target foe's Foe lines (Prone, Blinded, Restrained,
+ * Encumbered, Fatigued) are added for you.
  */
 
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
@@ -32,6 +36,8 @@ import {
 } from "../rules/attack.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote } from "./ability-test.mjs";
 import { turnState } from "../combat.mjs";
+import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
+import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -58,19 +64,22 @@ export async function rollAttack(actor, item) {
   const target = [...game.user.targets][0]?.actor ?? null;
 
   const ruined = actor.system.attackRuin;
-  const options = await askAttackOptions(item, { turn, attacksBefore, target, ruined });
+  const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined });
   if (!options) return;
   const { mode, ability } = options;
 
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
   const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
-  const boonCount = options.boon ? 1 : 0;
-  const baneCount = [options.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length;
+  const conditions = attackConditions(actor, target, mode);
+  const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
+  const boonCount = (options.boon ? 1 : 0) + fromConditions.boons;
+  const baneCount = [options.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length
+    + fromConditions.banes;
   const diceRule = diceMode(boonCount, baneCount);
   const abilityScore = actor.system.abilities[ability];
   const extraDr = weaponDr(weapon, options.oneHanded);
-  const dr = modifiedDr(options.dr, extraDr + automatic.armourDr);
+  const dr = modifiedDr(options.dr, extraDr + automatic.armourDr + fromConditions.dr);
 
   const roll = new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore });
   await roll.evaluate();
@@ -158,7 +167,9 @@ export async function rollAttack(actor, item) {
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     banes.multiple ? i18n.format("VARBORG.Attack.MultipleBane", { count: attacksBefore + 1 }) : null,
     banes.range ? i18n.format("VARBORG.Attack.RangeBane", { feet: attackDistance(weapon, mode) }) : null,
-    banes.ruin ? i18n.localize("VARBORG.Attack.RuinBane") : null
+    banes.ruin ? i18n.localize("VARBORG.Attack.RuinBane") : null,
+    ...conditionNotes(conditions.own),
+    ...conditionNotes(conditions.target, target?.name)
   ].filter(Boolean);
 
   const content = await renderTemplate(CARD_TEMPLATE, {
@@ -196,11 +207,25 @@ export async function rollAttack(actor, item) {
 }
 
 /**
+ * The conditions on this attack: the attacker's own, and the target's Foe
+ * lines when the target is a foe (rules 3.13).
+ * @returns {{own: object[], target: object[]}}
+ */
+function attackConditions(actor, target, mode) {
+  const own = conditionsOf(actor);
+  const against = target?.type === "foe" ? conditionsOf(target) : null;
+  return {
+    own: attackerConditions(own.conditions, own.fatigue),
+    target: against ? attackTargetConditions(against.conditions, against.fatigue, mode) : []
+  };
+}
+
+/**
  * The attack dialog. Returns the chosen options, or null if it was closed.
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
  *   dr: number, boon: boolean, bane: boolean}|null>}
  */
-async function askAttackOptions(item, { turn, attacksBefore, target, ruined }) {
+async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined }) {
   const i18n = game.i18n;
   const weapon = item.system;
   const modes = attackModes(weapon);
@@ -220,6 +245,9 @@ async function askAttackOptions(item, { turn, attacksBefore, target, ruined }) {
       : i18n.localize("VARBORG.Attack.ReactionNote");
   }
 
+  // For the usual way of attacking; the card shows the final numbers.
+  const conditions = attackConditions(actor, target, modes[0]);
+
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     modes: modes.length > 1 ? modes.map(mode => ({ value: mode, label: `VARBORG.Weapon.Kind.${mode}` })) : null,
     abilities: abilities.length > 1 ? abilities.map(a => ({ value: a, label: `VARBORG.Ability.${a}` })) : null,
@@ -238,6 +266,8 @@ async function askAttackOptions(item, { turn, attacksBefore, target, ruined }) {
     multipleNote: multiple ? i18n.localize(weapon.agile ? "VARBORG.Attack.MultipleNoteAgile" : "VARBORG.Attack.MultipleNote") : null,
     turnNote,
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
+    conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
+    reminders: reminderNotes(actor, "attack"),
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget")
   });
 

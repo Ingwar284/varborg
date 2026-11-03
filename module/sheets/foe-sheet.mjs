@@ -1,7 +1,7 @@
 /**
  * The foe sheet (ApplicationV2), laid out like a foe write-up in rules 6:
- * name and tier, description, HP, Morale and armour, then attacks (weapon
- * items) and passives (feat items). Every change is saved as soon as you
+ * name and tier, description, HP, Morale and armour, then conditions (with
+ * their Foe lines), attacks (weapon items) and passives (feat items). Every change is saved as soon as you
  * leave a field.
  */
 
@@ -10,6 +10,7 @@ import { moraleChoices } from "../rules/foe.mjs";
 import { foeAttack } from "../dice/defence.mjs";
 import { rollMorale } from "../dice/morale.mjs";
 import { canRollMorale } from "../rules/morale.mjs";
+import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -73,7 +74,14 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: attackSummary(item) }));
     context.passives = actor.itemTypes.feat.toSorted((a, b) => a.sort - b.sort);
+    context.conditions = sheetConditions(actor);
     return context;
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    activateConditionControls(this.element, this.document);
   }
 
   /** Morale "–" comes from the menu as "", which is saved as nothing (null). */

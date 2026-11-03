@@ -13,8 +13,11 @@
  * Shields: Raise shield (one action in combat) gives light or heavy cover
  * until the start of your next turn. An attack that only the cover stopped
  * strikes the shield: heavy becomes light, light is destroyed.
- * All the maths lives in module/rules/defence.mjs; this file only asks,
- * rolls and shows.
+ * Conditions (rules 3.13): the defender's own (Prone, Restrained, Fatigued,
+ * Dark Vessel) and the attacking foe's Foe lines (Prone, Blinded,
+ * Restrained, Encumbered, Fatigued) are added for you.
+ * All the maths lives in module/rules/defence.mjs and
+ * module/rules/conditions.mjs; this file only asks, rolls and shows.
  */
 
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
@@ -29,6 +32,8 @@ import {
 } from "../rules/defence.mjs";
 import { signed, modeLabel, naturalNote } from "./ability-test.mjs";
 import { turnState } from "../combat.mjs";
+import { defenderConditions, attackingFoeConditions, totalModifiers, carryingWithConditions } from "../rules/conditions.mjs";
+import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -85,15 +90,17 @@ export async function rollDefence(actor, attack) {
   const i18n = game.i18n;
   const foe = attack.parent;
   const automatic = defenceModifiers(actor);
-  const options = await askDefenceOptions(actor, attack, automatic);
+  const conditions = defenceConditions(actor, attack);
+  const options = await askDefenceOptions(actor, attack, automatic, conditions);
   if (!options) return;
 
-  const boonCount = options.boon ? 1 : 0;
-  const baneCount = [options.bane, automatic.encumberedBane].filter(Boolean).length;
+  const fromConditions = totalModifiers([...conditions.own, ...conditions.foe]);
+  const boonCount = (options.boon ? 1 : 0) + fromConditions.boons;
+  const baneCount = [options.bane, automatic.encumberedBane].filter(Boolean).length + fromConditions.banes;
   const diceRule = diceMode(boonCount, baneCount);
   const abilityScore = actor.system.abilities[DEFENCE_ABILITY];
-  const uncoveredDr = modifiedDr(options.dr, automatic.armourDr);
-  const dr = modifiedDr(options.dr, automatic.armourDr - automatic.cover);
+  const uncoveredDr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr);
+  const dr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr - automatic.cover);
 
   const roll = new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore });
   await roll.evaluate();
@@ -158,7 +165,9 @@ export async function rollDefence(actor, attack) {
   const notes = [
     automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
-    automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null
+    automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
+    ...conditionNotes(conditions.own),
+    ...conditionNotes(conditions.foe, foe?.name)
   ].filter(Boolean);
 
   const content = await renderTemplate(CARD_TEMPLATE, {
@@ -203,6 +212,7 @@ function defenceModifiers(actor) {
   const armour = wornArmour(items);
   const shield = strongestShield(items);
   const { state } = carrying(items, actor.system.abilities.toughness);
+  const carryingState = carryingWithConditions(actor.statuses, state);
   const nameOf = data => (data ? actor.items.get(data.id)?.name ?? null : null);
   return {
     armour,
@@ -211,7 +221,23 @@ function defenceModifiers(actor) {
     shield,
     shieldName: nameOf(shield),
     cover: shieldCover(shield, actor.system.shieldRaised),
-    encumberedBane: isEncumbered(state)
+    encumberedBane: isEncumbered(carryingState)
+  };
+}
+
+/**
+ * The conditions on this defence: the defender's own, and the attacking
+ * foe's Foe lines (rules 3.13). Melee or ranged follows the foe's attack.
+ * @returns {{own: object[], foe: object[]}}
+ */
+function defenceConditions(actor, attack) {
+  const foe = attack.parent;
+  const kind = attack.system.kind;
+  const own = conditionsOf(actor);
+  const theirs = foe?.type === "foe" ? conditionsOf(foe) : null;
+  return {
+    own: defenderConditions(own.conditions, own.fatigue, kind),
+    foe: theirs ? attackingFoeConditions(theirs.conditions, theirs.fatigue, kind) : []
   };
 }
 
@@ -219,7 +245,7 @@ function defenceModifiers(actor) {
  * The defence dialog. Returns the chosen options, or null if it was closed.
  * @returns {Promise<{dr: number, boon: boolean, bane: boolean}|null>}
  */
-async function askDefenceOptions(actor, attack, automatic) {
+async function askDefenceOptions(actor, attack, automatic, conditions) {
   const i18n = game.i18n;
   const foe = attack.parent;
   const soak = soakDie(automatic.armour);
@@ -235,8 +261,11 @@ async function askDefenceOptions(actor, attack, automatic) {
       automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
       automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
       soak ? i18n.format("VARBORG.Defence.SoakNote", { die: soak, name: automatic.armourName }) : null,
-      automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null
-    ].filter(Boolean)
+      automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
+      ...conditionNotes(conditions.own),
+      ...conditionNotes(conditions.foe, foe?.name)
+    ].filter(Boolean),
+    reminders: [...reminderNotes(actor, "defence"), ...foeReminders(foe)]
   });
 
   const data = await DialogV2.input({
@@ -339,6 +368,12 @@ export function addDefenceCardListeners(message, html) {
         + "</div>"
     });
   });
+}
+
+/** Reminders about the attacking foe's conditions, such as Frightened (GAPS 75). */
+function foeReminders(foe) {
+  if (foe?.type !== "foe") return [];
+  return reminderNotes(foe, "foeAttack").map(text => game.i18n.format("VARBORG.Condition.TheirReminder", { name: foe.name, text }));
 }
 
 /** With no target named: the user's own character, or the selected token's. */

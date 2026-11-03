@@ -50,7 +50,9 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
       // passives (GAPS 11), so the Dark Master types it in.
       initiative: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
       // A mook has 1 HP, fails every test and never rolls Morale.
-      mook: new BooleanField({ initial: false })
+      mook: new BooleanField({ initial: false }),
+      // Levels of the Fatigued condition, no maximum (rules 3.13, GAPS 20).
+      fatigue: wholeNumber()
     };
   }
 

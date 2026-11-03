@@ -15,6 +15,7 @@ import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
 import { addAttackCardListeners } from "./dice/attack.mjs";
 import { addDefenceCardListeners } from "./dice/defence.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
+import { registerConditions } from "./conditions.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -52,6 +53,9 @@ Hooks.once("init", () => {
   CONFIG.Combat.documentClass = VarBorgCombat;
   CONFIG.Combatant.documentClass = VarBorgCombatant;
   Hooks.on("renderCombatTracker", addTrackerPips);
+
+  // Conditions (rules 3.13) as status effects on tokens and sheets.
+  registerConditions();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

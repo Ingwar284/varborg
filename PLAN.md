@@ -240,7 +240,14 @@ prices, traits and tiers against 4.1.
     *Test:* hit the Bellman until it is at a third of its HP, then roll
     Morale.
 
-18. **Conditions.** Every 3.13 condition as a status effect with its PC
+18. ~~**Conditions.**~~ Done: `module/rules/conditions.mjs` with
+    `tests/conditions.test.mjs`, `module/conditions.mjs` (status effects,
+    a Conditions section with a Fatigue level on both sheets, notes on
+    dialogs and cards), and condition changes in ability tests, contests,
+    attacks, defences and turn starts (GAPS 73–75). Persistent Damage waits
+    for step 19; Death's Door and Dark Vessel have their icons and numbers
+    (cannot act; attack −2 DR, defend +2 DR) but their tables wait for
+    step 22. Every 3.13 condition as a status effect with its PC
     effect and its **Foe** line, applied to tests where a computer can (Bane,
     DR changes, lost actions or reactions). A rule tested for each condition
     that changes numbers.

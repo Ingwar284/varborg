@@ -3,6 +3,8 @@
   {{#if turnNote}}<p class="hint automatic">{{turnNote}}</p>{{/if}}
   {{#if ruinNote}}<p class="hint automatic">{{ruinNote}}</p>{{/if}}
   {{#if multipleNote}}<p class="hint automatic">{{multipleNote}}</p>{{/if}}
+  {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
+  {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
   {{#if modes}}
   <div class="form-group">
     <label for="var-borg-attack-mode">{{localize "VARBORG.Attack.Mode"}}</label>

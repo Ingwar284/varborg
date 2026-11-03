@@ -6,13 +6,17 @@
  *
  * Each combatant stores, in its flags:
  *   tiebreak   a random number rolled with initiative, for ties (GAPS 38)
- *   actions    actions left this turn
- *   reactions  reactions left this turn
- * A combatant without these flags has a full turn.
+ *   actions       actions left this turn
+ *   reactions     reactions left this turn
+ *   maxActions    actions gained at the start of this turn
+ *   maxReactions  reactions gained at the start of this turn
+ * A combatant without these flags has a full turn. Conditions change what
+ * a turn starts with (rules 3.13, module/rules/conditions.mjs).
  */
 
 import { initiativeFormula, compareInitiative } from "./rules/initiative.mjs";
-import { ACTIONS_PER_TURN, REACTIONS_PER_TURN, freshTurn, adjustLeft, pips } from "./rules/actions.mjs";
+import { ACTIONS_PER_TURN, REACTIONS_PER_TURN, adjustLeft, pips } from "./rules/actions.mjs";
+import { turnAllowance } from "./rules/conditions.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -34,15 +38,22 @@ export class VarBorgCombat extends foundry.documents.Combat {
 
   /**
    * At the start of each turn: three actions and one reaction (rules 3.4),
-   * and no attacks made yet (for the multiple-attack Bane). A shield raised
-   * last turn is lowered: its cover lasts "until the start of your next
-   * turn" (rules 3.8).
+   * changed by Quickened, Slowed, Stupefied and Death's Door (rules 3.13),
+   * and no attacks made yet (for the multiple-attack Bane). Quickened and
+   * Slowed then end (GAPS 74). A shield raised last turn is lowered: its
+   * cover lasts "until the start of your next turn" (rules 3.8).
    */
   async _onStartTurn(combatant, context) {
     await super._onStartTurn(combatant, context);
-    const { actions, reactions } = freshTurn();
-    await combatant.update({ [`flags.${SYSTEM}`]: { actions, reactions, attacks: 0 } });
-    if (combatant.actor?.system.shieldRaised) await combatant.actor.update({ "system.shieldRaised": false });
+    const actor = combatant.actor;
+    const conditions = actor?.statuses ?? new Set();
+    const { actions, reactions, ended } = turnAllowance(conditions, ACTIONS_PER_TURN, REACTIONS_PER_TURN);
+    await combatant.update({
+      [`flags.${SYSTEM}`]: { actions, reactions, maxActions: actions, maxReactions: reactions, attacks: 0 }
+    });
+    if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) await postTurnStart(combatant, actions, reactions);
+    for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
+    if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
   }
 
   /** When combat ends, raised shields are lowered: there is no next turn. */
@@ -71,6 +82,16 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
     return this.getFlag(SYSTEM, "reactions") ?? REACTIONS_PER_TURN;
   }
 
+  /** Actions gained at the start of this turn (4 when Quickened, 2 when Slowed). */
+  get maxActions() {
+    return this.getFlag(SYSTEM, "maxActions") ?? ACTIONS_PER_TURN;
+  }
+
+  /** Reactions gained at the start of this turn (0 when Slowed or Stupefied). */
+  get maxReactions() {
+    return this.getFlag(SYSTEM, "maxReactions") ?? REACTIONS_PER_TURN;
+  }
+
   /** Attacks made on this combatant's own turn so far (rules 3.4, GAPS 18). */
   get attacksThisTurn() {
     return this.getFlag(SYSTEM, "attacks") ?? 0;
@@ -87,7 +108,7 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
    * @param {number} delta
    */
   async adjustPips(kind, delta) {
-    const max = kind === "actions" ? ACTIONS_PER_TURN : REACTIONS_PER_TURN;
+    const max = kind === "actions" ? this.maxActions : this.maxReactions;
     const left = kind === "actions" ? this.actionsLeft : this.reactionsLeft;
     return this.setFlag(SYSTEM, kind, adjustLeft(left, delta, max));
   }
@@ -127,6 +148,23 @@ export function turnState(actor) {
 }
 
 /**
+ * A chat line when conditions change what a turn starts with, such as
+ * "Example Hero starts the turn with 4 actions and 1 reaction (Quickened)."
+ */
+async function postTurnStart(combatant, actions, reactions) {
+  const i18n = game.i18n;
+  const names = ["quickened", "slowed", "stupefied", "deathsDoor"]
+    .filter(id => combatant.actor?.statuses.has(id))
+    .map(id => i18n.localize(`VARBORG.Condition.${id}`));
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor: combatant.actor }),
+    content: `<div class="var-borg-card"><p>${i18n.format("VARBORG.Condition.TurnStart", {
+      name: combatant.name, actions, reactions, conditions: names.join(", ")
+    })}</p></div>`
+  });
+}
+
+/**
  * Draw the pips under each combatant's name in the Combat Tracker, once the
  * combat has started. Owners (and the GM) click a filled pip to spend it and
  * an empty pip to give it back.
@@ -142,8 +180,8 @@ export function addTrackerPips(app, html) {
     const box = document.createElement("div");
     box.className = "var-borg-pips";
     box.append(
-      pipGroup(combatant, "actions", combatant.actionsLeft, ACTIONS_PER_TURN, "◈"),
-      pipGroup(combatant, "reactions", combatant.reactionsLeft, REACTIONS_PER_TURN, "↻")
+      pipGroup(combatant, "actions", combatant.actionsLeft, combatant.maxActions, "◈"),
+      pipGroup(combatant, "reactions", combatant.reactionsLeft, combatant.maxReactions, "↻")
     );
     row.querySelector(".token-name")?.append(box);
   }

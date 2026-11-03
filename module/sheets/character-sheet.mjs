@@ -1,7 +1,7 @@
 /**
  * The character sheet (ApplicationV2). Every change is saved as soon as
- * you leave a field. Two tabs: Character (abilities, resources, feats,
- * details) and Inventory (carrying, equipment, gear and containers).
+ * you leave a field. Two tabs: Character (abilities, resources, conditions,
+ * feats, details) and Inventory (carrying, equipment, gear and containers).
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -15,6 +15,7 @@ import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
+import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -188,6 +189,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       system.abilities.toughness
     );
     context.carrying = { ...carried, stateLabel: `VARBORG.Carrying.State.${carried.state}` };
+    context.conditions = sheetConditions(actor);
 
     // A raised shield: which one counts, and its cover (GAPS 46).
     if (system.shieldRaised) {
@@ -203,6 +205,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** @override */
   async _onRender(context, options) {
     await super._onRender(context, options);
+    activateConditionControls(this.element, this.document);
     // The "Stored in" menus and quantity boxes have no form name, so they
     // change the item, not the character.
     for (const select of this.element.querySelectorAll("select[data-stored-in]")) {

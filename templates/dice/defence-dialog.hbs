@@ -1,6 +1,7 @@
 <div class="var-borg-test-dialog defence-dialog">
   <p class="hint automatic">{{against}}{{#if damage}} · {{damage}}{{/if}}</p>
   {{#each notes}}<p class="hint automatic">{{this}}</p>{{/each}}
+  {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
   <div class="form-group">
     <label for="var-borg-defence-dr">{{localize "VARBORG.Test.DR"}}</label>
     <select id="var-borg-defence-dr" name="dr">

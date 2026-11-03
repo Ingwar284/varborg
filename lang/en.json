@@ -210,7 +210,8 @@
       "Natural1": "Natural 1: −5",
       "Armour": "Armour {armour} ({name})",
       "Wins": "{name} wins",
-      "Tie": "A tie: no victor, the struggle goes on"
+      "Tie": "A tie: no victor, the struggle goes on",
+      "ConditionPart": "{condition} {value}"
     },
     "Chance": {
       "Button": "Chance Die",
@@ -381,7 +382,7 @@
       "BeyondRange": "Target beyond range",
       "BeyondRangeHint": "Tick if the target is farther away than {distance}. Bane.",
       "DistanceOf": "{mode} {feet}′",
-      "AutomaticHint": "Attacks are DR12. Heavy, one-handed, armour and Encumbered are added for you.",
+      "AutomaticHint": "Attacks are DR12. Heavy, one-handed, armour, Encumbered and conditions are added for you.",
       "HeavyNote": "Heavy: +2 DR, added for you.",
       "HeavyDR": "+2 DR: Heavy",
       "OneHandedDR": "+2 DR: Versatile, one-handed",
@@ -436,7 +437,7 @@
       "CardTitle": "Defence against {name}",
       "Against": "against {name}’s {attack}",
       "Roll": "Defend",
-      "AutomaticHint": "Defence is Agility DR12. Heavy and special armour (+2 DR), a raised shield and Encumbered are added for you.",
+      "AutomaticHint": "Defence is Agility DR12. Heavy and special armour (+2 DR), a raised shield, Encumbered and conditions are added for you.",
       "ArmourNote": "{dr} DR to defend: {name}",
       "CoverNote": "{dr} DR: shield raised ({name})",
       "SoakNote": "{name} soaks {die} if you are hit.",
@@ -495,6 +496,84 @@
         "surrenders": "{name} surrenders."
       },
       "ButtonFor": "Morale: {name}"
+    },
+    "Condition": {
+      "Title": "Conditions",
+      "None": "No conditions.",
+      "Add": "Add a condition…",
+      "Remove": "Remove this condition",
+      "FatigueLevel": "Fatigue",
+      "FatigueHint": "Levels of fatigue. 1 or more makes the character Fatigued; 0 ends it. There is no maximum.",
+      "WithLevel": "{name} {level}",
+      "DR": "{dr} DR",
+      "Note": "{condition}: {effect}, added for you.",
+      "TheirNote": "{name} is {condition}: {effect}, added for you.",
+      "TheirReminder": "{name}: {text}",
+      "TurnStart": "{name} starts the turn with {actions} actions and {reactions} reactions ({conditions}).",
+      "blinded": "Blinded",
+      "deafened": "Deafened",
+      "charmed": "Charmed",
+      "fatigued": "Fatigued",
+      "frightened": "Frightened",
+      "stupefied": "Stupefied",
+      "restrained": "Restrained",
+      "prone": "Prone",
+      "quickened": "Quickened",
+      "silenced": "Silenced",
+      "slowed": "Slowed",
+      "deathsDoor": "Death’s Door",
+      "darkVessel": "Dark Vessel",
+      "infected": "Infected",
+      "doomed": "Doomed",
+      "encumbered": "Encumbered",
+      "Text": {
+        "blinded": "You can’t see. All terrain is difficult terrain. Bane on tests that rely on sight.",
+        "deafened": "You can’t hear. Bane on tests that rely on hearing.",
+        "charmed": "You are treated as a minion by the source of the charming. You cannot harm the charmer.",
+        "fatigued": "+2 DR on all tests for each level of fatigue. Reduced by one level upon a Long Rest.",
+        "frightened": "You’re deadly afraid of something. Bane on all tests targeting the source of your fear.",
+        "stupefied": "Your mind is slow and sluggish. Bane on tests that require thought, no reaction.",
+        "restrained": "You’re tied up, held, or pinned down. You can’t move. Bane on tests to defend and attack.",
+        "prone": "You’re flat on the ground. Move as if difficult terrain. Attack +2 DR. Defend against melee +2 DR, defend against ranged −2 DR.",
+        "quickened": "At the start of your next turn, you gain one additional action. Then it ends.",
+        "silenced": "You can’t speak. Some sources of silence may also suppress other sounds.",
+        "slowed": "At the start of your next turn, you gain one less action and one less reaction. Then it ends.",
+        "deathsDoor": "You are at 0 HP, unconscious, and near death. You cannot act. Roll on the Death’s Door table. You remain at Death’s Door for as long as you are unconscious.",
+        "darkVessel": "Gain d8 HP. Use all your actions to attack the nearest target by the most effective means. Attack −2 DR. Defend +2 DR. Ends when at Death’s Door, dead or otherwise incapacitated.",
+        "infected": "You gain no benefits from resting, take d6 damage at the end of a rest. Can be cured using a medicine box.",
+        "doomed": "You gain no benefits from resting, take 1 wound at the start of each day. You can be cured using special means.",
+        "encumbered": "All terrain counts as difficult terrain, and Bane on any Strength and Agility tests."
+      },
+      "FoeText": {
+        "blinded": "Foe: All terrain is difficult terrain. Attacks against it are made with Boon, and creatures defend against its attacks with Boon.",
+        "deafened": "Foe: It cannot hear. It does not notice sounds, and cannot be affected by or respond to anything it must hear.",
+        "fatigued": "Foe: For each level of fatigue, attacks against it are at −2 DR and creatures defend against it at −2 DR.",
+        "frightened": "Foe: Creatures defend with Boon against its attacks and gloom abilities that target the source of its fear.",
+        "stupefied": "Foe: No reaction. Creatures defend against its gloom abilities with Boon.",
+        "restrained": "Foe: It can’t move. Attacks against it are made with Boon, and creatures defend against its attacks with Boon.",
+        "prone": "Foe: Moves as if difficult terrain. Creatures defend against its attacks at −2 DR. Melee attacks against it are at −2 DR, ranged attacks against it at +2 DR.",
+        "encumbered": "Foe: All terrain is difficult terrain. Attacks against it are made with Boon, and creatures defend against its melee attacks with Boon."
+      },
+      "Reminder": {
+        "test": {
+          "blinded": "Blinded: tick Bane if this test relies on sight.",
+          "deafened": "Deafened: tick Bane if this test relies on hearing.",
+          "stupefied": "Stupefied: tick Bane if this test requires thought.",
+          "frightened": "Frightened: tick Bane if this test targets the source of your fear."
+        },
+        "attack": {
+          "blinded": "Blinded: tick Bane if this attack relies on sight.",
+          "frightened": "Frightened: tick Bane if you are attacking the source of your fear.",
+          "charmed": "Charmed: you cannot harm the one who charmed you."
+        },
+        "defence": {
+          "blinded": "Blinded: tick Bane if this defence relies on sight.",
+          "deafened": "Deafened: tick Bane if this defence relies on hearing."
+        },
+        "foeAttack": {
+          "frightened": "Frightened: tick Boon if this attack targets the source of its fear."
+        }
+      }
     }
   }
 }

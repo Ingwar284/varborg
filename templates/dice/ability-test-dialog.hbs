@@ -9,6 +9,8 @@
     {{#if armourNote}}<p class="hint automatic">{{armourNote}}</p>{{/if}}
   </div>
   {{#if encumberedNote}}<p class="hint automatic">{{encumberedNote}}</p>{{/if}}
+  {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
+  {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
   <div class="form-group">
     <label for="var-borg-test-boon">{{localize "VARBORG.Test.Boon"}}</label>
     <input id="var-borg-test-boon" type="checkbox" name="boon">

@@ -41,6 +41,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       attackRuin: new BooleanField({ required: true, initial: false }),
       // A raised shield: cover until the start of your next turn (rules 3.8).
       shieldRaised: new BooleanField({ required: true, initial: false }),
+      // Levels of the Fatigued condition, no maximum (rules 3.13, GAPS 20).
+      fatigue: wholeNumber(),
       // Rules 2.1, Step 6: Details.
       details: new SchemaField({
         personality: new StringField({ required: true, initial: "" }),

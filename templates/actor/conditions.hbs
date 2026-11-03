@@ -1,0 +1,27 @@
+<section class="conditions-section">
+  <h2>{{localize "VARBORG.Condition.Title"}}</h2>
+  <ul class="condition-list">
+    {{#each conditions.list}}
+    <li class="condition-row">
+      <img src="{{img}}" alt="">
+      <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
+      <button type="button" class="icon-button" data-remove-condition="{{id}}"
+              data-tooltip="{{localize 'VARBORG.Condition.Remove'}}" aria-label="{{localize 'VARBORG.Condition.Remove'}}">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </li>
+    {{else}}
+    <li class="empty">{{localize "VARBORG.Condition.None"}}</li>
+    {{/each}}
+  </ul>
+  <div class="condition-controls">
+    <select data-add-condition aria-label="{{localize 'VARBORG.Condition.Add'}}">
+      <option value="">{{localize "VARBORG.Condition.Add"}}</option>
+      {{#each conditions.choices}}<option value="{{id}}">{{label}}</option>{{/each}}
+    </select>
+    <label data-tooltip="{{localize 'VARBORG.Condition.FatigueHint'}}">
+      <span>{{localize "VARBORG.Condition.FatigueLevel"}}</span>
+      <input type="number" name="system.fatigue" value="{{conditions.fatigue}}" min="0" step="1">
+    </label>
+  </div>
+</section>

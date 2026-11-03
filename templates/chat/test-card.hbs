@@ -16,6 +16,7 @@
     <strong>{{total}}</strong> {{localize "VARBORG.Test.Versus"}} <strong>{{localize "VARBORG.Test.DR"}} {{dr}}</strong>
   </p>
   {{#if drNote}}<p class="modifier">{{drNote}}</p>{{/if}}
+  {{#each conditionNotes}}<p class="modifier">{{this}}</p>{{/each}}
   <p class="tier tier-{{tier}}">{{tierLabel}}</p>
   {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
 </div>

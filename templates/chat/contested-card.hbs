@@ -14,6 +14,7 @@
       {{localize "VARBORG.Test.KeptDie"}} {{kept}}
       · {{abilityLabel}}{{#if ability}} {{ability}}{{/if}}
       {{#if armour}}· {{localize "VARBORG.Contest.Armour" armour=armour name=armourName}}{{/if}}
+      {{#each conditions}}· {{this}}{{/each}}
       {{#if naturalNote}}· {{naturalNote}}{{/if}}
     </p>
     <p class="total"><strong>{{total}}</strong></p>
