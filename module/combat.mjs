@@ -18,6 +18,8 @@ import { initiativeFormula, compareInitiative } from "./rules/initiative.mjs";
 import { ACTIONS_PER_TURN, REACTIONS_PER_TURN, adjustLeft, pips } from "./rules/actions.mjs";
 import { turnAllowance } from "./rules/conditions.mjs";
 import { tickPersistentDamage } from "./persistent.mjs";
+import { countDownPanic } from "./panic.mjs";
+import { statusName } from "./conditions.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -39,7 +41,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
 
   /**
    * At the start of each turn: three actions and one reaction (rules 3.4),
-   * changed by Quickened, Slowed, Stupefied and Death's Door (rules 3.13),
+   * changed by Quickened, Slowed, Stupefied and Death's Door (rules 3.13)
+   * and by the Panic results Sluggish, Distracted and Faint (rules 3.12),
    * and no attacks made yet (for the multiple-attack Bane). Quickened and
    * Slowed then end (GAPS 74). A shield raised last turn is lowered: its
    * cover lasts "until the start of your next turn" (rules 3.8).
@@ -59,11 +62,14 @@ export class VarBorgCombat extends foundry.documents.Combat {
 
   /**
    * At the end of each turn the actor takes its persistent damage
-   * (rules 3.13). Foundry runs this on the Dark Master's client.
+   * (rules 3.13), and its Panic results that last for turns lose one
+   * (GAPS 79). Foundry runs this on the Dark Master's client.
    */
   async _onEndTurn(combatant, context) {
     await super._onEndTurn(combatant, context);
-    if (combatant.actor) await tickPersistentDamage(combatant.actor);
+    if (!combatant.actor) return;
+    await tickPersistentDamage(combatant.actor);
+    await countDownPanic(combatant.actor);
   }
 
   /** When combat ends, raised shields are lowered: there is no next turn. */
@@ -163,9 +169,9 @@ export function turnState(actor) {
  */
 async function postTurnStart(combatant, actions, reactions) {
   const i18n = game.i18n;
-  const names = ["quickened", "slowed", "stupefied", "deathsDoor"]
+  const names = ["quickened", "slowed", "stupefied", "deathsDoor", "sluggish", "distracted", "faint"]
     .filter(id => combatant.actor?.statuses.has(id))
-    .map(id => i18n.localize(`VARBORG.Condition.${id}`));
+    .map(statusName);
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: combatant.actor }),
     content: `<div class="var-borg-card"><p>${i18n.format("VARBORG.Condition.TurnStart", {

@@ -15,7 +15,8 @@ import { MODE, diceMode, diceFormula } from "../rules/test-roll.mjs";
 import { WINNER, resolveContest } from "../rules/contested.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
-import { conditionsOf } from "../conditions.mjs";
+import { conditionsOf, conditionNotes } from "../conditions.mjs";
+import { useUpNextTest } from "../panic.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -74,23 +75,27 @@ export async function rollContestedTest(actor) {
     rolls: [firstRoll, secondRoll],
     sound: CONFIG.sounds.dice
   });
+  await useUpNextTest(actor);
+  if (opponentActor) await useUpNextTest(opponentActor);
 }
 
 /**
  * One character's side: its ability, Boon and Bane, plus Bane if Encumbered,
- * minus armour's Agility penalty and minus Fatigued's DR.
+ * minus armour's Agility penalty and minus Fatigued's DR. Adrenaline Rush
+ * and Rattled add Boon or Bane (GAPS 80).
  */
 function characterSide(actor, abilityKey, boon, bane) {
   const { encumberedBane, armourDr, armourName } = actorTestModifiers(actor, abilityKey);
   const { conditions, fatigue } = conditionsOf(actor);
   const conditionMods = testConditions(conditions, fatigue);
-  const boons = boon ? 1 : 0;
-  const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0);
+  const fromConditions = totalModifiers(conditionMods);
+  const boons = (boon ? 1 : 0) + fromConditions.boons;
+  const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0) + fromConditions.banes;
   return {
     name: actor.name,
     abilityKey,
     ability: actor.system.abilities[abilityKey],
-    modifier: -armourDr - totalModifiers(conditionMods).dr,
+    modifier: -armourDr - fromConditions.dr,
     armourDr,
     armourName,
     conditionMods,
@@ -122,6 +127,8 @@ function cardSide(side, roll, result, won) {
     dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
     modeLabel: modeLabel(side.mode, side.boons, side.banes),
     encumberedNote: side.encumbered ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
+    // Such as "Rattled: Bane, added for you."
+    modeNotes: conditionNotes(side.conditionMods.filter(mod => mod.dr === undefined)),
     kept: result.kept,
     abilityLabel: side.abilityKey
       ? game.i18n.localize(`VARBORG.Ability.${side.abilityKey}`)
@@ -130,7 +137,7 @@ function cardSide(side, roll, result, won) {
     armour: side.armourDr ? signed(-side.armourDr) : null,
     armourName: side.armourName,
     // Such as "Fatigued 1 −2".
-    conditions: side.conditionMods.map(mod => game.i18n.format("VARBORG.Contest.ConditionPart", {
+    conditions: side.conditionMods.filter(mod => mod.dr !== undefined).map(mod => game.i18n.format("VARBORG.Contest.ConditionPart", {
       condition: game.i18n.format("VARBORG.Condition.WithLevel", { name: game.i18n.localize(`VARBORG.Condition.${mod.condition}`), level: mod.level }),
       value: signed(-mod.dr)
     })),

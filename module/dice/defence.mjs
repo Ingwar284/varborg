@@ -34,6 +34,7 @@ import { signed, modeLabel, naturalNote } from "./ability-test.mjs";
 import { turnState } from "../combat.mjs";
 import { defenderConditions, attackingFoeConditions, totalModifiers, carryingWithConditions } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { useUpNextTest } from "../panic.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -107,6 +108,8 @@ export async function rollDefence(actor, attack) {
   const dice = roll.dice[0].results.map(r => r.result);
   const result = resolveTest({ dice, mode: diceRule, ability: abilityScore, dr });
   const outcome = defenceOutcome(result.tier);
+  // Adrenaline Rush and Rattled count for this defence, then end (GAPS 80).
+  await useUpNextTest(actor);
   const rolls = [roll];
 
   // Hit: roll the foe's damage and the armour's soak die (GAPS 64).

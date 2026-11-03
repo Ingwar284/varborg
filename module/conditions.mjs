@@ -7,11 +7,15 @@
  * The maths lives in module/rules/conditions.mjs; this file only connects
  * it to Foundry. Fatigued has a level, kept in system.fatigue and shown on
  * the sheet; the token icon follows it (on when the level is 1 or more).
+ * Lasting Panic results (module/panic.mjs) are listed in the same section
+ * on a character sheet.
  */
 
 import { CONDITIONS, FOE_LINE_CONDITIONS, reminders, lossOnArrival } from "./rules/conditions.mjs";
 import { signed } from "./dice/ability-test.mjs";
 import { sheetPersistent, activatePersistentControls } from "./persistent.mjs";
+import { PANIC_EFFECTS } from "./rules/panic.mjs";
+import { panicName, sheetPanic, activatePanicControls } from "./panic.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -59,9 +63,14 @@ export function conditionsOf(actor) {
   return { conditions: actor?.statuses ?? new Set(), fatigue: actor?.system.fatigue ?? 0 };
 }
 
+/** The name of a condition, or of a lasting Panic result such as "Sluggish". */
+export function statusName(id) {
+  return PANIC_EFFECTS.includes(id) ? panicName(id) : game.i18n.localize(`VARBORG.Condition.${id}`);
+}
+
 /** "Prone", or "Fatigued 2" with its level. */
 function conditionLabel(mod) {
-  const name = game.i18n.localize(`VARBORG.Condition.${mod.condition}`);
+  const name = statusName(mod.condition);
   return mod.level ? game.i18n.format("VARBORG.Condition.WithLevel", { name, level: mod.level }) : name;
 }
 
@@ -101,6 +110,7 @@ export function sheetConditions(actor) {
   return {
     fatigue: actor.system.fatigue,
     persistent: sheetPersistent(actor),
+    panic: sheetPanic(actor),
     list: active.map(id => ({
       id,
       img: ICONS[id],
@@ -116,7 +126,8 @@ export function sheetConditions(actor) {
 
 /**
  * The sheet's condition controls: the "Add a condition" menu, each
- * condition's remove button, and the persistent damage controls. Called from the sheet's _onRender.
+ * condition's remove button, and the persistent damage and Panic controls.
+ * Called from the sheet's _onRender.
  */
 export function activateConditionControls(element, actor) {
   element.querySelector("select[data-add-condition]")?.addEventListener("change", event => {
@@ -127,6 +138,7 @@ export function activateConditionControls(element, actor) {
     button.addEventListener("click", () => actor.toggleStatusEffect(button.dataset.removeCondition, { active: false }));
   }
   activatePersistentControls(element, actor);
+  activatePanicControls(element, actor);
 }
 
 /** When the fatigue level changes, the Fatigued icon follows it. */
@@ -138,8 +150,8 @@ function syncFatigueIcon(actor, changes, options, userId) {
 
 /**
  * A condition arrives. Fatigued from the token starts at level 1.
- * Stupefied (no reaction) and Death's Door (cannot act) take away what is
- * left of this turn in a running combat.
+ * Stupefied (no reaction), and Death's Door and Faint (cannot act) take
+ * away what is left of this turn in a running combat.
  */
 async function onConditionAdded(effect, options, userId) {
   const actor = effect.parent;

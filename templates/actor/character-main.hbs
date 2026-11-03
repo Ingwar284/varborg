@@ -20,6 +20,9 @@
       <button type="button" data-action="rollChance" data-tooltip="{{localize 'VARBORG.Chance.Tooltip'}}">
         <i class="fa-solid fa-dice"></i> {{localize "VARBORG.Chance.Button"}}
       </button>
+      <button type="button" data-action="rollPanic" data-tooltip="{{localize 'VARBORG.Panic.Tooltip'}}">
+        <i class="fa-solid fa-face-flushed"></i> {{localize "VARBORG.Panic.Button"}}
+      </button>
     </div>
   </section>
 
@@ -43,6 +46,10 @@
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Fortune"}}</span>
       <input type="number" name="system.fortune" value="{{system.fortune}}" min="0" step="1">
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Panic.LostSanityHint'}}">
+      <span>{{localize "VARBORG.Panic.LostSanity"}}</span>
+      <input type="number" name="system.sanityLost" value="{{system.sanityLost}}" min="0" step="1">
     </label>
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Silver"}}</span>
@@ -81,6 +88,10 @@
 
   <section class="details">
     <h2>{{localize "VARBORG.Sheet.Details"}}</h2>
+    <label data-tooltip="{{localize 'VARBORG.Panic.PhobiasHint'}}">
+      <span>{{localize "VARBORG.Panic.Phobias"}}</span>
+      <textarea name="system.phobias" rows="2">{{system.phobias}}</textarea>
+    </label>
     <label>
       <span>{{localize "VARBORG.Sheet.Personality"}}</span>
       <textarea name="system.details.personality" rows="2">{{system.details.personality}}</textarea>

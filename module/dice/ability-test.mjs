@@ -5,7 +5,9 @@
  * module/rules/test-roll.mjs decide the outcome, and posts a chat card.
  * Armour and Encumbered are added on their own (module/rules/test-modifiers.mjs),
  * and so is Fatigued (module/rules/conditions.mjs). Situational Bane from
- * other conditions is shown as a reminder (GAPS 75).
+ * other conditions is shown as a reminder (GAPS 75). The Panic results
+ * Adrenaline Rush and Rattled give Boon or Bane and are then used up
+ * (GAPS 80).
  * All the maths lives in the rules files; this file only asks, rolls and shows.
  */
 
@@ -17,6 +19,7 @@ import { carrying } from "../rules/carrying.mjs";
 import { wornArmour, testModifiers, modifiedDr } from "../rules/test-modifiers.mjs";
 import { testConditions, totalModifiers, carryingWithConditions } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { useUpNextTest } from "../panic.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -43,8 +46,8 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
   const options = await askTestOptions(abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose);
   if (!options) return null;
 
-  const boons = options.boon ? 1 : 0;
-  const banes = (options.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0);
+  const boons = (options.boon ? 1 : 0) + fromConditions.boons;
+  const banes = (options.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
   const mode = diceMode(boons, banes);
   const aid = aidModifier(options.aidSuccesses, options.aidFailures);
   const abilityScore = actor.system.abilities[ability];
@@ -84,6 +87,7 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
     flavor: game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel }),
     content
   });
+  await useUpNextTest(actor);
   return result;
 }
 

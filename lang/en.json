@@ -608,6 +608,126 @@
       "DialogTitle": "Persistent damage: {name}",
       "Has": "Already has {name}.",
       "RemoveHint": "To remove persistent damage, use its ✕ in the Conditions section of the sheet."
+    },
+    "Panic": {
+      "Title": "Panic",
+      "Button": "Panic",
+      "Tooltip": "Panic test: Sanity DR12. On a Failure roll on the Panic table with 1d10, on a Ruin with 2d10. A Triumph restores lost Sanity.",
+      "Purpose": "Panic test.",
+      "Calm": "{name} remains calm.",
+      "Unfazed": "{name} is unfazed.",
+      "Restored": "Lost Sanity restored: Sanity {from} → {to}.",
+      "CardTitle": "{name} panics",
+      "Rolled": "Panic table, {formula}: {roll}",
+      "Turn": "turn",
+      "Turns": "turns",
+      "Hour": "hour",
+      "Hours": "hours",
+      "LastsTurns": "Lasts {count} {unit}.",
+      "LastsHours": "Lasts {count} {unit}.",
+      "Left": "{count} {unit} left",
+      "CountsInCombat": "In combat, one turn is used at the end of each of your turns (not the turn it was gained in). Outside combat, the Dark Master removes it.",
+      "RemoveByHand": "The Dark Master removes it when the time has passed.",
+      "NextTest": "It counts for your next ability test, contest, attack or defence, and then ends.",
+      "Fortune": "Fortune {from} → {to}.",
+      "SanityLost": "Sanity {from} → {to}. Lost Sanity: {lost}. A Panic Triumph gives it back.",
+      "SanityAtMinimum": "Sanity is already −3 and cannot go lower.",
+      "NewPhobia": "Write the new phobia in Phobias on the character sheet.",
+      "NewPhobias": "Write the two new phobias in Phobias on the character sheet.",
+      "Phobias": "Phobias",
+      "RollsAgain": "Rolling 2d10 twice more.",
+      "TooDeep": "Too many Compounding problems in a row: roll any more on the Panic table by hand.",
+      "ByHand": "The system does not apply this. The Dark Master decides what happens to the character.",
+      "Ends": "{name}: {result} ends.",
+      "UsedUp": "{name}: {result} used up.",
+      "Remove": "Remove this Panic result",
+      "Add": "Add a Panic result…",
+      "AddHint": "Dark Master only. Gives the character a lasting Panic result, with its 1d10 duration rolled.",
+      "LostSanity": "Lost Sanity",
+      "LostSanityHint": "Sanity lost for a while, such as from Teetering. A Triumph on a Panic test gives it all back.",
+      "PhobiasHint": "Test Panic whenever you encounter a phobia. A phobia is resolved on a Triumph on its Panic test.",
+      "Result": {
+        "strokeOfLuck": {
+          "name": "Stroke of Luck",
+          "text": "Regain one Fortune."
+        },
+        "adrenalineRush": {
+          "name": "Adrenaline Rush",
+          "text": "Boon on your next test."
+        },
+        "rattled": {
+          "name": "Rattled",
+          "text": "Bane on your next test."
+        },
+        "terrified": {
+          "name": "Terrified",
+          "text": "For 1d10 turns, you cannot willingly approach the source of your panic."
+        },
+        "babbling": {
+          "name": "Babbling",
+          "text": "For 1d10 turns, you babble incoherently. You cannot communicate."
+        },
+        "distracted": {
+          "name": "Distracted",
+          "text": "For 1d10 turns, your mind is occupied by terror. You do not gain a reaction at the start of your turn."
+        },
+        "sluggish": {
+          "name": "Sluggish",
+          "text": "For 1d10 turns, your thoughts and movements are sluggish. At the start of your turn, you gain two actions instead of three."
+        },
+        "screamingFit": {
+          "name": "Screaming Fit",
+          "text": "For 1d10 turns, you scream in terror at the top of your lungs. Everyone can hear."
+        },
+        "denial": {
+          "name": "Denial",
+          "text": "For 1d10 turns, you vehemently deny the existence of the source of your panic."
+        },
+        "cripplingFear": {
+          "name": "Crippling Fear",
+          "text": "Gain a new permanent phobia. Test Panic whenever you encounter a phobia. A phobia is resolved on a Triumph on its Panic test."
+        },
+        "fitOfViolence": {
+          "name": "Fit of Violence",
+          "text": "For 1d10 turns, you lash out in violence. At the start of your turn, select a random target. You must attack this target by the most effective means."
+        },
+        "descentIntoMadness": {
+          "name": "Descent into Madness",
+          "text": "You gain two new phobias. Test Panic whenever you encounter a phobia. A phobia is resolved on a Triumph on its Panic test."
+        },
+        "flee": {
+          "name": "Flee",
+          "text": "For 1d10 turns, you must spend all your actions to get away as far as possible from the source of your panic."
+        },
+        "faint": {
+          "name": "Faint",
+          "text": "You faint for 1d10 turns: no actions or reactions. Your allies can awaken you by spending three cumulative actions; then remove this."
+        },
+        "cowardice": {
+          "name": "Cowardice",
+          "text": "For the next 1d10 hours, test Presence DR12 to engage in combat. Triumph: as Success, and you are no longer suffering from cowardice. Success: you engage in combat. Failure: you flee for one turn. Ruin: as Failure, and test Panic."
+        },
+        "paranoid": {
+          "name": "Paranoid",
+          "text": "For the next 1d10 hours, whenever a character (re)joins your group, even after a short absence, test Presence DR12. Triumph: you are no longer paranoid. Success: you are put at ease. Failure: you consider this person fully untrustworthy. Ruin: as Failure, and you Panic whenever this person acts suspiciously."
+        },
+        "teetering": {
+          "name": "Teetering",
+          "text": "Reduce your Sanity by 1."
+        },
+        "compoundingProblems": {
+          "name": "Compounding Problems",
+          "text": "Roll 2d10 twice on the Panic table."
+        },
+        "psychologicalCollapse": {
+          "name": "Psychological Collapse",
+          "text": "You become permanently and irreparably insane. You are effectively dead, and your character is taken over by the Dark Master."
+        },
+        "heartAttack": {
+          "name": "Heart Attack",
+          "text": "You die instantly."
+        }
+      }
     }
   }
 }

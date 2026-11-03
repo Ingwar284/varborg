@@ -676,3 +676,9 @@
 .var-borg-card .damage button[data-action="inflictDamage"] {
   margin-top: 0.3rem;
 }
+
+/* Panic cards: the rules text of the result. */
+.var-borg-card.panic-card .panic-text {
+  font-style: italic;
+  margin: 0.2rem 0;
+}

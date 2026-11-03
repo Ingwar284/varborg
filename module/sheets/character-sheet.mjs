@@ -16,6 +16,7 @@ import { weaponTraits } from "../rules/equipment.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
+import { rollPanicTest } from "../panic.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -90,6 +91,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollAbility: CharacterSheet.#onRollAbility,
       rollContest: CharacterSheet.#onRollContest,
       rollChance: CharacterSheet.#onRollChance,
+      rollPanic: CharacterSheet.#onRollPanic,
       editItem: CharacterSheet.#onEditItem,
       deleteItem: CharacterSheet.#onDeleteItem,
       toggleEquipped: CharacterSheet.#onToggleEquipped,
@@ -300,5 +302,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Chance Die button rolls 2d6 + Fortune straight away. */
   static async #onRollChance(event, button) {
     await rollChanceDie(this.document);
+  }
+
+  /** The Panic button tests Sanity DR12 and rolls on the Panic table if needed. */
+  static async #onRollPanic(event, button) {
+    await rollPanicTest(this.document);
   }
 }

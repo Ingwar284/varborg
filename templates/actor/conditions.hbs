@@ -21,9 +21,19 @@
       </button>
     </li>
     {{/each}}
-    {{#unless conditions.list.length}}{{#unless conditions.persistent.list.length}}
+    {{#each conditions.panic.list}}
+    <li class="condition-row panic-row">
+      <img src="{{img}}" alt="">
+      <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
+      <button type="button" class="icon-button" data-remove-panic="{{id}}"
+              data-tooltip="{{localize 'VARBORG.Panic.Remove'}}" aria-label="{{localize 'VARBORG.Panic.Remove'}}">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </li>
+    {{/each}}
+    {{#unless conditions.list.length}}{{#unless conditions.persistent.list.length}}{{#unless conditions.panic.list.length}}
     <li class="empty">{{localize "VARBORG.Condition.None"}}</li>
-    {{/unless}}{{/unless}}
+    {{/unless}}{{/unless}}{{/unless}}
   </ul>
   <div class="condition-controls">
     <select data-add-condition aria-label="{{localize 'VARBORG.Condition.Add'}}">
@@ -47,4 +57,12 @@
     <button type="button" data-tick-persistent data-tooltip="{{localize 'VARBORG.Persistent.TickHint'}}">{{localize "VARBORG.Persistent.Tick"}}</button>
     {{/if}}
   </div>
+  {{#if conditions.panic.choices}}
+  <div class="condition-controls">
+    <select data-add-panic aria-label="{{localize 'VARBORG.Panic.Add'}}" data-tooltip="{{localize 'VARBORG.Panic.AddHint'}}">
+      <option value="">{{localize "VARBORG.Panic.Add"}}</option>
+      {{#each conditions.panic.choices}}<option value="{{id}}">{{label}}</option>{{/each}}
+    </select>
+  </div>
+  {{/if}}
 </section>

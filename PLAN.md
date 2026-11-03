@@ -266,7 +266,12 @@ prices, traits and tiers against 4.1.
     *Test:* tests pass. Give Example Hero two fire effects and one poison,
     end the turn, and check that one fire and the poison tick.
 
-20. **Panic.** A Panic test (Sanity DR12). Triumph restores any Sanity lost
+20. ~~**Panic.**~~ Done: `module/rules/panic.mjs` with
+    `tests/panic.test.mjs`, `module/panic.mjs` (the Panic button, the
+    table, effects, the countdown and next-test Boon/Bane), a Panic card,
+    Lost Sanity and Phobias on the sheet, Panic rows and a Dark Master's
+    "Add a Panic result" menu in the Conditions section (GAPS 79–86).
+    A Panic test (Sanity DR12). Triumph restores any Sanity lost
     for a while, Failure rolls 1d10 on the Panic table and Ruin rolls 2d10.
     The timed results become effects (for example Sluggish means 2 actions).
     *Test:* force a Ruin and get a 2d10 Panic result. A Sluggish character

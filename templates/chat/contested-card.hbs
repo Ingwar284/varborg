@@ -10,6 +10,7 @@
       {{#if modeLabel}}<span class="mode">{{modeLabel}}</span>{{/if}}
     </div>
     {{#if encumberedNote}}<p class="modifier">{{encumberedNote}}</p>{{/if}}
+    {{#each modeNotes}}<p class="modifier">{{this}}</p>{{/each}}
     <p class="sum">
       {{localize "VARBORG.Test.KeptDie"}} {{kept}}
       · {{abilityLabel}}{{#if ability}} {{ability}}{{/if}}

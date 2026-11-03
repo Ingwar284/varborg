@@ -36,6 +36,7 @@ import {
 } from "../rules/attack.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote } from "./ability-test.mjs";
 import { turnState } from "../combat.mjs";
+import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 
@@ -86,6 +87,8 @@ export async function rollAttack(actor, item) {
   const dice = roll.dice[0].results.map(r => r.result);
   const result = resolveTest({ dice, mode: diceRule, ability: abilityScore, dr });
   const outcome = attackOutcome(result.tier);
+  // Adrenaline Rush and Rattled count for this attack, then end (GAPS 80).
+  await useUpNextTest(actor);
 
   // Damage, on a hit.
   const rolls = [roll];
