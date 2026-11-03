@@ -13,7 +13,8 @@
       "feat": "Feat",
       "class": "Class",
       "ancestry": "Ancestry",
-      "background": "Background"
+      "background": "Background",
+      "power": "Power"
     }
   },
   "VARBORG": {
@@ -72,7 +73,9 @@
       "Feats": "Feats",
       "Class": "VÅR BORG class sheet",
       "Ancestry": "VÅR BORG ancestry sheet",
-      "Background": "VÅR BORG background sheet"
+      "Background": "VÅR BORG background sheet",
+      "Power": "VÅR BORG power sheet",
+      "Powers": "Powers"
     },
     "Item": {
       "Price": "Price (s)",
@@ -1178,6 +1181,71 @@
       "WealthFlavour": "Wealth from {name} ({wealth})",
       "Wealth": "Wealth: {silver} s added. Silver is now {total} s.",
       "NoWealth": "No wealth rolled: the wealth is not written as dice, such as 2d6 × 10 s."
+    },
+    "Power": {
+      "Source": {
+        "class": "Class power",
+        "ancestry": "Ancestry power",
+        "general": "General power"
+      },
+      "Outcome": {
+        "triumph": "As described, double damage.",
+        "success": "As described.",
+        "failure": "Half damage (rounded down), no other effect.",
+        "ruin": "No effect."
+      },
+      "NotYourTurn": "{name} uses actions, so in combat it can only be used on your own turn.",
+      "NotEnoughEmber": "{name} costs 🟒{cost}, but the Ember pool holds only {left}.",
+      "NoActions": "Not enough actions left this turn; the pips are spent anyway.",
+      "UsedActions": "Used {count} action(s).",
+      "PaidEmber": "Paid 🟒{cost} from the Ember pool.",
+      "OutsideCombat": "Outside combat: no Ember is spent. Each ember ability works once, until you finish an encounter or a rest.",
+      "SustainNote": "Sustained: press Sustain on the sheet on each of your turns, or it ends.",
+      "NoClass": "{name} has no class, so there is no key ability for this power.",
+      "NoTarget": "No target. Target a token to deal damage to it.",
+      "UseNote": "Costs 🟒{cost} from the Ember pool and {actions} action(s).",
+      "DialogTitle": "Use {name}",
+      "Use": "Use",
+      "CardTitle": "{name}",
+      "How": "{ability} (key ability)",
+      "SustainNotYourTurn": "Sustain is an action, so in combat it can only be used on your own turn.",
+      "AlreadyKept": "{name} is already kept going until your next turn.",
+      "Sustained": "{name} sustains {power}.",
+      "Ended": "{power} ends.",
+      "NotSustained": "{power} ends: {name} did not sustain it this turn.",
+      "Cost": "Ember cost",
+      "CostHint": "The listed cost. The DR is always 11 + this, even if less is paid.",
+      "Actions": "Actions",
+      "ActionsHint": "Actions it takes: ◈◈ is 2. 0 is a free action.",
+      "Damage": "Damage",
+      "DamageHint": "The power's own damage dice, such as d6. Leave empty if it deals none.",
+      "SustainedLabel": "Sustained",
+      "SustainedHint": "Lasts while its user spends the Sustain action (◈) on each of their turns.",
+      "OutcomesLabel": "Outcomes",
+      "OutcomesHint": "Only fill these in if the power says something different. Empty uses the usual text.",
+      "DrHint": "Tests the class's boosted ability against DR{dr}.",
+      "DrShort": "DR{dr}",
+      "Sustaining": "Sustaining",
+      "Sustain": "Sustain",
+      "SustainTooltip": "Keep this power going until your next turn (one action in combat).",
+      "End": "End",
+      "EndTooltip": "Stop sustaining this power.",
+      "UseTooltip": "Use this power",
+      "TestNote": "Tests {ability} against DR{dr}: DR 11 + ember cost.",
+      "HowNamed": "{ability} (named by the power)",
+      "AbilityLabel": "Tests",
+      "AbilityHint": "Leave on Usual for the class's boosted ability. Pick an ability only when the power names its own test (“Test Agility (DR18)”).",
+      "UsualAbility": "Usual",
+      "DrHintNamed": "Tests {ability}, as the power names, against DR{dr}.",
+      "AddsWeapon": "Adds weapon damage",
+      "AddsWeaponHint": "Tick for powers such as Power strike (“an additional d6”): the damage is a chosen weapon's damage dice plus the power's own, or unarmed (d2) or an improvised weapon (d4) without one. Only the dice: the weapon's traits do not apply, and it is not an attack.",
+      "Weapon": "Weapon",
+      "WeaponHint": "Adds this weapon's damage dice to the power's. Its traits do not apply. Without a weapon: unarmed (d2) or an improvised weapon (d4).",
+      "WeaponNote": "Weapon damage from {name}.",
+      "Bare": {
+        "unarmed": "Unarmed",
+        "improvised": "Improvised weapon"
+      }
     }
   }
 }

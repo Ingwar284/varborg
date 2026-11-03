@@ -1,0 +1,356 @@
+/**
+ * Powers in Foundry (rules 3.10 "The price of the light", 3.4 Sustain,
+ * GAPS 2 and 116–120).
+ *
+ * The Use button on the sheet:
+ * - checks the power can be used now: in combat only on your own turn, with
+ *   enough Ember in the pool (module/pools.mjs);
+ * - tests the ability the power names, else the class's boosted ability,
+ *   against DR 11 + cost (GAPS 117). Powers are not weapon attacks, even
+ *   one that says "make a melee attack";
+ * - in combat, pays the cost from the Ember pool and spends its action pips.
+ * It posts the attack card, so Fortune and Inflict damage work as they do
+ * for attacks, with the power's outcomes (module/dice/attack.mjs).
+ *
+ * A Sustained power that takes effect is marked on the sheet. Its Sustain
+ * button spends one action; at the end of its user's turn a power that was
+ * neither started nor sustained that turn ends (module/combat.mjs).
+ *
+ * The maths lives in module/rules/powers.mjs.
+ */
+
+import {
+  powerDr, powerAbility, powerOutcome, powerUse, sustainCost, sustainAtEndOfTurn, startsSustaining,
+  powerDamageFormula, BARE_WEAPONS
+} from "../rules/powers.mjs";
+import { damageFormula } from "../rules/attack.mjs";
+import { isDamageFormula } from "../rules/equipment.mjs";
+import { DR_TABLE, diceMode, diceFormula } from "../rules/test-roll.mjs";
+import { modifiedDr } from "../rules/test-modifiers.mjs";
+import { testConditions, totalModifiers } from "../rules/conditions.mjs";
+import { CARD, dialogCost } from "../rules/fortune.mjs";
+import { POOL, canPay } from "../rules/pools.mjs";
+import { getPools, spendFromPool } from "../pools.mjs";
+import { turnState } from "../combat.mjs";
+import { useUpNextTest } from "../panic.mjs";
+import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
+import { settleAttackCard } from "./attack.mjs";
+import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
+
+const { DialogV2 } = foundry.applications.api;
+const { renderTemplate } = foundry.applications.handlebars;
+
+const DIALOG_TEMPLATE = "systems/var-borg/templates/dice/power-dialog.hbs";
+
+/**
+ * The Use button: use a power.
+ * @param {Actor} actor  The character.
+ * @param {Item} power   The power item.
+ */
+export async function usePower(actor, power) {
+  return rollPowerTest(actor, power);
+}
+
+/**
+ * Can the power be used now? Warns and returns null if not.
+ * @returns {{allowed: true, ember: number, actions: number}|null}
+ */
+export function checkPowerUse(actor, power, turn) {
+  const i18n = game.i18n;
+  const use = powerUse({
+    inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn, cost: power.system.cost, actions: power.system.actions
+  });
+  if (!use.allowed) {
+    ui.notifications.warn(i18n.format("VARBORG.Power.NotYourTurn", { name: power.name }));
+    return null;
+  }
+  const left = getPools()[POOL.EMBER];
+  if (use.ember && !canPay(left, use.ember)) {
+    ui.notifications.warn(i18n.format("VARBORG.Power.NotEnoughEmber", { name: power.name, cost: use.ember, left }));
+    return null;
+  }
+  return use;
+}
+
+/**
+ * Pay the power's ember from the pool, after the dialog's Fortune was paid.
+ * If the pool cannot pay after all, the Fortune is given back.
+ * @returns {Promise<boolean>} Whether the power goes ahead.
+ */
+export async function payPowerEmber(actor, use, paid) {
+  if (!use.ember) return true;
+  if (await spendFromPool(POOL.EMBER, use.ember)) return true;
+  const refund = dialogCost(paid.boon, paid.bane);
+  if (refund) await actor.update({ "system.fortune": (actor.system.fortune ?? 0) + refund });
+  return false;
+}
+
+/**
+ * Spend the power's action pips (own turn, in combat).
+ * @returns {Promise<string|null>} The card's note, such as "Used 2 actions."
+ */
+export async function spendPowerActions(turn, use) {
+  if (!turn.combatant || !use.actions) return null;
+  if (turn.combatant.actionsLeft < use.actions) ui.notifications.warn(game.i18n.localize("VARBORG.Power.NoActions"));
+  await turn.combatant.adjustPips("actions", -use.actions);
+  return game.i18n.format("VARBORG.Power.UsedActions", { count: use.actions });
+}
+
+/** The card note about Ember: paid from the pool, or none outside combat. */
+export function emberNote(use, inCombat) {
+  if (use.ember) return game.i18n.format("VARBORG.Power.PaidEmber", { cost: use.ember });
+  return inCombat ? null : game.i18n.localize("VARBORG.Power.OutsideCombat");
+}
+
+/**
+ * What the attack card needs to know about the power. Stored on the card,
+ * so Fortune can work it out again.
+ */
+export function powerInputs(power) {
+  const system = power.system;
+  return {
+    itemId: power.id,
+    name: power.name,
+    sustained: system.sustained,
+    description: system.description,
+    outcomes: { ...system.outcomes }
+  };
+}
+
+/**
+ * The damage dice for the card, and whether every part is valid dice.
+ * @param {Item} power
+ * @param {string} [weaponDice]  The weapon's damage dice the power adds (GAPS 121).
+ */
+export function powerDamageDice(power, weaponDice = "") {
+  const weaponPart = String(weaponDice ?? "").trim();
+  const powerPart = String(power.system.damage ?? "").trim();
+  const text = powerDamageFormula({ weapon: weaponPart, power: powerPart }) ?? "";
+  const invalid = [weaponPart, powerPart].filter(Boolean).some(part => !isDamageFormula(part));
+  return { formula: text && !invalid ? text : null, text, invalid };
+}
+
+/**
+ * What a power can take its damage dice from: every weapon the character
+ * carries (equipped ones first), then unarmed (d2) and an improvised
+ * weapon (d4) from rules 4.1, so there is always a choice.
+ * @returns {{id: string, name: string, dice: string, equipped: boolean}[]}
+ */
+function damageWeapons(actor) {
+  const i18n = game.i18n;
+  const carried = actor.itemTypes.weapon
+    .toSorted((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.sort - b.sort)
+    // A weapon such as the blunderbuss ("d10/d4") gives its within-range dice.
+    .map(item => ({ id: item.id, name: item.name, dice: damageFormula(item.system.damage, false), equipped: item.system.equipped }));
+  const bare = Object.entries(BARE_WEAPONS).map(([id, dice]) => ({
+    id, name: i18n.localize(`VARBORG.Power.Bare.${id}`), dice, equipped: false
+  }));
+  return [...carried, ...bare];
+}
+
+/** The outcome line: the power's own text for this result, or the usual one. */
+export function powerOutcomeText(power, tier) {
+  return power.outcomes?.[tier] || game.i18n.localize(`VARBORG.Power.Outcome.${tier}`);
+}
+
+/**
+ * Start a Sustained power when the result takes effect, or stop it again
+ * when a Fortune reroll takes the effect away.
+ * @returns {Promise<string|null>} The card's note.
+ */
+export async function applySustain(actor, data, tier) {
+  const power = data.inputs.power;
+  if (!power?.sustained) return null;
+  const want = startsSustaining(true, tier);
+  const before = data.applied.sustaining ?? false;
+  if (want !== before) {
+    await actor.items.get(power.itemId)?.update({ "system.sustaining": want, "system.kept": want });
+    data.applied.sustaining = want;
+  }
+  return want ? game.i18n.localize("VARBORG.Power.SustainNote") : null;
+}
+
+/**
+ * Use a power: test its ability against DR 11 + cost, and post the card.
+ */
+async function rollPowerTest(actor, power) {
+  const i18n = game.i18n;
+  const ability = powerAbility(power.system, actor.system.keyAbility);
+  if (!ability) {
+    ui.notifications.warn(i18n.format("VARBORG.Power.NoClass", { name: actor.name }));
+    return;
+  }
+  const turn = turnState(actor);
+  const use = checkPowerUse(actor, power, turn);
+  if (!use) return;
+  const target = [...game.user.targets][0]?.actor ?? null;
+
+  // A power that adds weapon damage: a carried weapon, unarmed or improvised.
+  const weapons = power.system.addsWeaponDamage ? damageWeapons(actor) : [];
+
+  const automatic = actorTestModifiers(actor, ability);
+  const { conditions, fatigue } = conditionsOf(actor);
+  const conditionMods = testConditions(conditions, fatigue, ability);
+  const fromConditions = totalModifiers(conditionMods);
+  const notes = conditionNotes(conditionMods);
+  const startDr = powerDr(power.system.cost);
+  const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
+
+  const content = await renderTemplate(DIALOG_TEMPLATE, {
+    target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Power.NoTarget"),
+    how: i18n.format("VARBORG.Power.TestNote", { ability: abilityLabel, dr: startDr }),
+    useNote: use.ember || use.actions
+      ? i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions })
+      : i18n.localize("VARBORG.Power.OutsideCombat"),
+    armourNote: automatic.armourDr ? i18n.format("VARBORG.Test.ArmourDialogNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
+    encumberedNote: automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
+    conditionNotes: notes,
+    reminders: reminderNotes(actor, "test"),
+    weapons: weapons.map(choice => ({
+      id: choice.id,
+      label: `${choice.name} (${choice.dice})${choice.equipped ? ` · ${i18n.localize("VARBORG.Item.Equipped")}` : ""}`
+    })),
+    drs: DR_TABLE.map(dr => ({
+      value: dr,
+      label: i18n.format("VARBORG.Test.DROption", { dr, name: i18n.localize(`VARBORG.DR.${dr}`) }),
+      selected: dr === startDr
+    })),
+    fortuneFields: await fortuneFields(actor, "power")
+  });
+  const options = await DialogV2.input({
+    window: { title: i18n.format("VARBORG.Power.DialogTitle", { name: power.name }) },
+    content,
+    ok: { label: "VARBORG.Power.Use", icon: "fa-solid fa-fire" },
+    rejectClose: false
+  });
+  if (!options) return;
+
+  const paid = await payDialogFortune(actor, options);
+  if (!paid) return;
+  if (!(await payPowerEmber(actor, use, paid))) return;
+
+  const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
+  const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
+  const diceRule = diceMode(boons, banes);
+  const abilityScore = actor.system.abilities[ability];
+  const chosenDr = Number(options.dr);
+  const dr = modifiedDr(chosenDr, automatic.armourDr + fromConditions.dr);
+
+  const formula = `${diceFormula(diceRule)} + @ability`;
+  const roll = await new Roll(formula, { ability: abilityScore }).evaluate();
+  await useUpNextTest(actor);
+  const pipNote = await spendPowerActions(turn, use);
+
+  const weapon = weapons.length ? (weapons.find(choice => choice.id === options.weapon) ?? weapons[0]) : null;
+  const damage = powerDamageDice(power, weapon?.dice);
+  const foe = target?.type === "foe" ? target : null;
+  const title = i18n.format("VARBORG.Power.CardTitle", { name: power.name });
+  const inputs = {
+    formula,
+    rollData: { ability: abilityScore },
+    diceRule, abilityScore, dr,
+    damageFormula: damage.formula,
+    damageInvalid: damage.invalid,
+    weaponDamage: damage.text,
+    ruinedBefore: actor.system.attackRuin,
+    inflicts: target?.type !== "character",
+    foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
+    attackName: power.name,
+    power: powerInputs(power),
+    context: {
+      title,
+      how: i18n.format(namesAbility(power.system) ? "VARBORG.Power.HowNamed" : "VARBORG.Power.How", { ability: abilityLabel }),
+      target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : null,
+      modeLabel: modeLabel(diceRule, boons, banes),
+      ability: signed(abilityScore),
+      abilityLabel,
+      drNote: dr !== chosenDr ? i18n.format("VARBORG.Attack.DRFrom", { dr: chosenDr }) : null,
+      notes: [
+        automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
+        automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
+        ...notes,
+        paid.note,
+        weapon ? i18n.format("VARBORG.Power.WeaponNote", { name: weapon.name }) : null,
+        emberNote(use, Boolean(turn.combatant))
+      ].filter(Boolean),
+      thrownNote: null,
+      pipNote
+    }
+  };
+
+  const data = newFortuneData(CARD.ATTACK, actor, inputs, { dice: diceOf(roll), damage: null, maximized: false }, foe?.uuid ?? null);
+  const { content: cardContent, rolls } = await settleAttackCard(actor, data);
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    flavor: title,
+    content: cardContent,
+    rolls: [roll, ...rolls],
+    sound: CONFIG.sounds.dice,
+    flags: fortuneFlags(data)
+  });
+}
+
+/**
+ * The Sustain button: keep a Sustained power going until your next turn.
+ * In combat it spends one action, on your own turn only (rules 3.4).
+ */
+export async function sustainPower(actor, power) {
+  const i18n = game.i18n;
+  if (!power.system.sustaining) return;
+  const turn = turnState(actor);
+  const cost = sustainCost({ inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn });
+  if (!cost.allowed) {
+    ui.notifications.warn(i18n.localize("VARBORG.Power.SustainNotYourTurn"));
+    return;
+  }
+  if (power.system.kept && turn.combatant) {
+    ui.notifications.info(i18n.format("VARBORG.Power.AlreadyKept", { name: power.name }));
+    return;
+  }
+  if (cost.actions) {
+    if (turn.combatant.actionsLeft < cost.actions) ui.notifications.warn(i18n.localize("VARBORG.Power.NoActions"));
+    await turn.combatant.adjustPips("actions", -cost.actions);
+  }
+  await power.update({ "system.kept": Boolean(turn.combatant) });
+  await postLine(actor, i18n.format("VARBORG.Power.Sustained", { name: actor.name, power: power.name })
+    + (cost.actions ? ` ${i18n.localize("VARBORG.Attack.UsedAction")}` : ""));
+}
+
+/** The End button: stop sustaining a power. */
+export async function endPower(actor, power) {
+  if (!power.system.sustaining) return;
+  await power.update({ "system.sustaining": false, "system.kept": false });
+  await postLine(actor, game.i18n.format("VARBORG.Power.Ended", { power: power.name }));
+}
+
+/**
+ * End of the actor's turn: a Sustained power that was neither started nor
+ * sustained this turn ends. Runs on the Dark Master's client.
+ */
+export async function endOfTurnSustain(actor) {
+  for (const power of actor.itemTypes.power ?? []) {
+    if (!power.system.sustaining) continue;
+    const next = sustainAtEndOfTurn({ sustaining: power.system.sustaining, kept: power.system.kept });
+    await power.update({ "system.sustaining": next.sustaining, "system.kept": next.kept });
+    if (next.ended) await postLine(actor, game.i18n.format("VARBORG.Power.NotSustained", { power: power.name, name: actor.name }));
+  }
+}
+
+/** Does the power name its own test ability? */
+function namesAbility(system) {
+  return Boolean(system.ability) && system.ability !== "usual";
+}
+
+/** The outcome as the attack card uses it: hit, multiplier, no armour lowered, no Ruin. */
+export function powerCardOutcome(tier) {
+  const outcome = powerOutcome(tier);
+  return { hit: outcome.damage, multiplier: outcome.multiplier, lowerArmour: false, ruin: false };
+}
+
+async function postLine(actor, text) {
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card power-card"><p>${text}</p></div>`
+  });
+}

@@ -73,3 +73,10 @@ test("a settled card offers nothing", () => {
   assert.deepEqual(availableSpends({ card: CARD.DEFENCE, tier: "failure", damage: true, taken: 4, settled: true }), []);
   assert.throws(() => availableSpends({ card: "panic", tier: "failure" }), RangeError);
 });
+
+test("a power offers reroll damage but not maximum damage (GAPS 119)", () => {
+  assert.deepEqual(availableSpends({ card: CARD.ATTACK, tier: "success", damage: true, attack: false }),
+    [SPEND.REROLL, SPEND.REROLL_DAMAGE]);
+  assert.deepEqual(availableSpends({ card: CARD.ATTACK, tier: "success", damage: true }),
+    [SPEND.REROLL, SPEND.MAX_DAMAGE, SPEND.REROLL_DAMAGE]);
+});

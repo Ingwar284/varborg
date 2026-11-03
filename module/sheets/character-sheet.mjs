@@ -11,6 +11,8 @@ import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
+import { usePower, sustainPower, endPower } from "../dice/power.mjs";
+import { powerDr } from "../rules/powers.mjs";
 import { raiseShield, lowerShield } from "../dice/defence.mjs";
 import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
@@ -103,6 +105,18 @@ function originSummary(item) {
   return "";
 }
 
+/** One short line about a power: cost, actions, DR, source, Sustained. */
+function powerSummary(item) {
+  const i18n = game.i18n;
+  const system = item.system;
+  return [
+    `🟒${system.cost}${system.actions ? ` ${"◈".repeat(system.actions)}` : " ◇"}`,
+    i18n.format("VARBORG.Power.DrShort", { dr: powerDr(system.cost) }),
+    i18n.localize(`VARBORG.Power.Source.${system.source}`),
+    system.sustained ? i18n.localize("VARBORG.Power.SustainedLabel") : ""
+  ].filter(Boolean).join(" · ");
+}
+
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "character"],
@@ -124,7 +138,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       attack: CharacterSheet.#onAttack,
       recover: CharacterSheet.#onRecover,
       raiseShield: CharacterSheet.#onRaiseShield,
-      lowerShield: CharacterSheet.#onLowerShield
+      lowerShield: CharacterSheet.#onLowerShield,
+      usePower: CharacterSheet.#onUsePower,
+      sustainPower: CharacterSheet.#onSustainPower,
+      endPower: CharacterSheet.#onEndPower
     }
   };
 
@@ -230,6 +247,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           item.system.improving ? game.i18n.localize("VARBORG.Feat.Improving") : ""
         ].filter(Boolean).join(" · ")
       }));
+
+    // Powers, with a line such as "🟒1 ◈◈ · DR12 · Class power".
+    context.powers = actor.itemTypes.power
+      .toSorted((a, b) => a.sort - b.sort)
+      .map(item => ({ item, summary: powerSummary(item) }));
 
     const carried = carrying(
       actor.items.map(item => ({ type: item.type, ...item.system })),
@@ -340,6 +362,24 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Lower button ends the shield's cover. */
   static async #onLowerShield(event, button) {
     await lowerShield(this.document);
+  }
+
+  /** The fire button uses the power. */
+  static async #onUsePower(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await usePower(this.document, item);
+  }
+
+  /** The Sustain button keeps a Sustained power going (one action in combat). */
+  static async #onSustainPower(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await sustainPower(this.document, item);
+  }
+
+  /** The End button stops sustaining a power. */
+  static async #onEndPower(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await endPower(this.document, item);
   }
 
   /** The item a button in the inventory belongs to. */

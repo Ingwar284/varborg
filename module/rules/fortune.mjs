@@ -102,17 +102,21 @@ export function lowerDamage(taken, lowered = []) {
  * @param {string} options.tier            The tier the card shows.
  * @param {boolean} [options.damage]       Damage was rolled from a valid formula.
  * @param {boolean} [options.maximized]    The attack's damage is already maximum.
+ * @param {boolean} [options.attack]       The damage is from a weapon attack. Powers
+ *   use the attack card but are not weapon attacks, so they offer only reroll
+ *   damage, not "Deal maximum damage with an attack" (GAPS 119).
  * @param {number} [options.taken]         Damage the defender takes now.
  * @param {boolean} [options.settled]      Damage was taken or inflicted.
  * @returns {string[]}                     SPEND values, in button order.
  */
-export function availableSpends({ card, tier, damage = false, maximized = false, taken = 0, settled = false }) {
+export function availableSpends({ card, tier, damage = false, maximized = false, attack = true, taken = 0, settled = false }) {
   if (!Object.values(CARD).includes(card)) throw new RangeError(`Unknown card ${card}`);
   if (settled) return [];
   const spends = [SPEND.REROLL];
   if (softenTier(tier)) spends.push(SPEND.SOFTEN);
   if (damage && card === CARD.ATTACK) {
-    if (!maximized) spends.push(SPEND.MAX_DAMAGE, SPEND.REROLL_DAMAGE);
+    if (!maximized && attack) spends.push(SPEND.MAX_DAMAGE, SPEND.REROLL_DAMAGE);
+    else if (!maximized) spends.push(SPEND.REROLL_DAMAGE);
   }
   if (damage && card === CARD.DEFENCE) {
     spends.push(SPEND.REROLL_DAMAGE);

@@ -28,6 +28,10 @@
  * Fortune buttons (module/fortune.mjs). settleAttackCard works the card out
  * again after each use; pips, ammunition and the attack count are not spent
  * twice.
+ *
+ * Power cards (module/dice/power.mjs) use this card too: settleAttackCard
+ * then uses the power's outcomes (rules 3.10: no armour lowered, no attack
+ * Ruin, half damage on a Failure) and starts a Sustained power.
  */
 
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
@@ -47,6 +51,8 @@ import { markFired } from "../ammunition.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { powerDamage } from "../rules/powers.mjs";
+import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -191,12 +197,16 @@ export async function settleAttackCard(actor, data) {
   const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr });
   const tier = fortuneTier(result.tier, state.softened);
   state.tier = tier;
-  const outcome = attackOutcome(tier);
+  // A power uses its own outcomes (rules 3.10).
+  const power = inputs.power ?? null;
+  const outcome = power ? powerCardOutcome(tier) : attackOutcome(tier);
 
   // Damage, on a hit. Fortune can make it the most the dice can show.
+  // A power without damage dice deals none.
+  const invalid = power ? Boolean(inputs.damageInvalid) : !inputs.damageFormula;
   let damage = null;
-  if (outcome.hit && !inputs.damageFormula) damage = { invalid: true, formula: inputs.weaponDamage };
-  else if (outcome.hit) {
+  if (outcome.hit && invalid) damage = { invalid: true, formula: inputs.weaponDamage };
+  else if (outcome.hit && inputs.damageFormula) {
     if (state.damage === null) {
       const damageRoll = await new Roll(inputs.damageFormula).evaluate({ maximize: state.maximized });
       rolls.push(damageRoll);
@@ -205,14 +215,15 @@ export async function settleAttackCard(actor, data) {
     damage = {
       formula: inputs.damageFormula,
       rolled: state.damage,
-      total: attackDamage(state.damage, tier),
+      total: power ? powerDamage(state.damage, tier) : attackDamage(state.damage, tier),
       doubled: outcome.multiplier === 2,
+      halved: outcome.multiplier === 0.5,
       maximized: state.maximized
     };
   }
 
   // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
-  const nowRuined = ruinedAfterAttack(inputs.ruinedBefore, tier);
+  const nowRuined = power ? Boolean(inputs.ruinedBefore) : ruinedAfterAttack(inputs.ruinedBefore, tier);
   if (nowRuined !== (applied.ruin ?? inputs.ruinedBefore)) await actor.update({ "system.attackRuin": nowRuined });
   applied.ruin = nowRuined;
 
@@ -240,6 +251,9 @@ export async function settleAttackCard(actor, data) {
     armour = { text: i18n.format("VARBORG.Fortune.ArmourBack", { name: inputs.foe.name, die: armourLabel(from) }) };
   }
 
+  // A Sustained power starts when it takes effect.
+  const sustainNote = power ? await applySustain(actor, data, tier) : null;
+
   // Inflict damage on a foe. A Triumph's hit is soaked by the armour die
   // the foe had before the Triumph lowered it (GAPS 69).
   let inflict = null;
@@ -263,13 +277,18 @@ export async function settleAttackCard(actor, data) {
     dr: inputs.dr,
     tier,
     tierLabel: i18n.localize(`VARBORG.Tier.${tier}`),
-    outcomeText: i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
+    outcomeText: power ? powerOutcomeText(power, tier) : i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
+    description: power?.description || null,
+    sustainNote,
     naturalNote: naturalNote(result),
     damage,
     inflict,
     armour,
     ruinNote: nowRuined && !inputs.ruinedBefore ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
-    fortune: await fortuneSection(data, { tier, damage: Boolean(damage && !damage.invalid), maximized: state.maximized })
+    // Powers are not weapon attacks: no maximum damage (GAPS 119).
+    fortune: await fortuneSection(data, {
+      tier, damage: Boolean(damage && !damage.invalid), maximized: state.maximized, attack: !power
+    })
   });
   return { content, rolls };
 }

@@ -19,6 +19,7 @@
     "items/warrior.json",
     "items/wizard.json",
     "items/human.json",
-    "items/butcher.json"
+    "items/butcher.json",
+    "items/power-strike.json"
   ]
 }

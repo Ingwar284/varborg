@@ -379,7 +379,15 @@ or Improving. Old characters are brought over when the world loads
     *Test:* tests pass. Run three rounds and see 5, 10 and 15, then an empty
     pool after combat.
 
-27. **Powers in combat.** Power item (cost, actions, source, sustained,
+27. ~~**Powers in combat.**~~ Done: `module/rules/powers.mjs` with
+    `tests/powers.test.mjs`, the power item (`module/data/power.mjs`, its
+    sheet), `module/dice/power.mjs` (Use, Sustain, End; its card shares the
+    attack card), Sustain checked at the end of each turn in
+    `module/combat.mjs`, example `power-strike.json` (GAPS 116–121).
+    Designer ruling: powers are never weapon attacks; they test the boosted
+    ability unless the power names its own test (GAPS 117). A power can
+    add a chosen weapon's damage dice to its own (Power strike, GAPS 121).
+    Power item (cost, actions, source, sustained,
     damage, outcome texts). Rule, with tests: DR 11 + listed cost, tested
     with the key ability. A power that is an attack uses that attack's
     ability, and it counts towards the multiple-attack Bane. Failure deals

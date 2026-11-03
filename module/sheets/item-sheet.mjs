@@ -9,6 +9,8 @@
 
 import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import FeatData from "../data/feat.mjs";
+import PowerData from "../data/power.mjs";
+import { powerDr } from "../rules/powers.mjs";
 import { ClassData } from "../data/origins.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 
@@ -129,6 +131,49 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.sources = FeatData.SOURCES;
     // Foes never improve, so their passives can't be gained through Improving.
     context.canImprove = this.document.actor?.type !== "foe" && this.document.system.source !== "passive";
+    return context;
+  }
+}
+
+/**
+ * Powers (rules 3.10): the feat header (picture, name, source), then cost,
+ * actions, attack, damage, Sustained and the outcome texts, then a
+ * description.
+ */
+export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+  static DEFAULT_OPTIONS = {
+    classes: ["var-borg", "item"],
+    position: { width: 480, height: "auto" },
+    window: { resizable: true },
+    form: { submitOnChange: true }
+  };
+
+  static PARTS = {
+    header: { template: `${TEMPLATES}/feat-header.hbs` },
+    details: { template: `${TEMPLATES}/power-details.hbs` },
+    description: { template: `${TEMPLATES}/item-description.hbs` }
+  };
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const system = this.document.system;
+    context.item = this.document;
+    context.system = system;
+    context.sources = PowerData.SOURCES;
+    context.canImprove = false;
+    context.testAbilities = PowerData.TEST_ABILITIES;
+    const named = system.ability !== "usual";
+    context.drHint = game.i18n.format(named ? "VARBORG.Power.DrHintNamed" : "VARBORG.Power.DrHint", {
+      dr: powerDr(system.cost),
+      ability: named ? game.i18n.localize(`VARBORG.Ability.${system.ability}`) : ""
+    });
+    context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({
+      key,
+      label: `VARBORG.Tier.${key}`,
+      value: system.outcomes[key],
+      placeholder: game.i18n.localize(`VARBORG.Power.Outcome.${key}`)
+    }));
     return context;
   }
 }

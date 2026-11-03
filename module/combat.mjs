@@ -23,6 +23,7 @@ import { countDownWaking } from "./deaths-door.mjs";
 import { statusName } from "./conditions.mjs";
 import { askForAmmoRolls } from "./ammunition.mjs";
 import { fillPools, drainPools } from "./pools.mjs";
+import { endOfTurnSustain } from "./dice/power.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -82,7 +83,9 @@ export class VarBorgCombat extends foundry.documents.Combat {
    * At the end of each turn the actor takes its persistent damage
    * (rules 3.13), and its Panic results that last for turns lose one
    * (GAPS 79), and an unconscious character at Death's Door is a round
-   * closer to waking (GAPS 92). Foundry runs this on the Dark Master's client.
+   * closer to waking (GAPS 92). A Sustained power that was not started or
+   * sustained this turn ends (rules 3.4). Foundry runs this on the Dark
+   * Master's client.
    */
   async _onEndTurn(combatant, context) {
     await super._onEndTurn(combatant, context);
@@ -90,6 +93,7 @@ export class VarBorgCombat extends foundry.documents.Combat {
     await tickPersistentDamage(combatant.actor);
     await countDownPanic(combatant.actor);
     await countDownWaking(combatant.actor);
+    await endOfTurnSustain(combatant.actor);
   }
 
   /**

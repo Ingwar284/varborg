@@ -1,0 +1,37 @@
+<div class="var-borg-test-dialog power-dialog">
+  <p class="hint automatic">{{how}}</p>
+  <p class="hint automatic">{{useNote}}</p>
+  <p class="hint automatic">{{target}}</p>
+  {{#if weapons}}
+  <div class="form-group">
+    <label for="var-borg-power-weapon">{{localize "VARBORG.Power.Weapon"}}</label>
+    <select id="var-borg-power-weapon" name="weapon">
+      {{#each weapons}}<option value="{{id}}">{{label}}</option>{{/each}}
+    </select>
+    <p class="hint">{{localize "VARBORG.Power.WeaponHint"}}</p>
+  </div>
+  {{/if}}
+  <div class="form-group">
+    <label for="var-borg-power-dr">{{localize "VARBORG.Test.DR"}}</label>
+    <select id="var-borg-power-dr" name="dr">
+      {{#each drs}}
+      <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+      {{/each}}
+    </select>
+    {{#if armourNote}}<p class="hint automatic">{{armourNote}}</p>{{/if}}
+  </div>
+  {{#if encumberedNote}}<p class="hint automatic">{{encumberedNote}}</p>{{/if}}
+  {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
+  {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
+  <div class="form-group">
+    <label for="var-borg-power-boon">{{localize "VARBORG.Test.Boon"}}</label>
+    <input id="var-borg-power-boon" type="checkbox" name="boon">
+    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-power-bane">{{localize "VARBORG.Test.Bane"}}</label>
+    <input id="var-borg-power-bane" type="checkbox" name="bane">
+    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
+  </div>
+  {{{fortuneFields}}}
+</div>

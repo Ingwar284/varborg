@@ -19,6 +19,8 @@
   <p class="tier tier-{{tier}}">{{tierLabel}}</p>
   {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
   <p class="outcome">{{outcomeText}}</p>
+  {{#if description}}<p class="power-description">{{description}}</p>{{/if}}
+  {{#if sustainNote}}<p class="modifier">{{sustainNote}}</p>{{/if}}
   {{#if ruinNote}}<p class="modifier">{{ruinNote}}</p>{{/if}}
   {{#if damage}}
   <div class="damage">
@@ -27,7 +29,7 @@
     {{else}}
     <p class="damage-line">
       {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
-      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
+      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{#if damage.halved}}{{damage.rolled}} ÷ 2 = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
       {{#if damage.maximized}}<span class="modifier">{{localize "VARBORG.Fortune.Maximum"}}</span>{{/if}}
     </p>
     {{/if}}

@@ -16,6 +16,7 @@ import {
 import { isCumbersomeByDefault } from "../module/rules/carrying.mjs";
 import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, isMorale } from "../module/rules/foe.mjs";
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
+import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS, powerDr, powerAbility } from "../module/rules/powers.mjs";
 import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
 import { SPELL_LISTS, STARTING_DICE, wealthFormula } from "../module/rules/origins.mjs";
 
@@ -205,4 +206,27 @@ test("step 24: example classes, ancestry and background match rules 2.4 and 2.5"
   assert.deepEqual(pick(byName("Wizard")), ["sanity", 6, 1, "arcane", "d6"]);
   assert.equal(byName("Human").type, "ancestry");
   assert.deepEqual([byName("Butcher").system.wealth, byName("Butcher").system.keepsake], ["2d6 × 10 s", "Cleaver"]);
+});
+
+test("example powers follow the power rules", () => {
+  const powers = examples.filter(({ data }) => data.type === "power");
+  assert.ok(powers.length, "there is at least one example power");
+  for (const { file, data } of powers) {
+    const system = data.system;
+    assert.ok(POWER_SOURCES.includes(system.source), `${file}: source`);
+    assert.ok(POWER_TEST_ABILITIES.includes(system.ability), `${file}: tested ability`);
+    assert.ok(Number.isInteger(system.actions) && system.actions >= 0 && system.actions <= MAX_POWER_ACTIONS, `${file}: actions`);
+    if (system.damage) assert.ok(isDamageFormula(system.damage), `${file}: damage must be dice such as d6`);
+  }
+});
+
+test("Power strike is 🟒1 ◈◈, an ordinary power: the boosted ability at DR12, weapon damage + d6", () => {
+  const strike = examples.find(({ data }) => data.name === "Power strike").data.system;
+  assert.equal(strike.cost, 1);
+  assert.equal(strike.actions, 2);
+  assert.equal(powerDr(strike.cost), 12);
+  assert.equal(powerAbility(strike, "strength"), "strength");
+  assert.equal(powerAbility(strike, "presence"), "presence");
+  assert.equal(strike.damage, "d6");
+  assert.equal(strike.addsWeaponDamage, true);
 });

@@ -786,3 +786,34 @@
   padding: 0 0.1rem;
   line-height: 1.6rem;
 }
+
+/* Powers (step 27) */
+
+.var-borg-sheet .power-row .text-button {
+  flex: 0 0 auto;
+  width: auto;
+  height: 1.8rem;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .item-row .item-state.sustaining {
+  margin-left: 0.3rem;
+  color: #ef6c00;
+}
+
+.var-borg-card .power-description {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.var-borg-item-details fieldset label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.2rem 0;
+}
+
+.var-borg-item-details fieldset label span {
+  flex: 0 0 5rem;
+}
