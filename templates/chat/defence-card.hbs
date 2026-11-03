@@ -1,0 +1,46 @@
+<div class="var-borg-card test-card defence-card">
+  <h3>{{title}}</h3>
+  {{#if against}}<p class="modifier">{{against}}</p>{{/if}}
+  <div class="dice">
+    {{#each dice}}
+    <span class="die {{#unless kept}}dropped{{/unless}}">{{value}}</span>
+    {{/each}}
+    {{#if modeLabel}}<span class="mode">{{modeLabel}}</span>{{/if}}
+  </div>
+  <p class="sum">
+    {{localize "VARBORG.Test.KeptDie"}} {{kept}}
+    · {{abilityLabel}} {{ability}}
+  </p>
+  <p class="total">
+    <strong>{{total}}</strong> {{localize "VARBORG.Test.Versus"}} <strong>{{localize "VARBORG.Test.DR"}} {{dr}}</strong>
+    {{#if drNote}}<span class="modifier">{{drNote}}</span>{{/if}}
+  </p>
+  {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
+  <p class="tier tier-{{tier}}">{{tierLabel}}</p>
+  {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
+  <p class="outcome">{{outcomeText}}</p>
+  {{#if shieldNote}}<p class="modifier">{{shieldNote}}</p>{{/if}}
+  {{#if damage}}
+  <div class="damage">
+    {{#if damage.invalid}}
+    <p class="modifier">{{localize "VARBORG.Attack.BadDamage" formula=damage.formula}}</p>
+    {{else}}
+    <p class="damage-line">
+      {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
+      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{damage.before}}
+    </p>
+    {{#if damage.soakDie}}
+    <p class="damage-line">{{localize "VARBORG.Defence.Soak"}} ({{damage.soakDie}}): −{{damage.soak}}</p>
+    {{/if}}
+    <p class="damage-line">
+      {{localize "VARBORG.Defence.Taken"}}: <strong class="damage-total">{{damage.taken}}</strong>
+      {{#if damage.minimum}}<span class="modifier">{{localize "VARBORG.Defence.Minimum"}}</span>{{/if}}
+    </p>
+    <button type="button" data-action="takeDamage" data-actor-uuid="{{actorUuid}}" data-damage="{{damage.taken}}">
+      <i class="fa-solid fa-heart-crack"></i> {{takeLabel}}
+    </button>
+    {{/if}}
+  </div>
+  {{/if}}
+  {{#if armourNote}}<p class="modifier">{{armourNote}}</p>{{/if}}
+</div>

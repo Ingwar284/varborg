@@ -18,6 +18,15 @@
   </section>
   {{/if}}
 
+  {{#if raisedShield}}
+  <section class="shield-raised">
+    <p><strong>{{localize "VARBORG.Defence.RaisedTitle"}}</strong> {{raisedShield}}</p>
+    <button type="button" data-action="lowerShield">
+      <i class="fa-solid fa-shield"></i> {{localize "VARBORG.Defence.Lower"}}
+    </button>
+  </section>
+  {{/if}}
+
   {{#each inventory as |section|}}
   <section class="inventory-section">
     <h3>{{localize section.label}}</h3>
@@ -45,6 +54,12 @@
         <button type="button" class="icon-button" data-action="attack"
                 data-tooltip="{{localize 'VARBORG.Attack.Tooltip'}}" aria-label="{{localize 'VARBORG.Attack.Tooltip'}}">
           <i class="fa-solid fa-khanda"></i>
+        </button>
+        {{/if}}
+        {{#if canRaise}}
+        <button type="button" class="icon-button" data-action="raiseShield"
+                data-tooltip="{{localize 'VARBORG.Defence.RaiseTooltip'}}" aria-label="{{localize 'VARBORG.Defence.RaiseTooltip'}}">
+          <i class="fa-solid fa-shield-halved"></i>
         </button>
         {{/if}}
         {{#if canFire}}

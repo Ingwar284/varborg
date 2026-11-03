@@ -142,7 +142,9 @@
         "light": "Light shield",
         "heavy": "Heavy shield"
       },
-      "Hint": "Use an action to gain light or heavy cover until the start of your next turn."
+      "Hint": "Use an action to gain light (−2 DR to defend) or heavy (−4 DR) cover until the start of your next turn. An attack that only the cover stopped strikes the shield: a heavy shield becomes light, a light one is destroyed.",
+      "Destroyed": "Destroyed",
+      "DestroyedHint": "Struck while giving light cover. A destroyed shield gives no cover. Untick it once the shield is replaced."
     },
     "DR": {
       "6": "Eyes closed",
@@ -422,6 +424,51 @@
       "Recovered": "{name} recovers from the Ruin. Attacks no longer have Bane from it.",
       "RecoverNotYourTurn": "Recovering uses an action, so in combat you can only do it on your own turn.",
       "RecoverNoActions": "No actions left this turn. Recovering anyway; the Dark Master decides."
+    },
+    "Defence": {
+      "FoeAttackTooltip": "Attack: post a card the target defends against",
+      "FoeAttackTitle": "{name} attacks: {attack}",
+      "DefendAs": "Defend: {name}",
+      "Defend": "Defend",
+      "DefendHint": "Foes do not roll. The target tests Agility to defend.",
+      "NoTargetHint": "No character targeted. Whoever presses Defend defends with their own character.",
+      "DialogTitle": "{name} defends",
+      "CardTitle": "Defence against {name}",
+      "Against": "against {name}’s {attack}",
+      "Roll": "Defend",
+      "AutomaticHint": "Defence is Agility DR12. Heavy and special armour (+2 DR), a raised shield and Encumbered are added for you.",
+      "ArmourNote": "{dr} DR to defend: {name}",
+      "CoverNote": "{dr} DR: shield raised ({name})",
+      "SoakNote": "{name} soaks {die} if you are hit.",
+      "Outcome": {
+        "triumph": "You dodge, and can react with an Attack.",
+        "success": "You dodge.",
+        "failure": "You are hit. Take damage.",
+        "ruin": "You are hit: double damage, and your armour is reduced by one tier."
+      },
+      "Soak": "Armour soaks",
+      "Taken": "Damage taken",
+      "Minimum": "(a hit always deals at least 1)",
+      "TakeDamage": "Take {damage} damage",
+      "Took": "{name} takes {damage} damage: HP {from} → {to}.",
+      "ZeroHp": "0 HP. Wounds and the Table of Agony come in a later step; the Dark Master handles them by hand for now.",
+      "ArmourLowered": "{name}: tier {from} → {to}.",
+      "ArmourDestroyed": "{name}: tier {from} → {to}. Damaged below tier 1, it is destroyed.",
+      "Destroyed": "Destroyed",
+      "ShieldDamaged": "Only the cover stopped the blow: it strikes {name}, which is now a light shield.",
+      "ShieldDestroyed": "Only the cover stopped the blow: it strikes {name}, which is destroyed.",
+      "RaiseTooltip": "Raise shield: cover until the start of your next turn (◈)",
+      "Raised": "{name} raises {shield}: {dr} DR to defend until the start of their next turn.",
+      "RaisedTitle": "Shield raised.",
+      "RaisedHint": "{name}: −{dr} DR to defend until the start of your next turn.",
+      "RaisedNoShield": "No equipped shield gives cover.",
+      "Lower": "Lower",
+      "NoShield": "No equipped shield to raise.",
+      "RaiseNotYourTurn": "Raising a shield uses an action, so in combat you can only do it on your own turn.",
+      "RaiseNoActions": "No actions left this turn. Raising the shield anyway; the Dark Master decides.",
+      "AttackGone": "That attack no longer exists.",
+      "NoCharacter": "No character to defend. Target a character, select its token, or have a character assigned to you.",
+      "NotYours": "You do not own {name}."
     }
   }
 }

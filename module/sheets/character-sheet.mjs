@@ -10,6 +10,8 @@ import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
+import { raiseShield, lowerShield } from "../dice/defence.mjs";
+import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
@@ -65,6 +67,12 @@ function itemStates(item) {
   if (item.type === "weapon" && needsReload(system)) {
     states.push(system.loaded ? { key: "loaded", label: "VARBORG.Reload.Loaded" } : { key: "unloaded", label: "VARBORG.Reload.Empty" });
   }
+  if (item.type === "shield" && system.destroyed) {
+    states.push({ key: "destroyed", label: "VARBORG.Shield.Destroyed" });
+  }
+  if (item.type === "armour" && system.originalTier >= 1 && system.tier < 1) {
+    states.push({ key: "destroyed", label: "VARBORG.Defence.Destroyed" });
+  }
   if (system.usedUp) {
     states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
   }
@@ -89,7 +97,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
       attack: CharacterSheet.#onAttack,
-      recover: CharacterSheet.#onRecover
+      recover: CharacterSheet.#onRecover,
+      raiseShield: CharacterSheet.#onRaiseShield,
+      lowerShield: CharacterSheet.#onLowerShield
     }
   };
 
@@ -153,6 +163,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           storedIn: containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
           states: itemStates(item),
           canAttack: item.type === "weapon",
+          canRaise: item.type === "shield" && item.system.equipped && !item.system.destroyed && !system.shieldRaised,
           canExpendable: canRollExpendable(item.system),
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
@@ -177,6 +188,15 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       system.abilities.toughness
     );
     context.carrying = { ...carried, stateLabel: `VARBORG.Carrying.State.${carried.state}` };
+
+    // A raised shield: which one counts, and its cover (GAPS 46).
+    if (system.shieldRaised) {
+      const shield = strongestShield(actor.items.map(item => ({ id: item.id, type: item.type, ...item.system })));
+      const cover = shieldCover(shield, true);
+      context.raisedShield = cover
+        ? game.i18n.format("VARBORG.Defence.RaisedHint", { name: actor.items.get(shield.id)?.name, dr: cover })
+        : game.i18n.localize("VARBORG.Defence.RaisedNoShield");
+    }
     return context;
   }
 
@@ -247,6 +267,16 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Recover button ends an attack Ruin, spending an action in combat. */
   static async #onRecover(event, button) {
     await recoverFromRuin(this.document);
+  }
+
+  /** The shield button raises the strongest equipped shield (one action in combat). */
+  static async #onRaiseShield(event, button) {
+    await raiseShield(this.document);
+  }
+
+  /** The Lower button ends the shield's cover. */
+  static async #onLowerShield(event, button) {
+    await lowerShield(this.document);
   }
 
   /** The item a button in the inventory belongs to. */

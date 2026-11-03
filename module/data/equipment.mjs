@@ -157,7 +157,10 @@ export class ShieldData extends EquipmentData {
   static defineSchema() {
     return {
       ...super.defineSchema(),
-      size: choice(SHIELD_SIZES)
+      size: choice(SHIELD_SIZES),
+      // Struck as light cover and broken (rules 3.8, GAPS 66). It stays
+      // until someone deletes it, but gives no cover.
+      destroyed: new BooleanField({ initial: false })
     };
   }
 

@@ -18,3 +18,17 @@ export function capHp(value, max) {
   }
   return Math.min(value, max);
 }
+
+/**
+ * HP after taking damage. HP never drops below 0; what happens at 0 HP
+ * (wounds, the Table of Agony) comes in a later step.
+ * @param {number} value   Current HP, a whole number.
+ * @param {number} damage  Damage taken, a whole number of 0 or more.
+ * @returns {number}
+ */
+export function hpAfterDamage(value, damage) {
+  if (!Number.isInteger(value) || !Number.isInteger(damage) || damage < 0) {
+    throw new RangeError(`HP and damage must be whole numbers (damage 0 or more), got ${value} and ${damage}`);
+  }
+  return Math.max(0, value - damage);
+}

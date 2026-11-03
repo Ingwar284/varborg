@@ -65,6 +65,10 @@
         <img src="{{item.img}}" alt="">
         <span class="item-name">{{item.name}}</span>
         <span class="item-summary">{{summary}}</span>
+        <button type="button" class="icon-button" data-action="attack"
+                data-tooltip="{{localize 'VARBORG.Defence.FoeAttackTooltip'}}" aria-label="{{localize 'VARBORG.Defence.FoeAttackTooltip'}}">
+          <i class="fa-solid fa-khanda"></i>
+        </button>
         <button type="button" class="icon-button" data-action="editItem"
                 data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
           <i class="fa-solid fa-pen"></i>

@@ -1,0 +1,17 @@
+<div class="var-borg-card foe-attack-card">
+  <h3>{{title}}</h3>
+  {{#if how}}<p class="modifier">{{how}}</p>{{/if}}
+  <p class="hint">{{hint}}</p>
+  <div class="card-buttons">
+    {{#each targets}}
+    <button type="button" data-action="defend" data-attack-uuid="{{@root.attackUuid}}" data-actor-uuid="{{uuid}}">
+      <i class="fa-solid fa-shield-halved"></i> {{label}}
+    </button>
+    {{else}}
+    <button type="button" data-action="defend" data-attack-uuid="{{attackUuid}}">
+      <i class="fa-solid fa-shield-halved"></i> {{localize "VARBORG.Defence.Defend"}}
+    </button>
+    {{/each}}
+  </div>
+  {{#if pipNote}}<p class="modifier">{{pipNote}}</p>{{/if}}
+</div>

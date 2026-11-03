@@ -7,6 +7,7 @@
 
 import FoeData from "../data/foe.mjs";
 import { moraleChoices } from "../rules/foe.mjs";
+import { foeAttack } from "../dice/defence.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -38,7 +39,8 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     actions: {
       createItem: FoeSheet.#onCreateItem,
       editItem: FoeSheet.#onEditItem,
-      deleteItem: FoeSheet.#onDeleteItem
+      deleteItem: FoeSheet.#onDeleteItem,
+      attack: FoeSheet.#onAttack
     }
   };
 
@@ -83,6 +85,12 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const system = type === "feat" ? { source: "passive" } : { kind: "melee" };
     const [item] = await this.document.createEmbeddedDocuments("Item", [{ name, type, system }]);
     item?.sheet.render(true);
+  }
+
+  /** The sword button posts the attack, with a Defend button for each target. */
+  static async #onAttack(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await foeAttack(this.document, item);
   }
 
   /** The pencil button opens the item's own sheet. */

@@ -39,6 +39,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       silver: wholeNumber(),
       // An attack Ruin: Bane on attacks until Recover (rules 3.4, GAPS 17).
       attackRuin: new BooleanField({ required: true, initial: false }),
+      // A raised shield: cover until the start of your next turn (rules 3.8).
+      shieldRaised: new BooleanField({ required: true, initial: false }),
       // Rules 2.1, Step 6: Details.
       details: new SchemaField({
         personality: new StringField({ required: true, initial: "" }),

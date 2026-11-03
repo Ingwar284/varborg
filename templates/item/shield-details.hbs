@@ -4,6 +4,10 @@
       <span>{{localize "VARBORG.Shield.SizeLabel"}}</span>
       <select name="system.size">{{selectOptions sizes selected=system.size localize=true}}</select>
     </label>
+    <label data-tooltip="{{localize 'VARBORG.Shield.DestroyedHint'}}">
+      <input type="checkbox" name="system.destroyed" {{checked system.destroyed}}>
+      <span>{{localize "VARBORG.Shield.Destroyed"}}</span>
+    </label>
   </div>
   <p class="hint">{{localize "VARBORG.Shield.Hint"}}</p>
 </section>

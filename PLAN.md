@@ -208,7 +208,14 @@ prices, traits and tiers against 4.1.
     *Test:* force a Ruin. Attacks show Bane, then press Recover and one
     action pip is used.
 
-16. **Defence and taking damage.** Rule, with tests: defence is Agility
+16. ~~**Defence and taking damage.**~~ Done: `module/rules/defence.mjs`
+    with `tests/defence.test.mjs`, `hpAfterDamage` in
+    `module/rules/health.mjs`, `module/dice/defence.mjs`, a foe attack card
+    with **Defend** buttons, a defence dialog and card with **Take
+    damage**, an Attack button on foe attacks, **Raise shield** and
+    **Lower** on the character, a "destroyed" box on shields, and raised
+    shields lowered at the start of your next turn (GAPS 64–68).
+    Rule, with tests: defence is Agility
     DR12. Tier 3 and 4 armour add +2 DR to defence; lower tiers add nothing.
     The armour soak die is subtracted from damage (t1 d2, t2 d4, t3 d6, t4
     d8), minimum 1 damage. Raising a shield (◈) gives light or heavy cover

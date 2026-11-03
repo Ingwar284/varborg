@@ -11,6 +11,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | # | Question | Ruling | Status |
 |---|---|---|---|
 | 55 | Lockpicks have two expendable dice by test result (Failure d6, Ruin d2), but an item holds one expendable die. How should the system handle that? | Deferred until tests can be tied to items. Until then lockpicks have no expendable die in the system and are rolled by hand. | Open |
+| 68 | Raising a shield costs an action (◈). What happens outside combat, or on someone else's turn in combat? | Provisional (step 16): outside combat the shield is raised with no action tracked, and stays raised until you press Lower. In combat it is only allowed on your own turn and spends one action. A raised shield is lowered at the start of your next turn, and when combat ends. | Open |
 | 63 | Recover from an attack Ruin "spends an action". What happens outside combat, or on someone else's turn in combat? Does the Ruin end when combat ends? | Provisional (step 15): outside combat Recover just ends the Ruin, with no action tracked. In combat it is only allowed on your own turn and spends one action (◈). The Ruin lasts until Recover, even after combat ends. | Open |
 
 ## Character creation and classes
@@ -67,6 +68,10 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 54 | Items bought or found in numbers (Sanity + 4 torches, 10 iron nails, dried food per day): should gear have a quantity, or is each one a separate item? | Gear has a quantity; weapons, armour and shields do not. Each piece counts: a stack of 3 cumbersome barrels is 3 cumbersome items, and 6 torches fill 6 places in a container. On an expendable 1, one of the stack is used up (quantity −1); the last one is marked used up. A use that is not a 1 (drinking one potion) is lowered by hand. | Resolved |
 | 60 | Multiple-attack Bane when a turn mixes weapons (for example a greatsword, then an agile dagger)? | Every attack made this turn counts. The weapon used now decides: an agile weapon has Bane from the 3rd attack, any other from the 2nd. Greatsword then dagger: no Bane. Dagger then greatsword: Bane. | Resolved |
 | 61 | Does pressing Attack in combat use a pip? | Yes. On your own turn it uses one action (◈) and counts for the multiple-attack Bane. On someone else's turn it uses your reaction (↻) and does not count (GAPS 18). | Resolved |
+| 64 | A defence Ruin means "double damage" and the armour "reduced by one tier". In what order do doubling and the armour's soak happen? | Roll the damage, double it, then subtract the soak die of the armour as it was before the hit. The armour drops one tier afterwards. A hit still deals at least 1. | Resolved |
+| 65 | Heavy and special armour "defend at +2 DR". Does that follow the original tier or the current tier once the armour is damaged? | The original tier ("Damaged armour retains its penalties"), as with the Agility penalty (GAPS 50). The soak die follows the current tier. | Resolved |
+| 66 | An attack that misses only because of cover "strikes the cover instead" (heavy becomes light, light is destroyed). What does that do to a raised shield? | The shield item itself is damaged: a heavy shield becomes a light shield, and a light shield is marked destroyed (it stays on the sheet but gives no cover). | Resolved |
+| 67 | Does Encumbered ("bane on any strength and agility tests") give Bane on defence? | Yes. Defence is an Agility test. Only armour's Agility penalty is exempt from defence (rules 3.8). | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom

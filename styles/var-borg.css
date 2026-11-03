@@ -563,3 +563,30 @@
 .var-borg-card .damage-total {
   font-size: 1.4rem;
 }
+
+/* Defence: raised shield, destroyed items, card buttons (step 16) */
+
+.var-borg-sheet .shield-raised {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #1565c0;
+  border-radius: 4px;
+}
+
+.var-borg-sheet .shield-raised p { flex: 1; margin: 0; }
+.var-borg-sheet .shield-raised strong { color: #1565c0; }
+.var-borg-sheet .shield-raised button { flex: 0 0 auto; width: auto; }
+
+.var-borg-sheet .item-row .item-state.destroyed {
+  color: #b71c1c;
+}
+
+.var-borg-card .card-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0.3rem 0;
+}

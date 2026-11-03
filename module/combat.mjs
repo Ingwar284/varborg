@@ -34,12 +34,24 @@ export class VarBorgCombat extends foundry.documents.Combat {
 
   /**
    * At the start of each turn: three actions and one reaction (rules 3.4),
-   * and no attacks made yet (for the multiple-attack Bane).
+   * and no attacks made yet (for the multiple-attack Bane). A shield raised
+   * last turn is lowered: its cover lasts "until the start of your next
+   * turn" (rules 3.8).
    */
   async _onStartTurn(combatant, context) {
     await super._onStartTurn(combatant, context);
     const { actions, reactions } = freshTurn();
     await combatant.update({ [`flags.${SYSTEM}`]: { actions, reactions, attacks: 0 } });
+    if (combatant.actor?.system.shieldRaised) await combatant.actor.update({ "system.shieldRaised": false });
+  }
+
+  /** When combat ends, raised shields are lowered: there is no next turn. */
+  _onDelete(options, userId) {
+    super._onDelete(options, userId);
+    if (!game.users.activeGM?.isSelf) return;
+    for (const combatant of this.combatants) {
+      if (combatant.actor?.system.shieldRaised) combatant.actor.update({ "system.shieldRaised": false });
+    }
   }
 }
 
