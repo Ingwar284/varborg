@@ -136,6 +136,22 @@
 .var-borg-sheet .carrying-overloaded .carrying-state,
 .var-borg-sheet .carrying-overloaded .movement-value { color: #b71c1c; }
 
+/* Attack Ruin and Recover */
+
+.var-borg-sheet .attack-ruin {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #b71c1c;
+  border-radius: 4px;
+}
+
+.var-borg-sheet .attack-ruin p { flex: 1; margin: 0; }
+.var-borg-sheet .attack-ruin strong { color: #b71c1c; }
+.var-borg-sheet .attack-ruin button { flex: 0 0 auto; width: auto; }
+
 /* Inventory list */
 
 .var-borg-sheet h3 {

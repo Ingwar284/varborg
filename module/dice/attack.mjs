@@ -13,6 +13,9 @@
  * The target is the token you have targeted. On a Triumph against a foe,
  * its armour die steps down one: straight away if you may change the foe,
  * otherwise the card gets a button for the Dark Master.
+ *
+ * A Ruin marks the character (system.attackRuin): Bane on every attack until
+ * they press Recover on the sheet, which spends one action (GAPS 17, 63).
  */
 
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
@@ -21,7 +24,8 @@ import { isDamageFormula } from "../rules/equipment.mjs";
 import { needsReload, canFire } from "../rules/expendable.mjs";
 import {
   ATTACK_DR, attackModes, attackAbilities, weaponDr, attackDistance, attackBanes,
-  countsAsTurnAttack, damageFormula, attackOutcome, attackDamage, stepDownArmourDie
+  countsAsTurnAttack, damageFormula, attackOutcome, attackDamage, stepDownArmourDie,
+  ruinedAfterAttack, recoverCost
 } from "../rules/attack.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote } from "./ability-test.mjs";
 import { turnState } from "../combat.mjs";
@@ -50,15 +54,16 @@ export async function rollAttack(actor, item) {
   const attacksBefore = turn.onOwnTurn ? turn.combatant.attacksThisTurn : 0;
   const target = [...game.user.targets][0]?.actor ?? null;
 
-  const options = await askAttackOptions(item, { turn, attacksBefore, target });
+  const ruined = actor.system.attackRuin;
+  const options = await askAttackOptions(item, { turn, attacksBefore, target, ruined });
   if (!options) return;
   const { mode, ability } = options;
 
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
-  const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange });
+  const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
   const boonCount = options.boon ? 1 : 0;
-  const baneCount = [options.bane, automatic.encumberedBane, banes.multiple, banes.range].filter(Boolean).length;
+  const baneCount = [options.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length;
   const diceRule = diceMode(boonCount, baneCount);
   const abilityScore = actor.system.abilities[ability];
   const extraDr = weaponDr(weapon, options.oneHanded);
@@ -89,6 +94,10 @@ export async function rollAttack(actor, item) {
       damage = { invalid: true, formula: weapon.damage };
     }
   }
+
+  // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
+  const nowRuined = ruinedAfterAttack(ruined, result.tier);
+  if (nowRuined !== ruined) await actor.update({ "system.attackRuin": nowRuined });
 
   // Firing empties a weapon with Reload (GAPS 53).
   if (mode === "shoot" && needsReload(weapon)) await item.update({ "system.loaded": false });
@@ -128,7 +137,8 @@ export async function rollAttack(actor, item) {
     automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     banes.multiple ? i18n.format("VARBORG.Attack.MultipleBane", { count: attacksBefore + 1 }) : null,
-    banes.range ? i18n.format("VARBORG.Attack.RangeBane", { feet: attackDistance(weapon, mode) }) : null
+    banes.range ? i18n.format("VARBORG.Attack.RangeBane", { feet: attackDistance(weapon, mode) }) : null,
+    banes.ruin ? i18n.localize("VARBORG.Attack.RuinBane") : null
   ].filter(Boolean);
 
   const content = await renderTemplate(CARD_TEMPLATE, {
@@ -151,6 +161,7 @@ export async function rollAttack(actor, item) {
     damage,
     armour,
     thrownNote: mode === "throw" ? i18n.localize("VARBORG.Attack.Retrieve") : null,
+    ruinNote: nowRuined && !ruined ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
     pipNote
   });
 
@@ -168,7 +179,7 @@ export async function rollAttack(actor, item) {
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
  *   dr: number, boon: boolean, bane: boolean}|null>}
  */
-async function askAttackOptions(item, { turn, attacksBefore, target }) {
+async function askAttackOptions(item, { turn, attacksBefore, target, ruined }) {
   const i18n = game.i18n;
   const weapon = item.system;
   const modes = attackModes(weapon);
@@ -205,6 +216,7 @@ async function askAttackOptions(item, { turn, attacksBefore, target }) {
     heavyNote: weapon.heavy ? i18n.localize("VARBORG.Attack.HeavyNote") : null,
     multipleNote: multiple ? i18n.localize(weapon.agile ? "VARBORG.Attack.MultipleNoteAgile" : "VARBORG.Attack.MultipleNote") : null,
     turnNote,
+    ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget")
   });
 
@@ -229,6 +241,33 @@ async function askAttackOptions(item, { turn, attacksBefore, target }) {
     boon: Boolean(data.boon),
     bane: Boolean(data.bane)
   };
+}
+
+/**
+ * The Recover button: end an attack Ruin. In combat it must be your own
+ * turn, and it spends one action (rules 3.4, GAPS 17 and 63).
+ * @param {Actor} actor  The ruined character.
+ */
+export async function recoverFromRuin(actor) {
+  const i18n = game.i18n;
+  if (!actor.system.attackRuin) return;
+  const turn = turnState(actor);
+  const cost = recoverCost({ inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn });
+  if (!cost.allowed) {
+    ui.notifications.warn(i18n.localize("VARBORG.Attack.RecoverNotYourTurn"));
+    return;
+  }
+  if (cost.actions) {
+    if (turn.combatant.actionsLeft < cost.actions) ui.notifications.warn(i18n.localize("VARBORG.Attack.RecoverNoActions"));
+    await turn.combatant.adjustPips("actions", -cost.actions);
+  }
+  await actor.update({ "system.attackRuin": false });
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${i18n.format("VARBORG.Attack.Recovered", { name: actor.name })}</p>`
+      + (cost.actions ? `<p class="modifier">${i18n.localize("VARBORG.Attack.UsedAction")}</p>` : "")
+      + "</div>"
+  });
 }
 
 /**

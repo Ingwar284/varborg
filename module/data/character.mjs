@@ -9,7 +9,7 @@
 import { ABILITIES, ABILITY_MIN, ABILITY_MAX } from "../rules/abilities.mjs";
 import { capHp } from "../rules/health.mjs";
 
-const { SchemaField, NumberField, StringField } = foundry.data.fields;
+const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
 
 /** A whole number that can never go below `min`. */
 function wholeNumber({ min = 0, max, initial = 0 } = {}) {
@@ -37,6 +37,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       fortune: wholeNumber(),
       // Silver is the only currency (GAPS 35).
       silver: wholeNumber(),
+      // An attack Ruin: Bane on attacks until Recover (rules 3.4, GAPS 17).
+      attackRuin: new BooleanField({ required: true, initial: false }),
       // Rules 2.1, Step 6: Details.
       details: new SchemaField({
         personality: new StringField({ required: true, initial: "" }),

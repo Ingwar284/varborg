@@ -21,6 +21,9 @@
  * weapon used now decides whether Bane starts from the 2nd or (agile) the
  * 3rd attack. An attack on your own turn uses an action; one on someone
  * else's turn uses your reaction and is not counted (GAPS 18).
+ *
+ * Step 15: a Ruin leaves the attacker "ruined" (Bane on every attack) until
+ * they Recover, which spends one action (GAPS 17, 63).
  */
 
 import { FOE_ARMOUR_DICE } from "./foe.mjs";
@@ -115,13 +118,44 @@ export function multipleAttackBane(attacksBefore, agile = false) {
  * @param {number} options.attacksBefore  Attacks already made this turn.
  * @param {boolean} options.onOwnTurn     Whether it is the attacker's turn.
  * @param {boolean} options.beyondRange   The target is farther than the weapon's distance.
- * @returns {{multiple: boolean, range: boolean}}
+ * @param {boolean} options.ruined        An earlier Ruin not yet recovered from.
+ * @returns {{multiple: boolean, range: boolean, ruin: boolean}}
  */
-export function attackBanes({ weapon, mode, attacksBefore = 0, onOwnTurn = false, beyondRange = false }) {
+export function attackBanes({ weapon, mode, attacksBefore = 0, onOwnTurn = false, beyondRange = false, ruined = false }) {
   return {
     multiple: countsAsTurnAttack(onOwnTurn) && multipleAttackBane(attacksBefore, weapon.agile),
-    range: Boolean(beyondRange) && attackDistance(weapon, mode) > 0
+    range: Boolean(beyondRange) && attackDistance(weapon, mode) > 0,
+    ruin: Boolean(ruined)
   };
+}
+
+/** Recovering from an attack Ruin costs one action (rules 3.4). */
+export const RECOVER_ACTIONS = 1;
+
+/**
+ * Is the attacker ruined after this attack? A Ruin makes them so; any
+ * other result leaves things as they were, since only Recover ends it.
+ * @param {boolean} ruined  Ruined before the attack.
+ * @param {string} tier     The attack's result.
+ */
+export function ruinedAfterAttack(ruined, tier) {
+  return attackOutcome(tier).ruin || Boolean(ruined);
+}
+
+/**
+ * What pressing Recover does (GAPS 63).
+ * Out of combat: the Ruin simply ends; no action is tracked.
+ * In combat, on your own turn: it ends and one action is spent.
+ * In combat, on someone else's turn: not allowed, as it needs an action.
+ * @param {object} options
+ * @param {boolean} options.inCombat   The attacker is in a running combat.
+ * @param {boolean} options.onOwnTurn  It is the attacker's turn.
+ * @returns {{allowed: boolean, actions: number}}  Actions to spend.
+ */
+export function recoverCost({ inCombat = false, onOwnTurn = false } = {}) {
+  if (!inCombat) return { allowed: true, actions: 0 };
+  if (!onOwnTurn) return { allowed: false, actions: 0 };
+  return { allowed: true, actions: RECOVER_ACTIONS };
 }
 
 /**

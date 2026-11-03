@@ -11,6 +11,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | # | Question | Ruling | Status |
 |---|---|---|---|
 | 55 | Lockpicks have two expendable dice by test result (Failure d6, Ruin d2), but an item holds one expendable die. How should the system handle that? | Deferred until tests can be tied to items. Until then lockpicks have no expendable die in the system and are rolled by hand. | Open |
+| 63 | Recover from an attack Ruin "spends an action". What happens outside combat, or on someone else's turn in combat? Does the Ruin end when combat ends? | Provisional (step 15): outside combat Recover just ends the Ruin, with no action tracked. In combat it is only allowed on your own turn and spends one action (◈). The Ruin lasts until Recover, even after combat ends. | Open |
 
 ## Character creation and classes
 

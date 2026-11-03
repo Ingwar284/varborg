@@ -412,7 +412,16 @@
       "UsedReaction": "Used your reaction (↻).",
       "NoActions": "No actions left this turn. The attack is rolled anyway; the Dark Master decides.",
       "NoReaction": "No reaction left. The attack is rolled anyway; the Dark Master decides.",
-      "UsualAbility": "As usual ({list})"
+      "UsualAbility": "As usual ({list})",
+      "RuinNote": "Your last attack was a Ruin: Bane until you Recover.",
+      "RuinBane": "Ruin not yet recovered from: Bane.",
+      "RuinedNow": "Bane on your attacks until you press Recover on your sheet (one action).",
+      "RuinedTitle": "Weapon jammed or grip faltered.",
+      "RuinedHint": "Bane on attacks until you Recover. In combat this uses one action (◈) on your turn.",
+      "Recover": "Recover",
+      "Recovered": "{name} recovers from the Ruin. Attacks no longer have Bane from it.",
+      "RecoverNotYourTurn": "Recovering uses an action, so in combat you can only do it on your own turn.",
+      "RecoverNoActions": "No actions left this turn. Recovering anyway; the Dark Master decides."
     }
   }
 }

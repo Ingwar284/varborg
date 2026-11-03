@@ -200,7 +200,10 @@ prices, traits and tiers against 4.1.
     *Test:* tests pass. Attack the Bellman twice in a turn and the second
     attack has Bane. A Triumph takes its armour from d2 to none.
 
-15. **Attack Ruin and Recover.** A Ruin gives Bane on attacks until you
+15. ~~**Attack Ruin and Recover.**~~ Done: `ruinedAfterAttack` and
+    `recoverCost` in `module/rules/attack.mjs` with tests, an `attackRuin`
+    box on the character, and a **Recover** button in the Inventory tab
+    while it is set (GAPS 17, 63). A Ruin gives Bane on attacks until you
     press **Recover**, which spends one action.
     *Test:* force a Ruin. Attacks show Bane, then press Recover and one
     action pip is used.

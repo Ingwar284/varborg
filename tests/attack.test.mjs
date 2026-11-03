@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import {
   ATTACK_DR, ATTACK_ABILITY, attackModes, attackAbilities, weaponDr, attackDistance,
   countsAsTurnAttack, multipleAttackBane, attackBanes, damageFormula, attackOutcome,
-  attackDamage, stepDownArmourDie
+  attackDamage, stepDownArmourDie, ruinedAfterAttack, recoverCost, RECOVER_ACTIONS
 } from "../module/rules/attack.mjs";
 
 const example = name => JSON.parse(readFileSync(new URL(`../content/examples/items/${name}.json`, import.meta.url))).system;
@@ -107,4 +107,21 @@ test("a foe's armour die steps down one: d8, d6, d4, d2, none (GAPS 12)", () => 
   assert.equal(stepDownArmourDie("d2"), "");
   assert.equal(stepDownArmourDie(""), "");
   assert.throws(() => stepDownArmourDie("d12"));
+});
+
+test("a Ruin gives Bane on attacks until you recover (rules 3.4)", () => {
+  assert.equal(ruinedAfterAttack(false, "ruin"), true);
+  assert.equal(ruinedAfterAttack(false, "failure"), false);
+  // Only Recover ends it: even a Triumph leaves you ruined.
+  assert.equal(ruinedAfterAttack(true, "triumph"), true);
+  assert.equal(ruinedAfterAttack(true, "success"), true);
+  assert.equal(attackBanes({ weapon: dagger, mode: "melee", ruined: true }).ruin, true);
+  assert.equal(attackBanes({ weapon: dagger, mode: "melee" }).ruin, false);
+});
+
+test("Recover spends one action on your own turn (GAPS 63)", () => {
+  assert.equal(RECOVER_ACTIONS, 1);
+  assert.deepEqual(recoverCost({ inCombat: true, onOwnTurn: true }), { allowed: true, actions: 1 });
+  assert.deepEqual(recoverCost({ inCombat: true, onOwnTurn: false }), { allowed: false, actions: 0 });
+  assert.deepEqual(recoverCost({ inCombat: false }), { allowed: true, actions: 0 });
 });

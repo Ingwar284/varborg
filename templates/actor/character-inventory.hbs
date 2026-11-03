@@ -9,6 +9,15 @@
     <p class="hint">{{localize (concat "VARBORG.Carrying.Hint." carrying.state)}}</p>
   </section>
 
+  {{#if system.attackRuin}}
+  <section class="attack-ruin">
+    <p><strong>{{localize "VARBORG.Attack.RuinedTitle"}}</strong> {{localize "VARBORG.Attack.RuinedHint"}}</p>
+    <button type="button" data-action="recover">
+      <i class="fa-solid fa-hand-fist"></i> {{localize "VARBORG.Attack.Recover"}}
+    </button>
+  </section>
+  {{/if}}
+
   {{#each inventory as |section|}}
   <section class="inventory-section">
     <h3>{{localize section.label}}</h3>

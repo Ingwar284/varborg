@@ -9,7 +9,7 @@ import { rollAbilityTest } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
-import { rollAttack } from "../dice/attack.mjs";
+import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
@@ -88,7 +88,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollExpendable: CharacterSheet.#onRollExpendable,
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
-      attack: CharacterSheet.#onAttack
+      attack: CharacterSheet.#onAttack,
+      recover: CharacterSheet.#onRecover
     }
   };
 
@@ -241,6 +242,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onAttack(event, button) {
     const item = this.#itemFor(button);
     if (item) await rollAttack(this.document, item);
+  }
+
+  /** The Recover button ends an attack Ruin, spending an action in combat. */
+  static async #onRecover(event, button) {
+    await recoverFromRuin(this.document);
   }
 
   /** The item a button in the inventory belongs to. */
