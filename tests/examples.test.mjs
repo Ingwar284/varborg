@@ -17,6 +17,7 @@ import { isCumbersomeByDefault } from "../module/rules/carrying.mjs";
 import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, isMorale } from "../module/rules/foe.mjs";
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
 import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
+import { SPELL_LISTS, STARTING_DICE, wealthFormula } from "../module/rules/origins.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -187,4 +188,21 @@ test("step 12: the Ash-Choked Bellman matches its write-up in rules 6", () => {
   // No ids shared with any other example, inside or outside an actor.
   const ids = [...examples.map(({ data }) => data._id), ...examples.flatMap(({ data }) => (data.items ?? []).map(i => i._id))];
   assert.equal(new Set(ids).size, ids.length);
+});
+
+test("step 24: example classes, ancestry and background match rules 2.4 and 2.5", () => {
+  for (const { file, data } of ofType("class")) {
+    assert.ok(ABILITIES.includes(data.system.boostedAbility), `${file}: unknown boosted ability`);
+    assert.ok(SPELL_LISTS.includes(data.system.spellList), `${file}: unknown spell list`);
+    assert.ok(STARTING_DICE.includes(data.system.startingDie), `${file}: unknown starting die`);
+  }
+  for (const { file, data } of ofType("background")) {
+    assert.ok(wealthFormula(data.system.wealth), `${file}: wealth "${data.system.wealth}" is not dice`);
+  }
+  const byName = name => examples.find(({ data }) => data.name === name)?.data;
+  const pick = ({ system: s }) => [s.boostedAbility, s.hpBase, s.maxWounds, s.spellList, s.startingDie];
+  assert.deepEqual(pick(byName("Warrior")), ["strength", 10, 3, "none", "d10"]);
+  assert.deepEqual(pick(byName("Wizard")), ["sanity", 6, 1, "arcane", "d6"]);
+  assert.equal(byName("Human").type, "ancestry");
+  assert.deepEqual([byName("Butcher").system.wealth, byName("Butcher").system.keepsake], ["2d6 × 10 s", "Cleaver"]);
 });

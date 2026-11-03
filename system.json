@@ -36,7 +36,10 @@
       "shield": {},
       "gear": {},
       "container": {},
-      "feat": {}
+      "feat": {},
+      "class": {},
+      "ancestry": {},
+      "background": {}
     }
   },
   "initiative": "1d6",

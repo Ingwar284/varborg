@@ -1,7 +1,7 @@
 /**
  * Data for a player character (actor type "character").
  *
- * Rules: 2.1 Creating your PC, 2.2 Abilities, 3.5 Health and wounds,
+ * Rules: 2.1 Creating your PC, 2.2 Abilities, 2.5 Pick a class, 3.5 Health and wounds,
  * 3.9 Fortune, 3.12 Panic, 4. Economy. Foundry keeps every number inside its min/max,
  * so typing +9 for an ability saves +6. HP is also kept at or below max HP.
  */
@@ -60,6 +60,15 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
         callToAdventure: new StringField({ required: true, initial: "" })
       })
     };
+  }
+
+  /**
+   * The key ability for powers is the class's boosted ability (GAPS 2), or
+   * null without a class.
+   */
+  prepareDerivedData() {
+    super.prepareDerivedData();
+    this.keyAbility = this.parent.itemTypes.class?.[0]?.system.boostedAbility ?? null;
   }
 
   /**

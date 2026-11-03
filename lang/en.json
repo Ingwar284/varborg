@@ -10,7 +10,10 @@
       "shield": "Shield",
       "gear": "Gear",
       "container": "Container",
-      "feat": "Feat"
+      "feat": "Feat",
+      "class": "Class",
+      "ancestry": "Ancestry",
+      "background": "Background"
     }
   },
   "VARBORG": {
@@ -61,7 +64,10 @@
       },
       "Foe": "VÅR BORG foe sheet",
       "Feat": "VÅR BORG feat sheet",
-      "Feats": "Feats"
+      "Feats": "Feats",
+      "Class": "VÅR BORG class sheet",
+      "Ancestry": "VÅR BORG ancestry sheet",
+      "Background": "VÅR BORG background sheet"
     },
     "Item": {
       "Price": "Price (s)",
@@ -1066,6 +1072,60 @@
       "VesselCount": "Dark Vessels since a Long Rest",
       "VesselHint": "A second Dark Vessel before a Long Rest kills. Until resting exists, the Dark Master sets this back to 0 after a Long Rest.",
       "RemovePart": "Remove this lost body part"
+    },
+    "Class": {
+      "BoostedAbility": "Boosted ability",
+      "Hp": "HP (this + Toughness)",
+      "HpHint": "Starting HP is this number plus Toughness, counted after the boost. It is fixed at creation.",
+      "MaxWounds": "Max wounds",
+      "SpellListLabel": "Spell list",
+      "SpellList": {
+        "none": "No spell list",
+        "arcane": "Arcane",
+        "divine": "Divine",
+        "primal": "Primal",
+        "profane": "Profane",
+        "bloodline": "Bloodline",
+        "choose": "Choose a spell list"
+      },
+      "StartingDie": "Starting armour and weaponry",
+      "StartingDieHint": "The die rolled on the armour and weaponry tables in 2.6 Starting Equipment.",
+      "KeyAbility": "Key ability {ability}",
+      "HpSummary": "HP {base} + Toughness",
+      "WoundsSummary": "{wounds} max wounds",
+      "DieSummary": "starting die {die}"
+    },
+    "Background": {
+      "Wealth": "Wealth",
+      "WealthHint": "As the rules write it, such as 2d6 × 10 s. Rolled and added to silver when the background is dropped on a character.",
+      "Keepsake": "Keepsake",
+      "KeepsakeHint": "Added to the character's gear when the background is dropped on a character."
+    },
+    "Origin": {
+      "Heading": "Origins",
+      "DropHint": "Drag a class, an ancestry and a background onto this sheet. A new one replaces the old one.",
+      "NoneYet": "none yet",
+      "Hint": {
+        "class": "Drop on a character: the boosted ability goes up 1, HP becomes this number + Toughness and max wounds are set.",
+        "ancestry": "Drop on a character to record their ancestry. Add the chosen ancestry feat as a feat.",
+        "background": "Drop on a character: wealth is rolled and added to silver, and the keepsake is added to their gear."
+      },
+      "Title": {
+        "class": "{actor}'s class: {name}",
+        "ancestry": "{actor}'s ancestry: {name}",
+        "background": "{actor}'s background: {name}"
+      },
+      "Replaced": "Replaces {name}.",
+      "Boost": "{ability} goes up 1, to {score}.",
+      "BoostCapped": "{ability} is already +6 and cannot go higher.",
+      "Hp": "HP {base} + Toughness {toughness} = {hp}, at full HP.",
+      "Wounds": "Max wounds {wounds}.",
+      "SpellList": "Spell list: {list}.",
+      "StartingDie": "Roll a {die} on the armour and weaponry tables (2.6 Starting Equipment).",
+      "Keepsake": "Keepsake added to gear: {name}.",
+      "WealthFlavour": "Wealth from {name} ({wealth})",
+      "Wealth": "Wealth: {silver} s added. Silver is now {total} s.",
+      "NoWealth": "No wealth rolled: the wealth is not written as dice, such as 2d6 × 10 s."
     }
   }
 }

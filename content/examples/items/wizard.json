@@ -1,0 +1,14 @@
+{
+  "_id": "vbExampleWizard0",
+  "name": "Wizard",
+  "type": "class",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "Class feature: Tome keeper. You carry a spellbook, and do not suffer Bane for casting a spell written in it, even if it is not on your spell list.\nClass power: Unravel (🟒1 ◈◈).",
+    "boostedAbility": "sanity",
+    "hpBase": 6,
+    "maxWounds": 1,
+    "spellList": "arcane",
+    "startingDie": "d6"
+  }
+}

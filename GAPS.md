@@ -18,6 +18,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 94 | Who rolls on the Death's Door table? | Provisional (step 22): the character's owner presses the button on the Death's Door card (or on the sheet) and rolls 2d6. When the Dark Master presses it, they may roll or choose the result, for rules such as "roll twice and choose" or "add 1 to the roll" that the system does not apply yet. Row 2's Sanity test is also made by the owner. | Open |
 | 90 | Who rolls what when a character is wounded? | Provisional (step 21): the character's owner presses the Toughness button on the wound card (once per card). On a Failure or Ruin, only the Dark Master can press Table of Agony, which asks for the damage type (the weapon's or the persistent damage's type is selected) and rolls d10. | Open |
 | 63 | Recover from an attack Ruin "spends an action". What happens outside combat, or on someone else's turn in combat? Does the Ruin end when combat ends? | Provisional (step 15): outside combat Recover just ends the Ruin, with no action tracked. In combat it is only allowed on your own turn and spends one action (◈). The Ruin lasts until Recover, even after combat ends. | Open |
+| 102 | What happens when a second ancestry or background is dropped on a character, or a class is deleted? | Provisional (step 24): a character has one of each, so the new one replaces the old. A replaced background's wealth and keepsake stay (the silver may be spent already); remove them by hand if needed. Deleting a class takes its +1 back, as replacing does, but HP and max wounds stay as they are. | Open |
 
 ## Character creation and classes
 
@@ -30,6 +31,10 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 5 | Is the +1 boost applied after the Ability Score Table (so +3 can become +4)? | Yes. | Resolved |
 | 6 | "Sanity + 4 torches / hours" when Sanity is negative? | Minimum of 1. | Resolved |
 | 7 | Which ability do ancestry powers test, if not stated? | Ask the Dark Master with a prompt. | Resolved |
+| 98 | The Sorcerer boosts Toughness and has HP 6 + Toughness. Does HP use the boosted Toughness? | Yes. The +1 comes first, then HP = X + Toughness. A Toughness +1 Sorcerer has 6 + 2 = 8 HP. | Resolved |
+| 99 | A character with a class gets another class. What happens? | The new class replaces the old one. The old class's +1 is taken back (only what it really added: nothing if the ability was already +6), then the new class is applied: its boost, HP X + Toughness at full HP, and its max wounds. | Resolved |
+| 100 | What does the system do with a background's keepsake? | It adds a gear item with the keepsake's name, price 0 and no stats. The Dark Master edits it if it should be a weapon or something else. | Resolved |
+| 101 | How is a background's wealth handled? | It is rolled as soon as the background is dropped on a character, posted to chat and added to their silver. | Resolved |
 
 ## Dice and tests
 

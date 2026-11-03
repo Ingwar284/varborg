@@ -1,4 +1,28 @@
 <section class="tab var-borg-sheet {{tabs.main.cssClass}}" data-group="primary" data-tab="main">
+  <section class="inventory-section origins">
+    <h2 data-tooltip="{{localize 'VARBORG.Origin.DropHint'}}">{{localize "VARBORG.Origin.Heading"}}</h2>
+    <ul class="item-list">
+      {{#each origins}}
+      {{#if item}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><span class="item-summary">{{localize label}}:</span> <strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span></span>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize label}}: {{localize "VARBORG.Origin.NoneYet"}}</li>
+      {{/if}}
+      {{/each}}
+    </ul>
+  </section>
+
   <section class="abilities">
     <h2>{{localize "VARBORG.Sheet.Abilities"}}</h2>
     <div class="ability-row">

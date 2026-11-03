@@ -1,13 +1,15 @@
 /**
  * Item sheets (ApplicationV2) for weapons, armour, shields, gear,
- * containers and feats. The carried items share a header (picture, name,
- * price, equipped, cumbersome) and a description; the middle part changes
- * with the item type. Feats have a header of their own.
+ * containers, feats, classes, ancestries and backgrounds. The carried items
+ * share a header (picture, name, price, equipped, cumbersome) and a
+ * description; the middle part changes with the item type. Feats, and
+ * classes, ancestries and backgrounds, have headers of their own.
  * Every change is saved as soon as you leave a field.
  */
 
 import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import FeatData from "../data/feat.mjs";
+import { ClassData } from "../data/origins.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -129,4 +131,56 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.canImprove = this.document.actor?.type !== "foe" && this.document.system.source !== "passive";
     return context;
   }
+}
+
+/**
+ * Class, ancestry and background: not carried, so a header with only the
+ * picture, name and a hint, then the type's own fields and a description.
+ */
+class OriginSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+  static DEFAULT_OPTIONS = {
+    classes: ["var-borg", "item"],
+    position: { width: 480, height: "auto" },
+    window: { resizable: true },
+    form: { submitOnChange: true }
+  };
+
+  /** Each sheet below names its own middle part, if it has one. */
+  static detailsTemplate = "";
+
+  static get PARTS() {
+    return {
+      header: { template: `${TEMPLATES}/origin-header.hbs` },
+      ...(this.detailsTemplate ? { details: { template: this.detailsTemplate } } : {}),
+      description: { template: `${TEMPLATES}/item-description.hbs` }
+    };
+  }
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.item = this.document;
+    context.system = this.document.system;
+    context.hint = `VARBORG.Origin.Hint.${this.document.type}`;
+    return context;
+  }
+}
+
+export class ClassSheet extends OriginSheet {
+  static detailsTemplate = `${TEMPLATES}/class-details.hbs`;
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.abilities = ClassData.ABILITIES;
+    context.spellLists = ClassData.SPELL_LISTS;
+    context.startingDice = ClassData.STARTING_DICE;
+    return context;
+  }
+}
+
+export class AncestrySheet extends OriginSheet {}
+
+export class BackgroundSheet extends OriginSheet {
+  static detailsTemplate = `${TEMPLATES}/background-details.hbs`;
 }

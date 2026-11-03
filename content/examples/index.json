@@ -15,6 +15,10 @@
     "items/torch.json",
     "items/healing-potion.json",
     "items/medicine-box.json",
-    "items/satchel.json"
+    "items/satchel.json",
+    "items/warrior.json",
+    "items/wizard.json",
+    "items/human.json",
+    "items/butcher.json"
   ]
 }

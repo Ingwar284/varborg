@@ -10,7 +10,10 @@ import FoeData from "./data/foe.mjs";
 import FoeSheet from "./sheets/foe-sheet.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
 import FeatData from "./data/feat.mjs";
-import { WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet } from "./sheets/item-sheet.mjs";
+import { ClassData, AncestryData, BackgroundData } from "./data/origins.mjs";
+import {
+  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, ClassSheet, AncestrySheet, BackgroundSheet
+} from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
 import { addAttackCardListeners } from "./dice/attack.mjs";
@@ -39,13 +42,17 @@ Hooks.once("init", () => {
   });
   Actors.registerSheet("var-borg", FoeSheet, { types: ["foe"], makeDefault: true, label: "VARBORG.Sheet.Foe" });
 
-  // Item data and sheets: weapons, armour, shields, gear, containers and feats.
+  // Item data and sheets: weapons, armour, shields, gear, containers, feats,
+  // and the class, ancestry and background a character comes from.
   CONFIG.Item.dataModels.weapon = WeaponData;
   CONFIG.Item.dataModels.armour = ArmourData;
   CONFIG.Item.dataModels.shield = ShieldData;
   CONFIG.Item.dataModels.gear = GearData;
   CONFIG.Item.dataModels.container = ContainerData;
   CONFIG.Item.dataModels.feat = FeatData;
+  CONFIG.Item.dataModels.class = ClassData;
+  CONFIG.Item.dataModels.ancestry = AncestryData;
+  CONFIG.Item.dataModels.background = BackgroundData;
 
   const Items = foundry.documents.collections.Items;
   Items.registerSheet("var-borg", WeaponSheet, { types: ["weapon"], makeDefault: true, label: "VARBORG.Sheet.Weapon" });
@@ -54,6 +61,9 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", GearSheet, { types: ["gear"], makeDefault: true, label: "VARBORG.Sheet.Gear" });
   Items.registerSheet("var-borg", ContainerSheet, { types: ["container"], makeDefault: true, label: "VARBORG.Sheet.Container" });
   Items.registerSheet("var-borg", FeatSheet, { types: ["feat"], makeDefault: true, label: "VARBORG.Sheet.Feat" });
+  Items.registerSheet("var-borg", ClassSheet, { types: ["class"], makeDefault: true, label: "VARBORG.Sheet.Class" });
+  Items.registerSheet("var-borg", AncestrySheet, { types: ["ancestry"], makeDefault: true, label: "VARBORG.Sheet.Ancestry" });
+  Items.registerSheet("var-borg", BackgroundSheet, { types: ["background"], makeDefault: true, label: "VARBORG.Sheet.Background" });
 
   // Combat: initiative, turn order and action pips (rules 3.4).
   CONFIG.Combat.documentClass = VarBorgCombat;

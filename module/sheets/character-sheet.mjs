@@ -1,7 +1,8 @@
 /**
  * The character sheet (ApplicationV2). Every change is saved as soon as
- * you leave a field. Two tabs: Character (abilities, resources, conditions,
- * feats, details) and Inventory (carrying, equipment, gear and containers).
+ * you leave a field. Two tabs: Character (origins, abilities, resources,
+ * conditions, feats, details) and Inventory (carrying, equipment, gear and
+ * containers). Dropping a class, ancestry or background applies it.
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -17,6 +18,8 @@ import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { rollPanicTest } from "../panic.mjs";
+import { addOrigin, isOrigin } from "../origins.mjs";
+import { ORIGIN_TYPES } from "../rules/origins.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -79,6 +82,25 @@ function itemStates(item) {
     states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
   }
   return states;
+}
+
+/** One short line about a class or background. */
+function originSummary(item) {
+  const i18n = game.i18n;
+  const system = item.system;
+  if (item.type === "class") {
+    return [
+      i18n.format("VARBORG.Class.KeyAbility", { ability: i18n.localize(`VARBORG.Ability.${system.boostedAbility}`) }),
+      i18n.format("VARBORG.Class.HpSummary", { base: system.hpBase }),
+      i18n.format("VARBORG.Class.WoundsSummary", { wounds: system.maxWounds }),
+      i18n.localize(`VARBORG.Class.SpellList.${system.spellList}`),
+      i18n.format("VARBORG.Class.DieSummary", { die: system.startingDie })
+    ].join(" · ");
+  }
+  if (item.type === "background") {
+    return [system.wealth, system.keepsake].filter(Boolean).join(" · ");
+  }
+  return "";
 }
 
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -175,6 +197,13 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         }))
     }));
 
+    // Class, ancestry and background, one row each, with a short line such
+    // as "Strength · 10 + Toughness HP · 3 wounds · No spell list · d10".
+    context.origins = ORIGIN_TYPES.map(type => {
+      const item = actor.itemTypes[type]?.[0];
+      return { type, label: `TYPES.Item.${type}`, item, summary: item ? originSummary(item) : "" };
+    });
+
     // Feats, with where each came from, such as "Class feat · Improving".
     context.feats = actor.itemTypes.feat
       .toSorted((a, b) => a.sort - b.sort)
@@ -221,6 +250,19 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         this.#itemFor(event.currentTarget)?.update({ "system.quantity": quantity });
       });
     }
+  }
+
+  /**
+   * A dropped class, ancestry or background replaces the one the character
+   * has and is applied (module/origins.mjs). Anything else is added as usual.
+   * @override
+   */
+  async _onDropItem(event, item) {
+    if (!isOrigin(item.type)) return super._onDropItem(event, item);
+    if (!this.actor.isOwner || this.actor.uuid === item.parent?.uuid) return null;
+    const data = item.inCompendium ? game.items.fromCompendium(item, { clearFolder: true }) : item.toObject();
+    delete data._id;
+    return addOrigin(this.actor, data);
   }
 
   /** The pencil button opens the item's own sheet. */

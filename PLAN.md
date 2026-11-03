@@ -332,7 +332,13 @@ is done on your own turn and uses its action pips.
 
 ## Milestone 4: Character building
 
-24. **Class, ancestry and background.** Item data and sheets. Dropping a
+24. ~~**Class, ancestry and background.**~~ Done: `module/rules/origins.mjs`
+    with `tests/origins.test.mjs`, `module/data/origins.mjs`, `module/origins.mjs`
+    (the drop, the card, the wealth roll and keepsake), item sheets, an
+    Origins section on the character sheet, the key ability on the character,
+    and the examples (GAPS 98–102). A new class, ancestry or background
+    replaces the old one; a replaced or deleted class takes its +1 back.
+    Item data and sheets. Dropping a
     class sets the boosted ability (+1, after the table) and HP (X +
     Toughness, fixed at creation), and records max wounds, the spell list and
     the starting armour/weapon die. Its boosted ability is the key ability

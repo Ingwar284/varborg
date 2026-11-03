@@ -1,0 +1,24 @@
+<section class="var-borg-item-details">
+  <div class="field-grid">
+    <label>
+      <span>{{localize "VARBORG.Class.BoostedAbility"}}</span>
+      <select name="system.boostedAbility">{{selectOptions abilities selected=system.boostedAbility localize=true}}</select>
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Class.HpHint'}}">
+      <span>{{localize "VARBORG.Class.Hp"}}</span>
+      <input type="number" name="system.hpBase" value="{{system.hpBase}}" min="0" step="1">
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Class.MaxWounds"}}</span>
+      <input type="number" name="system.maxWounds" value="{{system.maxWounds}}" min="0" step="1">
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Class.SpellListLabel"}}</span>
+      <select name="system.spellList">{{selectOptions spellLists selected=system.spellList localize=true}}</select>
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Class.StartingDieHint'}}">
+      <span>{{localize "VARBORG.Class.StartingDie"}}</span>
+      <select name="system.startingDie">{{selectOptions startingDice selected=system.startingDie}}</select>
+    </label>
+  </div>
+</section>
