@@ -2,6 +2,9 @@
   <img class="item-img" src="{{item.img}}" alt="{{item.name}}" data-action="editImage" data-edit="img">
   <div class="item-title">
     <input class="item-name" type="text" name="name" value="{{item.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+    {{#if forFoe}}
+    <p class="hint">{{localize "VARBORG.Foe.AttackHint"}}</p>
+    {{else}}
     <div class="item-meta">
       <label>
         <span>{{localize "VARBORG.Item.Price"}}</span>
@@ -18,5 +21,6 @@
         <span>{{localize "VARBORG.Item.Cumbersome"}}</span>
       </label>
     </div>
+    {{/if}}
   </div>
 </header>

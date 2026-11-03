@@ -14,6 +14,8 @@ import {
   isDamageFormula, isMetalByDefault, capArmourTier
 } from "../module/rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../module/rules/carrying.mjs";
+import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, isMorale } from "../module/rules/foe.mjs";
+import { FEAT_SOURCES } from "../module/rules/feats.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -125,4 +127,57 @@ test("step 11 examples start ready to use: weapons loaded, nothing used up", () 
   const byName = name => examples.find(({ data }) => data.name === name)?.data.system;
   assert.equal(byName("Healing potion").expendable, "d2");
   assert.equal(byName("Flintlock pistol").reload, 2);
+});
+
+test("example foes follow the foe rules", () => {
+  for (const { file, data } of ofType("foe")) {
+    const system = data.system;
+    assert.ok(FOE_TIERS.includes(system.tier), `${file}: unknown tier`);
+    assert.ok(FOE_CATEGORIES.includes(system.category), `${file}: unknown category`);
+    assert.ok(FOE_ARMOUR_DICE.includes(system.armour), `${file}: unknown armour die`);
+    assert.ok(isMorale(system.morale), `${file}: Morale must be 2 … 11 or null`);
+    assert.equal(capHp(system.hp.value, system.hp.max), system.hp.value, `${file}: HP above max HP`);
+    for (const item of data.items ?? []) {
+      assert.match(item._id, /^[a-zA-Z0-9]{16}$/, `${file}: ${item.name} needs a 16-letter-or-digit _id`);
+      assert.ok(["weapon", "feat"].includes(item.type), `${file}: foes carry only attacks and passives`);
+      if (item.type === "weapon") assert.ok(isDamageFormula(item.system.damage), `${file}: ${item.name} damage`);
+      if (item.type === "weapon") {
+        // Foe attacks have no traits besides reach or range, and no expendable die (GAPS 59).
+        const s = item.system;
+        assert.ok(!s.agile && !s.finesse && !s.heavy && !s.twoHanded && !s.versatile && !s.thrown && !s.reload,
+          `${file}: ${item.name} should have no weapon traits`);
+        assert.equal(s.expendable, "", `${file}: ${item.name} should have no expendable die`);
+      }
+      if (item.type === "feat") {
+        assert.ok(FEAT_SOURCES.includes(item.system.source), `${file}: ${item.name} source`);
+        assert.equal(item.system.improving, false, `${file}: foes never improve (GAPS 58)`);
+      }
+    }
+  }
+});
+
+test("step 12: the Ash-Choked Bellman matches its write-up in rules 6", () => {
+  const bellman = examples.find(({ data }) => data.name === "Ash-Choked Bellman")?.data;
+  assert.ok(bellman, "the Bellman is in the examples");
+  assert.equal(bellman.type, "foe");
+  assert.equal(bellman.system.tier, "weak");
+  assert.equal(bellman.system.category, "duskborn");
+  assert.deepEqual(bellman.system.hp, { value: 15, max: 15 });
+  assert.equal(bellman.system.morale, 7);
+  assert.equal(bellman.system.armour, "d2");
+  assert.equal(bellman.system.mook, false);
+
+  const attacks = bellman.items.filter(item => item.type === "weapon");
+  assert.equal(attacks.length, 1);
+  assert.deepEqual(
+    [attacks[0].name, attacks[0].system.kind, attacks[0].system.damage, attacks[0].system.reach],
+    ["Bell-rope lash", "melee", "d6", 10]
+  );
+
+  const passives = bellman.items.filter(item => item.type === "feat");
+  assert.deepEqual(passives.map(item => [item.name, item.system.source]), [["Ash-lung", "passive"]]);
+
+  // No ids shared with any other example, inside or outside an actor.
+  const ids = [...examples.map(({ data }) => data._id), ...examples.flatMap(({ data }) => (data.items ?? []).map(i => i._id))];
+  assert.equal(new Set(ids).size, ids.length);
 });

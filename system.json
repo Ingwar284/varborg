@@ -27,14 +27,16 @@
   ],
   "documentTypes": {
     "Actor": {
-      "character": {}
+      "character": {},
+      "foe": {}
     },
     "Item": {
       "weapon": {},
       "armour": {},
       "shield": {},
       "gear": {},
-      "container": {}
+      "container": {},
+      "feat": {}
     }
   },
   "grid": {

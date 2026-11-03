@@ -160,7 +160,14 @@ prices, traits and tiers against 4.1.
 
 ## Milestone 3: The first fight (one PC against one foe)
 
-12. **Foe actor and feats.** Foe data (tier, category, HP, Morale 2–11 or
+12. ~~**Foe actor and feats.**~~ Done: `module/data/foe.mjs`,
+    `module/data/feat.mjs`, `module/sheets/foe-sheet.mjs`, a feat sheet,
+    `module/rules/foe.mjs` and `module/rules/feats.mjs` with
+    `tests/foe.test.mjs`, a Feats list on the character sheet, and the
+    Bellman in `content/examples/actors/` with its attack and passive inside
+    it (the importer now brings an actor's own items). A mook shows 1 HP.
+    Foe attacks show only melee/ranged, damage and reach or range, and
+    foe armour has a name (GAPS 56–59). Foe data (tier, category, HP, Morale 2–11 or
     "–", armour die none/d2/d4/d6/d8, mook flag, initiative bonus) and
     sheet. A basic **feat** item (source, description, "gained through
     Improving" flag), used here for passives. Foe attacks are weapon items.

@@ -1,0 +1,26 @@
+/**
+ * Data for a feat (item type "feat"): ancestry, class and general feats for
+ * characters, and passives for foes. For now a feat is text only; the
+ * system does not apply its effect.
+ *
+ * Rules: 3.10 Feats and powers, 4.6 Feats, 6. Designing Foes (passives),
+ * 2.8 Improving, GAPS 16 and 57.
+ */
+
+import { FEAT_SOURCES } from "../rules/feats.mjs";
+
+const { StringField, BooleanField } = foundry.data.fields;
+
+export default class FeatData extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    return {
+      description: new StringField({ required: true, initial: "" }),
+      source: new StringField({ required: true, choices: FEAT_SOURCES, initial: FEAT_SOURCES[0] }),
+      // Gained through Improving (rules 2.8). Only these count for the
+      // Death's Door Sanity test (GAPS 16).
+      improving: new BooleanField({ initial: false })
+    };
+  }
+
+  static SOURCES = Object.fromEntries(FEAT_SOURCES.map(key => [key, `VARBORG.Feat.Source.${key}`]));
+}

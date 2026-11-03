@@ -98,6 +98,10 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | # | Question | Ruling | Status |
 |---|---|---|---|
 | 32 | When do minions act? | On their owner's initiative, right after the owner. | Resolved |
+| 56 | Which Bestiary category is the Ash-Choked Bellman? Its write-up in rules 6 gives no category. | Duskborn and undead. | Resolved |
+| 57 | Foe passives are stored as feat items. What should a foe passive be called as a feat source? | "Foe passive", a fourth source beside ancestry, class and general. | Resolved |
+| 58 | Do foes improve, or roll on Death’s Door? | No, never. A foe passive has no "gained through Improving" box. | Resolved |
+| 59 | Do foe attacks have weapon traits or an expendable die? | Generally not. A foe attack is melee or ranged, with damage and its reach or range only. | Resolved |
 | 34 | Who takes vehicle collision damage, and does armour apply? | The driver and passengers. Armour applies. | Resolved |
 
 ## Economy

@@ -18,6 +18,21 @@ async function loadJson(file) {
 }
 
 /**
+ * An example actor can carry its own items (a foe's attacks and passives).
+ * Reset each one to its saved values, or add it back if it was deleted.
+ * Items added in the world by hand are left alone.
+ */
+async function updateOwnedItems(actor, items) {
+  const toCreate = [];
+  for (const item of items) {
+    const owned = actor.items.get(item._id);
+    if (owned) await owned.update(item);
+    else toCreate.push(item);
+  }
+  if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate, { keepId: true });
+}
+
+/**
  * Create or update every example listed in content/examples/index.json.
  * The index maps a document type (such as "Actor") to a list of files.
  * GM only.
@@ -39,10 +54,12 @@ export async function importExamples() {
         const data = await loadJson(file);
         const existing = collection.get(data._id);
         if (existing) {
-          await existing.update(data);
+          const { items, ...rest } = data;
+          await existing.update(rest);
+          if (items) await updateOwnedItems(existing, items);
           updated++;
         } else {
-          await documentClass.create(data, { keepId: true });
+          await documentClass.create(data, { keepId: true, keepEmbeddedIds: true });
           created++;
         }
       }

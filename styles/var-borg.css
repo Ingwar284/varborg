@@ -442,3 +442,60 @@
   width: 3rem;
   text-align: center;
 }
+
+/* ---------- Foe sheet ---------- */
+
+.var-borg.foe .window-content {
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.var-borg-sheet .foe-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.var-borg-sheet .foe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  align-items: center;
+}
+
+.var-borg-sheet .foe-meta label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.var-borg-sheet .foe-stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.var-borg-sheet .foe-stats select {
+  width: 100%;
+}
+
+.var-borg-sheet .attack-mark {
+  flex: 0 0 auto;
+  font-size: 1.1rem;
+}
+
+.var-borg-sheet .add-item {
+  margin-top: 0.3rem;
+  width: auto;
+  align-self: flex-start;
+}
+
+/* Feats and passives: name in bold, then the text. */
+
+.var-borg-sheet .feat-row .feat-text {
+  flex: 1;
+}
+
+.var-borg-sheet .foe-stats .armour-name {
+  width: 100%;
+  text-align: center;
+}

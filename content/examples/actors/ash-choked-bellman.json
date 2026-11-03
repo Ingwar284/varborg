@@ -1,0 +1,60 @@
+{
+  "_id": "vbExampleBellman",
+  "name": "Ash-Choked Bellman",
+  "type": "foe",
+  "system": {
+    "tier": "weak",
+    "category": "duskborn",
+    "description": "A bell-ringer of the Vigilant Bell who stayed at his rope when the ash came down. He still rings for the dead, and he still thinks you are one of them.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 7,
+    "armour": "d2",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbBellmanLash000",
+      "name": "Bell-rope lash",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbBellmanAshLung",
+      "name": "Ash-lung",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Immune to smoke and ash; it does not need to breathe.",
+        "source": "passive",
+        "improving": false
+      }
+    }
+  ]
+}

@@ -55,6 +55,28 @@
     </div>
   </section>
 
+  <section class="inventory-section">
+    <h2>{{localize "VARBORG.Sheet.Feats"}}</h2>
+    <ul class="item-list">
+      {{#each feats}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span></span>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
   <section class="details">
     <h2>{{localize "VARBORG.Sheet.Details"}}</h2>
     <label>

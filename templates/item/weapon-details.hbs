@@ -1,4 +1,32 @@
 <section class="var-borg-item-details">
+  {{#if forFoe}}
+  {{!-- A foe's attack: melee or ranged, damage, and its reach or range (rules 6). --}}
+  <div class="field-grid">
+    <label>
+      <span>{{localize "VARBORG.Weapon.KindLabel"}}</span>
+      <select name="system.kind">{{selectOptions foeKinds selected=system.kind localize=true}}</select>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Weapon.Damage"}}</span>
+      <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d4">
+    </label>
+    {{#if (eq system.kind "melee")}}
+    <label data-tooltip="{{localize 'VARBORG.Foe.ReachHint'}}">
+      <span>{{localize "VARBORG.Weapon.ReachFeet"}}</span>
+      <input type="number" name="system.reach" value="{{system.reach}}" min="0" step="5">
+    </label>
+    {{else}}
+    <label data-tooltip="{{localize 'VARBORG.Foe.RangeHint'}}">
+      <span>{{localize "VARBORG.Foe.RangeFeet"}}</span>
+      <input type="number" name="system.ranged" value="{{system.ranged}}" min="0" step="5">
+    </label>
+    {{/if}}
+    <label>
+      <span>{{localize "VARBORG.Weapon.DamageType"}}</span>
+      <select name="system.damageType">{{selectOptions damageTypes selected=system.damageType localize=true}}</select>
+    </label>
+  </div>
+  {{else}}
   <div class="field-grid">
     <label>
       <span>{{localize "VARBORG.Weapon.Damage"}}</span>
@@ -69,4 +97,5 @@
     </label>
     {{/if}}
   </div>
+  {{/if}}
 </section>

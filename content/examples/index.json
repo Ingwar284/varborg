@@ -1,6 +1,7 @@
 {
   "Actor": [
-    "actors/example-hero.json"
+    "actors/example-hero.json",
+    "actors/ash-choked-bellman.json"
   ],
   "Item": [
     "items/dagger.json",

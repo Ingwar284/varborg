@@ -1,7 +1,7 @@
 /**
  * The character sheet (ApplicationV2). Every change is saved as soon as
- * you leave a field. Two tabs: Character (abilities, resources, details)
- * and Inventory (carrying, equipment, gear and containers).
+ * you leave a field. Two tabs: Character (abilities, resources, feats,
+ * details) and Inventory (carrying, equipment, gear and containers).
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -156,6 +156,17 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
         }))
     }));
+
+    // Feats, with where each came from, such as "Class feat · Improving".
+    context.feats = actor.itemTypes.feat
+      .toSorted((a, b) => a.sort - b.sort)
+      .map(item => ({
+        item,
+        summary: [
+          game.i18n.localize(`VARBORG.Feat.Source.${item.system.source}`),
+          item.system.improving ? game.i18n.localize("VARBORG.Feat.Improving") : ""
+        ].filter(Boolean).join(" · ")
+      }));
 
     const carried = carrying(
       actor.items.map(item => ({ type: item.type, ...item.system })),

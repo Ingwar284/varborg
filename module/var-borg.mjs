@@ -5,8 +5,11 @@
 
 import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
+import FoeData from "./data/foe.mjs";
+import FoeSheet from "./sheets/foe-sheet.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
-import { WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet } from "./sheets/item-sheet.mjs";
+import FeatData from "./data/feat.mjs";
+import { WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 
 Hooks.once("init", () => {
@@ -14,20 +17,24 @@ Hooks.once("init", () => {
 
   // Actor data: which fields each actor type stores.
   CONFIG.Actor.dataModels.character = CharacterData;
+  CONFIG.Actor.dataModels.foe = FoeData;
 
   // Actor sheets.
-  foundry.documents.collections.Actors.registerSheet("var-borg", CharacterSheet, {
+  const Actors = foundry.documents.collections.Actors;
+  Actors.registerSheet("var-borg", CharacterSheet, {
     types: ["character"],
     makeDefault: true,
     label: "VARBORG.Sheet.Character"
   });
+  Actors.registerSheet("var-borg", FoeSheet, { types: ["foe"], makeDefault: true, label: "VARBORG.Sheet.Foe" });
 
-  // Item data and sheets: weapons, armour, shields, gear and containers.
+  // Item data and sheets: weapons, armour, shields, gear, containers and feats.
   CONFIG.Item.dataModels.weapon = WeaponData;
   CONFIG.Item.dataModels.armour = ArmourData;
   CONFIG.Item.dataModels.shield = ShieldData;
   CONFIG.Item.dataModels.gear = GearData;
   CONFIG.Item.dataModels.container = ContainerData;
+  CONFIG.Item.dataModels.feat = FeatData;
 
   const Items = foundry.documents.collections.Items;
   Items.registerSheet("var-borg", WeaponSheet, { types: ["weapon"], makeDefault: true, label: "VARBORG.Sheet.Weapon" });
@@ -35,6 +42,7 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", ShieldSheet, { types: ["shield"], makeDefault: true, label: "VARBORG.Sheet.Shield" });
   Items.registerSheet("var-borg", GearSheet, { types: ["gear"], makeDefault: true, label: "VARBORG.Sheet.Gear" });
   Items.registerSheet("var-borg", ContainerSheet, { types: ["container"], makeDefault: true, label: "VARBORG.Sheet.Container" });
+  Items.registerSheet("var-borg", FeatSheet, { types: ["feat"], makeDefault: true, label: "VARBORG.Sheet.Feat" });
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

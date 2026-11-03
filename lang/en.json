@@ -1,14 +1,16 @@
 {
   "TYPES": {
     "Actor": {
-      "character": "Character"
+      "character": "Character",
+      "foe": "Foe"
     },
     "Item": {
       "weapon": "Weapon",
       "armour": "Armour",
       "shield": "Shield",
       "gear": "Gear",
-      "container": "Container"
+      "container": "Container",
+      "feat": "Feat"
     }
   },
   "VARBORG": {
@@ -56,7 +58,10 @@
         "shield": "Shields",
         "gear": "Gear",
         "container": "Containers"
-      }
+      },
+      "Foe": "VÅR BORG foe sheet",
+      "Feat": "VÅR BORG feat sheet",
+      "Feats": "Feats"
     },
     "Item": {
       "Price": "Price (s)",
@@ -278,6 +283,85 @@
         "encumbered": "Encumbered: all terrain counts as difficult terrain, and Bane on Strength and Agility tests.",
         "overloaded": "More than twice your cumbersome limit: your movement is 0. You are also Encumbered: Bane on Strength and Agility tests."
       }
+    },
+    "Feat": {
+      "SourceLabel": "Source",
+      "Source": {
+        "general": "General feat",
+        "ancestry": "Ancestry feat",
+        "class": "Class feat",
+        "passive": "Foe passive"
+      },
+      "Improving": "Gained through Improving",
+      "ImprovingHint": "Tick this if the feat was chosen when Improving. Only these feats raise the DR of the Death’s Door Sanity test."
+    },
+    "Foe": {
+      "TierLabel": "Tier",
+      "Tier": {
+        "pitiful": "Pitiful foe",
+        "weak": "Weak foe",
+        "moderate": "Moderate foe",
+        "strong": "Strong foe",
+        "mighty": "Mighty foe"
+      },
+      "CategoryLabel": "Category",
+      "Category": {
+        "none": "Not chosen",
+        "monstrosity": "Monstrosities",
+        "beast": "Animals and beasts",
+        "duskborn": "Duskborn and undead",
+        "elemental": "Elemental",
+        "fiend": "Fiend",
+        "plant": "Plant",
+        "fey": "Fey",
+        "construct": "Constructs",
+        "humanoid": "Humanoid",
+        "dragon": "Dragons"
+      },
+      "Description": "Description",
+      "MoraleLabel": "Morale",
+      "MoraleHint": "Roll 2d6: above its Morale, the foe is demoralised. A foe with Morale – never rolls.",
+      "Morale": {
+        "2": "2: Easily scared, likely to flee",
+        "3": "3: Bottom of the food chain",
+        "4": "4: Runs when danger is sensed",
+        "5": "5: Fearful, but willing to fight",
+        "6": "6: Untrained, average human",
+        "7": "7: Combat experience",
+        "8": "8: Military training",
+        "9": "9: A brave leader",
+        "10": "10: Unwise in their courage",
+        "11": "11: Insane, heroic, or both",
+        "none": "– (never rolls)"
+      },
+      "ArmourLabel": "Armour",
+      "ArmourHint": "Subtracted from damage that hits the foe.",
+      "Armour": {
+        "none": "None",
+        "d2": "−d2",
+        "d4": "−d4",
+        "d6": "−d6",
+        "d8": "−d8"
+      },
+      "Initiative": "Initiative bonus",
+      "InitiativeHint": "Added to the foe’s d6 initiative roll. It comes from the foe’s passives, so type it in when a passive grants one.",
+      "Mook": "Mook",
+      "MookHint": "A mook has 1 HP, fails every test and never rolls Morale. It keeps its attacks and passives but has no gloom abilities.",
+      "Attacks": "Attacks",
+      "Passives": "Passives",
+      "Melee": "Melee",
+      "Ranged": "Ranged",
+      "AddAttack": "Add attack",
+      "AddPassive": "Add passive",
+      "NewAttack": "New attack",
+      "NewPassive": "New passive",
+      "DropHint": "Drag weapons (attacks) and feats (passives) from the Items sidebar onto this sheet, or use the Add buttons.",
+      "ArmourName": "Armour name",
+      "ArmourNamePlaceholder": "Rusted mail",
+      "AttackHint": "A foe’s attack: melee or ranged, its damage, and its reach or range. Foe attacks have no other traits and no expendable die.",
+      "RangeFeet": "Range (feet)",
+      "RangeHint": "How far the ranged attack reaches, such as 60 for (60′).",
+      "ReachHint": "Melee reach in feet, such as 10 for (reach 10′). Leave at 0 for the usual 5′."
     }
   }
 }

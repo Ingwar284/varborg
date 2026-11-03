@@ -1,0 +1,111 @@
+<section class="var-borg-sheet foe-sheet">
+  <header class="sheet-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    <div class="foe-title">
+      <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+      <div class="foe-meta">
+        <label>
+          <span>{{localize "VARBORG.Foe.TierLabel"}}</span>
+          <select name="system.tier">{{selectOptions tiers selected=system.tier localize=true}}</select>
+        </label>
+        <label>
+          <span>{{localize "VARBORG.Foe.CategoryLabel"}}</span>
+          <select name="system.category">{{selectOptions categories selected=system.category localize=true}}</select>
+        </label>
+        <label data-tooltip="{{localize 'VARBORG.Foe.MookHint'}}">
+          <input type="checkbox" name="system.mook" {{checked system.mook}}>
+          <span>{{localize "VARBORG.Foe.Mook"}}</span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <section class="details">
+    <label>
+      <span>{{localize "VARBORG.Foe.Description"}}</span>
+      <textarea name="system.description" rows="3">{{system.description}}</textarea>
+    </label>
+  </section>
+
+  <section class="resources foe-stats">
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.HP"}}</span>
+      <span class="pair">
+        <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">
+        <span>/</span>
+        {{#if system.mook}}
+        <input type="number" value="{{system.hp.max}}" disabled data-tooltip="{{localize 'VARBORG.Foe.MookHint'}}">
+        {{else}}
+        <input type="number" name="system.hp.max" value="{{system.hp.max}}" min="0" step="1">
+        {{/if}}
+      </span>
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Foe.MoraleHint'}}">
+      <span>{{localize "VARBORG.Foe.MoraleLabel"}}</span>
+      <select name="system.morale">{{selectOptions moraleOptions selected=morale}}</select>
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Foe.ArmourHint'}}">
+      <span>{{localize "VARBORG.Foe.ArmourLabel"}}</span>
+      <select name="system.armour">{{selectOptions armourDice selected=system.armour localize=true}}</select>
+      <input type="text" class="armour-name" name="system.armourName" value="{{system.armourName}}"
+             placeholder="{{localize 'VARBORG.Foe.ArmourNamePlaceholder'}}" aria-label="{{localize 'VARBORG.Foe.ArmourName'}}">
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Foe.InitiativeHint'}}">
+      <span>{{localize "VARBORG.Foe.Initiative"}}</span>
+      <input type="number" name="system.initiative" value="{{system.initiative}}" step="1">
+    </label>
+  </section>
+
+  <section class="inventory-section">
+    <h2>{{localize "VARBORG.Foe.Attacks"}}</h2>
+    <ul class="item-list">
+      {{#each attacks}}
+      <li class="item-row" data-item-id="{{item.id}}">
+        <span class="attack-mark" aria-hidden="true">⚔</span>
+        <img src="{{item.img}}" alt="">
+        <span class="item-name">{{item.name}}</span>
+        <span class="item-summary">{{summary}}</span>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" class="add-item" data-action="createItem" data-type="weapon">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Foe.AddAttack"}}
+    </button>
+  </section>
+
+  <section class="inventory-section">
+    <h2>{{localize "VARBORG.Foe.Passives"}}</h2>
+    <ul class="item-list">
+      {{#each passives as |item|}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><strong>{{item.name}}</strong> {{item.system.description}}</span>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" class="add-item" data-action="createItem" data-type="feat">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Foe.AddPassive"}}
+    </button>
+  </section>
+  <p class="hint">{{localize "VARBORG.Foe.DropHint"}}</p>
+</section>
