@@ -359,6 +359,12 @@ is done on your own turn and uses its action pips.
 
 **Milestone 4 review:** build the example Warrior and Wizard by hand from
 rules 2.1 and compare them with the sheet.
+*Done:* a Warrior built in rules order matched. Three rulings (GAPS 111–113)
+and one fix: the sheet now stores the scores as rolled, and the class's +1
+and lost Sanity are added on top (shown under each score), so the steps can
+be done in any order. Max HP follows X + Toughness until the first Long Rest
+or Improving. Old characters are brought over when the world loads
+(`module/migrate.mjs`).
 
 ## Milestone 5: Ember, Gloom and magic
 
@@ -426,7 +432,8 @@ Warrior and a Wizard against the Bellman.
     rest unlocks ember abilities. An interrupted rest is a Toughness DR12
     test. Not sleeping adds a level of Fatigued, and a Long Rest removes one.
     Fortune regains d3 only when it is 0. Infected and Doomed characters get
-    no benefit, and Infected ones take d6.
+    no benefit, and Infected ones take d6. The first Long Rest fixes max HP
+    (`system.hpFixed`, GAPS 111).
     *Test:* rest an Infected character. No healing, d6 damage.
 
 34. **Medicine box.** Using it costs one action. The character tests
@@ -471,7 +478,8 @@ Warrior and a Wizard against the Bellman.
     1 or below the ability it goes down 1, otherwise up 1 (−3 … +6). Choose a
     feat (marked "gained through Improving"). Roll 6d10, and if it is at
     least your max HP, max HP goes up d6. Then roll the d6 find table.
-    Tested.
+    Ability changes go on the rolled score, and Improving fixes max HP
+    (`system.hpFixed`, GAPS 111). Tested.
     *Test:* tests pass. Improve the example Warrior and check each step.
 
 40. **Character creation helper.** Optional guided creation: the ability

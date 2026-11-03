@@ -89,10 +89,10 @@ export async function rollPanicTest(actor) {
   const lines = [i18n.format(result.tier === "triumph" ? "VARBORG.Panic.Unfazed" : "VARBORG.Panic.Calm", { name: actor.name })];
   const lost = actor.system.sanityLost;
   if (restoresSanity(result.tier) && lost > 0) {
+    // Only the lost Sanity is stored; the score in use follows it.
     const from = actor.system.abilities.sanity;
-    const restored = restoreSanity(from, lost);
-    await actor.update({ "system.abilities.sanity": restored.sanity, "system.sanityLost": restored.lost });
-    lines.push(i18n.format("VARBORG.Panic.Restored", { from, to: restored.sanity }));
+    await actor.update({ "system.sanityLost": restoreSanity(from, lost).lost });
+    lines.push(i18n.format("VARBORG.Panic.Restored", { from, to: actor.system.abilities.sanity }));
   }
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -159,7 +159,8 @@ async function applyPanicResult(actor, id) {
     const lowered = loseSanity(from, actor.system.sanityLost, rules.sanity);
     if (lowered.sanity === from) lines.push(i18n.localize("VARBORG.Panic.SanityAtMinimum"));
     else {
-      await actor.update({ "system.abilities.sanity": lowered.sanity, "system.sanityLost": lowered.lost });
+      // Only the lost Sanity is stored; the score in use follows it.
+      await actor.update({ "system.sanityLost": lowered.lost });
       lines.push(i18n.format("VARBORG.Panic.SanityLost", { from, to: lowered.sanity, lost: lowered.lost }));
     }
   }

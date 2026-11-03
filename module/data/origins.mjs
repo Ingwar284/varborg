@@ -4,12 +4,11 @@
  * each. Dropping one on a character sheet applies it (module/origins.mjs).
  *
  * Rules: 2.1 Creating your PC, 2.3 Pick an ancestry, 2.4 Pick a background,
- * 2.5 Pick a class, 2.6 Starting Equipment, GAPS 2, 3, 5 and 98–102.
+ * 2.5 Pick a class, 2.6 Starting Equipment, GAPS 2, 3, 5, 98–102 and 111.
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
 import { SPELL_LISTS, STARTING_DICE } from "../rules/origins.mjs";
-import { undoClassBoost } from "../origins.mjs";
 
 const { NumberField, StringField } = foundry.data.fields;
 
@@ -33,7 +32,8 @@ export class ClassData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),
-      // Goes up 1, and is the key ability for powers (GAPS 2).
+      // Goes up 1 while the class is on a character, and is the key
+      // ability for powers (GAPS 2).
       boostedAbility: choice(ABILITIES),
       // HP is this number + Toughness, fixed at creation (GAPS 3).
       hpBase: wholeNumber({ initial: 8 }),
@@ -42,13 +42,6 @@ export class ClassData extends foundry.abstract.TypeDataModel {
       // The die rolled on the armour and weaponry tables (rules 2.6).
       startingDie: choice(STARTING_DICE)
     };
-  }
-
-  /** Deleting a class from a character takes its +1 back first (GAPS 99). */
-  async _preDelete(options, user) {
-    const allowed = await super._preDelete(options, user);
-    if (allowed === false) return false;
-    await undoClassBoost(this.parent);
   }
 
   static ABILITIES = labels(ABILITIES, "Ability");

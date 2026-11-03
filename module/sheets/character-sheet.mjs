@@ -6,7 +6,7 @@
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
-import { rollAbilityTest } from "../dice/ability-test.mjs";
+import { rollAbilityTest, signed } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
@@ -19,7 +19,7 @@ import { canRollExpendable, needsReload, canFire, canReload } from "../rules/exp
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { rollPanicTest } from "../panic.mjs";
 import { addOrigin, isOrigin } from "../origins.mjs";
-import { ORIGIN_TYPES } from "../rules/origins.mjs";
+import { ORIGIN_TYPES, currentAbilities } from "../rules/origins.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -153,11 +153,27 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const system = actor.system;
     context.actor = actor;
     context.system = system;
-    context.abilities = ABILITIES.map(key => ({
-      key,
-      label: `VARBORG.Ability.${key}`,
-      value: system.abilities[key]
-    }));
+    // The box holds the score as rolled. Under it, what is added on top and
+    // the score in use, such as "+1 Warrior → +3" (GAPS 111).
+    const i18n = game.i18n;
+    const cls = actor.itemTypes.class?.[0];
+    context.abilities = ABILITIES.map(key => {
+      const rolled = system.rolledAbilities[key];
+      const parts = [];
+      if (cls && key === system.keyAbility) {
+        const boost = currentAbilities(system.rolledAbilities, key)[key] - rolled;
+        if (boost) parts.push(i18n.format("VARBORG.Sheet.ClassPart", { boost, name: cls.name }));
+      }
+      if (key === "sanity" && system.sanityLost) parts.push(i18n.format("VARBORG.Sheet.LostPart", { lost: system.sanityLost }));
+      return {
+        key,
+        label: `VARBORG.Ability.${key}`,
+        value: rolled,
+        inUse: parts.length ? i18n.format("VARBORG.Sheet.AbilityInUse", { parts: parts.join(", "), score: signed(system.abilities[key]) }) : ""
+      };
+    });
+    // Max HP follows X + Toughness until it is fixed (GAPS 111).
+    context.hpHint = cls && !system.hpFixed ? i18n.format("VARBORG.Sheet.HpFollows", { base: cls.system.hpBase }) : "";
 
     // Containers on this character, and how many items each one holds.
     // An item pointing at a container that is gone counts as loose.

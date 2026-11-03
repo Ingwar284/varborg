@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { applyClass, removeClassBoost, wealthFormula } from "../module/rules/origins.mjs";
+import { applyClass, currentAbilities, followHp, rolledAbilities, wealthFormula } from "../module/rules/origins.mjs";
 
 const zero = { strength: 0, agility: 0, toughness: 0, presence: 0, sanity: 0 };
 const warrior = { boostedAbility: "strength", hpBase: 10, maxWounds: 3 };
@@ -53,19 +53,53 @@ test("an unknown boosted ability is refused", () => {
   assert.throws(() => applyClass(zero, { ...warrior, boostedAbility: "luck" }), RangeError);
 });
 
-test("taking a class back removes only what it added (GAPS 99)", () => {
-  assert.equal(removeClassBoost({ ...zero, strength: 4 }, "strength", 1).strength, 3);
-  assert.equal(removeClassBoost({ ...zero, strength: 6 }, "strength", 0).strength, 6);
-  assert.equal(removeClassBoost({ ...zero, strength: -3 }, "strength", 1).strength, -3);
+test("the +1 is added on top of the rolled score, so typing the score later keeps it (GAPS 111)", () => {
+  // Wizard dropped first, then Sanity +3 typed: Sanity in use is +4.
+  assert.equal(currentAbilities({ ...zero, sanity: 3 }, "sanity").sanity, 4);
+  assert.equal(currentAbilities({ ...zero, sanity: 6 }, "sanity").sanity, 6);
+  assert.deepEqual(currentAbilities(zero, null), zero);
 });
 
-test("replacing the Warrior with the Wizard: Strength back, Sanity up", () => {
-  const asWarrior = applyClass(zero, warrior);
-  const undone = removeClassBoost(asWarrior.abilities, "strength", asWarrior.boost);
-  const asWizard = applyClass(undone, wizard);
-  assert.deepEqual(asWizard.abilities, { ...zero, sanity: 1 });
-  assert.equal(asWizard.hp, 6);
+test("replacing the Warrior with the Wizard moves the +1, the rolled scores stay (GAPS 99)", () => {
+  const rolled = { ...zero, strength: 2, sanity: 3 };
+  assert.deepEqual(currentAbilities(rolled, "strength"), { ...rolled, strength: 3 });
+  assert.deepEqual(currentAbilities(rolled, "sanity"), { ...rolled, sanity: 4 });
+  const asWizard = applyClass(rolled, wizard);
+  assert.equal(asWizard.abilities.strength, 2);
+  assert.equal(asWizard.abilities.sanity, 4);
   assert.equal(asWizard.maxWounds, 1);
+});
+
+test("lost Sanity is taken off after the class +1, never below −3", () => {
+  assert.equal(currentAbilities({ ...zero, sanity: 3 }, "sanity", 2).sanity, 2);
+  assert.equal(currentAbilities({ ...zero, sanity: -3 }, null, 1).sanity, -3);
+  assert.equal(currentAbilities({ ...zero, sanity: -3 }, "sanity", 1).sanity, -3);
+});
+
+test("while building, max HP follows X + Toughness and HP moves with it (GAPS 111)", () => {
+  // Wizard at 6/6, Toughness typed as +1: 7/7.
+  assert.deepEqual(followHp({ hpBase: 6, toughness: 1, hp: 6, max: 6 }), { value: 7, max: 7 });
+  // Hurt Warrior at 5/12, Toughness lowered by 1: 4/11.
+  assert.deepEqual(followHp({ hpBase: 10, toughness: 1, hp: 5, max: 12 }), { value: 4, max: 11 });
+});
+
+test("following Toughness never takes a character to 0 HP, and 0 HP stays 0", () => {
+  assert.deepEqual(followHp({ hpBase: 6, toughness: -3, hp: 1, max: 6 }), { value: 1, max: 3 });
+  assert.deepEqual(followHp({ hpBase: 6, toughness: 2, hp: 0, max: 6 }), { value: 2, max: 8 });
+  assert.deepEqual(followHp({ hpBase: 6, toughness: 2, hp: 0, max: 8 }), { value: 0, max: 8 });
+});
+
+test("old characters: the stored +1 and lost Sanity are worked back out", () => {
+  const stored = { ...zero, strength: 3, sanity: 1 };
+  const rolled = rolledAbilities(stored, { boostedAbility: "strength", boost: 1, sanityLost: 2 });
+  assert.deepEqual(rolled, { ...zero, strength: 2, sanity: 3 });
+  assert.deepEqual(currentAbilities(rolled, "strength", 2), stored);
+  // A Wizard with lost Sanity.
+  const wizardRolled = rolledAbilities({ ...zero, sanity: 2 }, { boostedAbility: "sanity", boost: 1, sanityLost: 1 });
+  assert.equal(wizardRolled.sanity, 2);
+  assert.equal(currentAbilities(wizardRolled, "sanity", 1).sanity, 2);
+  // Nothing to undo.
+  assert.deepEqual(rolledAbilities(stored, {}), stored);
 });
 
 test("background wealth as the rules write it becomes a dice formula", () => {

@@ -4,14 +4,22 @@
  * Rules: 2.1 Creating your PC, 2.2 Abilities, 2.5 Pick a class, 3.5 Health and wounds,
  * 3.9 Fortune, 3.12 Panic, 4. Economy. Foundry keeps every number inside its min/max,
  * so typing +9 for an ability saves +6. HP is also kept at or below max HP.
+ *
+ * The abilities stored are the scores as rolled. The scores in use add the
+ * class's +1 and take off lost Sanity (currentAbilities, GAPS 111), so
+ * everything that reads actor.system.abilities gets the scores in use.
  */
 
 import { ABILITIES, ABILITY_MIN, ABILITY_MAX } from "../rules/abilities.mjs";
 import { capHp } from "../rules/health.mjs";
+import { currentAbilities, followHp } from "../rules/origins.mjs";
 import { atZeroHp, strikesZero } from "../rules/agony.mjs";
 import { postWoundCard, WOUND_OPTION, AGONY_TYPE_OPTION } from "../agony.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
 import { rollStartingFortune, postStartingFortune } from "../fortune.mjs";
+
+/** An update that changes how scores are stored, not the scores in use (module/migrate.mjs). */
+export const MIGRATION_OPTION = "varBorgMigration";
 
 /** Passes a new character's rolled Fortune from _preCreate to _onCreate. */
 const STARTING_FORTUNE_OPTION = "varBorgStartingFortune";
@@ -42,6 +50,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       }),
       // No maximum (GAPS 4).
       fortune: wholeNumber(),
+      // Max HP follows X + Toughness until the first Long Rest or Improving
+      // sets this (GAPS 111). After that max HP is fixed (GAPS 3).
+      hpFixed: new BooleanField({ required: true, initial: false }),
       // Silver is the only currency (GAPS 35).
       silver: wholeNumber(),
       // An attack Ruin: Bane on attacks until Recover (rules 3.4, GAPS 17).
@@ -68,11 +79,15 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
 
   /**
    * The key ability for powers is the class's boosted ability (GAPS 2), or
-   * null without a class.
+   * null without a class. The scores in use are worked out from the stored
+   * (rolled) scores every time, so working them out twice changes nothing.
+   * rolledAbilities keeps the scores as rolled.
    */
   prepareDerivedData() {
     super.prepareDerivedData();
     this.keyAbility = this.parent.itemTypes.class?.[0]?.system.boostedAbility ?? null;
+    this.rolledAbilities = { ...this._source.abilities };
+    Object.assign(this.abilities, currentAbilities(this.rolledAbilities, this.keyAbility, this.sanityLost));
   }
 
   /**
@@ -111,6 +126,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
   async _preUpdate(changes, options, user) {
     const allowed = await super._preUpdate(changes, options, user);
     if (allowed === false) return false;
+    if (!options[MIGRATION_OPTION]) this.#followToughness(changes);
     const hp = changes.system?.hp;
     if (!hp || !("value" in hp || "max" in hp)) return;
     const max = hp.max ?? this.hp.max;
@@ -124,6 +140,27 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       foundry.utils.setProperty(changes, "system.wounds.value", outcome.wounds);
     }
     options[WOUND_OPTION] = { ...outcome, agonyType: options[AGONY_TYPE_OPTION] ?? null };
+  }
+
+  /**
+   * While max HP is not fixed, a change of Toughness moves max HP to
+   * X + Toughness, and HP by the same amount (GAPS 111). Max HP typed in the
+   * same change wins.
+   */
+  #followToughness(changes) {
+    const cls = this.parent.itemTypes.class?.[0];
+    const toughness = changes.system?.abilities?.toughness;
+    if (!cls || this.hpFixed || toughness === undefined || toughness === this._source.abilities.toughness) return;
+    const hp = changes.system.hp ?? {};
+    if (hp.max !== undefined && hp.max !== this.hp.max) return;
+    const rolled = { ...this._source.abilities, toughness };
+    const followed = followHp({
+      hpBase: cls.system.hpBase,
+      toughness: currentAbilities(rolled, cls.system.boostedAbility).toughness,
+      hp: hp.value ?? this.hp.value,
+      max: this.hp.max
+    });
+    foundry.utils.setProperty(changes, "system.hp", { ...hp, ...followed });
   }
 
   /** After HP struck zero, the client that made the change posts the wound card. */

@@ -36,9 +36,11 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 6 | "Sanity + 4 torches / hours" when Sanity is negative? | Minimum of 1. | Resolved |
 | 7 | Which ability do ancestry powers test, if not stated? | Ask the Dark Master with a prompt. | Resolved |
 | 98 | The Sorcerer boosts Toughness and has HP 6 + Toughness. Does HP use the boosted Toughness? | Yes. The +1 comes first, then HP = X + Toughness. A Toughness +1 Sorcerer has 6 + 2 = 8 HP. | Resolved |
-| 99 | A character with a class gets another class. What happens? | The new class replaces the old one. The old class's +1 is taken back (only what it really added: nothing if the ability was already +6), then the new class is applied: its boost, HP X + Toughness at full HP, and its max wounds. | Resolved |
+| 99 | A character with a class gets another class. What happens? | The new class replaces the old one. The old class's +1 goes (only what it really added: nothing if the ability was already +6), then the new class is applied: its boost, HP X + Toughness at full HP, and its max wounds. Since the Milestone 4 review the +1 is never written into the score: the sheet stores the score as rolled and adds the class's +1 on top while the class is there. | Resolved |
 | 100 | What does the system do with a background's keepsake? | It adds a gear item with the keepsake's name, price 0 and no stats. The Dark Master edits it if it should be a weapon or something else. | Resolved |
 | 101 | How is a background's wealth handled? | It is rolled as soon as the background is dropped on a character, posted to chat and added to their silver. | Resolved |
+| 111 | Rules 2.1 lets you do the steps in any order. If Toughness is set after the class, does max HP follow it? | Yes, while the character is being built: max HP stays X + Toughness (the class's X, the current Toughness) until the character's first Long Rest or first Improving, whichever comes first. Current HP moves up or down by the same amount. After that max HP is fixed (GAPS 3). Until rests and Improving exist, it always follows. | Resolved |
+| 113 | Some rules text says "up to their maximum" or "up to the d3 they started with" for Fortune, and one feature lets Fortune go "even above your maximum". Is there a maximum after all? | No (GAPS 4 stands). That rules text is to be edited in the rules document. | Resolved |
 
 ## Dice and tests
 
@@ -55,6 +57,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 104 | Which rolls can Fortune reroll? | The d20 test, an attack's damage, and a foe's damage against you. Panic, Table of Agony, chance die and expendable rolls are rerolled by hand for now. | Resolved |
 | 105 | Who can burn Fortune to turn a Triumph into a Success? | Anyone, on any test card. The card's own character pays when you own it; otherwise your own character pays. The same goes for every Fortune button. | Resolved |
 | 106 | How is "grant boon or bane on any test (before rolling)" offered? | Fortune: Boon and Fortune: Bane boxes in the test, attack and defence dialogs, 1 Fortune each, paid when you roll. They count like any Boon or Bane, so a Fortune Boon cancels a Bane. | Resolved |
+| 112 | A Fortune Bane in your own roll window makes your own roll worse. Should it stay? | Yes. Both boxes stay; it is the player's choice. | Resolved |
 
 ## Combat
 

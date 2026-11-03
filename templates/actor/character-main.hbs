@@ -33,7 +33,8 @@
           <i class="fa-solid fa-dice-d20"></i> {{localize label}}
         </button>
         <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1"
-               aria-label="{{localize label}}">
+               aria-label="{{localize label}}" data-tooltip="{{localize 'VARBORG.Sheet.RolledHint'}}">
+        {{#if inUse}}<span class="ability-in-use">{{inUse}}</span>{{/if}}
       </div>
       {{/each}}
     </div>
@@ -51,7 +52,7 @@
   </section>
 
   <section class="resources">
-    <label class="resource">
+    <label class="resource" {{#if hpHint}}data-tooltip="{{hpHint}}"{{/if}}>
       <span>{{localize "VARBORG.Sheet.HP"}}</span>
       <span class="pair">
         <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">

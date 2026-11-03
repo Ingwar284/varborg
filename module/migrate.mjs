@@ -1,0 +1,58 @@
+/**
+ * Bringing a world's data up to date when the system changes how it stores
+ * something. The Dark Master's client does it once when the world loads, and
+ * a world setting remembers how far the world has come.
+ *
+ * Version 1 (Milestone 4 review, GAPS 111): characters store their scores as
+ * rolled. Before, a class's +1 (remembered on the class item as the flag
+ * "classBoost") and lost Sanity were written into the scores.
+ */
+
+import { rolledAbilities } from "./rules/origins.mjs";
+import { MIGRATION_OPTION } from "./data/character.mjs";
+
+const SYSTEM = "var-borg";
+const SETTING = "dataVersion";
+
+/** The data version this code expects. */
+export const DATA_VERSION = 1;
+
+/** The old flag on a class item: how much it had added to its ability. */
+const OLD_BOOST_FLAG = "classBoost";
+
+/** Register the world setting that remembers the data version. */
+export function registerMigrations() {
+  game.settings.register(SYSTEM, SETTING, {
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 0
+  });
+}
+
+/** On ready: one Dark Master brings the world up to date. */
+export async function migrateWorld() {
+  if (game.users.activeGM !== game.user) return;
+  const version = game.settings.get(SYSTEM, SETTING);
+  if (version >= DATA_VERSION) return;
+  if (version < 1) {
+    for (const actor of game.actors.filter(actor => actor.type === "character")) await toRolledAbilities(actor);
+  }
+  await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
+  console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
+}
+
+/** Version 1: work the rolled scores back out and drop the old flag. */
+async function toRolledAbilities(actor) {
+  const cls = actor.itemTypes.class?.[0];
+  const boost = cls?.getFlag(SYSTEM, OLD_BOOST_FLAG) ?? 0;
+  const sanityLost = actor.system.sanityLost;
+  if (!boost && !sanityLost) return;
+  const rolled = rolledAbilities(actor._source.system.abilities, {
+    boostedAbility: cls?.system.boostedAbility,
+    boost,
+    sanityLost
+  });
+  await actor.update({ "system.abilities": rolled }, { [MIGRATION_OPTION]: true });
+  if (boost) await cls.unsetFlag(SYSTEM, OLD_BOOST_FLAG);
+}

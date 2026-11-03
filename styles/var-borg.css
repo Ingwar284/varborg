@@ -103,6 +103,12 @@
   resize: vertical;
 }
 
+.var-borg-sheet .ability-in-use {
+  font-size: var(--font-size-12);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
 .var-borg-sheet .ability-roll {
   width: 100%;
   white-space: nowrap;

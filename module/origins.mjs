@@ -2,22 +2,20 @@
  * Dropping a class, ancestry or background on a character sheet (rules 2.1,
  * Steps 2–4). A character has one of each: a new one replaces the old.
  *
- * Class: the boosted ability goes up 1, HP becomes X + Toughness (full),
- * max wounds is set. Replacing or deleting a class takes its +1 back
- * (ClassData._preDelete in module/data/origins.mjs, GAPS 99).
+ * Class: HP becomes X + Toughness (full) and max wounds is set. The boosted
+ * ability's +1 is not written into the scores: it is added on top while the
+ * class is on the character (CharacterData.prepareDerivedData), so replacing
+ * or deleting a class takes it away by itself (GAPS 99, 111).
  * Background: its wealth is rolled and added to silver (GAPS 101), and its
  * keepsake becomes a gear item (GAPS 100).
  * Each drop posts a card saying what changed.
  */
 
-import { applyClass, removeClassBoost, wealthFormula, ORIGIN_TYPES } from "./rules/origins.mjs";
+import { applyClass, wealthFormula, ORIGIN_TYPES } from "./rules/origins.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
 const CARD_TEMPLATE = "systems/var-borg/templates/chat/origin-card.hbs";
-
-/** Where a class item remembers how much it really raised its ability (0 at +6). */
-export const BOOST_FLAG = "classBoost";
 
 /** Is this item type a class, ancestry or background? */
 export function isOrigin(type) {
@@ -39,7 +37,7 @@ function signed(score) {
  */
 export async function addOrigin(actor, data) {
   const i18n = game.i18n;
-  // Replace the old one. Deleting an old class takes its +1 back first.
+  // Replace the old one. An old class's +1 goes with it.
   const old = actor.itemTypes[data.type] ?? [];
   if (old.length) await actor.deleteEmbeddedDocuments("Item", old.map(item => item.id));
 
@@ -47,14 +45,12 @@ export async function addOrigin(actor, data) {
   if (old.length) lines.push(i18n.format("VARBORG.Origin.Replaced", { name: old.map(item => item.name).join(", ") }));
 
   if (data.type === "class") {
-    const result = applyClass(actor.system.abilities, data.system);
+    const result = applyClass(actor.system.rolledAbilities, data.system);
     await actor.update({
-      "system.abilities": result.abilities,
       "system.hp.max": result.hp,
       "system.hp.value": result.hp,
       "system.wounds.max": result.maxWounds
     });
-    foundry.utils.setProperty(data, `flags.var-borg.${BOOST_FLAG}`, result.boost);
     const ability = i18n.localize(`VARBORG.Ability.${data.system.boostedAbility}`);
     lines.push(result.boost
       ? i18n.format("VARBORG.Origin.Boost", { ability, score: signed(result.abilities[data.system.boostedAbility]) })
@@ -95,18 +91,4 @@ export async function addOrigin(actor, data) {
   const content = await renderTemplate(CARD_TEMPLATE, { title, lines });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), flavor: title, content });
   return item ?? null;
-}
-
-/**
- * Take a class's +1 back from its character, just before the class is
- * deleted (GAPS 99). HP and max wounds stay as they are (GAPS 102). A class
- * that was never applied by dropping it has no flag and changes nothing.
- * @param {Item} item  A class item on a character.
- */
-export async function undoClassBoost(item) {
-  const actor = item.actor;
-  const boost = item.getFlag("var-borg", BOOST_FLAG);
-  if (actor?.type !== "character" || !boost) return;
-  const abilities = removeClassBoost(actor.system.abilities, item.system.boostedAbility, boost);
-  await actor.update({ "system.abilities": abilities });
 }

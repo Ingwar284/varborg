@@ -27,6 +27,7 @@ import { registerPersistentDamage } from "./persistent.mjs";
 import { registerAgony } from "./agony.mjs";
 import { registerDeathsDoor } from "./deaths-door.mjs";
 import { registerAmmunition } from "./ammunition.mjs";
+import { registerMigrations, migrateWorld } from "./migrate.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -97,6 +98,9 @@ Hooks.once("init", () => {
     [CARD.DEFENCE]: settleDefenceCard
   });
 
+  // The world's data version, for bringing old data up to date.
+  registerMigrations();
+
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {
     name: "VARBORG.Examples.MenuName",
@@ -108,6 +112,7 @@ Hooks.once("init", () => {
   });
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async () => {
   console.log("VÅR BORG | Ready");
+  await migrateWorld();
 });
