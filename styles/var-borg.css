@@ -570,6 +570,22 @@
   width: 3rem;
 }
 
+/* Persistent damage: type, damage, Add and the Dark Master's Tick. */
+.var-borg-sheet .persistent-controls select {
+  flex: 0 1 auto;
+}
+
+.var-borg-sheet .persistent-controls input[type="text"] {
+  width: 4rem;
+}
+
+/* What a test is for, such as ending persistent damage. */
+.var-borg-test-dialog .purpose,
+.var-borg-card .purpose {
+  font-style: italic;
+  margin: 0 0 0.3rem;
+}
+
 /* A situational Bane the player judges: shown, not added. */
 .var-borg-test-dialog .hint.reminder {
   font-style: italic;

@@ -10,6 +10,8 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 
 | # | Question | Ruling | Status |
 |---|---|---|---|
+| 77 | Does worn armour soak persistent damage? Armour soaks "when struck" (rules 3.8). | Provisional (step 19): no. Persistent damage goes straight to HP. | Open |
+| 78 | Outside combat there is no "end of your turn" for persistent damage. | Provisional (step 19): a Tick button in the Conditions section (Dark Master only) deals all of an actor's persistent damage, exactly as at the end of a turn. | Open |
 | 55 | Lockpicks have two expendable dice by test result (Failure d6, Ruin d2), but an item holds one expendable die. How should the system handle that? | Deferred until tests can be tied to items. Until then lockpicks have no expendable die in the system and are rolled by hand. | Open |
 | 68 | Raising a shield costs an action (◈). What happens outside combat, or on someone else's turn in combat? | Provisional (step 16): outside combat the shield is raised with no action tracked, and stays raised until you press Lower. In combat it is only allowed on your own turn and spends one action. A raised shield is lowered at the start of your next turn, and when combat ends. | Open |
 | 63 | Recover from an attack Ruin "spends an action". What happens outside combat, or on someone else's turn in combat? Does the Ruin end when combat ends? | Provisional (step 15): outside combat Recover just ends the Ruin, with no action tracked. In combat it is only allowed on your own turn and spends one action (◈). The Ruin lasts until Recover, even after combat ends. | Open |
@@ -79,6 +81,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 73 | Prone foe: "melee attacks against it are at -2 DR, ranged attacks against it at +2 DR". Is a thrown attack melee or ranged? | Ranged. Only melee is melee; shooting and throwing are ranged (+2 DR against a Prone foe). | Resolved |
 | 74 | How long do Quickened and Slowed last? | One turn each. At the start of the affected creature's next turn it gains one more action (Quickened) or one less action and one less reaction (Slowed), and the condition then ends. | Resolved |
 | 75 | Situational Bane (Blinded: tests relying on sight; Deafened: hearing; Stupefied: thought; Frightened: tests targeting the source of fear) cannot be judged by the system. How is it handled? | Reminder only. Test, attack and defence dialogs show a reminder line; the player ticks Bane (or Boon, for a Frightened foe's attack) themselves. Nothing is added automatically. | Resolved |
+| 76 | Of the same type only the strongest persistent damage applies. What happens to the weaker one? | It is removed. When a second one of the same type arrives, the one with the lower average damage is deleted (on a tie the older one stays). | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 
 ## Ember and Gloom

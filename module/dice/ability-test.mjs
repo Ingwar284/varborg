@@ -28,16 +28,20 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/test-card.hbs";
  * Ask for the test's options, roll it and post the chat card.
  * @param {Actor} actor     The character making the test.
  * @param {string} ability  One of ABILITIES, such as "strength".
+ * @param {object} [options]
+ * @param {number} [options.dr]       The DR the dialog starts at (12 if not given).
+ * @param {string} [options.purpose]  What the test is for, shown on the dialog and card.
+ * @returns {Promise<object|null>}    The rules result (with its tier), or null if closed.
  */
-export async function rollAbilityTest(actor, ability) {
+export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null } = {}) {
   const abilityLabel = game.i18n.localize(`VARBORG.Ability.${ability}`);
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
   const conditionMods = testConditions(conditions, fatigue);
   const fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
-  const options = await askTestOptions(abilityLabel, automatic, notes, reminderNotes(actor, "test"));
-  if (!options) return;
+  const options = await askTestOptions(abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose);
+  if (!options) return null;
 
   const boons = options.boon ? 1 : 0;
   const banes = (options.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0);
@@ -56,6 +60,7 @@ export async function rollAbilityTest(actor, ability) {
 
   const content = await renderTemplate(CARD_TEMPLATE, {
     title: game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel }),
+    purpose,
     dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
     modeLabel: modeLabel(mode, boons, banes),
     kept: result.kept,
@@ -79,6 +84,7 @@ export async function rollAbilityTest(actor, ability) {
     flavor: game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel }),
     content
   });
+  return result;
 }
 
 /**
@@ -104,21 +110,24 @@ export function actorTestModifiers(actor, ability) {
  *   The armour and Encumbered modifiers, shown so the player knows they apply.
  * @param {string[]} conditionNotes  Conditions added for you, such as "Fatigued 1: +2 DR".
  * @param {string[]} reminders       Situational Bane for the player to judge.
+ * @param {number} startDr            The DR selected when the dialog opens.
+ * @param {string|null} purpose       What the test is for, if anything.
  * @returns {Promise<{dr: number, boon: boolean, bane: boolean, aidSuccesses: number, aidFailures: number}|null>}
  */
-async function askTestOptions(abilityLabel, automatic, conditionNotes = [], reminders = []) {
+async function askTestOptions(abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null) {
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     drs: DR_TABLE.map(dr => ({
       value: dr,
       label: game.i18n.format("VARBORG.Test.DROption", { dr, name: game.i18n.localize(`VARBORG.DR.${dr}`) }),
-      selected: dr === DR_DEFAULT
+      selected: dr === startDr
     })),
     armourNote: automatic.armourDr ? game.i18n.format("VARBORG.Test.ArmourDialogNote", {
       armour: signed(automatic.armourDr), name: automatic.armourName
     }) : null,
     encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes,
-    reminders
+    reminders,
+    purpose
   });
 
   const data = await DialogV2.input({

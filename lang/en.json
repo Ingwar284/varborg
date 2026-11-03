@@ -542,7 +542,8 @@
         "darkVessel": "Gain d8 HP. Use all your actions to attack the nearest target by the most effective means. Attack −2 DR. Defend +2 DR. Ends when at Death’s Door, dead or otherwise incapacitated.",
         "infected": "You gain no benefits from resting, take d6 damage at the end of a rest. Can be cured using a medicine box.",
         "doomed": "You gain no benefits from resting, take 1 wound at the start of each day. You can be cured using special means.",
-        "encumbered": "All terrain counts as difficult terrain, and Bane on any Strength and Agility tests."
+        "encumbered": "All terrain counts as difficult terrain, and Bane on any Strength and Agility tests.",
+        "persistentDamage": "Take ongoing damage at the end of your turn. Each time you take persistent damage, test Toughness DR12 to overcome it; on a Success it ends. The Dark Master may adjust the DR."
       },
       "FoeText": {
         "blinded": "Foe: All terrain is difficult terrain. Attacks against it are made with Boon, and creatures defend against its attacks with Boon.",
@@ -552,7 +553,8 @@
         "stupefied": "Foe: No reaction. Creatures defend against its gloom abilities with Boon.",
         "restrained": "Foe: It can’t move. Attacks against it are made with Boon, and creatures defend against its attacks with Boon.",
         "prone": "Foe: Moves as if difficult terrain. Creatures defend against its attacks at −2 DR. Melee attacks against it are at −2 DR, ranged attacks against it at +2 DR.",
-        "encumbered": "Foe: All terrain is difficult terrain. Attacks against it are made with Boon, and creatures defend against its melee attacks with Boon."
+        "encumbered": "Foe: All terrain is difficult terrain. Attacks against it are made with Boon, and creatures defend against its melee attacks with Boon.",
+        "persistentDamage": "Takes ongoing damage at the end of its turn. Each time it takes persistent damage, the Dark Master rolls a d20; on 12 or higher it ends."
       },
       "Reminder": {
         "test": {
@@ -573,7 +575,39 @@
         "foeAttack": {
           "frightened": "Frightened: tick Boon if this attack targets the source of its fear."
         }
-      }
+      },
+      "persistentDamage": "Persistent Damage"
+    },
+    "Persistent": {
+      "Label": "Persistent damage",
+      "TypeLabel": "Damage type",
+      "Type": {
+        "fire": "Fire",
+        "bleeding": "Bleeding",
+        "acid": "Acid",
+        "poison": "Poison"
+      },
+      "FormulaLabel": "Damage",
+      "FormulaHint": "Dice such as d4 or 2d4, or a number such as 7.",
+      "Add": "Add",
+      "Tick": "Tick",
+      "TickHint": "Deal all persistent damage now, as at the end of a turn. For use outside combat.",
+      "Name": "Persistent {type} damage ({formula})",
+      "BadFormula": "Persistent damage needs dice such as d4 or 2d4, or a number such as 7.",
+      "WeakerRemoved": "{name}: {removed} removed. Of the same type, only the strongest applies.",
+      "Damage": "{formula}: {damage} damage. Armour does not soak it.",
+      "Hp": "HP {from} → {to} (max {max}).",
+      "TestButton": "Test Toughness (DR{dr}) to end it",
+      "Purpose": "To end {name}.",
+      "Ends": "{name} ends.",
+      "GoesOn": "{name} goes on.",
+      "FoeEnds": "Dark Master’s d20: {roll}. It ends.",
+      "FoeGoesOn": "Dark Master’s d20: {roll}. It goes on.",
+      "MookFails": "A mook fails every test: it goes on.",
+      "AlreadyEnded": "This persistent damage has already ended.",
+      "DialogTitle": "Persistent damage: {name}",
+      "Has": "Already has {name}.",
+      "RemoveHint": "To remove persistent damage, use its ✕ in the Conditions section of the sheet."
     }
   }
 }

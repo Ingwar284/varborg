@@ -255,9 +255,13 @@ prices, traits and tiers against 4.1.
     defence +2 DR. Make the Bellman Prone and melee attacks against it show
     −2 DR.
 
-19. **Persistent damage.** One effect per damage type. Of the same type,
+19. ~~**Persistent damage.**~~ Done: `module/rules/persistent.mjs` with
+    `tests/persistent.test.mjs`, `module/persistent.mjs` (effects, the
+    end-of-turn tick, a card with a Toughness button, a Persistent damage
+    row and a GM Tick button in the Conditions section), and a DR and
+    purpose for ability tests (GAPS 76–78). One effect per damage type. Of the same type,
     only the one with the highest average damage applies (tested: 2d4 beats
-    d6). It deals damage at the end of the turn. A PC tests Toughness DR12
+    d6); the weaker is removed. It deals damage at the end of the turn. A PC tests Toughness DR12
     to end each one. For a foe the GM rolls a d20 and it ends on 12+.
     *Test:* tests pass. Give Example Hero two fire effects and one poison,
     end the turn, and check that one fire and the poison tick.

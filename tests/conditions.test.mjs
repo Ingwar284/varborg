@@ -15,7 +15,7 @@ import {
 
 const total = mods => totalModifiers(mods);
 
-test("every 3.13 condition is listed, except Persistent Damage (step 19)", () => {
+test("every 3.13 condition is listed, except Persistent Damage (its own file)", () => {
   assert.equal(CONDITIONS.length, 16);
   assert.ok(!CONDITIONS.includes("persistentDamage"));
 });

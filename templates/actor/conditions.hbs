@@ -10,9 +10,20 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
     </li>
-    {{else}}
-    <li class="empty">{{localize "VARBORG.Condition.None"}}</li>
     {{/each}}
+    {{#each conditions.persistent.list}}
+    <li class="condition-row">
+      <img src="{{img}}" alt="">
+      <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
+      <button type="button" class="icon-button" data-remove-persistent="{{id}}"
+              data-tooltip="{{localize 'VARBORG.Condition.Remove'}}" aria-label="{{localize 'VARBORG.Condition.Remove'}}">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </li>
+    {{/each}}
+    {{#unless conditions.list.length}}{{#unless conditions.persistent.list.length}}
+    <li class="empty">{{localize "VARBORG.Condition.None"}}</li>
+    {{/unless}}{{/unless}}
   </ul>
   <div class="condition-controls">
     <select data-add-condition aria-label="{{localize 'VARBORG.Condition.Add'}}">
@@ -23,5 +34,17 @@
       <span>{{localize "VARBORG.Condition.FatigueLevel"}}</span>
       <input type="number" name="system.fatigue" value="{{conditions.fatigue}}" min="0" step="1">
     </label>
+  </div>
+  <div class="condition-controls persistent-controls">
+    <span>{{localize "VARBORG.Persistent.Label"}}</span>
+    <select data-persistent-type aria-label="{{localize 'VARBORG.Persistent.TypeLabel'}}">
+      {{#each conditions.persistent.types}}<option value="{{id}}">{{label}}</option>{{/each}}
+    </select>
+    <input type="text" data-persistent-formula value="d4" placeholder="d4"
+           aria-label="{{localize 'VARBORG.Persistent.FormulaLabel'}}" data-tooltip="{{localize 'VARBORG.Persistent.FormulaHint'}}">
+    <button type="button" data-add-persistent>{{localize "VARBORG.Persistent.Add"}}</button>
+    {{#if conditions.persistent.canTick}}
+    <button type="button" data-tick-persistent data-tooltip="{{localize 'VARBORG.Persistent.TickHint'}}">{{localize "VARBORG.Persistent.Tick"}}</button>
+    {{/if}}
   </div>
 </section>

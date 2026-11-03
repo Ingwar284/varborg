@@ -1,0 +1,15 @@
+<div class="var-borg-test-dialog">
+  <div class="form-group">
+    <label for="var-borg-persistent-type">{{localize "VARBORG.Persistent.TypeLabel"}}</label>
+    <select id="var-borg-persistent-type" name="type">
+      {{#each types}}<option value="{{id}}">{{label}}</option>{{/each}}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-persistent-formula">{{localize "VARBORG.Persistent.FormulaLabel"}}</label>
+    <input id="var-borg-persistent-formula" type="text" name="formula" value="d4" placeholder="d4">
+  </div>
+  <p class="hint">{{localize "VARBORG.Persistent.FormulaHint"}}</p>
+  {{#each current}}<p class="hint automatic">{{this}}</p>{{/each}}
+  <p class="hint">{{localize "VARBORG.Persistent.RemoveHint"}}</p>
+</div>

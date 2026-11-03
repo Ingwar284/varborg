@@ -171,7 +171,7 @@ function foeGroup(foe) {
  * At 0 HP: mark the foe defeated in the running combat, with the usual
  * defeated icon on its token (GAPS 71).
  */
-async function markDefeated(foe) {
+export async function markDefeated(foe) {
   const combatants = game.combat?.combatants.filter(c => c.actor?.uuid === foe.uuid && !c.defeated) ?? [];
   for (const combatant of combatants) await combatant.update({ defeated: true });
   const defeatedId = CONFIG.specialStatusEffects.DEFEATED;

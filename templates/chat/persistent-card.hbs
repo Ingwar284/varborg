@@ -1,0 +1,12 @@
+<div class="var-borg-card persistent-card">
+  <h3>{{title}}</h3>
+  <p class="total">{{damage}}</p>
+  <p class="sum">{{hp}}</p>
+  {{#if zeroHp}}<p class="modifier">{{zeroHp}}</p>{{/if}}
+  {{#if foeLine}}<p class="modifier">{{foeLine}}</p>{{/if}}
+  {{#if test}}
+  <button type="button" data-action="persistentTest" data-effect-uuid="{{test.effectUuid}}">
+    <i class="fa-solid fa-dice-d20"></i> {{test.label}}
+  </button>
+  {{/if}}
+</div>

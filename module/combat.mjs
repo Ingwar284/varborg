@@ -17,6 +17,7 @@
 import { initiativeFormula, compareInitiative } from "./rules/initiative.mjs";
 import { ACTIONS_PER_TURN, REACTIONS_PER_TURN, adjustLeft, pips } from "./rules/actions.mjs";
 import { turnAllowance } from "./rules/conditions.mjs";
+import { tickPersistentDamage } from "./persistent.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -54,6 +55,15 @@ export class VarBorgCombat extends foundry.documents.Combat {
     if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) await postTurnStart(combatant, actions, reactions);
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
     if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
+  }
+
+  /**
+   * At the end of each turn the actor takes its persistent damage
+   * (rules 3.13). Foundry runs this on the Dark Master's client.
+   */
+  async _onEndTurn(combatant, context) {
+    await super._onEndTurn(combatant, context);
+    if (combatant.actor) await tickPersistentDamage(combatant.actor);
   }
 
   /** When combat ends, raised shields are lowered: there is no next turn. */

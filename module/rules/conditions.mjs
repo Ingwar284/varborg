@@ -11,14 +11,14 @@
  * Only what a computer can judge is applied: Boon, Bane, DR changes and
  * lost actions or reactions. Bane that depends on the situation ("tests
  * that rely on sight") is shown as a reminder for the player to tick
- * (GAPS 75). Persistent Damage comes in step 19; the Death's Door table and
- * Dark Vessel's d8 HP in step 22.
+ * (GAPS 75). Persistent Damage has its own file (persistent.mjs); the
+ * Death's Door table and Dark Vessel's d8 HP come in step 22.
  *
  * Every function takes `conditions`: the condition ids an actor has (a Set
  * or an array), and `fatigue`: its level of fatigue.
  */
 
-/** Every condition in rules 3.13, except Persistent Damage (step 19). */
+/** Every condition in rules 3.13, except Persistent Damage (see persistent.mjs). */
 export const CONDITIONS = [
   "blinded", "deafened", "charmed", "fatigued", "frightened", "stupefied",
   "restrained", "prone", "quickened", "silenced", "slowed",

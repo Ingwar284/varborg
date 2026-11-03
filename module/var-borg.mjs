@@ -3,6 +3,7 @@
  * Foundry loads this file first (see "esmodules" in system.json).
  */
 
+import VarBorgActor from "./actor.mjs";
 import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
 import FoeData from "./data/foe.mjs";
@@ -16,11 +17,13 @@ import { addAttackCardListeners } from "./dice/attack.mjs";
 import { addDefenceCardListeners } from "./dice/defence.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerConditions } from "./conditions.mjs";
+import { registerPersistentDamage } from "./persistent.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
 
-  // Actor data: which fields each actor type stores.
+  // Actors: the document class, and which fields each actor type stores.
+  CONFIG.Actor.documentClass = VarBorgActor;
   CONFIG.Actor.dataModels.character = CharacterData;
   CONFIG.Actor.dataModels.foe = FoeData;
 
@@ -56,6 +59,8 @@ Hooks.once("init", () => {
 
   // Conditions (rules 3.13) as status effects on tokens and sheets.
   registerConditions();
+  // Persistent Damage: one effect per type, ticking at the end of the turn.
+  registerPersistentDamage();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

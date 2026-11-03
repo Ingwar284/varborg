@@ -1,5 +1,6 @@
 <div class="var-borg-card test-card">
   <h3>{{title}}</h3>
+  {{#if purpose}}<p class="purpose">{{purpose}}</p>{{/if}}
   <div class="dice">
     {{#each dice}}
     <span class="die {{#unless kept}}dropped{{/unless}}">{{value}}</span>

@@ -1,6 +1,8 @@
 /**
  * Conditions in Foundry (rules 3.13): status effects on tokens and actors,
  * the Conditions list on the sheets, and the notes on dialogs and cards.
+ * Persistent Damage has its own file (module/persistent.mjs) but is shown
+ * in the same Conditions section.
  *
  * The maths lives in module/rules/conditions.mjs; this file only connects
  * it to Foundry. Fatigued has a level, kept in system.fatigue and shown on
@@ -9,6 +11,7 @@
 
 import { CONDITIONS, FOE_LINE_CONDITIONS, reminders, lossOnArrival } from "./rules/conditions.mjs";
 import { signed } from "./dice/ability-test.mjs";
+import { sheetPersistent, activatePersistentControls } from "./persistent.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -97,6 +100,7 @@ export function sheetConditions(actor) {
   const active = CONDITIONS.filter(id => actor.statuses.has(id));
   return {
     fatigue: actor.system.fatigue,
+    persistent: sheetPersistent(actor),
     list: active.map(id => ({
       id,
       img: ICONS[id],
@@ -111,8 +115,8 @@ export function sheetConditions(actor) {
 }
 
 /**
- * The sheet's condition controls: the "Add a condition" menu and each
- * condition's remove button. Called from the sheet's _onRender.
+ * The sheet's condition controls: the "Add a condition" menu, each
+ * condition's remove button, and the persistent damage controls. Called from the sheet's _onRender.
  */
 export function activateConditionControls(element, actor) {
   element.querySelector("select[data-add-condition]")?.addEventListener("change", event => {
@@ -122,6 +126,7 @@ export function activateConditionControls(element, actor) {
   for (const button of element.querySelectorAll("[data-remove-condition]")) {
     button.addEventListener("click", () => actor.toggleStatusEffect(button.dataset.removeCondition, { active: false }));
   }
+  activatePersistentControls(element, actor);
 }
 
 /** When the fatigue level changes, the Fatigued icon follows it. */
