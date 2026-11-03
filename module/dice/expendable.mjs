@@ -12,6 +12,7 @@
 import {
   expendableFormula, expendableOutcome, canRollExpendable, canFire, canReload, actionSymbols
 } from "../rules/expendable.mjs";
+import { markFired } from "../ammunition.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -51,12 +52,13 @@ export async function rollExpendable(actor, item) {
 }
 
 /**
- * Fire a loaded weapon: it becomes empty. The attack itself arrives in
- * PLAN step 14, so the card only says the shot is spent.
+ * Fire a loaded weapon without an attack roll: it becomes empty. In combat,
+ * its ammunition is rolled for when the combat ends (GAPS 39).
  */
 export async function fireWeapon(actor, item) {
   if (!canFire(item.system)) return;
   await item.update({ "system.loaded": false });
+  await markFired(actor, item);
   await postWeaponCard(actor, item, {
     title: game.i18n.format("VARBORG.Reload.FireTitle", { name: item.name }),
     text: game.i18n.localize("VARBORG.Reload.NowEmpty")

@@ -36,6 +36,7 @@ import {
 } from "../rules/attack.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote } from "./ability-test.mjs";
 import { turnState } from "../combat.mjs";
+import { markFired } from "../ammunition.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
@@ -114,8 +115,10 @@ export async function rollAttack(actor, item) {
   const nowRuined = ruinedAfterAttack(ruined, result.tier);
   if (nowRuined !== ruined) await actor.update({ "system.attackRuin": nowRuined });
 
-  // Firing empties a weapon with Reload (GAPS 53).
+  // Firing empties a weapon with Reload (GAPS 53). In combat, its
+  // ammunition is rolled for when the combat ends (GAPS 39).
   if (mode === "shoot" && needsReload(weapon)) await item.update({ "system.loaded": false });
+  if (mode === "shoot") await markFired(actor, item);
 
   // Action and reaction pips, and the count for the multiple-attack Bane.
   let pipNote = null;

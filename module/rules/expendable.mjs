@@ -59,3 +59,24 @@ export function canReload(weapon) {
 export function actionSymbols(count) {
   return ACTION_SYMBOL.repeat(Math.max(0, count));
 }
+
+/**
+ * A weapon with ammunition shoots and has an expendable die (rules 4.1,
+ * Expendable). Thrown weapons and a sling ("find your own stones") have none.
+ */
+export function usesAmmunition(weapon) {
+  return weapon.kind === "shoot" && Boolean(weapon.expendable);
+}
+
+/**
+ * After a combat, a weapon rolls its expendable die if its ammunition was
+ * used in that combat and has not already run out (rules 4.1: "roll the
+ * indicated die after a combat encounter in which you used said
+ * ammunition"). One roll per combat, however many shots were fired.
+ * @param {object} weapon       The weapon's system data.
+ * @param {string} firedIn      The id of the combat it last fired in, if any.
+ * @param {string} combatId     The combat that has just ended.
+ */
+export function needsAmmoRoll(weapon, firedIn, combatId) {
+  return usesAmmunition(weapon) && !weapon.usedUp && Boolean(combatId) && firedIn === combatId;
+}

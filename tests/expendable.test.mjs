@@ -6,7 +6,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  expendableFormula, isUsedUpRoll, expendableOutcome, canRollExpendable, needsReload, canFire, canReload, actionSymbols
+  expendableFormula, isUsedUpRoll, expendableOutcome, canRollExpendable, needsReload, canFire, canReload, actionSymbols,
+  usesAmmunition, needsAmmoRoll
 } from "../module/rules/expendable.mjs";
 
 test("an expendable die becomes a one-die formula", () => {
@@ -71,4 +72,32 @@ test("on a 1, one of a stack is used up (GAPS 54)", () => {
 test("on a 1, the last one (or a weapon's ammunition) is marked used up", () => {
   assert.deepEqual(expendableOutcome(1, 1), { quantity: 1, usedUp: true, spent: true });
   assert.deepEqual(expendableOutcome(1), { quantity: 1, usedUp: true, spent: true });
+});
+
+test("only shooting weapons with an expendable die use ammunition", () => {
+  assert.ok(usesAmmunition({ kind: "shoot", expendable: "d4" }));
+  assert.ok(!usesAmmunition({ kind: "shoot", expendable: "" }), "a sling finds its own stones");
+  assert.ok(!usesAmmunition({ kind: "throw", expendable: "d4" }));
+  assert.ok(!usesAmmunition({ kind: "melee", expendable: "d4" }));
+});
+
+test("after combat, ammunition used in that combat is rolled for", () => {
+  const pistol = { kind: "shoot", expendable: "d4", usedUp: false };
+  assert.ok(needsAmmoRoll(pistol, "combatA", "combatA"));
+});
+
+test("ammunition not used in the combat that ended is not rolled for", () => {
+  const pistol = { kind: "shoot", expendable: "d4", usedUp: false };
+  assert.ok(!needsAmmoRoll(pistol, undefined, "combatA"), "never fired");
+  assert.ok(!needsAmmoRoll(pistol, "combatB", "combatA"), "fired in another combat");
+  assert.ok(!needsAmmoRoll(pistol, "", ""), "no combat");
+});
+
+test("a weapon already out of ammunition is not rolled for again", () => {
+  assert.ok(!needsAmmoRoll({ kind: "shoot", expendable: "d4", usedUp: true }, "combatA", "combatA"));
+});
+
+test("weapons without ammunition are never rolled for after combat", () => {
+  assert.ok(!needsAmmoRoll({ kind: "shoot", expendable: "", usedUp: false }, "combatA", "combatA"));
+  assert.ok(!needsAmmoRoll({ kind: "throw", expendable: "d4", usedUp: false }, "combatA", "combatA"));
 });

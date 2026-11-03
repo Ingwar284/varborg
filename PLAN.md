@@ -310,8 +310,17 @@ prices, traits and tiers against 4.1.
     *Test:* tests pass. Push Example Hero past max wounds and check each
     table row with forced rolls.
 
-23. **Ammunition after combat.** When combat ends, the system asks for an
-    expendable roll for each ranged weapon fired during that combat.
+23. ~~**Ammunition after combat.**~~ Done: `usesAmmunition` and
+    `needsAmmoRoll` in `module/rules/expendable.mjs` with tests,
+    `module/ammunition.mjs` (marking a weapon fired, the card and its
+    buttons) and an ammunition card (GAPS 39). A shooting weapon with an
+    expendable die that is shot in combat (an attack or the Fire button)
+    remembers that combat. When the combat ends, each character gets one
+    card with an Expendable button per such weapon, rolled once by its
+    owner. One roll per combat, however many shots. Thrown weapons, a sling
+    and weapons already out of ammunition are left out. When combat ends,
+    the system asks for an expendable roll for each ranged weapon fired
+    during that combat.
     *Test:* fire the pistol in combat, end combat, and a roll prompt
     appears.
 

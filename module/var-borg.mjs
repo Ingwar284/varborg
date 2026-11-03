@@ -20,6 +20,7 @@ import { registerConditions } from "./conditions.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
 import { registerAgony } from "./agony.mjs";
 import { registerDeathsDoor } from "./deaths-door.mjs";
+import { registerAmmunition } from "./ammunition.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -67,6 +68,8 @@ Hooks.once("init", () => {
   registerAgony();
   // Death's Door and Dark Vessel (rules 3.6).
   registerDeathsDoor();
+  // Ammunition: an expendable roll after a combat it was used in (rules 4.1).
+  registerAmmunition();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

@@ -1,0 +1,11 @@
+<div class="var-borg-card ammunition-card">
+  <h3>{{title}}</h3>
+  <p class="modifier">{{text}}</p>
+  <div class="card-buttons">
+  {{#each weapons}}
+  <button type="button" data-action="ammoRoll" data-item-uuid="{{uuid}}" data-combat-id="{{../combatId}}">
+    <i class="fa-solid fa-dice"></i> {{label}}
+  </button>
+  {{/each}}
+  </div>
+</div>

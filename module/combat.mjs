@@ -21,6 +21,7 @@ import { tickPersistentDamage } from "./persistent.mjs";
 import { countDownPanic } from "./panic.mjs";
 import { countDownWaking } from "./deaths-door.mjs";
 import { statusName } from "./conditions.mjs";
+import { askForAmmoRolls } from "./ammunition.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -75,13 +76,18 @@ export class VarBorgCombat extends foundry.documents.Combat {
     await countDownWaking(combatant.actor);
   }
 
-  /** When combat ends, raised shields are lowered: there is no next turn. */
+  /**
+   * When combat ends, raised shields are lowered: there is no next turn.
+   * Each weapon whose ammunition was used asks for its expendable roll
+   * (rules 4.1, GAPS 39).
+   */
   _onDelete(options, userId) {
     super._onDelete(options, userId);
     if (!game.users.activeGM?.isSelf) return;
     for (const combatant of this.combatants) {
       if (combatant.actor?.system.shieldRaised) combatant.actor.update({ "system.shieldRaised": false });
     }
+    if (this.started) askForAmmoRolls(this);
   }
 }
 

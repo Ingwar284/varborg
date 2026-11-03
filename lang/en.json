@@ -251,6 +251,11 @@
       "ReloadTitle": "{name} reloaded",
       "ActionsSpent": "Spend {count} Interact actions to reload. The weapon is loaded."
     },
+    "Ammunition": {
+      "CardTitle": "{name}: ammunition after combat",
+      "Explanation": "Ammunition was used in this combat. Roll its expendable die: on a 1 you have run out of ammunition.",
+      "Button": "{name}: roll expendable {die}"
+    },
     "Examples": {
       "MenuName": "Example content",
       "Label": "Import examples",
