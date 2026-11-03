@@ -2,6 +2,18 @@
   "_id": "vbExampleBellman",
   "name": "Ash-Choked Bellman",
   "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
   "system": {
     "tier": "weak",
     "category": "duskborn",

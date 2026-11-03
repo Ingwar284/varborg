@@ -10,6 +10,11 @@ working step, commit with Git.
 ## Design summary
 
 - **Actor types:** character, foe, minion, vehicle.
+- **Tokens** (`module/rules/tokens.mjs`): every name shows on hover to
+  anyone. Characters are friendly and linked to their actor (damage on the
+  token reaches the sheet), with HP and Wounds bars always shown to
+  everyone. Foes are hostile and not linked, so each copy has its own HP,
+  with an HP bar shown to everyone on hover.
 - **Item types:** weapon, armour, shield, gear, container, ancestry,
   background, class, feat, power, spell, scroll, relic.
 - **Shared state (world settings, one table panel):** Ember pool, Gloom pool,

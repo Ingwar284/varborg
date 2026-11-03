@@ -16,6 +16,7 @@ import {
 import { isCumbersomeByDefault } from "../module/rules/carrying.mjs";
 import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, isMorale } from "../module/rules/foe.mjs";
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
+import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -43,6 +44,12 @@ test("example characters follow the ability and HP rules", () => {
     }
     assert.equal(capHp(data.system.hp.value, data.system.hp.max), data.system.hp.value,
       `${file}: HP must not be above max HP`);
+  }
+});
+
+test("example actors carry the token defaults, so importing sets them", () => {
+  for (const { file, data } of examples.filter(({ data }) => data.type in TOKEN_DEFAULTS)) {
+    assert.deepEqual(data.prototypeToken, TOKEN_DEFAULTS[data.type], `${file}: token settings`);
   }
 });
 

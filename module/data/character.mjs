@@ -8,6 +8,7 @@
 
 import { ABILITIES, ABILITY_MIN, ABILITY_MAX } from "../rules/abilities.mjs";
 import { capHp } from "../rules/health.mjs";
+import { missingTokenDefaults } from "../rules/tokens.mjs";
 
 const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -57,12 +58,18 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     };
   }
 
-  /** On creation, HP can never start above max HP (GAPS 44). */
+  /**
+   * On creation, HP can never start above max HP (GAPS 44), and the
+   * character's tokens get their defaults (module/rules/tokens.mjs): linked
+   * to the character, friendly, name on hover, HP and Wounds bars always
+   * shown. A character copied with its own token settings keeps them.
+   */
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
     const capped = capHp(this.hp.value, this.hp.max);
     if (capped !== this.hp.value) this.parent.updateSource({ "system.hp.value": capped });
+    this.parent.updateSource(missingTokenDefaults("character", data));
   }
 
   /**

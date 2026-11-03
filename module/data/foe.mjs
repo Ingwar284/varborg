@@ -12,6 +12,7 @@ import {
   FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, MORALE_MIN, MORALE_MAX, foeMaxHp
 } from "../rules/foe.mjs";
 import { capHp } from "../rules/health.mjs";
+import { missingTokenDefaults } from "../rules/tokens.mjs";
 
 const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -67,12 +68,17 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
     this.hp.value = capHp(this.hp.value, this.hp.max);
   }
 
-  /** On creation, HP can never start above max HP (GAPS 44). */
+  /**
+   * On creation, HP can never start above max HP (GAPS 44), and the foe's
+   * tokens get their defaults (module/rules/tokens.mjs): not linked,
+   * hostile, name and HP bar on hover.
+   */
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
     const capped = capHp(this.hp.value, this.hp.max);
     if (capped !== this.hp.value) this.parent.updateSource({ "system.hp.value": capped });
+    this.parent.updateSource(missingTokenDefaults("foe", data));
   }
 
   /**

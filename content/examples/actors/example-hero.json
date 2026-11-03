@@ -2,6 +2,18 @@
   "_id": "vbExampleHero000",
   "name": "Example Hero",
   "type": "character",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 1,
+    "displayName": 30,
+    "displayBars": 50,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": "wounds"
+    }
+  },
   "system": {
     "abilities": {
       "strength": 0,
