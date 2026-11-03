@@ -368,7 +368,11 @@ or Improving. Old characters are brought over when the world loads
 
 ## Milestone 5: Ember, Gloom and magic
 
-26. **Ember and Gloom pools.** A shared panel. Rule, with tests: at the start
+26. ~~**Ember and Gloom pools.**~~ Done: `module/rules/pools.mjs` with
+    `tests/pools.test.mjs`, `module/pools.mjs` (the world setting, the
+    Dark Master query for player spends, and the Table panel, opened from
+    the token controls), round hooks in `module/combat.mjs` (GAPS 114–115).
+    A shared panel. Rule, with tests: at the start
     of each round the pool fills to round × 5 (5, 10, 15…). What isn't spent
     is lost at the end of the round, and both pools empty when combat ends.
     Players spend Ember through the GM (sockets).

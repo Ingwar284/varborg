@@ -420,6 +420,23 @@
       "Reactions": "Reactions",
       "PipsLeft": "{label}: {left} of {max} left. Click a filled pip to spend it, an empty one to give it back."
     },
+    "Pools": {
+      "Title": "The Table",
+      "Open": "The Table: Ember and Gloom",
+      "Ember": "Ember",
+      "Gloom": "Gloom",
+      "Round": "Round {round}: both pools filled to {fill}. Unspent charges are lost at the end of the round.",
+      "OutsideCombat": "Outside combat there is no pool.",
+      "Spend": "Spend",
+      "Add": "Add 1 charge",
+      "Remove": "Remove 1 charge",
+      "Spent": "{name} spends {symbol}{amount} from the {pool} pool ({left} left).",
+      "NotEnough": "The {pool} pool does not hold enough charges.",
+      "NoCombat": "There is no pool outside combat.",
+      "GMOnly": "Only the Dark Master can do that with the {pool} pool.",
+      "NoGM": "The Dark Master must be connected to spend from the {pool} pool.",
+      "Bad": "That is not a valid change to the {pool} pool."
+    },
     "Attack": {
       "Tooltip": "Attack with this weapon",
       "DialogTitle": "Attack with {name}",

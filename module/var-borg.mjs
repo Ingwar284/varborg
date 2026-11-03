@@ -28,6 +28,7 @@ import { registerAgony } from "./agony.mjs";
 import { registerDeathsDoor } from "./deaths-door.mjs";
 import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
+import { registerPools } from "./pools.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -84,6 +85,8 @@ Hooks.once("init", () => {
   registerDeathsDoor();
   // Ammunition: an expendable roll after a combat it was used in (rules 4.1).
   registerAmmunition();
+  // The Ember and Gloom pools and the shared Table panel (rules 3.10).
+  registerPools();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

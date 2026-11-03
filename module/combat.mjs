@@ -22,6 +22,7 @@ import { countDownPanic } from "./panic.mjs";
 import { countDownWaking } from "./deaths-door.mjs";
 import { statusName } from "./conditions.mjs";
 import { askForAmmoRolls } from "./ammunition.mjs";
+import { fillPools, drainPools } from "./pools.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -63,6 +64,21 @@ export class VarBorgCombat extends foundry.documents.Combat {
   }
 
   /**
+   * Start of each round: the Ember and Gloom pools fill to round × 5
+   * (rules 3.10). Beginning the combat starts round 1.
+   */
+  async _onStartRound(context) {
+    await super._onStartRound(context);
+    await fillPools(context.round);
+  }
+
+  /** End of each round: whatever is left in both pools is lost (rules 3.10). */
+  async _onEndRound(context) {
+    await super._onEndRound(context);
+    await drainPools();
+  }
+
+  /**
    * At the end of each turn the actor takes its persistent damage
    * (rules 3.13), and its Panic results that last for turns lose one
    * (GAPS 79), and an unconscious character at Death's Door is a round
@@ -77,13 +93,14 @@ export class VarBorgCombat extends foundry.documents.Combat {
   }
 
   /**
-   * When combat ends, raised shields are lowered: there is no next turn.
-   * Each weapon whose ammunition was used asks for its expendable roll
-   * (rules 4.1, GAPS 39).
+   * When combat ends, both pools empty (rules 3.10), and raised shields are
+   * lowered: there is no next turn. Each weapon whose ammunition was used
+   * asks for its expendable roll (rules 4.1, GAPS 39).
    */
   _onDelete(options, userId) {
     super._onDelete(options, userId);
     if (!game.users.activeGM?.isSelf) return;
+    drainPools();
     for (const combatant of this.combatants) {
       if (combatant.actor?.system.shieldRaised) combatant.actor.update({ "system.shieldRaised": false });
     }

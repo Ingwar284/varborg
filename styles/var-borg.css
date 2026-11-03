@@ -720,3 +720,69 @@
   flex-direction: column;
   gap: 0.25rem;
 }
+
+/* ---------- The Table panel: Ember and Gloom pools (step 26) ---------- */
+
+.var-borg.table-panel .window-content {
+  padding: 0.5rem;
+}
+
+.var-borg-table-panel .round,
+.var-borg-table-panel .hint {
+  margin: 0 0 0.4rem;
+  font-style: italic;
+}
+
+.var-borg-table-panel .pool {
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .pool-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-table-panel .pool-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .pool-count {
+  min-width: 2ch;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .pool.ember .pool-count {
+  color: #e07b24;
+}
+
+.var-borg-table-panel .pool.gloom .pool-count {
+  color: #7e57c2;
+}
+
+.var-borg-table-panel button.adjust {
+  flex: 0 0 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+}
+
+.var-borg-table-panel .pool-spend {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.25rem;
+}
+
+.var-borg-table-panel .pool-spend .spend-label {
+  margin-right: 0.2rem;
+}
+
+.var-borg-table-panel .pool-spend button {
+  flex: 1;
+  padding: 0 0.1rem;
+  line-height: 1.6rem;
+}
