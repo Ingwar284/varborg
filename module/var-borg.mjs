@@ -14,6 +14,7 @@ import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
 import { addAttackCardListeners } from "./dice/attack.mjs";
 import { addDefenceCardListeners } from "./dice/defence.mjs";
+import { addMoraleCardListeners } from "./dice/morale.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -56,6 +57,8 @@ Hooks.once("init", () => {
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);
   // Defend on a foe's attack card, Take damage on a defence card (rules 3.4).
   Hooks.on("renderChatMessageHTML", addDefenceCardListeners);
+  // Inflict damage on an attack card, Morale on a foe damage card (rules 3.12).
+  Hooks.on("renderChatMessageHTML", addMoraleCardListeners);
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

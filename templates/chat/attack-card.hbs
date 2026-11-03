@@ -30,6 +30,12 @@
       {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
     </p>
     {{/if}}
+    {{#if inflict}}
+    <button type="button" data-action="inflictDamage" data-damage="{{inflict.damage}}" data-foe-uuid="{{inflict.foeUuid}}"
+            data-armour="{{inflict.armour}}" data-attack="{{inflict.attack}}">
+      <i class="fa-solid fa-droplet"></i> {{inflict.label}}
+    </button>
+    {{/if}}
   </div>
   {{/if}}
   {{#if armour}}

@@ -1,0 +1,14 @@
+<div class="var-borg-card test-card morale-card">
+  <h3>{{title}}</h3>
+  <div class="dice">
+    {{#each dice}}<span class="die">{{this}}</span>{{/each}}
+  </div>
+  <p class="total">
+    <strong>{{total}}</strong> {{localize "VARBORG.MoraleRoll.Versus"}} <strong>{{localize "VARBORG.Foe.MoraleLabel"}} {{morale}}</strong>
+  </p>
+  <p class="tier {{#if demoralised}}tier-ruin{{else}}tier-success{{/if}}">{{outcome}}</p>
+  {{#if reaction}}
+  <div class="dice"><span class="die">{{d6}}</span></div>
+  <p class="outcome">{{reaction}}</p>
+  {{/if}}
+</div>

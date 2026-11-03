@@ -469,6 +469,32 @@
       "AttackGone": "That attack no longer exists.",
       "NoCharacter": "No character to defend. Target a character, select its token, or have a character assigned to you.",
       "NotYours": "You do not own {name}."
+    },
+    "FoeDamage": {
+      "CardTitle": "Damage to {name}",
+      "From": "From {attack}",
+      "Inflict": "Inflict {damage} damage on the targeted foe",
+      "InflictOn": "Inflict {damage} damage on {name}",
+      "Hp": "HP {from} → {to} (of {max})",
+      "Fallen": "{name} falls at 0 HP.",
+      "NoFoe": "No foe to damage. Target a foe’s token first.",
+      "LastEnemy": "{name} is the last enemy standing, with a third of its HP or less. It may roll Morale.",
+      "HalfDown": "Half the group is down. Each foe still standing may roll Morale."
+    },
+    "MoraleRoll": {
+      "Button": "Morale",
+      "Tooltip": "Roll 2d6. Above its Morale the foe is demoralised: d6, 1–3 it flees, 4–6 it surrenders.",
+      "NeverTooltip": "This foe never rolls Morale (Morale – or a mook).",
+      "Never": "{name} never rolls Morale.",
+      "CardTitle": "Morale: {name}",
+      "Versus": "vs",
+      "Holds": "{name} holds its nerve.",
+      "Demoralised": "{name} is demoralised!",
+      "Reaction": {
+        "flees": "{name} flees.",
+        "surrenders": "{name} surrenders."
+      },
+      "ButtonFor": "Morale: {name}"
     }
   }
 }

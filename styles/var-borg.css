@@ -590,3 +590,14 @@
   gap: 0.25rem;
   margin: 0.3rem 0;
 }
+
+/* Damaging foes and Morale (step 17) */
+
+.var-borg-sheet .foe-stats .morale-button {
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+.var-borg-card .damage button[data-action="inflictDamage"] {
+  margin-top: 0.3rem;
+}

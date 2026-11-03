@@ -8,6 +8,8 @@
 import FoeData from "../data/foe.mjs";
 import { moraleChoices } from "../rules/foe.mjs";
 import { foeAttack } from "../dice/defence.mjs";
+import { rollMorale } from "../dice/morale.mjs";
+import { canRollMorale } from "../rules/morale.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -40,7 +42,8 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       createItem: FoeSheet.#onCreateItem,
       editItem: FoeSheet.#onEditItem,
       deleteItem: FoeSheet.#onDeleteItem,
-      attack: FoeSheet.#onAttack
+      attack: FoeSheet.#onAttack,
+      rollMorale: FoeSheet.#onRollMorale
     }
   };
 
@@ -64,6 +67,8 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       game.i18n.localize(`VARBORG.Foe.Morale.${value ?? "none"}`)
     ]));
     context.morale = String(system.morale ?? "");
+    context.canRollMorale = canRollMorale(system);
+    context.moraleTooltip = game.i18n.localize(context.canRollMorale ? "VARBORG.MoraleRoll.Tooltip" : "VARBORG.MoraleRoll.NeverTooltip");
     context.attacks = actor.itemTypes.weapon
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: attackSummary(item) }));
@@ -91,6 +96,11 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static async #onAttack(event, button) {
     const item = this.#itemFor(button);
     if (item) await foeAttack(this.document, item);
+  }
+
+  /** The Morale button rolls 2d6 against the foe's Morale (rules 3.12). */
+  static async #onRollMorale() {
+    await rollMorale(this.document);
   }
 
   /** The pencil button opens the item's own sheet. */

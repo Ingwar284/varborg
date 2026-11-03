@@ -13,6 +13,9 @@
  * The target is the token you have targeted. On a Triumph against a foe,
  * its armour die steps down one: straight away if you may change the foe,
  * otherwise the card gets a button for the Dark Master.
+ * A hit that is not on a character gets an Inflict damage button
+ * (module/dice/morale.mjs), which remembers the foe's armour die from
+ * before the Triumph (GAPS 69).
  *
  * A Ruin marks the character (system.attackRuin): Bane on every attack until
  * they press Recover on the sheet, which spends one action (GAPS 17, 63).
@@ -113,6 +116,23 @@ export async function rollAttack(actor, item) {
     pipNote = i18n.localize(turn.onOwnTurn ? "VARBORG.Attack.UsedAction" : "VARBORG.Attack.UsedReaction");
   }
 
+  // Inflict damage on a foe. Characters defend instead, so a character
+  // target gets no button. A Triumph's hit is soaked by the armour die the
+  // foe had before the Triumph lowered it (GAPS 69).
+  let inflict = null;
+  if (damage && !damage.invalid && target?.type !== "character") {
+    const foe = target?.type === "foe" ? target : null;
+    inflict = {
+      damage: damage.total,
+      foeUuid: foe?.uuid ?? "",
+      armour: foe?.system.armour ?? "",
+      attack: item.name,
+      label: foe
+        ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: foe.name })
+        : i18n.format("VARBORG.FoeDamage.Inflict", { damage: damage.total })
+    };
+  }
+
   // A Triumph lowers the target foe's armour die by one (GAPS 12).
   let armour = null;
   if (outcome.lowerArmour && target?.type === "foe") {
@@ -159,6 +179,7 @@ export async function rollAttack(actor, item) {
     outcomeText: i18n.localize(`VARBORG.Attack.Outcome.${result.tier}`),
     naturalNote: naturalNote(result),
     damage,
+    inflict,
     armour,
     thrownNote: mode === "throw" ? i18n.localize("VARBORG.Attack.Retrieve") : null,
     ruinNote: nowRuined && !ruined ? i18n.localize("VARBORG.Attack.RuinedNow") : null,

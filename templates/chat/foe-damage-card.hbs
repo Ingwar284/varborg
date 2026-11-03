@@ -1,0 +1,26 @@
+<div class="var-borg-card foe-damage-card">
+  <h3>{{title}}</h3>
+  {{#if attack}}<p class="modifier">{{attack}}</p>{{/if}}
+  <div class="damage">
+    <p class="damage-line">{{localize "VARBORG.Attack.Damage"}}: {{damage}}</p>
+    {{#if soakDie}}
+    <p class="damage-line">{{localize "VARBORG.Defence.Soak"}} ({{soakDie}}): −{{soak}}</p>
+    {{/if}}
+    <p class="damage-line">
+      {{localize "VARBORG.Defence.Taken"}}: <strong class="damage-total">{{taken}}</strong>
+      {{#if minimum}}<span class="modifier">{{localize "VARBORG.Defence.Minimum"}}</span>{{/if}}
+    </p>
+  </div>
+  <p>{{hp}}</p>
+  {{#if fallenNote}}<p class="tier tier-ruin">{{fallenNote}}</p>{{/if}}
+  {{#each moraleNotes}}<p class="modifier">{{this}}</p>{{/each}}
+  {{#if moraleFoes.length}}
+  <div class="card-buttons">
+    {{#each moraleFoes}}
+    <button type="button" data-action="rollMorale" data-foe-uuid="{{uuid}}">
+      <i class="fa-solid fa-person-running"></i> {{label}}
+    </button>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>

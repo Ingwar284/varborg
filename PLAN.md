@@ -226,7 +226,14 @@ prices, traits and tiers against 4.1.
     *Test:* tests pass. The Bellman attacks, Example Hero defends and HP
     falls by the damage minus the soak roll.
 
-17. **Damaging foes and Morale.** An **Inflict damage** button on attack
+17. ~~**Damaging foes and Morale.**~~ Done: `module/rules/morale.mjs` with
+    `tests/morale.test.mjs`, `module/dice/morale.mjs`, a foe damage card
+    and a Morale card, and a **Morale** button on the foe sheet (GAPS
+    69–72). A Triumph's hit is soaked by the armour die from before the
+    hit. The damage card offers Morale when the last enemy standing is at a
+    third of its HP or less, or when a kill brings the foes in combat to
+    half eliminated (mooks left out). At 0 HP the foe is marked defeated.
+    An **Inflict damage** button on attack
     cards subtracts the foe's armour die (minimum 1). A **Morale** button
     rolls 2d6; above the foe's Morale it is demoralised, then d6: 1–3 flees,
     4–6 surrenders. A foe with Morale "–" never rolls.
