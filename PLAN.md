@@ -326,6 +326,9 @@ prices, traits and tiers against 4.1.
 
 **Milestone 3 review:** run a full fight, Example Hero against the Bellman,
 from initiative to Morale.
+*Done:* played through in Foundry. Two rulings (GAPS 96, 97) and two fixes:
+the last enemy is offered Morale once per fight, and in combat reloading
+is done on your own turn and uses its action pips.
 
 ## Milestone 4: Character building
 

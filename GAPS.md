@@ -100,6 +100,8 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 92 | How are "unconscious for X rounds, then awaken" rounds counted? | Like Panic results (questions 79 and 85): in combat they count down at the end of the character's own turns, the turn it starts in does not count, and at 0 the character wakes with the HP the row gives. Outside combat the Dark Master presses Wake on the sheet. The character stays at Death's Door while unconscious, so damage still kills. | Resolved |
 | 93 | "A second Dark Vessel before a Long Rest kills", but there is no resting yet. | The sheet counts Dark Vessels since a Long Rest. Until resting exists (Milestone 6), the Dark Master sets it back to 0 by hand. | Resolved |
 | 95 | A fatal Table of Agony result says "death's door", but the wound has just put HP back to max. | HP drops to 0, wounds go to their maximum, and the character is at Death's Door. | Resolved |
+| 96 | Does an Agility attack (a Finesse weapon used with Agility, or a throw) take the armour's Agility penalty? Rules 3.8 exempt only defence. | Yes. An Agility attack is an Agility test, so it takes the penalty (chain shirt +2 DR). Only defence is exempt; it takes the listed defence penalty instead. | Resolved |
+| 97 | The last foe standing at a third of its HP or less may roll Morale. Is it offered again on every later hit? | No, once per trigger, like the group trigger (GAPS 70). The hit that first brings it to a third or less offers the roll; if it holds, later hits do not offer it again. The foe sheet's Morale button stays for the Dark Master. | Resolved |
 
 ## Ember and Gloom
 

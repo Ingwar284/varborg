@@ -56,6 +56,19 @@ test("the last enemy at a third of its HP may roll Morale", () => {
   assert.deepEqual(moraleTriggers(group, "b", false).roll, ["b"]);
 });
 
+test("the last enemy is offered Morale once, not on every later hit (GAPS 97)", () => {
+  const alone = [foe("bellman", { hp: 2 })];
+  assert.deepEqual(moraleTriggers(alone, "bellman", false, { lastEnemyOffered: true }),
+    { lastEnemy: false, halfDown: false, roll: [] });
+  // Not yet offered: it is.
+  assert.equal(moraleTriggers(alone, "bellman", false, { lastEnemyOffered: false }).lastEnemy, true);
+});
+
+test("an earlier last-enemy offer does not stop the half-the-group trigger", () => {
+  const group = [foe("a", { eliminated: true }), foe("b", { eliminated: true }), foe("c"), foe("d")];
+  assert.deepEqual(moraleTriggers(group, "b", true, { lastEnemyOffered: true }).roll, ["c", "d"]);
+});
+
 test("a foe at a third of its HP is not the last enemy while others stand", () => {
   const group = [foe("a"), foe("b", { hp: 4 })];
   assert.deepEqual(moraleTriggers(group, "b", false), { lastEnemy: false, halfDown: false, roll: [] });

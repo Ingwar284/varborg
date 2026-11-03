@@ -9,7 +9,7 @@
  * foe (the Dark Master) can press it.
  *
  * The damage card offers Morale buttons when the last enemy standing is at
- * a third of its HP or less, or when this kill brings the group (the foes
+ * a third of its HP or less (once per fight, GAPS 97), or when this kill brings the group (the foes
  * in combat, mooks left out) to half eliminated (GAPS 70, 72). The foe
  * sheet always has a Morale button. At 0 HP the foe is marked defeated in
  * the Combat Tracker (GAPS 71).
@@ -29,6 +29,9 @@ const { renderTemplate } = foundry.applications.handlebars;
 const SYSTEM = "var-borg";
 const DAMAGE_TEMPLATE = "systems/var-borg/templates/chat/foe-damage-card.hbs";
 const MORALE_TEMPLATE = "systems/var-borg/templates/chat/morale-card.hbs";
+
+/** Stands in for a combat id when a foe is hit outside combat. */
+const NO_COMBAT = "none";
 
 /**
  * Deal an attack's damage to a foe: roll its armour, lower its HP, post a
@@ -58,9 +61,13 @@ export async function inflictDamage(foe, damage, armour, attack) {
   if (fallen) await markDefeated(foe);
 
   // Who may roll Morale now: the last enemy, or everyone left when this
-  // kill brings the group to half (GAPS 70, 72).
+  // kill brings the group to half (GAPS 70, 72). The last enemy is offered
+  // it once per fight (GAPS 97), remembered in the foe's flags.
   const group = foeGroup(foe);
-  const triggers = moraleTriggers(group, foe.uuid, fallen && from > 0);
+  const fight = game.combat?.id ?? NO_COMBAT;
+  const lastEnemyOffered = foe.getFlag(SYSTEM, "lastEnemyMorale") === fight;
+  const triggers = moraleTriggers(group, foe.uuid, fallen && from > 0, { lastEnemyOffered });
+  if (triggers.lastEnemy && canRollMorale(foe.system)) await foe.setFlag(SYSTEM, "lastEnemyMorale", fight);
   const moraleNotes = [
     triggers.lastEnemy ? i18n.format("VARBORG.FoeDamage.LastEnemy", { name: foe.name }) : null,
     triggers.halfDown ? i18n.localize("VARBORG.FoeDamage.HalfDown") : null

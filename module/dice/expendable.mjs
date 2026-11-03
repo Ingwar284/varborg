@@ -5,14 +5,15 @@
  * The Expendable button rolls the item's die. On a 1 one of a stack is used
  * up, and the last one (or a weapon's ammunition) is marked used up.
  * A weapon with Reload is loaded or empty: Fire empties it, Reload fills it
- * and the card lists the Interact actions it costs. The actions are counted
- * on the card only; action pips arrive with turns (PLAN step 13).
+ * and the card lists the Interact actions it costs. In combat, reloading is
+ * done on your own turn and uses that many action pips.
  */
 
 import {
   expendableFormula, expendableOutcome, canRollExpendable, canFire, canReload, actionSymbols
 } from "../rules/expendable.mjs";
 import { markFired } from "../ammunition.mjs";
+import { turnState } from "../combat.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -68,15 +69,26 @@ export async function fireWeapon(actor, item) {
 /**
  * Reload an empty weapon: it becomes loaded, and the card shows the Interact
  * actions spent (rules 4.1: "an indicated number of Interact actions").
+ * In combat it must be your own turn, and it uses that many action pips.
  */
 export async function reloadWeapon(actor, item) {
   if (!canReload(item.system)) return;
+  const i18n = game.i18n;
   const actions = item.system.reload;
+  const turn = turnState(actor);
+  if (turn.combatant && !turn.onOwnTurn) {
+    ui.notifications.warn(i18n.localize("VARBORG.Reload.NotYourTurn"));
+    return;
+  }
+  if (turn.combatant) {
+    if (turn.combatant.actionsLeft < actions) ui.notifications.warn(i18n.format("VARBORG.Reload.NoActions", { count: actions }));
+    await turn.combatant.adjustPips("actions", -actions);
+  }
   await item.update({ "system.loaded": true });
   await postWeaponCard(actor, item, {
-    title: game.i18n.format("VARBORG.Reload.ReloadTitle", { name: item.name }),
+    title: i18n.format("VARBORG.Reload.ReloadTitle", { name: item.name }),
     symbols: actionSymbols(actions),
-    text: game.i18n.format("VARBORG.Reload.ActionsSpent", { count: actions })
+    text: i18n.format(turn.combatant ? "VARBORG.Reload.ActionsUsed" : "VARBORG.Reload.ActionsSpent", { count: actions })
   });
 }
 

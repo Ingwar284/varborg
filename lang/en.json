@@ -249,7 +249,10 @@
       "NowEmpty": "The weapon is now empty.",
       "ReloadTooltip": "Reload ({count} Interact actions)",
       "ReloadTitle": "{name} reloaded",
-      "ActionsSpent": "Spend {count} Interact actions to reload. The weapon is loaded."
+      "ActionsSpent": "Spend {count} Interact actions to reload. The weapon is loaded.",
+      "ActionsUsed": "Used {count} Interact actions to reload. The weapon is loaded.",
+      "NotYourTurn": "Reloading uses actions, so in combat you can only do it on your own turn.",
+      "NoActions": "Reloading needs {count} actions and you have fewer left this turn. Reloading anyway; the Dark Master decides."
     },
     "Ammunition": {
       "CardTitle": "{name}: ammunition after combat",

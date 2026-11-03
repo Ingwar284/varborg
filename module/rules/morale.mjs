@@ -52,7 +52,8 @@ export function atOneThirdHp(hp, max) {
 /**
  * Which foes may roll Morale after a hit (rules 3.12, GAPS 70)?
  * - The last enemy: the hit foe is the only one of its group still
- *   standing, and has a third of its HP or less left.
+ *   standing, and has a third of its HP or less left. Offered once: not
+ *   again after it was offered (GAPS 97).
  * - Half the group: this hit eliminated the foe that brings the group to
  *   half or more eliminated (2 of 4, 2 of 3). Every foe still standing may
  *   roll. Only that hit counts, not later ones.
@@ -62,16 +63,19 @@ export function atOneThirdHp(hp, max) {
  *   morale: number|null, mook?: boolean}>} group  The foes, after the hit.
  * @param {string} hitId          The foe that was hit.
  * @param {boolean} eliminatedNow  Whether this hit eliminated it.
+ * @param {object} [options]
+ * @param {boolean} [options.lastEnemyOffered]  The hit foe was already
+ *   offered Morale as the last enemy in this fight.
  * @returns {{lastEnemy: boolean, halfDown: boolean, roll: string[]}}
  *   roll lists the ids of the foes that may roll Morale.
  */
-export function moraleTriggers(group, hitId, eliminatedNow) {
+export function moraleTriggers(group, hitId, eliminatedNow, { lastEnemyOffered = false } = {}) {
   const counted = group.filter(foe => !foe.mook);
   const standing = counted.filter(foe => !foe.eliminated);
   const hit = counted.find(foe => foe.id === hitId);
 
   const lastEnemy = Boolean(hit) && !hit.eliminated && standing.length === 1
-    && atOneThirdHp(hit.hp, hit.max);
+    && atOneThirdHp(hit.hp, hit.max) && !lastEnemyOffered;
 
   const down = counted.length - standing.length;
   const halfDown = Boolean(hit) && eliminatedNow
