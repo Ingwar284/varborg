@@ -54,6 +54,9 @@ None at the moment.
 | 42 | What does losing a body part do in play? | The Dark Master decides. The system only records which part was lost. | Resolved |
 | 39 | Ammunition rolls its expendable die after a combat in which it was used. Automatic or by hand? | When combat ends, the system asks automatically for each ranged weapon fired during that combat. | Resolved |
 | 46 | Can a character have more than one armour, or more than one shield, equipped at once? | Yes, any number can be equipped, but only the strongest effect applies: the armour with the highest current tier counts (soak die, DR penalties, metal), and a heavy shield beats a light one. | Resolved |
+| 49 | The DR table runs 6 to 26. Can armour push a DR above 26 (for example DR 22 with special armour, +6)? | No. A modified DR is capped at 26. | Resolved |
+| 50 | Two equipped armours with the same current tier but different original tiers (one damaged): which one's Agility penalty counts? | The one with the highest original tier. | Resolved |
+| 51 | Does armour's "+DR on Agility tests" change a contested Agility test, which has no DR? | Yes, it applies to all Agility tests. In a contested test, which has no DR, the penalty is taken off the character's total instead (+4 DR becomes −4). | Resolved |
 | 47 | Weapon groups (Weapon specialist feat): is there a fixed list? | No. Weapon groups are flavour, not a defined game term, so weapons don't store one. | Resolved |
 | 44 | Can current HP go above max HP? | No. HP is capped at max HP, and lowering max HP lowers current HP to match. | Resolved |
 

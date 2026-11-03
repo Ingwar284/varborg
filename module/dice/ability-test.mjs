@@ -3,13 +3,16 @@
  *
  * Opens a dialog (DR, Boon, Bane, aid), rolls the dice with Foundry, lets
  * module/rules/test-roll.mjs decide the outcome, and posts a chat card.
- * All the maths lives in the rules file; this file only asks, rolls and shows.
+ * Armour and Encumbered are added on their own (module/rules/test-modifiers.mjs).
+ * All the maths lives in the rules files; this file only asks, rolls and shows.
  */
 
 import {
   DR_TABLE, DR_DEFAULT, MODE,
   diceMode, diceFormula, aidModifier, resolveTest
 } from "../rules/test-roll.mjs";
+import { carrying } from "../rules/carrying.mjs";
+import { wornArmour, testModifiers, modifiedDr } from "../rules/test-modifiers.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -24,17 +27,21 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/test-card.hbs";
  */
 export async function rollAbilityTest(actor, ability) {
   const abilityLabel = game.i18n.localize(`VARBORG.Ability.${ability}`);
-  const options = await askTestOptions(abilityLabel);
+  const automatic = actorTestModifiers(actor, ability);
+  const options = await askTestOptions(abilityLabel, automatic);
   if (!options) return;
 
-  const mode = diceMode(options.boon ? 1 : 0, options.bane ? 1 : 0);
+  const boons = options.boon ? 1 : 0;
+  const banes = (options.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0);
+  const mode = diceMode(boons, banes);
   const aid = aidModifier(options.aidSuccesses, options.aidFailures);
   const abilityScore = actor.system.abilities[ability];
+  const dr = modifiedDr(options.dr, automatic.armourDr);
 
   const roll = new Roll(`${diceFormula(mode)} + @ability + @aid`, { ability: abilityScore, aid });
   await roll.evaluate();
   const dice = roll.dice[0].results.map(r => r.result);
-  const result = resolveTest({ dice, mode, ability: abilityScore, dr: options.dr, aid });
+  const result = resolveTest({ dice, mode, ability: abilityScore, dr, aid });
   if (result.total !== roll.total) {
     console.warn("VÅR BORG | Foundry's total and the rules total differ", roll.total, result);
   }
@@ -42,13 +49,17 @@ export async function rollAbilityTest(actor, ability) {
   const content = await renderTemplate(CARD_TEMPLATE, {
     title: game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel }),
     dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
-    modeLabel: modeLabel(mode, options),
+    modeLabel: modeLabel(mode, boons, banes),
     kept: result.kept,
     ability: signed(abilityScore),
     abilityLabel,
     aid: aid === 0 ? null : signed(aid),
     total: result.total,
-    dr: options.dr,
+    dr,
+    drNote: automatic.armourDr ? game.i18n.format("VARBORG.Test.ArmourDRNote", {
+      dr: options.dr, armour: signed(automatic.armourDr), name: automatic.armourName
+    }) : null,
+    encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
     tier: result.tier,
     tierLabel: game.i18n.localize(`VARBORG.Tier.${result.tier}`),
     naturalNote: naturalNote(result)
@@ -62,16 +73,37 @@ export async function rollAbilityTest(actor, ability) {
 }
 
 /**
+ * What the character's worn armour and load do to a test of this ability.
+ * @param {Actor} actor
+ * @param {string} ability
+ * @returns {{armourDr: number, armourName: string|null, encumberedBane: boolean}}
+ */
+export function actorTestModifiers(actor, ability) {
+  const items = actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }));
+  const armour = wornArmour(items);
+  const { state } = carrying(items, actor.system.abilities.toughness);
+  const modifiers = testModifiers({ ability, armour, carryingState: state });
+  return { ...modifiers, armourName: armour ? actor.items.get(armour.id)?.name ?? null : null };
+}
+
+/**
  * The test dialog. Returns the chosen options, or null if it was closed.
+ * @param {string} abilityLabel
+ * @param {{armourDr: number, armourName: string|null, encumberedBane: boolean}} automatic
+ *   The armour and Encumbered modifiers, shown so the player knows they apply.
  * @returns {Promise<{dr: number, boon: boolean, bane: boolean, aidSuccesses: number, aidFailures: number}|null>}
  */
-async function askTestOptions(abilityLabel) {
+async function askTestOptions(abilityLabel, automatic) {
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     drs: DR_TABLE.map(dr => ({
       value: dr,
       label: game.i18n.format("VARBORG.Test.DROption", { dr, name: game.i18n.localize(`VARBORG.DR.${dr}`) }),
       selected: dr === DR_DEFAULT
-    }))
+    })),
+    armourNote: automatic.armourDr ? game.i18n.format("VARBORG.Test.ArmourDialogNote", {
+      armour: signed(automatic.armourDr), name: automatic.armourName
+    }) : null,
+    encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null
   });
 
   const data = await DialogV2.input({
@@ -105,10 +137,10 @@ export function signed(number) {
 }
 
 /** "Boon", "Bane", "Boon and Bane cancel" or nothing. */
-function modeLabel(mode, options) {
+function modeLabel(mode, boons, banes) {
   if (mode === MODE.BOON) return game.i18n.localize("VARBORG.Test.Boon");
   if (mode === MODE.BANE) return game.i18n.localize("VARBORG.Test.Bane");
-  if (options.boon && options.bane) return game.i18n.localize("VARBORG.Test.Cancelled");
+  if (boons > 0 && banes > 0) return game.i18n.localize("VARBORG.Test.Cancelled");
   return null;
 }
 

@@ -374,6 +374,15 @@
   font-style: italic;
 }
 
+.var-borg-card .modifier {
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.var-borg-test-dialog .hint.automatic {
+  font-weight: bold;
+}
+
 /* Contested test card */
 
 .var-borg-card.contested-card .side {

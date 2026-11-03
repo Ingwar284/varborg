@@ -5,7 +5,8 @@
  * No victor emerges—the struggle endures."
  * Highest total wins. A natural 20 counts as +5 and a natural 1 as -5. A tie
  * means no victor (GAPS 10). Against a foe, roll its d20 plain, and foes add
- * nothing to their d20 (GAPS 33).
+ * nothing to their d20 (GAPS 33). Armour's Agility penalty, which is +DR in
+ * other tests, is taken off the total instead (GAPS 51).
  *
  * Each side uses keptDie from test-roll.mjs, so Boon and Bane work as in any
  * other test. Plain JavaScript: knows nothing about Foundry.
@@ -25,15 +26,17 @@ export const WINNER = { FIRST: "first", SECOND: "second", TIE: "tie" };
  * @param {number[]} side.dice    The d20 results (one, or two for Boon or Bane).
  * @param {string} [side.mode]    MODE.BOON, MODE.BANE or MODE.NORMAL.
  * @param {number} [side.ability] The ability score added (0 for a foe).
+ * @param {number} [side.modifier] Anything else added, such as -4 for armour.
  * @returns {{kept: number, natural: number|null, naturalBonus: number, total: number}}
  *   total includes the +5 or -5 for a natural 20 or 1.
  */
-export function resolveSide({ dice, mode = MODE.NORMAL, ability = 0 }) {
+export function resolveSide({ dice, mode = MODE.NORMAL, ability = 0, modifier = 0 }) {
   if (!Number.isInteger(ability)) throw new RangeError(`Ability must be a whole number, got ${ability}`);
+  if (!Number.isInteger(modifier)) throw new RangeError(`Modifier must be a whole number, got ${modifier}`);
   const kept = keptDie(dice, mode);
   const natural = kept === 20 || kept === 1 ? kept : null;
   const naturalBonus = natural === 20 ? NATURAL_BONUS : natural === 1 ? -NATURAL_BONUS : 0;
-  return { kept, natural, naturalBonus, total: kept + ability + naturalBonus };
+  return { kept, natural, naturalBonus, total: kept + ability + modifier + naturalBonus };
 }
 
 /**

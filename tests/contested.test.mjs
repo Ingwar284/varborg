@@ -42,6 +42,11 @@ test("Boon and Bane pick the kept die, which decides a natural 20 or 1", () => {
   assert.equal(resolveSide({ dice: [1, 9], mode: MODE.BOON }).natural, null);
 });
 
+test("armour's Agility penalty comes off the total (GAPS 51)", () => {
+  assert.equal(resolveSide({ dice: [12], ability: 1, modifier: -4 }).total, 9);
+  assert.equal(resolveContest({ dice: [12], modifier: -4 }, { dice: [10] }).winner, WINNER.SECOND);
+});
+
 test("bad input is refused", () => {
   assert.throws(() => resolveSide({ dice: [21] }), RangeError);
   assert.throws(() => resolveSide({ dice: [5], ability: 1.5 }), RangeError);

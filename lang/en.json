@@ -187,7 +187,10 @@
       "Natural20": "Natural 20.",
       "Natural20Up": "Natural 20: {from} moves up to {to}.",
       "Natural1": "Natural 1.",
-      "Natural1Down": "Natural 1: {from} drops to {to}."
+      "Natural1Down": "Natural 1: {from} drops to {to}.",
+      "ArmourDialogNote": "{name}: {armour} DR on Agility tests, added for you.",
+      "ArmourDRNote": "DR {dr}, {armour} for armour ({name})",
+      "EncumberedBane": "Encumbered: Bane on Strength and Agility tests."
     },
     "Contest": {
       "Button": "Contested test",
@@ -206,6 +209,7 @@
       "PlainD20": "Plain d20",
       "Natural20": "Natural 20: +5",
       "Natural1": "Natural 1: −5",
+      "Armour": "Armour {armour} ({name})",
       "Wins": "{name} wins",
       "Tie": "A tie: no victor, the struggle goes on"
     },
@@ -250,7 +254,7 @@
       "Hint": {
         "normal": "You can carry cumbersome items up to your Toughness (minimum 1). Other items do not count.",
         "encumbered": "Encumbered: all terrain counts as difficult terrain, and Bane on Strength and Agility tests.",
-        "overloaded": "More than twice your cumbersome limit: your movement is 0."
+        "overloaded": "More than twice your cumbersome limit: your movement is 0. You are also Encumbered: Bane on Strength and Agility tests."
       }
     }
   }

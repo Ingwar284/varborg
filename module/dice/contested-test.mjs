@@ -4,13 +4,15 @@
  * Opens a dialog (your ability, Boon, Bane, and the opponent: a foe rolling a
  * plain d20, or another character with an ability), rolls both sides with
  * Foundry, lets module/rules/contested.mjs pick the winner, and posts one
- * chat card. All the maths lives in the rules file.
+ * chat card. An Encumbered character gets Bane on Strength and Agility
+ * (rules 3.13), and armour's Agility penalty comes off the total (GAPS 51).
+ * All the maths lives in the rules files.
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
 import { MODE, diceMode, diceFormula } from "../rules/test-roll.mjs";
 import { WINNER, resolveContest } from "../rules/contested.mjs";
-import { signed } from "./ability-test.mjs";
+import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -33,29 +35,17 @@ export async function rollContestedTest(actor) {
   const opponentName = opponentActor?.name
     ?? (options.foeName || game.i18n.localize("VARBORG.Contest.FoeDefaultName"));
 
-  const first = {
-    name: actor.name,
-    abilityKey: options.ability,
-    ability: actor.system.abilities[options.ability],
-    mode: diceMode(options.boon ? 1 : 0, options.bane ? 1 : 0),
-    cancelled: options.boon && options.bane
-  };
+  const first = characterSide(actor, options.ability, options.boon, options.bane);
   // A foe rolls its d20 plain and adds nothing (GAPS 33).
   const second = opponentActor
-    ? {
-      name: opponentName,
-      abilityKey: options.opponentAbility,
-      ability: opponentActor.system.abilities[options.opponentAbility],
-      mode: diceMode(options.opponentBoon ? 1 : 0, options.opponentBane ? 1 : 0),
-      cancelled: options.opponentBoon && options.opponentBane
-    }
-    : { name: opponentName, abilityKey: null, ability: 0, mode: MODE.NORMAL, cancelled: false };
+    ? characterSide(opponentActor, options.opponentAbility, options.opponentBoon, options.opponentBane)
+    : { name: opponentName, abilityKey: null, ability: 0, modifier: 0, mode: MODE.NORMAL, boons: 0, banes: 0 };
 
   const firstRoll = await rollSide(first);
   const secondRoll = await rollSide(second);
   const result = resolveContest(
-    { dice: diceOf(firstRoll), mode: first.mode, ability: first.ability },
-    { dice: diceOf(secondRoll), mode: second.mode, ability: second.ability }
+    { dice: diceOf(firstRoll), mode: first.mode, ability: first.ability, modifier: first.modifier },
+    { dice: diceOf(secondRoll), mode: second.mode, ability: second.ability, modifier: second.modifier }
   );
 
   const winnerName = result.winner === WINNER.FIRST ? first.name
@@ -83,9 +73,31 @@ export async function rollContestedTest(actor) {
   });
 }
 
-/** Roll one side's d20 (or two, for Boon or Bane) plus its ability. */
+/**
+ * One character's side: its ability, Boon and Bane, plus Bane if Encumbered
+ * and minus armour's Agility penalty.
+ */
+function characterSide(actor, abilityKey, boon, bane) {
+  const { encumberedBane, armourDr, armourName } = actorTestModifiers(actor, abilityKey);
+  const boons = boon ? 1 : 0;
+  const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0);
+  return {
+    name: actor.name,
+    abilityKey,
+    ability: actor.system.abilities[abilityKey],
+    modifier: -armourDr,
+    armourName,
+    mode: diceMode(boons, banes),
+    boons,
+    banes,
+    encumbered: encumberedBane
+  };
+}
+
+/** Roll one side's d20 (or two, for Boon or Bane) plus its ability and armour. */
 async function rollSide(side) {
-  const roll = new Roll(`${diceFormula(side.mode)} + @ability`, { ability: side.ability });
+  const roll = new Roll(`${diceFormula(side.mode)} + @ability + @modifier`,
+    { ability: side.ability, modifier: side.modifier });
   await roll.evaluate();
   return roll;
 }
@@ -101,15 +113,15 @@ function cardSide(side, roll, result, won) {
     name: side.name,
     won,
     dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
-    modeLabel: side.mode === MODE.BOON ? game.i18n.localize("VARBORG.Test.Boon")
-      : side.mode === MODE.BANE ? game.i18n.localize("VARBORG.Test.Bane")
-      : side.cancelled ? game.i18n.localize("VARBORG.Test.Cancelled")
-      : null,
+    modeLabel: modeLabel(side.mode, side.boons, side.banes),
+    encumberedNote: side.encumbered ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
     kept: result.kept,
     abilityLabel: side.abilityKey
       ? game.i18n.localize(`VARBORG.Ability.${side.abilityKey}`)
       : game.i18n.localize("VARBORG.Contest.PlainD20"),
     ability: side.abilityKey ? signed(side.ability) : null,
+    armour: side.modifier ? signed(side.modifier) : null,
+    armourName: side.armourName,
     naturalNote: result.natural === 20 ? game.i18n.localize("VARBORG.Contest.Natural20")
       : result.natural === 1 ? game.i18n.localize("VARBORG.Contest.Natural1")
       : null,

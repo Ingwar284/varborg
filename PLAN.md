@@ -134,7 +134,11 @@ rules 3.2–3.3.
    *Test:* tests pass. Mark items cumbersome until the sheet shows Encumbered,
    then movement 0.
 
-10. **Armour and Encumbered on tests.** The rule, with tests: armour adds to
+10. ~~**Armour and Encumbered on tests.**~~ Done: `module/rules/test-modifiers.mjs`
+    with `tests/test-modifiers.test.mjs`, wired into the ability test and
+    contested test. The penalty follows the original tier (rules 3.8,
+    "Damaged armour retains its penalties"), and GAPS 49–51.
+    The rule, with tests: armour adds to
     Agility test DRs (tier 1 +0, tier 2 +2, tier 3 +4, tier 4 +6).
     Encumbered gives Bane on Strength and Agility tests. With several
     armours equipped, only the highest current tier counts (GAPS 46).

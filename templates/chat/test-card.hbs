@@ -6,6 +6,7 @@
     {{/each}}
     {{#if modeLabel}}<span class="mode">{{modeLabel}}</span>{{/if}}
   </div>
+  {{#if encumberedNote}}<p class="modifier">{{encumberedNote}}</p>{{/if}}
   <p class="sum">
     {{localize "VARBORG.Test.KeptDie"}} {{kept}}
     · {{abilityLabel}} {{ability}}
@@ -14,6 +15,7 @@
   <p class="total">
     <strong>{{total}}</strong> {{localize "VARBORG.Test.Versus"}} <strong>{{localize "VARBORG.Test.DR"}} {{dr}}</strong>
   </p>
+  {{#if drNote}}<p class="modifier">{{drNote}}</p>{{/if}}
   <p class="tier tier-{{tier}}">{{tierLabel}}</p>
   {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
 </div>
