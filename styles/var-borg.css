@@ -499,3 +499,35 @@
   width: 100%;
   text-align: center;
 }
+
+/* ---------- Combat Tracker: action and reaction pips ---------- */
+
+.var-borg-pips {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.15rem;
+}
+
+.var-borg-pips .pip-group {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.var-borg-pips .pip {
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0 0.15rem;
+  border: none;
+  background: none;
+  line-height: 1.1;
+  font-size: 1rem;
+}
+
+.var-borg-pips .pip.spent {
+  opacity: 0.3;
+}
+
+.var-borg-pips .pip:disabled {
+  cursor: default;
+}

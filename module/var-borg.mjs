@@ -11,6 +11,7 @@ import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./d
 import FeatData from "./data/feat.mjs";
 import { WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
+import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -43,6 +44,11 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", GearSheet, { types: ["gear"], makeDefault: true, label: "VARBORG.Sheet.Gear" });
   Items.registerSheet("var-borg", ContainerSheet, { types: ["container"], makeDefault: true, label: "VARBORG.Sheet.Container" });
   Items.registerSheet("var-borg", FeatSheet, { types: ["feat"], makeDefault: true, label: "VARBORG.Sheet.Feat" });
+
+  // Combat: initiative, turn order and action pips (rules 3.4).
+  CONFIG.Combat.documentClass = VarBorgCombat;
+  CONFIG.Combatant.documentClass = VarBorgCombatant;
+  Hooks.on("renderCombatTracker", addTrackerPips);
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

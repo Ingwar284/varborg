@@ -176,7 +176,11 @@ prices, traits and tiers against 4.1.
     *Test:* import the Bellman. Its sheet shows its HP, armour, attack and
     passive.
 
-13. **Initiative and turns.** PCs roll d6 + Agility, foes d6 + their bonus.
+13. ~~**Initiative and turns.**~~ Done: `module/rules/initiative.mjs` and
+    `module/rules/actions.mjs` with `tests/initiative.test.mjs` and
+    `tests/actions.test.mjs`, and `module/combat.mjs` (turn order, a random
+    tiebreak rolled with initiative, and clickable pips in the Combat
+    Tracker). PCs roll d6 + Agility, foes d6 + their bonus.
     Ties: PCs go first, then random among equals (tested). Each turn shows 3
     action pips and 1 reaction pip that reset at the start of the turn.
     *Test:* start combat with Example Hero and the Bellman. Check the order

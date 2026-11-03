@@ -362,6 +362,11 @@
       "RangeFeet": "Range (feet)",
       "RangeHint": "How far the ranged attack reaches, such as 60 for (60′).",
       "ReachHint": "Melee reach in feet, such as 10 for (reach 10′). Leave at 0 for the usual 5′."
+    },
+    "Combat": {
+      "Actions": "Actions",
+      "Reactions": "Reactions",
+      "PipsLeft": "{label}: {left} of {max} left. Click a filled pip to spend it, an empty one to give it back."
     }
   }
 }

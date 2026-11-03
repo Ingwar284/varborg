@@ -39,6 +39,7 @@
       "feat": {}
     }
   },
+  "initiative": "1d6",
   "grid": {
     "distance": 5,
     "units": "ft"
