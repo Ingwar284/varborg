@@ -8,6 +8,10 @@
  * other conditions is shown as a reminder (GAPS 75). The Panic results
  * Adrenaline Rush and Rattled give Boon or Bane and are then used up
  * (GAPS 80). Injuries from the Table of Agony count too (GAPS 88).
+ * Fortune (rule 3.9): the dialog can buy a Boon or Bane, and a test from
+ * the sheet gets Fortune buttons on its card (module/fortune.mjs). Tests
+ * that other features start (Panic, wounds...) do not, because what they
+ * did with the result cannot be taken back yet (GAPS 107).
  * All the maths lives in the rules files; this file only asks, rolls and shows.
  */
 
@@ -18,8 +22,10 @@ import {
 import { carrying } from "../rules/carrying.mjs";
 import { wornArmour, testModifiers, modifiedDr } from "../rules/test-modifiers.mjs";
 import { testConditions, totalModifiers, carryingWithConditions } from "../rules/conditions.mjs";
+import { CARD, softenTier } from "../rules/fortune.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
+import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -34,61 +40,114 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/test-card.hbs";
  * @param {object} [options]
  * @param {number} [options.dr]       The DR the dialog starts at (12 if not given).
  * @param {string} [options.purpose]  What the test is for, shown on the dialog and card.
+ * @param {boolean} [options.fortune] Put Fortune buttons on the card (tests from the sheet).
  * @returns {Promise<object|null>}    The rules result (with its tier), or null if closed.
  */
-export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null } = {}) {
+export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null, fortune = false } = {}) {
   const abilityLabel = game.i18n.localize(`VARBORG.Ability.${ability}`);
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
   const conditionMods = testConditions(conditions, fatigue, ability);
   const fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
-  const options = await askTestOptions(abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose);
+  const options = await askTestOptions(actor, abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose);
   if (!options) return null;
+  // A Boon or Bane bought with Fortune is paid before rolling (rule 3.9).
+  const paid = await payDialogFortune(actor, options.data);
+  if (!paid) return null;
 
-  const boons = (options.boon ? 1 : 0) + fromConditions.boons;
-  const banes = (options.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
+  const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
+  const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
   const mode = diceMode(boons, banes);
   const aid = aidModifier(options.aidSuccesses, options.aidFailures);
   const abilityScore = actor.system.abilities[ability];
   const dr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr);
+  const title = game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel });
 
-  const roll = new Roll(`${diceFormula(mode)} + @ability + @aid`, { ability: abilityScore, aid });
-  await roll.evaluate();
-  const dice = roll.dice[0].results.map(r => r.result);
-  const result = resolveTest({ dice, mode, ability: abilityScore, dr, aid });
-  if (result.total !== roll.total) {
-    console.warn("VÅR BORG | Foundry's total and the rules total differ", roll.total, result);
-  }
+  // Everything the card needs that Fortune cannot change.
+  const inputs = {
+    formula: `${diceFormula(mode)} + @ability + @aid`,
+    rollData: { ability: abilityScore, aid },
+    mode, abilityScore, aid, dr,
+    context: {
+      title,
+      purpose,
+      modeLabel: modeLabel(mode, boons, banes),
+      ability: signed(abilityScore),
+      abilityLabel,
+      aid: aid === 0 ? null : signed(aid),
+      drNote: automatic.armourDr ? game.i18n.format("VARBORG.Test.ArmourDRNote", {
+        dr: options.dr, armour: signed(automatic.armourDr), name: automatic.armourName
+      }) : null,
+      encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
+      conditionNotes: [...notes, paid.note].filter(Boolean)
+    }
+  };
 
-  const content = await renderTemplate(CARD_TEMPLATE, {
-    title: game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel }),
-    purpose,
-    dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
-    modeLabel: modeLabel(mode, boons, banes),
-    kept: result.kept,
-    ability: signed(abilityScore),
-    abilityLabel,
-    aid: aid === 0 ? null : signed(aid),
-    total: result.total,
-    dr,
-    drNote: automatic.armourDr ? game.i18n.format("VARBORG.Test.ArmourDRNote", {
-      dr: options.dr, armour: signed(automatic.armourDr), name: automatic.armourName
-    }) : null,
-    encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
-    conditionNotes: notes,
-    tier: result.tier,
-    tierLabel: game.i18n.localize(`VARBORG.Tier.${result.tier}`),
-    naturalNote: naturalNote(result)
-  });
+  const roll = await new Roll(inputs.formula, inputs.rollData).evaluate();
+  const data = newFortuneData(CARD.TEST, actor, inputs, { dice: diceOf(roll) });
+  const { content, result } = await renderTestCard(data, fortune);
 
   await roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor }),
-    flavor: game.i18n.format("VARBORG.Test.CardTitle", { ability: abilityLabel }),
-    content
+    flavor: title,
+    content,
+    flags: fortune ? fortuneFlags(data) : {}
   });
   await useUpNextTest(actor);
   return result;
+}
+
+/**
+ * Work a test card out again after Fortune was burned on it: new dice for a
+ * reroll, or the same dice with a softened tier. A plain test changes
+ * nothing else. Registered with module/fortune.mjs.
+ * @returns {Promise<{content: string, rolls: Roll[]}>}
+ */
+export async function settleTestCard(actor, data) {
+  const rolls = [];
+  if (!data.state.dice) {
+    const roll = await new Roll(data.inputs.formula, data.inputs.rollData).evaluate();
+    rolls.push(roll);
+    data.state.dice = diceOf(roll);
+  }
+  const { content } = await renderTestCard(data, true);
+  return { content, rolls };
+}
+
+/**
+ * The test card from its stored inputs and dice.
+ * @returns {Promise<{content: string, result: object}>} result.tier is the final tier.
+ */
+async function renderTestCard(data, withFortune) {
+  const { inputs, state } = data;
+  const rules = resolveTest({
+    dice: state.dice.map(die => die.value), mode: inputs.mode, ability: inputs.abilityScore, dr: inputs.dr, aid: inputs.aid
+  });
+  const result = { ...rules, tier: fortuneTier(rules.tier, state.softened) };
+  state.tier = result.tier;
+  const content = await renderTemplate(CARD_TEMPLATE, {
+    ...inputs.context,
+    dice: state.dice,
+    kept: result.kept,
+    total: result.total,
+    dr: inputs.dr,
+    tier: result.tier,
+    tierLabel: game.i18n.localize(`VARBORG.Tier.${result.tier}`),
+    naturalNote: naturalNote(rules),
+    fortune: withFortune ? await fortuneSection(data, { tier: result.tier }) : null
+  });
+  return { content, result };
+}
+
+/** The d20s as the card shows them: each value, and whether it was kept. */
+export function diceOf(roll) {
+  return roll.dice[0].results.map(r => ({ value: r.result, kept: r.active }));
+}
+
+/** The tier after Fortune: Triumph → Success, Ruin → Failure when softened. */
+export function fortuneTier(tier, softened) {
+  return softened ? softenTier(tier) ?? tier : tier;
 }
 
 /**
@@ -109,6 +168,7 @@ export function actorTestModifiers(actor, ability) {
 
 /**
  * The test dialog. Returns the chosen options, or null if it was closed.
+ * @param {Actor} actor               The character, for its Fortune.
  * @param {string} abilityLabel
  * @param {{armourDr: number, armourName: string|null, encumberedBane: boolean}} automatic
  *   The armour and Encumbered modifiers, shown so the player knows they apply.
@@ -116,9 +176,10 @@ export function actorTestModifiers(actor, ability) {
  * @param {string[]} reminders       Situational Bane for the player to judge.
  * @param {number} startDr            The DR selected when the dialog opens.
  * @param {string|null} purpose       What the test is for, if anything.
- * @returns {Promise<{dr: number, boon: boolean, bane: boolean, aidSuccesses: number, aidFailures: number}|null>}
+ * @returns {Promise<{dr: number, boon: boolean, bane: boolean, aidSuccesses: number, aidFailures: number, data: object}|null>}
+ *   data is the whole form, for the Fortune boxes.
  */
-async function askTestOptions(abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null) {
+async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null) {
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     drs: DR_TABLE.map(dr => ({
       value: dr,
@@ -131,7 +192,8 @@ async function askTestOptions(abilityLabel, automatic, conditionNotes = [], remi
     encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes,
     reminders,
-    purpose
+    purpose,
+    fortuneFields: await fortuneFields(actor, "test")
   });
 
   const data = await DialogV2.input({
@@ -147,7 +209,8 @@ async function askTestOptions(abilityLabel, automatic, conditionNotes = [], remi
     boon: Boolean(data.boon),
     bane: Boolean(data.bane),
     aidSuccesses: wholeCount(data.aidSuccesses),
-    aidFailures: wholeCount(data.aidFailures)
+    aidFailures: wholeCount(data.aidFailures),
+    data
   };
 }
 

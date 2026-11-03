@@ -16,6 +16,9 @@
  * Conditions (rules 3.13): the defender's own (Prone, Restrained, Fatigued,
  * Dark Vessel) and the attacking foe's Foe lines (Prone, Blinded,
  * Restrained, Encumbered, Fatigued) are added for you.
+ * Fortune (rule 3.9): the dialog can buy a Boon or Bane, and the card has
+ * Fortune buttons (module/fortune.mjs). settleDefenceCard works the card
+ * out again after each use.
  * All the maths lives in module/rules/defence.mjs and
  * module/rules/conditions.mjs; this file only asks, rolls and shows.
  */
@@ -31,7 +34,9 @@ import {
   DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, strongestShield, shieldCover,
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
 } from "../rules/defence.mjs";
-import { signed, modeLabel, naturalNote } from "./ability-test.mjs";
+import { signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
+import { CARD, lowerDamage } from "../rules/fortune.mjs";
+import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { turnState } from "../combat.mjs";
 import { defenderConditions, attackingFoeConditions, totalModifiers, carryingWithConditions } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
@@ -97,73 +102,21 @@ export async function rollDefence(actor, attack) {
   const options = await askDefenceOptions(actor, attack, automatic, conditions);
   if (!options) return;
 
+  // Fortune can buy a Boon or Bane before rolling (rule 3.9).
+  const paid = await payDialogFortune(actor, options.data);
+  if (!paid) return;
+
   const fromConditions = totalModifiers([...conditions.own, ...conditions.foe]);
-  const boonCount = (options.boon ? 1 : 0) + fromConditions.boons;
-  const baneCount = [options.bane, automatic.encumberedBane].filter(Boolean).length + fromConditions.banes;
+  const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
+  const baneCount = [options.bane, paid.bane, automatic.encumberedBane].filter(Boolean).length + fromConditions.banes;
   const diceRule = diceMode(boonCount, baneCount);
   const abilityScore = actor.system.abilities[DEFENCE_ABILITY];
   const uncoveredDr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr);
   const dr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr - automatic.cover);
 
-  const roll = new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore });
-  await roll.evaluate();
-  const dice = roll.dice[0].results.map(r => r.result);
-  const result = resolveTest({ dice, mode: diceRule, ability: abilityScore, dr });
-  const outcome = defenceOutcome(result.tier);
+  const roll = await new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore }).evaluate();
   // Adrenaline Rush and Rattled count for this defence, then end (GAPS 80).
   await useUpNextTest(actor);
-  const rolls = [roll];
-
-  // Hit: roll the foe's damage and the armour's soak die (GAPS 64).
-  let damage = null;
-  if (outcome.hit) {
-    const formula = damageFormula(attack.system.damage);
-    if (isDamageFormula(formula)) {
-      const damageRoll = await new Roll(formula).evaluate();
-      rolls.push(damageRoll);
-      let soak = 0;
-      const die = soakDie(automatic.armour);
-      if (die) {
-        const soakRoll = await new Roll(die).evaluate();
-        rolls.push(soakRoll);
-        soak = soakRoll.total;
-      }
-      const { before, taken } = damageTaken(damageRoll.total, result.tier, soak);
-      damage = {
-        formula,
-        rolled: damageRoll.total,
-        doubled: outcome.multiplier === 2,
-        before,
-        soakDie: die,
-        soak,
-        taken,
-        minimum: taken > before - soak
-      };
-    } else {
-      damage = { invalid: true, formula: attack.system.damage };
-    }
-  }
-
-  // Ruin: the armour drops one tier, and below tier 1 it is destroyed.
-  let armourNote = null;
-  if (outcome.lowerArmour && automatic.armour) {
-    const item = actor.items.get(automatic.armour.id);
-    const lowered = lowerArmourTier(automatic.armour);
-    await item.update({ "system.tier": lowered.tier });
-    armourNote = i18n.format(lowered.destroyed ? "VARBORG.Defence.ArmourDestroyed" : "VARBORG.Defence.ArmourLowered", {
-      name: item.name, from: automatic.armour.tier, to: lowered.tier
-    });
-  }
-
-  // The cover alone stopped the attack: it strikes the shield (GAPS 66).
-  let shieldNote = null;
-  if (automatic.cover && coverStruck({ tier: result.tier, total: result.total, dr, uncoveredDr })) {
-    const item = actor.items.get(automatic.shield.id);
-    const damaged = damagedShield(automatic.shield.size);
-    await item.update({ "system.size": damaged.size, "system.destroyed": damaged.destroyed });
-    if (damaged.destroyed) await actor.update({ "system.shieldRaised": false });
-    shieldNote = i18n.format(damaged.destroyed ? "VARBORG.Defence.ShieldDestroyed" : "VARBORG.Defence.ShieldDamaged", { name: item.name });
-  }
 
   const abilityLabel = i18n.localize(`VARBORG.Ability.${DEFENCE_ABILITY}`);
   const title = i18n.format("VARBORG.Defence.CardTitle", { name: attack.name });
@@ -172,41 +125,162 @@ export async function rollDefence(actor, attack) {
     automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     ...conditionNotes(conditions.own),
-    ...conditionNotes(conditions.foe, foe?.name)
+    ...conditionNotes(conditions.foe, foe?.name),
+    paid.note
   ].filter(Boolean);
 
-  const content = await renderTemplate(CARD_TEMPLATE, {
-    title,
-    against: foe ? i18n.format("VARBORG.Defence.Against", { name: foe.name, attack: attack.name }) : null,
-    dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
-    modeLabel: modeLabel(diceRule, boonCount, baneCount),
-    kept: result.kept,
-    ability: signed(abilityScore),
-    abilityLabel,
-    total: result.total,
-    dr,
-    drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
-    notes,
-    tier: result.tier,
-    tierLabel: i18n.localize(`VARBORG.Tier.${result.tier}`),
-    outcomeText: i18n.localize(`VARBORG.Defence.Outcome.${result.tier}`),
-    naturalNote: naturalNote(result),
-    damage,
-    armourNote,
-    shieldNote,
-    actorUuid: actor.uuid,
-    // The weapon's damage type, suggested for the Table of Agony (GAPS 15).
-    agonyType: attack.system.damageType ?? "",
-    takeLabel: damage && !damage.invalid ? i18n.format("VARBORG.Defence.TakeDamage", { damage: damage.taken }) : null
-  });
+  // Everything the card needs that Fortune cannot change.
+  const formula = damageFormula(attack.system.damage);
+  const inputs = {
+    formula: `${diceFormula(diceRule)} + @ability`,
+    rollData: { ability: abilityScore },
+    diceRule, abilityScore, dr, uncoveredDr,
+    damageFormula: isDamageFormula(formula) ? formula : null,
+    attackDamage: attack.system.damage,
+    // The armour and shield as they were before this attack.
+    armour: automatic.armour ? { id: automatic.armour.id, tier: automatic.armour.tier, originalTier: automatic.armour.originalTier } : null,
+    soakDie: soakDie(automatic.armour),
+    shield: automatic.cover ? { id: automatic.shield.id, size: automatic.shield.size } : null,
+    cover: automatic.cover,
+    context: {
+      title,
+      against: foe ? i18n.format("VARBORG.Defence.Against", { name: foe.name, attack: attack.name }) : null,
+      modeLabel: modeLabel(diceRule, boonCount, baneCount),
+      ability: signed(abilityScore),
+      abilityLabel,
+      drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
+      notes,
+      actorUuid: actor.uuid,
+      // The weapon's damage type, suggested for the Table of Agony (GAPS 15).
+      agonyType: attack.system.damageType ?? ""
+    }
+  };
+
+  const data = newFortuneData(CARD.DEFENCE, actor, inputs, { dice: diceOf(roll), damage: null, soak: null, lowered: [] });
+  const { content, rolls } = await settleDefenceCard(actor, data);
 
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content,
-    rolls,
-    sound: CONFIG.sounds.dice
+    rolls: [roll, ...rolls],
+    sound: CONFIG.sounds.dice,
+    flags: fortuneFlags(data)
   });
+}
+
+/**
+ * Work the defence card out from its stored inputs, dice and damage: roll
+ * what is missing (new dice after a Fortune reroll, damage and soak on a
+ * new hit), then make the armour and shield match the result, taking back
+ * what an earlier result did (GAPS 103). Fortune's −d6 comes off last and
+ * can reach 0 (GAPS 109). Used for the first card and after each Fortune
+ * use; registered with module/fortune.mjs.
+ * @param {Actor} actor  The defender.
+ * @param {object} data  The card's Fortune data (changed in place).
+ * @returns {Promise<{content: string, rolls: Roll[]}>} The new rolls.
+ */
+export async function settleDefenceCard(actor, data) {
+  const i18n = game.i18n;
+  const { inputs, state, applied } = data;
+  const rolls = [];
+  if (!state.dice) {
+    const roll = await new Roll(inputs.formula, inputs.rollData).evaluate();
+    rolls.push(roll);
+    state.dice = diceOf(roll);
+  }
+  const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr });
+  const tier = fortuneTier(result.tier, state.softened);
+  state.tier = tier;
+  const outcome = defenceOutcome(tier);
+
+  // Hit: the foe's damage and the armour's soak die (GAPS 64). A damage
+  // reroll keeps the soak roll.
+  let damage = null;
+  if (outcome.hit && !inputs.damageFormula) damage = { invalid: true, formula: inputs.attackDamage };
+  else if (outcome.hit) {
+    if (state.damage === null) {
+      const damageRoll = await new Roll(inputs.damageFormula).evaluate();
+      rolls.push(damageRoll);
+      state.damage = damageRoll.total;
+    }
+    if (state.soak === null) {
+      state.soak = 0;
+      if (inputs.soakDie) {
+        const soakRoll = await new Roll(inputs.soakDie).evaluate();
+        rolls.push(soakRoll);
+        state.soak = soakRoll.total;
+      }
+    }
+    const { before, taken } = damageTaken(state.damage, tier, state.soak);
+    const lowered = taken - lowerDamage(taken, state.lowered);
+    damage = {
+      formula: inputs.damageFormula,
+      rolled: state.damage,
+      doubled: outcome.multiplier === 2,
+      before,
+      soakDie: inputs.soakDie,
+      soak: state.soak,
+      lowered,
+      taken: taken - lowered,
+      minimum: taken > before - state.soak
+    };
+  }
+
+  // Ruin: the armour drops one tier, and below tier 1 it is destroyed.
+  // If an earlier Ruin dropped it and this result is not one, it goes back.
+  let armourNote = null;
+  const armourItem = inputs.armour ? actor.items.get(inputs.armour.id) : null;
+  if (armourItem && outcome.lowerArmour) {
+    const lowered = lowerArmourTier(inputs.armour);
+    if (!applied.armourLowered) await armourItem.update({ "system.tier": lowered.tier });
+    applied.armourLowered = true;
+    armourNote = i18n.format(lowered.destroyed ? "VARBORG.Defence.ArmourDestroyed" : "VARBORG.Defence.ArmourLowered", {
+      name: armourItem.name, from: inputs.armour.tier, to: lowered.tier
+    });
+  } else if (armourItem && applied.armourLowered) {
+    await armourItem.update({ "system.tier": inputs.armour.tier });
+    applied.armourLowered = false;
+    armourNote = i18n.format("VARBORG.Fortune.ArmourTierBack", { name: armourItem.name, tier: inputs.armour.tier });
+  }
+
+  // The cover alone stopped the attack: it strikes the shield (GAPS 66).
+  // If an earlier result struck it and this one does not, it is mended.
+  let shieldNote = null;
+  const shieldItem = inputs.shield ? actor.items.get(inputs.shield.id) : null;
+  const struck = Boolean(shieldItem) && coverStruck({ tier, total: result.total, dr: inputs.dr, uncoveredDr: inputs.uncoveredDr });
+  if (struck) {
+    const damaged = damagedShield(inputs.shield.size);
+    if (!applied.shieldStruck) {
+      await shieldItem.update({ "system.size": damaged.size, "system.destroyed": damaged.destroyed });
+      if (damaged.destroyed) await actor.update({ "system.shieldRaised": false });
+    }
+    applied.shieldStruck = true;
+    shieldNote = i18n.format(damaged.destroyed ? "VARBORG.Defence.ShieldDestroyed" : "VARBORG.Defence.ShieldDamaged", { name: shieldItem.name });
+  } else if (shieldItem && applied.shieldStruck) {
+    await shieldItem.update({ "system.size": inputs.shield.size, "system.destroyed": false });
+    await actor.update({ "system.shieldRaised": true });
+    applied.shieldStruck = false;
+    shieldNote = i18n.format("VARBORG.Fortune.ShieldBack", { name: shieldItem.name });
+  }
+
+  const content = await renderTemplate(CARD_TEMPLATE, {
+    ...inputs.context,
+    dice: state.dice,
+    kept: result.kept,
+    total: result.total,
+    dr: inputs.dr,
+    tier,
+    tierLabel: i18n.localize(`VARBORG.Tier.${tier}`),
+    outcomeText: i18n.localize(`VARBORG.Defence.Outcome.${tier}`),
+    naturalNote: naturalNote(result),
+    damage,
+    armourNote,
+    shieldNote,
+    takeLabel: damage && !damage.invalid ? i18n.format("VARBORG.Defence.TakeDamage", { damage: damage.taken }) : null,
+    fortune: await fortuneSection(data, { tier, damage: Boolean(damage && !damage.invalid), taken: damage?.taken ?? 0 })
+  });
+  return { content, rolls };
 }
 
 /**
@@ -250,7 +324,7 @@ function defenceConditions(actor, attack) {
 
 /**
  * The defence dialog. Returns the chosen options, or null if it was closed.
- * @returns {Promise<{dr: number, boon: boolean, bane: boolean}|null>}
+ * @returns {Promise<{dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
 async function askDefenceOptions(actor, attack, automatic, conditions) {
   const i18n = game.i18n;
@@ -272,7 +346,8 @@ async function askDefenceOptions(actor, attack, automatic, conditions) {
       ...conditionNotes(conditions.own),
       ...conditionNotes(conditions.foe, foe?.name)
     ].filter(Boolean),
-    reminders: [...reminderNotes(actor, "defence"), ...foeReminders(foe)]
+    reminders: [...reminderNotes(actor, "defence"), ...foeReminders(foe)],
+    fortuneFields: await fortuneFields(actor, "defence")
   });
 
   const data = await DialogV2.input({
@@ -282,7 +357,7 @@ async function askDefenceOptions(actor, attack, automatic, conditions) {
     rejectClose: false
   });
   if (!data) return null;
-  return { dr: Number(data.dr), boon: Boolean(data.boon), bane: Boolean(data.bane) };
+  return { dr: Number(data.dr), boon: Boolean(data.boon), bane: Boolean(data.bane), data };
 }
 
 /**

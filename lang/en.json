@@ -197,6 +197,36 @@
       "ArmourDRNote": "DR {dr}, {armour} for armour ({name})",
       "EncumberedBane": "Encumbered: Bane on Strength and Agility tests."
     },
+    "Fortune": {
+      "Button": "{use} ({cost} Fortune)",
+      "Use": {
+        "reroll": "Reroll",
+        "maxDamage": "Maximum damage",
+        "rerollDamage": "Reroll damage",
+        "lowerDamage": "Lower damage by d6"
+      },
+      "Soften": {
+        "triumph": "Triumph → Success",
+        "ruin": "Ruin → Failure"
+      },
+      "Spent": "{name} burns 1 Fortune: {use}",
+      "None": "{name} has no Fortune left.",
+      "NotEnough": "{name} needs {cost} Fortune and has {fortune}.",
+      "NoCharacter": "You need a character of your own to burn Fortune on this card.",
+      "NoGM": "The Dark Master must be online to change this card.",
+      "Gone": "This card can no longer be changed: its character is gone.",
+      "NotNow": "That Fortune use is no longer offered on this card.",
+      "DialogBoon": "Fortune: Boon",
+      "DialogBane": "Fortune: Bane",
+      "DialogHint": "Burn 1 Fortune for each, paid when you roll. You have {fortune}.",
+      "DialogSpent": "Burned {cost} Fortune before rolling: {which}.",
+      "Maximum": "maximum",
+      "Lowered": "Fortune",
+      "ArmourBack": "{name}'s armour is back to {die}.",
+      "ArmourTierBack": "{name} is back to tier {tier}.",
+      "ShieldBack": "{name} is whole again and still raised.",
+      "Starting": "{name} starts with {fortune} Fortune (d3)."
+    },
     "Contest": {
       "Button": "Contested test",
       "Tooltip": "Roll against an opponent: the higher total wins",

@@ -347,7 +347,11 @@ is done on your own turn and uses its action pips.
     *Test:* drop the Warrior on a new character. Strength goes up 1, HP is
     10 + Toughness and max wounds is 3.
 
-25. **Fortune.** Start with d3 Fortune, with no cap. Spend buttons on cards:
+25. ~~**Fortune.**~~ Done: `module/rules/fortune.mjs` with
+    `tests/fortune.test.mjs`, `module/fortune.mjs` (card buttons, the Dark
+    Master query, dialog boxes, starting d3), and test, attack and defence
+    cards that can be worked out again (GAPS 103–110).
+    Start with d3 Fortune, with no cap. Spend buttons on cards:
     Triumph → Success or Ruin → Failure, maximum damage, reroll, −d6 damage
     taken, and Boon or Bane before rolling (in the test dialog). You can
     spend several at once.

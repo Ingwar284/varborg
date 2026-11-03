@@ -11,6 +11,10 @@ import { capHp } from "../rules/health.mjs";
 import { atZeroHp, strikesZero } from "../rules/agony.mjs";
 import { postWoundCard, WOUND_OPTION, AGONY_TYPE_OPTION } from "../agony.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
+import { rollStartingFortune, postStartingFortune } from "../fortune.mjs";
+
+/** Passes a new character's rolled Fortune from _preCreate to _onCreate. */
+const STARTING_FORTUNE_OPTION = "varBorgStartingFortune";
 
 const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -76,6 +80,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
    * character's tokens get their defaults (module/rules/tokens.mjs): linked
    * to the character, friendly, name on hover, HP and Wounds bars always
    * shown. A character copied with its own token settings keeps them.
+   * A character created without Fortune rolls its d3 (rules 3.9, GAPS 110).
    */
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
@@ -83,6 +88,17 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     const capped = capHp(this.hp.value, this.hp.max);
     if (capped !== this.hp.value) this.parent.updateSource({ "system.hp.value": capped });
     this.parent.updateSource(missingTokenDefaults("character", data));
+    const fortune = await rollStartingFortune(data);
+    if (fortune !== null) {
+      this.parent.updateSource({ "system.fortune": fortune });
+      options[STARTING_FORTUNE_OPTION] = fortune;
+    }
+  }
+
+  /** The client that created the character posts its starting Fortune. */
+  _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
+    if (userId === game.user.id && options[STARTING_FORTUNE_OPTION]) postStartingFortune(this.parent, options[STARTING_FORTUNE_OPTION]);
   }
 
   /**

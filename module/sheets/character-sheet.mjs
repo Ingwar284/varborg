@@ -331,9 +331,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     return this.document.items.get(element.closest("[data-item-id]")?.dataset.itemId);
   }
 
-  /** Clicking an ability name opens the test dialog for that ability. */
+  /** Clicking an ability name opens the test dialog for that ability, with Fortune buttons on its card. */
   static async #onRollAbility(event, button) {
-    await rollAbilityTest(this.document, button.dataset.ability);
+    await rollAbilityTest(this.document, button.dataset.ability, { fortune: true });
   }
 
   /** The Contested test button opens the contest dialog. */

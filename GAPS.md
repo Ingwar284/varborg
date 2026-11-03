@@ -19,6 +19,10 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 90 | Who rolls what when a character is wounded? | Provisional (step 21): the character's owner presses the Toughness button on the wound card (once per card). On a Failure or Ruin, only the Dark Master can press Table of Agony, which asks for the damage type (the weapon's or the persistent damage's type is selected) and rolls d10. | Open |
 | 63 | Recover from an attack Ruin "spends an action". What happens outside combat, or on someone else's turn in combat? Does the Ruin end when combat ends? | Provisional (step 15): outside combat Recover just ends the Ruin, with no action tracked. In combat it is only allowed on your own turn and spends one action (◈). The Ruin lasts until Recover, even after combat ends. | Open |
 | 102 | What happens when a second ancestry or background is dropped on a character, or a class is deleted? | Provisional (step 24): a character has one of each, so the new one replaces the old. A replaced background's wealth and keepsake stay (the silver may be spent already); remove them by hand if needed. Deleting a class takes its +1 back, as replacing does, but HP and max wounds stay as they are. | Open |
+| 107 | Panic, wound, Dark pull and persistent damage tests act on their result straight away. Can Fortune change those results? | Provisional (step 25): not from the card yet, because what those features did cannot be taken back. Their dialogs do offer the Fortune Boon and Bane. The contested test has no Fortune yet either. | Open |
+| 108 | Can Fortune be burned on a card after its damage was taken or inflicted? | Provisional (step 25): no. Pressing Take damage or Inflict damage settles the card and switches its Fortune buttons off. | Open |
+| 109 | Fortune details: can −d6 lower damage below the usual minimum of 1? Does a damage reroll reroll the soak die? Does maximum damage last through a test reroll? | Provisional (step 25): −d6 can lower damage to 0. A damage reroll keeps the soak roll. Maximum damage and any −d6 stay on the card through rerolls. | Open |
+| 110 | When is the starting d3 Fortune rolled? | Provisional (step 25): when a character is created without a Fortune value, posted to chat. Regaining d3 after a Long Rest at 0 Fortune waits until resting exists. | Open |
 
 ## Character creation and classes
 
@@ -47,6 +51,10 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 62 | Can allies aid an attack? Rules 3.3 "Aiding an ally" covers tests in general. | No. The attack dialog has no aid boxes. Other tests, such as a Strength test, can still be aided, in or out of combat. | Resolved |
 | 33 | Do foes add anything to their d20 tests? | No. | Resolved |
 | 45 | Aid: are the +2 and −2 limits applied separately, or to the net total? | To the net total: add +1 per success and −1 per failure, then limit the result to −2 … +2. 3 successes and 2 failures give +1. | Resolved |
+| 103 | What does a Fortune reroll do when the first result already did something (an attack Ruin, a foe's armour lowered, armour or a shield damaged)? | The same test is rolled again with the same options. The system takes back what the first result did and does what the new one does. No action pips, ammunition or attack count are spent again. Offered on tests rolled from the sheet, attacks and defences. | Resolved |
+| 104 | Which rolls can Fortune reroll? | The d20 test, an attack's damage, and a foe's damage against you. Panic, Table of Agony, chance die and expendable rolls are rerolled by hand for now. | Resolved |
+| 105 | Who can burn Fortune to turn a Triumph into a Success? | Anyone, on any test card. The card's own character pays when you own it; otherwise your own character pays. The same goes for every Fortune button. | Resolved |
+| 106 | How is "grant boon or bane on any test (before rolling)" offered? | Fortune: Boon and Fortune: Bane boxes in the test, attack and defence dialogs, 1 Fortune each, paid when you roll. They count like any Boon or Bane, so a Fortune Boon cancels a Bane. | Resolved |
 
 ## Combat
 

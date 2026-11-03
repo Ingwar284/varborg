@@ -23,6 +23,11 @@
  * Conditions (rules 3.13): the attacker's own (Prone, Restrained, Fatigued,
  * Dark Vessel) and the target foe's Foe lines (Prone, Blinded, Restrained,
  * Encumbered, Fatigued) are added for you.
+ *
+ * Fortune (rule 3.9): the dialog can buy a Boon or Bane, and the card has
+ * Fortune buttons (module/fortune.mjs). settleAttackCard works the card out
+ * again after each use; pips, ammunition and the attack count are not spent
+ * twice.
  */
 
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
@@ -34,7 +39,9 @@ import {
   countsAsTurnAttack, damageFormula, attackOutcome, attackDamage, stepDownArmourDie,
   ruinedAfterAttack, recoverCost
 } from "../rules/attack.mjs";
-import { actorTestModifiers, signed, modeLabel, naturalNote } from "./ability-test.mjs";
+import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
+import { CARD } from "../rules/fortune.mjs";
+import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { turnState } from "../combat.mjs";
 import { markFired } from "../ammunition.mjs";
 import { useUpNextTest } from "../panic.mjs";
@@ -70,50 +77,26 @@ export async function rollAttack(actor, item) {
   if (!options) return;
   const { mode, ability } = options;
 
+  // Fortune can buy a Boon or Bane before rolling (rule 3.9).
+  const paid = await payDialogFortune(actor, options.data);
+  if (!paid) return;
+
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
   const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
   const conditions = attackConditions(actor, target, mode, ability);
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
-  const boonCount = (options.boon ? 1 : 0) + fromConditions.boons;
-  const baneCount = [options.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length
+  const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
+  const baneCount = [options.bane, paid.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length
     + fromConditions.banes;
   const diceRule = diceMode(boonCount, baneCount);
   const abilityScore = actor.system.abilities[ability];
   const extraDr = weaponDr(weapon, options.oneHanded);
   const dr = modifiedDr(options.dr, extraDr + automatic.armourDr + fromConditions.dr);
 
-  const roll = new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore });
-  await roll.evaluate();
-  const dice = roll.dice[0].results.map(r => r.result);
-  const result = resolveTest({ dice, mode: diceRule, ability: abilityScore, dr });
-  const outcome = attackOutcome(result.tier);
+  const roll = await new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore }).evaluate();
   // Adrenaline Rush and Rattled count for this attack, then end (GAPS 80).
   await useUpNextTest(actor);
-
-  // Damage, on a hit.
-  const rolls = [roll];
-  let damage = null;
-  if (outcome.hit) {
-    const formula = damageFormula(weapon.damage, options.beyondRange);
-    if (isDamageFormula(formula)) {
-      const damageRoll = new Roll(formula);
-      await damageRoll.evaluate();
-      rolls.push(damageRoll);
-      damage = {
-        formula,
-        rolled: damageRoll.total,
-        total: attackDamage(damageRoll.total, result.tier),
-        doubled: outcome.multiplier === 2
-      };
-    } else {
-      damage = { invalid: true, formula: weapon.damage };
-    }
-  }
-
-  // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
-  const nowRuined = ruinedAfterAttack(ruined, result.tier);
-  if (nowRuined !== ruined) await actor.update({ "system.attackRuin": nowRuined });
 
   // Firing empties a weapon with Reload (GAPS 53). In combat, its
   // ammunition is rolled for when the combat ends (GAPS 39).
@@ -131,40 +114,6 @@ export async function rollAttack(actor, item) {
     pipNote = i18n.localize(turn.onOwnTurn ? "VARBORG.Attack.UsedAction" : "VARBORG.Attack.UsedReaction");
   }
 
-  // Inflict damage on a foe. Characters defend instead, so a character
-  // target gets no button. A Triumph's hit is soaked by the armour die the
-  // foe had before the Triumph lowered it (GAPS 69).
-  let inflict = null;
-  if (damage && !damage.invalid && target?.type !== "character") {
-    const foe = target?.type === "foe" ? target : null;
-    inflict = {
-      damage: damage.total,
-      foeUuid: foe?.uuid ?? "",
-      armour: foe?.system.armour ?? "",
-      attack: item.name,
-      label: foe
-        ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: foe.name })
-        : i18n.format("VARBORG.FoeDamage.Inflict", { damage: damage.total })
-    };
-  }
-
-  // A Triumph lowers the target foe's armour die by one (GAPS 12).
-  let armour = null;
-  if (outcome.lowerArmour && target?.type === "foe") {
-    const from = target.system.armour;
-    if (!from) armour = { text: i18n.format("VARBORG.Attack.NoArmourToLower", { name: target.name }) };
-    else {
-      const to = stepDownArmourDie(from);
-      const change = { name: target.name, from: armourLabel(from), to: armourLabel(to) };
-      if (target.isOwner) {
-        await target.update({ "system.armour": to });
-        armour = { text: i18n.format("VARBORG.Attack.ArmourLowered", change) };
-      } else {
-        armour = { button: i18n.format("VARBORG.Attack.LowerArmourButton", change), uuid: target.uuid };
-      }
-    }
-  }
-
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const title = i18n.format("VARBORG.Attack.CardTitle", { name: item.name });
   const notes = [
@@ -175,41 +124,154 @@ export async function rollAttack(actor, item) {
     banes.range ? i18n.format("VARBORG.Attack.RangeBane", { feet: attackDistance(weapon, mode) }) : null,
     banes.ruin ? i18n.localize("VARBORG.Attack.RuinBane") : null,
     ...conditionNotes(conditions.own),
-    ...conditionNotes(conditions.target, target?.name)
+    ...conditionNotes(conditions.target, target?.name),
+    paid.note
   ].filter(Boolean);
 
-  const content = await renderTemplate(CARD_TEMPLATE, {
-    title,
-    how: i18n.format("VARBORG.Attack.How", { mode: i18n.localize(`VARBORG.Weapon.Kind.${mode}`), ability: abilityLabel }),
-    target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : null,
-    dice: roll.dice[0].results.map(r => ({ value: r.result, kept: r.active })),
-    modeLabel: modeLabel(diceRule, boonCount, baneCount),
-    kept: result.kept,
-    ability: signed(abilityScore),
-    abilityLabel,
-    total: result.total,
-    dr,
-    drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
-    notes,
-    tier: result.tier,
-    tierLabel: i18n.localize(`VARBORG.Tier.${result.tier}`),
-    outcomeText: i18n.localize(`VARBORG.Attack.Outcome.${result.tier}`),
-    naturalNote: naturalNote(result),
-    damage,
-    inflict,
-    armour,
-    thrownNote: mode === "throw" ? i18n.localize("VARBORG.Attack.Retrieve") : null,
-    ruinNote: nowRuined && !ruined ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
-    pipNote
-  });
+  // Everything the card needs that Fortune cannot change.
+  const formula = damageFormula(weapon.damage, options.beyondRange);
+  const foe = target?.type === "foe" ? target : null;
+  const inputs = {
+    formula: `${diceFormula(diceRule)} + @ability`,
+    rollData: { ability: abilityScore },
+    diceRule, abilityScore, dr,
+    damageFormula: isDamageFormula(formula) ? formula : null,
+    weaponDamage: weapon.damage,
+    ruinedBefore: ruined,
+    // Characters defend instead, so only a foe or no target gets Inflict damage.
+    inflicts: target?.type !== "character",
+    foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
+    attackName: item.name,
+    context: {
+      title,
+      how: i18n.format("VARBORG.Attack.How", { mode: i18n.localize(`VARBORG.Weapon.Kind.${mode}`), ability: abilityLabel }),
+      target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : null,
+      modeLabel: modeLabel(diceRule, boonCount, baneCount),
+      ability: signed(abilityScore),
+      abilityLabel,
+      drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
+      notes,
+      thrownNote: mode === "throw" ? i18n.localize("VARBORG.Attack.Retrieve") : null,
+      pipNote
+    }
+  };
+
+  const data = newFortuneData(CARD.ATTACK, actor, inputs, { dice: diceOf(roll), damage: null, maximized: false }, foe?.uuid ?? null);
+  const { content, rolls } = await settleAttackCard(actor, data);
 
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content,
-    rolls,
-    sound: CONFIG.sounds.dice
+    rolls: [roll, ...rolls],
+    sound: CONFIG.sounds.dice,
+    flags: fortuneFlags(data)
   });
+}
+
+/**
+ * Work the attack card out from its stored inputs, dice and damage: roll
+ * what is missing (new dice after a Fortune reroll, damage on a new hit),
+ * then make the character's Ruin and the foe's armour match the result,
+ * taking back what an earlier result did (GAPS 103). Used for the first
+ * card and after each Fortune use; registered with module/fortune.mjs.
+ * @param {Actor} actor  The attacker.
+ * @param {object} data  The card's Fortune data (changed in place).
+ * @returns {Promise<{content: string, rolls: Roll[]}>} The new rolls.
+ */
+export async function settleAttackCard(actor, data) {
+  const i18n = game.i18n;
+  const { inputs, state, applied } = data;
+  const rolls = [];
+  if (!state.dice) {
+    const roll = await new Roll(inputs.formula, inputs.rollData).evaluate();
+    rolls.push(roll);
+    state.dice = diceOf(roll);
+  }
+  const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr });
+  const tier = fortuneTier(result.tier, state.softened);
+  state.tier = tier;
+  const outcome = attackOutcome(tier);
+
+  // Damage, on a hit. Fortune can make it the most the dice can show.
+  let damage = null;
+  if (outcome.hit && !inputs.damageFormula) damage = { invalid: true, formula: inputs.weaponDamage };
+  else if (outcome.hit) {
+    if (state.damage === null) {
+      const damageRoll = await new Roll(inputs.damageFormula).evaluate({ maximize: state.maximized });
+      rolls.push(damageRoll);
+      state.damage = damageRoll.total;
+    }
+    damage = {
+      formula: inputs.damageFormula,
+      rolled: state.damage,
+      total: attackDamage(state.damage, tier),
+      doubled: outcome.multiplier === 2,
+      maximized: state.maximized
+    };
+  }
+
+  // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
+  const nowRuined = ruinedAfterAttack(inputs.ruinedBefore, tier);
+  if (nowRuined !== (applied.ruin ?? inputs.ruinedBefore)) await actor.update({ "system.attackRuin": nowRuined });
+  applied.ruin = nowRuined;
+
+  // A Triumph lowers the target foe's armour die by one (GAPS 12). If an
+  // earlier Triumph lowered it and this result is not one, it goes back.
+  let armour = null;
+  const foe = inputs.foe ? await fromUuid(inputs.foe.uuid) : null;
+  const from = inputs.foe?.armourBefore;
+  if (outcome.lowerArmour && inputs.foe) {
+    if (!from) armour = { text: i18n.format("VARBORG.Attack.NoArmourToLower", { name: inputs.foe.name }) };
+    else {
+      const to = stepDownArmourDie(from);
+      const change = { name: inputs.foe.name, from: armourLabel(from), to: armourLabel(to) };
+      if (!applied.armourLowered && foe?.isOwner) {
+        await foe.update({ "system.armour": to });
+        applied.armourLowered = true;
+      }
+      armour = applied.armourLowered
+        ? { text: i18n.format("VARBORG.Attack.ArmourLowered", change) }
+        : { button: i18n.format("VARBORG.Attack.LowerArmourButton", change), uuid: inputs.foe.uuid };
+    }
+  } else if (applied.armourLowered && foe) {
+    await foe.update({ "system.armour": from });
+    applied.armourLowered = false;
+    armour = { text: i18n.format("VARBORG.Fortune.ArmourBack", { name: inputs.foe.name, die: armourLabel(from) }) };
+  }
+
+  // Inflict damage on a foe. A Triumph's hit is soaked by the armour die
+  // the foe had before the Triumph lowered it (GAPS 69).
+  let inflict = null;
+  if (damage && !damage.invalid && inputs.inflicts) {
+    inflict = {
+      damage: damage.total,
+      foeUuid: inputs.foe?.uuid ?? "",
+      armour: from ?? "",
+      attack: inputs.attackName,
+      label: inputs.foe
+        ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: inputs.foe.name })
+        : i18n.format("VARBORG.FoeDamage.Inflict", { damage: damage.total })
+    };
+  }
+
+  const content = await renderTemplate(CARD_TEMPLATE, {
+    ...inputs.context,
+    dice: state.dice,
+    kept: result.kept,
+    total: result.total,
+    dr: inputs.dr,
+    tier,
+    tierLabel: i18n.localize(`VARBORG.Tier.${tier}`),
+    outcomeText: i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
+    naturalNote: naturalNote(result),
+    damage,
+    inflict,
+    armour,
+    ruinNote: nowRuined && !inputs.ruinedBefore ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
+    fortune: await fortuneSection(data, { tier, damage: Boolean(damage && !damage.invalid), maximized: state.maximized })
+  });
+  return { content, rolls };
 }
 
 /**
@@ -230,7 +292,7 @@ function attackConditions(actor, target, mode, ability) {
 /**
  * The attack dialog. Returns the chosen options, or null if it was closed.
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
- *   dr: number, boon: boolean, bane: boolean}|null>}
+ *   dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
 async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined }) {
   const i18n = game.i18n;
@@ -275,7 +337,8 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
     reminders: reminderNotes(actor, "attack"),
-    target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget")
+    target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
+    fortuneFields: await fortuneFields(actor, "attack")
   });
 
   const data = await DialogV2.input({
@@ -297,7 +360,8 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     beyondRange: Boolean(data.beyondRange),
     dr: Number(data.dr),
     boon: Boolean(data.boon),
-    bane: Boolean(data.bane)
+    bane: Boolean(data.bane),
+    data
   };
 }
 
@@ -335,7 +399,9 @@ export async function recoverFromRuin(actor) {
 export function addAttackCardListeners(message, html) {
   const button = html.querySelector("button[data-action='lowerArmour']");
   if (!button) return;
-  if (message.getFlag(SYSTEM, "armourLowered")) {
+  // Cards from before Fortune remember it in their own flag.
+  const lowered = message.getFlag(SYSTEM, "fortune")?.applied?.armourLowered ?? message.getFlag(SYSTEM, "armourLowered");
+  if (lowered) {
     button.disabled = true;
     return;
   }
@@ -347,7 +413,8 @@ export function addAttackCardListeners(message, html) {
     }
     button.disabled = true;
     await foe.update({ "system.armour": stepDownArmourDie(foe.system.armour) });
-    await message.setFlag(SYSTEM, "armourLowered", true);
+    // Fortune reads this to put the armour back if a reroll loses the Triumph.
+    await message.update({ [`flags.${SYSTEM}.armourLowered`]: true, [`flags.${SYSTEM}.fortune.applied.armourLowered`]: true });
   });
 }
 

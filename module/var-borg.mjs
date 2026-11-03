@@ -16,8 +16,11 @@ import {
 } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
-import { addAttackCardListeners } from "./dice/attack.mjs";
-import { addDefenceCardListeners } from "./dice/defence.mjs";
+import { addAttackCardListeners, settleAttackCard } from "./dice/attack.mjs";
+import { addDefenceCardListeners, settleDefenceCard } from "./dice/defence.mjs";
+import { settleTestCard } from "./dice/ability-test.mjs";
+import { registerFortune } from "./fortune.mjs";
+import { CARD } from "./rules/fortune.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerConditions } from "./conditions.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
@@ -87,6 +90,12 @@ Hooks.once("init", () => {
   Hooks.on("renderChatMessageHTML", addDefenceCardListeners);
   // Inflict damage on an attack card, Morale on a foe damage card (rules 3.12).
   Hooks.on("renderChatMessageHTML", addMoraleCardListeners);
+  // Fortune buttons on test, attack and defence cards (rules 3.9).
+  registerFortune({
+    [CARD.TEST]: settleTestCard,
+    [CARD.ATTACK]: settleAttackCard,
+    [CARD.DEFENCE]: settleDefenceCard
+  });
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

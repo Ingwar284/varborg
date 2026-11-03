@@ -1,0 +1,10 @@
+<div class="fortune">
+  {{#each log}}<p class="modifier fortune-spent">{{this}}</p>{{/each}}
+  {{#if buttons.length}}
+  <div class="fortune-buttons">
+    {{#each buttons}}
+    <button type="button" data-fortune="{{action}}"><i class="{{icon}}"></i> {{label}}</button>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>

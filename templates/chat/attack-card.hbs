@@ -28,6 +28,7 @@
     <p class="damage-line">
       {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
       {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
+      {{#if damage.maximized}}<span class="modifier">{{localize "VARBORG.Fortune.Maximum"}}</span>{{/if}}
     </p>
     {{/if}}
     {{#if inflict}}
@@ -49,4 +50,5 @@
   {{/if}}
   {{#if thrownNote}}<p class="modifier">{{thrownNote}}</p>{{/if}}
   {{#if pipNote}}<p class="modifier">{{pipNote}}</p>{{/if}}
+  {{{fortune}}}
 </div>

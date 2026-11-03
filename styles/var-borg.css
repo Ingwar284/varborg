@@ -697,3 +697,20 @@
   font-weight: bold;
   margin: 0.2rem 0;
 }
+
+/* Fortune on chat cards (step 25): what was burned, and the buttons. */
+.var-borg-card .fortune {
+  border-top: 1px dashed #7e57c2;
+  margin-top: 0.4rem;
+  padding-top: 0.3rem;
+}
+
+.var-borg-card .fortune-spent {
+  color: #5e35b1;
+}
+
+.var-borg-card .fortune-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
