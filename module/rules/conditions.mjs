@@ -11,8 +11,8 @@
  * Only what a computer can judge is applied: Boon, Bane, DR changes and
  * lost actions or reactions. Bane that depends on the situation ("tests
  * that rely on sight") is shown as a reminder for the player to tick
- * (GAPS 75). Persistent Damage has its own file (persistent.mjs); the
- * Death's Door table and Dark Vessel's d8 HP come in step 22.
+ * (GAPS 75). Persistent Damage has its own file (persistent.mjs), and so
+ * do the Death's Door table and Dark Vessel's d8 HP (deaths-door.mjs).
  *
  * Lasting Panic results (rules 3.12) are statuses too, and are counted
  * here where they change a turn or a test (module/rules/panic.mjs). So are

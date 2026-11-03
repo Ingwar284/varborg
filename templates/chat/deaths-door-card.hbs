@@ -1,0 +1,12 @@
+<div class="var-borg-card agony-card deaths-door-card">
+  <h3>{{title}}</h3>
+  {{#if rolled}}<p class="sum">{{rolled}}</p>{{/if}}
+  {{#if result}}<p class="total">{{result}}</p>{{/if}}
+  {{#if text}}<p class="agony-text">{{text}}</p>{{/if}}
+  {{#each lines}}<p class="modifier">{{this}}</p>{{/each}}
+  {{#if button}}
+  <button type="button" data-action="{{button.action}}" data-actor-uuid="{{button.actorUuid}}">
+    <i class="fa-solid {{button.icon}}"></i> {{button.label}}
+  </button>
+  {{/if}}
+</div>

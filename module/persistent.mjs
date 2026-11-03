@@ -23,6 +23,7 @@ import {
   testEndsPersistent, foeRollEndsPersistent
 } from "./rules/persistent.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
+import { killedByDamage } from "./deaths-door.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 import { agonyTypeForPersistent } from "./rules/agony.mjs";
@@ -164,6 +165,8 @@ async function tickOne(actor, type, formula, effect) {
   await damageRoll.evaluate();
   const rolls = [damageRoll];
   const damage = damageRoll.total;
+  // At Death's Door any damage kills (module/deaths-door.mjs).
+  if (await killedByDamage(actor, damage)) return;
   const from = actor.system.hp.value;
   const to = hpAfterDamage(from, damage);
   // At 0 HP a character gains a wound; fire and bleeding suggest their column of the Table of Agony.

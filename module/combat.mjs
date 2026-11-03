@@ -19,6 +19,7 @@ import { ACTIONS_PER_TURN, REACTIONS_PER_TURN, adjustLeft, pips } from "./rules/
 import { turnAllowance } from "./rules/conditions.mjs";
 import { tickPersistentDamage } from "./persistent.mjs";
 import { countDownPanic } from "./panic.mjs";
+import { countDownWaking } from "./deaths-door.mjs";
 import { statusName } from "./conditions.mjs";
 
 const SYSTEM = "var-borg";
@@ -63,13 +64,15 @@ export class VarBorgCombat extends foundry.documents.Combat {
   /**
    * At the end of each turn the actor takes its persistent damage
    * (rules 3.13), and its Panic results that last for turns lose one
-   * (GAPS 79). Foundry runs this on the Dark Master's client.
+   * (GAPS 79), and an unconscious character at Death's Door is a round
+   * closer to waking (GAPS 92). Foundry runs this on the Dark Master's client.
    */
   async _onEndTurn(combatant, context) {
     await super._onEndTurn(combatant, context);
     if (!combatant.actor) return;
     await tickPersistentDamage(combatant.actor);
     await countDownPanic(combatant.actor);
+    await countDownWaking(combatant.actor);
   }
 
   /** When combat ends, raised shields are lowered: there is no next turn. */

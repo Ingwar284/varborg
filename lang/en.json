@@ -739,9 +739,6 @@
       "GainsWound": "0 HP: gains a wound (wounds {wounds}/{max}).",
       "HpReturns": "HP returns to its maximum ({hp}). Any leftover damage is negated.",
       "TestButton": "Test Toughness DR{dr}",
-      "DeathsDoorTitle": "{name} is at Death's Door",
-      "AtMaxWounds": "0 HP with maximum wounds ({max}): no new wound, and HP stays at 0.",
-      "DeathsDoorLater": "Death's Door comes in a later step; the Dark Master handles it by hand for now.",
       "Purpose": "Wound test: on a failure, roll on the Table of Agony. The Dark Master may change the DR.",
       "ShrugsOff": "{name} takes the wound without further harm.",
       "Cracks": "{name}'s body cracks: roll on the Table of Agony.",
@@ -769,7 +766,7 @@
       "NextTest": "It counts for your next ability test, contest, attack or defence, and then ends.",
       "Lasting": "A lasting injury, shown in Conditions. The Dark Master removes it when it heals or ends.",
       "ReminderOnly": "The system cannot judge which tests this covers: the test dialog reminds you to tick Bane.",
-      "Dies": "The character dies. The Dark Master handles it.",
+      "Dies": "The character dies.",
       "ByHand": "The system does not apply this. The Dark Master decides what happens.",
       "Remove": "Remove this injury",
       "Result": {
@@ -969,7 +966,98 @@
           "name": "Head explodes",
           "text": "Head explodes. You die."
         }
-      }
+      },
+      "ToDeathsDoor": "Wounds go to their maximum and HP to 0: Death's Door."
+    },
+    "DeathsDoor": {
+      "Title": "Death's Door",
+      "CardTitle": "{name} is at Death's Door",
+      "KillWarning": "Any damage taken now kills.",
+      "VesselEnds": "Dark Vessel ends.",
+      "RollButton": "Roll on the Death's Door table",
+      "DialogTitle": "Death's Door: {name}",
+      "ResultLabel": "Result",
+      "RollRandom": "Roll 2d6",
+      "ChooseHint": "As the Dark Master you may choose the result instead of rolling, for example when a relic or feat lets the player roll twice.",
+      "Roll": "Roll",
+      "ResultTitle": "{name}: Death's Door",
+      "Rolled": "2d6: {roll}",
+      "Chosen": "Chosen by the Dark Master: {roll}",
+      "Result": {
+        "darkPull": {
+          "name": "The dark pulls",
+          "text": "Sanity DR10, increased by 1 for each feat gained through Improving. Success: unconscious for d8 rounds, then awaken with 1 HP. Failure: Dark Vessel."
+        },
+        "doomed": {
+          "name": "Doomed",
+          "text": "Doomed, unconscious for d10 rounds, then awaken with 1 HP."
+        },
+        "dead": {
+          "name": "Dead",
+          "text": "Dead as can be."
+        },
+        "maimed": {
+          "name": "Maimed",
+          "text": "Unconscious d6 rounds, then awaken with d4 HP. Infected, and a random body part destroyed."
+        },
+        "stirs": {
+          "name": "Unconscious",
+          "text": "Unconscious d4 rounds, then awaken with d4 HP."
+        },
+        "narrowEscape": {
+          "name": "Narrow escape",
+          "text": "You narrowly avoid death. Alive and at 1 HP."
+        }
+      },
+      "DrFrom": "Sanity DR{dr}: 10, plus {count} for feats gained through Improving.",
+      "TestButton": "Test Sanity DR{dr}",
+      "TestPurpose": "Death's Door: on a Success you are unconscious for d8 rounds and wake with 1 HP. On a Failure you become a Dark Vessel.",
+      "Outcome": {
+        "sleeps": "The dark lets go",
+        "darkVessel": "Dark Vessel"
+      },
+      "Sleeps": "{name} resists the pull of the dark.",
+      "Unconscious": "Unconscious for {rounds}, then wakes with {hp} HP.",
+      "CountsInCombat": "The rounds count down at the end of {name}'s own turns.",
+      "WakeByHand": "Not in combat: the Dark Master presses Wake on the sheet when the time has passed.",
+      "Wakes": "{name} wakes with {hp} HP.",
+      "AliveAt": "{name} is alive at {hp} HP.",
+      "DoomedAdded": "Doomed added.",
+      "InfectedAdded": "Infected added.",
+      "BodyPart": "Body part destroyed (d10: {roll}): {part}. Shown in Conditions.",
+      "Lost": "Lost: {part}",
+      "LostText": "Destroyed at Death's Door. The Dark Master decides what the loss does.",
+      "Part": {
+        "rightHand": "Right hand",
+        "leftHand": "Left hand",
+        "rightArm": "Right arm",
+        "leftArm": "Left arm",
+        "rightLeg": "Right leg",
+        "leftLeg": "Left leg",
+        "rightFoot": "Right foot",
+        "leftFoot": "Left foot",
+        "rightEye": "Right eye",
+        "leftEye": "Left eye"
+      },
+      "BecomesVessel": "Something from beyond the light takes over {name}'s body: Dark Vessel with {hp} HP. Dark Vessels since the last Long Rest: {count}.",
+      "SecondVessel": "A second Dark Vessel before a Long Rest. The body rises as a Shade, a foe under the Dark Master's control, and the player creates a new character.",
+      "Dead": "{name} is dead. Marked defeated.",
+      "DeadTitle": "{name} dies",
+      "Reason": {
+        "killingBlow": "Damage taken at Death's Door: {name} dies in a most gruesome manner.",
+        "agony": "The Table of Agony: {name} dies."
+      },
+      "Round": "round",
+      "Rounds": "rounds",
+      "StageRoll": "At Death's Door: roll on the table.",
+      "StageTest": "At Death's Door: test Sanity DR{dr} (button on the chat card).",
+      "StageWaking": "Unconscious: {rounds} left, then wakes with {hp} HP.",
+      "StageDead": "Dead.",
+      "Wake": "Wake",
+      "WakeHint": "Wake the character now with the HP the table gave. Use this outside combat when the rounds have passed.",
+      "VesselCount": "Dark Vessels since a Long Rest",
+      "VesselHint": "A second Dark Vessel before a Long Rest kills. Until resting exists, the Dark Master sets this back to 0 after a Long Rest.",
+      "RemovePart": "Remove this lost body part"
     }
   }
 }

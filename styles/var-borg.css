@@ -683,3 +683,17 @@
   font-style: italic;
   margin: 0.2rem 0;
 }
+
+/* Death's Door on the character sheet: where the character stands, the Dark Vessel count and lost body parts. */
+.var-borg-sheet .deaths-door-panel {
+  margin-top: 0.5rem;
+}
+
+.var-borg-sheet .deaths-door-panel h3 {
+  margin: 0 0 0.2rem;
+}
+
+.var-borg-sheet .deaths-door-status {
+  font-weight: bold;
+  margin: 0.2rem 0;
+}

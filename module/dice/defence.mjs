@@ -26,6 +26,7 @@ import { carrying } from "../rules/carrying.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
 import { damageFormula } from "../rules/attack.mjs";
 import { hpAfterDamage } from "../rules/health.mjs";
+import { killedByDamage } from "../deaths-door.mjs";
 import {
   DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, strongestShield, shieldCover,
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
@@ -363,6 +364,11 @@ export function addDefenceCardListeners(message, html) {
     }
     take.disabled = true;
     const damage = Number(take.dataset.damage);
+    // At Death's Door any damage kills (module/deaths-door.mjs).
+    if (await killedByDamage(actor, damage)) {
+      await message.setFlag(SYSTEM, "damageTaken", true);
+      return;
+    }
     const from = actor.system.hp.value;
     const to = hpAfterDamage(from, damage);
     // At 0 HP the character data adds the wound (module/agony.mjs).

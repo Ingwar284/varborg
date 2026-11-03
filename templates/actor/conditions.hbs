@@ -67,6 +67,34 @@
     <button type="button" data-tick-persistent data-tooltip="{{localize 'VARBORG.Persistent.TickHint'}}">{{localize "VARBORG.Persistent.Tick"}}</button>
     {{/if}}
   </div>
+  {{#with conditions.deathsDoor}}
+  <div class="deaths-door-panel">
+    <h3>{{localize "VARBORG.DeathsDoor.Title"}}</h3>
+    {{#if status}}<p class="deaths-door-status">{{status}}</p>{{/if}}
+    <div class="condition-controls">
+      {{#if canRoll}}<button type="button" data-roll-deaths-door>{{localize "VARBORG.DeathsDoor.RollButton"}}</button>{{/if}}
+      {{#if canWake}}<button type="button" data-wake data-tooltip="{{localize 'VARBORG.DeathsDoor.WakeHint'}}">{{localize "VARBORG.DeathsDoor.Wake"}}</button>{{/if}}
+      <label data-tooltip="{{localize 'VARBORG.DeathsDoor.VesselHint'}}">
+        <span>{{localize "VARBORG.DeathsDoor.VesselCount"}}</span>
+        <input type="number" name="system.darkVessels" value="{{darkVessels}}" min="0" step="1" {{#unless isGM}}disabled{{/unless}}>
+      </label>
+    </div>
+    {{#if lostParts.length}}
+    <ul class="condition-list">
+      {{#each lostParts}}
+      <li class="condition-row injury-row">
+        <img src="{{img}}" alt="">
+        <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
+        <button type="button" class="icon-button" data-remove-part="{{id}}"
+                data-tooltip="{{localize 'VARBORG.DeathsDoor.RemovePart'}}" aria-label="{{localize 'VARBORG.DeathsDoor.RemovePart'}}">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </li>
+      {{/each}}
+    </ul>
+    {{/if}}
+  </div>
+  {{/with}}
   {{#if conditions.panic.choices}}
   <div class="condition-controls">
     <select data-add-panic aria-label="{{localize 'VARBORG.Panic.Add'}}" data-tooltip="{{localize 'VARBORG.Panic.AddHint'}}">

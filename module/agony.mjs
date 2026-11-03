@@ -28,6 +28,7 @@ import {
 } from "./rules/agony.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { addPersistentDamage } from "./persistent.mjs";
+import { enterDeathsDoor, killCharacter } from "./deaths-door.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -67,15 +68,18 @@ export function injuryEffects(actor) {
 }
 
 /**
- * Post the card after HP struck zero. Called by the character data on the
- * client that made the change.
+ * Post the card after HP struck zero, or at max wounds put the character
+ * at Death's Door. Called by the character data on the client that made
+ * the change.
  * @param {Actor} actor
  * @param {{wounded: boolean, wounds?: number, hp?: number, deathsDoor?: boolean, agonyType?: string|null}} wound
  */
 export async function postWoundCard(actor, wound) {
+  // At max wounds: Death's Door, with its own card (module/deaths-door.mjs).
+  if (!wound.wounded) return enterDeathsDoor(actor);
   const i18n = game.i18n;
   const max = actor.system.wounds.max;
-  const content = await renderTemplate(WOUND_TEMPLATE, wound.wounded ? {
+  const content = await renderTemplate(WOUND_TEMPLATE, {
     title: i18n.format("VARBORG.Agony.WoundedTitle", { name: actor.name }),
     lines: [
       i18n.format("VARBORG.Agony.GainsWound", { wounds: wound.wounds, max }),
@@ -86,9 +90,6 @@ export async function postWoundCard(actor, wound) {
       agonyType: wound.agonyType ?? "",
       label: i18n.format("VARBORG.Agony.TestButton", { dr: WOUND_DR })
     }
-  } : {
-    title: i18n.format("VARBORG.Agony.DeathsDoorTitle", { name: actor.name }),
-    lines: [i18n.format("VARBORG.Agony.AtMaxWounds", { max }), i18n.localize("VARBORG.Agony.DeathsDoorLater")]
   });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content });
 }
@@ -174,7 +175,7 @@ export async function rollAgony(actor, type) {
 
 /**
  * Do what a result does: Prone, persistent damage, Fortune, an injury
- * effect. Death's Door, death and the rest are explained on the card
+ * effect, Death's Door or death. The rest is explained on the card
  * (GAPS 88).
  * @returns {Promise<string[]>}  What happened, for the card.
  */
@@ -208,8 +209,15 @@ async function applyAgonyResult(actor, id) {
     lines.push(i18n.localize("VARBORG.Agony.Lasting"));
     if (rules.reminder) lines.push(i18n.localize("VARBORG.Agony.ReminderOnly"));
   }
-  if (rules.deathsDoor) lines.push(i18n.localize("VARBORG.Agony.DeathsDoorLater"));
-  if (rules.dies) lines.push(i18n.localize("VARBORG.Agony.Dies"));
+  // Wounds to max and HP to 0: the character data sends them to Death's Door (GAPS 95).
+  if (rules.deathsDoor) {
+    await actor.update({ "system.wounds.value": actor.system.wounds.max, "system.hp.value": 0 });
+    lines.push(i18n.localize("VARBORG.Agony.ToDeathsDoor"));
+  }
+  if (rules.dies) {
+    await killCharacter(actor, "agony");
+    lines.push(i18n.localize("VARBORG.Agony.Dies"));
+  }
   if (!Object.keys(rules).length) lines.push(i18n.localize("VARBORG.Agony.ByHand"));
   return lines;
 }

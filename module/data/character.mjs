@@ -48,6 +48,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       fatigue: wholeNumber(),
       // Sanity lost for a while (Teetering); a Panic Triumph restores it (rules 3.12, GAPS 81).
       sanityLost: wholeNumber(),
+      // Dark Vessels since the last Long Rest; the second kills (rules 3.6, GAPS 93).
+      darkVessels: wholeNumber(),
       // Phobias from the Panic table, written by hand (GAPS 82).
       phobias: new StringField({ required: true, initial: "" }),
       // Rules 2.1, Step 6: Details.

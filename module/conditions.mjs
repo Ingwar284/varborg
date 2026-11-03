@@ -9,7 +9,8 @@
  * the sheet; the token icon follows it (on when the level is 1 or more).
  * Lasting Panic results (module/panic.mjs) and injuries from the Table of
  * Agony (module/agony.mjs) are listed in the same section on a character
- * sheet.
+ * sheet, and so is Death's Door (module/deaths-door.mjs): the Dark Vessel
+ * count, where the character stands and lost body parts.
  */
 
 import { CONDITIONS, FOE_LINE_CONDITIONS, reminders, lossOnArrival } from "./rules/conditions.mjs";
@@ -19,6 +20,7 @@ import { PANIC_EFFECTS } from "./rules/panic.mjs";
 import { panicName, sheetPanic, activatePanicControls } from "./panic.mjs";
 import { AGONY_EFFECTS } from "./rules/agony.mjs";
 import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
+import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -117,6 +119,7 @@ export function sheetConditions(actor) {
     persistent: sheetPersistent(actor),
     panic: sheetPanic(actor),
     injuries: sheetInjuries(actor),
+    deathsDoor: sheetDeathsDoor(actor),
     list: active.map(id => ({
       id,
       img: ICONS[id],
@@ -132,8 +135,8 @@ export function sheetConditions(actor) {
 
 /**
  * The sheet's condition controls: the "Add a condition" menu, each
- * condition's remove button, and the persistent damage, Panic and injury
- * controls.
+ * condition's remove button, and the persistent damage, Panic, injury and
+ * Death's Door controls.
  * Called from the sheet's _onRender.
  */
 export function activateConditionControls(element, actor) {
@@ -147,6 +150,7 @@ export function activateConditionControls(element, actor) {
   activatePersistentControls(element, actor);
   activatePanicControls(element, actor);
   activateInjuryControls(element, actor);
+  activateDeathsDoorControls(element, actor);
 }
 
 /** When the fatigue level changes, the Fatigued icon follows it. */

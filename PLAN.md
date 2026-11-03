@@ -295,7 +295,13 @@ prices, traits and tiers against 4.1.
     *Test:* drop Example Hero to 0 HP. You see a wound, a test, an Agony
     result and full HP.
 
-22. **Death's Door and Dark Vessel.** At max wounds and 0 HP, roll 2d6 on
+22. ~~**Death's Door and Dark Vessel.**~~ Done: `module/rules/deaths-door.mjs`
+    with `tests/deaths-door.test.mjs`, `module/deaths-door.mjs` (the card,
+    the roll and the Dark Master's choice, the Sanity test, waking, death,
+    killing blows), a Death's Door part in the Conditions section with the
+    Dark Vessel count and lost body parts, a Wake countdown at turn end, and
+    fatal Table of Agony results sending the character to Death's Door
+    (GAPS 91–95). At max wounds and 0 HP, roll 2d6 on
     the table. Row 2 is Sanity DR10 + 1 per feat gained through Improving
     (tested). Rows 9–10 roll d10 for the lost body part (GAPS 36). Dark
     Vessel: d8 HP, attack −2 DR, defend +2 DR. A second Dark Vessel before a
