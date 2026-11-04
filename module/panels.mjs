@@ -2,9 +2,9 @@
  * The three shared table panels, each with its own button in the token
  * controls (the toolbar on the left):
  * - Calendar: the date, weekday, phase and hour, today's weather, the
- *   Misery, and the Dark Master's clock, New day, Rest, Set weather and
- *   Set Misery buttons (module/calendar.mjs, days.mjs, rest.mjs,
- *   weather.mjs, misery.mjs).
+ *   Misery, and the Dark Master's clock, New day, Rest, Travel, Set
+ *   weather and Set Misery buttons (module/calendar.mjs, days.mjs,
+ *   rest.mjs, travel.mjs, weather.mjs, misery.mjs).
  * - Light: the light timer (module/light.mjs).
  * - Ember and Gloom: the pools and Reset ember abilities (module/pools.mjs).
  *
@@ -20,6 +20,7 @@ import { registerCalendar, calendarContext, nextPhase, moveHours } from "./calen
 import { rest } from "./rest.mjs";
 import { registerWeather, weatherContext, setWeatherByHand } from "./weather.mjs";
 import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
+import { travel } from "./travel.mjs";
 import { registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight } from "./light.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
@@ -72,7 +73,8 @@ export class CalendarPanel extends SharedPanel {
       nextPhase: CalendarPanel.#onNextPhase,
       moveHours: CalendarPanel.#onMoveHours,
       setWeather: CalendarPanel.#onSetWeather,
-      setMisery: CalendarPanel.#onSetMisery
+      setMisery: CalendarPanel.#onSetMisery,
+      travel: CalendarPanel.#onTravel
     }
   };
 
@@ -118,6 +120,12 @@ export class CalendarPanel extends SharedPanel {
   static async #onSetMisery(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, setMiseryByHand);
+  }
+
+  /** Dark Master only: travel for a phase and roll the encounter table (step 40). */
+  static async #onTravel(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, travel);
   }
 }
 

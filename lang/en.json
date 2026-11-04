@@ -1741,6 +1741,7 @@
       "Rolled": "2d6: {total}, {direction}.",
       "Moves": "{from} becomes {to}.",
       "Walled": "Walled off at the edge of the flower: the weather stays {name}.",
+      "Shifts": "On the road, the weather suddenly shifts.",
       "Wrapped": "Off the edge of the flower, it comes back in on the far side: {to}.",
       "HazardRolled": "{table}, d10: {roll}",
       "HazardRepeats": "{table}: the same event again.",
@@ -1908,6 +1909,141 @@
         "VI4": "The stars shall turn to dust, falling as grey snow upon a shadowed world.",
         "VI5": "Every young heart shall beat once more, then stop in unison. These empty vessels shall not remain empty for long.",
         "VI6": "The moon is swallowed by a great shadow, leaving only a faint, blood-red ring in the sky."
+      }
+    },
+    "Travel": {
+      "Button": "Travel",
+      "Tooltip": "Travel overland: spend the rest of this phase on the road, then roll the encounter table.",
+      "Title": "Overland travel",
+      "SpendsPhase": "The party travels for the rest of the {phase} phase. At its end, the encounter table is rolled.",
+      "MethodLabel": "Method",
+      "MethodOption": "{name} (×{speed} speed)",
+      "Method": {
+        "trek": "Trek",
+        "gallop": "Gallop",
+        "cruise": "Cruise"
+      },
+      "RegionLabel": "Region",
+      "Region": {
+        "heartlands": "the Heartlands",
+        "hinterlands": "the Hinterlands"
+      },
+      "BoonHint": "Travelling by night, or through the Hinterlands, is more dangerous: the encounter table is rolled with Boon.",
+      "Go": "Travel",
+      "Cancelled": "The new day did not begin, so the party did not travel.",
+      "CardTitle": "{method} through {region}",
+      "Spent": "The {phase} phase is spent on the road (×{speed} speed).",
+      "Rolled": "Encounter d20: {dice}.",
+      "RolledBoon": "Encounter d20 with Boon ({reason}): {dice}.",
+      "KeepHigher": "{dice}, keep {kept}",
+      "And": " and ",
+      "BoonNight": "night",
+      "BoonHinterlands": "the Hinterlands",
+      "EncounterName": "{name} ({points} points)",
+      "CombatTables": "Roll the encounter type and the type of creature on the Combat Tables.",
+      "HardshipRolled": "Travel hardship d20: {roll}.",
+      "OmenOf": "An omen of {name}: {omen}",
+      "OmenNoText": "An omen of {name}.",
+      "OmenNone": "An omen of the dying light.",
+      "Misfit": "This hardship suits other places best. In the Heartlands, roll again or pick the nearest fit.",
+      "EachPC": "Unless the entry says otherwise, every PC tests separately.",
+      "Result": {
+        "weather": { "Name": "The weather suddenly shifts", "Text": "The weather moves on the hex flower using 2d6." },
+        "uneventful": { "Name": "Uneventful", "Text": "The world passes by, uneventful." },
+        "scenery": { "Name": "Scenery", "Text": "The Dark Master describes something seen along the way." },
+        "hardship": { "Name": "Travel hardship", "Text": "" },
+        "omenRandom": { "Name": "Omen", "Text": "" },
+        "omenNearest": { "Name": "Omen", "Text": "" },
+        "easy": { "Name": "Easy encounter", "Text": "" },
+        "standard": { "Name": "Standard encounter", "Text": "" },
+        "hard": { "Name": "Hard encounter", "Text": "" }
+      },
+      "Place": {
+        "hinterlands": "Hinterlands",
+        "mountains": "mountains",
+        "fens": "fens and Gaslake shores"
+      },
+      "Hardship": {
+        "blackout": {
+          "Name": "Blackout",
+          "Effect": "The sky gutters like a dying wick and darkness engulfs the land for d4 hours. Without a light source, the party is in complete darkness (Bane on all tests) and rolls for a random encounter for every hour spent in it."
+        },
+        "waylaid": {
+          "Name": "Waylaid",
+          "Effect": "The roads have shifted, or the landmarks have been swallowed. One PC tests Presence DR12 to find the way. Failure: the party loses d4 hours. Ruin: the party loses a whole phase and rolls on the encounter table again."
+        },
+        "thinIce": {
+          "Name": "Thin Ice",
+          "Effect": "A frozen river or mire looks solid, but cracks beneath your weight. Test Agility DR12. Failure: you plunge into the freezing water before being pulled out: d4 damage and one level of Fatigued. Ruin: as Failure, and one carried item of the Dark Master's choice is lost beneath the ice."
+        },
+        "coldSnap": {
+          "Name": "Cold Snap",
+          "Effect": "A sudden drop in temperature catches even the hardened off guard; breath crystallises in the air. Test Toughness DR12 (Boon with cold weather clothes). Failure: d6 damage. Ruin: d6 damage and one level of Fatigued that is not removed until you rest somewhere warm."
+        },
+        "howlingGale": {
+          "Name": "Howling Gale",
+          "Effect": "Razor-sharp winds batter the travellers, numbing fingers and drowning out all sound. Unshielded torches and candles go out. Test Toughness DR12. Failure: one level of Fatigued. Ruin: one level of Fatigued, and Deafened until your next Long Rest."
+        },
+        "rockslide": {
+          "Name": "Rockslide",
+          "Effect": "A distant rumble becomes a roaring wall of snow and stone. Test Agility DR14. Failure: 2d6 damage, and you are Restrained (buried) until an ally spends ◈◈ to dig you out. Ruin: 3d6 damage and Restrained (buried). Each round you stay buried, take d4 damage."
+        },
+        "spoiledSupplies": {
+          "Name": "Spoiled Supplies",
+          "Effect": "Rations freeze, rot or turn to ash in their wrappings. Each PC rolls the expendable die of every food and water item they carry."
+        },
+        "ashfall": {
+          "Name": "Ashfall",
+          "Effect": "The clouds turn the colour of bone, and grey ash drifts down like snow. Test Toughness DR12. Failure: d4 damage and a hacking cough: Bane on Presence tests until your next Long Rest. Ruin: as Failure, and you are Infected."
+        },
+        "fallingLedge": {
+          "Name": "Falling Ledge",
+          "Effect": "An overhang of rotten stone and snow gives way beneath the party. Test Agility DR12. Failure: you slide and fall 10' (no damage) and land Prone. The party loses d4 hours regrouping. Ruin: you fall 20': 10 damage, and you land Prone."
+        },
+        "dryLightning": {
+          "Name": "Dry Lightning",
+          "Effect": "A storm without rain crackles across the plain, hunting the tallest point. The PC carrying the most metal tests Agility DR12. Failure: 2d6 damage. Ruin: 3d6 damage, and your armour is reduced by one tier."
+        },
+        "frostbite": {
+          "Name": "Frostbite",
+          "Effect": "Hours of biting wind leave flesh pale and numb. Test Toughness DR12 (Boon with cold weather clothes). Failure: Bane on Agility tests until you rest somewhere warm. Ruin: you gain a wound as fingers or toes blacken and die."
+        },
+        "bitterClimb": {
+          "Name": "Bitter Climb",
+          "Effect": "A sheer, wind-scoured ascent or a road sunk into mud saps the strength from your limbs. Test Strength DR12. Failure: one level of Fatigued. Ruin: one level of Fatigued and d4 damage, and you drop one carried item of your choice down the slope."
+        },
+        "whistlingWinds": {
+          "Name": "Whistling Winds",
+          "Effect": "You now know why it is called the Whistling Spine: the wind howls through the old quarries and carries whispers that burrow into the mind. Test Sanity DR12. Failure: you are Stupefied until the end of your next encounter. Ruin: test for Panic. Until your next Long Rest, you are deeply suspicious of strangers."
+        },
+        "watcher": {
+          "Name": "The Watcher on the Ridge",
+          "Effect": "Through the haze, a pale figure stands motionless on a distant ridge, its eyes gleaming like cold moons. For a moment, you cannot look away. Test Sanity DR14. Failure: you are Frightened of the figure until your next Long Rest, and certain it is following you. Ruin: roll on the Panic table with d10. Your next Long Rest gives no benefit, as you wake again and again to check the dark."
+        },
+        "mournfulDirge": {
+          "Name": "Mournful Dirge",
+          "Effect": "The wind carries a funeral bell from somewhere far away, mournful and sweet: Harkin calling someone home. Test Sanity DR12. Failure: your next Long Rest gives no benefit; the bell tolls in your dreams. Ruin: as Failure, and you have Bane on Panic tests until that rest is complete."
+        },
+        "oilmist": {
+          "Name": "Oilmist",
+          "Effect": "A shimmering, oily haze settles over the land for d4 hours. It is safe to breathe but catastrophically flammable. Any open flame in it explodes: everyone within 20' tests Agility DR14. Failure: 3d6 damage and d4 persistent fire damage. Ruin: 4d6 damage and d6 persistent fire damage. Lanterns with a closed shutter are safe."
+        },
+        "foulAir": {
+          "Name": "Foul Air",
+          "Effect": "The party wanders into a pocket of gas seeping from the deep strata. Test Toughness DR12. Failure: d6 damage and one level of Fatigued. Ruin: d6 damage and d4 persistent poison damage."
+        },
+        "moondrops": {
+          "Name": "Moondrops",
+          "Effect": "An untouched clearing of ice-crystal flowers pulses faintly with inner light. As you linger, the air grows still and a gentle warmth fills your chest. Until your next Long Rest, you ignore the effects of non-magical cold, including results 3, 4 and 11 on this table."
+        },
+        "silverEye": {
+          "Name": "The Silver Eye",
+          "Effect": "The clouds part to reveal the cold, pure light of the moon, and for a fleeting moment something passes judgement. Each PC rolls the Chance Die. Positive: regain 1 Fortune. Neutral: nothing happens. Negative: Bane on your next test."
+        },
+        "wayshrine": {
+          "Name": "Wayshrine",
+          "Effect": "A roadside cairn, its lamp still burning, shelters a shrine to a half-forgotten god. The party may take a Long Rest here without testing for interruptions, and anyone who leaves an offering of food or light regains d4 HP."
+        }
       }
     }
   }

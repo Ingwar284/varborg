@@ -613,7 +613,12 @@ on its open gaps.
     Master can set the Misery by hand. (GAPS 156)
     *Test:* set Misery VI and start days until no sun rises.
 
-40. **Overland travel.** A Travel button for the Dark Master: method (Trek,
+40. ~~**Overland travel.**~~ Done: `module/rules/travel.mjs` with
+    `tests/travel.test.mjs`, `module/travel.mjs` (the Travel button and
+    dialog on the Calendar panel, the encounter roll and travel card, the
+    hardship roll, the current Misery's omen), `shiftWeather` in
+    `module/weather.mjs` (GAPS 159, 160).
+    A Travel button for the Dark Master: method (Trek,
     Gallop, Cruise) and region (Heartlands, Hinterlands). It spends one
     phase and rolls the d20 encounter table at its end, with Boon at night
     or in the Hinterlands. A result of 1 to 2 moves the weather; a Travel

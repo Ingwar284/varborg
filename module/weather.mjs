@@ -13,6 +13,9 @@
  * everyone. The Dark Master's Set weather button picks a hex (and a hazard
  * event, or rolls one) by hand.
  *
+ * Overland travel (step 40) can also shift the weather mid-day: the same
+ * 2d6 move, through shiftWeather().
+ *
  * The maths lives in module/rules/weather.mjs.
  */
 
@@ -119,6 +122,19 @@ export function weatherContext() {
  * Called by module/days.mjs for each new day.
  */
 export async function weatherForNewDay() {
+  return rollWeatherMove();
+}
+
+/**
+ * Dark Master only: the weather suddenly shifts (a 1 or 2 on the travel
+ * encounter table, step 40). The same 2d6 move as at a new day.
+ */
+export async function shiftWeather() {
+  return rollWeatherMove(game.i18n.localize("VARBORG.Weather.Shifts"));
+}
+
+/** Roll 2d6, move the weather, roll a hazard's d10, save and post the card. */
+async function rollWeatherMove(intro = "") {
   if (!game.user.isGM) return;
   const i18n = game.i18n;
   const today = currentWeather();
@@ -127,12 +143,13 @@ export async function weatherForNewDay() {
   const move = moveWeather(today.hex, roll.total);
   const next = weatherAfterMove(today, move);
 
-  const lines = [
+  const lines = intro ? [intro] : [];
+  lines.push(
     i18n.format("VARBORG.Weather.Rolled", {
       total: roll.total,
       direction: i18n.localize(`VARBORG.Weather.Direction.${move.direction}`)
     })
-  ];
+  );
   if (move.walled) lines.push(i18n.format("VARBORG.Weather.Walled", { name: hexName(move.to) }));
   else if (move.wrapped) lines.push(i18n.format("VARBORG.Weather.Wrapped", { to: hexName(move.to) }));
   else lines.push(i18n.format("VARBORG.Weather.Moves", { from: hexName(move.from), to: hexName(move.to) }));
