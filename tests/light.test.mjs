@@ -9,7 +9,7 @@ import {
   LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, LENIENCY_MINUTES, noLight, timeLeft, isBurntOut, isCounting,
   startLight, lightLit, pauseLight, resumeLight, checkpointLight, reopenLight, lightAfterLoad, needsRedraw, setTimeLeft, changeTimeLeft,
   clock, useOne, canLight, findFuel, lightFromName,
-  DEFAULT_LIGHT_RANGE, LIGHT_RANGES, litTokenLight, lightBefore
+  DEFAULT_LIGHT_RANGE, LIGHT_RANGES, litTokenLight, lightBefore, setLightRate, rateOf
 } from "../module/rules/light.mjs";
 
 const MIN = 60 * 1000;
@@ -200,4 +200,40 @@ test("the token's own light is remembered once, to give back", () => {
   assert.deepEqual(lightBefore({ bright: 0, dim: 5 }, null), { bright: 0, dim: 5 });
   assert.deepEqual(lightBefore({ bright: 40, dim: 40 }, { bright: 0, dim: 5 }), { bright: 0, dim: 5 });
   assert.deepEqual(lightBefore(undefined, undefined), { bright: 0, dim: 0 });
+});
+
+test("Blackburn: at rate 2 a light burns two minutes for each minute", () => {
+  const lit = startLight(60, 0);
+  assert.equal(rateOf(lit), 1);
+  const fast = setLightRate(lit, 2, 0);
+  assert.equal(rateOf(fast), 2);
+  assert.equal(timeLeft(fast, 10 * MIN), 40 * MIN);
+  assert.ok(isBurntOut(fast, 30 * MIN));
+});
+
+test("changing the rate does not reach back: burnt time stays burnt", () => {
+  // 10 minutes at normal speed, then Blackburn for 10, then normal again.
+  let state = startLight(60, 0);
+  state = setLightRate(state, 2, 10 * MIN);
+  assert.equal(timeLeft(state, 10 * MIN), 50 * MIN);
+  assert.equal(timeLeft(state, 20 * MIN), 30 * MIN);
+  state = setLightRate(state, 1, 20 * MIN);
+  assert.equal(timeLeft(state, 30 * MIN), 20 * MIN);
+});
+
+test("the rate survives pausing, and a rate change while paused counts nothing", () => {
+  let state = setLightRate(startLight(60, 0), 2, 0);
+  state = pauseLight(state, 5 * MIN);
+  assert.equal(timeLeft(state, 50 * MIN), 50 * MIN);
+  state = resumeLight(state, 50 * MIN);
+  assert.equal(timeLeft(state, 55 * MIN), 40 * MIN);
+  const paused = pauseLight(startLight(60, 0), 0);
+  assert.equal(timeLeft(setLightRate(paused, 2, 9 * MIN), 9 * MIN), 60 * MIN);
+});
+
+test("no light, no rate; the same rate changes nothing; a new rate redraws the panel", () => {
+  assert.deepEqual(setLightRate(noLight(), 2, 0), noLight());
+  const lit = startLight(60, 0);
+  assert.equal(setLightRate(lit, 1, 5 * MIN), lit);
+  assert.ok(needsRedraw(lit, setLightRate(lit, 2, 0), 0));
 });

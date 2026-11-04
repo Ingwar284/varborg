@@ -26,6 +26,8 @@ import { fillPools, drainPools } from "./pools.mjs";
 import { endOfTurnSustain, resetEmberAbilities } from "./dice/power.mjs";
 import { startOfTurnTimers, endOfTurnTimers, endCombatTimers } from "./timers.mjs";
 import { resetLimitedUses } from "./uses.mjs";
+import { currentWeather } from "./weather.mjs";
+import { conditionsForTurn, turnConditionFor } from "./rules/weather-effects.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -53,16 +55,25 @@ export class VarBorgCombat extends foundry.documents.Combat {
    * Slowed then end (GAPS 74). A shield raised last turn is lowered: its
    * cover lasts "until the start of your next turn" (rules 3.8). Conditions
    * timed "until the start of its next turn" end (GAPS 129).
+   * In an Energy void every creature is Slowed at the start of each of its
+   * turns, in an Energy font Quickened (step 41, GAPS 168): the turn starts
+   * as if it had the condition, which then ends like any other.
    */
   async _onStartTurn(combatant, context) {
     await super._onStartTurn(combatant, context);
     const actor = combatant.actor;
-    const conditions = actor?.statuses ?? new Set();
-    const { actions, reactions, ended } = turnAllowance(conditions, ACTIONS_PER_TURN, REACTIONS_PER_TURN);
+    const own = actor?.statuses ?? new Set();
+    const { hazard } = currentWeather();
+    const conditions = conditionsForTurn(own, hazard);
+    const { actions, reactions, ended: worked } = turnAllowance(conditions, ACTIONS_PER_TURN, REACTIONS_PER_TURN);
+    // Only the conditions the actor really has are taken off.
+    const ended = worked.filter(id => own.has(id));
     await combatant.update({
       [`flags.${SYSTEM}`]: { actions, reactions, maxActions: actions, maxReactions: reactions, attacks: 0 }
     });
-    if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) await postTurnStart(combatant, actions, reactions);
+    if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) {
+      await postTurnStart(combatant, actions, reactions, conditions, turnConditionFor(hazard) ? hazard : null);
+    }
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
     if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
     if (actor) await startOfTurnTimers(actor);
@@ -213,11 +224,17 @@ export function turnState(actor) {
  * A chat line when conditions change what a turn starts with, such as
  * "Example Hero starts the turn with 4 actions and 1 reaction (Quickened)."
  */
-async function postTurnStart(combatant, actions, reactions) {
+async function postTurnStart(combatant, actions, reactions, conditions, hazard = null) {
   const i18n = game.i18n;
+  const fromWeather = hazard ? turnConditionFor(hazard) : null;
+  const own = combatant.actor?.statuses ?? new Set();
   const names = ["quickened", "slowed", "stupefied", "deathsDoor", "sluggish", "distracted", "faint"]
-    .filter(id => combatant.actor?.statuses.has(id))
-    .map(statusName);
+    .filter(id => conditions.has(id))
+    .map(id => (id === fromWeather && !own.has(id))
+      ? i18n.format("VARBORG.Condition.FromWeather", {
+        condition: statusName(id), hazard: i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Name`)
+      })
+      : statusName(id));
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: combatant.actor }),
     content: `<div class="var-borg-card"><p>${i18n.format("VARBORG.Condition.TurnStart", {

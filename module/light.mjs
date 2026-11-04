@@ -22,6 +22,9 @@
  * - The character who lights a light has their tokens shine bright light
  *   out to its range. When the timer ends, every token it lit goes dark
  *   and gets back its own light (GAPS 154).
+ * - Blackburn (step 41, GAPS 168): while it is today's weather the timer
+ *   burns at double speed and lit tokens shine to half their light's range.
+ *   When the weather changes, both go back to normal.
  *
  * The maths lives in module/rules/light.mjs.
  */
@@ -29,8 +32,10 @@
 import {
   DEFAULT_LIGHT_MINUTES, noLight, timeLeft, isBurntOut, isCounting, lightLit,
   pauseLight, resumeLight, checkpointLight, lightAfterLoad, needsRedraw, setTimeLeft, changeTimeLeft,
-  clock, useOne, canLight, findFuel, litTokenLight, lightBefore, DEFAULT_LIGHT_RANGE
+  clock, useOne, canLight, findFuel, litTokenLight, lightBefore, DEFAULT_LIGHT_RANGE, setLightRate, rateOf
 } from "./rules/light.mjs";
+import { lightRateFor, lightRangeFor } from "./rules/weather-effects.mjs";
+import { currentWeather } from "./weather.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "light";
@@ -38,6 +43,8 @@ const QUERY = "var-borg.light";
 const NEW_TIMER_FLAG = "lightNewTimerUsed";
 /** On a lit token: its own light before, to give back when the light goes out. */
 const TOKEN_FLAG = "lightBefore";
+/** On a lit token: the full range of the light it carries (before Blackburn halves it). */
+const RANGE_FLAG = "lightRange";
 
 /** How often the time left is written down while it counts (GAPS 152). */
 const CHECKPOINT_MS = 60 * 1000;
@@ -93,6 +100,7 @@ export function lightContext() {
     burning,
     clock: clock(left),
     waiting: burning && !isCounting(state),
+    blackburn: currentWeather().hazard === "blackburn",
     defaultMinutes: DEFAULT_LIGHT_MINUTES
   };
 }
@@ -145,11 +153,18 @@ function currentLaunch() {
   return game.world.lastPlayed ?? "";
 }
 
+/** How fast lights burn today: 2 in a Blackburn, else 1. */
+function todaysRate() {
+  return lightRateFor(currentWeather().hazard);
+}
+
 /**
- * Save the timer, with the launch it was saved in (see lightAfterLoad).
- * When no light is burning any more, the lit tokens go dark.
+ * Save the timer, with the launch it was saved in (see lightAfterLoad),
+ * burning at today's rate. When no light is burning any more, the lit
+ * tokens go dark.
  */
 async function saveLight(state) {
+  state = setLightRate(state, todaysRate(), now());
   await game.settings.set(SYSTEM, SETTING, { ...state, launch: currentLaunch() });
   if (!state.running) await darkenTokens();
 }
@@ -158,13 +173,44 @@ async function saveLight(state) {
 /*  Token light (GAPS 154)                       */
 /* -------------------------------------------- */
 
-/** A character's light is lit: their tokens shine out to its range. */
+/**
+ * A character's light is lit: their tokens shine out to its range (half
+ * of it in a Blackburn). With two lights lit, the longer range counts.
+ */
 async function lightTokens(actor, range) {
+  const { hazard } = currentWeather();
   for (const token of actor.getDependentTokens({ concreteOnly: true })) {
     const current = { bright: token.light.bright, dim: token.light.dim };
     const before = lightBefore(current, token.getFlag(SYSTEM, TOKEN_FLAG));
-    const light = litTokenLight(current, range);
-    await token.update({ light, flags: { [SYSTEM]: { [TOKEN_FLAG]: before } } });
+    const full = Math.max(Number(range) || 0, Number(token.getFlag(SYSTEM, RANGE_FLAG)) || 0);
+    const light = litTokenLight(before, lightRangeFor(full, hazard));
+    await token.update({ light, flags: { [SYSTEM]: { [TOKEN_FLAG]: before, [RANGE_FLAG]: full } } });
+  }
+}
+
+/**
+ * The weather changed: the timer burns at the new rate from now on, and
+ * every lit token shines to its light's range for the new weather.
+ * Dark Master only.
+ */
+export async function weatherChangedLight() {
+  if (!game.user.isActiveGM) return;
+  const state = getLight();
+  if (!state.running) return;
+  if (rateOf(state) !== todaysRate()) await saveLight(state);
+  const { hazard } = currentWeather();
+  for (const scene of game.scenes) {
+    const updates = scene.tokens
+      .filter(token => token.getFlag(SYSTEM, TOKEN_FLAG) && token.getFlag(SYSTEM, RANGE_FLAG))
+      .map(token => ({
+        _id: token.id,
+        light: litTokenLight(token.getFlag(SYSTEM, TOKEN_FLAG), lightRangeFor(token.getFlag(SYSTEM, RANGE_FLAG), hazard))
+      }))
+      .filter(update => {
+        const token = scene.tokens.get(update._id);
+        return token.light.bright !== update.light.bright || token.light.dim !== update.light.dim;
+      });
+    if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
   }
 }
 
@@ -175,7 +221,7 @@ async function darkenTokens() {
       .filter(token => token.getFlag(SYSTEM, TOKEN_FLAG))
       .map(token => {
         const { bright, dim } = token.getFlag(SYSTEM, TOKEN_FLAG);
-        return { _id: token.id, light: { bright, dim }, flags: { [SYSTEM]: { [TOKEN_FLAG]: _del } } };
+        return { _id: token.id, light: { bright, dim }, flags: { [SYSTEM]: { [TOKEN_FLAG]: _del, [RANGE_FLAG]: _del } } };
       });
     if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
   }

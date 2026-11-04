@@ -14,6 +14,8 @@
  */
 
 import { POOL, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
+import { poolBonusFor } from "./rules/weather-effects.mjs";
+import { currentWeather } from "./weather.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
@@ -49,10 +51,38 @@ export function runningCombat() {
 /*  Dark Master only: filling and emptying       */
 /* -------------------------------------------- */
 
-/** Start of a round: fill both pools to round × 5. */
+/**
+ * Start of a round: fill both pools to round × 5. On a Day of ember or a
+ * Day of gloom, that pool gains an extra 5, and a chat line says so
+ * (step 41).
+ */
 export async function fillPools(round) {
   if (!game.user.isActiveGM) return;
-  await game.settings.set(SYSTEM, SETTING, poolsForRound(round));
+  const { hazard } = currentWeather();
+  const bonus = poolBonusFor(hazard);
+  await game.settings.set(SYSTEM, SETTING, poolsForRound(round, bonus));
+  for (const pool of [POOL.EMBER, POOL.GLOOM]) {
+    if (bonus[pool]) await postWeatherBonus(pool, bonus[pool], hazard);
+  }
+}
+
+/** "Day of ember: the Ember pool gains an extra 🟒5 this round." */
+async function postWeatherBonus(pool, amount, hazard) {
+  const text = game.i18n.format("VARBORG.Pools.WeatherBonus", {
+    hazard: game.i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Name`),
+    pool: poolLabel(pool),
+    symbol: poolSymbol(pool),
+    amount
+  });
+  await ChatMessage.create({
+    speaker: { alias: game.i18n.localize("VARBORG.Weather.CardTitle") },
+    content: `<div class="var-borg-card pool-card ${pool}"><p>${foundry.utils.escapeHTML(text)}</p></div>`
+  });
+}
+
+/** Today's extra charges for each pool, for the Ember and Gloom panel. */
+export function weatherPoolBonus() {
+  return poolBonusFor(currentWeather().hazard);
 }
 
 /** End of a round, or combat ended: both pools empty. */

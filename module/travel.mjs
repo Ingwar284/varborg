@@ -17,6 +17,10 @@
  * - Encounters are named with their threat points; the Dark Master rolls
  *   the Combat Tables.
  *
+ * An Energy void halves the day's travel and an Energy font adds half
+ * again (step 41): the card shows the speed for today's weather, as it was
+ * when the party set out.
+ *
  * The maths lives in module/rules/travel.mjs.
  */
 
@@ -28,6 +32,8 @@ import { phaseAt } from "./rules/calendar.mjs";
 import { nextPhase } from "./calendar.mjs";
 import { shiftWeather } from "./weather.mjs";
 import { miseryContext } from "./misery.mjs";
+import { currentWeather } from "./weather.mjs";
+import { travelFactorFor, travelSpeed } from "./rules/weather-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -50,8 +56,28 @@ function phaseName(phase) {
   return game.i18n.localize(`VARBORG.Calendar.Phase.${phase}`);
 }
 
+/** A speed as written: 1, 2, ½, 1½. */
+function speedText(speed) {
+  const whole = Math.floor(speed);
+  const half = speed - whole >= 0.5;
+  if (!half) return String(whole);
+  return whole ? `${whole}½` : "½";
+}
+
+/** The line about today's weather and travel, or "" if it changes nothing. */
+function weatherTravelLine(hazard, speed = null) {
+  if (travelFactorFor(hazard) === 1) return "";
+  const i18n = game.i18n;
+  const name = i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Name`);
+  const key = travelFactorFor(hazard) < 1 ? "VARBORG.Travel.WeatherSlower" : "VARBORG.Travel.WeatherFaster";
+  if (speed === null) return i18n.format(key, { hazard: name });
+  return i18n.format(`${key}Card`, {
+    hazard: name, speed: speedText(travelSpeed(speed, hazard)), usual: speedText(speed)
+  });
+}
+
 /** Ask for the method and region. Returns null if closed. */
-async function askTravel(phase) {
+async function askTravel(phase, hazard) {
   const i18n = game.i18n;
   const escape = foundry.utils.escapeHTML;
   const methods = Object.entries(METHODS).map(([method, speed]) =>
@@ -65,7 +91,8 @@ async function askTravel(phase) {
     + `<fieldset><legend>${i18n.localize("VARBORG.Travel.MethodLabel")}</legend>${methods}</fieldset>`
     + `<div class="form-group"><label>${i18n.localize("VARBORG.Travel.RegionLabel")}</label>`
     + `<select name="region">${regions}</select></div>`
-    + `<p class="hint">${i18n.localize("VARBORG.Travel.BoonHint")}</p>`;
+    + `<p class="hint">${i18n.localize("VARBORG.Travel.BoonHint")}</p>`
+    + (weatherTravelLine(hazard) ? `<p class="hint">${escape(weatherTravelLine(hazard))}</p>` : "");
   return DialogV2.input({
     window: { title: "VARBORG.Travel.Title", icon: "fa-solid fa-route" },
     position: { width: 380 },
@@ -88,7 +115,10 @@ async function askTravel(phase) {
 export async function travel() {
   if (!game.user.isGM) return false;
   const phase = phaseAt(game.time.worldTime);
-  const data = await askTravel(phase);
+  // The weather the party sets out in: a new day at the end of the phase
+  // does not change how far they went (step 41).
+  const { hazard } = currentWeather();
+  const data = await askTravel(phase, hazard);
   if (!data) return false;
   const method = cleanMethod(data.method);
   const region = cleanRegion(data.region);
@@ -114,7 +144,7 @@ export async function travel() {
     hardship = { roll: d20.total, ...hardshipFor(d20.total) };
   }
 
-  await postTravelCard({ method, region, phase, roll, key, hardship, rolls });
+  await postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard });
   if (key === "weather") await shiftWeather();
   return true;
 }
@@ -158,7 +188,7 @@ function resultLines(key, hardship) {
   return [i18n.localize(`VARBORG.Travel.Result.${key}.Text`)];
 }
 
-async function postTravelCard({ method, region, phase, roll, key, hardship, rolls }) {
+async function postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard }) {
   const i18n = game.i18n;
   const escape = foundry.utils.escapeHTML;
   const trip = { phase, region };
@@ -169,15 +199,17 @@ async function postTravelCard({ method, region, phase, roll, key, hardship, roll
     })
     : i18n.localize(`VARBORG.Travel.Result.${key}.Name`);
 
+  const speed = METHODS[method];
   const lines = [
-    i18n.format("VARBORG.Travel.Spent", { phase: phaseName(phase), speed: METHODS[method] }),
+    i18n.format("VARBORG.Travel.Spent", { phase: phaseName(phase), speed: speedText(travelSpeed(speed, hazard)) }),
+    weatherTravelLine(hazard, speed),
     hasBoon(trip)
       ? i18n.format("VARBORG.Travel.RolledBoon", { dice: diceText(roll), reason: boonReason(trip) })
       : i18n.format("VARBORG.Travel.Rolled", { dice: diceText(roll) })
   ];
 
   let html = `<div class="var-borg-card travel-card"><h3>${escape(title)}</h3>`
-    + lines.map(line => `<p>${escape(line)}</p>`).join("")
+    + lines.filter(Boolean).map(line => `<p>${escape(line)}</p>`).join("")
     + `<p class="travel-result"><strong>${escape(resultName)}</strong></p>`
     + resultLines(key, hardship).map(line => `<p>${escape(line)}</p>`).join("");
 

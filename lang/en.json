@@ -437,6 +437,8 @@
       "Ember": "Ember",
       "Gloom": "Gloom",
       "Round": "Round {round}: both pools filled to {fill}. Unspent charges are lost at the end of the round.",
+      "WeatherBonus": "{hazard}: the {pool} pool gains an extra {symbol}{amount} this round.",
+      "WeatherBonusPanel": "{hazard}: the {pool} pool gains an extra {symbol}{amount} each round.",
       "OutsideCombat": "Outside combat there is no pool.",
       "Spend": "Spend",
       "Add": "Add 1 charge",
@@ -654,6 +656,7 @@
       "TheirNote": "{name} is {condition}: {effect}, added for you.",
       "TheirReminder": "{name}: {text}",
       "TurnStart": "{name} starts the turn with {actions} actions and {reactions} reactions ({conditions}).",
+      "FromWeather": "{condition} by the {hazard}",
       "blinded": "Blinded",
       "deafened": "Deafened",
       "charmed": "Charmed",
@@ -794,6 +797,7 @@
       "Tooltip": "Light it. With no light burning it starts the light timer; otherwise it joins the running timer. Uses one up.",
       "NoneBurning": "No light burning.",
       "PausedHint": "The game is paused: the light timer waits.",
+      "BlackburnHint": "Blackburn: lights burn twice as fast and shine half as far today.",
       "MinutesLabel": "Minutes of light",
       "Start": "Light",
       "StartTooltip": "Start the light timer for this many minutes of real time.",
@@ -1746,6 +1750,7 @@
       "HazardRolled": "{table}, d10: {roll}",
       "HazardRepeats": "{table}: the same event again.",
       "UntilNextDay": "It lasts until the next day begins.",
+      "Automated": "The system applies: {text}",
       "Set": "Set weather",
       "SetTooltip": "Set today's weather by hand: pick a hex on the flower and, for a hazard, its event.",
       "SetTitle": "Set the weather",
@@ -1797,10 +1802,12 @@
           "Effect": "The clouds dip low and swallow the light. There is no daylight today: outdoors, anywhere your lights do not reach is complete darkness. Light sources work as normal."
         },
         "dayOfGloom": {
+          "Auto": "the gloom pool fills 5 higher at the start of each round.",
           "Name": "Day of gloom",
           "Effect": "A sword day, a red day. In every combat, the gloom pool gains an extra 5 at the start of each round."
         },
         "energyVoid": {
+          "Auto": "every combatant starts each turn Slowed; travel speed is halved.",
           "Name": "Energy void",
           "Effect": "Lethargy hangs heavy in the air. In combat, every creature is Slowed at the start of each of its turns. Out of combat, the day's travel covers only half as much ground."
         },
@@ -1813,6 +1820,7 @@
           "Effect": "Magic is abundant. Boon on tests to cast spells and use powers. The sky shimmers too brightly for stealth: Bane on tests to hide outdoors."
         },
         "blackburn": {
+          "Auto": "the light timer burns twice as fast and lit tokens shine to half range.",
           "Name": "Blackburn",
           "Effect": "The dark is strong today. Light sources burn twice as fast and shed light in half their radius. The dark hides friend and foe alike: Boon on tests to hide in darkness."
         },
@@ -1829,10 +1837,12 @@
           "Effect": "The essence of the world fluctuates and lets go. Fall damage is halved, jumps go twice as far, and tests to lift, climb, jump or swim are at Boon."
         },
         "energyFont": {
+          "Auto": "every combatant starts each turn Quickened; travel speed is one and a half times.",
           "Name": "Energy font",
           "Effect": "Unnatural vitality invigorates everyone. In combat, every creature is Quickened at the start of each of its turns. Out of combat, the day's travel covers half as much ground again."
         },
         "dayOfEmber": {
+          "Auto": "the ember pool fills 5 higher at the start of each round.",
           "Name": "Day of ember",
           "Effect": "A glorious day. In every combat, the ember pool gains an extra 5 at the start of each round."
         }
@@ -1933,6 +1943,10 @@
       "Cancelled": "The new day did not begin, so the party did not travel.",
       "CardTitle": "{method} through {region}",
       "Spent": "The {phase} phase is spent on the road (×{speed} speed).",
+      "WeatherSlower": "Energy void: the day's travel covers only half as much ground.",
+      "WeatherFaster": "Energy font: the day's travel covers half as much ground again.",
+      "WeatherSlowerCard": "{hazard}: only half as much ground today (×{speed} instead of ×{usual}).",
+      "WeatherFasterCard": "{hazard}: half as much ground again today (×{speed} instead of ×{usual}).",
       "Rolled": "Encounter d20: {dice}.",
       "RolledBoon": "Encounter d20 with Boon ({reason}): {dice}.",
       "KeepHigher": "{dice}, keep {kept}",

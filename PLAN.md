@@ -626,7 +626,14 @@ on its open gaps.
     *Test:* travel by night through the Hinterlands and see the encounter
     rolled with Boon.
 
-41. **Weather effects (optional).** Automate the hazards that touch what
+41. ~~**Weather effects (optional).**~~ Done: `module/rules/weather-effects.mjs`
+    with `tests/weather-effects.test.mjs`; Day of ember and Day of gloom in
+    `module/pools.mjs` (and the Ember and Gloom panel), Energy void and
+    Energy font in `module/combat.mjs` (Slowed or Quickened at each turn
+    start) and `module/travel.mjs` (×½ or ×1½ speed), Blackburn in
+    `module/light.mjs` (the timer's burn rate and half-range tokens); the
+    weather card names what the system applies (GAPS 168).
+    Automate the hazards that touch what
     the system already does: Day of ember and Day of gloom (+5 to the pool
     each combat round), Blackburn (lights burn twice as fast, at half
     range), Energy void and Energy font (half or one and a half times the

@@ -13,15 +13,19 @@
  */
 
 import { POOL, COSTS, fillForRound, canPay, maySpend } from "./rules/pools.mjs";
-import { registerPools, getPools, spendFromPool, adjustPoolBy, runningCombat, poolLabel, poolSymbol } from "./pools.mjs";
+import {
+  registerPools, getPools, spendFromPool, adjustPoolBy, runningCombat, poolLabel, poolSymbol, weatherPoolBonus
+} from "./pools.mjs";
 import { resetEmberAbilities } from "./dice/power.mjs";
 import { registerDays, newDay } from "./days.mjs";
 import { registerCalendar, calendarContext, nextPhase, moveHours } from "./calendar.mjs";
 import { rest } from "./rest.mjs";
-import { registerWeather, weatherContext, setWeatherByHand } from "./weather.mjs";
+import { registerWeather, weatherContext, setWeatherByHand, currentWeather } from "./weather.mjs";
 import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
 import { travel } from "./travel.mjs";
-import { registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight } from "./light.mjs";
+import {
+  registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight, weatherChangedLight
+} from "./light.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
@@ -200,10 +204,19 @@ export class PoolsPanel extends SharedPanel {
     const round = combat?.round ?? 0;
     const isGM = game.user.isGM;
     const pools = getPools();
+    const bonus = weatherPoolBonus();
+    const { hazard } = currentWeather();
     return {
       inCombat: !!combat,
       round,
       fill: combat ? fillForRound(round) : 0,
+      // A Day of ember or Day of gloom (step 41).
+      weatherBonus: [POOL.EMBER, POOL.GLOOM].filter(id => bonus[id]).map(id => game.i18n.format("VARBORG.Pools.WeatherBonusPanel", {
+        hazard: game.i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Name`),
+        pool: poolLabel(id),
+        symbol: poolSymbol(id),
+        amount: bonus[id]
+      })),
       isGM,
       pools: [POOL.EMBER, POOL.GLOOM].map(id => ({
         id,
@@ -263,7 +276,14 @@ export function registerPanels() {
   registerDays(refreshCalendar);
   registerCalendar(refreshCalendar);
   // Today's weather on the hex flower (module/weather.mjs).
-  registerWeather(refreshCalendar);
+  // A change of weather can change the pools (Day of ember, Day of gloom)
+  // and the light (Blackburn) too (step 41).
+  registerWeather(() => {
+    refreshCalendar();
+    refreshPools();
+    refreshLight();
+    weatherChangedLight();
+  });
   // The Misery (module/misery.mjs).
   registerMisery(refreshCalendar);
   // The light timer (module/light.mjs).

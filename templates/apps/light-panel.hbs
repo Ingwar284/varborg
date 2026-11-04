@@ -9,6 +9,7 @@
       {{/if}}
     </div>
     {{#if light.waiting}}<p class="hint">{{localize "VARBORG.Light.PausedHint"}}</p>{{/if}}
+    {{#if light.blackburn}}<p class="hint light-blackburn">{{localize "VARBORG.Light.BlackburnHint"}}</p>{{/if}}
     {{#if isGM}}
       <div class="light-controls">
         {{#if light.burning}}

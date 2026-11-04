@@ -69,3 +69,10 @@ test("players spend Ember, only the Dark Master spends Gloom", () => {
   assert.equal(maySpend(POOL.GLOOM, true), true);
   assert.equal(maySpend("fortune", true), false);
 });
+
+test("an extra bonus adds on top of the round's fill, never below 0", () => {
+  assert.deepEqual(poolsForRound(1, { ember: 5 }), { ember: 10, gloom: 5 });
+  assert.deepEqual(poolsForRound(2, { gloom: 5 }), { ember: 10, gloom: 15 });
+  assert.deepEqual(poolsForRound(2, { ember: -3 }), { ember: 10, gloom: 10 });
+  assert.deepEqual(poolsForRound(0, { ember: 5 }), { ember: 5, gloom: 0 });
+});

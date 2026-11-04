@@ -44,11 +44,15 @@ export function emptyPools() {
 /**
  * Both pools at the start of a round. The pool is filled *to* round × 5,
  * not added to: whatever was left has already been lost.
+ * A Day of ember or Day of gloom adds an extra 5 to its pool (step 41,
+ * module/rules/weather-effects.mjs).
  * @param {number} round
+ * @param {{ember?: number, gloom?: number}} [bonus]  Extra charges per pool.
  */
-export function poolsForRound(round) {
+export function poolsForRound(round, bonus = {}) {
   const charges = fillForRound(round);
-  return { [POOL.EMBER]: charges, [POOL.GLOOM]: charges };
+  const extra = pool => Math.max(0, Math.round(Number(bonus?.[pool]) || 0));
+  return { [POOL.EMBER]: charges + extra(POOL.EMBER), [POOL.GLOOM]: charges + extra(POOL.GLOOM) };
 }
 
 /**

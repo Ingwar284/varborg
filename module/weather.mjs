@@ -16,6 +16,12 @@
  * Overland travel (step 40) can also shift the weather mid-day: the same
  * 2d6 move, through shiftWeather().
  *
+ * Five hazards are applied by the system (step 41, GAPS 168; maths in
+ * module/rules/weather-effects.mjs): Day of ember and Day of gloom in
+ * module/pools.mjs, Energy void and Energy font in module/combat.mjs and
+ * module/travel.mjs, Blackburn in module/light.mjs. Their card says what
+ * the system does; every other hazard stays as text.
+ *
  * The maths lives in module/rules/weather.mjs.
  */
 
@@ -23,6 +29,7 @@ import {
   HEXES, HAZARDS, MOVE_DICE, HAZARD_DIE, hexById, hexPosition, hazardTableOf, hazardFor,
   moveWeather, weatherAfterMove, cleanWeather, START_HEX
 } from "./rules/weather.mjs";
+import { AUTOMATED } from "./rules/weather-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -251,6 +258,11 @@ async function postWeatherCard({ hex, hazard, lines, hazardLine, rolls }) {
       + (hazardLine ? `<p class="hazard-table">${escape(hazardLine)}</p>` : "")
       + `<p class="hazard-name"><strong>${escape(hazardName(hazard))}</strong></p>`
       + `<p>${escape(hazardEffect(hazard))}</p>`
+      + (AUTOMATED.includes(hazard)
+        ? `<p class="hint hazard-auto">${escape(i18n.format("VARBORG.Weather.Automated", {
+          text: i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Auto`)
+        }))}</p>`
+        : "")
       + `<p class="hint">${i18n.localize("VARBORG.Weather.UntilNextDay")}</p></div>`;
   }
   html += `</div>`;

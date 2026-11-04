@@ -1,6 +1,7 @@
 <section class="var-borg-table-panel var-borg-pools-panel">
   {{#if inCombat}}
     <p class="round">{{localize "VARBORG.Pools.Round" round=round fill=fill}}</p>
+    {{#each weatherBonus}}<p class="hint weather-bonus">{{this}}</p>{{/each}}
   {{else}}
     <p class="hint">{{localize "VARBORG.Pools.OutsideCombat"}}</p>
   {{/if}}
