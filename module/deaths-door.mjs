@@ -20,7 +20,8 @@
  * Removing the Death's Door condition clears it.
  *
  * Any damage at Death's Door kills (Take damage, persistent damage, the
- * token bar). A dead character is marked defeated, like a fallen foe
+ * token bar). Any HP gained there wakes the character and ends Death's
+ * Door (a medicine box, the sheet, the token bar; GAPS 163). A dead character is marked defeated, like a fallen foe
  * (GAPS 91). The Dark Vessel count is system.darkVessels; the Dark Master
  * sets it back to 0 after a Long Rest until resting exists (GAPS 93).
  * All the maths lives in module/rules/deaths-door.mjs; this file only rolls
@@ -260,6 +261,23 @@ export async function wake(actor, formula, post = true) {
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.DeathsDoor.Wakes", { name: actor.name, hp: roll.total })}</p></div>`,
     rolls: roll.isDeterministic ? [] : [roll]
+  });
+}
+
+/**
+ * The character gained HP at Death's Door (a medicine box, the sheet, the
+ * token bar): they wake and Death's Door ends (GAPS 163). Called by the
+ * character data on the client that made the change.
+ * @param {Actor} actor
+ */
+export async function healedAtDeathsDoor(actor) {
+  if (!atDeathsDoor(actor) || isDead(actor)) return;
+  await actor.toggleStatusEffect("deathsDoor", { active: false });
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.DeathsDoor.Healed", {
+      name: foundry.utils.escapeHTML(actor.name), hp: actor.system.hp.value
+    })}</p></div>`
   });
 }
 

@@ -8,7 +8,10 @@
  * during this timer tag along on the running timer." A light lit in the
  * last five minutes "may simply warrant a new timer" (the Dark Master's
  * call).
- * Rules 4.1 Gear: candle 1 hour, torch 1 hour, lantern requires oil,
+ * Rules 3.15: "Each light source has a set range to which it casts its
+ * light, usually 30 feet."
+ * Rules 4.1 Gear: candle 1 hour, 10 feet; torch 1 hour, 40 feet; lantern
+ * 60 feet, requires oil,
  * lantern oil 1 hour.
  *
  * Rulings (GAPS 31, 40, 150–153):
@@ -33,6 +36,12 @@ export const LIGHT_KINDS = ["", "burns", "lamp", "fuel"];
 
 /** "Each light source has a duration ..., usually 1 hour." */
 export const DEFAULT_LIGHT_MINUTES = 60;
+
+/** "Each light source has a set range ..., usually 30 feet." */
+export const DEFAULT_LIGHT_RANGE = 30;
+
+/** The ranges in rules 4.1, in feet. */
+export const LIGHT_RANGES = { candle: 10, torch: 40, lantern: 60 };
 
 /** A light lit in the last five minutes may warrant a new timer. */
 export const LENIENCY_MINUTES = 5;
@@ -122,6 +131,39 @@ export function reopenLight(state, now, paused) {
   return { ...state, since: paused ? null : now };
 }
 
+/**
+ * The Dark Master's client loads. Each save remembers which launch of the
+ * world it was made in (`launch`). If the world has not been closed since,
+ * only the Dark Master reloaded or reconnected: the players' clocks kept
+ * counting, so the timer goes on as it is (paused or not, as the game is).
+ * If the world was closed and launched again, it goes on from the last
+ * time left that was written down (reopenLight).
+ * @param {object} state
+ * @param {number} now
+ * @param {boolean} paused
+ * @param {string} launch  When this launch of the world began.
+ */
+export function lightAfterLoad(state, now, paused, launch) {
+  if (!state?.running) return noLight();
+  if (!launch || state.launch !== launch) return reopenLight(state, now, paused);
+  return paused ? pauseLight(state, now) : resumeLight(state, now);
+}
+
+/**
+ * Whether the Table panel needs redrawing after the timer was saved. The
+ * clock on the panel updates itself every second, so the save made every
+ * minute (checkpointLight) does not redraw it: a redraw would clear what
+ * the Dark Master is typing in the minutes box.
+ * Redraw when a light starts or goes out, when it pauses or resumes, or
+ * when the time left changes by more than a couple of seconds.
+ */
+export function needsRedraw(before, after, now) {
+  if (Boolean(before?.running) !== Boolean(after?.running)) return true;
+  if (!after?.running) return false;
+  if (isCounting(before) !== isCounting(after)) return true;
+  return Math.abs(timeLeft(before, now) - timeLeft(after, now)) > 2000;
+}
+
 /** The Dark Master sets the time left by hand. 0 or less puts the light out. */
 export function setTimeLeft(state, minutes, now, paused) {
   const ms = minutesToMs(minutes);
@@ -173,13 +215,42 @@ export function findFuel(items) {
 
 /**
  * The light gear suggested from a name, for worlds made before this step
- * (GAPS 153). Only the four lights in rules 4.1.
- * @returns {{light: string, lightMinutes: number}|null}
+ * (GAPS 153, 154). Only the four lights in rules 4.1. Oil has no range of
+ * its own: the lantern's range counts.
+ * @returns {{light: string, lightMinutes: number, lightRange: number}|null}
  */
 export function lightFromName(name) {
   const key = String(name ?? "").trim().toLowerCase();
-  if (key === "torch" || key === "torches" || key === "candle" || key === "candles") return { light: "burns", lightMinutes: DEFAULT_LIGHT_MINUTES };
-  if (key === "lantern") return { light: "lamp", lightMinutes: DEFAULT_LIGHT_MINUTES };
-  if (key === "lantern oil") return { light: "fuel", lightMinutes: DEFAULT_LIGHT_MINUTES };
+  const minutes = DEFAULT_LIGHT_MINUTES;
+  if (key === "torch" || key === "torches") return { light: "burns", lightMinutes: minutes, lightRange: LIGHT_RANGES.torch };
+  if (key === "candle" || key === "candles") return { light: "burns", lightMinutes: minutes, lightRange: LIGHT_RANGES.candle };
+  if (key === "lantern") return { light: "lamp", lightMinutes: minutes, lightRange: LIGHT_RANGES.lantern };
+  if (key === "lantern oil") return { light: "fuel", lightMinutes: minutes, lightRange: DEFAULT_LIGHT_RANGE };
   return null;
+}
+
+/**
+ * A token's light while its character carries a lit light (GAPS 154): all
+ * bright out to the light's range, no dim edge. The token's own light is
+ * never made smaller, and with two lights lit the longer range shows.
+ * @param {{bright?: number, dim?: number}} current  The token's light now.
+ * @param {number} range  The light's range, in the scene's units.
+ * @returns {{bright: number, dim: number}}
+ */
+export function litTokenLight(current, range) {
+  const reach = Math.max(0, Math.round(Number(range) || 0));
+  const bright = Math.max(reach, Number(current?.bright) || 0);
+  return { bright, dim: Math.max(bright, Number(current?.dim) || 0) };
+}
+
+/**
+ * What to remember about a token before it is lit, to give it back when the
+ * light goes out. If it is already lit by a light, keep what was remembered
+ * first.
+ * @param {{bright?: number, dim?: number}} current
+ * @param {{bright: number, dim: number}|null|undefined} remembered
+ */
+export function lightBefore(current, remembered) {
+  if (remembered) return remembered;
+  return { bright: Number(current?.bright) || 0, dim: Number(current?.dim) || 0 };
 }

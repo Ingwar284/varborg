@@ -6,8 +6,18 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   DEATHS_DOOR_RESULTS, DEATHS_DOOR_MIN, DEATHS_DOOR_MAX, DARK_PULL_ABILITY, BODY_PARTS,
-  deathsDoorResult, darkPullDr, darkPullOutcome, becomeDarkVessel, bodyPart, killingBlow
+  deathsDoorResult, darkPullDr, darkPullOutcome, becomeDarkVessel, bodyPart, killingBlow, wakesFromHealing
 } from "../module/rules/deaths-door.mjs";
+
+test("gaining HP at Death's Door wakes the character (GAPS 163)", () => {
+  assert.equal(wakesFromHealing({ atDeathsDoor: true, dead: false, from: 0, to: 4 }), true);
+  // No HP gained: still at Death's Door.
+  assert.equal(wakesFromHealing({ atDeathsDoor: true, dead: false, from: 0, to: 0 }), false);
+  // The dead stay dead.
+  assert.equal(wakesFromHealing({ atDeathsDoor: true, dead: true, from: 0, to: 4 }), false);
+  // Not at Death's Door: healing is only healing.
+  assert.equal(wakesFromHealing({ atDeathsDoor: false, dead: false, from: 3, to: 6 }), false);
+});
 import { attackerConditions, defenderConditions, totalModifiers, turnAllowance } from "../module/rules/conditions.mjs";
 
 test("each 2d6 roll gives its row", () => {

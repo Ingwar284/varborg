@@ -18,13 +18,15 @@
 
 import {
   MEDICINE_ABILITY, MEDICINE_DR, MEDICINE_HEAL, MEDICINE_ACTIONS,
-  availableUses, treatmentWorks, hpAfterHealing
+  availableUses, treatmentWorks, hpAfterHealing,
+  testedCards, withTestedCard, withoutTestedCard
 } from "./rules/medicine.mjs";
 import { canRollExpendable, actionSymbols } from "./rules/expendable.mjs";
 import { rollExpendable } from "./dice/expendable.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { persistentEffects } from "./persistent.mjs";
 import { turnState } from "./combat.mjs";
+import { isDead } from "./deaths-door.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -50,6 +52,16 @@ function bleedingEffects(actor) {
  * @returns {Actor|null}  null (with a warning) if the targets don't work.
  */
 function findPatient(actor) {
+  const patient = targetedPatient(actor);
+  if (patient && isDead(patient)) {
+    ui.notifications.warn(game.i18n.format("VARBORG.Medicine.Dead", { name: patient.name }));
+    return null;
+  }
+  return patient;
+}
+
+/** The one targeted character, or the user's own character, before the checks on the patient. */
+function targetedPatient(actor) {
   const targets = [...game.user.targets].map(token => token.actor).filter(Boolean);
   if (!targets.length) return actor;
   if (targets.length > 1) {
@@ -87,7 +99,7 @@ export async function useMedicineBox(actor, item) {
 
   if (turn.combatant) {
     if (turn.combatant.actionsLeft < MEDICINE_ACTIONS) {
-      ui.notifications.warn(i18n.format("VARBORG.Reload.NoActions", { count: MEDICINE_ACTIONS }));
+      ui.notifications.warn("VARBORG.Medicine.NoActions", { localize: true });
     }
     await turn.combatant.adjustPips("actions", -MEDICINE_ACTIONS);
   }
@@ -133,15 +145,26 @@ async function askUse(actor, patient) {
   return uses.includes(data?.use) ? data.use : null;
 }
 
+/** The patient flag that lists the cards it has been tested from. */
+const TESTED_FLAG = "medicineTestedOn";
+
+/** Whether the patient has already been tested from this card. */
+function testedFrom(patient, messageId) {
+  return testedCards(patient.getFlag(SYSTEM, TESTED_FLAG)).includes(messageId);
+}
+
 /**
- * The patient's Toughness test, once per card: the patient remembers which
+ * The patient's Toughness test, once per card: the patient remembers every
  * card it was tested from. Closing the dialog lets the test be made later.
  */
 async function startTest(patient, use, messageId) {
-  if (patient.getFlag(SYSTEM, "medicineTestedOn") === messageId) return false;
-  await patient.setFlag(SYSTEM, "medicineTestedOn", messageId);
+  if (testedFrom(patient, messageId)) return false;
+  await patient.setFlag(SYSTEM, TESTED_FLAG,
+    withTestedCard(patient.getFlag(SYSTEM, TESTED_FLAG), messageId, id => game.messages.has(id)));
   const done = await testAndTreat(patient, use);
-  if (done === null) await patient.unsetFlag(SYSTEM, "medicineTestedOn");
+  if (done === null) {
+    await patient.setFlag(SYSTEM, TESTED_FLAG, withoutTestedCard(patient.getFlag(SYSTEM, TESTED_FLAG), messageId));
+  }
   return done !== null;
 }
 
@@ -195,7 +218,7 @@ function addMedicineCardListeners(message, html) {
   const button = html.querySelector("button[data-action='medicineTest']");
   if (!button) return;
   const patient = fromUuidSync(button.dataset.patientUuid);
-  if (!patient || patient.getFlag(SYSTEM, "medicineTestedOn") === message.id) {
+  if (!patient || testedFrom(patient, message.id)) {
     button.disabled = true;
     return;
   }
@@ -206,6 +229,6 @@ function addMedicineCardListeners(message, html) {
     }
     button.disabled = true;
     const done = await startTest(patient, button.dataset.use, message.id);
-    if (!done && patient.getFlag(SYSTEM, "medicineTestedOn") !== message.id) button.disabled = false;
+    if (!done && !testedFrom(patient, message.id)) button.disabled = false;
   });
 }

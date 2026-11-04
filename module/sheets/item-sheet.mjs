@@ -103,6 +103,7 @@ export class GearSheet extends EquipmentSheet {
     context.expendableDice = GearData.EXPENDABLE_DICE;
     context.lightKinds = GearData.LIGHT_KINDS;
     context.showLightMinutes = ["burns", "fuel"].includes(this.document.system.light);
+    context.showLightRange = ["burns", "lamp"].includes(this.document.system.light);
     return context;
   }
 }

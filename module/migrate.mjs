@@ -12,17 +12,21 @@
  *
  * Version 3 (step 35, GAPS 153): gear named Torch, Candle, Lantern or
  * Lantern oil becomes a light source, in the Items tab and on every actor.
+ *
+ * Version 4 (step 36, GAPS 154): torches, candles and lanterns get their
+ * light range from rules 4.1 (40, 10 and 60 feet). Other lights keep the
+ * usual 30 feet.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
 import { MIGRATION_OPTION } from "./data/character.mjs";
-import { lightFromName } from "./rules/light.mjs";
+import { lightFromName, DEFAULT_LIGHT_RANGE } from "./rules/light.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 3;
+export const DATA_VERSION = 4;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -47,23 +51,50 @@ export async function migrateWorld() {
   }
   if (version < 2) await markMedicineBoxes();
   if (version < 3) await markLights();
+  if (version < 4) await setLightRanges();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
 
-/** Version 3: torches, candles, lanterns and lantern oil become light sources. */
-async function markLights() {
-  const update = item => {
-    if (item.type !== "gear" || item.system.light) return null;
-    const light = lightFromName(item.name);
-    return light ? { _id: item.id, "system.light": light.light, "system.lightMinutes": light.lightMinutes } : null;
-  };
-  const worldItems = game.items.map(update).filter(Boolean);
+/**
+ * Update gear in the Items tab and on every actor.
+ * @param {(item: Item) => object|null} change  The changes for one item, or null for none.
+ */
+async function updateGear(change) {
+  const updatesFor = items => items
+    .filter(item => item.type === "gear")
+    .map(item => {
+      const changes = change(item);
+      return changes ? { _id: item.id, ...changes } : null;
+    })
+    .filter(Boolean);
+  const worldItems = updatesFor(game.items);
   if (worldItems.length) await Item.updateDocuments(worldItems);
   for (const actor of game.actors) {
-    const updates = actor.items.map(update).filter(Boolean);
+    const updates = updatesFor(actor.items);
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   }
+}
+
+/** Version 3: torches, candles, lanterns and lantern oil become light sources. */
+function markLights() {
+  return updateGear(item => {
+    if (item.system.light) return null;
+    const light = lightFromName(item.name);
+    return light ? { "system.light": light.light, "system.lightMinutes": light.lightMinutes } : null;
+  });
+}
+
+/**
+ * Version 4: torches, candles and lanterns get their range from rules 4.1.
+ * The range is new, so every item still has the usual 30 feet.
+ */
+function setLightRanges() {
+  return updateGear(item => {
+    if (!item.system.light || item.system.lightRange !== DEFAULT_LIGHT_RANGE) return null;
+    const light = lightFromName(item.name);
+    return light && light.lightRange !== DEFAULT_LIGHT_RANGE ? { "system.lightRange": light.lightRange } : null;
+  });
 }
 
 /** Version 1: work the rolled scores back out and drop the old flag. */
@@ -85,13 +116,8 @@ async function toRolledAbilities(actor) {
 const MEDICINE_BOX_NAME = "medicine box";
 
 /** Version 2: tick "Medicine box" on gear called Medicine box. */
-async function markMedicineBoxes() {
-  const isBox = item => item.type === "gear" && !item.system.medicine
-    && item.name.trim().toLowerCase() === MEDICINE_BOX_NAME;
-  const worldItems = game.items.filter(isBox).map(item => ({ _id: item.id, "system.medicine": true }));
-  if (worldItems.length) await Item.updateDocuments(worldItems);
-  for (const actor of game.actors) {
-    const updates = actor.items.filter(isBox).map(item => ({ _id: item.id, "system.medicine": true }));
-    if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
-  }
+function markMedicineBoxes() {
+  return updateGear(item => !item.system.medicine && item.name.trim().toLowerCase() === MEDICINE_BOX_NAME
+    ? { "system.medicine": true }
+    : null);
 }

@@ -7,8 +7,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, LENIENCY_MINUTES, noLight, timeLeft, isBurntOut, isCounting,
-  startLight, lightLit, pauseLight, resumeLight, checkpointLight, reopenLight, setTimeLeft, changeTimeLeft,
-  clock, useOne, canLight, findFuel, lightFromName
+  startLight, lightLit, pauseLight, resumeLight, checkpointLight, reopenLight, lightAfterLoad, needsRedraw, setTimeLeft, changeTimeLeft,
+  clock, useOne, canLight, findFuel, lightFromName,
+  DEFAULT_LIGHT_RANGE, LIGHT_RANGES, litTokenLight, lightBefore
 } from "../module/rules/light.mjs";
 
 const MIN = 60 * 1000;
@@ -128,9 +129,75 @@ test("a lantern finds its oil", () => {
 });
 
 test("the lights in rules 4.1 are known by name", () => {
-  assert.deepEqual(lightFromName("Torch"), { light: "burns", lightMinutes: 60 });
-  assert.deepEqual(lightFromName(" candle "), { light: "burns", lightMinutes: 60 });
-  assert.deepEqual(lightFromName("Lantern"), { light: "lamp", lightMinutes: 60 });
-  assert.deepEqual(lightFromName("Lantern oil"), { light: "fuel", lightMinutes: 60 });
+  assert.deepEqual(lightFromName("Torch"), { light: "burns", lightMinutes: 60, lightRange: 40 });
+  assert.deepEqual(lightFromName(" candle "), { light: "burns", lightMinutes: 60, lightRange: 10 });
+  assert.deepEqual(lightFromName("Lantern"), { light: "lamp", lightMinutes: 60, lightRange: 60 });
+  assert.deepEqual(lightFromName("Lantern oil"), { light: "fuel", lightMinutes: 60, lightRange: 30 });
   assert.equal(lightFromName("Rope"), null);
+});
+
+test("the Dark Master reloads: the timer keeps counting", () => {
+  // Lit at 0 in launch A, last written down at 10 minutes, reloaded at 30.
+  const saved = { ...checkpointLight(startLight(60, 0), 10 * MIN), launch: "A" };
+  const after = lightAfterLoad(saved, 30 * MIN, false, "A");
+  assert.equal(timeLeft(after, 30 * MIN), 30 * MIN);
+  // Reloaded while the game is paused: it stops counting at the reload.
+  const paused = lightAfterLoad(saved, 30 * MIN, true, "A");
+  assert.equal(isCounting(paused), false);
+  assert.equal(timeLeft(paused, 50 * MIN), 30 * MIN);
+  // Paused before the reload, playing after: it counts on from the reload.
+  const wasPaused = { ...pauseLight(startLight(60, 0), 10 * MIN), launch: "A" };
+  const resumed = lightAfterLoad(wasPaused, 30 * MIN, false, "A");
+  assert.equal(timeLeft(resumed, 30 * MIN), 50 * MIN);
+});
+
+test("the world was closed and launched again: the closed time does not count", () => {
+  const saved = { ...checkpointLight(startLight(60, 0), 10 * MIN), launch: "A" };
+  const after = lightAfterLoad(saved, 24 * HOUR, false, "B");
+  assert.equal(timeLeft(after, 24 * HOUR), 50 * MIN);
+  // Saved before this fix, with no launch: treated as closed.
+  const old = checkpointLight(startLight(60, 0), 10 * MIN);
+  assert.equal(timeLeft(lightAfterLoad(old, 24 * HOUR, false, "B"), 24 * HOUR), 50 * MIN);
+  assert.deepEqual(lightAfterLoad(noLight(), 5, false, "A"), noLight());
+});
+
+test("the panel is not redrawn for the save made every minute", () => {
+  const lit = startLight(60, 0);
+  assert.equal(needsRedraw(lit, checkpointLight(lit, 10 * MIN), 10 * MIN), false);
+  assert.equal(needsRedraw({ ...lit }, { ...checkpointLight(lit, 10 * MIN), launch: "A" }, 10 * MIN), false);
+});
+
+test("the panel is redrawn when the light really changes", () => {
+  const lit = startLight(60, 0);
+  assert.equal(needsRedraw(noLight(), lit, 0), true);
+  assert.equal(needsRedraw(null, lit, 0), true);
+  assert.equal(needsRedraw(lit, noLight(), 10 * MIN), true);
+  assert.equal(needsRedraw(lit, pauseLight(lit, 10 * MIN), 10 * MIN), true);
+  assert.equal(needsRedraw(lit, changeTimeLeft(lit, 5, 10 * MIN, false), 10 * MIN), true);
+  assert.equal(needsRedraw(noLight(), noLight(), 0), false);
+});
+
+test("light ranges from rules 3.15 and 4.1", () => {
+  assert.equal(DEFAULT_LIGHT_RANGE, 30);
+  assert.deepEqual(LIGHT_RANGES, { candle: 10, torch: 40, lantern: 60 });
+  assert.equal(lightFromName("Torch").lightRange, 40);
+  assert.equal(lightFromName("candles").lightRange, 10);
+  assert.equal(lightFromName("Lantern").lightRange, 60);
+});
+
+test("a lit token shines bright light to the range, with no dim edge", () => {
+  assert.deepEqual(litTokenLight({ bright: 0, dim: 0 }, 40), { bright: 40, dim: 40 });
+  assert.deepEqual(litTokenLight(undefined, 30), { bright: 30, dim: 30 });
+});
+
+test("two lights: the longer range shows; the token's own light never shrinks", () => {
+  assert.deepEqual(litTokenLight({ bright: 40, dim: 40 }, 10), { bright: 40, dim: 40 });
+  assert.deepEqual(litTokenLight({ bright: 10, dim: 10 }, 60), { bright: 60, dim: 60 });
+  assert.deepEqual(litTokenLight({ bright: 5, dim: 80 }, 40), { bright: 40, dim: 80 });
+});
+
+test("the token's own light is remembered once, to give back", () => {
+  assert.deepEqual(lightBefore({ bright: 0, dim: 5 }, null), { bright: 0, dim: 5 });
+  assert.deepEqual(lightBefore({ bright: 40, dim: 40 }, { bright: 0, dim: 5 }), { bright: 0, dim: 5 });
+  assert.deepEqual(lightBefore(undefined, undefined), { bright: 0, dim: 0 });
 });

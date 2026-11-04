@@ -52,3 +52,33 @@ export function hpAfterHealing(value, max, amount) {
   }
   return Math.min(max, value + amount);
 }
+
+/**
+ * The medicine cards a patient has been tested from, so each card's test is
+ * made once. Stored on the patient as a list of chat message ids. Worlds
+ * from step 34 stored only the last card's id as text: that counts as a
+ * list of one.
+ * @param {string|string[]|undefined} stored
+ * @returns {string[]}
+ */
+export function testedCards(stored) {
+  if (typeof stored === "string") return stored ? [stored] : [];
+  return Array.isArray(stored) ? stored.filter(id => typeof id === "string" && id) : [];
+}
+
+/**
+ * The list with this card added. Cards no longer in the chat log are
+ * dropped (`stillInChat`), so the list stays short.
+ * @param {string|string[]|undefined} stored
+ * @param {string} messageId
+ * @param {(id: string) => boolean} [stillInChat]
+ */
+export function withTestedCard(stored, messageId, stillInChat = () => true) {
+  const kept = testedCards(stored).filter(id => id !== messageId && stillInChat(id));
+  return [...kept, messageId];
+}
+
+/** The list without this card (its test dialog was closed). */
+export function withoutTestedCard(stored, messageId) {
+  return testedCards(stored).filter(id => id !== messageId);
+}

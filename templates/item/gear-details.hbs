@@ -28,5 +28,11 @@
       <input type="number" name="system.lightMinutes" value="{{system.lightMinutes}}" min="1" step="1">
     </label>
     {{/if}}
+    {{#if showLightRange}}
+    <label data-tooltip="{{localize 'VARBORG.Light.RangeHint'}}">
+      <span>{{localize "VARBORG.Light.Range"}}</span>
+      <input type="number" name="system.lightRange" value="{{system.lightRange}}" min="1" step="1">
+    </label>
+    {{/if}}
   </div>
 </section>

@@ -1,6 +1,6 @@
 /**
  * The light timer in Foundry (rules 3.15 Darkness and light, 4.1 Gear;
- * GAPS 31, 40, 150–153).
+ * GAPS 31, 40, 150–154).
  *
  * One timer for the whole table, kept in a world setting and shown on the
  * Table panel (module/pools.mjs). It counts real time and pauses while the
@@ -17,20 +17,27 @@
  *   the panel.
  * - When it runs out, a card says the lights go out and reminds the table
  *   what complete darkness does.
+ * - It does not count while the world is closed, but keeps counting if
+ *   the Dark Master only reloads or drops out (GAPS 152).
+ * - The character who lights a light has their tokens shine bright light
+ *   out to its range. When the timer ends, every token it lit goes dark
+ *   and gets back its own light (GAPS 154).
  *
  * The maths lives in module/rules/light.mjs.
  */
 
 import {
   DEFAULT_LIGHT_MINUTES, noLight, timeLeft, isBurntOut, isCounting, lightLit,
-  pauseLight, resumeLight, checkpointLight, reopenLight, setTimeLeft, changeTimeLeft,
-  clock, useOne, canLight, findFuel
+  pauseLight, resumeLight, checkpointLight, lightAfterLoad, needsRedraw, setTimeLeft, changeTimeLeft,
+  clock, useOne, canLight, findFuel, litTokenLight, lightBefore, DEFAULT_LIGHT_RANGE
 } from "./rules/light.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "light";
 const QUERY = "var-borg.light";
 const NEW_TIMER_FLAG = "lightNewTimerUsed";
+/** On a lit token: its own light before, to give back when the light goes out. */
+const TOKEN_FLAG = "lightBefore";
 
 /** How often the time left is written down while it counts (GAPS 152). */
 const CHECKPOINT_MS = 60 * 1000;
@@ -42,13 +49,20 @@ export function registerLight(onChange) {
     config: false,
     type: Object,
     default: noLight(),
-    onChange
+    onChange: value => {
+      const before = lastSeen;
+      lastSeen = { ...noLight(), ...value };
+      if (needsRedraw(before, lastSeen, now())) onChange();
+    }
   });
   CONFIG.queries[QUERY] = (request, { user }) => changeLight(request, user);
   Hooks.on("pauseGame", onPause);
   Hooks.on("renderChatMessageHTML", addLightCardListeners);
   Hooks.once("ready", onReady);
 }
+
+/** The timer as last seen on this client, to tell whether the panel needs redrawing. */
+let lastSeen = null;
 
 /** The timer as stored. */
 export function getLight() {
@@ -126,16 +140,58 @@ async function burnOut() {
   }
 }
 
-function saveLight(state) {
-  return game.settings.set(SYSTEM, SETTING, state);
+/** When this launch of the world began: Foundry stamps it at each launch. */
+function currentLaunch() {
+  return game.world.lastPlayed ?? "";
 }
 
-/** World opened: the time it was closed does not count (GAPS 152). */
+/**
+ * Save the timer, with the launch it was saved in (see lightAfterLoad).
+ * When no light is burning any more, the lit tokens go dark.
+ */
+async function saveLight(state) {
+  await game.settings.set(SYSTEM, SETTING, { ...state, launch: currentLaunch() });
+  if (!state.running) await darkenTokens();
+}
+
+/* -------------------------------------------- */
+/*  Token light (GAPS 154)                       */
+/* -------------------------------------------- */
+
+/** A character's light is lit: their tokens shine out to its range. */
+async function lightTokens(actor, range) {
+  for (const token of actor.getDependentTokens({ concreteOnly: true })) {
+    const current = { bright: token.light.bright, dim: token.light.dim };
+    const before = lightBefore(current, token.getFlag(SYSTEM, TOKEN_FLAG));
+    const light = litTokenLight(current, range);
+    await token.update({ light, flags: { [SYSTEM]: { [TOKEN_FLAG]: before } } });
+  }
+}
+
+/** The lights go out: every lit token, on every scene, gets its own light back. */
+async function darkenTokens() {
+  for (const scene of game.scenes) {
+    const updates = scene.tokens
+      .filter(token => token.getFlag(SYSTEM, TOKEN_FLAG))
+      .map(token => {
+        const { bright, dim } = token.getFlag(SYSTEM, TOKEN_FLAG);
+        return { _id: token.id, light: { bright, dim }, flags: { [SYSTEM]: { [TOKEN_FLAG]: _del } } };
+      });
+    if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
+  }
+}
+
+/**
+ * The Dark Master's client loads. If the world was closed, the time it was
+ * closed does not count; if the Dark Master only reloaded or reconnected,
+ * the timer keeps counting (GAPS 152).
+ */
 async function onReady() {
+  lastSeen = getLight();
   ticker ??= setInterval(tick, 1000);
   if (!game.user.isActiveGM) return;
   const state = getLight();
-  if (state.running) await saveLight(reopenLight(state, now(), game.paused));
+  if (state.running) await saveLight(lightAfterLoad(state, now(), game.paused, currentLaunch()));
   lastCheckpoint = Date.now();
 }
 
@@ -183,6 +239,9 @@ async function applyChange(request, user) {
       if (minutes < 1) return { error: "VARBORG.Light.Bad" };
       const result = lightLit(state, minutes, at, game.paused);
       if (!result.joined) await saveLight(result.state);
+      // The character who lit it shines, if the one asking may act for them.
+      const actor = request.actorUuid ? fromUuidSync(request.actorUuid) : null;
+      if (actor?.testUserPermission(user, "OWNER")) await lightTokens(actor, Number(request.range) || DEFAULT_LIGHT_RANGE);
       return { ok: true, joined: result.joined, lateLight: result.lateLight, left: timeLeft(result.state, at) };
     }
     case "set":
@@ -231,7 +290,13 @@ export async function lightItem(actor, item) {
   }
   const minutes = burnt.system.lightMinutes || DEFAULT_LIGHT_MINUTES;
 
-  const result = await sendChange({ kind: "lit", minutes });
+  const result = await sendChange({
+    kind: "lit",
+    minutes,
+    actorUuid: actor.uuid,
+    // A lantern lights as far as the lantern, not its oil.
+    range: item.system.lightRange || DEFAULT_LIGHT_RANGE
+  });
   if (result?.error) {
     ui.notifications.warn(result.error, { localize: true });
     return;

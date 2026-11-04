@@ -17,6 +17,11 @@ import { atZeroHp, strikesZero } from "../rules/agony.mjs";
 import { postWoundCard, WOUND_OPTION, AGONY_TYPE_OPTION } from "../agony.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
 import { rollStartingFortune, postStartingFortune } from "../fortune.mjs";
+import { wakesFromHealing } from "../rules/deaths-door.mjs";
+import { atDeathsDoor, isDead, healedAtDeathsDoor } from "../deaths-door.mjs";
+
+/** Passes "gained HP at Death's Door" from _preUpdate to _onUpdate (GAPS 163). */
+const HEALED_AT_DOOR_OPTION = "varBorgHealedAtDeathsDoor";
 
 /** An update that changes how scores are stored, not the scores in use (module/migrate.mjs). */
 export const MIGRATION_OPTION = "varBorgMigration";
@@ -133,6 +138,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     if (!hp || !("value" in hp || "max" in hp)) return;
     const max = hp.max ?? this.hp.max;
     hp.value = capHp(hp.value ?? this.hp.value, max);
+    if (wakesFromHealing({ atDeathsDoor: atDeathsDoor(this.parent), dead: isDead(this.parent), from: this.hp.value, to: hp.value })) {
+      options[HEALED_AT_DOOR_OPTION] = true;
+    }
     if (!strikesZero(this.hp.value, hp.value)) return;
 
     const wounds = changes.system.wounds ?? {};
@@ -165,9 +173,14 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     foundry.utils.setProperty(changes, "system.hp", { ...hp, ...followed });
   }
 
-  /** After HP struck zero, the client that made the change posts the wound card. */
+  /**
+   * After HP struck zero, the client that made the change posts the wound
+   * card. After HP was gained at Death's Door, it wakes the character.
+   */
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
-    if (userId === game.user.id && options[WOUND_OPTION]) postWoundCard(this.parent, options[WOUND_OPTION]);
+    if (userId !== game.user.id) return;
+    if (options[WOUND_OPTION]) postWoundCard(this.parent, options[WOUND_OPTION]);
+    if (options[HEALED_AT_DOOR_OPTION]) healedAtDeathsDoor(this.parent);
   }
 }

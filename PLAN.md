@@ -525,7 +525,88 @@ dialogs and the scroll card. One open question: area spells and powers
     time.
     *Test:* light a torch (1 hour), pause the game and see the timer stop.
 
+36. ~~**Token light.**~~ Done: a light range on light gear (usually 30
+    feet; candle 10, torch 40, lantern 60), the lighting character's tokens
+    shine bright light to that range, and every lit token goes dark and
+    gets its own light back when the timer ends or is put out. Data
+    version 4 gives existing torches, candles and lanterns their range
+    (GAPS 154).
+    *Test:* light a torch with a token on the scene, see 40 feet of bright
+    light, then put the light out and see the token go dark.
+
 **Milestone 6 review:** play a short trip with rests, days and torches.
+*Code review done:* rests, days, the medicine box and the light timer
+match the rules; 420 tests pass. Fix: the medicine box's "no actions
+left" warning had the reloading text. Rulings from the review (GAPS
+161–163) add steps 36a and 36b and a line to step 37. The play-test in
+Foundry is still to do.
+
+36a. ~~**Healing at Death's Door.**~~ Done: `wakesFromHealing` in
+    `module/rules/deaths-door.mjs` (tested), the character data notices HP
+    gained at Death's Door and `healedAtDeathsDoor` ends it with a card;
+    the medicine box refuses a dead patient.
+    Gaining HP at Death's Door (the medicine
+    box, the sheet or the token bar) wakes the character and ends Death's
+    Door, with a card. A dead character stays dead. (GAPS 163)
+    *Test:* put Example Hero at Death's Door, use the medicine box's Heal
+    on them and pass the test. Death's Door goes and HP is above 0.
+
+36b. **Once per day.** Items and effects with "once per day" or "until the
+    next day begins" (GAPS 161). A once-per-day use is marked used and comes
+    back at each new day (New day, Long Rest, Downtime); an effect that
+    lasts until the next day begins ends then. How items are marked and
+    where the Use button sits to be settled with the designer before
+    building.
+    *Test:* use a once-per-day item, see it marked used, press New day and
+    see it come back.
+
+## Milestone 6b: Calendar, weather and travel
+
+A lightweight calendar on Foundry's own world clock (no new packages):
+the date, the time of day, the weather and the Misery, all on the Table
+panel, and overland travel that spends phases of the day. Each step waits
+on its open gaps.
+
+37. **Calendar and time of day.** VÅR BORG months and weekdays in
+    Foundry's world clock (`CONFIG.time.worldCalendarConfig`). The Table
+    panel shows the date, weekday and phase (Morning, Afternoon, Night).
+    Dark Master buttons: Next phase, and hours on or back if hours are
+    tracked. A new day starts at dawn (the New day button of step 32); a
+    Long Rest or Downtime moves on to the next dawn. The day counter of
+    step 32 carries over. If hours are tracked, Cowardice and Paranoid
+    (1d10 hours) end when their hours have passed. (GAPS 157, 158, 162)
+    *Test:* step through Morning, Afternoon and Night; at the next dawn
+    the New day dialog opens and the date moves on.
+
+38. **Weather.** The hex flower as data, starting on Perfect day. At the
+    start of each day, 2d6 moves the weather one hex; on a Minor or Major
+    hazard, its d10 table is rolled and the hazard's card posted. It lasts
+    until the next day begins. The panel shows today's weather; the Dark
+    Master can set it by hand. (GAPS 155)
+    *Test:* start several days and follow the weather on the flower.
+
+39. **Miseries.** The Misery (I to VI) on the panel, the daily die at the
+    start of each day, the d6 omen card, and the end card at VII. The Dark
+    Master can set the Misery by hand. (GAPS 156)
+    *Test:* set Misery VI and start days until no sun rises.
+
+40. **Overland travel.** A Travel button for the Dark Master: method (Trek,
+    Gallop, Cruise) and region (Heartlands, Hinterlands). It spends one
+    phase and rolls the d20 encounter table at its end, with Boon at night
+    or in the Hinterlands. A result of 1 to 2 moves the weather; a Travel
+    hardship rolls its d20 table and posts the hardship. (GAPS 159, 160)
+    *Test:* travel by night through the Hinterlands and see the encounter
+    rolled with Boon.
+
+41. **Weather effects (optional).** Automate the hazards that touch what
+    the system already does: Day of ember and Day of gloom (+5 to the pool
+    each combat round), Blackburn (lights burn twice as fast, at half
+    range), Energy void and Energy font (half or one and a half times the
+    day's travel). The rest stay as cards.
+    *Test:* set Day of ember and start a combat round.
+
+**Milestone 6b review:** a three-day journey with weather, a Misery and a
+rest at a wayshrine.
 
 ## Milestone 7: Minions, relics and vehicles
 

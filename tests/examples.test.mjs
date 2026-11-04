@@ -140,6 +140,9 @@ test("step 35 lights match rules 4.1: torch and lantern oil 1 hour, lantern need
   }
   assert.equal(byName("Torch").lightMinutes, 60);
   assert.equal(byName("Lantern oil").lightMinutes, 60);
+  // Rules 4.1: torch 40 feet, lantern 60 feet (GAPS 154).
+  assert.equal(byName("Torch").lightRange, 40);
+  assert.equal(byName("Lantern").lightRange, 60);
   assert.deepEqual(["Lantern", "Lantern oil"].map(name => byName(name).price), [10, 1]);
 });
 

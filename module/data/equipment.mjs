@@ -14,7 +14,7 @@ import {
   ARMOUR_TIER_MIN, ARMOUR_TIER_MAX, isMetalByDefault, capArmourTier
 } from "../rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../rules/carrying.mjs";
-import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES } from "../rules/light.mjs";
+import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rules/light.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -185,7 +185,10 @@ export class GearData extends CarriedData {
       light: choice(LIGHT_KINDS, ""),
       // How long one burns: a torch, a candle or one oil (a lantern uses
       // its oil's minutes).
-      lightMinutes: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_MINUTES })
+      lightMinutes: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_MINUTES }),
+      // How far it lights, in the scene's units (feet); its character's token
+      // shines this far while the light timer runs (GAPS 154).
+      lightRange: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_RANGE })
     };
   }
 

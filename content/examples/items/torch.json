@@ -12,6 +12,7 @@
     "expendable": "",
     "usedUp": false,
     "light": "burns",
-    "lightMinutes": 60
+    "lightMinutes": 60,
+    "lightRange": 40
   }
 }

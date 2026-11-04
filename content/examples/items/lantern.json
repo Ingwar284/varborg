@@ -13,6 +13,7 @@
     "usedUp": false,
     "medicine": false,
     "light": "lamp",
-    "lightMinutes": 60
+    "lightMinutes": 60,
+    "lightRange": 60
   }
 }

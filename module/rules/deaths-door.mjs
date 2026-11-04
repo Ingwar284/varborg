@@ -127,3 +127,13 @@ export function bodyPart(roll) {
 export function killingBlow(atDeathsDoor, damage) {
   return Boolean(atDeathsDoor) && damage > 0;
 }
+
+/**
+ * Gaining HP at Death's Door wakes the character and ends Death's Door
+ * (GAPS 163), whatever the HP came from. A dead character stays dead.
+ * @param {{atDeathsDoor: boolean, dead: boolean, from: number, to: number}} change
+ *   from, to: HP before and after the change.
+ */
+export function wakesFromHealing({ atDeathsDoor, dead, from, to }) {
+  return Boolean(atDeathsDoor) && !dead && Number(to) > Number(from);
+}
