@@ -15,6 +15,7 @@
 
 import { POOL, COSTS, fillForRound, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
 import { resetEmberAbilities } from "./dice/power.mjs";
+import { registerDays, currentDay, newDay } from "./days.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
@@ -32,6 +33,8 @@ export function registerPools() {
     default: emptyPools(),
     onChange: refreshPanel
   });
+  // The day counter is shown on the same panel (module/days.mjs).
+  registerDays(refreshPanel);
   CONFIG.queries[QUERY] = (request, { user }) => changePool(request, user);
 
   for (const hook of ["createCombat", "updateCombat", "deleteCombat"]) Hooks.on(hook, refreshPanel);
@@ -215,9 +218,9 @@ function addPanelButton(controls) {
 }
 
 /**
- * The shared table panel: the Ember and Gloom pools, and the Dark Master's
- * Reset ember abilities button. The day counter and light timer come in
- * later steps.
+ * The shared table panel: the day, the Ember and Gloom pools, and the Dark
+ * Master's New day and Reset ember abilities buttons. The light timer
+ * comes in a later step.
  */
 export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -228,7 +231,8 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     actions: {
       spend: TablePanel.#onSpend,
       adjust: TablePanel.#onAdjust,
-      resetEmber: TablePanel.#onResetEmber
+      resetEmber: TablePanel.#onResetEmber,
+      newDay: TablePanel.#onNewDay
     }
   };
 
@@ -242,6 +246,7 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     const isGM = game.user.isGM;
     const pools = getPools();
     return {
+      day: currentDay(),
       inCombat: !!combat,
       round,
       fill: combat ? fillForRound(round) : 0,
@@ -274,5 +279,16 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     button.disabled = true;
     await resetEmberAbilities(game.actors.contents, { announce: true });
     button.disabled = false;
+  }
+
+  /** Dark Master only: ask who ate, then start the next day (rules 3.16). */
+  static async #onNewDay(event, button) {
+    if (!game.user.isGM) return;
+    button.disabled = true;
+    try {
+      await newDay();
+    } finally {
+      button.disabled = false;
+    }
   }
 }

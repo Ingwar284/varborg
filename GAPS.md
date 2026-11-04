@@ -174,6 +174,8 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 40 | Should the light timer pause with the game, and how do lights with longer durations join it? | It pauses while the game is paused. A lantern uses one hour of oil at a time and joins the running timer like any other light. | Resolved |
 | 41 | Does a medicine box remove Infected automatically? | No. The infected character tests Toughness DR12. See question 43. | Resolved |
 | 43 | Medicine box: what happens on a failed test, and does applying it cost an action? | Applying it costs an action (◈). The box is used whether the test succeeds or fails, so its expendable die is rolled either way. | Resolved |
+| 142 | Starvation: how does the system know whether a character ate? | At each New day the Dark Master ticks who ate and drank the day before (ticked by default). Ticked sets the character's days without food to 0; unticked adds 1. With more than 2 days without food, the character takes d6 damage at the start of that day and each day after. The count is shown on the sheet and can be changed by hand. | Resolved |
+| 143 | Doomed: does the daily wound work like a wound at 0 HP, and what happens at max wounds? | Like life force: the wound is added, HP does not change, and the usual Toughness DR12 test follows (Table of Agony on a failure). At max wounds no wound is added; the card says so, and the next 0 HP is Death's Door. | Resolved |
 
 ## Foes, minions and vehicles
 

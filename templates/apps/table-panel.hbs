@@ -1,4 +1,11 @@
 <section class="var-borg-table-panel">
+  <div class="day-row">
+    <span class="day-name"><i class="fa-solid fa-sun"></i> {{localize "VARBORG.Day.Label" day=day}}</span>
+    {{#if isGM}}
+      <button type="button" class="new-day" data-action="newDay"
+        data-tooltip="{{localize 'VARBORG.Day.NewDayTooltip'}}">{{localize "VARBORG.Day.NewDay"}}</button>
+    {{/if}}
+  </div>
   {{#if inCombat}}
     <p class="round">{{localize "VARBORG.Pools.Round" round=round fill=fill}}</p>
   {{else}}

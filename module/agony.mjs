@@ -123,6 +123,33 @@ export async function postLifeForceWoundCards(actor, before, count) {
 }
 
 /**
+ * A Doomed character at the start of a day (rules 3.16, GAPS 143): the
+ * wound has already been added and HP does not change, as with life force.
+ * The card has the usual Toughness test. At max wounds no wound is added
+ * and the card says so, with no test.
+ * @param {Actor} actor
+ * @param {{added: boolean, wounds: number, atMax: boolean}} doom  From newDayFor (module/rules/days.mjs).
+ */
+export async function postDoomedWoundCard(actor, doom) {
+  const i18n = game.i18n;
+  const max = actor.system.wounds.max;
+  const lines = doom.added
+    ? [i18n.format("VARBORG.Day.DoomedWound", { wounds: doom.wounds, max }), i18n.localize("VARBORG.Day.DoomedHp")]
+    : [i18n.localize("VARBORG.Day.DoomedAtMax")];
+  if (doom.atMax) lines.push(i18n.format("VARBORG.Day.NextZeroDeathsDoor", { name: actor.name }));
+  const content = await renderTemplate(WOUND_TEMPLATE, {
+    title: i18n.format("VARBORG.Day.DoomedTitle", { name: actor.name }),
+    lines,
+    test: doom.added ? {
+      actorUuid: actor.uuid,
+      agonyType: "",
+      label: i18n.format("VARBORG.Agony.TestButton", { dr: WOUND_DR })
+    } : null
+  });
+  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content });
+}
+
+/**
  * The wound test: Toughness, starting at DR12 (the Dark Master may change
  * it). On a Failure or Ruin, a card with the Table of Agony button.
  * @returns {Promise<boolean|null>}  Whether it rolls on the table, or null if the dialog was closed.

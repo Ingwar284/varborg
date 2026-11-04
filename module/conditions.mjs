@@ -22,6 +22,7 @@ import { AGONY_EFFECTS } from "./rules/agony.mjs";
 import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
 import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
 import { conditionTimer, timerText, askConditionTimer } from "./timers.mjs";
+import { isStarving } from "./rules/days.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -117,6 +118,8 @@ export function sheetConditions(actor) {
   const active = CONDITIONS.filter(id => actor.statuses.has(id));
   return {
     fatigue: actor.system.fatigue,
+    // Characters only: days without food (rules 3.16, module/days.mjs).
+    food: isFoe ? null : { days: actor.system.daysWithoutFood, starving: isStarving(actor.system.daysWithoutFood) },
     persistent: sheetPersistent(actor),
     panic: sheetPanic(actor),
     injuries: sheetInjuries(actor),

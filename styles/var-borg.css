@@ -860,3 +860,42 @@
   font-style: italic;
   opacity: 0.8;
 }
+
+/* Days (step 32) */
+
+.var-borg-table-panel .day-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-bottom: 0.35rem;
+}
+
+.var-borg-table-panel .day-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.var-borg-table-panel button.new-day {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0 0.5rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+.day-ate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.4rem 0;
+}
+
+.day-ate-list .hint {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-sheet .condition-controls .starving {
+  color: #c62828;
+  font-weight: bold;
+}

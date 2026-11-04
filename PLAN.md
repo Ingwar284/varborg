@@ -477,7 +477,13 @@ dialogs and the scroll card. One open question: area spells and powers
 
 ## Milestone 6: Time and rest
 
-32. **Days.** A day counter and a **New day** button. At each new day:
+32. ~~**Days.**~~ Done: `module/rules/days.mjs` with `tests/days.test.mjs`,
+    `module/days.mjs` (the day setting, the New day dialog with an
+    "ate and drank" box per character, Doomed wound cards, starvation
+    damage), the day and New day button on the Table panel, days without
+    food on the character sheet (GAPS 142–143). Dead characters are left
+    out. Long Rests will call `newDay` in step 33.
+    A day counter and a **New day** button. At each new day:
     Doomed characters gain a wound, and a character without food for more
     than 2 days takes d6 damage.
     *Test:* make Example Hero Doomed and press New day. A wound is added.

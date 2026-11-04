@@ -65,6 +65,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       sanityLost: wholeNumber(),
       // Dark Vessels since the last Long Rest; the second kills (rules 3.6, GAPS 93).
       darkVessels: wholeNumber(),
+      // Days in a row without food or drink; more than 2 is starving (rules 3.16, GAPS 142).
+      daysWithoutFood: wholeNumber(),
       // Phobias from the Panic table, written by hand (GAPS 82).
       phobias: new StringField({ required: true, initial: "" }),
       // Rules 2.1, Step 6: Details.

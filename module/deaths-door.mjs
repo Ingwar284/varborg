@@ -337,6 +337,11 @@ export async function killCharacter(actor, reason) {
   });
 }
 
+/** Whether a character has died (module/days.mjs leaves the dead out of a new day). */
+export function isDead(actor) {
+  return stateOf(actor)?.stage === "dead";
+}
+
 /**
  * Before a character takes damage: at Death's Door any damage kills.
  * @param {Actor} actor

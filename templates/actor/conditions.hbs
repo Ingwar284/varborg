@@ -60,6 +60,13 @@
       <span>{{localize "VARBORG.Condition.FatigueLevel"}}</span>
       <input type="number" name="system.fatigue" value="{{conditions.fatigue}}" min="0" step="1">
     </label>
+    {{#if conditions.food}}
+    <label data-tooltip="{{localize 'VARBORG.Day.WithoutFoodHint'}}">
+      <span>{{localize "VARBORG.Day.WithoutFood"}}</span>
+      <input type="number" name="system.daysWithoutFood" value="{{conditions.food.days}}" min="0" step="1">
+    </label>
+    {{#if conditions.food.starving}}<span class="starving">{{localize "VARBORG.Day.StarvingTag"}}</span>{{/if}}
+    {{/if}}
   </div>
   <div class="condition-controls persistent-controls">
     <span>{{localize "VARBORG.Persistent.Label"}}</span>
