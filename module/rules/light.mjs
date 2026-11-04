@@ -150,7 +150,7 @@ export function lightAfterLoad(state, now, paused, launch) {
 }
 
 /**
- * Whether the Table panel needs redrawing after the timer was saved. The
+ * Whether the Light panel needs redrawing after the timer was saved. The
  * clock on the panel updates itself every second, so the save made every
  * minute (checkpointLight) does not redraw it: a redraw would clear what
  * the Dark Master is typing in the minutes box.

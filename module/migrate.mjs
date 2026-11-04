@@ -19,18 +19,25 @@
  *
  * Version 5 (step 36b, GAPS 164): feats and gear whose text says "once per
  * round", "once per encounter" or "once per day" get that frequency.
+ *
+ * Version 6 (step 37, GAPS 157, 158, 162): the world clock is set to the
+ * dawn of the day the day counter has reached (a new world: 1 Dawning,
+ * year 1, at 06:00), and Cowardice or Paranoid a character already has
+ * gets an end time on the clock, its hours counted from now.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
 import { frequencyFromText } from "./rules/uses.mjs";
 import { MIGRATION_OPTION } from "./data/character.mjs";
 import { lightFromName, DEFAULT_LIGHT_RANGE } from "./rules/light.mjs";
+import { dawnOf, dayAt, endsAfterHours } from "./rules/calendar.mjs";
+import { currentDay } from "./days.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 5;
+export const DATA_VERSION = 6;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -57,6 +64,7 @@ export async function migrateWorld() {
   if (version < 3) await markLights();
   if (version < 4) await setLightRanges();
   if (version < 5) await setFrequencies();
+  if (version < 6) await startClock();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -121,6 +129,21 @@ function setFrequencies() {
     const frequency = frequencyFromText(item.system.description);
     return frequency ? { "system.frequency": frequency } : null;
   });
+}
+
+/** Version 6: the clock at the day counter's dawn; hour-long Panic results timed on it. */
+async function startClock() {
+  const day = currentDay();
+  const now = dayAt(game.time.worldTime) === day ? game.time.worldTime : await game.time.set(dawnOf(day));
+  for (const actor of game.actors.filter(actor => actor.type === "character")) {
+    const updates = actor.effects
+      .filter(effect => {
+        const panic = effect.getFlag(SYSTEM, "panic");
+        return panic?.hours && !Number.isFinite(panic.endsAt);
+      })
+      .map(effect => ({ _id: effect.id, [`flags.${SYSTEM}.panic.endsAt`]: endsAfterHours(now, effect.getFlag(SYSTEM, "panic").hours) }));
+    if (updates.length) await actor.updateEmbeddedDocuments("ActiveEffect", updates);
+  }
 }
 
 /** Version 1: work the rolled scores back out and drop the old flag. */

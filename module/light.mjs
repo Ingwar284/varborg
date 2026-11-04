@@ -3,7 +3,7 @@
  * GAPS 31, 40, 150–154).
  *
  * One timer for the whole table, kept in a world setting and shown on the
- * Table panel (module/pools.mjs). It counts real time and pauses while the
+ * Light panel (module/panels.mjs). It counts real time and pauses while the
  * game is paused. Only the Dark Master's client changes it; a player's
  * light is sent there as a Foundry query.
  *
@@ -42,7 +42,7 @@ const TOKEN_FLAG = "lightBefore";
 /** How often the time left is written down while it counts (GAPS 152). */
 const CHECKPOINT_MS = 60 * 1000;
 
-/** Hook up the light timer. `onChange` redraws the Table panel. */
+/** Hook up the light timer. `onChange` redraws the Light panel. */
 export function registerLight(onChange) {
   game.settings.register(SYSTEM, SETTING, {
     scope: "world",
@@ -84,7 +84,7 @@ export function durationText(minutes) {
   return i18n.format(minutes === 1 ? "VARBORG.Light.Minute" : "VARBORG.Light.Minutes", { minutes });
 }
 
-/** What the Table panel shows. */
+/** What the Light panel shows. */
 export function lightContext() {
   const state = getLight();
   const left = timeLeft(state, now());

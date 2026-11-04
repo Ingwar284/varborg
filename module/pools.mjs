@@ -5,7 +5,7 @@
  * The Dark Master's client fills them at the start of each round, empties
  * them at the end of each round and when combat ends (module/combat.mjs).
  *
- * The Table panel shows both pools to everyone. Players spend Ember from it;
+ * The Ember and Gloom panel (module/panels.mjs) shows both pools to everyone. Players spend Ember from it;
  * only the Dark Master spends Gloom or adjusts a pool by hand. Players may
  * not change world settings, so a player's spend is sent to the Dark
  * Master's client (a Foundry query), which checks it and pays it.
@@ -13,37 +13,25 @@
  * The maths lives in module/rules/pools.mjs.
  */
 
-import { POOL, COSTS, fillForRound, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
-import { resetEmberAbilities } from "./dice/power.mjs";
-import { registerDays, currentDay, newDay } from "./days.mjs";
-import { rest } from "./rest.mjs";
-import { registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight } from "./light.mjs";
+import { POOL, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
 const QUERY = "var-borg.pools";
-const PANEL_ID = "var-borg-table-panel";
 
-const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
-
-/** Hook up the pools: the setting, the query, the panel and its button. */
-export function registerPools() {
+/**
+ * Hook up the pools: the setting and the query.
+ * @param {Function} onChange  Redraws the Ember and Gloom panel.
+ */
+export function registerPools(onChange) {
   game.settings.register(SYSTEM, SETTING, {
     scope: "world",
     config: false,
     type: Object,
     default: emptyPools(),
-    onChange: refreshPanel
+    onChange
   });
-  // The day counter is shown on the same panel (module/days.mjs).
-  registerDays(refreshPanel);
-  // And the light timer (module/light.mjs).
-  registerLight(refreshPanel);
   CONFIG.queries[QUERY] = (request, { user }) => changePool(request, user);
-
-  for (const hook of ["createCombat", "updateCombat", "deleteCombat"]) Hooks.on(hook, refreshPanel);
-  Hooks.on("getSceneControlButtons", addPanelButton);
-  Hooks.once("ready", () => new TablePanel().render({ force: true }));
 }
 
 /** Both pools as they stand. */
@@ -52,7 +40,7 @@ export function getPools() {
 }
 
 /** The combat that is running, or null. */
-function runningCombat() {
+export function runningCombat() {
   const combat = game.combats.active;
   return combat?.started ? combat : null;
 }
@@ -83,7 +71,7 @@ export async function drainPools() {
  * @param {string} pool  POOL.EMBER or POOL.GLOOM.
  * @param {number} cost
  * @param {Actor} [actor]  Who spends it (the caster, the foe), named on the
- *   chat line. Without one (the Table panel) the line names the user.
+ *   chat line. Without one (the Ember and Gloom panel) the line names the user.
  * @returns {Promise<boolean>} Whether the charges were spent.
  */
 export async function spendFromPool(pool, cost, actor = null) {
@@ -185,153 +173,10 @@ async function postSpend(pool, amount, left, user, actor) {
   });
 }
 
-function poolLabel(pool) {
+export function poolLabel(pool) {
   return game.i18n.localize(pool === POOL.GLOOM ? "VARBORG.Pools.Gloom" : "VARBORG.Pools.Ember");
 }
 
-function poolSymbol(pool) {
+export function poolSymbol(pool) {
   return pool === POOL.GLOOM ? "☾" : "🟒";
-}
-
-/* -------------------------------------------- */
-/*  The Table panel                              */
-/* -------------------------------------------- */
-
-/** Redraw the panel if it is open. */
-function refreshPanel() {
-  foundry.applications.instances.get(PANEL_ID)?.render();
-}
-
-/** A button in the token controls (left toolbar) that opens or closes the panel. */
-function addPanelButton(controls) {
-  const tools = controls.tokens?.tools;
-  if (!tools) return;
-  tools.varBorgTable = {
-    name: "varBorgTable",
-    title: "VARBORG.Pools.Open",
-    icon: "fa-solid fa-fire",
-    order: Object.keys(tools).length,
-    button: true,
-    visible: true,
-    onChange: () => {
-      const open = foundry.applications.instances.get(PANEL_ID);
-      if (open) open.close();
-      else new TablePanel().render({ force: true });
-    }
-  };
-}
-
-/**
- * The shared table panel: the day, the light timer, the Ember and Gloom
- * pools, and the Dark Master's New day, Rest, light and Reset ember
- * abilities buttons.
- */
-export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
-  static DEFAULT_OPTIONS = {
-    id: PANEL_ID,
-    classes: ["var-borg", "table-panel"],
-    window: { title: "VARBORG.Pools.Title", icon: "fa-solid fa-fire", resizable: false },
-    position: { width: 280, top: 70, left: 120 },
-    actions: {
-      spend: TablePanel.#onSpend,
-      adjust: TablePanel.#onAdjust,
-      resetEmber: TablePanel.#onResetEmber,
-      newDay: TablePanel.#onNewDay,
-      rest: TablePanel.#onRest,
-      lightStart: TablePanel.#onLightStart,
-      lightChange: TablePanel.#onLightChange,
-      lightOut: TablePanel.#onLightOut
-    }
-  };
-
-  static PARTS = {
-    main: { template: "systems/var-borg/templates/apps/table-panel.hbs" }
-  };
-
-  async _prepareContext(options) {
-    const combat = runningCombat();
-    const round = combat?.round ?? 0;
-    const isGM = game.user.isGM;
-    const pools = getPools();
-    return {
-      day: currentDay(),
-      light: lightContext(),
-      inCombat: !!combat,
-      round,
-      fill: combat ? fillForRound(round) : 0,
-      isGM,
-      pools: [POOL.EMBER, POOL.GLOOM].map(id => ({
-        id,
-        label: poolLabel(id),
-        symbol: poolSymbol(id),
-        left: pools[id],
-        canSpend: maySpend(id, isGM),
-        canAdjust: isGM && !!combat,
-        costs: COSTS.map(cost => ({ cost, disabled: !combat || !canPay(pools[id], cost) }))
-      }))
-    };
-  }
-
-  static async #onSpend(event, button) {
-    button.disabled = true;
-    await spendFromPool(button.dataset.pool, Number(button.dataset.cost));
-    this.render();
-  }
-
-  static async #onAdjust(event, button) {
-    await adjustPoolBy(button.dataset.pool, Number(button.dataset.delta));
-  }
-
-  /** Dark Master only: every character's ember abilities work once again outside combat (GAPS 22). */
-  static async #onResetEmber(event, button) {
-    if (!game.user.isGM) return;
-    button.disabled = true;
-    await resetEmberAbilities(game.actors.contents, { announce: true });
-    button.disabled = false;
-  }
-
-  /** Dark Master only: ask who ate, then start the next day (rules 3.16). */
-  static async #onNewDay(event, button) {
-    if (!game.user.isGM) return;
-    button.disabled = true;
-    try {
-      await newDay();
-    } finally {
-      button.disabled = false;
-    }
-  }
-
-  /** Dark Master only: start the light timer for the minutes typed in (rules 3.15). */
-  static async #onLightStart(event, button) {
-    if (!game.user.isGM) return;
-    const minutes = Number(this.element.querySelector("input[name='lightMinutes']")?.value);
-    if (!(minutes >= 1)) {
-      ui.notifications.warn("VARBORG.Light.Bad", { localize: true });
-      return;
-    }
-    await setLightMinutes(minutes);
-  }
-
-  /** Dark Master only: lengthen or shorten the running light timer. */
-  static async #onLightChange(event, button) {
-    if (!game.user.isGM) return;
-    await changeLightMinutes(Number(button.dataset.minutes));
-  }
-
-  /** Dark Master only: put the lights out. */
-  static async #onLightOut(event, button) {
-    if (!game.user.isGM) return;
-    await putOutLight();
-  }
-
-  /** Dark Master only: Short rest, Long rest or Downtime (rules 3.16). */
-  static async #onRest(event, button) {
-    if (!game.user.isGM) return;
-    button.disabled = true;
-    try {
-      await rest();
-    } finally {
-      button.disabled = false;
-    }
-  }
 }

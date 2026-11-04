@@ -31,7 +31,7 @@ import { registerAgony } from "./agony.mjs";
 import { registerDeathsDoor } from "./deaths-door.mjs";
 import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
-import { registerPools } from "./pools.mjs";
+import { registerPanels } from "./panels.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
 import { registerUses } from "./uses.mjs";
@@ -97,8 +97,9 @@ Hooks.once("init", () => {
   registerDeathsDoor();
   // Ammunition: an expendable roll after a combat it was used in (rules 4.1).
   registerAmmunition();
-  // The Ember and Gloom pools and the shared Table panel (rules 3.10).
-  registerPools();
+  // The shared panels, each with its own toolbar button: the calendar
+  // (days, clock, rest), the light timer, and the Ember and Gloom pools.
+  registerPanels();
   // The Shadowblight table button on a spell's Ruin card (rules 3.11).
   registerShadowblight();
   // The Toughness button on medicine box cards (step 34).

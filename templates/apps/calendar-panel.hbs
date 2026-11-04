@@ -1,0 +1,33 @@
+<section class="var-borg-table-panel var-borg-calendar-panel">
+  <div class="calendar-row">
+    <div class="calendar-date">
+      <span class="date-name">{{calendar.weekday}}, {{calendar.date}}</span>
+      <span class="day-number">{{localize "VARBORG.Day.Label" day=calendar.day}}</span>
+    </div>
+    <div class="calendar-time">
+      <span class="phase-name"><i class="{{calendar.phaseIcon}}"></i> {{calendar.phase}}</span>
+      <span class="clock">{{calendar.clock}}</span>
+    </div>
+    {{#if isGM}}
+      {{#if calendar.waiting}}
+        <p class="hint waiting">{{localize "VARBORG.Calendar.Waiting"}}</p>
+      {{/if}}
+      <div class="calendar-controls">
+        <button type="button" data-action="moveHours" data-hours="-1" {{#if calendar.atDawn}}disabled{{/if}}
+          data-tooltip="{{localize 'VARBORG.Calendar.HourBackTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.HourBackTooltip'}}">−1 h</button>
+        <button type="button" data-action="moveHours" data-hours="1"
+          data-tooltip="{{localize 'VARBORG.Calendar.HourOnTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.HourOnTooltip'}}">+1 h</button>
+        <button type="button" class="next-phase" data-action="nextPhase"
+          data-tooltip="{{localize 'VARBORG.Calendar.NextPhaseTooltip'}}"><i class="fa-solid fa-forward"></i> {{localize "VARBORG.Calendar.NextPhase"}}</button>
+      </div>
+    {{/if}}
+  </div>
+  {{#if isGM}}
+    <div class="day-row">
+      <button type="button" class="new-day" data-action="newDay"
+        data-tooltip="{{localize 'VARBORG.Day.NewDayTooltip'}}"><i class="fa-solid fa-sun"></i> {{localize "VARBORG.Day.NewDay"}}</button>
+      <button type="button" class="new-day rest" data-action="rest"
+        data-tooltip="{{localize 'VARBORG.Rest.Tooltip'}}"><i class="fa-solid fa-bed"></i> {{localize "VARBORG.Rest.Button"}}</button>
+    </div>
+  {{/if}}
+</section>

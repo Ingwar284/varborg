@@ -2,7 +2,7 @@
  * Days in Foundry (rules 3.16 Resting, "A new day", Starvation, Doomed;
  * GAPS 30, 142–143).
  *
- * The day number is a world setting, shown to everyone on the Table panel
+ * The day number is a world setting, shown to everyone on the Calendar panel
  * (module/pools.mjs). The Dark Master's New day button asks who ate and
  * drank the day before, then, for every living character:
  * - days without food go to 0 (ate) or up by 1 (did not);
@@ -15,10 +15,14 @@
  * lasting "until the next day begins" end (GAPS 161). Rests (module/rest.mjs) start their days with startDays, without
  * the dialog: those who rested slept.
  *
+ * Each new day also moves Foundry's world clock on to that day's dawn
+ * (step 37, module/calendar.mjs), unless the clock is already past it.
+ *
  * The maths lives in module/rules/days.mjs.
  */
 
 import { FIRST_DAY, STARVATION_DAMAGE, nextDay, newDayFor } from "./rules/days.mjs";
+import { dawnOf, dateOfDay } from "./rules/calendar.mjs";
 import { fatigueAfterNight } from "./rules/rest.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
 import { postDoomedWoundCard } from "./agony.mjs";
@@ -31,7 +35,7 @@ const { DialogV2 } = foundry.applications.api;
 const SYSTEM = "var-borg";
 const SETTING = "day";
 
-/** The day setting. Changing it redraws the Table panel. */
+/** The day setting. Changing it redraws the Calendar panel. */
 export function registerDays(onChange) {
   game.settings.register(SYSTEM, SETTING, {
     scope: "world",
@@ -45,6 +49,21 @@ export function registerDays(onChange) {
 /** Today's number. */
 export function currentDay() {
   return game.settings.get(SYSTEM, SETTING) ?? FIRST_DAY;
+}
+
+/** "3 Dawning, year 1": the date of a day number (GAPS 157). */
+export function formatDate(day) {
+  const date = dateOfDay(day);
+  return game.i18n.format("VARBORG.Calendar.Date", {
+    day: date.dayOfMonth,
+    month: game.i18n.localize(`VARBORG.Calendar.Month.${date.month}`),
+    year: date.year
+  });
+}
+
+/** "Thirdday": the weekday of a day number. */
+export function weekdayName(day) {
+  return game.i18n.localize(`VARBORG.Calendar.Weekday.${dateOfDay(day).weekday}`);
 }
 
 /** The characters a new day reaches: every character that is not dead. */
@@ -103,8 +122,12 @@ export async function startDays(characters, { ate, slept }, count = 1) {
   for (let i = 0; i < count; i++) {
     const day = nextDay(currentDay());
     await game.settings.set(SYSTEM, SETTING, day);
+    // The clock moves on to this day's dawn (step 37), never back.
+    const dawn = dawnOf(day);
+    if (game.time.worldTime < dawn) await game.time.set(dawn);
     await ChatMessage.create({
-      content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.Begins", { day })}</h3></div>`
+      content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.Begins", { day })}</h3>`
+        + `<p>${i18n.format("VARBORG.Calendar.DawnOf", { weekday: weekdayName(day), date: formatDate(day) })}</p></div>`
     });
     await dawnForEveryone();
     for (const actor of characters) {

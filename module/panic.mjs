@@ -11,7 +11,10 @@
  *   result     the result id, such as "sluggish"
  *   turns      turns left (1d10 turns), counted down at the end of the
  *              character's own turns in combat (GAPS 79)
- *   hours      hours (1d10 hours), removed by hand for now (GAPS 83)
+ *   hours      hours (1d10 hours) as rolled (GAPS 83)
+ *   endsAt     the world time at which those hours have passed; the
+ *              Dark Master's client ends the result then (step 37,
+ *              GAPS 162, module/calendar.mjs)
  *   freshTurn  gained during the character's own turn, which does not count
  * Adrenaline Rush and Rattled are used up by the next test (GAPS 80).
  * The Dark Master can also add a result from the sheet, for rules that say
@@ -27,6 +30,7 @@ import {
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { turnState } from "./combat.mjs";
 import { AGONY_RESULTS } from "./rules/agony.mjs";
+import { endsAfterHours, hoursLeft, hasEnded } from "./rules/calendar.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -143,7 +147,7 @@ async function applyPanicResult(actor, id) {
     await createPanicEffect(actor, id, rules.turns ? { turns: count } : { hours: count });
     lines.push(rules.turns ? turnsText("VARBORG.Panic.LastsTurns", count) : hoursText("VARBORG.Panic.LastsHours", count));
     if (rules.turns) lines.push(i18n.localize("VARBORG.Panic.CountsInCombat"));
-    else lines.push(i18n.localize("VARBORG.Panic.RemoveByHand"));
+    else lines.push(i18n.localize("VARBORG.Panic.EndsByClock"));
   }
   if (rules.next) {
     await createPanicEffect(actor, id, {});
@@ -173,6 +177,7 @@ async function applyPanicResult(actor, id) {
 /** Add a lasting result's effect. Gained on the character's own turn: that turn does not count. */
 async function createPanicEffect(actor, id, duration) {
   const freshTurn = Boolean(duration.turns) && turnState(actor).onOwnTurn;
+  if (duration.hours) duration = { ...duration, endsAt: endsAfterHours(game.time.worldTime, duration.hours) };
   await actor.createEmbeddedDocuments("ActiveEffect", [{
     name: panicName(id),
     img: PANIC_ICONS[id],
@@ -219,6 +224,25 @@ export async function countDownPanic(actor) {
   }
 }
 
+/** Whether the actor has a Panic result timed on the world clock. */
+export function hasClockPanic(actor) {
+  return panicEffects(actor).some(({ endsAt }) => Number.isFinite(endsAt));
+}
+
+/**
+ * The world clock has moved: Panic results whose hours have passed end
+ * (Cowardice, Paranoid; GAPS 162). Dark Master only.
+ * @param {Actor} actor
+ * @param {number} now  World time in seconds.
+ */
+export async function endPanicByClock(actor, now) {
+  for (const { result, endsAt, effect } of panicEffects(actor)) {
+    if (!hasEnded(endsAt, now)) continue;
+    await effect.delete();
+    await postLine(actor, game.i18n.format("VARBORG.Panic.Ends", { name: actor.name, result: panicName(result) }));
+  }
+}
+
 /**
  * After an ability test, contest, attack or defence: Adrenaline Rush and
  * Rattled are used up (GAPS 80), and so are Singed and Vomit from the
@@ -260,11 +284,11 @@ export function sheetPanic(actor) {
   if (actor.type !== "character") return null;
   const i18n = game.i18n;
   return {
-    list: panicEffects(actor).map(({ id, result, turns, hours, effect }) => ({
+    list: panicEffects(actor).map(({ id, result, turns, hours, endsAt, effect }) => ({
       id,
       img: effect.img,
       label: turns ? `${effect.name} (${turnsText("VARBORG.Panic.Left", turns)})`
-        : hours ? `${effect.name} (${hoursText("VARBORG.Panic.Left", hours)})`
+        : hours ? `${effect.name} (${hoursText("VARBORG.Panic.Left", Number.isFinite(endsAt) ? hoursLeft(endsAt, game.time.worldTime) : hours)})`
         : effect.name,
       text: i18n.localize(`VARBORG.Panic.Result.${result}.text`)
     })),

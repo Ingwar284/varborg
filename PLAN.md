@@ -573,7 +573,14 @@ the date, the time of day, the weather and the Misery, all on the Table
 panel, and overland travel that spends phases of the day. Each step waits
 on its open gaps.
 
-37. **Calendar and time of day.** VÅR BORG months and weekdays in
+37. ~~**Calendar and time of day.**~~ Done: `module/rules/calendar.mjs`
+    with `tests/calendar.test.mjs`, `module/calendar.mjs` (the VÅR BORG
+    calendar in Foundry's world clock, Next phase and ±1 hour for the
+    Dark Master, New day dialog at dawn, Cowardice and Paranoid ending by
+    the clock), the date row on the Table panel, each new day moving the
+    clock to its dawn, data version 6 sets the clock from the day counter
+    (GAPS 157, 158, 162, 165).
+    VÅR BORG months and weekdays in
     Foundry's world clock (`CONFIG.time.worldCalendarConfig`). The Table
     panel shows the date, weekday and phase (Morning, Afternoon, Night).
     Dark Master buttons: Next phase, and hours on or back if hours are

@@ -2,7 +2,7 @@
  * Resting in Foundry (rules 3.16 Resting, 3.13 Fatigued, 3.9 Fortune;
  * GAPS 111, 144–148).
  *
- * The Dark Master's Rest button on the Table panel asks which rest (Short,
+ * The Dark Master's Rest button on the Calendar panel asks which rest (Short,
  * Long or Downtime) and, for each living character not at Death's Door:
  * whether they take part, whether they ate and drank (Long rest and
  * Downtime) and whether the rest was interrupted. Then:

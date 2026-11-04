@@ -432,8 +432,8 @@
       "PipsLeft": "{label}: {left} of {max} left. Click a filled pip to spend it, an empty one to give it back."
     },
     "Pools": {
-      "Title": "The Table",
-      "Open": "The Table: Ember and Gloom",
+      "Title": "Ember and Gloom",
+      "Open": "Ember and Gloom: the pools",
       "Ember": "Ember",
       "Gloom": "Gloom",
       "Round": "Round {round}: both pools filled to {fill}. Unspent charges are lost at the end of the round.",
@@ -451,7 +451,7 @@
     "Day": {
       "Label": "Day {day}",
       "NewDay": "New day",
-      "NewDayTooltip": "Start the next day: Doomed characters gain a wound, those without food for more than 2 days take d6 damage, and those who did not sleep become Fatigued.",
+      "NewDayTooltip": "Start the next day and move the clock on to its dawn: Doomed characters gain a wound, those without food for more than 2 days take d6 damage, and those who did not sleep become Fatigued.",
       "DialogTitle": "Day {day} begins",
       "Ate": "Ate and drank",
       "Slept": "Slept",
@@ -776,7 +776,7 @@
       "Label": "Light",
       "Speaker": "Light",
       "KindLabel": "Light source",
-      "KindHint": "A torch or candle burns itself when lit. A lantern burns one Lantern oil carried by the same character. Lit lights share one real-time timer on the Table panel.",
+      "KindHint": "A torch or candle burns itself when lit. A lantern burns one Lantern oil carried by the same character. Lit lights share one real-time timer on the Light panel.",
       "Kind": {
         "none": "Not a light",
         "burns": "Burns itself (torch, candle)",
@@ -818,7 +818,9 @@
       "NoFuel": "{name} has no Lantern oil to burn in {item}.",
       "NoGM": "The Dark Master must be connected to light a light.",
       "GMOnly": "Only the Dark Master can change the light timer.",
-      "Bad": "That is not a valid number of minutes."
+      "Bad": "That is not a valid number of minutes.",
+      "Title": "The Light",
+      "Open": "The Light: the light timer"
     },
     "Persistent": {
       "Label": "Persistent damage",
@@ -869,7 +871,6 @@
       "LastsHours": "Lasts {count} {unit}.",
       "Left": "{count} {unit} left",
       "CountsInCombat": "In combat, one turn is used at the end of each of your turns (not the turn it was gained in). Outside combat, the Dark Master removes it.",
-      "RemoveByHand": "The Dark Master removes it when the time has passed.",
       "NextTest": "It counts for your next ability test, contest, attack or defence, and then ends.",
       "Fortune": "Fortune {from} → {to}.",
       "SanityLost": "Sanity {from} → {to}. Lost Sanity: {lost}. A Panic Triumph gives it back.",
@@ -969,7 +970,8 @@
           "name": "Heart Attack",
           "text": "You die instantly."
         }
-      }
+      },
+      "EndsByClock": "It ends by itself when that many hours have passed on the world clock."
     },
     "Agony": {
       "Title": "Table of Agony",
@@ -1670,6 +1672,50 @@
           "text": "You explode in a massive fireball that reaches 10 feet, plus 5 feet for each spell you know. It deals 1d6 damage for each spell you know."
         }
       }
+    },
+    "Calendar": {
+      "Name": "The Dusklands calendar",
+      "Description": "Ten months of 30 days, weeks of ten days. A new day begins at dawn.",
+      "Date": "{day} {month}, year {year}",
+      "DawnOf": "Dawn of {weekday}, {date}.",
+      "Month": {
+        "dawning": "Dawning",
+        "thawing": "Thawing",
+        "planting": "Planting",
+        "blossoming": "Blossoming",
+        "longday": "Longday",
+        "bearing": "Bearing",
+        "reaping": "Reaping",
+        "wilting": "Wilting",
+        "bleakening": "Bleakening",
+        "shortday": "Shortday"
+      },
+      "Weekday": {
+        "firstday": "Firstday",
+        "secondday": "Secondday",
+        "thirdday": "Thirdday",
+        "fourthday": "Fourthday",
+        "fifthday": "Fifthday",
+        "sixthday": "Sixthday",
+        "seventhday": "Seventhday",
+        "eighthday": "Eighthday",
+        "ninthday": "Ninthday",
+        "tenthday": "Tenthday"
+      },
+      "Phase": {
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "night": "Night"
+      },
+      "NextPhase": "Next phase",
+      "NextPhaseTooltip": "Move the clock on to the next noon, dusk or dawn. At dawn the New day dialog opens first.",
+      "HourOnTooltip": "Move the clock one hour on. Passing dawn opens the New day dialog first.",
+      "HourBackTooltip": "Move the clock one hour back. It cannot go back before this day's dawn.",
+      "NotBeforeDawn": "The clock cannot go back before the dawn of the day that has begun: what the new day did cannot be undone.",
+      "Waiting": "The clock has passed dawn, but the new day has not begun. Press New day.",
+      "DayWaiting": "The clock has passed dawn. Press New day on the Calendar panel to begin the new day.",
+      "Title": "The Calendar",
+      "Open": "The Calendar: date, time of day, New day and Rest"
     }
   }
 }
