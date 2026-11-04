@@ -156,9 +156,20 @@ function damageWeapons(actor) {
   return [...carried, ...bare];
 }
 
-/** The outcome line: the power's own text for this result, or the usual one. */
+/**
+ * The outcome line: the power's own text for this result, or the usual one.
+ * A spell's usual Ruin also calls for the Shadowblight table (rules 3.11).
+ */
 export function powerOutcomeText(power, tier) {
-  return power.outcomes?.[tier] || game.i18n.localize(`VARBORG.Power.Outcome.${tier}`);
+  const usual = power.kind === "spell" ? "VARBORG.Spell.Outcome" : "VARBORG.Power.Outcome";
+  const own = power.outcomes?.[tier];
+  if (own && power.kind === "spell" && tier === "ruin") return `${own} ${game.i18n.localize("VARBORG.Spell.ShadowblightNote")}`;
+  return own || game.i18n.localize(`${usual}.${tier}`);
+}
+
+/** A character's ember abilities: powers and spells (both can be Sustained). */
+function emberAbilities(actor) {
+  return [...(actor.itemTypes.power ?? []), ...(actor.itemTypes.spell ?? [])];
 }
 
 /**
@@ -334,11 +345,11 @@ export async function endPower(actor, power) {
 }
 
 /**
- * End of the actor's turn: a Sustained power that was neither started nor
- * sustained this turn ends. Runs on the Dark Master's client.
+ * End of the actor's turn: a Sustained power or spell that was neither
+ * started nor sustained this turn ends. Runs on the Dark Master's client.
  */
 export async function endOfTurnSustain(actor) {
-  for (const power of actor.itemTypes.power ?? []) {
+  for (const power of emberAbilities(actor)) {
     if (!power.system.sustaining) continue;
     const next = sustainAtEndOfTurn({ sustaining: power.system.sustaining, kept: power.system.kept });
     await power.update({ "system.sustaining": next.sustaining, "system.kept": next.kept });
@@ -347,7 +358,7 @@ export async function endOfTurnSustain(actor) {
 }
 
 /**
- * Unlock ember abilities again: each can be used once more outside combat
+ * Unlock ember abilities (powers and spells) again: each can be used once more outside combat
  * (rules 3.10, GAPS 22). Called when a combat ends (for the characters who
  * fought in it), by the Dark Master's Reset ember abilities button (for
  * every character), and later by rests. Runs on the Dark Master's client.
@@ -361,7 +372,7 @@ export async function resetEmberAbilities(actors, { announce = false } = {}) {
   let count = 0;
   for (const actor of new Set(actors)) {
     if (actor?.type !== "character") continue;
-    const updates = actor.itemTypes.power
+    const updates = emberAbilities(actor)
       .filter(power => power.system.usedOutside)
       .map(power => ({ _id: power.id, "system.usedOutside": false }));
     if (!updates.length) continue;

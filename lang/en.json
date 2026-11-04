@@ -14,7 +14,8 @@
       "class": "Class",
       "ancestry": "Ancestry",
       "background": "Background",
-      "power": "Power"
+      "power": "Power",
+      "spell": "Spell"
     }
   },
   "VARBORG": {
@@ -75,7 +76,9 @@
       "Ancestry": "VÅR BORG ancestry sheet",
       "Background": "VÅR BORG background sheet",
       "Power": "VÅR BORG power sheet",
-      "Powers": "Powers"
+      "Powers": "Powers",
+      "Spells": "Spells",
+      "Spell": "VÅR BORG spell sheet"
     },
     "Item": {
       "Price": "Price (s)",
@@ -1259,6 +1262,52 @@
       "ResourceLabel": "Resource",
       "ResourceHint": "Ember for a character's power, Gloom for a foe's gloom ability.",
       "GloomOnCharacter": "{name} is a gloom ability. Gloom abilities belong to foes and are used from the foe sheet."
+    },
+    "Spell": {
+      "SheetHint": "A spell, cast with Sanity against DR 11 + its ember cost (rules 3.11).",
+      "SpellList": "Spell list",
+      "SpellListHint": "Casting a spell outside your class's spell list is at Bane.",
+      "DamageHint": "The spell's damage dice, such as d8. Leave empty if it deals none.",
+      "DrHint": "Tests Sanity against DR{dr}.",
+      "OutcomesHint": "Only fill these in if the spell says something different. Empty uses the usual text. A Ruin always calls for the Shadowblight table.",
+      "Outcome": {
+        "triumph": "As described, double damage.",
+        "success": "As described.",
+        "failure": "Half damage (rounded down), no other effect.",
+        "ruin": "No effect. Roll on the Shadowblight table."
+      },
+      "ShadowblightNote": "Roll on the Shadowblight table.",
+      "CastTooltip": "Cast this spell",
+      "Cast": "Cast",
+      "DialogTitle": "Cast {name}",
+      "TestNote": "Tests Sanity against DR{dr}: DR 11 + ember cost.",
+      "How": "{ability} ({list} spell)",
+      "NoClass": "no class",
+      "Modifiers": "Spellcasting",
+      "OutsideList": "Outside your spell list (Bane)",
+      "OutsideListHint": "This is a {list} spell; your class's list is {classList}. Untick it for a feature that removes the Bane, such as a spell in the Wizard's spellbook.",
+      "OutsideListChoose": "This is a {list} spell. Your class chooses its spell list, so tick this if it is not the one you chose.",
+      "MetalArmour": "Metal armour (Bane)",
+      "MetalArmourWorn": "You wear {name}: metal armour of tier 2 or heavier smothers magic. Untick it only for a feature that removes the Bane.",
+      "MetalArmourHint": "Metal armour of tier 2 or heavier gives Bane. Weapons and non-metal armour do not.",
+      "Duress": "Under duress (Bane)",
+      "DuressHint": "Tick if you cast under duress, such as with a foe within melee range.",
+      "CastingTimeLabel": "Casting time",
+      "CastingTime": {
+        "normal": "As listed",
+        "minute": "1 minute (−2 DR)",
+        "hour": "1 hour (Boon)"
+      },
+      "SeveralCasters": "Several casters (Boon)",
+      "SeveralCastersHint": "Tick if more than one caster casts this spell, each spending the actions and ember in the same round.",
+      "OutsideListNote": "Outside your spell list ({list}): Bane.",
+      "MetalArmourNote": "Metal armour: Bane.",
+      "DuressNote": "Under duress: Bane.",
+      "CastingTimeNote": {
+        "minute": "Took 1 minute to cast: −2 DR.",
+        "hour": "Took 1 hour to cast: Boon."
+      },
+      "SeveralCastersNote": "Several casters: Boon."
     },
     "Gloom": {
       "Abilities": "Gloom abilities",

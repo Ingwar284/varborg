@@ -21,6 +21,7 @@ import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
 import { GLOOM_CONDITIONS, gloomTest } from "../module/rules/gloom.mjs";
 import { isRoundsFormula } from "../module/rules/timers.mjs";
 import { SPELL_LISTS, STARTING_DICE, wealthFormula } from "../module/rules/origins.mjs";
+import { SPELL_LISTS_OF_SPELLS, spellDr } from "../module/rules/spells.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -258,4 +259,24 @@ test("Power strike is 🟒1 ◈◈, an ordinary power: the boosted ability at DR
   assert.equal(powerAbility(strike, "presence"), "presence");
   assert.equal(strike.damage, "d6");
   assert.equal(strike.addsWeaponDamage, true);
+});
+
+test("example spells follow the spell rules", () => {
+  const spells = examples.filter(({ data }) => data.type === "spell");
+  assert.ok(spells.length, "there is at least one example spell");
+  for (const { file, data } of spells) {
+    const system = data.system;
+    assert.ok(SPELL_LISTS_OF_SPELLS.includes(system.spellList), `${file}: spell list`);
+    assert.ok(Number.isInteger(system.actions) && system.actions >= 0 && system.actions <= MAX_POWER_ACTIONS, `${file}: actions`);
+    if (system.damage) assert.ok(isDamageFormula(system.damage), `${file}: damage must be dice such as d8`);
+  }
+});
+
+test("And They Spoke of Fire is an Arcane spell, 🟒3 ◈◈, DR14, d8 damage", () => {
+  const fire = examples.find(({ data }) => data.name === "And They Spoke of Fire").data.system;
+  assert.equal(fire.spellList, "arcane");
+  assert.equal(fire.cost, 3);
+  assert.equal(fire.actions, 2);
+  assert.equal(spellDr(fire.cost), 14);
+  assert.equal(fire.damage, "d8");
 });

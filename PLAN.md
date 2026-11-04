@@ -435,7 +435,14 @@ or Improving. Old characters are brought over when the world loads
     *Test:* the Bellman tolls and Example Hero fails: Deafened shows
     "1 round left" and ends at the end of the Hero's next turn.
 
-30. **Spells.** Spell item. Rule, with tests: Sanity against DR 11 + cost.
+30. ~~**Spells.**~~ Done: `module/rules/spells.mjs` with
+    `tests/spells.test.mjs`, the spell item (`module/data/spell.mjs`, its
+    sheet), `module/dice/spell.mjs` (Cast; the dialog pre-ticks the
+    other-list and metal-armour Bane, and the card shares the power card),
+    a Spells section on the character sheet, Sustain and the ember reset
+    for spells too, example `and-they-spoke-of-fire.json` (GAPS 132–135).
+    A Ruin's card says to roll on the Shadowblight table; the roll is step 31.
+    Spell item. Rule, with tests: Sanity against DR 11 + cost.
     Bane for another spell list, for tier 2+ metal armour and for "foe in
     melee range". −2 DR for 1 minute of casting. Boon for 1 hour or for
     several casters. Boon and Bane cancel as in step 5.

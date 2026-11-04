@@ -11,9 +11,10 @@ import FoeSheet from "./sheets/foe-sheet.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
 import FeatData from "./data/feat.mjs";
 import PowerData from "./data/power.mjs";
+import SpellData from "./data/spell.mjs";
 import { ClassData, AncestryData, BackgroundData } from "./data/origins.mjs";
 import {
-  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, ClassSheet, AncestrySheet, BackgroundSheet
+  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, SpellSheet, ClassSheet, AncestrySheet, BackgroundSheet
 } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
@@ -50,7 +51,7 @@ Hooks.once("init", () => {
   Actors.registerSheet("var-borg", FoeSheet, { types: ["foe"], makeDefault: true, label: "VARBORG.Sheet.Foe" });
 
   // Item data and sheets: weapons, armour, shields, gear, containers, feats,
-  // powers, and the class, ancestry and background a character comes from.
+  // powers, spells, and the class, ancestry and background a character comes from.
   CONFIG.Item.dataModels.weapon = WeaponData;
   CONFIG.Item.dataModels.armour = ArmourData;
   CONFIG.Item.dataModels.shield = ShieldData;
@@ -58,6 +59,7 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.container = ContainerData;
   CONFIG.Item.dataModels.feat = FeatData;
   CONFIG.Item.dataModels.power = PowerData;
+  CONFIG.Item.dataModels.spell = SpellData;
   CONFIG.Item.dataModels.class = ClassData;
   CONFIG.Item.dataModels.ancestry = AncestryData;
   CONFIG.Item.dataModels.background = BackgroundData;
@@ -70,6 +72,7 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", ContainerSheet, { types: ["container"], makeDefault: true, label: "VARBORG.Sheet.Container" });
   Items.registerSheet("var-borg", FeatSheet, { types: ["feat"], makeDefault: true, label: "VARBORG.Sheet.Feat" });
   Items.registerSheet("var-borg", PowerSheet, { types: ["power"], makeDefault: true, label: "VARBORG.Sheet.Power" });
+  Items.registerSheet("var-borg", SpellSheet, { types: ["spell"], makeDefault: true, label: "VARBORG.Sheet.Spell" });
   Items.registerSheet("var-borg", ClassSheet, { types: ["class"], makeDefault: true, label: "VARBORG.Sheet.Class" });
   Items.registerSheet("var-borg", AncestrySheet, { types: ["ancestry"], makeDefault: true, label: "VARBORG.Sheet.Ancestry" });
   Items.registerSheet("var-borg", BackgroundSheet, { types: ["background"], makeDefault: true, label: "VARBORG.Sheet.Background" });

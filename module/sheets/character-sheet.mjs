@@ -12,7 +12,9 @@ import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
+import { castSpell } from "../dice/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
+import { spellDr } from "../rules/spells.mjs";
 import { raiseShield, lowerShield } from "../dice/defence.mjs";
 import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
@@ -117,6 +119,18 @@ function powerSummary(item) {
   ].filter(Boolean).join(" · ");
 }
 
+/** One short line about a spell: cost, actions, DR, spell list, Sustained. */
+function spellSummary(item) {
+  const i18n = game.i18n;
+  const system = item.system;
+  return [
+    `🟒${system.cost}${system.actions ? ` ${"◈".repeat(system.actions)}` : " ◇"}`,
+    i18n.format("VARBORG.Power.DrShort", { dr: spellDr(system.cost) }),
+    i18n.localize(`VARBORG.Class.SpellList.${system.spellList}`),
+    system.sustained ? i18n.localize("VARBORG.Power.SustainedLabel") : ""
+  ].filter(Boolean).join(" · ");
+}
+
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "character"],
@@ -140,6 +154,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       raiseShield: CharacterSheet.#onRaiseShield,
       lowerShield: CharacterSheet.#onLowerShield,
       usePower: CharacterSheet.#onUsePower,
+      castSpell: CharacterSheet.#onCastSpell,
       sustainPower: CharacterSheet.#onSustainPower,
       endPower: CharacterSheet.#onEndPower
     }
@@ -252,6 +267,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     context.powers = actor.itemTypes.power
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: powerSummary(item) }));
+
+    // Spells, with a line such as "🟒3 ◈◈ · DR14 · Arcane".
+    context.spells = (actor.itemTypes.spell ?? [])
+      .toSorted((a, b) => a.sort - b.sort)
+      .map(item => ({ item, summary: spellSummary(item) }));
 
     const carried = carrying(
       actor.items.map(item => ({ type: item.type, ...item.system })),
@@ -368,6 +388,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onUsePower(event, button) {
     const item = this.#itemFor(button);
     if (item) await usePower(this.document, item);
+  }
+
+  /** The wand button casts the spell. */
+  static async #onCastSpell(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await castSpell(this.document, item);
   }
 
   /** The Sustain button keeps a Sustained power going (one action in combat). */

@@ -10,8 +10,10 @@
 import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import FeatData from "../data/feat.mjs";
 import PowerData from "../data/power.mjs";
+import SpellData from "../data/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
+import { spellDr } from "../rules/spells.mjs";
 import { ClassData } from "../data/origins.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 
@@ -200,6 +202,43 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       label: `VARBORG.Tier.${key}`,
       value: system.outcomes[key],
       placeholder: i18n.localize(`VARBORG.Gloom.Outcome.${kind}.${key}`)
+    }));
+    return context;
+  }
+}
+
+/**
+ * Spells (rules 3.11): picture and name, then the spell list, cost,
+ * actions, damage, Sustained and the outcome texts, then a description.
+ */
+export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+  static DEFAULT_OPTIONS = {
+    classes: ["var-borg", "item"],
+    position: { width: 480, height: "auto" },
+    window: { resizable: true },
+    form: { submitOnChange: true }
+  };
+
+  static PARTS = {
+    header: { template: `${TEMPLATES}/origin-header.hbs` },
+    details: { template: `${TEMPLATES}/spell-details.hbs` },
+    description: { template: `${TEMPLATES}/item-description.hbs` }
+  };
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const system = this.document.system;
+    context.item = this.document;
+    context.system = system;
+    context.hint = "VARBORG.Spell.SheetHint";
+    context.spellLists = SpellData.SPELL_LISTS;
+    context.drHint = game.i18n.format("VARBORG.Spell.DrHint", { dr: spellDr(system.cost) });
+    context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({
+      key,
+      label: `VARBORG.Tier.${key}`,
+      value: system.outcomes[key],
+      placeholder: game.i18n.localize(`VARBORG.Spell.Outcome.${key}`)
     }));
     return context;
   }

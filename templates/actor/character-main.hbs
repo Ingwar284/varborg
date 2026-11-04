@@ -147,6 +147,42 @@
     </ul>
   </section>
 
+  <section class="inventory-section spells">
+    <h2>{{localize "VARBORG.Sheet.Spells"}}</h2>
+    <ul class="item-list">
+      {{#each spells}}
+      <li class="item-row feat-row power-row spell-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span>
+          {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}
+          {{#if item.system.usedOutside}}<span class="item-state used-outside" data-tooltip="{{localize 'VARBORG.Power.UsedOutsideHint'}}">{{localize "VARBORG.Power.UsedOutside"}}</span>{{/if}}</span>
+        {{#if item.system.sustaining}}
+        <button type="button" class="text-button" data-action="sustainPower" data-tooltip="{{localize 'VARBORG.Power.SustainTooltip'}}">
+          ◈ {{localize "VARBORG.Power.Sustain"}}
+        </button>
+        <button type="button" class="text-button" data-action="endPower" data-tooltip="{{localize 'VARBORG.Power.EndTooltip'}}">
+          {{localize "VARBORG.Power.End"}}
+        </button>
+        {{/if}}
+        <button type="button" class="icon-button" data-action="castSpell"
+                data-tooltip="{{localize 'VARBORG.Spell.CastTooltip'}}" aria-label="{{localize 'VARBORG.Spell.CastTooltip'}}">
+          <i class="fa-solid fa-wand-sparkles"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
   <section class="details">
     <h2>{{localize "VARBORG.Sheet.Details"}}</h2>
     <label data-tooltip="{{localize 'VARBORG.Panic.PhobiasHint'}}">

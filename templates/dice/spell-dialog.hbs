@@ -1,0 +1,53 @@
+<div class="var-borg-test-dialog power-dialog spell-dialog">
+  <p class="hint automatic">{{how}}</p>
+  <p class="hint automatic">{{useNote}}</p>
+  <p class="hint automatic">{{target}}</p>
+  <div class="form-group">
+    <label for="var-borg-spell-dr">{{localize "VARBORG.Test.DR"}}</label>
+    <select id="var-borg-spell-dr" name="dr">
+      {{#each drs}}
+      <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <fieldset>
+    <legend>{{localize "VARBORG.Spell.Modifiers"}}</legend>
+    <div class="form-group">
+      <label for="var-borg-spell-outside">{{localize "VARBORG.Spell.OutsideList"}}</label>
+      <input id="var-borg-spell-outside" type="checkbox" name="outsideList" {{checked outsideList}}>
+      <p class="hint">{{outsideListHint}}</p>
+    </div>
+    <div class="form-group">
+      <label for="var-borg-spell-metal">{{localize "VARBORG.Spell.MetalArmour"}}</label>
+      <input id="var-borg-spell-metal" type="checkbox" name="metalArmour" {{checked metalArmour}}>
+      <p class="hint">{{metalArmourHint}}</p>
+    </div>
+    <div class="form-group">
+      <label for="var-borg-spell-duress">{{localize "VARBORG.Spell.Duress"}}</label>
+      <input id="var-borg-spell-duress" type="checkbox" name="duress">
+      <p class="hint">{{localize "VARBORG.Spell.DuressHint"}}</p>
+    </div>
+    <div class="form-group">
+      <label for="var-borg-spell-time">{{localize "VARBORG.Spell.CastingTimeLabel"}}</label>
+      <select id="var-borg-spell-time" name="castingTime">{{selectOptions castingTimes selected="normal" localize=true}}</select>
+    </div>
+    <div class="form-group">
+      <label for="var-borg-spell-several">{{localize "VARBORG.Spell.SeveralCasters"}}</label>
+      <input id="var-borg-spell-several" type="checkbox" name="severalCasters">
+      <p class="hint">{{localize "VARBORG.Spell.SeveralCastersHint"}}</p>
+    </div>
+  </fieldset>
+  {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
+  {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
+  <div class="form-group">
+    <label for="var-borg-spell-boon">{{localize "VARBORG.Test.Boon"}}</label>
+    <input id="var-borg-spell-boon" type="checkbox" name="boon">
+    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
+  </div>
+  <div class="form-group">
+    <label for="var-borg-spell-bane">{{localize "VARBORG.Test.Bane"}}</label>
+    <input id="var-borg-spell-bane" type="checkbox" name="bane">
+    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
+  </div>
+  {{{fortuneFields}}}
+</div>
