@@ -883,14 +883,24 @@
   white-space: nowrap;
 }
 
-.day-ate-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
+.var-borg-tick-table {
+  width: 100%;
   margin: 0.4rem 0;
+  border-collapse: collapse;
 }
 
-.day-ate-list .hint {
+.var-borg-tick-table th,
+.var-borg-tick-table td {
+  padding: 0.15rem 0.3rem;
+  text-align: center;
+}
+
+.var-borg-tick-table th:first-child,
+.var-borg-tick-table td:first-child {
+  text-align: left;
+}
+
+.var-borg-tick-table .hint {
   font-style: italic;
   opacity: 0.8;
 }

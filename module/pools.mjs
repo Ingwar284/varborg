@@ -16,6 +16,7 @@
 import { POOL, COSTS, fillForRound, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
 import { resetEmberAbilities } from "./dice/power.mjs";
 import { registerDays, currentDay, newDay } from "./days.mjs";
+import { rest } from "./rest.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
@@ -219,7 +220,7 @@ function addPanelButton(controls) {
 
 /**
  * The shared table panel: the day, the Ember and Gloom pools, and the Dark
- * Master's New day and Reset ember abilities buttons. The light timer
+ * Master's New day, Rest and Reset ember abilities buttons. The light timer
  * comes in a later step.
  */
 export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -232,7 +233,8 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
       spend: TablePanel.#onSpend,
       adjust: TablePanel.#onAdjust,
       resetEmber: TablePanel.#onResetEmber,
-      newDay: TablePanel.#onNewDay
+      newDay: TablePanel.#onNewDay,
+      rest: TablePanel.#onRest
     }
   };
 
@@ -287,6 +289,17 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     button.disabled = true;
     try {
       await newDay();
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  /** Dark Master only: Short rest, Long rest or Downtime (rules 3.16). */
+  static async #onRest(event, button) {
+    if (!game.user.isGM) return;
+    button.disabled = true;
+    try {
+      await rest();
     } finally {
       button.disabled = false;
     }

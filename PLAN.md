@@ -488,7 +488,12 @@ dialogs and the scroll card. One open question: area spells and powers
     than 2 days takes d6 damage.
     *Test:* make Example Hero Doomed and press New day. A wound is added.
 
-33. **Resting.** Short rest heals to full HP. Long rest heals HP and one
+33. ~~**Resting.**~~ Done: `module/rules/rest.mjs` with
+    `tests/rest.test.mjs`, `module/rest.mjs` (the Rest button and dialog on
+    the Table panel, interrupted rest tests, rest cards, Infected damage,
+    Downtime clearing conditions), a "Slept" box on the New day dialog
+    (GAPS 144–148).
+    Short rest heals to full HP. Long rest heals HP and one
     wound, starts a new day and resets the Dark Vessel count. Downtime heals
     everything except Doomed and conditions that name their own cure. Any
     rest unlocks ember abilities. An interrupted rest is a Toughness DR12

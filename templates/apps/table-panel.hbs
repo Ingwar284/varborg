@@ -4,6 +4,8 @@
     {{#if isGM}}
       <button type="button" class="new-day" data-action="newDay"
         data-tooltip="{{localize 'VARBORG.Day.NewDayTooltip'}}">{{localize "VARBORG.Day.NewDay"}}</button>
+      <button type="button" class="new-day rest" data-action="rest"
+        data-tooltip="{{localize 'VARBORG.Rest.Tooltip'}}"><i class="fa-solid fa-bed"></i> {{localize "VARBORG.Rest.Button"}}</button>
     {{/if}}
   </div>
   {{#if inCombat}}

@@ -10,12 +10,15 @@
  *   Toughness test, or none at max wounds;
  * - a character with more than 2 days without food takes d6 damage (at
  *   0 HP this gains a wound as any damage does).
- * Long Rests will call newDay too (step 33).
+ * Not sleeping adds a level of Fatigued: the dialog asks who slept (GAPS
+ * 145). Rests (module/rest.mjs) start their days with startDays, without
+ * the dialog: those who rested slept.
  *
  * The maths lives in module/rules/days.mjs.
  */
 
 import { FIRST_DAY, STARVATION_DAMAGE, nextDay, newDayFor } from "./rules/days.mjs";
+import { fatigueAfterNight } from "./rules/rest.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
 import { postDoomedWoundCard } from "./agony.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
@@ -42,12 +45,12 @@ export function currentDay() {
 }
 
 /** The characters a new day reaches: every character that is not dead. */
-function livingCharacters() {
+export function livingCharacters() {
   return game.actors.filter(actor => actor.type === "character" && !isDead(actor));
 }
 
 /**
- * Dark Master only: ask who ate, then start the next day.
+ * Dark Master only: ask who ate and who slept, then start the next day.
  * @returns {Promise<boolean>}  Whether a new day began (false if the dialog was closed).
  */
 export async function newDay() {
@@ -59,12 +62,16 @@ export async function newDay() {
   const rows = characters.map(actor => {
     const days = actor.system.daysWithoutFood;
     const hint = days ? ` <span class="hint">${i18n.format("VARBORG.Day.SoFar", { days })}</span>` : "";
-    return `<label class="checkbox"><input type="checkbox" name="ate-${actor.id}" checked> `
-      + `${foundry.utils.escapeHTML(actor.name)}${hint}</label>`;
+    return `<tr><td>${foundry.utils.escapeHTML(actor.name)}${hint}</td>`
+      + `<td><input type="checkbox" name="ate-${actor.id}" checked></td>`
+      + `<td><input type="checkbox" name="slept-${actor.id}" checked></td></tr>`;
   }).join("");
   const content = characters.length
-    ? `<p>${i18n.localize("VARBORG.Day.AteQuestion")}</p><div class="day-ate-list">${rows}</div>`
+    ? `<table class="var-borg-tick-table"><thead><tr><th></th>`
+      + `<th>${i18n.localize("VARBORG.Day.Ate")}</th><th>${i18n.localize("VARBORG.Day.Slept")}</th></tr></thead>`
+      + `<tbody>${rows}</tbody></table>`
       + `<p class="hint">${i18n.localize("VARBORG.Day.AteHint")}</p>`
+      + `<p class="hint">${i18n.localize("VARBORG.Day.SleptHint")}</p>`
     : `<p>${i18n.localize("VARBORG.Day.NoCharacters")}</p>`;
   const data = await DialogV2.input({
     window: { title: i18n.format("VARBORG.Day.DialogTitle", { day }) },
@@ -74,18 +81,37 @@ export async function newDay() {
   });
   if (!data) return false;
 
-  await game.settings.set(SYSTEM, SETTING, day);
-  await ChatMessage.create({
-    content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.Begins", { day })}</h3></div>`
-  });
-  for (const actor of characters) {
-    await startDayFor(actor, !!data[`ate-${actor.id}`]);
-  }
+  const ate = new Set(characters.filter(actor => data[`ate-${actor.id}`]).map(actor => actor.id));
+  const slept = new Set(characters.filter(actor => data[`slept-${actor.id}`]).map(actor => actor.id));
+  await startDays(characters, { ate, slept });
   return true;
 }
 
+/**
+ * Start one or more new days (a Long Rest, Downtime or the New day button).
+ * Dark Master only. A character who dies on one day is left out of the next.
+ * @param {Actor[]} characters  The characters the days reach.
+ * @param {{ate: Set<string>, slept: Set<string>}} who  Actor ids that ate and drank, and that slept.
+ * @param {number} [count]  How many days.
+ */
+export async function startDays(characters, { ate, slept }, count = 1) {
+  if (!game.user.isGM) return;
+  const i18n = game.i18n;
+  for (let i = 0; i < count; i++) {
+    const day = nextDay(currentDay());
+    await game.settings.set(SYSTEM, SETTING, day);
+    await ChatMessage.create({
+      content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.Begins", { day })}</h3></div>`
+    });
+    for (const actor of characters) {
+      if (isDead(actor)) continue;
+      await startDayFor(actor, ate.has(actor.id), slept.has(actor.id));
+    }
+  }
+}
+
 /** Everything the start of a day does to one character. */
-async function startDayFor(actor, ate) {
+async function startDayFor(actor, ate, slept) {
   const system = actor.system;
   const outcome = newDayFor({
     daysWithoutFood: system.daysWithoutFood,
@@ -96,8 +122,11 @@ async function startDayFor(actor, ate) {
   });
 
   const changes = { "system.daysWithoutFood": outcome.daysWithoutFood };
+  const fatigue = fatigueAfterNight(system.fatigue, slept);
+  if (fatigue !== system.fatigue) changes["system.fatigue"] = fatigue;
   if (outcome.doom?.added) changes["system.wounds.value"] = outcome.doom.wounds;
   await actor.update(changes);
+  if (fatigue !== system.fatigue) await postLine(actor, game.i18n.format("VARBORG.Day.NoSleep", { name: actor.name, level: fatigue }));
   if (outcome.doom) await postDoomedWoundCard(actor, outcome.doom);
   if (outcome.starving) await starve(actor, outcome.daysWithoutFood);
 }
@@ -125,4 +154,12 @@ async function starve(actor, days) {
   if (await killedByDamage(actor, damage)) return;
   // At 0 HP the character data adds a wound and posts its card.
   await actor.update({ "system.hp.value": to });
+}
+
+/** A one-line card. */
+async function postLine(actor, text) {
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card day-card"><p>${text}</p></div>`
+  });
 }
