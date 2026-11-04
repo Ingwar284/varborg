@@ -129,10 +129,13 @@
   <section class="inventory-section">
     <h2>{{localize "VARBORG.Foe.Passives"}}</h2>
     <ul class="item-list">
-      {{#each passives as |item|}}
+      {{#each passives}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
         <img src="{{item.img}}" alt="">
-        <span class="feat-text"><strong>{{item.name}}</strong> {{item.system.description}}</span>
+        <span class="feat-text"><strong>{{item.name}}</strong> {{#if frequency}}<span class="item-summary">{{frequency}}</span>{{/if}}
+          {{#if item.system.frequencyUsed}}<span class="item-state used">{{localize "VARBORG.Uses.Used"}}</span>{{/if}}
+          {{item.system.description}}</span>
+        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
         <button type="button" class="icon-button" data-action="editItem"
                 data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
           <i class="fa-solid fa-pen"></i>

@@ -95,7 +95,9 @@
       {{#each feats}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
         <img src="{{item.img}}" alt="">
-        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span></span>
+        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span>
+          {{#each states}} <span class="item-state {{key}}">{{localize label}}</span>{{/each}}</span>
+        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
         <button type="button" class="icon-button" data-action="editItem"
                 data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
           <i class="fa-solid fa-pen"></i>

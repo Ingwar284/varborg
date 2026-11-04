@@ -34,5 +34,15 @@
       <input type="number" name="system.lightRange" value="{{system.lightRange}}" min="1" step="1">
     </label>
     {{/if}}
+    <label data-tooltip="{{localize 'VARBORG.Uses.FrequencyHint'}}">
+      <span>{{localize "VARBORG.Uses.FrequencyLabel"}}</span>
+      <select name="system.frequency">{{selectOptions frequencies selected=system.frequency localize=true}}</select>
+    </label>
+    {{#if system.frequency}}
+    <label data-tooltip="{{localize 'VARBORG.Uses.UsedHint'}}">
+      <span>{{localize "VARBORG.Uses.Used"}}</span>
+      <input type="checkbox" name="system.frequencyUsed" {{checked system.frequencyUsed}}>
+    </label>
+    {{/if}}
   </div>
 </section>

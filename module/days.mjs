@@ -11,7 +11,8 @@
  * - a character with more than 2 days without food takes d6 damage (at
  *   0 HP this gains a wound as any damage does).
  * Not sleeping adds a level of Fatigued: the dialog asks who slept (GAPS
- * 145). Rests (module/rest.mjs) start their days with startDays, without
+ * 145). For every actor, once-per-day uses come back and conditions
+ * lasting "until the next day begins" end (GAPS 161). Rests (module/rest.mjs) start their days with startDays, without
  * the dialog: those who rested slept.
  *
  * The maths lives in module/rules/days.mjs.
@@ -22,6 +23,8 @@ import { fatigueAfterNight } from "./rules/rest.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
 import { postDoomedWoundCard } from "./agony.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
+import { resetLimitedUses, actorsForNewDay } from "./uses.mjs";
+import { endNewDayTimers } from "./timers.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -103,11 +106,29 @@ export async function startDays(characters, { ate, slept }, count = 1) {
     await ChatMessage.create({
       content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.Begins", { day })}</h3></div>`
     });
+    await dawnForEveryone();
     for (const actor of characters) {
       if (isDead(actor)) continue;
       await startDayFor(actor, ate.has(actor.id), slept.has(actor.id));
     }
   }
+}
+
+/**
+ * For every actor, characters and foes: once-per-day uses come back (with a
+ * line saying which), and conditions lasting "until the next day begins"
+ * end (rules 3.16, GAPS 161).
+ */
+async function dawnForEveryone() {
+  const actors = actorsForNewDay().filter(actor => !isDead(actor));
+  const back = await resetLimitedUses(actors, "newDay");
+  for (const [actor, names] of back) {
+    await postLine(actor, game.i18n.format("VARBORG.Uses.BackToday", {
+      name: foundry.utils.escapeHTML(actor.name),
+      items: names.map(name => foundry.utils.escapeHTML(name)).join(", ")
+    }));
+  }
+  await endNewDayTimers(actors);
 }
 
 /** Everything the start of a day does to one character. */

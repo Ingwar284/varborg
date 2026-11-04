@@ -12,6 +12,7 @@ import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { lightItem, canLightItem } from "../light.mjs";
+import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
 import { castSpell } from "../dice/spell.mjs";
@@ -89,6 +90,7 @@ function itemStates(item) {
   if (system.usedUp) {
     states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
   }
+  if (hasLimitedUse(item) && system.frequencyUsed) states.push({ key: "used", label: "VARBORG.Uses.Used" });
   return states;
 }
 
@@ -153,6 +155,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollExpendable: CharacterSheet.#onRollExpendable,
       useMedicine: CharacterSheet.#onUseMedicine,
       lightItem: CharacterSheet.#onLightItem,
+      useLimited: CharacterSheet.#onUseLimited,
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
       attack: CharacterSheet.#onAttack,
@@ -246,6 +249,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canRaise: item.type === "shield" && item.system.equipped && !item.system.destroyed && !system.shieldRaised,
           canMedicine: canUseMedicine(item),
           canLight: canLightItem(item),
+          ...useButton(item),
           canExpendable: canRollExpendable(item.system),
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
@@ -268,8 +272,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         item,
         summary: [
           game.i18n.localize(`VARBORG.Feat.Source.${item.system.source}`),
-          item.system.improving ? game.i18n.localize("VARBORG.Feat.Improving") : ""
-        ].filter(Boolean).join(" · ")
+          item.system.improving ? game.i18n.localize("VARBORG.Feat.Improving") : "",
+          hasLimitedUse(item) ? frequencyLabel(item) : ""
+        ].filter(Boolean).join(" · "),
+        states: itemStates(item),
+        ...useButton(item)
       }));
 
     // Powers, with a line such as "🟒1 ◈◈ · DR12 · Class power".
@@ -370,6 +377,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onLightItem(event, button) {
     const item = this.#itemFor(button);
     if (item) await lightItem(this.document, item);
+  }
+
+  /** The Use button marks a once-per-round, -encounter or -day item used (GAPS 161). */
+  static async #onUseLimited(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await useLimitedItem(this.document, item);
   }
 
   /** The Fire button empties a loaded weapon with Reload. */

@@ -13,6 +13,18 @@
         <span>{{localize "VARBORG.Feat.Improving"}}</span>
       </label>
       {{/if}}
+      {{#if frequencies}}
+      <label data-tooltip="{{localize 'VARBORG.Uses.FrequencyHint'}}">
+        <span>{{localize "VARBORG.Uses.FrequencyLabel"}}</span>
+        <select name="system.frequency">{{selectOptions frequencies selected=system.frequency localize=true}}</select>
+      </label>
+      {{#if system.frequency}}
+      <label data-tooltip="{{localize 'VARBORG.Uses.UsedHint'}}">
+        <input type="checkbox" name="system.frequencyUsed" {{checked system.frequencyUsed}}>
+        <span>{{localize "VARBORG.Uses.Used"}}</span>
+      </label>
+      {{/if}}
+      {{/if}}
     </div>
   </div>
 </header>

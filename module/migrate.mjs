@@ -16,9 +16,13 @@
  * Version 4 (step 36, GAPS 154): torches, candles and lanterns get their
  * light range from rules 4.1 (40, 10 and 60 feet). Other lights keep the
  * usual 30 feet.
+ *
+ * Version 5 (step 36b, GAPS 164): feats and gear whose text says "once per
+ * round", "once per encounter" or "once per day" get that frequency.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
+import { frequencyFromText } from "./rules/uses.mjs";
 import { MIGRATION_OPTION } from "./data/character.mjs";
 import { lightFromName, DEFAULT_LIGHT_RANGE } from "./rules/light.mjs";
 
@@ -26,7 +30,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 4;
+export const DATA_VERSION = 5;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -52,6 +56,7 @@ export async function migrateWorld() {
   if (version < 2) await markMedicineBoxes();
   if (version < 3) await markLights();
   if (version < 4) await setLightRanges();
+  if (version < 5) await setFrequencies();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -60,9 +65,18 @@ export async function migrateWorld() {
  * Update gear in the Items tab and on every actor.
  * @param {(item: Item) => object|null} change  The changes for one item, or null for none.
  */
-async function updateGear(change) {
+function updateGear(change) {
+  return updateItems(["gear"], change);
+}
+
+/**
+ * Update items of these types in the Items tab and on every actor.
+ * @param {string[]} types
+ * @param {(item: Item) => object|null} change  The changes for one item, or null for none.
+ */
+async function updateItems(types, change) {
   const updatesFor = items => items
-    .filter(item => item.type === "gear")
+    .filter(item => types.includes(item.type))
     .map(item => {
       const changes = change(item);
       return changes ? { _id: item.id, ...changes } : null;
@@ -94,6 +108,18 @@ function setLightRanges() {
     if (!item.system.light || item.system.lightRange !== DEFAULT_LIGHT_RANGE) return null;
     const light = lightFromName(item.name);
     return light && light.lightRange !== DEFAULT_LIGHT_RANGE ? { "system.lightRange": light.lightRange } : null;
+  });
+}
+
+/**
+ * Version 5: feats and gear whose text says "once per round", "once per
+ * encounter" or "once per day" get that frequency (GAPS 164).
+ */
+function setFrequencies() {
+  return updateItems(["feat", "gear"], item => {
+    if (item.system.frequency) return null;
+    const frequency = frequencyFromText(item.system.description);
+    return frequency ? { "system.frequency": frequency } : null;
   });
 }
 

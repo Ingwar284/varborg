@@ -92,6 +92,7 @@
           <i class="fa-solid fa-fire-flame-curved"></i>
         </button>
         {{/if}}
+        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
         {{#if canExpendable}}
         <button type="button" class="icon-button" data-action="rollExpendable"
                 data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"

@@ -25,6 +25,7 @@ import { askForAmmoRolls } from "./ammunition.mjs";
 import { fillPools, drainPools } from "./pools.mjs";
 import { endOfTurnSustain, resetEmberAbilities } from "./dice/power.mjs";
 import { startOfTurnTimers, endOfTurnTimers, endCombatTimers } from "./timers.mjs";
+import { resetLimitedUses } from "./uses.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -74,6 +75,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
   async _onStartRound(context) {
     await super._onStartRound(context);
     await fillPools(context.round);
+    // Once-per-round uses come back (GAPS 161).
+    await resetLimitedUses(this.combatants.map(combatant => combatant.actor), "roundStart");
   }
 
   /** End of each round: whatever is left in both pools is lost (rules 3.10). */
@@ -120,6 +123,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     if (this.started) resetEmberAbilities(this.combatants.map(combatant => combatant.actor));
     // Timed conditions end with the fight (GAPS 130).
     endCombatTimers(this.combatants.map(combatant => combatant.actor).filter(Boolean));
+    // Once-per-round and once-per-encounter uses come back (GAPS 161).
+    resetLimitedUses(this.combatants.map(combatant => combatant.actor), "combatEnd");
   }
 }
 

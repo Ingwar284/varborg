@@ -6,11 +6,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  TIMER_KINDS, isRoundsFormula, newTimer, timerAtEndOfTurn, timerAtStartOfTurn, timerEndsWithCombat, longerTimer
+  TIMER_KINDS, isRoundsFormula, newTimer, timerAtEndOfTurn, timerAtStartOfTurn, timerEndsWithCombat,
+  timerEndsWithNewDay, longerTimer
 } from "../module/rules/timers.mjs";
 
-test("timer kinds: rounds, until the start of its next turn, until the end of the encounter", () => {
-  assert.deepEqual(TIMER_KINDS, ["rounds", "startOfTurn", "encounter"]);
+test("timer kinds: rounds, until the start of its next turn, until the end of the encounter, until the next day", () => {
+  assert.deepEqual(TIMER_KINDS, ["rounds", "startOfTurn", "encounter", "nextDay"]);
   assert.throws(() => newTimer("minutes"), RangeError);
   assert.throws(() => newTimer("rounds", { rounds: 0 }), RangeError);
   assert.throws(() => newTimer("rounds"), RangeError);
@@ -57,10 +58,22 @@ test("'until the end of the encounter' only ends with combat; every timer ends w
   const timer = newTimer("encounter");
   assert.equal(timerAtEndOfTurn(timer).ends, false);
   assert.equal(timerAtStartOfTurn(timer).ends, false);
-  for (const kind of TIMER_KINDS) {
+  for (const kind of TIMER_KINDS.filter(kind => kind !== "nextDay")) {
     assert.equal(timerEndsWithCombat(newTimer(kind, { rounds: 2 })), true);
   }
   assert.equal(timerEndsWithCombat(null), false);
+});
+
+test("'until the next day begins' outlasts combat and ends with the new day (GAPS 161)", () => {
+  const day = newTimer("nextDay");
+  assert.equal(timerEndsWithCombat(day), false);
+  assert.equal(timerAtEndOfTurn(day).ends, false);
+  assert.equal(timerAtStartOfTurn(day).ends, false);
+  assert.equal(timerEndsWithNewDay(day), true);
+  assert.equal(timerEndsWithNewDay(newTimer("encounter")), false);
+  assert.equal(timerEndsWithNewDay(null), false);
+  assert.equal(longerTimer(newTimer("encounter"), day), day);
+  assert.equal(longerTimer(day, newTimer("rounds", { rounds: 9 })), day);
 });
 
 test("gained again: the longer lasting one stays; no timer stays no timer (GAPS 131)", () => {

@@ -8,6 +8,7 @@
  */
 
 import { FEAT_SOURCES } from "../rules/feats.mjs";
+import { frequencyFields, presetFrequency } from "./uses.mjs";
 
 const { StringField, BooleanField } = foundry.data.fields;
 
@@ -18,8 +19,17 @@ export default class FeatData extends foundry.abstract.TypeDataModel {
       source: new StringField({ required: true, choices: FEAT_SOURCES, initial: FEAT_SOURCES[0] }),
       // Gained through Improving (rules 2.8). Only these count for the
       // Death's Door Sanity test (GAPS 16).
-      improving: new BooleanField({ initial: false })
+      improving: new BooleanField({ initial: false }),
+      // Once per round, encounter or day, and whether it is used (GAPS 161).
+      ...frequencyFields()
     };
+  }
+
+  /** On creation, "Once per day" in the text sets the frequency (GAPS 164). */
+  async _preCreate(data, options, user) {
+    const allowed = await super._preCreate(data, options, user);
+    if (allowed === false) return false;
+    presetFrequency(this, data);
   }
 
   static SOURCES = Object.fromEntries(FEAT_SOURCES.map(key => [key, `VARBORG.Feat.Source.${key}`]));

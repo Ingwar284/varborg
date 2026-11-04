@@ -15,6 +15,7 @@ import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
 import { spellDr } from "../rules/spells.mjs";
 import { ClassData } from "../data/origins.mjs";
+import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -104,6 +105,7 @@ export class GearSheet extends EquipmentSheet {
     context.lightKinds = GearData.LIGHT_KINDS;
     context.showLightMinutes = ["burns", "fuel"].includes(this.document.system.light);
     context.showLightRange = ["burns", "lamp"].includes(this.document.system.light);
+    context.frequencies = FREQUENCY_LABELS;
     return context;
   }
 }
@@ -137,6 +139,7 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.sources = FeatData.SOURCES;
     // Foes never improve, so their passives can't be gained through Improving.
     context.canImprove = this.document.actor?.type !== "foe" && this.document.system.source !== "passive";
+    context.frequencies = FREQUENCY_LABELS;
     return context;
   }
 }

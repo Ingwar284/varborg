@@ -15,6 +15,7 @@ import {
 } from "../rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../rules/carrying.mjs";
 import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rules/light.mjs";
+import { frequencyFields, presetFrequency } from "./uses.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -188,8 +189,17 @@ export class GearData extends CarriedData {
       lightMinutes: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_MINUTES }),
       // How far it lights, in the scene's units (feet); its character's token
       // shines this far while the light timer runs (GAPS 154).
-      lightRange: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_RANGE })
+      lightRange: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_RANGE }),
+      // Once per round, encounter or day, and whether it is used (GAPS 161).
+      ...frequencyFields()
     };
+  }
+
+  /** On creation, "Once per day" in the text sets the frequency (GAPS 164). */
+  async _preCreate(data, options, user) {
+    const allowed = await super._preCreate(data, options, user);
+    if (allowed === false) return false;
+    presetFrequency(this, data);
   }
 
   static EXPENDABLE_DICE = labels(EXPENDABLE_DICE, "Expendable");

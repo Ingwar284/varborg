@@ -14,6 +14,7 @@ import { GLOOM_ACTIONS } from "../rules/gloom.mjs";
 import { rollMorale } from "../dice/morale.mjs";
 import { canRollMorale } from "../rules/morale.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
+import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -48,7 +49,8 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       deleteItem: FoeSheet.#onDeleteItem,
       attack: FoeSheet.#onAttack,
       useGloom: FoeSheet.#onUseGloom,
-      rollMorale: FoeSheet.#onRollMorale
+      rollMorale: FoeSheet.#onRollMorale,
+      useLimited: FoeSheet.#onUseLimited
     }
   };
 
@@ -80,7 +82,10 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.gloomAbilities = actor.itemTypes.power
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, cost: gloomCostLabel(item.system), isGloom: item.system.resource === "gloom" }));
-    context.passives = actor.itemTypes.feat.toSorted((a, b) => a.sort - b.sort);
+    // Passives, with a Use button for once per round, encounter or day (GAPS 161).
+    context.passives = actor.itemTypes.feat
+      .toSorted((a, b) => a.sort - b.sort)
+      .map(item => ({ item, frequency: hasLimitedUse(item) ? frequencyLabel(item) : "", ...useButton(item) }));
     context.conditions = sheetConditions(actor);
     return context;
   }
@@ -124,6 +129,12 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static async #onUseGloom(event, button) {
     const item = this.#itemFor(button);
     if (item) await useGloomAbility(this.document, item);
+  }
+
+  /** The Use button marks a once-per-round, -encounter or -day passive used (GAPS 161). */
+  static async #onUseLimited(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await useLimitedItem(this.document, item);
   }
 
   /** The Morale button rolls 2d6 against the foe's Morale (rules 3.12). */

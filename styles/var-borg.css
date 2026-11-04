@@ -812,10 +812,18 @@
 
 /* Ember abilities outside combat (step 28) */
 
-.var-borg-sheet .item-row .item-state.used-outside {
+.var-borg-sheet .item-row .item-state.used-outside,
+.var-borg-sheet .item-row .item-state.used {
   margin-left: 0.3rem;
   color: #757575;
   font-style: italic;
+}
+
+/* Once per round, encounter or day (step 36b) */
+
+.var-borg-sheet .item-row button.use-limited:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 .var-borg-table-panel button.reset-ember {

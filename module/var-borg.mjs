@@ -34,6 +34,7 @@ import { registerMigrations, migrateWorld } from "./migrate.mjs";
 import { registerPools } from "./pools.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
+import { registerUses } from "./uses.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -102,6 +103,8 @@ Hooks.once("init", () => {
   registerShadowblight();
   // The Toughness button on medicine box cards (step 34).
   registerMedicine();
+  // The Use button on once-per-round, -encounter and -day items (step 36b).
+  registerUses();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

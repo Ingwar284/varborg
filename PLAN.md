@@ -551,7 +551,13 @@ Foundry is still to do.
     *Test:* put Example Hero at Death's Door, use the medicine box's Heal
     on them and pass the test. Death's Door goes and HP is above 0.
 
-36b. **Once per day.** Items and effects with "once per day" or "until the
+36b. ~~**Once per day.**~~ Done: `module/rules/uses.mjs` with
+    `tests/uses.test.mjs`, `module/uses.mjs` (the Use button on feats, foe
+    passives and gear, its card, the resets), a Use menu and Used box on
+    feat and gear sheets, resets at round start, combat end and each new
+    day, the "Until the next day begins" condition timer, data version 5
+    sets frequencies from item text (GAPS 161, 164).
+    Items and effects with "once per day" or "until the
     next day begins" (GAPS 161). A once-per-day use is marked used and comes
     back at each new day (New day, Long Rest, Downtime); an effect that
     lasts until the next day begins ends then. How items are marked and
@@ -621,6 +627,8 @@ rest at a wayshrine.
 37. **Relics.** Relic item: use it (then roll the expendable d20, or daily
     for always-on relics), its Last Rite (always works and destroys the
     relic), and its "if lost" drawback shown when it is destroyed.
+    "Once per day" uses the frequency and Use button of step 36b (GAPS
+    164), and the Use button also rolls the expendable d20.
     *Example:* Shard of the Great Brazier (+3 to the Ember pool).
     *Test:* use the Shard. The pool goes up by 3 and the d20 is rolled.
 

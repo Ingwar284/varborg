@@ -754,6 +754,24 @@
       "Cured": "{name} is no longer Infected.",
       "BleedingEnds": "{name}'s persistent bleeding ends."
     },
+    "Uses": {
+      "FrequencyLabel": "Use",
+      "FrequencyHint": "How often it can be used. Once used, its Use button is off until it comes back: once per round at the start of each round and when combat ends, once per encounter when combat ends, once per day at each new day. New items take this from “once per …” in their text.",
+      "Frequency": {
+        "none": "No limit",
+        "round": "Once per round",
+        "encounter": "Once per encounter",
+        "day": "Once per day"
+      },
+      "Used": "Used",
+      "UsedHint": "Used: its Use button is off until it comes back. Untick to give the use back by hand.",
+      "Tooltip": "Use it ({frequency}). Posts its text to chat and marks it used.",
+      "UsedTooltip": "Already used. It comes back on its own, or untick Used on the item.",
+      "AlreadyUsed": "{item} is already used ({frequency}).",
+      "CardTitle": "{name} uses {item}",
+      "CardLine": "{frequency}: used until it comes back.",
+      "BackToday": "{name} can use these again today: {items}."
+    },
     "Light": {
       "Label": "Light",
       "Speaker": "Light",
@@ -1538,7 +1556,8 @@
       "Kind": {
         "rounds": "For a number of rounds",
         "startOfTurn": "Until the start of its next turn",
-        "encounter": "Until the end of the encounter"
+        "encounter": "Until the end of the encounter",
+        "nextDay": "Until the next day begins"
       },
       "RoundLeft": "1 round left",
       "RoundsLeft": "{rounds} rounds left",
@@ -1550,7 +1569,7 @@
       "Ended": "{name} is no longer {condition}: its time is up.",
       "Button": "Set how long this condition lasts",
       "DialogTitle": "{condition} on {name}: how long?",
-      "DialogHint": "In combat, rounds count down at the end of each of its own turns; the turn it was gained in does not count. “Until the end of its next turn” is 1 round. Every timed condition ends when combat ends. Outside combat the timer does not run.",
+      "DialogHint": "In combat, rounds count down at the end of each of its own turns; the turn it was gained in does not count. “Until the end of its next turn” is 1 round. Every timed condition ends when combat ends, except “Until the next day begins”, which ends at the next new day. Outside combat the timer does not run.",
       "KindLabel": "Lasts",
       "RoundsLabel": "Rounds",
       "RoundsHint": "A number such as 1, or dice such as d4. Dice are rolled when it is set.",

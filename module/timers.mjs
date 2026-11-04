@@ -6,7 +6,9 @@
  * the creature's own turns, "until the start of its next turn" when its
  * turn starts (module/combat.mjs). When combat ends, every timed condition
  * ends. Outside combat nothing counts down; the timer waits for the next
- * fight's end, or the condition is removed by hand.
+ * fight's end, or the condition is removed by hand. "Until the next day
+ * begins" is the exception: it outlasts combat and ends at the next new
+ * day (module/days.mjs, GAPS 161).
  *
  * Timers are set by a gloom ability's Take button (module/dice/defence.mjs)
  * or by the clock button beside a condition on the sheet.
@@ -15,7 +17,8 @@
  */
 
 import {
-  TIMER_KINDS, isRoundsFormula, newTimer, timerAtEndOfTurn, timerAtStartOfTurn, timerEndsWithCombat, longerTimer
+  TIMER_KINDS, isRoundsFormula, newTimer, timerAtEndOfTurn, timerAtStartOfTurn, timerEndsWithCombat,
+  timerEndsWithNewDay, longerTimer
 } from "./rules/timers.mjs";
 import { turnState } from "./combat.mjs";
 
@@ -125,6 +128,15 @@ export async function endCombatTimers(actors) {
   for (const actor of new Set(actors)) {
     for (const effect of timedEffects(actor)) {
       if (timerEndsWithCombat(effect.getFlag(SYSTEM, FLAG))) await endCondition(actor, effect);
+    }
+  }
+}
+
+/** A new day begins: "until the next day begins" ends (rules 3.16, GAPS 161). */
+export async function endNewDayTimers(actors) {
+  for (const actor of new Set(actors)) {
+    for (const effect of timedEffects(actor)) {
+      if (timerEndsWithNewDay(effect.getFlag(SYSTEM, FLAG))) await endCondition(actor, effect);
     }
   }
 }

@@ -13,6 +13,8 @@
  * - When combat ends, every timed condition ends: the leftover rounds have
  *   passed, and "until the end of the encounter" is over.
  * Durations in minutes or hours are not timed yet.
+ * "Until the next day begins" (rules 3.16, GAPS 161) ends at the next new
+ * day, not when combat ends, and outlasts every other timer.
  */
 
 import { countDown } from "./panic.mjs";
@@ -21,9 +23,10 @@ import { countDown } from "./panic.mjs";
  * The kinds of timer:
  * rounds       counts down at the end of the creature's own turns;
  * startOfTurn  ends when the creature's next turn starts;
- * encounter    ends when combat ends.
+ * encounter    ends when combat ends;
+ * nextDay      ends when the next day begins.
  */
-export const TIMER_KINDS = ["rounds", "startOfTurn", "encounter"];
+export const TIMER_KINDS = ["rounds", "startOfTurn", "encounter", "nextDay"];
 
 /** How many rounds: a whole number such as 1, or dice such as d4 or 2d6. */
 export function isRoundsFormula(text) {
@@ -66,9 +69,17 @@ export function timerAtStartOfTurn(timer) {
   return { timer, ends: timer.kind === "startOfTurn" };
 }
 
-/** When combat ends, every timer ends (GAPS 130). */
+/**
+ * When combat ends, every timer ends (GAPS 130), except "until the next
+ * day begins".
+ */
 export function timerEndsWithCombat(timer) {
-  return Boolean(timer);
+  return Boolean(timer) && timer.kind !== "nextDay";
+}
+
+/** When a new day begins, "until the next day begins" ends (rules 3.16). */
+export function timerEndsWithNewDay(timer) {
+  return timer?.kind === "nextDay";
 }
 
 /**
@@ -78,6 +89,7 @@ export function timerEndsWithCombat(timer) {
  */
 function reach(timer) {
   if (!timer) return Infinity;
+  if (timer.kind === "nextDay") return 1e7;
   if (timer.kind === "encounter") return 1e6;
   if (timer.kind === "rounds") return timer.rounds + (timer.freshTurn ? 0.5 : 0);
   return 0.25;
