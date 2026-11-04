@@ -1715,7 +1715,127 @@
       "Waiting": "The clock has passed dawn, but the new day has not begun. Press New day.",
       "DayWaiting": "The clock has passed dawn. Press New day on the Calendar panel to begin the new day.",
       "Title": "The Calendar",
-      "Open": "The Calendar: date, time of day, New day and Rest"
+      "Open": "The Calendar: date, time of day, weather, New day and Rest"
+    },
+    "Weather": {
+      "Label": "Weather",
+      "Kind": {
+        "perfectDay": "Perfect day",
+        "clearSky": "Clear sky",
+        "clouded": "Clouded",
+        "lightPrecipitation": "Light precipitation",
+        "heavyPrecipitation": "Heavy precipitation",
+        "storm": "Storm",
+        "minorHazard": "Minor hazard",
+        "majorHazard": "Major hazard"
+      },
+      "Direction": {
+        "up": "up",
+        "upRight": "up and right",
+        "downRight": "down and right",
+        "down": "down",
+        "downLeft": "down and left",
+        "upLeft": "up and left"
+      },
+      "CardTitle": "The weather",
+      "Rolled": "2d6: {total}, {direction}.",
+      "Moves": "{from} becomes {to}.",
+      "Walled": "Walled off at the edge of the flower: the weather stays {name}.",
+      "Wrapped": "Off the edge of the flower, it comes back in on the far side: {to}.",
+      "HazardRolled": "{table}, d10: {roll}",
+      "HazardRepeats": "{table}: the same event again.",
+      "UntilNextDay": "It lasts until the next day begins.",
+      "Set": "Set weather",
+      "SetTooltip": "Set today's weather by hand: pick a hex on the flower and, for a hazard, its event.",
+      "SetTitle": "Set the weather",
+      "SetHint": "Pick today's hex on the flower.",
+      "MinorEvent": "Minor hazard event",
+      "MajorEvent": "Major hazard event",
+      "RollEvent": "Roll the d10",
+      "EventHint": "Used only when the hex you pick is that hazard.",
+      "SetCard": "The Dark Master sets the weather: {name}.",
+      "Hazard": {
+        "siltRain": {
+          "Name": "Silt rain",
+          "Effect": "A greasy, grey downpour coats everything in slick mud. Outdoors, all terrain is difficult terrain, and tracks wash away (tests to track are at Bane)."
+        },
+        "whistling": {
+          "Name": "Whistling from the Spine",
+          "Effect": "An eerie whistling resounds across the realm, unnerving kin and kith. Bane on Panic tests, but the noise covers footsteps: Boon on tests to sneak outdoors."
+        },
+        "creepfrost": {
+          "Name": "Creepfrost",
+          "Effect": "A thin blue ice grows only on metal. Attacks with a metal weapon are at Bane unless its grip is wrapped in cloth or leather (an Interact action)."
+        },
+        "tamefire": {
+          "Name": "Tamefire",
+          "Effect": "Slow, wandering fires drift across the land without lasting harm to buildings. A creature that enters or starts its turn in a patch takes d4 persistent fire damage. The flames light the night: outdoors is never complete darkness today."
+        },
+        "lightstrike": {
+          "Name": "Lightstrike",
+          "Effect": "Thunder and lightning. At the start of each round of combat outdoors, roll a d6: 1 lightning strikes a random PC, 2 a random creature, 3–5 nothing, 6 a random foe. The target takes 2d6 damage. Creatures in metal armour of tier 2 or heavier are struck first."
+        },
+        "hazefall": {
+          "Name": "Hazefall",
+          "Effect": "Runoff from the refineries settles as a metallic fog. No one can see more than 30'. Ranged attacks beyond 30' are at Bane, and a creature more than 30' away can hide without cover."
+        },
+        "shadowstretch": {
+          "Name": "Shadowstretch",
+          "Effect": "Dim light stretches and sharpens every shadow. During an encounter, roll a d6 for each fresh corpse: on a 1, a Corpse Stealer takes hold of it and rises."
+        },
+        "strongGales": {
+          "Name": "Strong gales",
+          "Effect": "Windy weather, stormy weather. Ranged attacks are at Bane, and creatures defend against ranged attacks with Boon. Flying creatures move at half speed. Each hour, roll a d6 for every torch or open flame outdoors: on a 1, it blows out."
+        },
+        "blightPollen": {
+          "Name": "Blight-pollen",
+          "Effect": "Black spores drift from twisted trees. For each hour outdoors without cloth over mouth and nose, test Toughness DR12: Failure Infected. Ruin Infected, and d4 damage as you cough up black dust."
+        },
+        "loomingDark": {
+          "Name": "Looming dark",
+          "Effect": "The clouds dip low and swallow the light. There is no daylight today: outdoors, anywhere your lights do not reach is complete darkness. Light sources work as normal."
+        },
+        "dayOfGloom": {
+          "Name": "Day of gloom",
+          "Effect": "A sword day, a red day. In every combat, the gloom pool gains an extra 5 at the start of each round."
+        },
+        "energyVoid": {
+          "Name": "Energy void",
+          "Effect": "Lethargy hangs heavy in the air. In combat, every creature is Slowed at the start of each of its turns. Out of combat, the day's travel covers only half as much ground."
+        },
+        "heavyGravity": {
+          "Name": "Heavy gravity",
+          "Effect": "The essence of the world fluctuates and weighs everything down. Fall damage is doubled, Move is reduced by 5', and tests to lift, climb, jump or swim are at Bane. Flying creatures cannot gain height."
+        },
+        "photonStorm": {
+          "Name": "Photon storm",
+          "Effect": "Magic is abundant. Boon on tests to cast spells and use powers. The sky shimmers too brightly for stealth: Bane on tests to hide outdoors."
+        },
+        "blackburn": {
+          "Name": "Blackburn",
+          "Effect": "The dark is strong today. Light sources burn twice as fast and shed light in half their radius. The dark hides friend and foe alike: Boon on tests to hide in darkness."
+        },
+        "oilmist": {
+          "Name": "Oilmist",
+          "Effect": "A prismatic vapour, safe to breathe but catastrophically flammable. Any open flame (a torch, a campfire, a firearm, a fire pot, a fire spell or power) ignites it. Everything within 10' of the flame tests Agility DR14: Failure 3d6 and d4 persistent fire damage. Ruin 4d6 and d6 persistent fire damage. The blast burns the mist away within 30' for the rest of the day. Closed lanterns are safe."
+        },
+        "shadowblightOutbreak": {
+          "Name": "Shadowblight outbreak",
+          "Effect": "Magic becomes unstable. Bane on tests to cast spells and use powers, and a power that Ruins also rolls on the Shadowblight table."
+        },
+        "lightGravity": {
+          "Name": "Light gravity",
+          "Effect": "The essence of the world fluctuates and lets go. Fall damage is halved, jumps go twice as far, and tests to lift, climb, jump or swim are at Boon."
+        },
+        "energyFont": {
+          "Name": "Energy font",
+          "Effect": "Unnatural vitality invigorates everyone. In combat, every creature is Quickened at the start of each of its turns. Out of combat, the day's travel covers half as much ground again."
+        },
+        "dayOfEmber": {
+          "Name": "Day of ember",
+          "Effect": "A glorious day. In every combat, the ember pool gains an extra 5 at the start of each round."
+        }
+      }
     }
   }
 }

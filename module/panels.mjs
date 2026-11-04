@@ -1,8 +1,9 @@
 /**
  * The three shared table panels, each with its own button in the token
  * controls (the toolbar on the left):
- * - Calendar: the date, weekday, phase and hour, and the Dark Master's
- *   clock, New day and Rest buttons (module/calendar.mjs, days.mjs, rest.mjs).
+ * - Calendar: the date, weekday, phase and hour, today's weather, and the
+ *   Dark Master's clock, New day, Rest and Set weather buttons
+ *   (module/calendar.mjs, days.mjs, rest.mjs, weather.mjs).
  * - Light: the light timer (module/light.mjs).
  * - Ember and Gloom: the pools and Reset ember abilities (module/pools.mjs).
  *
@@ -16,6 +17,7 @@ import { resetEmberAbilities } from "./dice/power.mjs";
 import { registerDays, newDay } from "./days.mjs";
 import { registerCalendar, calendarContext, nextPhase, moveHours } from "./calendar.mjs";
 import { rest } from "./rest.mjs";
+import { registerWeather, weatherContext, setWeatherByHand } from "./weather.mjs";
 import { registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight } from "./light.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
@@ -54,7 +56,7 @@ class SharedPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 }
 
-/** The calendar: date, time of day, New day and Rest (step 37). */
+/** The calendar: date, time of day, weather, New day and Rest (steps 37, 38). */
 export class CalendarPanel extends SharedPanel {
   static KEY = "calendar";
 
@@ -66,7 +68,8 @@ export class CalendarPanel extends SharedPanel {
       newDay: CalendarPanel.#onNewDay,
       rest: CalendarPanel.#onRest,
       nextPhase: CalendarPanel.#onNextPhase,
-      moveHours: CalendarPanel.#onMoveHours
+      moveHours: CalendarPanel.#onMoveHours,
+      setWeather: CalendarPanel.#onSetWeather
     }
   };
 
@@ -75,7 +78,7 @@ export class CalendarPanel extends SharedPanel {
   };
 
   async _prepareContext(options) {
-    return { calendar: calendarContext(), isGM: game.user.isGM };
+    return { calendar: calendarContext(), weather: weatherContext(), isGM: game.user.isGM };
   }
 
   /** Dark Master only: ask who ate, then start the next day (rules 3.16). */
@@ -100,6 +103,12 @@ export class CalendarPanel extends SharedPanel {
   static async #onMoveHours(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, () => moveHours(Number(button.dataset.hours)));
+  }
+
+  /** Dark Master only: pick today's weather on the hex flower (step 38). */
+  static async #onSetWeather(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, setWeatherByHand);
   }
 }
 
@@ -236,6 +245,8 @@ export function registerPanels() {
   // The day counter (module/days.mjs) and the world clock (module/calendar.mjs).
   registerDays(refreshCalendar);
   registerCalendar(refreshCalendar);
+  // Today's weather on the hex flower (module/weather.mjs).
+  registerWeather(refreshCalendar);
   // The light timer (module/light.mjs).
   registerLight(refreshLight);
 

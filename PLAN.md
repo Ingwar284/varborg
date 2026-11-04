@@ -591,7 +591,12 @@ on its open gaps.
     *Test:* step through Morning, Afternoon and Night; at the next dawn
     the New day dialog opens and the date moves on.
 
-38. **Weather.** The hex flower as data, starting on Perfect day. At the
+38. ~~**Weather.**~~ Done: `module/rules/weather.mjs` with
+    `tests/weather.test.mjs`, `module/weather.mjs` (the weather setting,
+    the 2d6 move and hazard d10 at each new day, the weather card, Set
+    weather for the Dark Master), the weather row and small hex flower on
+    the Calendar panel (GAPS 155, 166).
+    The hex flower as data, starting on Perfect day. At the
     start of each day, 2d6 moves the weather one hex; on a Minor or Major
     hazard, its d10 table is rolled and the hazard's card posted. It lasts
     until the next day begins. The panel shows today's weather; the Dark

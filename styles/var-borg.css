@@ -1019,3 +1019,136 @@
 .var-borg-card.light-card.out h3 {
   color: #7e57c2;
 }
+
+/* ---------- Weather and the hex flower (step 38) ---------- */
+
+.var-borg-table-panel .weather-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .weather-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.var-borg-table-panel .weather-label {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-table-panel .weather-name {
+  font-weight: bold;
+}
+
+.var-borg-table-panel .weather-hazard {
+  color: #c62828;
+  font-weight: bold;
+  cursor: help;
+}
+
+.var-borg-table-panel button.set-weather {
+  margin-top: 0.2rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+/* The flower: flat-topped hexes placed by --x and --y (module/rules/weather.mjs). */
+.var-borg-hex-flower {
+  --w: 22px;
+  --h: calc(var(--w) * 0.866);
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(var(--w) * 4);
+  height: calc(var(--h) * 5);
+}
+
+.var-borg-hex-flower.pick {
+  --w: 76px;
+  margin: 0.4rem auto 0.6rem;
+}
+
+.var-borg-hex-flower .hex {
+  position: absolute;
+  left: calc(var(--x) * var(--w));
+  top: calc(var(--y) * var(--h));
+  width: calc(var(--w) - 2px);
+  height: calc(var(--h) - 2px);
+  margin: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  color: #1b1b1b;
+  opacity: 0.55;
+}
+
+.var-borg-hex-flower.pick .hex {
+  cursor: pointer;
+  opacity: 0.45;
+}
+
+.var-borg-hex-flower.pick .hex:hover {
+  opacity: 0.8;
+}
+
+.var-borg-hex-flower .hex.current,
+.var-borg-hex-flower.pick .hex:has(input:checked) {
+  opacity: 1;
+}
+
+.var-borg-hex-flower.pick .hex:has(input:checked) .hex-name {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.var-borg-hex-flower.pick .hex input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.var-borg-hex-flower .hex-name {
+  padding: 0 14%;
+  font-size: 0.62rem;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.var-borg-hex-flower .hex-token {
+  width: 45%;
+  height: 52%;
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid #fff;
+}
+
+.var-borg-hex-flower .kind-perfectDay { background: #f2d675; }
+.var-borg-hex-flower .kind-clearSky { background: #b9dcf2; }
+.var-borg-hex-flower .kind-clouded { background: #c4c8ce; }
+.var-borg-hex-flower .kind-lightPrecipitation { background: #93aac2; }
+.var-borg-hex-flower .kind-heavyPrecipitation { background: #6b86a3; color: #fff; }
+.var-borg-hex-flower .kind-storm { background: #434b58; color: #fff; }
+.var-borg-hex-flower .kind-minorHazard { background: #df8a35; }
+.var-borg-hex-flower .kind-majorHazard { background: #b23a3a; color: #fff; }
+
+.var-borg-card.weather-card .weather-hazard {
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+}
+
+.var-borg-card.weather-card .hazard-table {
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.var-borg-card.weather-card .hazard-name {
+  color: #c62828;
+  margin: 0.1rem 0;
+}

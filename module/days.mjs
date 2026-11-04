@@ -16,7 +16,8 @@
  * the dialog: those who rested slept.
  *
  * Each new day also moves Foundry's world clock on to that day's dawn
- * (step 37, module/calendar.mjs), unless the clock is already past it.
+ * (step 37, module/calendar.mjs), unless the clock is already past it,
+ * and moves the weather on the hex flower (step 38, module/weather.mjs).
  *
  * The maths lives in module/rules/days.mjs.
  */
@@ -29,6 +30,7 @@ import { postDoomedWoundCard } from "./agony.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { resetLimitedUses, actorsForNewDay } from "./uses.mjs";
 import { endNewDayTimers } from "./timers.mjs";
+import { weatherForNewDay } from "./weather.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -129,6 +131,8 @@ export async function startDays(characters, { ate, slept }, count = 1) {
       content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.Begins", { day })}</h3>`
         + `<p>${i18n.format("VARBORG.Calendar.DawnOf", { weekday: weekdayName(day), date: formatDate(day) })}</p></div>`
     });
+    // The weather moves one hex on the flower (step 38).
+    await weatherForNewDay();
     await dawnForEveryone();
     for (const actor of characters) {
       if (isDead(actor)) continue;
