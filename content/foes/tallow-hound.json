@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo132000000000",
+  "name": "Tallow Hound",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Sabb's Slaughterhouse renders what it cannot sell into tallow for the Candle-Wicked Men. Some of what goes into the vats crawls back out: dripping, hound-shaped and hungry, its hide a slick white crust over meat that never quite set. It smells like a chapel on fire.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 6,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo132It0000000",
+      "name": "Gnawing bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo132It0100000",
+      "name": "Lunging Snap",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Hound moves up to 40' and makes a Gnawing bite. The target defends with Bane. On a Ruin, it is also Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo132It0200000",
+      "name": "Tallowborn",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It takes double damage from fire. Whenever it takes fire damage, creatures adjacent to it take d4 damage from spattering tallow.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

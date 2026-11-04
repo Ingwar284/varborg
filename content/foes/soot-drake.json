@@ -1,0 +1,147 @@
+{
+  "_id": "vbFo075000000000",
+  "name": "Soot Drake",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "A lean, black-scaled drake, perched on the chimneys of the Spill District where the smog is thick enough to hide in. It hunts rats, pigeons and drunk men, and its breath leaves a stain that does not wash out.",
+    "hp": {
+      "value": 18,
+      "max": 18
+    },
+    "morale": 6,
+    "armour": "d2",
+    "armourName": "Sooty scales",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo075It0000000",
+      "name": "Bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo075It0100000",
+      "name": "Flaming spit",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 20,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "shoot",
+        "damageType": "fire",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo075It0200000",
+      "name": "Smoke Belch",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Drake exhales a rolling cloud of black smoke. All creatures within 15' test Toughness DR12: Failure d6 and Blinded until the end of their next turn. Ruin d8 and Blinded for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 and Blinded until the end of their next turn.",
+          "ruin": "d8 and Blinded for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo075It0300000",
+      "name": "Flight",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Soot Drake flies 30' per move.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

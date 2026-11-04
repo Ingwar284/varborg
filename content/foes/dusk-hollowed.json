@@ -1,0 +1,219 @@
+{
+  "_id": "vbFo183000000000",
+  "name": "Dusk-Hollowed",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Duskborn do not only wear the dead. Sometimes one takes root in the living, and eats its way out slowly, until the person is a shell with black veins and something else behind the eyes. The Silent Fraternity quarantines whole tenements when it finds one.",
+    "hp": {
+      "value": 25,
+      "max": 25
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo183It0000000",
+      "name": "Black-veined fists",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo183It0100000",
+      "name": "Bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo183It0200000",
+      "name": "Spill the Dark",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It vomits black ichor in a 15' cone. Every creature in the cone tests Agility DR12. Failure d6 damage and Blinded until the end of its next turn. Ruin d8 damage and Blinded for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Blinded until the end of its next turn.",
+          "ruin": "d8 damage and Blinded for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo183It0300000",
+      "name": "Hollow Out",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It seizes one creature within reach and presses its mouth to theirs. The creature tests Toughness DR13. Failure d12 damage and one level of Fatigued. Ruin 2d8 damage and Doomed, as the dark takes root. Only special means (a priest of Harkin, a relic, a rite of the Silent Fraternity) can cure it.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d12",
+        "ruinDamage": "2d8",
+        "conditions": {
+          "failure": "fatigued",
+          "ruin": "doomed"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d12 damage and one level of Fatigued.",
+          "ruin": "2d8 damage and Doomed, as the dark takes root. Only special means (a priest of Harkin, a relic, a rite of the Silent Fraternity) can cure it."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo183It0400000",
+      "name": "Duskborn",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Attacks against it are made with Boon while it stands in bright light, and with Bane while it stands in darkness.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo183It0500000",
+      "name": "Shell Breaks",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When it drops to 0 HP, a Stray Shadow mook crawls out of the body and acts on the next turn.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo183It0600000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who sees the dark move beneath its skin for the first time tests Sanity DR12 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

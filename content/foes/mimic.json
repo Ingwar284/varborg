@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo071000000000",
+  "name": "Mimic",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A patient, rubbery horror that has learned to look like a brass-bound strongbox, a Wickguard crate or a bookcase in an abandoned archive. It waits for years, perfectly still, until a hand reaches for the lid. Then it opens, and the hand does not come back.",
+    "hp": {
+      "value": 25,
+      "max": 25
+    },
+    "morale": null,
+    "armour": "d4",
+    "armourName": "Hard shell",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo071It0000000",
+      "name": "Crushing lid",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo071It0100000",
+      "name": "Sticky pseudopod",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo071It0200000",
+      "name": "Adhesive Slime",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Mimic lashes out and sticks fast. One creature within 10' tests Strength DR12: Failure d6 and Restrained until it spends an action to tear free. Ruin d8 and Restrained.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 and Restrained until it spends an action to tear free.",
+          "ruin": "d8 and Restrained."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo071It0300000",
+      "name": "Rending Gulp",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Mimic swallows a Restrained creature. Test Strength DR13: Failure d8, swallowed (Restrained) and d4 persistent acid damage. Ruin 2d6, swallowed (Restrained) and d6 persistent acid damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d8",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d8, swallowed (Restrained) and d4 persistent acid damage.",
+          "ruin": "2d6, swallowed (Restrained) and d6 persistent acid damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo071It0400000",
+      "name": "False Appearance",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Until it acts, the Mimic is indistinguishable from an ordinary object. A creature that inspects it closely may test Presence DR14 to notice.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo071It0500000",
+      "name": "Adhesive Hide",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature that hits the Mimic with a melee attack must test Strength DR10 or be Restrained until it spends an action to pull free. Ruin the weapon is stuck fast and is lost until the Mimic is killed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo129000000000",
+  "name": "Amber-Tick",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "Ticks the size of a fist, fattened on the tears of the Wailing Oak in the Verdant Still. Their bellies are full of amber, and their bite leaves sap in the wound that hardens like glass. Travellers who rest too long beneath the great trees are found later, sitting upright, perfectly preserved.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 3,
+    "armour": "d2",
+    "armourName": "Hardened amber",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo129It0000000",
+      "name": "Amber bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo129It0100000",
+      "name": "Hardening Sap",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature hit by it moves 5' less with each Move action until it spends an action (◈) to crack the amber away.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

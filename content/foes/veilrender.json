@@ -1,0 +1,249 @@
+{
+  "_id": "vbFo027000000000",
+  "name": "Veilrender",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "strong",
+    "category": "",
+    "description": "A gaunt, many-jointed shape that unfolds from places where the world has worn thin: the cloisters beneath the great temples, the sealed vaults, the last hollow of a dying fire. It does not walk so much as arrive, and where it has stood the air stays torn. The dead whisper from its wake, and they are never saying anything kind.",
+    "hp": {
+      "value": 30,
+      "max": 30
+    },
+    "morale": 9,
+    "armour": "d6",
+    "armourName": "Congealed shadow",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo027It0000000",
+      "name": "Rending claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo027It0100000",
+      "name": "Bone-white talons",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo027It0200000",
+      "name": "Tear the Veil",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Veilrender opens a rift within 30'. 2 Gloamlouse mooks crawl out and act on its next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo027It0300000",
+      "name": "Snuff",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "All non-magical light sources within 30' go out. Creatures within that area test Sanity DR14: Failure d8 and Frightened until the end of their next turn. Ruin 2d6 and Frightened for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 14,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d8",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d8 and Frightened until the end of their next turn.",
+          "ruin": "2d6 and Frightened for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo027It0400000",
+      "name": "Beyond Step",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Veilrender vanishes and reappears within 60', making an attack against any creature adjacent to its new position.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 7,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo027It0500000",
+      "name": "Thin Place",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Spellcasters within 30' of the Veilrender roll on the Shadowblight table on any Failure or Ruin when casting.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo027It0600000",
+      "name": "Hungry Dark",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Veilrender is immune to necrotic damage and is Blinded by direct sunlight.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

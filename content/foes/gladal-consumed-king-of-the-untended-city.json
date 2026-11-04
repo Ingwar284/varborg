@@ -1,0 +1,307 @@
+{
+  "_id": "vbFo099000000000",
+  "name": "Gladal, Consumed King of the Untended City",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "",
+    "description": "Gladal clutched at the rising silt as his crown slipped into the muck, begging anyone who would listen for a reprieve; something answered with a mouthful of black salt. Now the Untended City sits in the dark at the bottom of the Gaslake, inhabited only by the barnacled corpses of his subjects. The Consumed King sits upon a throne of calcified grief, his skin a pale wax and his eyes aglow with the sickly light of the Deep-Thing he swore fealty to.",
+    "hp": {
+      "value": 55,
+      "max": 55
+    },
+    "morale": null,
+    "armour": "d8",
+    "armourName": "Silt-encrusted regalia",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo099It0000000",
+      "name": "Sceptre of the Abyss",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo099It0100000",
+      "name": "Salt blast",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo099It0200000",
+      "name": "Weight of the Crown",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A spectral, barnacle-encrusted crown settles over one creature within 60' and forces it to its knees. It tests Toughness DR15: Failure 2d10 and Prone. Ruin 2d12 and Prone, and it cannot stand until the end of its next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 15,
+        "cost": 3,
+        "actions": 2,
+        "damage": "2d10",
+        "ruinDamage": "2d12",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d10 and Prone.",
+          "ruin": "2d12 and Prone, and it cannot stand until the end of its next turn."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo099It0300000",
+      "name": "Black Salt Haemorrhage",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Gladal exhales crystalline black salt in a 60' cone that scours the lungs and turns blood to brine. Creatures in the cone test Agility DR15: Failure 3d6. Ruin 4d6 and d4 persistent damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 15,
+        "cost": 5,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "4d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6.",
+          "ruin": "4d6 and d4 persistent damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo099It0400000",
+      "name": "Gaze of the Deep-Thing",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The sickly light in Gladal's empty eye socket fixes on one creature within 60'. It tests Sanity DR16: Failure 2d10 and Slowed until the end of its next turn as coral creeps over its skin. Ruin 3d10, and it is Restrained as it begins to calcify. At the end of each of its turns it tests Toughness DR14; a Success ends the effect, and after three Failures it becomes coral.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 16,
+        "cost": 7,
+        "actions": 2,
+        "damage": "2d10",
+        "ruinDamage": "3d10",
+        "conditions": {
+          "failure": "slowed",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d10 and Slowed until the end of its next turn as coral creeps over its skin.",
+          "ruin": "3d10, and it is Restrained as it begins to calcify. At the end of each of its turns it tests Toughness DR14; a Success ends the effect, and after three Failures it becomes coral."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo099It0500000",
+      "name": "The Sinking City",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Gladal screams as the Untended City sinks deeper, and the weight of the deep crushes everything near him. Every creature within 60' tests Agility DR16: Failure 4d6 and Prone. Ruin 6d6 and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 16,
+        "cost": 9,
+        "actions": 2,
+        "damage": "4d6",
+        "ruinDamage": "6d6",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "4d6 and Prone.",
+          "ruin": "6d6 and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo099It0600000",
+      "name": "Buoyed by Death",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When a creature within 30' is reduced to 0 HP or dies, Gladal regains d10 HP as its soul pays down the city's debt.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo099It0700000",
+      "name": "Sunken Will",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Gladal is immune to forced movement, to being knocked Prone and to being Charmed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo099It0800000",
+      "name": "Barnacled Hide",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When a creature hits Gladal with a melee attack, it takes d6 damage from the jagged, cursed shells on his skin.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

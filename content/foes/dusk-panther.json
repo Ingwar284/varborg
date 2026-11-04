@@ -1,0 +1,249 @@
+{
+  "_id": "vbFo163000000000",
+  "name": "Dusk Panther",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "strong",
+    "category": "",
+    "description": "At the edge of the Darklands, where the cairn-lights are the last lights there are, a black cat as long as a hearse walks the line between them. It does not come into the light. It waits for the light to come to it, or to go out. The Moon-Watchers say Lun made it to remind the world what the night was for.",
+    "hp": {
+      "value": 30,
+      "max": 30
+    },
+    "morale": 7,
+    "armour": "d2",
+    "armourName": "Velvet hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo163It0000000",
+      "name": "Claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo163It0100000",
+      "name": "Bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo163It0200000",
+      "name": "Fade",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Only in dim light or darkness. It moves up to 40', and until it attacks, it cannot be targeted by attacks or abilities from more than 10' away. The target of its next attack defends with Bane.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo163It0300000",
+      "name": "Throat Grab",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It closes its jaws on the throat of one creature within reach. The creature tests Toughness DR13. Failure 2d6 damage and Silenced until the end of its next turn. Ruin 2d8 damage, Silenced for d4 rounds, and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "2d8",
+        "conditions": {
+          "failure": "silenced",
+          "ruin": "silenced"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 damage and Silenced until the end of its next turn.",
+          "ruin": "2d8 damage, Silenced for d4 rounds, and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo163It0400000",
+      "name": "Rend the Fallen",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It makes a Claws attack and a Bite attack against one Prone or Restrained creature. The creature defends against both with Bane, and each Ruin also deals d6 persistent bleeding damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 7,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo163It0500000",
+      "name": "Shadow Pelt",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Attacks against it in dim light or darkness are made with Bane.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo163It0600000",
+      "name": "Lightless Hunter",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It perceives in complete darkness and moves without a sound.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

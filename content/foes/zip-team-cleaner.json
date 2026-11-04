@@ -1,0 +1,147 @@
+{
+  "_id": "vbFo077000000000",
+  "name": "Zip-team Cleaner",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "A Society of the Last Witness snatch agent in a Ministry infirmary wagon, sent to bring the characters in, alive for now. Use the Society Cleaner names table in \"A Volume of Secret Faces\".",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 7,
+    "armour": "d2",
+    "armourName": "Padded coat",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo077It0000000",
+      "name": "Shock-baton",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "On a Ruin on defence, the target is also Slowed until the end of its next turn.",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo077It0100000",
+      "name": "Pepperbox pistol",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 30,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo077It0200000",
+      "name": "Sedative Syringe",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Needle to the neck of a creature within reach: 1 damage, then after d6 rounds the target tests Toughness DR14. Success: Fatigued 1 for the next 12 hours. Failure: Slowed for 1 hour and Fatigued 1. Ruin: falls into a drugged sleep, Blinded and Restrained for 1 hour or until an ally spends ◈ to shake them awake.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 14,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo077It0300000",
+      "name": "Opportune Attack",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "(training).",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

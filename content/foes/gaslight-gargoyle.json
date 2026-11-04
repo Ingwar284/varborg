@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo072000000000",
+  "name": "Gaslight Gargoyle",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A hunched stone sentinel perched above the Highrise cornices, carved as a warning to thieves and crumbling pilgrims. The old sculptors gave it a purpose, the gas gave it a spark, and now it drops from the rooftops on anyone who looks too long at the lamps.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": null,
+    "armour": "d6",
+    "armourName": "Stone hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo072It0000000",
+      "name": "Stone claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo072It0100000",
+      "name": "Horn butt",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo072It0200000",
+      "name": "Plummet",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Gargoyle dives from above. One creature within 40' tests Agility DR12: Failure d8 and Prone. Ruin 2d6 and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d8",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d8 and Prone.",
+          "ruin": "2d6 and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo072It0300000",
+      "name": "Stone Shriek",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A grinding scream splits the air. All creatures within 20' test Toughness DR13: Failure d8 and Deafened until the end of their next turn. Ruin 2d6 and Deafened for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d8",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "deafened",
+          "ruin": "deafened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d8 and Deafened until the end of their next turn.",
+          "ruin": "2d6 and Deafened for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo072It0400000",
+      "name": "Statue Stillness",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "While motionless, the Gargoyle is indistinguishable from an ordinary statue. A creature that inspects it closely may test Presence DR14 to notice.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo072It0500000",
+      "name": "Stone-Bound",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Gargoyle flies 30' per move and is immune to poison and the Frightened condition.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -820,7 +820,17 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       always on; the Shard adds 3 ember (GAPS 174). The Shard example moved
       there unchanged. The "Rolling a relic" table (d2, then d12 or d10 +
       12) comes with the other tables in 48i.
-    - 48i. Foes and tables.
+    - 48i. ~~**Foes.**~~ Done: every stat block in the rules with stats,
+      182 foes in `content/foes/` and the Destrier and Raider-Beast in
+      `content/minions/`. Tier, HP, Morale ("-" never rolls), armour die
+      and name; attacks as weapons (melee or shoot, reach or range); gloom
+      abilities as gloom powers with their own test, DR, Failure and Ruin
+      damage, conditions and timers read from the text; passives as foe
+      passive feats. Odd lines (", and the target is knocked Prone…",
+      "Stuck: …") stay as text. Categories and damage types: GAPS 187.
+    - 48j. Tables: the roll tables of the rules (relics, backgrounds,
+      treasure and the like) as Foundry roll tables, and the vehicle (the
+      Charioteer's rig) and the Gravecaller's Thrall if they need entries.
 
 49. **Automating feats.** After all content is in (designer's choice at
     step 48a). Feats are text only so far. Automate the ones the system can

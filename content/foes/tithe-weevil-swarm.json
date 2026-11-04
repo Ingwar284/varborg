@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo149000000000",
+  "name": "Tithe Weevil Swarm",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "The Solar Conclave's grain comes down the river Clear in sealed barges, and every barge arrives lighter than it left. The Iron Ledger blames the bargemen; the bargemen blame the weevils, a crawling grey tide that boils out of the sacks and into anything that smells of bread, including pockets, packs and mouths.",
+    "hp": {
+      "value": 10,
+      "max": 10
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo149It0000000",
+      "name": "Crawling mass",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo149It0100000",
+      "name": "Grain-Hunger",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When it hits, the creature loses one ration it carries, if it has any.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

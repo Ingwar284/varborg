@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo123000000000",
+  "name": "Wickworm",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "Pale, finger-long worms that nest in the tallow vats of the Solemn Order of the Candle-Wicked Men, where they are mistaken for wick until the candle is lit. They crawl towards warmth, and the warmest thing in any chapel is a living body. The Order calls finding one in a votive candle an omen. It is usually just the first.",
+    "hp": {
+      "value": 5,
+      "max": 5
+    },
+    "morale": 3,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo123It0000000",
+      "name": "Burrowing bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo123It0100000",
+      "name": "Burrow",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature damaged by its bite takes d2 persistent bleeding damage as the worm works its way in.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

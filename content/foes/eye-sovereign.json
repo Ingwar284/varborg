@@ -1,0 +1,335 @@
+{
+  "_id": "vbFo057000000000",
+  "name": "Eye Sovereign",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "",
+    "description": "A bloated, floating mass of grey flesh ringed with a crown of lidless eyes, each one a lens ground from a star that no longer shines. It drifts through the sunken observatories beneath Emberglow, hunting the last lamplight in the Dusklands and eating it. It watches everything. It has not blinked in an age.",
+    "hp": {
+      "value": 55,
+      "max": 55
+    },
+    "morale": 11,
+    "armour": "d6",
+    "armourName": "Lens-hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo057It0000000",
+      "name": "Gnashing maw",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo057It0100000",
+      "name": "Lashing eyestalk",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 15,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo057It0200000",
+      "name": "Gaze beam",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo057It0300000",
+      "name": "Lidless Stare",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "One creature within 60' that can see the Sovereign tests Sanity DR14: Failure 2d8 and Stupefied until the end of its next turn. Ruin 2d10 and Stupefied for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 14,
+        "cost": 3,
+        "actions": 2,
+        "damage": "2d8",
+        "ruinDamage": "2d10",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d8 and Stupefied until the end of its next turn.",
+          "ruin": "2d10 and Stupefied for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo057It0400000",
+      "name": "Snuffing Eye",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Every non-magical light source within 40' goes out. All creatures in that area test Toughness DR14: Failure 2d8 and Blinded until the end of their next turn. Ruin 3d6 and Blinded for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 14,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d8",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d8 and Blinded until the end of their next turn.",
+          "ruin": "3d6 and Blinded for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo057It0500000",
+      "name": "Withering Ray",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A grey beam lances from one eye. One creature within 60' tests Toughness DR15: Failure 2d10 and one level of Fatigued. Ruin 3d10 and one level of Fatigued.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 15,
+        "cost": 7,
+        "actions": 2,
+        "damage": "2d10",
+        "ruinDamage": "3d10",
+        "conditions": {
+          "failure": "fatigued",
+          "ruin": "fatigued"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d10 and one level of Fatigued.",
+          "ruin": "3d10 and one level of Fatigued."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo057It0600000",
+      "name": "The Last Hour",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Every eye opens at once. All creatures within 40' that can see the Sovereign test Sanity DR16: Failure 3d6 and Frightened for d4 rounds. Ruin 5d6, Frightened for d4 rounds and Stupefied until the end of their next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 16,
+        "cost": 9,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "5d6",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "d4"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6 and Frightened for d4 rounds.",
+          "ruin": "5d6, Frightened for d4 rounds and Stupefied until the end of their next turn."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo057It0700000",
+      "name": "Many Eyes",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Sovereign cannot be surprised and is immune to the Blinded condition.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo057It0800000",
+      "name": "Hovering Horror",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Sovereign flies 20' per move, ignores difficult terrain and cannot be knocked Prone.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo057It0900000",
+      "name": "Watching Dark",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Creatures within 30' have Bane on Agility tests to hide or move unseen. The Sovereign knows the location of every light source within 100'.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

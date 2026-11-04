@@ -1,0 +1,233 @@
+{
+  "_id": "vbFo069000000000",
+  "name": "Watchful Weaver",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A magus of the Aetheric Order's protectors in warded blue robes, threads of aether drifting from her fingertips like loose silk. She hunts those who work the weave without licence, and she can feel a spell being cast three streets away. She would much rather bring you in alive. The Order pays more for the living.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 8,
+    "armour": "d2",
+    "armourName": "Warded robes",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo069It0000000",
+      "name": "Wardstaff",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo069It0100000",
+      "name": "Flux-knife",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo069It0200000",
+      "name": "Aether bolt",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo069It0300000",
+      "name": "Binding Thread",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Threads of light lash out at a creature within 30'. Test Agility DR12: Failure Restrained until the end of its next turn. Ruin Restrained for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "Restrained until the end of its next turn.",
+          "ruin": "Restrained for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo069It0400000",
+      "name": "Unravel",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Weaver plucks at the ember of a creature within 30' that cast a spell or used an ember ability since the Weaver's last turn. Test Sanity DR13: Failure 2d6 and it cannot cast spells until the end of its next turn. Ruin 2d8, it cannot cast spells until the end of its next turn, and it rolls on the Shadowblight table.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "2d8",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 and it cannot cast spells until the end of its next turn.",
+          "ruin": "2d8, it cannot cast spells until the end of its next turn, and it rolls on the Shadowblight table."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo069It0500000",
+      "name": "Sense the Flux",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Weaver knows the location of any creature that casts a spell within 120', even one she cannot see.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo069It0600000",
+      "name": "Aether Ward",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Weaver reduces damage from spells by d4.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

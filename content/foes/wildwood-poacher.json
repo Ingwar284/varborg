@@ -1,0 +1,147 @@
+{
+  "_id": "vbFo115000000000",
+  "name": "Wildwood Poacher",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "A lean, quiet hunter in a coat stitched from a dozen furs, taking game from lands that belong to someone else. He knows the forest better than the lords who own it, and he has learned that the safest prey is the one that wanders into his traps.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 6,
+    "armour": "d2",
+    "armourName": "Hide coat",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo115It0000000",
+      "name": "Hunting knife",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo115It0100000",
+      "name": "Longbow",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 40,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo115It0200000",
+      "name": "Snare Trap",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Poacher triggers a hidden snare within 20'. Test Agility DR12: Failure d6 and Restrained until the creature spends an action to tear free. Ruin d8 and Restrained.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 and Restrained until the creature spends an action to tear free.",
+          "ruin": "d8 and Restrained."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo115It0300000",
+      "name": "Woodland Stalker",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Poacher ignores difficult terrain from natural plants. In forests, creatures have Bane on tests to spot or track him.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "_id": "vbFo061000000000",
+  "name": "Wickguard Sentry",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "A bored, underpaid watchman in a padded coat and a brass-trimmed helm, carrying a cudgel and a hooded lantern. He patrols the lamplit streets of Emberglow and knows every shortcut, every bribe and every body in the canal. He is not paid enough to die for you.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 7,
+    "armour": "d2",
+    "armourName": "Padded coat",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo061It0000000",
+      "name": "Cudgel",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo061It0100000",
+      "name": "Crossbow",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 30,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo061It0200000",
+      "name": "Whistle Blast",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Sentry blows a shrill whistle. 2 Wickguard Sentry mooks arrive from within 60' after d4 rounds. All creatures within 20' that can hear it test Sanity DR12: Failure they lose their next ◈ to the noise. Ruin as Failure, and they are Deafened until the end of their next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": "deafened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "they lose their next ◈ to the noise.",
+          "ruin": "as Failure, and they are Deafened until the end of their next turn."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo061It0300000",
+      "name": "Shoulder to Shoulder",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "While adjacent to another Wickguard, attacks against the Sentry are made at +2 DR.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo061It0400000",
+      "name": "Opportune Attack",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When a creature within the Sentry's reach interacts with something, moves, makes a ranged attack or casts a spell, the Sentry may use its reaction to attack it with a melee attack. On a Ruin, their action is disrupted.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

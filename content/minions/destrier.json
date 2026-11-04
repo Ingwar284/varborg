@@ -1,0 +1,88 @@
+{
+  "_id": "vbMn055000000000",
+  "name": "Destrier",
+  "type": "minion",
+  "img": "icons/svg/pawprint.svg",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 1,
+    "displayName": 30,
+    "displayBars": 50,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "description": "Blinkered against the dark and shod in pitted iron, or scaled, or feathered, or something the stable-masters will not describe. It was raised to charge into things that scream, and it has never learned to stop.",
+    "owner": "",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 8,
+    "armour": "d4",
+    "armourName": "Barding"
+  },
+  "items": [
+    {
+      "_id": "vbMn055It0000000",
+      "name": "Hooves, horns or beak",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbMn055It0100000",
+      "name": "Shoulder Barge",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "◈◈ It moves up to 40' and slams into a creature in its path, pushing it 10'. The Dark Master may rule a creature too vast to be moved; a player character may test Strength DR12 to stand firm.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbMn055It0200000",
+      "name": "Swift",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It moves 40' per Move (20' safe, 60' fast) and carries one rider and up to 6 heavy items. It will not move willingly into complete darkness. If it drops to 0 HP while you ride it, you are thrown: you land Prone and take d6 damage.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo014000000000",
+  "name": "Edward \"Mr Ed\" Dubronvik",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A huge man with a flattened nose, squinting eyes and two chipped front teeth, carrying \"Thomas\", a sawn-down club with a core of lead, in a loop on his belt. He does not think about the past or the future. He persists, like an animal, and his memories stop shortly before he came to work at \"the hospital\".",
+    "hp": {
+      "value": 25,
+      "max": 25
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo014It0000000",
+      "name": "Thomas",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d12",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo014It0100000",
+      "name": "Fists",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo014It0200000",
+      "name": "Two Warnings",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "After a creature has ignored two warnings this encounter, Mr Ed beats it. It defends with Bane against Thomas, and on a Failure is also knocked Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo014It0300000",
+      "name": "Starfish",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "He drags a creature within 5' onto a trolley and buckles it down. It tests Strength DR13. Failure Restrained until an ally frees it (◈◈). Ruin As Failure, and it is sedated: Stupefied until it is freed.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "Restrained until an ally frees it (◈◈).",
+          "ruin": "As Failure, and it is sedated: Stupefied until it is freed."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo014It0400000",
+      "name": "Endless Doors",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "As Dr Friend; Mr Ed can go anywhere in the Night World, and never notices that he cannot leave.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo014It0500000",
+      "name": "Infinite",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Until he finds his Soul Bottle or meets the King, he cannot die. Killed, he comes back the next night.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

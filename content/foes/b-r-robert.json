@@ -1,0 +1,219 @@
+{
+  "_id": "vbFo040000000000",
+  "name": "B. R. Robert",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A tall, finely dressed gentleman. The longer one talks to him, the more flaws appear: nicotine-stained fingers and lips, cracked lips, sores at the corners of his mouth, yellowed eyes, and porcelain teeth stamped 601 that stay pearl-white. He remembers little of his past and is glad of it. He is fairly sure he did awful things before the Bookshop opened its doors.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 9,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo040It0000000",
+      "name": "Cane",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo040It0100000",
+      "name": "Pocket pistol",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 30,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo040It0200000",
+      "name": "Wander Far and Wide",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Robert waves a hand at the stacks, and the shelves slide. One creature within 30' tests Sanity DR12. Failure It is somewhere else in the Bookshop, alone, until it finds its way back (Presence DR12, once per round). Ruin As Failure, and its light goes out.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "It is somewhere else in the Bookshop, alone, until it finds its way back (Presence DR12, once per round).",
+          "ruin": "As Failure, and its light goes out."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo040It0300000",
+      "name": "A Word in Wilde's Ear",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Robert says something to a creature it would rather not have heard: a true secret about it. It tests Sanity DR13. Failure Stupefied until the end of its next turn. Ruin Stupefied for d4 rounds, and Mister Wilde knows the secret too.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "Stupefied until the end of its next turn.",
+          "ruin": "Stupefied for d4 rounds, and Mister Wilde knows the secret too."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo040It0400000",
+      "name": "Endless Doors",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Robert can always find a way out: hidden passages, secret doors, doors that were not there a moment ago. Others may follow (+1 Corruption), but he soon vanishes into endless rooms. Through the Bookshop he can reach the Missing Room, the Night Floors and the corpse-city of Carcosa, though he would never willingly take anyone there.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo040It0500000",
+      "name": "Infinite",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Until he finds his Soul Bottle or meets the King, he cannot die. Killed, he returns, unharmed, after a while.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo040It0600000",
+      "name": "What Robert wants",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "To sell copies of the play. To spread rumours for Mister Wilde. To wait for his \"revelation\". He is obsessed with finding his own Soul Bottle in the Whisper Labyrinth, but sure that anyone who searches that maze is doomed to wander forever; he is certain the place will be shown to him, if only he is patient. A character who brings him word of his bottle can name their price: any book in the shop, free.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

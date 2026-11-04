@@ -1,0 +1,133 @@
+{
+  "_id": "vbFo136000000000",
+  "name": "Obelisk Dreamer",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Those who sleep beneath the black obelisks of the Heartlands dream of horrors yet to come. Some never wake, but their bodies get up anyway: slack-jawed, eyes rolling beneath closed lids, mumbling of things that have not happened yet.",
+    "hp": {
+      "value": 18,
+      "max": 18
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo136It0000000",
+      "name": "Clutching hands",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo136It0100000",
+      "name": "Shared Nightmare",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It murmurs how one creature within 30' will die. The creature tests Sanity DR12. Failure d6 damage and Frightened of the Dreamer until the end of its next turn. Ruin d8 damage and Frightened of the Dreamer for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Frightened of the Dreamer until the end of its next turn.",
+          "ruin": "d8 damage and Frightened of the Dreamer for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo136It0200000",
+      "name": "Still Dreaming",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It is immune to Frightened and Stupefied, and knows where every sleeping or unconscious creature within 100' lies.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo136It0300000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who hears one speak their name for the first time tests Sanity DR12 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

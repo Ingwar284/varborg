@@ -1,0 +1,349 @@
+{
+  "_id": "vbFo096000000000",
+  "name": "Pit Warden",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "",
+    "description": "A towering, horned fiend in hellforged plate, its hide veined with glowing coals and its voice like a furnace door slamming. It is the overseer of the Pit, charged with keeping the furnaces of the damned stoked, and it arrives with an army when the Pit requires a debt collected in full. It does not bargain. It enforces.",
+    "hp": {
+      "value": 55,
+      "max": 55
+    },
+    "morale": 11,
+    "armour": "d8",
+    "armourName": "Hellforged plate",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo096It0000000",
+      "name": "Flaming sword",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d12",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo096It0100000",
+      "name": "Ember whip",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 15,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "fire",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo096It0200000",
+      "name": "Hellfire bolt",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo096It0300000",
+      "name": "Infernal Command",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "One creature within 30' tests Sanity DR14: Failure 2d8 and must use its next action to attack its nearest ally. Ruin 3d6 and the effect lasts d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 14,
+        "cost": 3,
+        "actions": 2,
+        "damage": "2d8",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d8 and must use its next action to attack its nearest ally.",
+          "ruin": "3d6 and the effect lasts d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo096It0400000",
+      "name": "Summon Imps",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "3 Ledger Imp mooks appear within 20' and act on the Warden's next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 5,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo096It0500000",
+      "name": "Wall of Hellfire",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A 40' line of fire erupts within 60'. Creatures in the area test Agility DR15: Failure 3d6 and d4 persistent fire damage. Ruin 4d6 and d6 persistent fire damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 15,
+        "cost": 7,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "4d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6 and d4 persistent fire damage.",
+          "ruin": "4d6 and d6 persistent fire damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo096It0600000",
+      "name": "Rain of Fire",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Burning ash falls across a 50' radius within 100'. Creatures in the area test Agility DR15: Failure 3d6 and d4 persistent fire damage. Ruin 5d6 and d6 persistent fire damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 15,
+        "cost": 9,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "5d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6 and d4 persistent fire damage.",
+          "ruin": "5d6 and d6 persistent fire damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo096It0700000",
+      "name": "Hellforged",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Warden is immune to fire and takes double damage from cold.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo096It0800000",
+      "name": "Commander's Aura",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Fiends within 30' of the Warden gain +2 Morale and deal an additional d4 damage.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo096It0900000",
+      "name": "Debt-Collector",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Warden always knows where every Doomed creature, and every creature that has struck a bargain with a fiend, is within a mile. Such creatures defend against its attacks with Bane.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo096It1000000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Creatures that see the Warden for the first time test Sanity DR14 or Panic.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

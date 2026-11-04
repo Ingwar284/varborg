@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo137000000000",
+  "name": "Gnawgrin",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "When a spell goes wrong in Emberglow, the Shadowblight sometimes leaves something behind. A Gnawgrin is a mouth with legs: a too-wide grin of needle teeth on four knuckled limbs, scuttling after the smell of the weave. The Flux-Weavers keep cages for them. Cages are rarely enough.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 4,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo137It0000000",
+      "name": "Needle teeth",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo137It0100000",
+      "name": "Bite the Weave",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It snaps at the magic around one creature within 10'. The creature tests Sanity DR12. Failure d6 damage and Stupefied until the end of its next turn. Ruin d8 damage, Stupefied until the end of its next turn, and the next spell it casts this encounter rolls on the Shadowblight table whatever the result.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Stupefied until the end of its next turn.",
+          "ruin": "d8 damage, Stupefied until the end of its next turn, and the next spell it casts this encounter rolls on the Shadowblight table whatever the result."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo137It0200000",
+      "name": "Spell-Fed",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Whenever a spell is cast within 30' of it, it regains d4 HP.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

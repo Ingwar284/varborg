@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo154000000000",
+  "name": "Pit Mastiff",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Bred for the Fighting Pits, all jaw and scar, with a spiked collar and no memory of being anything else. The best of them fetch more than a journeyman earns in a year. The worst are turned loose in the alleys when they lose, and they have not forgotten how to win.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 8,
+    "armour": "d2",
+    "armourName": "Scarred hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo154It0000000",
+      "name": "Crushing jaws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo154It0100000",
+      "name": "Lock Jaw",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It bites down on one creature within reach and does not let go. The creature tests Strength DR12. Failure d6 damage and Restrained until it breaks free (◈, Strength DR12). Ruin d8 damage, Restrained in the same way, and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Restrained until it breaks free (◈, Strength DR12).",
+          "ruin": "d8 damage, Restrained in the same way, and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo154It0200000",
+      "name": "Bred for the Pit",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It is immune to Frightened.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

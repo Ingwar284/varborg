@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo097000000000",
+  "name": "Gutter Cutpurse",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A thin, quick-fingered scrap of a person in a coat three sizes too large, working the crowds of the Spill District where nobody looks twice. Alone, a cutpurse is a nuisance. In a pack, they are a tide that strips a traveller to the buttons and vanishes into the soot.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 4,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo097It0000000",
+      "name": "Rusty shiv",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo097It0100000",
+      "name": "Lost in the Crowd",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "While three or more other creatures are within 10', attacks against the Cutpurse are made at +2 DR.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

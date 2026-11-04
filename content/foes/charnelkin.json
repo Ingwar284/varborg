@@ -1,0 +1,133 @@
+{
+  "_id": "vbFo031000000000",
+  "name": "Charnelkin",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Once they were people: gravediggers, mourners, and the hungry poor who found the doors behind the oldest tombs and went through. Below the Silent Fraternity's catacombs they became something else. Their skin is grey and rubbery, their faces have stretched into hound-like snouts, their feet have hardened into cloven hooves, and grave-mould grows on them like fur. They live on the dead the Silent Mourners never reach. They are not cruel. They are hungry and patient, and they were under Emberglow long before the Sepulcher wall was built. They dig and climb like hounds and see well in the dark.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 5,
+    "armour": "d2",
+    "armourName": "Rubbery hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo031It0000000",
+      "name": "Grave-black claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo031It0100000",
+      "name": "Drag Below",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Charnelkin grabs a creature within reach and hauls it towards the nearest burrow. The creature tests Strength DR12. Failure d4 damage and Restrained until it breaks free (◈, Strength DR12) or the Charnelkin takes damage. Ruin d6 damage, Restrained, and dragged 10' into the nearest tunnel.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d4",
+        "ruinDamage": "d6",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d4 damage and Restrained until it breaks free (◈, Strength DR12) or the Charnelkin takes damage.",
+          "ruin": "d6 damage, Restrained, and dragged 10' into the nearest tunnel."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo031It0200000",
+      "name": "Charnel Flesh",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Its rubbery body soaks up shot and bolt: the Charnelkin takes half damage from non-magical ranged attacks.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo031It0300000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who sees one up close for the first time tests Sanity DR12 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

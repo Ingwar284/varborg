@@ -1,0 +1,335 @@
+{
+  "_id": "vbFo067000000000",
+  "name": "Old Sulphurgill",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "",
+    "description": "The oldest thing in the Gaslake: a whiskered catfish the length of a coal barge, grown fat on drowned lamp-oil, spilled grain and dockhands who leaned too far. Its barbels glow with the sick green of the deep gas, and on the worst nights every lantern on the Gaslake piers gutters as it passes beneath. The Wickguard have posted a bounty on it for forty years. Nobody has ever collected.",
+    "hp": {
+      "value": 45,
+      "max": 45
+    },
+    "morale": 10,
+    "armour": "d6",
+    "armourName": "Gas-slick hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo067It0000000",
+      "name": "Swallowing maw",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo067It0100000",
+      "name": "Barbel lash",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 15,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo067It0200000",
+      "name": "Bilge spout",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 40,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo067It0300000",
+      "name": "Undertow",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The water around one creature within 20' turns and pulls. It tests Strength DR14: Failure 2d8 and it is dragged 15' toward Old Sulphurgill. Ruin 3d6, dragged 15' and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 14,
+        "cost": 3,
+        "actions": 2,
+        "damage": "2d8",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d8 and it is dragged 15' toward Old Sulphurgill.",
+          "ruin": "3d6, dragged 15' and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo067It0400000",
+      "name": "Marsh Belch",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Old Sulphurgill surfaces and belches swamp gas across a 20' radius. Creatures in the area test Toughness DR14: Failure 2d6 and Blinded until the end of their next turn. Ruin 3d6 and Blinded for d4 rounds. If an open flame is in the area, the gas catches: every creature that failed also takes d4 persistent fire damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 14,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 and Blinded until the end of their next turn.",
+          "ruin": "3d6 and Blinded for d4 rounds. If an open flame is in the area, the gas catches: every creature that failed also takes d4 persistent fire damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo067It0500000",
+      "name": "Capsizing Thrash",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The catfish rolls its whole bulk. All creatures within 20' test Agility DR15: Failure 3d6 and Prone. Ruin 4d6, Prone and thrown 15' into the water. Any boat or pier section in the area is wrecked.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 15,
+        "cost": 7,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "4d6",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6 and Prone.",
+          "ruin": "4d6, Prone and thrown 15' into the water. Any boat or pier section in the area is wrecked."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo067It0600000",
+      "name": "Deepgas Upwelling",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Old Sulphurgill churns the lakebed and a century of trapped gas boils up across a 40' radius. Creatures in the area test Toughness DR16: Failure 3d6 and Stupefied until the end of their next turn. Ruin 5d6 and Stupefied for d4 rounds. If an open flame is in the area, the cloud detonates: every creature in it takes an additional 2d6 fire damage, and every non-magical light source in the area goes out.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 16,
+        "cost": 9,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "5d6",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6 and Stupefied until the end of their next turn.",
+          "ruin": "5d6 and Stupefied for d4 rounds. If an open flame is in the area, the cloud detonates: every creature in it takes an additional 2d6 fire damage, and every non-magical light source in the area goes out."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo067It0700000",
+      "name": "Bottom-Dweller",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Old Sulphurgill swims 40' per move and can haul itself 10' onto land per move. While it is out of the water, creatures defend against its attacks with Boon.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo067It0800000",
+      "name": "Drawn to the Lamps",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Old Sulphurgill senses every light source on or within 120' of the water, and it surfaces beside the brightest one.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo067It0900000",
+      "name": "Gas-Soaked Hide",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Old Sulphurgill is immune to poison and fire.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

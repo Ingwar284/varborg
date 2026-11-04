@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo151000000000",
+  "name": "Wisp-Newt",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "In the bogs of the Wispweald, pale newts glow faintly green, and lost travellers follow them in the belief that they are the lights of a village. Their skin weeps a sweet slime that makes the world swim. Some travellers lick them on purpose, and some of those find the village after all.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 2,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo151It0000000",
+      "name": "Sticky tongue",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo151It0100000",
+      "name": "Dreaming Skin",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It sheds dim light in a 10' radius. A creature that hits it with a melee attack tests Toughness DR10. Failure Stupefied until the end of its next turn. Ruin Stupefied for d4 rounds.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "_id": "vbFo051000000000",
+  "name": "Corpse Stealer",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "duskborn",
+    "description": "Deceptive. Macabre. Flesh-animating predators. These lesser shadows inhabit the lifeless bodies of their victims, reanimating them with eerie precision. Mimicking the deceased, they blend in as they stalk new prey, driven by a relentless hunger.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 8,
+    "armour": "d4",
+    "armourName": "Incorporeal",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo051It0000000",
+      "name": "Shadow touch",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo051It0100000",
+      "name": "Enfeebling Touch",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The shadow reaches through physical armour to touch the soul. One creature within reach tests Toughness DR12: Failure d8 and one level of Fatigued. Ruin d10 and one level of Fatigued that is not removed until the Corpse Stealer is destroyed.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d8",
+        "ruinDamage": "d10",
+        "conditions": {
+          "failure": "fatigued",
+          "ruin": "fatigued"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d8 and one level of Fatigued.",
+          "ruin": "d10 and one level of Fatigued that is not removed until the Corpse Stealer is destroyed."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo051It0200000",
+      "name": "Inhabit Corpse",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "◈◈ The Corpse Stealer possesses a corpse within reach, mimicking it with an eerie likeness.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo051It0300000",
+      "name": "Duskborn",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Attack and defend against the Corpse Stealer at DR10 while it stands in light, and at DR14 while it stands in darkness. It does not need food, air or sleep, and it is destroyed when killed or when it fails a Morale test.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

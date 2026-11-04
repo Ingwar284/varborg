@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo121000000000",
+  "name": "Ledger Imp",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A sooty, ink-fingered fiend no larger than a rat, pulled up from the void by the weight of unpaid debts. It scuttles through tenements, counting coins with its claws and tallying what everyone owes. It always finds something to take.",
+    "hp": {
+      "value": 5,
+      "max": 5
+    },
+    "morale": 4,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo121It0000000",
+      "name": "Inky claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo121It0100000",
+      "name": "Sticky Fingers",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When the Ledger Imp hits, it may steal a coin purse or small unworn item instead of dealing damage. Test Presence DR12 to notice the theft: Failure the theft goes unnoticed. Ruin as Failure, and the Imp takes a second item.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "_id": "vbFo133000000000",
+  "name": "Pale Usher",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Tall, stooped and wrapped in a borrowed shroud, it waits in the doorways of Harkin's Last Hall, where the Shroud Brethren are too poor to post a watch. It beckons mourners to a back room that is not on any plan. It never speaks; it only hushes.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 5,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo133It0000000",
+      "name": "Long cold fingers",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo133It0100000",
+      "name": "Hush",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Usher lays one finger where its lips should be. One creature within 30' tests Presence DR12. Failure d4 damage and Silenced until the end of its next turn. Ruin d6 damage and Silenced for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "presence",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d4",
+        "ruinDamage": "d6",
+        "conditions": {
+          "failure": "silenced",
+          "ruin": "silenced"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d4 damage and Silenced until the end of its next turn.",
+          "ruin": "d6 damage and Silenced for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo133It0200000",
+      "name": "Through the Door",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When it moves through a doorway, curtain or open grave, it may step out of any other doorway, curtain or open grave within 60' instead.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo133It0300000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who sees its face for the first time tests Sanity DR12 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

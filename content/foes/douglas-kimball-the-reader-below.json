@@ -1,0 +1,233 @@
+{
+  "_id": "vbFo103000000000",
+  "name": "Douglas Kimball, the Reader Below",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Douglas is a rubbery grey grave-eater, a year into a change he went looking for. He wears the rags of a scholar's tweed, and his round spectacles sit on a twitching, hound-like snout. He is not a predator by choice; hunger made him one. He smiles a jagged, apologetic smile at anyone who finds him, and would much rather talk about the history of the Heartlands than fight.\n,",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 8,
+    "armour": "d4",
+    "armourName": "Rubbery hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo103It0000000",
+      "name": "Ink-black claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo103It0100000",
+      "name": "Desperate bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo103It0200000",
+      "name": "Scholarly Insight",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Douglas looks at one creature within 30' and says, softly, the one true thing about it that it least wants to hear. The creature tests Sanity DR12. Failure d6 damage and Stupefied until the end of its next turn. Ruin d8 damage and Stupefied for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Stupefied until the end of its next turn.",
+          "ruin": "d8 damage and Stupefied for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo103It0300000",
+      "name": "Grave-Soil Burst",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "He kicks up a cloud of grave filth and mouldering book-dust. Every creature in a 10' emanation tests Toughness DR13. Failure d6 damage and Blinded until the end of its next turn. Ruin d8 damage and Blinded for d4 rounds. Douglas then moves up to 20', and this movement does not provoke reactions.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Blinded until the end of its next turn.",
+          "ruin": "d8 damage and Blinded for d4 rounds. Douglas then moves up to 20', and this movement does not provoke reactions."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo103It0400000",
+      "name": "Charnel Flesh",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Douglas takes half damage from non-magical ranged attacks.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo103It0500000",
+      "name": "Remnants of Humanity",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "If a creature calls him by name or speaks of his books, Douglas does not attack it until it harms him, and the Dark Master rolls his Morale at once.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo103It0600000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who recognises him for the first time tests Sanity DR12 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo103It0700000",
+      "name": "Also used",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Charnelkin, Charnelkin Warren-Mother, Resurrection Man, Gutter Cutpurse, Wickguard Sentry, Watch Captain.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

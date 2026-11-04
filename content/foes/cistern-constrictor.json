@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo160000000000",
+  "name": "Cistern Constrictor",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Thirty years ago a menagerie keeper at the Market of the Outlandish lost a crate in the Undercity. The snake inside has grown fat in the cisterns since, on rats, on stray dogs, and on the Gasmen who go down to read the water gauges. It is as thick as a cask and patient as a debt.",
+    "hp": {
+      "value": 25,
+      "max": 25
+    },
+    "morale": 5,
+    "armour": "d2",
+    "armourName": "Banded scales",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo160It0000000",
+      "name": "Bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo160It0100000",
+      "name": "Coils",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo160It0200000",
+      "name": "Coil",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It throws its coils around one creature within reach. The creature tests Strength DR12. Failure d6 damage and Restrained until it breaks free (◈, Strength DR13). Ruin d8 damage, Restrained in the same way, and Silenced while Restrained.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Restrained until it breaks free (◈, Strength DR13).",
+          "ruin": "d8 damage, Restrained in the same way, and Silenced while Restrained."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo160It0300000",
+      "name": "Crush",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It tightens around a creature it has Restrained. The creature tests Toughness DR13. Failure d12 damage and one level of Fatigued. Ruin 2d8 damage and one level of Fatigued.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d12",
+        "ruinDamage": "2d8",
+        "conditions": {
+          "failure": "fatigued",
+          "ruin": "fatigued"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d12 damage and one level of Fatigued.",
+          "ruin": "2d8 damage and one level of Fatigued."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo160It0400000",
+      "name": "Cistern-Dweller",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It swims and climbs at full speed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo160It0500000",
+      "name": "Heat-Sight",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It perceives warm-blooded creatures within 60', even in complete darkness.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo068000000000",
+  "name": "Gloamlouse",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A pale, fat-bellied parasite that crawls from the cracks where the gas-jets fail. It feeds not on blood but on warmth and light, swelling grey and glossy as the flame beside it gutters. Gloamlice are never found alone, and to crush one is to learn how cold the dark can taste.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 3,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo068It0000000",
+      "name": "Sipping bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo068It0100000",
+      "name": "Light-Leech",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature hit by the Gloamlouse has the radius of its carried light source reduced by 10' for one hour or until the light is relit.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

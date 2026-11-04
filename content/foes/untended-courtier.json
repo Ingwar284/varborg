@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo181000000000",
+  "name": "Untended Courtier",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Gladal's court went down with him, and in the Untended City at the bottom of the Gaslake his courtiers still bow and scrape before the throne of calcified grief. Sometimes the Consumed King sends one up to the surface on an errand: salt-crusted, dripping, impeccably polite. It always carries a summons. It never says to what.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": null,
+    "armour": "d2",
+    "armourName": "Silt-crusted finery",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo181It0000000",
+      "name": "Salt-rotted rapier",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo181It0100000",
+      "name": "Salt spit",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 20,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "shoot",
+        "damageType": "fire",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo181It0200000",
+      "name": "Courtly Summons",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It rings a drowned handbell. 2 Barnacled Drowned mooks climb out of the nearest water within 30'.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo181It0300000",
+      "name": "Drown on Land",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It bows to one creature within 30', and brine fills that creature's lungs. The creature tests Toughness DR13. Failure d12 damage and Silenced until the end of its next turn. Ruin 2d8 damage, Silenced for d4 rounds, and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d12",
+        "ruinDamage": "2d8",
+        "conditions": {
+          "failure": "silenced",
+          "ruin": "silenced"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d12 damage and Silenced until the end of its next turn.",
+          "ruin": "2d8 damage, Silenced for d4 rounds, and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo181It0400000",
+      "name": "Gaslake-Born",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It swims 30' per move and takes half damage from fire.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo181It0500000",
+      "name": "Courtly Grace",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature that spends an action (◈) to bow to it cannot be targeted by its attacks or gloom abilities until the end of that creature's next turn.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

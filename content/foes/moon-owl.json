@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo156000000000",
+  "name": "Moon-Owl",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "The Moon-Watchers keep great white owls in their towers as the eyes of Lun. The ones that escape grow wild over the Heartlands, wings as wide as a door, and hunt anything that moves under the cold moon. Their screech is said to be Lun's voice. It does not sound like a god who cares.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 5,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo156It0000000",
+      "name": "Talons",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo156It0100000",
+      "name": "Midnight Screech",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Every creature within 30' that can hear it tests Sanity DR12. Failure d4 damage and Frightened of the owl until the end of its next turn. Ruin d6 damage and Frightened of the owl for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d4",
+        "ruinDamage": "d6",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d4 damage and Frightened of the owl until the end of its next turn.",
+          "ruin": "d6 damage and Frightened of the owl for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo156It0200000",
+      "name": "Silent Wings",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It flies 40' per move, perceives in complete darkness, and cannot be heard approaching.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

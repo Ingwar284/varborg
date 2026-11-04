@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo124000000000",
+  "name": "Flueling",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "Spindly, soot-black things no bigger than a chimney-boy, all elbows and knuckles, that live in the flues of the Highrise district. Some say they were chimney-boys once, sent up too many times. The sweeps no longer go up after dark, and the Highrise has learned to keep its fires lit.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 4,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo124It0000000",
+      "name": "Sooty claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo124It0100000",
+      "name": "Chimney-Born",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It climbs walls and ceilings at full speed. Attacks against it while it is in smoke or soot-fog are made with Bane.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

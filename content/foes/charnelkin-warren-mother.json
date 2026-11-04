@@ -1,0 +1,291 @@
+{
+  "_id": "vbFo044000000000",
+  "name": "Charnelkin Warren-Mother",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "strong",
+    "category": "",
+    "description": "The oldest of a warren: swollen, hunched, and white with mould. She has eaten from the graves of three generations of Iron Ledger clerks and remembers every one of their names. She speaks Low Emberian with a scrivener's precision, through a mouth that was never meant for it. When a warren moves on, she decides which tunnels are closed and who is left on the wrong side.",
+    "hp": {
+      "value": 30,
+      "max": 30
+    },
+    "morale": 9,
+    "armour": "d4",
+    "armourName": "Mould-matted hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo044It0000000",
+      "name": "Rending claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo044It0100000",
+      "name": "Bone-cracking bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo044It0200000",
+      "name": "Hurled headstone",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 30,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d10",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo044It0300000",
+      "name": "Call the Warren",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She lets out a low, wet, clicking whine. 2 Charnelkin mooks claw out of the walls and floor within 30'.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo044It0400000",
+      "name": "Grave-Rot Embrace",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She pulls one creature within reach close and breathes the charnel-house into its face. The creature tests Toughness DR13. Failure 2d6 damage and Infected. Ruin 2d8 damage and Infected.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "2d8",
+        "conditions": {
+          "failure": "infected",
+          "ruin": "infected"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 damage and Infected.",
+          "ruin": "2d8 damage and Infected."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo044It0500000",
+      "name": "Close the Warren",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She tears the coffin-wood props out of a tunnel. Every creature in a 15' burst within 30' tests Agility DR14. Failure 2d6 damage and Restrained under the earth until it breaks free (◈, Strength DR12) or an adjacent ally digs it out (◈◈). Ruin 3d6 damage and Restrained in the same way. A buried creature is in complete darkness until it is free.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 14,
+        "cost": 7,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 damage and Restrained under the earth until it breaks free (◈, Strength DR12) or an adjacent ally digs it out (◈◈).",
+          "ruin": "3d6 damage and Restrained in the same way. A buried creature is in complete darkness until it is free."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo044It0600000",
+      "name": "Charnel Flesh",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "She takes half damage from non-magical ranged attacks.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo044It0700000",
+      "name": "Mother of the Warren",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "While she lives, Charnelkin within 60' of her do not roll Morale. When she dies or flees, every Charnelkin that sees it rolls Morale at once.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo044It0800000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who sees her for the first time tests Sanity DR14 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

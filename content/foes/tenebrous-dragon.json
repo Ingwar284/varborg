@@ -1,0 +1,349 @@
+{
+  "_id": "vbFo112000000000",
+  "name": "Tenebrous Dragon",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "dragon",
+    "description": "This winged behemoth is dead, yet it does not rest. Its ribcage now serves as a hollow tabernacle for a parasite of shadow. Where noble blood once surged, there is only a thick bile animating the corpse like a puppet. It stalks the lightless craters of the Darklands, devouring every source of light it finds.",
+    "hp": {
+      "value": 55,
+      "max": 55
+    },
+    "morale": null,
+    "armour": "d8",
+    "armourName": "Spectral scales",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo112It0000000",
+      "name": "Tenebrous bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "3d10",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo112It0100000",
+      "name": "Tenebrous claws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo112It0200000",
+      "name": "Hurled rock",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo112It0300000",
+      "name": "Umbral Shroud",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Shadow swallows the dragon's outline. Until the end of its next turn, attacks against it are made with Bane.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo112It0400000",
+      "name": "Slam",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The dragon slams its body against the ground. Every creature within 15' tests Agility DR15: Failure 3d6. Ruin 4d6 and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 15,
+        "cost": 5,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "4d6",
+        "conditions": {
+          "failure": "",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6.",
+          "ruin": "4d6 and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo112It0500000",
+      "name": "Gloom Breath",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The dragon exhales necrotic darkness in a 60' cone. Creatures in the cone test Agility DR15: Failure 4d6. Ruin 5d6, and every light source they carry goes out.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 15,
+        "cost": 7,
+        "actions": 2,
+        "damage": "4d6",
+        "ruinDamage": "5d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "4d6.",
+          "ruin": "5d6, and every light source they carry goes out."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo112It0600000",
+      "name": "Voidburst",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The parasite erupts from the dragon in a blast of darkness. Every creature within 60' tests Sanity DR16: Failure 4d6 and Frightened for d4 rounds. Ruin 5d6 and Frightened until the end of the encounter.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 16,
+        "cost": 9,
+        "actions": 2,
+        "damage": "4d6",
+        "ruinDamage": "5d6",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "d4"
+          },
+          "ruin": {
+            "kind": "encounter",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "4d6 and Frightened for d4 rounds.",
+          "ruin": "5d6 and Frightened until the end of the encounter."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo112It0700000",
+      "name": "Flight",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Tenebrous Dragon can fly 40' per Move.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo112It0800000",
+      "name": "Eater of Light",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Every light source within 60' of the Tenebrous Dragon sheds light in half its usual radius.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo112It0900000",
+      "name": "Hollow Tabernacle",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A Triumph on an attack against the dragon tears open its ribs and exposes the parasite: until the end of the round, all attacks against it are made with Boon.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo112It1000000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Creatures that see the Tenebrous Dragon for the first time test Sanity DR14 or Panic.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

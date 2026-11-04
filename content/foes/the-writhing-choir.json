@@ -1,0 +1,349 @@
+{
+  "_id": "vbFo070000000000",
+  "name": "The Writhing Choir",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "",
+    "description": "A heaving mass of pale flesh, eyes and mouths, dragged up from beneath the oldest foundations of Emberglow when the gas-mains finally failed. Each mouth speaks in a different voice, singing the names of the drowned and the forgotten. The harmony is almost beautiful, and the longer it is heard, the less the listener remembers being anyone else.",
+    "hp": {
+      "value": 45,
+      "max": 45
+    },
+    "morale": null,
+    "armour": "d6",
+    "armourName": "Writhing flesh",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo070It0000000",
+      "name": "Lashing tentacle",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo070It0100000",
+      "name": "Gnashing mouths",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 15,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo070It0200000",
+      "name": "Acid vomit",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 40,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "shoot",
+        "damageType": "fire",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo070It0300000",
+      "name": "Whispering Chorus",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A chorus of voices fills the air. All creatures within 30' test Sanity DR14: Failure 2d8 and bane on Sanity tests until the end of their next turn. Ruin 3d6 and bane for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 14,
+        "cost": 3,
+        "actions": 2,
+        "damage": "2d8",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d8 and bane on Sanity tests until the end of their next turn.",
+          "ruin": "3d6 and bane for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo070It0400000",
+      "name": "Spawn Gloamlice",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "3 Gloamlouse mooks burst from the Choir's flesh and act on its next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 5,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo070It0500000",
+      "name": "Warp Flesh",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "One creature within 20' tests Toughness DR15: Failure 2d10 and a limb twists. The creature has bane on Strength and Agility tests until the next Long Rest. Ruin 3d10 and the effect is permanent until healed by a miracle.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 15,
+        "cost": 7,
+        "actions": 2,
+        "damage": "2d10",
+        "ruinDamage": "3d10",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d10 and a limb twists. The creature has bane on Strength and Agility tests until the next Long Rest.",
+          "ruin": "3d10 and the effect is permanent until healed by a miracle."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo070It0600000",
+      "name": "The Unmaking",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Every mouth screams a single note. All creatures within 40' test Sanity DR15: Failure 3d6 and Frightened for d4 rounds. Ruin 5d6, Frightened and Deafened.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 15,
+        "cost": 9,
+        "actions": 2,
+        "damage": "3d6",
+        "ruinDamage": "5d6",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "d4"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "3d6 and Frightened for d4 rounds.",
+          "ruin": "5d6, Frightened and Deafened."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo070It0700000",
+      "name": "Amorphous",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Choir can squeeze through any gap of 6 inches or more and cannot be knocked prone.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo070It0800000",
+      "name": "Shifting Flesh",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Choir regains d6 HP at the start of each round.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo070It0900000",
+      "name": "Hundred Eyes and Mouths",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Choir cannot be surprised, and is immune to Blinded and Silenced.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo070It1000000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Creatures that see the Choir for the first time test Sanity DR14 or Panic.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

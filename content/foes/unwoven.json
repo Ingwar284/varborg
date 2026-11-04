@@ -1,0 +1,177 @@
+{
+  "_id": "vbFo114000000000",
+  "name": "Unwoven",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Once a man, perhaps. Now a tall figure of fraying cloth and loose, humming thread, its seams opening wider with every step. It wanders the Hinterlands pulling at whatever it meets, driven by the dim memory of a loom and the need to stitch itself whole from other people.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 8,
+    "armour": "d4",
+    "armourName": "Frayed shroud",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo114It0000000",
+      "name": "Lashing tatters",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo114It0100000",
+      "name": "Unspool",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Unwoven flings a thread at a target within 30'. Test Agility DR12: Failure d6 and the target is Restrained until it spends an action to break free. Ruin d8 and Restrained.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 and the target is Restrained until it spends an action to break free.",
+          "ruin": "d8 and Restrained."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo114It0200000",
+      "name": "Pull Apart",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Unwoven tears a strip from a Restrained target. Test Toughness DR13: Failure d8, the target loses one feat gained through Improving (its choice) until the next Long Rest, and the Unwoven heals d8. Ruin 2d6, the target loses one such feat (the Dark Master's choice), and the Unwoven heals 2d8. A class feature, class power or starting ancestry feat is never lost; a creature with no other feats takes an additional d6 damage instead.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "d8",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d8, the target loses one feat gained through Improving (its choice) until the next Long Rest, and the Unwoven heals d8.",
+          "ruin": "2d6, the target loses one such feat (the Dark Master's choice), and the Unwoven heals 2d8. A class feature, class power or starting ancestry feat is never lost; a creature with no other feats takes an additional d6 damage instead."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo114It0300000",
+      "name": "Loose Threads",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Unwoven takes double damage from fire. Creatures hit by its attacks cannot use reactions until the start of their next turn.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo114It0400000",
+      "name": "Humming Weave",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Unwoven is aware of any creature wearing woven cloth within 60'.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo025000000000",
+  "name": "Dockside Brawler",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A broad, bruise-knuckled drunk who has been in every fistfight on the Gaslake waterfront and lost very few. He swings a broken bottle with the confidence of a man who has forgotten what pain is.",
+    "hp": {
+      "value": 10,
+      "max": 10
+    },
+    "morale": 5,
+    "armour": "d2",
+    "armourName": "Heavy coat",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo025It0000000",
+      "name": "Broken bottle",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo025It0100000",
+      "name": "Liquid Courage",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "The Brawler is immune to the Frightened condition, but he sways on his feet: creatures have Boon on tests to shove, trip or slip past him.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

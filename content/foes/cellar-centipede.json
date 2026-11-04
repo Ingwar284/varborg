@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo145000000000",
+  "name": "Cellar Centipede",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "Arm-long, rust-red and quick as a dropped coin, it lives in the damp coal cellars of Kettlewhistle, where the boilers keep the stone warm all year. Children are told to stamp twice before going down the stairs. The centipedes have learned what the stamping means.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 3,
+    "armour": "d2",
+    "armourName": "Chitin",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo145It0000000",
+      "name": "Venom bite",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo145It0100000",
+      "name": "Venom",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature damaged by its bite takes d2 persistent poison damage.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

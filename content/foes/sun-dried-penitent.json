@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo174000000000",
+  "name": "Sun-Dried Penitent",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "The Solar Conclave teaches purity through suffering, and its most devout penitents stand in the fields with their faces lifted to Sol's gaze until they fall. The sun dries them hard and brown as old leather. Some of them get up again, still facing the sky, and walk the furrows touching anyone who has not suffered enough.",
+    "hp": {
+      "value": 18,
+      "max": 18
+    },
+    "morale": null,
+    "armour": "d2",
+    "armourName": "Leathered skin",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo174It0000000",
+      "name": "Withered fists",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo174It0100000",
+      "name": "Rotting Touch",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It lays a dry palm on one creature within reach. The creature tests Toughness DR12. Failure d6 damage and Infected. Ruin d10 damage and Infected.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d10",
+        "conditions": {
+          "failure": "infected",
+          "ruin": "infected"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Infected.",
+          "ruin": "d10 damage and Infected."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo174It0200000",
+      "name": "Dry as Kindling",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It takes double damage from fire and is immune to poison.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

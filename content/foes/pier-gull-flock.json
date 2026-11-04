@@ -1,0 +1,177 @@
+{
+  "_id": "vbFo161000000000",
+  "name": "Pier Gull Flock",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "The gulls of the Gaslake piers have grown fat on offal and fish-guts and bold on the dockhands' fear. They take bread from hands, pies from windowsills and eyes from drunks asleep on the jetties. A single gull is a nuisance. The flock is a weather front with beaks.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 4,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo161It0000000",
+      "name": "Mobbing beaks",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo161It0100000",
+      "name": "Snatch and Scatter",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A dozen birds dive at one creature within 30' and go for whatever it holds: food, a light, a small item. The creature tests Agility DR12. Failure d4 damage, and the item is taken and carried up to the rooftops. Ruin d6 damage, the item is taken, and it is Blinded until the end of its next turn.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d4",
+        "ruinDamage": "d6",
+        "conditions": {
+          "failure": "",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d4 damage, and the item is taken and carried up to the rooftops.",
+          "ruin": "d6 damage, the item is taken, and it is Blinded until the end of its next turn."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo161It0200000",
+      "name": "Mob",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The whole flock descends on a 15' burst within 30'. Every creature in the burst tests Agility DR13. Failure 2d4 damage and Blinded until the end of its next turn. Ruin 2d6 damage and Blinded for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d4",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d4 damage and Blinded until the end of its next turn.",
+          "ruin": "2d6 damage and Blinded for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo161It0300000",
+      "name": "Flock",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It takes half damage from single-target attacks and double damage from areas.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo161It0400000",
+      "name": "Wheeling Wings",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It flies 30' per move and can share a space with other creatures.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

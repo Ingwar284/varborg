@@ -1,0 +1,177 @@
+{
+  "_id": "vbFo013000000000",
+  "name": "Dr Maximo Friend",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A loud, fastidious little man with a bald head and a grey spade beard, always in pinstripes. His questions are kind, and his insults are not. He has been looking for the play since 659.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 9,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo013It0000000",
+      "name": "Great brass syringe",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo013It0100000",
+      "name": "A Sample",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Friend draws patzu from the eye of a Restrained or Stupefied creature within reach. It tests Toughness DR12. Failure d6 damage, Dread, and it loses 1 Corruption. Ruin As Failure, and it is Stupefied for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage, Dread, and it loses 1 Corruption.",
+          "ruin": "As Failure, and it is Stupefied for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo013It0200000",
+      "name": "Mr Ed!",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Friend calls out. Mr Ed arrives at the start of the next round, wherever Friend is.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 5,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo013It0300000",
+      "name": "Endless Doors",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Friend can always find a way out of anywhere: a hidden passage, a secret door, a door that was not there a moment ago. Others may follow him (+1 Corruption), but are soon held up. He goes between the Broadalbin, the Macallister Building and the Dorchester House, which to him are all \"the hospital\", but he cannot bring others.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo013It0400000",
+      "name": "Infinite",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Until he finds and reads the play, he cannot die. He can be shot, stabbed, beaten and burned like anyone, but after a while he comes back unharmed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

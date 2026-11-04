@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo138000000000",
+  "name": "Hollow Gasman",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Only the Gasmen may enter the Siphons, and some of them swim too long in the air that drowns. Khael's breath fills them until there is no room left for the man: the mask fuses to the face, the oilskin to the flesh, and the body swells and hisses like a split main. The Gasmen put out their lamps when they hear one coming.",
+    "hp": {
+      "value": 25,
+      "max": 25
+    },
+    "morale": null,
+    "armour": "d4",
+    "armourName": "Fused mask and oilskin",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo138It0000000",
+      "name": "Valve-wrench",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo138It0100000",
+      "name": "Swollen fist",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo138It0200000",
+      "name": "Choking Exhale",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It breathes out a 15' cone of grey gas. Every creature in the cone tests Toughness DR12. Failure d6 damage and Slowed until the end of its next turn. Ruin d8 damage and Slowed for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "slowed",
+          "ruin": "slowed"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Slowed until the end of its next turn.",
+          "ruin": "d8 damage and Slowed for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo138It0300000",
+      "name": "Rupture",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It tears open a seam and vents a 15' burst centred on itself. If an open flame or lit lantern is in the burst, the gas ignites and every creature in it tests Agility DR13. Failure 2d4 damage and d4 persistent fire damage. Ruin 2d6 damage and d6 persistent fire damage. If there is no flame, the gas lingers in the burst until the end of the next round and ignites as above the moment a flame enters it.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d4",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d4 damage and d4 persistent fire damage.",
+          "ruin": "2d6 damage and d6 persistent fire damage. If there is no flame, the gas lingers in the burst until the end of the next round and ignites as above the moment a flame enters it."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo138It0400000",
+      "name": "Breath of Khael",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It is immune to poison and fire, and does not breathe.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo138It0500000",
+      "name": "Pressurised",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When it drops to 0 HP, it bursts as Rupture, without spending gloom.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

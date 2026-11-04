@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo155000000000",
+  "name": "Pinedeep Toad",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "A warty, barrel-sized toad that squats among the petrified roots of the Pinedeep, its throat-sac glowing with the swallowed light of crystal needles. The raft-folk hear it boom across the water at night and pull their children inboard. Its tongue can take a grown man off a raft, and has.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 5,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo155It0000000",
+      "name": "Wide mouth",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo155It0100000",
+      "name": "Tongue Snare",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Its tongue lashes at one creature within 20'. The creature tests Agility DR12. Failure d4 damage, pulled adjacent to the toad and Restrained until it breaks free (◈, Strength DR12). Ruin d6 damage, pulled adjacent, Restrained in the same way, and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d4",
+        "ruinDamage": "d6",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d4 damage, pulled adjacent to the toad and Restrained until it breaks free (◈, Strength DR12).",
+          "ruin": "d6 damage, pulled adjacent, Restrained in the same way, and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo155It0200000",
+      "name": "Great Leap",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It leaps 30' per move, ignoring difficult terrain, and swims at full speed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

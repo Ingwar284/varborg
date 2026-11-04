@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo135000000000",
+  "name": "Maw-Crawler",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "In the Rift of the Maw, where the old basalt bleeds Sun-Blood, long many-legged things drink at the seams. Their bellies glow through the cracks between their plates like coals through a grate. Oakhaven-on-the-Brink pays well for their heads, which stay warm for a month, and pays nothing at all for the men who go down to fetch them.",
+    "hp": {
+      "value": 18,
+      "max": 18
+    },
+    "morale": 6,
+    "armour": "d4",
+    "armourName": "Basalt plates",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo135It0000000",
+      "name": "Mandibles",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo135It0100000",
+      "name": "Sun-Blood Spit",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It spits a gob of molten Sun-Blood at one creature within 30'. The creature tests Agility DR12. Failure d6 damage and d4 persistent fire damage. Ruin d8 damage and d6 persistent fire damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and d4 persistent fire damage.",
+          "ruin": "d8 damage and d6 persistent fire damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo135It0200000",
+      "name": "Glowing Seams",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It sheds dim light in a 10' radius and climbs sheer rock at full speed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

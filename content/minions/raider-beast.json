@@ -1,0 +1,88 @@
+{
+  "_id": "vbMn026000000000",
+  "name": "Raider-Beast",
+  "type": "minion",
+  "img": "icons/svg/pawprint.svg",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 1,
+    "displayName": 30,
+    "displayBars": 50,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "description": "Matted with old blood and hung with the skulls of everything it has helped you kill. It answers to your whistle and to nothing else, and it has eaten the last two people who tried to steal it.",
+    "owner": "",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 8,
+    "armour": "d4",
+    "armourName": "Scarred hide and bone"
+  },
+  "items": [
+    {
+      "_id": "vbMn026It0000000",
+      "name": "Bite, tusks or hooves",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbMn026It0100000",
+      "name": "Maul",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "◈◈ It seizes a creature within reach in its jaws and shakes it: d6 damage, and the creature is Restrained until the end of its next turn or until the beast moves. A player character may test Strength DR12 on their turn to break free.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbMn026It0200000",
+      "name": "Swift",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It moves 40' per Move (20' safe, 60' fast) and carries one rider and up to 6 heavy items. It will not move willingly into complete darkness. If it drops to 0 HP while you ride it, you are thrown: you land Prone and take d6 damage.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

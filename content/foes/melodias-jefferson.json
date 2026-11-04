@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo102000000000",
+  "name": "Melodias Jefferson",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Melodias Jefferson is not a monster, but he has the temper of a cornered badger and the calloused hands of a man who has buried more than secrets. He smells of damp peat and cheap tobacco, and he stumps around the yard he calls his kingdom with stiff, steady spite. To him you are not investigators. You are muddy-booted pests trampling his ivy, and he would gladly plant you under it for a moment's peace.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 7,
+    "armour": "d2",
+    "armourName": "Thick patched overalls",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo102It0000000",
+      "name": "Rusty garden shovel",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo102It0100000",
+      "name": "Get Off My Land!",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "A torrent of gravelly abuse and a lunge with the shovel, surprisingly fast. One creature within reach tests Agility DR12. Failure d6 damage and Prone. Ruin d8 damage and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Prone.",
+          "ruin": "d8 damage and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo102It0200000",
+      "name": "Groundskeeper",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Jefferson knows every dip and shadow of Scriveners' Rest. He ignores difficult terrain in the yard, and he cannot be surprised there.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

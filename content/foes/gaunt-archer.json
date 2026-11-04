@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo169000000000",
+  "name": "Gaunt Archer",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "The Gaunt Tombs hold the dead of the old city, the one Lamoral ruled, and some of them were buried with their bows. Their skeletons rise in rusted mail with quivers that never seem to empty, and they shoot from the broken mausoleums in perfect volleys, as if someone long dead were still calling the orders.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": null,
+    "armour": "d2",
+    "armourName": "Rusted mail",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo169It0000000",
+      "name": "Bone bow",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo169It0100000",
+      "name": "Hollow Bones",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It is immune to Frightened, and takes double damage from blunt weapons (cudgels, maces, mauls, hammers and unarmed attacks).",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

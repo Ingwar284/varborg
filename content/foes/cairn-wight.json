@@ -1,0 +1,133 @@
+{
+  "_id": "vbFo175000000000",
+  "name": "Cairn Wight",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "Some of the cairns at the edge of the Darklands were raised over kings and captains who swore to hold the line against the dark. They are still holding it. A Cairn Wight wears its grave-gold like armour and guards its stones against everything, the dark and the living alike.",
+    "hp": {
+      "value": 15,
+      "max": 15
+    },
+    "morale": 9,
+    "armour": "d4",
+    "armourName": "Grave-gold mail",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo175It0000000",
+      "name": "Barrow-blade",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo175It0100000",
+      "name": "Grave Chill",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It breathes the cold of the cairn over one creature within reach. The creature tests Toughness DR12. Failure d6 damage and Slowed until the end of its next turn. Ruin d8 damage and Slowed for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "slowed",
+          "ruin": "slowed"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Slowed until the end of its next turn.",
+          "ruin": "d8 damage and Slowed for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo175It0200000",
+      "name": "Cairn-Bound",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It cannot move more than 300' from its cairn. While it is within 30' of it, it regains d4 HP at the start of each of its turns.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo175It0300000",
+      "name": "Opportune Attack",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When a creature within its reach interacts with something, moves, makes a ranged attack or casts a spell, it may use its reaction to attack it with a melee attack. On a Ruin, their action is disrupted.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

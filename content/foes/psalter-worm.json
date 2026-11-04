@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo139000000000",
+  "name": "Psalter-Worm",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "Beneath the Great Archives, among the records too heretical to burn and too dangerous to read, the worms have eaten well. A Psalter-Worm is as long as a hearse, its pale flesh tattooed from within by the ink it has swallowed, and it mutters what it has eaten in the Grand Archivist's own cadence. The Iron Ledger Society denies that it exists. It has eaten the denials too.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 5,
+    "armour": "d2",
+    "armourName": "Vellum folds",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo139It0000000",
+      "name": "Rasping maw",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo139It0100000",
+      "name": "Tail lash",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo139It0200000",
+      "name": "Strike from the Record",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It recites a creature's name backwards. One creature within 30' that can hear it tests Sanity DR12. Failure d6 damage and Stupefied until the end of its next turn. Ruin d8 damage, Stupefied for d4 rounds, and it cannot use one spell or power of the Dark Master's choice until its next Long Rest.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Stupefied until the end of its next turn.",
+          "ruin": "d8 damage, Stupefied for d4 rounds, and it cannot use one spell or power of the Dark Master's choice until its next Long Rest."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo139It0300000",
+      "name": "Paper Storm",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It retches up a whirl of razor-edged pages. Every creature within 15' of it tests Agility DR13. Failure 2d4 damage and d4 persistent bleeding damage. Ruin 2d6 damage and d6 persistent bleeding damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d4",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d4 damage and d4 persistent bleeding damage.",
+          "ruin": "2d6 damage and d6 persistent bleeding damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo139It0400000",
+      "name": "Kindling",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It takes double damage from fire.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo139It0500000",
+      "name": "Living Index",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It knows where every creature within 60' whose name is written in the Iron Ledger is, which is nearly everyone born in Emberglow.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,291 @@
+{
+  "_id": "vbFo142000000000",
+  "name": "Lantern Shepherd",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "strong",
+    "category": "",
+    "description": "On the Hinterlands roads, far beyond the Wickguard's lamp-routes, travellers sometimes see a light ahead that is too many lights: a crown of stolen lanterns hung from great black antlers, swaying ten feet above the road. The Shepherd collects lights. It does not much care what carried them.",
+    "hp": {
+      "value": 30,
+      "max": 30
+    },
+    "morale": 8,
+    "armour": "d4",
+    "armourName": "Soot-black hide",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo142It0000000",
+      "name": "Antler gore",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 10,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo142It0100000",
+      "name": "Trampling hooves",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo142It0200000",
+      "name": "Hurled lantern",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 30,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d10",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo142It0300000",
+      "name": "Claim the Light",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It hooks at the light carried by one creature within 10'. The creature tests Strength DR13. Failure d10 damage, and its light source is torn away and hung on the Shepherd's antlers, still burning. Ruin 2d6 damage, its light is taken, and it drops whatever else it holds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 13,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d10",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d10 damage, and its light source is torn away and hung on the Shepherd's antlers, still burning.",
+          "ruin": "2d6 damage, its light is taken, and it drops whatever else it holds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo142It0400000",
+      "name": "Lead Astray",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The lights on its antlers sway in a slow, kind rhythm. One creature within 60' that can see them tests Sanity DR13. Failure 2d4 damage and Charmed until the end of its next turn. Ruin 2d6 damage and Charmed for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d4",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "charmed",
+          "ruin": "charmed"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d4 damage and Charmed until the end of its next turn.",
+          "ruin": "2d6 damage and Charmed for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo142It0500000",
+      "name": "Crown of Fire",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Only while at least one claimed light hangs from its antlers. Every claimed light flares at once, then burns out for good. Every creature within 30' tests Toughness DR14. Failure 2d6 damage and Blinded until the end of its next turn. Ruin 3d6 damage and Blinded for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 14,
+        "cost": 7,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "blinded",
+          "ruin": "blinded"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 damage and Blinded until the end of its next turn.",
+          "ruin": "3d6 damage and Blinded for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo142It0600000",
+      "name": "Chandelier",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It sheds bright light in a 30' radius. When it dies, every claimed light that still burns falls to the ground and can be taken back.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo142It0700000",
+      "name": "Long-Legged",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It moves 30' per move and ignores difficult terrain.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo142It0800000",
+      "name": "Horrifying",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Anyone who sees it step from the dark for the first time tests Sanity DR14 or Panics.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

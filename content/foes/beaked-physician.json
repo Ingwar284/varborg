@@ -1,0 +1,205 @@
+{
+  "_id": "vbFo182000000000",
+  "name": "Beaked Physician",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "The last plague in the Spill killed its physician too, and the physician never noticed. It still makes its rounds in a beaked mask stuffed with rotten herbs and a coat of waxed leather, bleeding the sick, lancing the swollen, and swinging its censer over patients who have been dead for twenty years. It is always looking for new patients. It always finds something wrong.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 7,
+    "armour": "d2",
+    "armourName": "Waxed leather coat",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo182It0000000",
+      "name": "Bone saw",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo182It0100000",
+      "name": "Flung tincture",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 20,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo182It0200000",
+      "name": "Bloodletting",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It opens a vein on one creature within reach. The creature tests Toughness DR12. Failure d6 damage and d4 persistent bleeding damage. Ruin d8 damage and d6 persistent bleeding damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and d4 persistent bleeding damage.",
+          "ruin": "d8 damage and d6 persistent bleeding damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo182It0300000",
+      "name": "Miasma Censer",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It swings its censer in a 15' burst centred on itself. Every creature in the burst tests Toughness DR13. Failure 2d4 damage and Infected. Ruin 2d6 damage, Infected, and one level of Fatigued.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d4",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "infected",
+          "ruin": "infected"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d4 damage and Infected.",
+          "ruin": "2d6 damage, Infected, and one level of Fatigued."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo182It0400000",
+      "name": "Beaked Mask",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It is immune to poison and Infected.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo182It0500000",
+      "name": "Bedside Manner",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "At the start of each of its turns, every undead ally within 15' of it regains d4 HP.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

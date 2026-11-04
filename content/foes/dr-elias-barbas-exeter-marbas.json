@@ -1,0 +1,219 @@
+{
+  "_id": "vbFo006000000000",
+  "name": "Dr Elias Barbas (Exeter, Marbas)",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A gaunt, grey-bearded man who smells of oil and lamp-spirit and rustles when he moves. He believes he is the author of the play, and he is correcting your part.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 11,
+    "armour": "d2",
+    "armourName": "Pages of the play under his clothes",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo006It0000000",
+      "name": "Spanner",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo006It0100000",
+      "name": "Wickguard pistol",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo006It0200000",
+      "name": "Strike Through",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "Barbas tears a page from inside his coat and eats it, staring at one creature within 30'. It tests Sanity DR12. Failure Stupefied until the end of its next turn. Ruin Stupefied for d4 rounds, and it forgets one thing it learned this operation (the Dark Master's choice) until its next Long Rest.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "stupefied",
+          "ruin": "stupefied"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "Stupefied until the end of its next turn.",
+          "ruin": "Stupefied for d4 rounds, and it forgets one thing it learned this operation (the Dark Master's choice) until its next Long Rest."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo006It0300000",
+      "name": "The Lion Wakes",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "In his own house only. Barbas shouts at the machine, and the Lion springs to life and joins the fight (see below).",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "usual",
+        "dr": 12,
+        "cost": 5,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "",
+          "ruin": ""
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo006It0400000",
+      "name": "The Author's Armour",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A Triumph against Barbas does not reduce his armour: the pages cannot be torn by force.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo006It0500000",
+      "name": "Night Eyes",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Barbas has lived in his dark house for months. He suffers no Bane in darkness there.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo006It0600000",
+      "name": "Possessions",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A Wickguard pistol and holster; his papers; the brass key with the filigree \"B\" for room 616; keys to his gig and house; an Emagico key-token labelled MARBAS on a strip of paper; an envelope of burnt paper scraps; a small silver pill-box carved with the laughing face of a child whose eyes have been scratched out, holding half a dozen rotten milk teeth (Unease, if the character saw him swallow one); and numbered, handwritten pages of the play stuffed inside his clothes. Passing strange: Barbas was born on 30 Bearing 655, the night Her Grey Song opened and closed; his house was finished on 21 Blossoming 624, the same day as the Macallister Building, and on Emeline Fitzroy's birthday.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

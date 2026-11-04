@@ -396,3 +396,54 @@ test("relics are once per day; those rolled once per day are always on; the Shar
   }
   assert.deepEqual(relics.filter(r => r.system.alwaysOn).map(r => r.name).sort(), ["Directorate compass", "Gasman's rebreather"]);
 });
+
+// 48i: foes and minions (every stat block in the rules).
+const foeActors = readAll(join(root, "content", "foes")).map(({ data }) => data);
+const minionActors = readAll(join(root, "content", "minions")).map(({ data }) => data);
+const flatNoMarks = flatRules.replace(/⚔ /g, "");
+/** Text made safe to put inside a regular expression. */
+const escapeRe = text => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+test("the rules' 182 foe stat blocks and 2 minion stat blocks are there", () => {
+  assert.equal(foeActors.length, 182);
+  assert.deepEqual(minionActors.map(m => m.name).sort(), ["Destrier", "Raider-Beast"]);
+});
+
+test("each foe's tier, HP, Morale and armour are as its stat block", () => {
+  for (const f of [...foeActors, ...minionActors]) {
+    const s = f.system;
+    const tier = s.tier[0].toUpperCase() + s.tier.slice(1);
+    assert.ok(new RegExp(`${escapeRe(f.name)} _?${tier} (Foe|foe|minion)`).test(flatRules), `${f.name}: tier`);
+    assert.ok(flatRules.includes(`HP ${s.hp.max}/${s.hp.max}`), `${f.name}: HP`);
+    assert.ok(s.morale === null || flatRules.includes(`Morale ${s.morale}`), `${f.name}: Morale`);
+    if (s.armour) assert.ok(flatRules.includes(`-${s.armour}`), `${f.name}: armour`);
+  }
+});
+
+test("each foe's attacks, gloom abilities and passives come from the rules", () => {
+  for (const f of [...foeActors, ...minionActors]) {
+    for (const item of f.items) {
+      assert.match(item._id, /^[a-zA-Z0-9]{16}$/, `${f.name}: ${item.name} id`);
+      if (item.type === "weapon") {
+        assert.ok(flatNoMarks.includes(`${item.name} Damage ${item.system.damage}`) || flatNoMarks.includes(`${item.name} ${item.system.damage}`)
+          || new RegExp(`${escapeRe(item.name)} \\([^)]+\\) Damage ${item.system.damage}`).test(flatNoMarks), `${f.name}: attack ${item.name}`);
+      } else if (item.type === "power") {
+        assert.equal(item.system.resource, "gloom", `${f.name}: ${item.name}`);
+        assert.ok(flatRules.includes(`${item.name} ☾${item.system.cost}`), `${f.name}: gloom ${item.name} ☾${item.system.cost}`);
+        if (item.system.ability !== "usual") assert.ok(new RegExp(`${item.system.ability} ,?(at )?DR ?${item.system.dr}`, "i").test(item.system.description), `${f.name}: ${item.name} test`);
+      } else {
+        assert.equal(item.type, "feat", `${f.name}: ${item.name}`);
+        assert.equal(item.system.source, "passive", `${f.name}: ${item.name}`);
+        assert.ok(inRules(`${item.name} ${item.system.description}`) || inRules(`${item.name}: ${item.system.description}`) || inRules(`${item.name}. ${item.system.description}`), `${f.name}: passive ${item.name}`);
+      }
+    }
+  }
+});
+
+test("a gloom ability's own test gives its Failure and Ruin damage and conditions from its text", () => {
+  const goblin = foeActors.find(f => f.name === "Lamp-Snuffer Goblin");
+  const trick = goblin.items.find(i => i.name === "Dirty Trick").system;
+  assert.deepEqual([trick.ability, trick.dr, trick.damage, trick.ruinDamage], ["agility", 12, "d6", "d8"]);
+  assert.deepEqual(trick.conditions, { failure: "blinded", ruin: "blinded" });
+  assert.deepEqual(trick.durations, { failure: { kind: "rounds", rounds: "1" }, ruin: { kind: "rounds", rounds: "d4" } });
+});

@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo126000000000",
+  "name": "Siphon Leech",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "Down in the Siphons, where only the Gasmen may go and only the Gasmen know how to swim in the air that drowns, blind grey leeches have learned to drink from the hoses. They have since learned that the men at the other end taste better. A Gasman counts his leeches after every shift, the way other men count their fingers.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": null,
+    "armour": "d2",
+    "armourName": "Rubbery skin",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo126It0000000",
+      "name": "Latching mouth",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo126It0100000",
+      "name": "Latch",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "On a hit, it clings to the target and moves with it. While latched, it deals 1 damage at the start of each of the target's turns. Prying it off takes an action (◈).",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

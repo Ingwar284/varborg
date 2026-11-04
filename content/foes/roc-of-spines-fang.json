@@ -1,0 +1,335 @@
+{
+  "_id": "vbFo164000000000",
+  "name": "Roc of Spine's Fang",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "mighty",
+    "category": "",
+    "description": "She nests on the summit of Spine's Fang, beside the Vigilant Bell, and her wings span the width of a village. When she takes flight the Bell stirs in the downdraught, and the Heartlands below hear it toll. Some say the Bell does not ring for doom at all, only for her. In the Heartlands that has long since become the same thing.",
+    "hp": {
+      "value": 45,
+      "max": 45
+    },
+    "morale": 9,
+    "armour": "d6",
+    "armourName": "Storm-feathers",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo164It0000000",
+      "name": "Talons",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d10",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo164It0100000",
+      "name": "Beak",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d12",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo164It0200000",
+      "name": "Dropped boulder",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "Range: 60', only at creatures below it while it flies.",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 60,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "2d8",
+        "kind": "shoot",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo164It0300000",
+      "name": "Snatch Up",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She closes her talons on one creature within reach. The creature tests Strength DR14. Failure 2d8 damage and Restrained in her talons until it breaks free (◈, Strength DR14), falling from whatever height she has reached. Ruin 2d10 damage and Restrained in the same way. She can hold one creature at a time and still fly.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 14,
+        "cost": 3,
+        "actions": 2,
+        "damage": "2d8",
+        "ruinDamage": "2d10",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": "restrained"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d8 damage and Restrained in her talons until it breaks free (◈, Strength DR14), falling from whatever height she has reached.",
+          "ruin": "2d10 damage and Restrained in the same way. She can hold one creature at a time and still fly."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo164It0400000",
+      "name": "Hurricane Wings",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She beats her wings across a 40' cone. Every non-magical flame in the cone goes out, and every creature in it tests Strength DR14. Failure 2d6 damage, pushed 20' and Prone. Ruin 3d6 damage, pushed 40' and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 14,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 damage, pushed 20' and Prone.",
+          "ruin": "3d6 damage, pushed 40' and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo164It0500000",
+      "name": "Let Fall",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She drops the creature in her talons from on high onto a point within 60'. The dropped creature tests Toughness DR15. Failure 2d10 damage and Prone. Ruin 3d10 damage and Prone. Every other creature within 10' of where it lands defends (Agility DR12) against 2d6 damage.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 15,
+        "cost": 7,
+        "actions": 2,
+        "damage": "2d10",
+        "ruinDamage": "3d10",
+        "conditions": {
+          "failure": "prone",
+          "ruin": "prone"
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d10 damage and Prone.",
+          "ruin": "3d10 damage and Prone. Every other creature within 10' of where it lands defends (Agility DR12) against 2d6 damage."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo164It0600000",
+      "name": "Eclipse",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "She spreads her wings across the sky and the last sun. Every non-magical light source within 60' goes out, and every creature in that area tests Sanity DR16. Failure 2d6 damage and Frightened of her for d4 rounds. Ruin 3d6 damage, Frightened of her for d4 rounds, and Prone.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 16,
+        "cost": 9,
+        "actions": 2,
+        "damage": "2d6",
+        "ruinDamage": "3d6",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "d4"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d6 damage and Frightened of her for d4 rounds.",
+          "ruin": "3d6 damage, Frightened of her for d4 rounds, and Prone."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo164It0700000",
+      "name": "Vast Wings",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "She flies 80' per move and cannot be knocked Prone.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo164It0800000",
+      "name": "Mountain of Feathers",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "She cannot be pushed, pulled or Restrained.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo164It0900000",
+      "name": "Keen Eyes",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "She cannot be surprised, and sees any light source within a mile.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

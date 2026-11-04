@@ -1,0 +1,247 @@
+{
+  "_id": "vbFo050000000000",
+  "name": "Candle-Wicked Man",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A silent figure hooded in black, a single candle lit from the Great Brazier burning in an iron cage at his breast. He is judge, jury and executioner for the Lord of Light, and he has already heard your case. He does not speak. The candle speaks for him.",
+    "hp": {
+      "value": 25,
+      "max": 25
+    },
+    "morale": 10,
+    "armour": "d4",
+    "armourName": "Black mail beneath the hood",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo050It0000000",
+      "name": "Executioner's blade",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d12",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo050It0100000",
+      "name": "Branding iron",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo050It0200000",
+      "name": "Hand crossbow",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 30,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo050It0300000",
+      "name": "Judgement",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "The Candle-Wicked Man raises his caged candle towards a creature within 30' that can see it. Test Presence DR13: Failure Frightened of him until the end of its next turn. Ruin Frightened for d4 rounds, and it drops whatever it is holding.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "presence",
+        "dr": 13,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "Frightened of him until the end of its next turn.",
+          "ruin": "Frightened for d4 rounds, and it drops whatever it is holding."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo050It0400000",
+      "name": "Brand of the Brazier",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "He presses a white-hot iron to a creature within reach. Test Toughness DR13: Failure 2d4 and d4 persistent fire damage. Ruin 2d6 and d6 persistent fire damage, and the creature bears the Lord of Light's brand for life: every Wickguard and Candle-Wicked Man in Emberglow knows it on sight.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "toughness",
+        "dr": 13,
+        "cost": 5,
+        "actions": 2,
+        "damage": "2d4",
+        "ruinDamage": "2d6",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "2d4 and d4 persistent fire damage.",
+          "ruin": "2d6 and d6 persistent fire damage, and the creature bears the Lord of Light's brand for life: every Wickguard and Candle-Wicked Man in Emberglow knows it on sight."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo050It0500000",
+      "name": "Caged Candle",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "He sheds light in a 15' radius, and creatures in that light cannot hide from him. A creature within reach can try to snuff the candle (◈, Agility DR14). While it is out, his Morale is 4. Relighting it takes him ◈◈.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo050It0600000",
+      "name": "Silent Vigil",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "He is immune to Frightened and Charmed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo050It0700000",
+      "name": "Opportune Attack",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When a creature within his reach interacts with something, moves, makes a ranged attack or casts a spell, he may use his reaction to attack it with a melee attack. On a Ruin, their action is disrupted.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

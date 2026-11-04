@@ -1,0 +1,161 @@
+{
+  "_id": "vbFo012000000000",
+  "name": "Superintendent Ruben Hardrick",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "",
+    "description": "A plain, wide-faced man in old-fashioned spectacles, with swollen knuckles from the wrestling-mat and the eyes of a bloodhound. He cannot be recruited by the Society; if he ever sees too much, he kills every witness, forgets it, and later turns his blunderbuss on himself.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "morale": 9,
+    "armour": "d2",
+    "armourName": "Wickguard greatcoat",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo012It0000000",
+      "name": "Wrestler's throw",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "And the target is Prone if it fails its defence.",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo012It0100000",
+      "name": "Blunderbuss",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 10,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d12",
+        "kind": "shoot",
+        "damageType": "shot",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo012It0200000",
+      "name": "You're Under Arrest",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "He seizes a creature within 5' and twists its arm up its back. It tests Strength DR13. Failure Restrained until it breaks free (◈, Strength DR13). Ruin As Failure, and in irons.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "strength",
+        "dr": 13,
+        "cost": 3,
+        "actions": 2,
+        "damage": "",
+        "ruinDamage": "",
+        "conditions": {
+          "failure": "restrained",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "Restrained until it breaks free (◈, Strength DR13).",
+          "ruin": "As Failure, and in irons."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo012It0300000",
+      "name": "Bloodhound",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "He cannot be Charmed, and he never forgets a face.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbFo012It0400000",
+      "name": "Opportune Attack",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "As the Society Cleaner, with his throw.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

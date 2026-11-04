@@ -1,0 +1,119 @@
+{
+  "_id": "vbFo178000000000",
+  "name": "Church Grim",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "",
+    "description": "An old custom among Harkin's faithful: the first grave in a new burial ground is dug for a black dog, so that it may guard the dead that come after. Most of those grounds are full now, and their Grims are very old. A Grim does not trouble mourners. It hunts grave-robbers, resurrection men and anyone who disturbs the rest of its charges, and to see one is said to mean your own grave is already being dug.",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "morale": 10,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo178It0000000",
+      "name": "Spectral jaws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d8",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo178It0100000",
+      "name": "Omen of Death",
+      "type": "power",
+      "img": "icons/svg/terror.svg",
+      "system": {
+        "description": "It fixes its coal-red eyes on one creature within 60' that can see it. The creature tests Sanity DR12. Failure d6 damage and Frightened of the Grim until the end of its next turn. Ruin d8 damage and Frightened of the Grim for d4 rounds.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "sanity",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "d8",
+        "conditions": {
+          "failure": "frightened",
+          "ruin": "frightened"
+        },
+        "durations": {
+          "failure": {
+            "kind": "rounds",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "rounds",
+            "rounds": "d4"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 damage and Frightened of the Grim until the end of its next turn.",
+          "ruin": "d8 damage and Frightened of the Grim for d4 rounds."
+        },
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false
+      }
+    },
+    {
+      "_id": "vbFo178It0200000",
+      "name": "Graveyard Warden",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It takes half damage from non-magical weapons, and cannot leave the burial ground it guards.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

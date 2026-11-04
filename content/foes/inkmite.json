@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo125000000000",
+  "name": "Inkmite",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "Thumb-sized, silver-scaled crawlers bred in the lower stacks of the Great Archives, fat and black with swallowed ink. Eres records everything; the Inkmites unrecord it. Iron Ledger clerks have been known to burn their own files rather than let a swarm reach them, since a ledger that has been eaten cannot be corrected.",
+    "hp": {
+      "value": 5,
+      "max": 5
+    },
+    "morale": 3,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo125It0000000",
+      "name": "Rasping mandibles",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo125It0100000",
+      "name": "Ink-Hunger",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When it hits a creature carrying scrolls or loose documents, roll a d6: on a 1, one scroll or document (the Dark Master's choice) is eaten. A spellbook is too tough to eat.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo062000000000",
+  "name": "Barbed Creeper",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A knotted tangle of thorny vine that creeps across the ruins of the Hinterlands, tightening on whatever sleeps beside it. It has no eyes and no malice, only an endless, slow appetite for the warm.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": null,
+    "armour": "d2",
+    "armourName": "Thorny bark",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo062It0000000",
+      "name": "Thorn lash",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo062It0100000",
+      "name": "Tangle",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "A creature hit by the Barbed Creeper is Restrained until it spends an action to tear free (Strength DR10): Failure it stays Restrained. Ruin the thorns dig in, dealing d4 damage, and it stays Restrained.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

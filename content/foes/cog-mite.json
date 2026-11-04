@@ -1,0 +1,75 @@
+{
+  "_id": "vbFo059000000000",
+  "name": "Cog-Mite",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A wind-up beetle of tarnished brass, the size of a boot, left ticking in the corners of abandoned workshops. It does not know why it was built, but it knows that it must bite whatever moves, and that it must keep ticking.",
+    "hp": {
+      "value": 5,
+      "max": 5
+    },
+    "morale": null,
+    "armour": "d2",
+    "armourName": "Brass shell",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbFo059It0000000",
+      "name": "Gnashing jaws",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFo059It0100000",
+      "name": "Wound Tight",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When the Cog-Mite is reduced to 0 HP, its spring snaps. All adjacent creatures take d4 damage.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}
