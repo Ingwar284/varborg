@@ -11,10 +11,10 @@ import FoeSheet from "./sheets/foe-sheet.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
 import FeatData from "./data/feat.mjs";
 import PowerData from "./data/power.mjs";
-import SpellData from "./data/spell.mjs";
+import SpellData, { ScrollData } from "./data/spell.mjs";
 import { ClassData, AncestryData, BackgroundData } from "./data/origins.mjs";
 import {
-  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, SpellSheet, ClassSheet, AncestrySheet, BackgroundSheet
+  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, SpellSheet, ScrollSheet, ClassSheet, AncestrySheet, BackgroundSheet
 } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
@@ -32,6 +32,7 @@ import { registerDeathsDoor } from "./deaths-door.mjs";
 import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
 import { registerPools } from "./pools.mjs";
+import { registerShadowblight } from "./shadowblight.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -51,7 +52,7 @@ Hooks.once("init", () => {
   Actors.registerSheet("var-borg", FoeSheet, { types: ["foe"], makeDefault: true, label: "VARBORG.Sheet.Foe" });
 
   // Item data and sheets: weapons, armour, shields, gear, containers, feats,
-  // powers, spells, and the class, ancestry and background a character comes from.
+  // powers, spells, scrolls, and the class, ancestry and background a character comes from.
   CONFIG.Item.dataModels.weapon = WeaponData;
   CONFIG.Item.dataModels.armour = ArmourData;
   CONFIG.Item.dataModels.shield = ShieldData;
@@ -60,6 +61,7 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.feat = FeatData;
   CONFIG.Item.dataModels.power = PowerData;
   CONFIG.Item.dataModels.spell = SpellData;
+  CONFIG.Item.dataModels.scroll = ScrollData;
   CONFIG.Item.dataModels.class = ClassData;
   CONFIG.Item.dataModels.ancestry = AncestryData;
   CONFIG.Item.dataModels.background = BackgroundData;
@@ -73,6 +75,7 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", FeatSheet, { types: ["feat"], makeDefault: true, label: "VARBORG.Sheet.Feat" });
   Items.registerSheet("var-borg", PowerSheet, { types: ["power"], makeDefault: true, label: "VARBORG.Sheet.Power" });
   Items.registerSheet("var-borg", SpellSheet, { types: ["spell"], makeDefault: true, label: "VARBORG.Sheet.Spell" });
+  Items.registerSheet("var-borg", ScrollSheet, { types: ["scroll"], makeDefault: true, label: "VARBORG.Sheet.Scroll" });
   Items.registerSheet("var-borg", ClassSheet, { types: ["class"], makeDefault: true, label: "VARBORG.Sheet.Class" });
   Items.registerSheet("var-borg", AncestrySheet, { types: ["ancestry"], makeDefault: true, label: "VARBORG.Sheet.Ancestry" });
   Items.registerSheet("var-borg", BackgroundSheet, { types: ["background"], makeDefault: true, label: "VARBORG.Sheet.Background" });
@@ -94,6 +97,8 @@ Hooks.once("init", () => {
   registerAmmunition();
   // The Ember and Gloom pools and the shared Table panel (rules 3.10).
   registerPools();
+  // The Shadowblight table button on a spell's Ruin card (rules 3.11).
+  registerShadowblight();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

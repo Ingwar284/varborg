@@ -18,15 +18,31 @@
  * damage). Success As described. Failure Half damage; no other effect.
  * Ruin No effect, roll on the Shadowblight table."
  * Rules 3.2: Boon and Bane cancel (module/rules/test-roll.mjs, diceMode).
- * GAPS 25 (variable actions keep the listed cost), 26, 27, 132–134.
- * Life force, scrolls and the Shadowblight roll come in step 31.
+ * Life force: "Spend life force: Test using Toughness instead of Sanity.
+ * Declare how many wounds you'd like to take, then reduce the DR by d4 for
+ * each wound." "You can take only as many wounds as you have left before
+ * your maximum. Each wound counts as a wound gained at 0 HP (test Toughness
+ * as normal), but your HP does not change."
+ * Scrolls: "A scroll contains a single-use spell that one can cast without
+ * having to expend embers. Using a scroll uses as many actions as the spell
+ * it contains would, and the caster tests Sanity against the spell's normal
+ * DR. Invoking a scroll always destroys the scroll, even if the spell fails."
+ * GAPS 25 (variable actions keep the listed cost), 26, 27, 28 (one d4 per
+ * wound, never below DR6), 29 (no other-list Bane on a scroll), 132–134,
+ * 136–140.
  */
 
 import { powerDr, powerOutcome } from "./powers.mjs";
-import { isDestroyed } from "./test-modifiers.mjs";
+import { isDestroyed, modifiedDr } from "./test-modifiers.mjs";
 
-/** Spells test Sanity (rules 3.11). Life force (Toughness) is step 31. */
+/** Spells test Sanity (rules 3.11). */
 export const SPELL_ABILITY = "sanity";
+
+/** Spending life force tests Toughness instead. */
+export const LIFE_FORCE_ABILITY = "toughness";
+
+/** Each wound spent as life force lowers the DR by this die (GAPS 28). */
+export const LIFE_FORCE_DIE = "d4";
 
 /** The lists a spell can belong to (rules 3.11, the class tables). */
 export const SPELL_LISTS_OF_SPELLS = ["arcane", "divine", "primal", "profane", "bloodline"];
@@ -100,4 +116,68 @@ export function spellModifiers({
  */
 export function spellOutcome(tier) {
   return { ...powerOutcome(tier), shadowblight: tier === "ruin" };
+}
+
+/**
+ * How many wounds a caster can spend as life force: only those left before
+ * their maximum (rules 3.11).
+ * @param {number} wounds     Wounds now.
+ * @param {number} maxWounds
+ */
+export function lifeForceLeft(wounds, maxWounds) {
+  return Math.max(0, maxWounds - wounds);
+}
+
+/**
+ * The wounds actually spent: what the player declared, never fewer than 0
+ * and never more than are left.
+ * @param {number} declared
+ * @param {number} wounds
+ * @param {number} maxWounds
+ */
+export function lifeForceWounds(declared, wounds, maxWounds) {
+  const asked = Math.max(0, Math.floor(Number(declared) || 0));
+  return Math.min(asked, lifeForceLeft(wounds, maxWounds));
+}
+
+/** The ability the casting tests: Toughness when life force is spent. */
+export function castingAbility(lifeWounds) {
+  return lifeWounds > 0 ? LIFE_FORCE_ABILITY : SPELL_ABILITY;
+}
+
+/** The dice to roll for the DR reduction, such as "2d4"; null for none. */
+export function lifeForceFormula(lifeWounds) {
+  return lifeWounds > 0 ? `${lifeWounds}${LIFE_FORCE_DIE}` : null;
+}
+
+/**
+ * The DR after life force: lowered by the d4 rolls, never below 6
+ * (GAPS 28). Other DR changes go in `modifier`.
+ * @param {number} dr          The DR before.
+ * @param {number} reduction   The total of the d4s.
+ * @param {number} [modifier]  Other DR changes (armour, conditions, 1 minute).
+ */
+export function lifeForceDr(dr, reduction, modifier = 0) {
+  return modifiedDr(dr, modifier - reduction);
+}
+
+/**
+ * Can a scroll be read now, and what does it take? No Ember ever (rules
+ * 3.11). In combat only on your own turn, with the spell's actions (as for
+ * any ember ability, GAPS 136). Outside combat it is not limited to once:
+ * the scroll is destroyed anyway.
+ * @returns {{allowed: boolean, reason: string|null, ember: 0, actions: number, marksUsed: false}}
+ */
+export function scrollUse({ inCombat = false, onOwnTurn = false, actions = 0 } = {}) {
+  if (!Number.isInteger(actions) || actions < 0) throw new RangeError(`Actions must be a whole number, not ${actions}`);
+  if (inCombat && !onOwnTurn) return { allowed: false, reason: "turn", ember: 0, actions: 0, marksUsed: false };
+  return { allowed: true, reason: null, ember: 0, actions: inCombat ? actions : 0, marksUsed: false };
+}
+
+/**
+ * Everything that changes reading a scroll: as for any casting, but never
+ * the Bane for another spell list (GAPS 29).
+ */
+export function scrollModifiers(options = {}) {
+  return spellModifiers({ ...options, outsideList: false });
 }

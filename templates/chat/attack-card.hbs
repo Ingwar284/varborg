@@ -21,6 +21,11 @@
   <p class="outcome">{{outcomeText}}</p>
   {{#if description}}<p class="power-description">{{description}}</p>{{/if}}
   {{#if sustainNote}}<p class="modifier">{{sustainNote}}</p>{{/if}}
+  {{#if shadowblight}}
+  <button type="button" data-action="rollShadowblight" data-actor-uuid="{{shadowblight.actorUuid}}">
+    <i class="fa-solid fa-skull"></i> {{localize "VARBORG.Shadowblight.Button"}}
+  </button>
+  {{/if}}
   {{#if ruinNote}}<p class="modifier">{{ruinNote}}</p>{{/if}}
   {{#if damage}}
   <div class="damage">

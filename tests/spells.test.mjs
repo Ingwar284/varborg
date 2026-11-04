@@ -6,7 +6,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers, spellOutcome
+  SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers, spellOutcome,
+  LIFE_FORCE_ABILITY, lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr,
+  scrollUse, scrollModifiers
 } from "../module/rules/spells.mjs";
 import { diceMode, MODE } from "../module/rules/test-roll.mjs";
 import { modifiedDr } from "../module/rules/test-modifiers.mjs";
@@ -72,4 +74,51 @@ test("spell outcomes: as powers, and a Ruin calls for the Shadowblight table", (
   assert.deepEqual(spellOutcome("triumph"), { damage: true, multiplier: 2, effect: true, shadowblight: false });
   assert.deepEqual(spellOutcome("failure"), { damage: true, multiplier: 0.5, effect: false, shadowblight: false });
   assert.deepEqual(spellOutcome("ruin"), { damage: false, multiplier: 0, effect: false, shadowblight: true });
+});
+
+test("life force tests Toughness instead of Sanity", () => {
+  assert.equal(LIFE_FORCE_ABILITY, "toughness");
+  assert.equal(castingAbility(0), "sanity");
+  assert.equal(castingAbility(2), "toughness");
+});
+
+test("life force: only the wounds left before your maximum", () => {
+  assert.equal(lifeForceLeft(0, 3), 3);
+  assert.equal(lifeForceLeft(2, 3), 1);
+  assert.equal(lifeForceLeft(3, 3), 0);
+  assert.equal(lifeForceLeft(4, 3), 0, "never negative");
+  assert.equal(lifeForceWounds(2, 0, 3), 2);
+  assert.equal(lifeForceWounds(5, 1, 3), 2, "capped at what is left");
+  assert.equal(lifeForceWounds(-1, 0, 3), 0);
+  assert.equal(lifeForceWounds("", 0, 3), 0);
+  assert.equal(lifeForceWounds(1, 0, 1), 1, "a caster with 1 max wound can spend it once");
+  assert.equal(lifeForceWounds(1, 1, 1), 0);
+});
+
+test("life force rolls one d4 per wound", () => {
+  assert.equal(lifeForceFormula(0), null);
+  assert.equal(lifeForceFormula(1), "1d4");
+  assert.equal(lifeForceFormula(3), "3d4");
+});
+
+test("life force lowers the DR by the d4s, never below 6", () => {
+  assert.equal(lifeForceDr(14, 3), 11);
+  assert.equal(lifeForceDr(14, 12), 6, "never below DR6");
+  assert.equal(lifeForceDr(14, 3, -2), 9, "with 1 minute of casting");
+  assert.equal(lifeForceDr(14, 0), 14);
+});
+
+test("scrolls: no Ember; actions on your own turn in combat; free outside combat", () => {
+  assert.deepEqual(scrollUse({ inCombat: true, onOwnTurn: true, actions: 2 }),
+    { allowed: true, reason: null, ember: 0, actions: 2, marksUsed: false });
+  assert.equal(scrollUse({ inCombat: true, onOwnTurn: false, actions: 2 }).allowed, false);
+  assert.deepEqual(scrollUse({ inCombat: false, actions: 2 }),
+    { allowed: true, reason: null, ember: 0, actions: 0, marksUsed: false }, "never marked used: the scroll is gone");
+  assert.throws(() => scrollUse({ actions: -1 }), RangeError);
+});
+
+test("scrolls never have the other-list Bane, but other modifiers count", () => {
+  assert.deepEqual(scrollModifiers({ outsideList: true }), { boons: 0, banes: 0, dr: 0 });
+  assert.deepEqual(scrollModifiers({ outsideList: true, metalArmour: true }), { boons: 0, banes: 1, dr: 0 });
+  assert.equal(modifiedDr(spellDr(3), scrollModifiers({}).dr), 14, "the spell's normal DR");
 });

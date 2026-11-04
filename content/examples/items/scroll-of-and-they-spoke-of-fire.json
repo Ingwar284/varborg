@@ -1,0 +1,23 @@
+{
+  "_id": "vbExampleScFire0",
+  "name": "Scroll of And They Spoke of Fire",
+  "type": "scroll",
+  "img": "icons/sundries/scrolls/scroll-bound-red.webp",
+  "system": {
+    "description": "Your outstretched hand vomits a 15' cone of flame, and screams come with it.",
+    "price": 140,
+    "cumbersome": false,
+    "storedIn": "",
+    "spellList": "arcane",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d8",
+    "sustained": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and creatures in the cone take d4 persistent fire damage.",
+      "success": "Every creature in the cone takes d8 damage.",
+      "failure": "Half damage.",
+      "ruin": "The screams are yours: you take d4 damage and are Deafened until the end of your next turn."
+    }
+  }
+}

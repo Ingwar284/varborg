@@ -32,8 +32,8 @@ function labels(keys, prefix) {
   return Object.fromEntries(keys.map(key => [key, `VARBORG.${prefix}.${key || "none"}`]));
 }
 
-/** Fields every item a character carries has. */
-class CarriedData extends foundry.abstract.TypeDataModel {
+/** Fields every item a character carries has. Scrolls use them too. */
+export class CarriedData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),

@@ -31,7 +31,7 @@ const { ActorSheetV2 } = foundry.applications.sheets;
 const TEMPLATES = "systems/var-borg/templates/actor";
 
 /** Item types shown in the Inventory tab, in this order. */
-const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container"];
+const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container", "scroll"];
 
 /** Item types that can be equipped. */
 const EQUIPPABLE_TYPES = ["weapon", "armour", "shield"];
@@ -61,6 +61,8 @@ function itemSummary(item, stored) {
       return system.expendable ? i18n.format("VARBORG.Trait.expendableValue", { value: system.expendable }) : "";
     case "container":
       return i18n.format("VARBORG.Container.Holds", { count: stored.get(item.id) ?? 0, capacity: system.capacity });
+    case "scroll":
+      return spellSummary(item);
   }
   return "";
 }
@@ -236,6 +238,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           storedIn: containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
           states: itemStates(item),
           canAttack: item.type === "weapon",
+          canCast: item.type === "scroll",
           canRaise: item.type === "shield" && item.system.equipped && !item.system.destroyed && !system.shieldRaised,
           canExpendable: canRollExpendable(item.system),
           canFire: item.type === "weapon" && canFire(item.system),

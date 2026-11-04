@@ -280,6 +280,8 @@ export async function settleAttackCard(actor, data) {
     outcomeText: power ? powerOutcomeText(power, tier) : i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
     description: power?.description || null,
     sustainNote,
+    // A spell's Ruin: the Shadowblight table (rules 3.11, module/shadowblight.mjs).
+    shadowblight: power?.kind === "spell" && tier === "ruin" ? { actorUuid: actor.uuid } : null,
     naturalNote: naturalNote(result),
     damage,
     inflict,

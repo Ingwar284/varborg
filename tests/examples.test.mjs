@@ -280,3 +280,12 @@ test("And They Spoke of Fire is an Arcane spell, 🟒3 ◈◈, DR14, d8 damage",
   assert.equal(spellDr(fire.cost), 14);
   assert.equal(fire.damage, "d8");
 });
+
+test("the scroll of And They Spoke of Fire carries the same spell, at the DR14 scroll price", () => {
+  const fire = examples.find(({ data }) => data.name === "And They Spoke of Fire").data.system;
+  const { data } = examples.find(({ data }) => data.name === "Scroll of And They Spoke of Fire");
+  assert.equal(data.type, "scroll");
+  for (const key of ["spellList", "cost", "actions", "damage", "sustained"]) assert.equal(data.system[key], fire[key], key);
+  assert.deepEqual(data.system.outcomes, fire.outcomes);
+  assert.equal(data.system.price, 140, "rules 4. Economy: a DR14 (🟒3) scroll costs 140 s");
+});

@@ -56,6 +56,12 @@
           <i class="fa-solid fa-khanda"></i>
         </button>
         {{/if}}
+        {{#if canCast}}
+        <button type="button" class="icon-button" data-action="castSpell"
+                data-tooltip="{{localize 'VARBORG.Spell.ScrollCastTooltip'}}" aria-label="{{localize 'VARBORG.Spell.ScrollCastTooltip'}}">
+          <i class="fa-solid fa-scroll"></i>
+        </button>
+        {{/if}}
         {{#if canRaise}}
         <button type="button" class="icon-button" data-action="raiseShield"
                 data-tooltip="{{localize 'VARBORG.Defence.RaiseTooltip'}}" aria-label="{{localize 'VARBORG.Defence.RaiseTooltip'}}">

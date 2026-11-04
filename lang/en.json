@@ -15,7 +15,8 @@
       "ancestry": "Ancestry",
       "background": "Background",
       "power": "Power",
-      "spell": "Spell"
+      "spell": "Spell",
+      "scroll": "Scroll"
     }
   },
   "VARBORG": {
@@ -67,7 +68,8 @@
         "armour": "Armour",
         "shield": "Shields",
         "gear": "Gear",
-        "container": "Containers"
+        "container": "Containers",
+        "scroll": "Scrolls"
       },
       "Foe": "VÅR BORG foe sheet",
       "Feat": "VÅR BORG feat sheet",
@@ -78,7 +80,8 @@
       "Power": "VÅR BORG power sheet",
       "Powers": "Powers",
       "Spells": "Spells",
-      "Spell": "VÅR BORG spell sheet"
+      "Spell": "VÅR BORG spell sheet",
+      "Scroll": "VÅR BORG scroll sheet"
     },
     "Item": {
       "Price": "Price (s)",
@@ -1039,7 +1042,10 @@
           "text": "Head explodes. You die."
         }
       },
-      "ToDeathsDoor": "Wounds go to their maximum and HP to 0: Death's Door."
+      "ToDeathsDoor": "Wounds go to their maximum and HP to 0: Death's Door.",
+      "LifeForceTitle": "{name} spends life force",
+      "LifeForceWound": "Life force: gains a wound (wounds {wounds}/{max}).",
+      "HpUnchanged": "HP does not change: blood spent on magic does not heal you."
     },
     "DeathsDoor": {
       "Title": "Death's Door",
@@ -1307,7 +1313,22 @@
         "minute": "Took 1 minute to cast: −2 DR.",
         "hour": "Took 1 hour to cast: Boon."
       },
-      "SeveralCastersNote": "Several casters: Boon."
+      "SeveralCastersNote": "Several casters: Boon.",
+      "ScrollSheetHint": "A spell written on a scroll. Anyone can read it once, without Ember, testing Sanity against the spell's normal DR. It is destroyed when read, even if the spell fails (rules 3.11).",
+      "ScrollDrHint": "Read from the scroll: Sanity against DR{dr}, no Ember.",
+      "ScrollCastTooltip": "Read this scroll (cast its spell)",
+      "ScrollDialogTitle": "Read {name}",
+      "ScrollTestNote": "A scroll: tests Sanity against the spell's normal DR{dr}. No Ember, and no Bane for another spell list. The scroll is destroyed even if the spell fails.",
+      "ScrollHow": "{ability} ({list} scroll)",
+      "ScrollNotYourTurn": "You can only read {name} on your own turn.",
+      "ScrollDestroyed": "The scroll {name} is destroyed.",
+      "ScrollNoEmber": "Read from a scroll: no Ember spent.",
+      "ScrollSustainNote": "A Sustained spell from a scroll: the scroll is gone, so keep track of sustaining it yourself (◈ each turn).",
+      "LifeForce": "Spend life force (wounds)",
+      "LifeForceHint": "Test Toughness instead of Sanity, and lower the DR by d4 for each wound (never below DR6). Each wound tests Toughness as a wound at 0 HP, but HP does not change. You can spend up to {left}.",
+      "LifeForceNone": "You are at your maximum wounds, so you cannot spend life force.",
+      "LifeForceNote": "Life force: {count} wound(s), Toughness instead of Sanity, DR −{reduction} ({formula}: {dice}).",
+      "LifeForceAtMax": "{name} is now at maximum wounds: the next 0 HP is Death's Door."
     },
     "Gloom": {
       "Abilities": "Gloom abilities",
@@ -1391,6 +1412,97 @@
       "FieldHint": "How long the condition lasts. “Until the end of its next turn” is 1 round.",
       "FailureLasts": "Failure condition lasts",
       "RuinLasts": "Ruin condition lasts"
+    },
+    "Shadowblight": {
+      "Button": "Roll on the Shadowblight table",
+      "NotYours": "Only {name}'s owner or the Dark Master can roll on the Shadowblight table for them.",
+      "Title": "Shadowblight: {name}",
+      "Roll": "d20: {roll}",
+      "DmApplies": "The Dark Master applies the result.",
+      "Combustion": "{name} knows {count} spell(s): the fireball reaches {feet} feet and deals {damage} damage.",
+      "CombustionNone": "{name} knows no spells: the fireball reaches 10 feet and deals no damage.",
+      "Result": {
+        "darknessEternal": {
+          "name": "Darkness eternal",
+          "text": "Light fades from your eyes; darkness engulfs your sight. You are Blinded for d10 days."
+        },
+        "peerBeyondTheCurtain": {
+          "name": "Peer beyond the curtain",
+          "text": "The veil tears, your mind collapses through. There, a tattered page, your name scrawled in ink. You realise: you aren't real. This world is a hollow jest. A cruel farce. Roll on the Panic table with 2d10."
+        },
+        "theWithering": {
+          "name": "The withering",
+          "text": "Your flesh begins to rot and peel. You are Doomed."
+        },
+        "puppetry": {
+          "name": "Puppetry",
+          "text": "Your own shadow gains control of your body for d4 rounds, and you are forced to watch, immobile. It acts only in malice."
+        },
+        "shatteredGround": {
+          "name": "Shattered ground",
+          "text": "The earth beneath your feet buckles, cracking open into jagged chasms. Everyone within 20 feet tests Agility DR14 or falls Prone, taking d4 damage."
+        },
+        "mindRift": {
+          "name": "Mind rift",
+          "text": "Reality twists, your thoughts become foreign whispers, incomprehensible. Test Sanity DR16 or reduce your Sanity by 1 until you finish a rest."
+        },
+        "bloodFog": {
+          "name": "Blood fog",
+          "text": "A thick red mist surrounds you for 10 feet, lingering for 1d6 turns. All creatures within must test Toughness DR12 or suffer d4 persistent damage as they bleed profusely from every orifice."
+        },
+        "corpseLight": {
+          "name": "Corpse-light",
+          "text": "For 1d10 days, you emit an eerie, greenish glow that enrages any duskborn within a 1 mile radius. They're hostile to you specifically, are set on ending your life, and cannot be reasoned with."
+        },
+        "hungerOfTheAbyss": {
+          "name": "Hunger of the abyss",
+          "text": "A rift of pure darkness swallows you for 1d4 rounds. You are returned, but anything you carried on you is lost to the void."
+        },
+        "echoesOfTheDead": {
+          "name": "Echoes of the dead",
+          "text": "Voices from beyond tear into your mind, tormenting you. Lose 1 Fortune and take d4 persistent damage."
+        },
+        "frozenBreath": {
+          "name": "Frozen breath",
+          "text": "Cold mist seeps from your skin, spreading a biting frost. For 1d6 hours, you are Slowed and all who touch you take d2 damage."
+        },
+        "boneRot": {
+          "name": "Bone rot",
+          "text": "Your bones ache and weaken. Test Toughness DR12 after any form of physical impact; failure means you are Infected."
+        },
+        "dustToDust": {
+          "name": "Dust to dust",
+          "text": "Your flesh is not long for this world. You are Doomed. Every time you reduce your max HP, you age by the same amount."
+        },
+        "theBirds": {
+          "name": "The birds",
+          "text": "Ravens and crows descend, pecking and clawing. Every creature within a 20-foot square takes d4 damage per round. The birds disperse after d6 rounds."
+        },
+        "shatteredReflection": {
+          "name": "Shattered reflection",
+          "text": "All reflective surfaces within 30 feet shatter into fragments, emitting an otherworldly screech that deals d4 damage to everyone within earshot."
+        },
+        "fallingRocks": {
+          "name": "Falling rocks",
+          "text": "Boulders manifest right above you, crashing down upon you. Agility DR12 or gain a wound."
+        },
+        "forgottenKnowledge": {
+          "name": "Forgotten knowledge",
+          "text": "Something crucial is erased from your memory: perhaps a face, perhaps a ritual. Decide on one fact, memory, or spell; it is now completely lost to you."
+        },
+        "darkbound": {
+          "name": "Darkbound",
+          "text": "Shadows permanently drag at your limbs. You cannot move when in darkness, and your movement is halved when in the light."
+        },
+        "skinOfAsh": {
+          "name": "Skin of ash",
+          "text": "Your skin becomes brittle and begins to flake away. You are Doomed, and suffer +2 DR to any social interactions until healed."
+        },
+        "spontaneousCombustion": {
+          "name": "Spontaneous combustion",
+          "text": "You explode in a massive fireball that reaches 10 feet, plus 5 feet for each spell you know. It deals 1d6 damage for each spell you know."
+        }
+      }
     }
   }
 }

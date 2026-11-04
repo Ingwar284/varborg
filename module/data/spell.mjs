@@ -10,31 +10,42 @@
 
 import { MAX_POWER_ACTIONS } from "../rules/powers.mjs";
 import { SPELL_LISTS_OF_SPELLS } from "../rules/spells.mjs";
+import { CarriedData } from "./equipment.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
+/**
+ * What every spell says about itself: its list, cost, actions, damage,
+ * Sustained and outcome texts. Spells and scrolls both have these.
+ */
+function spellFields() {
+  const text = () => new StringField({ required: true, initial: "" });
+  return {
+    // Arcane, Divine, Primal, Profane or Bloodline. Casting outside your
+    // class's list is at Bane.
+    spellList: new StringField({ required: true, choices: SPELL_LISTS_OF_SPELLS, initial: SPELL_LISTS_OF_SPELLS[0] }),
+    // The listed ember cost. The DR is always 11 + this.
+    cost: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 1 }),
+    // Actions it takes (◈◈ = 2).
+    actions: new NumberField({ required: true, nullable: false, integer: true, min: 0, max: MAX_POWER_ACTIONS, initial: 2 }),
+    // Its damage dice, such as "d8". Empty when it deals none.
+    damage: text(),
+    sustained: new BooleanField({ initial: false }),
+    // What each result does, when the spell says. Empty uses the usual text.
+    outcomes: new SchemaField({
+      triumph: text(),
+      success: text(),
+      failure: text(),
+      ruin: text()
+    })
+  };
+}
+
 export default class SpellData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const text = () => new StringField({ required: true, initial: "" });
     return {
-      description: text(),
-      // Arcane, Divine, Primal, Profane or Bloodline. Casting outside your
-      // class's list is at Bane.
-      spellList: new StringField({ required: true, choices: SPELL_LISTS_OF_SPELLS, initial: SPELL_LISTS_OF_SPELLS[0] }),
-      // The listed ember cost. The DR is always 11 + this.
-      cost: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 1 }),
-      // Actions it takes (◈◈ = 2).
-      actions: new NumberField({ required: true, nullable: false, integer: true, min: 0, max: MAX_POWER_ACTIONS, initial: 2 }),
-      // Its damage dice, such as "d8". Empty when it deals none.
-      damage: text(),
-      sustained: new BooleanField({ initial: false }),
-      // What each result does, when the spell says. Empty uses the usual text.
-      outcomes: new SchemaField({
-        triumph: text(),
-        success: text(),
-        failure: text(),
-        ruin: text()
-      }),
+      description: new StringField({ required: true, initial: "" }),
+      ...spellFields(),
       // As for powers: being sustained now, kept this turn, and the one free
       // use outside combat (rules 3.10).
       sustaining: new BooleanField({ initial: false }),
@@ -44,4 +55,20 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
   }
 
   static SPELL_LISTS = Object.fromEntries(SPELL_LISTS_OF_SPELLS.map(key => [key, `VARBORG.Class.SpellList.${key}`]));
+}
+
+/**
+ * Data for a scroll (item type "scroll"): a spell written down, carried
+ * like gear (price, cumbersome, stored in). Rules 3.11 Scrolls: read once
+ * without Ember, testing Sanity against the spell's normal DR, and
+ * destroyed even if the spell fails. Not limited to once outside combat,
+ * since it is gone after one use.
+ */
+export class ScrollData extends CarriedData {
+  static defineSchema() {
+    return {
+      ...super.defineSchema(),
+      ...spellFields()
+    };
+  }
 }

@@ -232,15 +232,38 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = this.document;
     context.system = system;
     context.hint = "VARBORG.Spell.SheetHint";
-    context.spellLists = SpellData.SPELL_LISTS;
-    context.drHint = game.i18n.format("VARBORG.Spell.DrHint", { dr: spellDr(system.cost) });
-    context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({
-      key,
-      label: `VARBORG.Tier.${key}`,
-      value: system.outcomes[key],
-      placeholder: game.i18n.localize(`VARBORG.Spell.Outcome.${key}`)
-    }));
-    return context;
+    return spellContext(context, system, "VARBORG.Spell.DrHint");
+  }
+}
+
+/**
+ * The spell's fields on its sheet: list, DR hint and outcome boxes. Shared
+ * by spells and scrolls.
+ */
+function spellContext(context, system, drHintKey) {
+  context.spellLists = SpellData.SPELL_LISTS;
+  context.drHint = game.i18n.format(drHintKey, { dr: spellDr(system.cost) });
+  context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({
+    key,
+    label: `VARBORG.Tier.${key}`,
+    value: system.outcomes[key],
+    placeholder: game.i18n.localize(`VARBORG.Spell.Outcome.${key}`)
+  }));
+  return context;
+}
+
+/**
+ * Scrolls (rules 3.11 Scrolls): carried like gear (price, cumbersome),
+ * with the spell's fields written on it.
+ */
+export class ScrollSheet extends EquipmentSheet {
+  static detailsTemplate = `${TEMPLATES}/spell-details.hbs`;
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.scrollHint = "VARBORG.Spell.ScrollSheetHint";
+    return spellContext(context, this.document.system, "VARBORG.Spell.ScrollDrHint");
   }
 }
 

@@ -336,6 +336,14 @@
 
 /* ---------- Test dialog ---------- */
 
+/* A long dialog (such as Cast, with life force) scrolls inside the window,
+   so the roll button below it always stays on screen. */
+.var-borg-test-dialog {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
 .var-borg-test-dialog .hint {
   flex-basis: 100%;
   margin: 0.1rem 0 0;

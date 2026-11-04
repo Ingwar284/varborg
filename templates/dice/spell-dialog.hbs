@@ -12,11 +12,13 @@
   </div>
   <fieldset>
     <legend>{{localize "VARBORG.Spell.Modifiers"}}</legend>
+    {{#unless scroll}}
     <div class="form-group">
       <label for="var-borg-spell-outside">{{localize "VARBORG.Spell.OutsideList"}}</label>
       <input id="var-borg-spell-outside" type="checkbox" name="outsideList" {{checked outsideList}}>
       <p class="hint">{{outsideListHint}}</p>
     </div>
+    {{/unless}}
     <div class="form-group">
       <label for="var-borg-spell-metal">{{localize "VARBORG.Spell.MetalArmour"}}</label>
       <input id="var-borg-spell-metal" type="checkbox" name="metalArmour" {{checked metalArmour}}>
@@ -36,6 +38,14 @@
       <input id="var-borg-spell-several" type="checkbox" name="severalCasters">
       <p class="hint">{{localize "VARBORG.Spell.SeveralCastersHint"}}</p>
     </div>
+    {{#if lifeForce}}
+    <div class="form-group">
+      <label for="var-borg-spell-life">{{localize "VARBORG.Spell.LifeForce"}}</label>
+      <input id="var-borg-spell-life" type="number" name="lifeForce" value="0" min="0" max="{{lifeForce.left}}" step="1"
+             {{#unless lifeForce.left}}disabled{{/unless}}>
+      <p class="hint">{{lifeForce.hint}}</p>
+    </div>
+    {{/if}}
   </fieldset>
   {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}

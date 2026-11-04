@@ -95,6 +95,34 @@ export async function postWoundCard(actor, wound) {
 }
 
 /**
+ * Spending life force (rules 3.11): the caster has already taken the
+ * wounds; HP does not change. One card per wound, each with its own
+ * Toughness test, as for a wound gained at 0 HP.
+ * @param {Actor} actor
+ * @param {number} before  Wounds before the life force was spent.
+ * @param {number} count   Wounds taken.
+ */
+export async function postLifeForceWoundCards(actor, before, count) {
+  const i18n = game.i18n;
+  const max = actor.system.wounds.max;
+  for (let n = 1; n <= count; n++) {
+    const content = await renderTemplate(WOUND_TEMPLATE, {
+      title: i18n.format("VARBORG.Agony.LifeForceTitle", { name: actor.name }),
+      lines: [
+        i18n.format("VARBORG.Agony.LifeForceWound", { wounds: before + n, max }),
+        i18n.localize("VARBORG.Agony.HpUnchanged")
+      ],
+      test: {
+        actorUuid: actor.uuid,
+        agonyType: "",
+        label: i18n.format("VARBORG.Agony.TestButton", { dr: WOUND_DR })
+      }
+    });
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content });
+  }
+}
+
+/**
  * The wound test: Toughness, starting at DR12 (the Dark Master may change
  * it). On a Failure or Ruin, a card with the Table of Agony button.
  * @returns {Promise<boolean|null>}  Whether it rolls on the table, or null if the dialog was closed.
@@ -234,6 +262,18 @@ async function createInjuryEffect(actor, id, img) {
 }
 
 /**
+ * How many tested wound cards a character remembers. Life force can give
+ * several wounds at once, each with its own card (rules 3.11).
+ */
+const WOUND_CARDS_REMEMBERED = 10;
+
+/** The wound cards this character has tested (older worlds stored one id). */
+function woundTestedOn(actor) {
+  const flag = actor.getFlag(SYSTEM, "woundTestedOn");
+  return flag ? [].concat(flag) : [];
+}
+
+/**
  * Buttons on chat cards: the wound test (the character's owner, once per
  * wound card) and the Table of Agony (the Dark Master, once per card).
  */
@@ -241,7 +281,7 @@ function addAgonyCardListeners(message, html) {
   const test = html.querySelector("button[data-action='woundTest']");
   if (test) {
     const actor = fromUuidSync(test.dataset.actorUuid);
-    if (!actor || actor.getFlag(SYSTEM, "woundTestedOn") === message.id) test.disabled = true;
+    if (!actor || woundTestedOn(actor).includes(message.id)) test.disabled = true;
     else test.addEventListener("click", async () => {
       const current = await fromUuid(test.dataset.actorUuid);
       if (!current?.isOwner) {
@@ -249,10 +289,11 @@ function addAgonyCardListeners(message, html) {
         return;
       }
       test.disabled = true;
-      await current.setFlag(SYSTEM, "woundTestedOn", message.id);
+      const before = woundTestedOn(current);
+      await current.setFlag(SYSTEM, "woundTestedOn", [...before, message.id].slice(-WOUND_CARDS_REMEMBERED));
       // Dialog closed without rolling: the test can still be made.
       if (await woundTest(current, test.dataset.agonyType) === null) {
-        await current.unsetFlag(SYSTEM, "woundTestedOn");
+        await current.setFlag(SYSTEM, "woundTestedOn", before);
         test.disabled = false;
       }
     });

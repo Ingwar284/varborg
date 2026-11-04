@@ -158,6 +158,11 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 27 | Which armour is metal (Bane on spellcasting)? | Tier 2 and up is metal unless it is marked as not metal. | Resolved |
 | 28 | Life force: how is the DR reduced? | Roll one d4 per wound. The DR can never go below 6. | Resolved |
 | 29 | Do scrolls from another spell list have Bane? | No. | Resolved |
+| 136 | Reading a scroll: when can it be done, and does the other spellcasting Bane and Boon still apply? | As any casting, in combat only on your own turn and with the spell's actions. Outside combat it is not limited to once, since the scroll is gone. Metal armour, duress, casting time and several casters count as normal; only the other-list Bane does not (GAPS 29). Anyone can read a scroll; no class is needed. | Resolved |
+| 137 | Can a caster spend life force when reading a scroll? | No. The rules say the reader "tests Sanity", so the life force box is not offered for scrolls. | Resolved |
+| 138 | Shadowblight results (Blinded for d10 days, Doomed, Panic with 2d10, lost spells and so on). Should the system apply them? | No. The Ruin card has a button that rolls d20 and shows the result; the Dark Master applies it. Spontaneous combustion counts the caster's spells and shows the reach and damage dice. | Resolved |
+| 139 | A Sustained spell read from a scroll: how is Sustain tracked once the scroll is destroyed? | It is not. The card says to keep track of it by hand (◈ each turn). | Resolved |
+| 140 | Blood of power (d6 instead of d4 per wound for life force). How does the system know? | It does not yet. Life force always rolls d4; set the DR by hand for now. | Resolved |
 
 ## Rest, days and time
 

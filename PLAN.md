@@ -449,7 +449,15 @@ or Improving. Old characters are brought over when the world loads
     *Example:* And They Spoke of Fire (🟒3 ◈◈).
     *Test:* tests pass. Cast it in the chain shirt: DR14 with Bane.
 
-31. **Shadowblight, life force and scrolls.** A Ruin on a spell rolls d20 on
+31. ~~**Shadowblight, life force and scrolls.**~~ Done:
+    `module/rules/shadowblight.mjs` with `tests/shadowblight.test.mjs`,
+    `module/shadowblight.mjs` (the button on a spell's Ruin card), life
+    force and scroll maths in `module/rules/spells.mjs` (tested), the life
+    force box and scroll reading in `module/dice/spell.mjs`, life force
+    wound cards in `module/agony.mjs`, the scroll item (`ScrollData`, its
+    sheet, Scrolls in the Inventory tab), example
+    `scroll-of-and-they-spoke-of-fire.json` (GAPS 136–140).
+    A Ruin on a spell rolls d20 on
     Shadowblight. Life force: test Toughness instead, take the chosen wounds
     (each tests Toughness, HP unchanged) and lower the DR by d4 per wound,
     never below 6 (tested). Scrolls cast without Ember and without the

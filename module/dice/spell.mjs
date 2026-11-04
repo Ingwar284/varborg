@@ -12,21 +12,34 @@
  *   a foe in melee range (Bane), 1 minute (−2 DR) or 1 hour (Boon) of
  *   casting, several casters (Boon). Boon and Bane cancel.
  * It posts the attack card, like a power: Fortune and Inflict damage work
- * there, with the spell's outcomes. A Ruin says to roll on the Shadowblight
- * table; the roll itself comes in step 31.
+ * there, with the spell's outcomes. A Ruin shows a button that rolls on the
+ * Shadowblight table (module/shadowblight.mjs).
+ *
+ * Life force (rules 3.11, GAPS 28): the dialog asks how many wounds to
+ * spend. Then the test is Toughness, the DR drops by d4 per wound (never
+ * below 6), the wounds are added at once (HP unchanged), and each gets a
+ * wound card with its Toughness test (module/agony.mjs).
+ *
+ * Scrolls (rules 3.11, GAPS 29 and 136–140) use the same dialog from the
+ * Inventory tab: no Ember, never the other-list Bane, no life force, and
+ * the scroll is deleted after the card is posted, whatever the result.
  *
  * The maths lives in module/rules/spells.mjs.
  */
 
-import { SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers } from "../rules/spells.mjs";
+import {
+  SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers,
+  lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr, scrollUse, scrollModifiers
+} from "../rules/spells.mjs";
 import { DR_TABLE, diceMode, diceFormula } from "../rules/test-roll.mjs";
-import { modifiedDr, wornArmour } from "../rules/test-modifiers.mjs";
+import { wornArmour } from "../rules/test-modifiers.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { CARD } from "../rules/fortune.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
+import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
 import {
@@ -56,40 +69,68 @@ function castingFacts(actor, spell) {
 }
 
 /**
- * The Cast button: cast a spell.
- * @param {Actor} actor  The character.
- * @param {Item} spell   The spell item.
+ * Can the scroll be read now? Warns and returns null if not.
+ * @returns {{allowed: true, ember: 0, actions: number, marksUsed: false}|null}
  */
-export async function castSpell(actor, spell) {
-  const i18n = game.i18n;
-  const turn = turnState(actor);
-  const use = checkPowerUse(actor, spell, turn);
-  if (!use) return;
-  const target = [...game.user.targets][0]?.actor ?? null;
+function checkScrollUse(scroll, turn) {
+  const use = scrollUse({ inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn, actions: scroll.system.actions });
+  if (!use.allowed) {
+    ui.notifications.warn(game.i18n.format("VARBORG.Spell.ScrollNotYourTurn", { name: scroll.name }));
+    return null;
+  }
+  return use;
+}
 
-  const ability = SPELL_ABILITY;
-  const facts = castingFacts(actor, spell);
+/** What armour, Encumbered and conditions do to a test of this ability. */
+function abilityMods(actor, ability) {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
   const conditionMods = testConditions(conditions, fatigue, ability);
-  const fromConditions = totalModifiers(conditionMods);
-  const notes = conditionNotes(conditionMods);
+  return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods) };
+}
+
+/** The d4s a life force roll showed, such as "3, 1". */
+function diceShown(roll) {
+  return roll.dice.flatMap(die => die.results.map(result => result.result)).join(", ");
+}
+
+/**
+ * The Cast button on a spell, or the read button on a scroll.
+ * @param {Actor} actor  The character.
+ * @param {Item} spell   The spell or scroll item.
+ */
+export async function castSpell(actor, spell) {
+  const i18n = game.i18n;
+  const scroll = spell.type === "scroll";
+  const turn = turnState(actor);
+  const use = scroll ? checkScrollUse(spell, turn) : checkPowerUse(actor, spell, turn);
+  if (!use) return;
+  const target = [...game.user.targets][0]?.actor ?? null;
+
+  const facts = castingFacts(actor, spell);
+  const sanity = abilityMods(actor, SPELL_ABILITY);
   const startDr = spellDr(spell.system.cost);
-  const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const spellListLabel = i18n.localize(`VARBORG.Class.SpellList.${spell.system.spellList}`);
   const classListLabel = facts.classList ? i18n.localize(`VARBORG.Class.SpellList.${facts.classList}`) : i18n.localize("VARBORG.Spell.NoClass");
+  const wounds = actor.system.wounds;
+  const woundsLeft = lifeForceLeft(wounds.value, wounds.max);
+
+  let useNote;
+  if (scroll) useNote = i18n.localize("VARBORG.Spell.ScrollNoEmber");
+  else if (use.ember || use.actions) useNote = i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions });
+  else useNote = i18n.localize("VARBORG.Power.OutsideCombat");
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Power.NoTarget"),
-    how: i18n.format("VARBORG.Spell.TestNote", { dr: startDr }),
-    useNote: use.ember || use.actions
-      ? i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions })
-      : i18n.localize("VARBORG.Power.OutsideCombat"),
+    how: i18n.format(scroll ? "VARBORG.Spell.ScrollTestNote" : "VARBORG.Spell.TestNote", { dr: startDr }),
+    useNote,
     drs: DR_TABLE.map(dr => ({
       value: dr,
       label: i18n.format("VARBORG.Test.DROption", { dr, name: i18n.localize(`VARBORG.DR.${dr}`) }),
       selected: dr === startDr
     })),
+    // A scroll never has the other-list Bane (GAPS 29), so the box is hidden.
+    scroll,
     outsideList: facts.outsideList === true,
     outsideListHint: facts.outsideList === null
       ? i18n.format("VARBORG.Spell.OutsideListChoose", { list: spellListLabel })
@@ -99,14 +140,21 @@ export async function castSpell(actor, spell) {
       ? i18n.format("VARBORG.Spell.MetalArmourWorn", { name: facts.armourName })
       : i18n.localize("VARBORG.Spell.MetalArmourHint"),
     castingTimes: Object.fromEntries(CASTING_TIMES.map(key => [key, `VARBORG.Spell.CastingTime.${key}`])),
-    conditionNotes: notes,
+    // Life force is for spells you know; a scroll tests Sanity (GAPS 137).
+    lifeForce: scroll ? null : {
+      left: woundsLeft,
+      hint: woundsLeft
+        ? i18n.format("VARBORG.Spell.LifeForceHint", { left: woundsLeft })
+        : i18n.localize("VARBORG.Spell.LifeForceNone")
+    },
+    conditionNotes: sanity.notes,
     reminders: reminderNotes(actor, "test"),
     fortuneFields: await fortuneFields(actor, "spell")
   });
   const options = await DialogV2.input({
-    window: { title: i18n.format("VARBORG.Spell.DialogTitle", { name: spell.name }) },
+    window: { title: i18n.format(scroll ? "VARBORG.Spell.ScrollDialogTitle" : "VARBORG.Spell.DialogTitle", { name: spell.name }) },
     content,
-    ok: { label: "VARBORG.Spell.Cast", icon: "fa-solid fa-wand-sparkles" },
+    ok: { label: "VARBORG.Spell.Cast", icon: scroll ? "fa-solid fa-scroll" : "fa-solid fa-wand-sparkles" },
     rejectClose: false
   });
   if (!options) return;
@@ -114,24 +162,37 @@ export async function castSpell(actor, spell) {
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;
   if (!(await payPowerEmber(actor, use, paid))) return;
-  // Outside combat: this was the one free use (rules 3.10).
+  // Outside combat: this was the one free use (rules 3.10). Never for a scroll.
   if (use.marksUsed) await spell.update({ "system.usedOutside": true });
 
+  // Life force: Toughness instead of Sanity, and the DR drops by d4 per wound.
+  const lifeWounds = scroll ? 0 : lifeForceWounds(options.lifeForce, wounds.value, wounds.max);
+  const ability = castingAbility(lifeWounds);
+  const { automatic, fromConditions, notes } = ability === SPELL_ABILITY ? sanity : abilityMods(actor, ability);
+  const lifeFormula = lifeForceFormula(lifeWounds);
+  const lifeRoll = lifeFormula ? await new Roll(lifeFormula).evaluate() : null;
+  const reduction = lifeRoll?.total ?? 0;
+  const woundsBefore = wounds.value;
+  // The wounds are taken now; HP does not change (rules 3.11).
+  if (lifeWounds) await actor.update({ "system.wounds.value": woundsBefore + lifeWounds });
+
   const castingTime = CASTING_TIMES.includes(options.castingTime) ? options.castingTime : "normal";
-  const casting = spellModifiers({
+  const modifierOptions = {
     outsideList: Boolean(options.outsideList),
     metalArmour: Boolean(options.metalArmour),
     duress: Boolean(options.duress),
     castingTime,
     severalCasters: Boolean(options.severalCasters)
-  });
+  };
+  const casting = scroll ? scrollModifiers(modifierOptions) : spellModifiers(modifierOptions);
   const boons = casting.boons + (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const banes = casting.banes + (options.bane ? 1 : 0) + (paid.bane ? 1 : 0)
     + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
   const diceRule = diceMode(boons, banes);
   const abilityScore = actor.system.abilities[ability];
+  const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const chosenDr = Number(options.dr);
-  const dr = modifiedDr(chosenDr, automatic.armourDr + fromConditions.dr + casting.dr);
+  const dr = lifeForceDr(chosenDr, reduction, automatic.armourDr + fromConditions.dr + casting.dr);
 
   const formula = `${diceFormula(diceRule)} + @ability`;
   const roll = await new Roll(formula, { ability: abilityScore }).evaluate();
@@ -142,12 +203,21 @@ export async function castSpell(actor, spell) {
   const foe = target?.type === "foe" ? target : null;
   const title = i18n.format("VARBORG.Power.CardTitle", { name: spell.name });
   const castingNotes = [
-    options.outsideList ? i18n.format("VARBORG.Spell.OutsideListNote", { list: spellListLabel }) : null,
+    !scroll && options.outsideList ? i18n.format("VARBORG.Spell.OutsideListNote", { list: spellListLabel }) : null,
     options.metalArmour ? i18n.localize("VARBORG.Spell.MetalArmourNote") : null,
     options.duress ? i18n.localize("VARBORG.Spell.DuressNote") : null,
     castingTime !== "normal" ? i18n.localize(`VARBORG.Spell.CastingTimeNote.${castingTime}`) : null,
-    options.severalCasters ? i18n.localize("VARBORG.Spell.SeveralCastersNote") : null
+    options.severalCasters ? i18n.localize("VARBORG.Spell.SeveralCastersNote") : null,
+    lifeRoll ? i18n.format("VARBORG.Spell.LifeForceNote", {
+      count: lifeWounds, reduction, formula: lifeFormula, dice: diceShown(lifeRoll)
+    }) : null,
+    lifeWounds && woundsBefore + lifeWounds >= wounds.max ? i18n.format("VARBORG.Spell.LifeForceAtMax", { name: actor.name }) : null
   ];
+  // A Sustained spell read from a scroll is not tracked: the scroll is gone (GAPS 139).
+  const scrollNotes = scroll ? [
+    spell.system.sustained ? i18n.localize("VARBORG.Spell.ScrollSustainNote") : null,
+    i18n.format("VARBORG.Spell.ScrollDestroyed", { name: spell.name })
+  ] : [];
   const inputs = {
     formula,
     rollData: { ability: abilityScore },
@@ -160,10 +230,10 @@ export async function castSpell(actor, spell) {
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: spell.name,
     // The card treats a spell as a power, with the spell's Ruin text.
-    power: { ...powerInputs(spell), kind: "spell" },
+    power: { ...powerInputs(spell), kind: "spell", sustained: scroll ? false : spell.system.sustained },
     context: {
       title,
-      how: i18n.format("VARBORG.Spell.How", { ability: abilityLabel, list: spellListLabel }),
+      how: i18n.format(scroll ? "VARBORG.Spell.ScrollHow" : "VARBORG.Spell.How", { ability: abilityLabel, list: spellListLabel }),
       target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : null,
       modeLabel: modeLabel(diceRule, boons, banes),
       ability: signed(abilityScore),
@@ -171,10 +241,12 @@ export async function castSpell(actor, spell) {
       drNote: dr !== chosenDr ? i18n.format("VARBORG.Attack.DRFrom", { dr: chosenDr }) : null,
       notes: [
         ...castingNotes,
+        automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
         automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
         ...notes,
         paid.note,
-        emberNote(use, Boolean(turn.combatant))
+        scroll ? i18n.localize("VARBORG.Spell.ScrollNoEmber") : emberNote(use, Boolean(turn.combatant)),
+        ...scrollNotes
       ].filter(Boolean),
       thrownNote: null,
       pipNote
@@ -187,8 +259,13 @@ export async function castSpell(actor, spell) {
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content: cardContent,
-    rolls: [roll, ...rolls],
+    rolls: [...(lifeRoll ? [lifeRoll] : []), roll, ...rolls],
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
+
+  // Each wound spent tests Toughness, as a wound gained at 0 HP.
+  if (lifeWounds) await postLifeForceWoundCards(actor, woundsBefore, lifeWounds);
+  // Reading a scroll always destroys it, even if the spell fails.
+  if (scroll) await spell.delete();
 }
