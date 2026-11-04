@@ -18,5 +18,15 @@
       <span>{{localize "VARBORG.Item.Medicine"}}</span>
       <input type="checkbox" name="system.medicine" {{checked system.medicine}}>
     </label>
+    <label data-tooltip="{{localize 'VARBORG.Light.KindHint'}}">
+      <span>{{localize "VARBORG.Light.KindLabel"}}</span>
+      <select name="system.light">{{selectOptions lightKinds selected=system.light localize=true}}</select>
+    </label>
+    {{#if showLightMinutes}}
+    <label data-tooltip="{{localize 'VARBORG.Light.BurnsForHint'}}">
+      <span>{{localize "VARBORG.Light.BurnsFor"}}</span>
+      <input type="number" name="system.lightMinutes" value="{{system.lightMinutes}}" min="1" step="1">
+    </label>
+    {{/if}}
   </div>
 </section>

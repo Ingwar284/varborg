@@ -20,6 +20,7 @@ import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS, powerDr, powerA
 import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
 import { GLOOM_CONDITIONS, gloomTest } from "../module/rules/gloom.mjs";
 import { isRoundsFormula } from "../module/rules/timers.mjs";
+import { LIGHT_KINDS, lightFromName } from "../module/rules/light.mjs";
 import { SPELL_LISTS, STARTING_DICE, wealthFormula } from "../module/rules/origins.mjs";
 import { SPELL_LISTS_OF_SPELLS, spellDr } from "../module/rules/spells.mjs";
 
@@ -128,6 +129,18 @@ test("step 9 examples match the prices and effects in rules 4.1", () => {
   assert.equal(byName("Healing potion").expendable, "d2");
   assert.equal(byName("Medicine box").expendable, "d6");
   assert.equal(byName("Satchel").capacity, 10);
+});
+
+test("step 35 lights match rules 4.1: torch and lantern oil 1 hour, lantern needs oil", () => {
+  const byName = name => examples.find(({ data }) => data.name === name)?.data.system;
+  for (const { file, data } of ofType("gear")) {
+    assert.ok(LIGHT_KINDS.includes(data.system.light ?? ""), `${file}: unknown light kind`);
+    const known = lightFromName(data.name);
+    assert.equal(data.system.light ?? "", known?.light ?? "", `${file}: light kind`);
+  }
+  assert.equal(byName("Torch").lightMinutes, 60);
+  assert.equal(byName("Lantern oil").lightMinutes, 60);
+  assert.deepEqual(["Lantern", "Lantern oil"].map(name => byName(name).price), [10, 1]);
 });
 
 test("step 11 examples start ready to use: weapons loaded, nothing used up", () => {

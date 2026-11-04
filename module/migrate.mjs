@@ -9,16 +9,20 @@
  *
  * Version 2 (step 34, GAPS 149): gear named "Medicine box" gets the new
  * "Medicine box" tick, in the Items tab and on every actor.
+ *
+ * Version 3 (step 35, GAPS 153): gear named Torch, Candle, Lantern or
+ * Lantern oil becomes a light source, in the Items tab and on every actor.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
 import { MIGRATION_OPTION } from "./data/character.mjs";
+import { lightFromName } from "./rules/light.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 2;
+export const DATA_VERSION = 3;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -42,8 +46,24 @@ export async function migrateWorld() {
     for (const actor of game.actors.filter(actor => actor.type === "character")) await toRolledAbilities(actor);
   }
   if (version < 2) await markMedicineBoxes();
+  if (version < 3) await markLights();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
+}
+
+/** Version 3: torches, candles, lanterns and lantern oil become light sources. */
+async function markLights() {
+  const update = item => {
+    if (item.type !== "gear" || item.system.light) return null;
+    const light = lightFromName(item.name);
+    return light ? { _id: item.id, "system.light": light.light, "system.lightMinutes": light.lightMinutes } : null;
+  };
+  const worldItems = game.items.map(update).filter(Boolean);
+  if (worldItems.length) await Item.updateDocuments(worldItems);
+  for (const actor of game.actors) {
+    const updates = actor.items.map(update).filter(Boolean);
+    if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  }
 }
 
 /** Version 1: work the rolled scores back out and drop the old flag. */

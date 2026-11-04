@@ -514,7 +514,13 @@ dialogs and the scroll card. One open question: area spells and powers
     either way.
     *Test:* use the medicine box example on an Infected character.
 
-35. **Light timer.** A real-time countdown that pauses with the game. Other
+35. ~~**Light timer.**~~ Done: `module/rules/light.mjs` with
+    `tests/light.test.mjs`, `module/light.mjs` (the timer setting, the
+    Light button on gear with a light kind, oil for lanterns, the New timer
+    button on late lights, the lights-out card, pausing with the game), the
+    light row and Dark Master controls on the Table panel, the Lantern and
+    Lantern oil examples, data version 3 marks existing lights (GAPS 150–153).
+    A real-time countdown that pauses with the game. Other
     lights lit while it runs join it. A lantern uses one hour of oil at a
     time.
     *Test:* light a torch (1 hour), pause the game and see the timer stop.

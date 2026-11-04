@@ -13,6 +13,8 @@
     "items/light-shield.json",
     "items/rope.json",
     "items/torch.json",
+    "items/lantern.json",
+    "items/lantern-oil.json",
     "items/healing-potion.json",
     "items/medicine-box.json",
     "items/satchel.json",

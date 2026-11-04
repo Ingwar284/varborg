@@ -101,6 +101,8 @@ export class GearSheet extends EquipmentSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.expendableDice = GearData.EXPENDABLE_DICE;
+    context.lightKinds = GearData.LIGHT_KINDS;
+    context.showLightMinutes = ["burns", "fuel"].includes(this.document.system.light);
     return context;
   }
 }

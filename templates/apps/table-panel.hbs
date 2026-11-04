@@ -8,6 +8,35 @@
         data-tooltip="{{localize 'VARBORG.Rest.Tooltip'}}"><i class="fa-solid fa-bed"></i> {{localize "VARBORG.Rest.Button"}}</button>
     {{/if}}
   </div>
+  <div class="light-row {{#if light.burning}}burning{{/if}}">
+    <div class="light-head">
+      <span class="light-name"><i class="fa-solid fa-fire-flame-curved"></i> {{localize "VARBORG.Light.Label"}}</span>
+      {{#if light.burning}}
+        <span class="light-clock" data-light-clock>{{light.clock}}</span>
+      {{else}}
+        <span class="hint">{{localize "VARBORG.Light.NoneBurning"}}</span>
+      {{/if}}
+    </div>
+    {{#if light.waiting}}<p class="hint">{{localize "VARBORG.Light.PausedHint"}}</p>{{/if}}
+    {{#if isGM}}
+      <div class="light-controls">
+        {{#if light.burning}}
+          <button type="button" data-action="lightChange" data-minutes="-10"
+            data-tooltip="{{localize 'VARBORG.Light.LessTooltip'}}">−10</button>
+          <button type="button" data-action="lightChange" data-minutes="10"
+            data-tooltip="{{localize 'VARBORG.Light.MoreTooltip'}}">+10</button>
+          <button type="button" data-action="lightOut"
+            data-tooltip="{{localize 'VARBORG.Light.OutTooltip'}}"><i class="fa-solid fa-moon"></i> {{localize "VARBORG.Light.Out"}}</button>
+        {{else}}
+          <input type="number" name="lightMinutes" value="{{light.defaultMinutes}}" min="1" step="1"
+            aria-label="{{localize 'VARBORG.Light.MinutesLabel'}}" data-tooltip="{{localize 'VARBORG.Light.MinutesLabel'}}">
+          <button type="button" data-action="lightStart"
+            data-tooltip="{{localize 'VARBORG.Light.StartTooltip'}}"><i class="fa-solid fa-fire-flame-curved"></i> {{localize "VARBORG.Light.Start"}}</button>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+
   {{#if inCombat}}
     <p class="round">{{localize "VARBORG.Pools.Round" round=round fill=fill}}</p>
   {{else}}

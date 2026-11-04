@@ -909,3 +909,52 @@
   color: #c62828;
   font-weight: bold;
 }
+
+/* Light timer (step 35) */
+
+.var-borg-table-panel .light-row {
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .light-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-table-panel .light-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .light-clock {
+  font-size: 1.4rem;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  color: #e0a526;
+}
+
+.var-borg-table-panel .light-row .hint {
+  margin: 0;
+}
+
+.var-borg-table-panel .light-controls {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.var-borg-table-panel .light-controls input {
+  width: 4.5rem;
+  flex: 0 0 auto;
+}
+
+.var-borg-table-panel .light-controls button {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.var-borg-card.light-card.out h3 {
+  color: #7e57c2;
+}

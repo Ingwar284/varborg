@@ -1,0 +1,18 @@
+{
+  "_id": "vbExampleLampOil",
+  "name": "Lantern oil",
+  "type": "gear",
+  "img": "icons/consumables/potions/bottle-round-corked-yellow.webp",
+  "system": {
+    "description": "1 hour.",
+    "price": 1,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 3,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "fuel",
+    "lightMinutes": 60
+  }
+}

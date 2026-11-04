@@ -8,8 +8,10 @@
     "price": 2,
     "cumbersome": false,
     "storedIn": "",
-    "quantity": 1,
+    "quantity": 6,
     "expendable": "",
-    "usedUp": false
+    "usedUp": false,
+    "light": "burns",
+    "lightMinutes": 60
   }
 }

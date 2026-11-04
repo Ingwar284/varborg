@@ -14,6 +14,7 @@ import {
   ARMOUR_TIER_MIN, ARMOUR_TIER_MAX, isMetalByDefault, capArmourTier
 } from "../rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../rules/carrying.mjs";
+import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES } from "../rules/light.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -178,11 +179,18 @@ export class GearData extends CarriedData {
       // or refills it (GAPS 52).
       usedUp: new BooleanField({ initial: false }),
       // A medicine box: gets a Use button on the sheet (rules 4.1, GAPS 149).
-      medicine: new BooleanField({ initial: false })
+      medicine: new BooleanField({ initial: false }),
+      // A light source (rules 3.15, 4.1; GAPS 150–153): a torch burns
+      // itself, a lantern burns oil. Lit from the sheet onto the light timer.
+      light: choice(LIGHT_KINDS, ""),
+      // How long one burns: a torch, a candle or one oil (a lantern uses
+      // its oil's minutes).
+      lightMinutes: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_MINUTES })
     };
   }
 
   static EXPENDABLE_DICE = labels(EXPENDABLE_DICE, "Expendable");
+  static LIGHT_KINDS = labels(LIGHT_KINDS, "Light.Kind");
 }
 
 /**

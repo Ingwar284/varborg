@@ -17,6 +17,7 @@ import { POOL, COSTS, fillForRound, emptyPools, poolsForRound, canPay, pay, adju
 import { resetEmberAbilities } from "./dice/power.mjs";
 import { registerDays, currentDay, newDay } from "./days.mjs";
 import { rest } from "./rest.mjs";
+import { registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight } from "./light.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
@@ -36,6 +37,8 @@ export function registerPools() {
   });
   // The day counter is shown on the same panel (module/days.mjs).
   registerDays(refreshPanel);
+  // And the light timer (module/light.mjs).
+  registerLight(refreshPanel);
   CONFIG.queries[QUERY] = (request, { user }) => changePool(request, user);
 
   for (const hook of ["createCombat", "updateCombat", "deleteCombat"]) Hooks.on(hook, refreshPanel);
@@ -219,9 +222,9 @@ function addPanelButton(controls) {
 }
 
 /**
- * The shared table panel: the day, the Ember and Gloom pools, and the Dark
- * Master's New day, Rest and Reset ember abilities buttons. The light timer
- * comes in a later step.
+ * The shared table panel: the day, the light timer, the Ember and Gloom
+ * pools, and the Dark Master's New day, Rest, light and Reset ember
+ * abilities buttons.
  */
 export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -234,7 +237,10 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
       adjust: TablePanel.#onAdjust,
       resetEmber: TablePanel.#onResetEmber,
       newDay: TablePanel.#onNewDay,
-      rest: TablePanel.#onRest
+      rest: TablePanel.#onRest,
+      lightStart: TablePanel.#onLightStart,
+      lightChange: TablePanel.#onLightChange,
+      lightOut: TablePanel.#onLightOut
     }
   };
 
@@ -249,6 +255,7 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     const pools = getPools();
     return {
       day: currentDay(),
+      light: lightContext(),
       inCombat: !!combat,
       round,
       fill: combat ? fillForRound(round) : 0,
@@ -292,6 +299,29 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     } finally {
       button.disabled = false;
     }
+  }
+
+  /** Dark Master only: start the light timer for the minutes typed in (rules 3.15). */
+  static async #onLightStart(event, button) {
+    if (!game.user.isGM) return;
+    const minutes = Number(this.element.querySelector("input[name='lightMinutes']")?.value);
+    if (!(minutes >= 1)) {
+      ui.notifications.warn("VARBORG.Light.Bad", { localize: true });
+      return;
+    }
+    await setLightMinutes(minutes);
+  }
+
+  /** Dark Master only: lengthen or shorten the running light timer. */
+  static async #onLightChange(event, button) {
+    if (!game.user.isGM) return;
+    await changeLightMinutes(Number(button.dataset.minutes));
+  }
+
+  /** Dark Master only: put the lights out. */
+  static async #onLightOut(event, button) {
+    if (!game.user.isGM) return;
+    await putOutLight();
   }
 
   /** Dark Master only: Short rest, Long rest or Downtime (rules 3.16). */

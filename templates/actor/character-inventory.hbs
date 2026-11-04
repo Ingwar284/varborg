@@ -86,6 +86,12 @@
           <i class="fa-solid fa-kit-medical"></i>
         </button>
         {{/if}}
+        {{#if canLight}}
+        <button type="button" class="icon-button" data-action="lightItem"
+                data-tooltip="{{localize 'VARBORG.Light.Tooltip'}}" aria-label="{{localize 'VARBORG.Light.Tooltip'}}">
+          <i class="fa-solid fa-fire-flame-curved"></i>
+        </button>
+        {{/if}}
         {{#if canExpendable}}
         <button type="button" class="icon-button" data-action="rollExpendable"
                 data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"
