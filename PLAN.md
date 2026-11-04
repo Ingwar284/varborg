@@ -730,7 +730,12 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
     class die.
     *Test:* make a character with the helper and check it against 2.1.
 
-47. **Compendium packs.** Turn `content/` into real compendiums that ship
+47. ~~**Compendium packs.**~~ Done: Foundry's official command-line tool
+    installed as a build tool (`package.json`, approved), `tools/packs.mjs`
+    with `tests/packs.test.mjs`, `tools/build-packs.mjs` (run with
+    `npm run build:packs`), thirteen packs in `packs/` listed in `system.json`
+    in a VÅR BORG folder (GAPS 181).
+    Turn `content/` into real compendiums that ship
     with the system. Building packs from JSON files needs Foundry's official
     command-line tool (an npm package), so **I will ask before installing
     it**.

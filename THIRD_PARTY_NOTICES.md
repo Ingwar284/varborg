@@ -1,5 +1,12 @@
 # Third-party notices
 
+## Foundry VTT command-line tool (build tool only)
+
+`@foundryvtt/foundryvtt-cli` (MIT licence, copyright 2023 Foundry Virtual Tabletop) is installed
+as a development tool to build the compendiums in `packs/` from `content/`
+(see `tools/build-packs.mjs`). It is not part of the system Foundry loads
+and is not shipped with it; `node_modules/` is not committed.
+
 ## Pirate Borg Foundry system (code only)
 
 Some code in this system is adapted from the Pirate Borg Foundry VTT system

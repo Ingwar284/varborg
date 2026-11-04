@@ -1,0 +1,13 @@
+{
+  "name": "var-borg",
+  "private": true,
+  "description": "Build tools for the VÅR BORG Foundry system. Not needed to play.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/",
+    "build:packs": "node tools/build-packs.mjs"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "3.0.5"
+  }
+}

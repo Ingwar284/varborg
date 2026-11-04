@@ -7,3 +7,8 @@ node_modules/
 # Build output
 dist/
 build/
+
+# Compendium database files Foundry rewrites while running
+packs/**/LOCK
+packs/**/LOG
+packs/**/LOG.old
