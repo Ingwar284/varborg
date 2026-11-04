@@ -75,10 +75,12 @@ export async function drainPools() {
  * Master. Later steps (powers, spells) call this too.
  * @param {string} pool  POOL.EMBER or POOL.GLOOM.
  * @param {number} cost
+ * @param {Actor} [actor]  Who spends it (the caster, the foe), named on the
+ *   chat line. Without one (the Table panel) the line names the user.
  * @returns {Promise<boolean>} Whether the charges were spent.
  */
-export async function spendFromPool(pool, cost) {
-  return sendChange({ pool, kind: "spend", amount: cost });
+export async function spendFromPool(pool, cost, actor = null) {
+  return sendChange({ pool, kind: "spend", amount: cost, actorUuid: actor?.uuid ?? null });
 }
 
 /**
@@ -132,7 +134,7 @@ function changePool(request, user) {
   return run;
 }
 
-async function applyChange({ pool, kind, amount }, user) {
+async function applyChange({ pool, kind, amount, actorUuid }, user) {
   if (!Object.values(POOL).includes(pool) || !Number.isInteger(amount)) return { error: "VARBORG.Pools.Bad" };
   if (!runningCombat()) return { error: "VARBORG.Pools.NoCombat" };
   const pools = getPools();
@@ -150,18 +152,28 @@ async function applyChange({ pool, kind, amount }, user) {
   if (!canPay(left, amount)) return { error: "VARBORG.Pools.NotEnough" };
   pools[pool] = pay(left, amount);
   await game.settings.set(SYSTEM, SETTING, pools);
-  await postSpend(pool, amount, pools[pool], user);
+  await postSpend(pool, amount, pools[pool], user, spenderOf(actorUuid, user));
   return { ok: true, left: pools[pool] };
 }
 
+/**
+ * The actor named on the spend line: the one sent with the spend, if the
+ * user who asked owns it; else the user's own character (players only).
+ */
+function spenderOf(actorUuid, user) {
+  const actor = actorUuid ? fromUuidSync(actorUuid) : null;
+  if (actor?.testUserPermission?.(user, "OWNER")) return actor;
+  return user.isGM ? null : (user.character ?? null);
+}
+
 /** A chat line: "Example Hero spends 🟒3 from the Ember pool (7 left)." */
-async function postSpend(pool, amount, left, user) {
-  const name = user.isGM ? user.name : (user.character?.name ?? user.name);
+async function postSpend(pool, amount, left, user, actor) {
+  const name = actor?.name ?? user.name;
   const text = game.i18n.format("VARBORG.Pools.Spent", {
     name, symbol: poolSymbol(pool), amount, pool: poolLabel(pool), left
   });
   await ChatMessage.create({
-    speaker: user.character ? ChatMessage.getSpeaker({ actor: user.character }) : { alias: user.name },
+    speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },
     content: `<div class="var-borg-card pool-card ${pool}"><p>${text}</p></div>`
   });
 }

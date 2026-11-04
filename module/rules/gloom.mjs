@@ -114,12 +114,13 @@ export function gloomDamageTaken(rolled, multiplier, soak = 0) {
  * Can the foe use the ability now, and what does it take?
  * In combat: only on its own turn, paying the cost from the Gloom pool and
  * spending its actions. Outside combat there is no pool: nothing is spent
- * and nothing is tracked.
- * @returns {{allowed: boolean, reason: "turn"|null, gloom: number, actions: number}}
+ * and nothing is tracked. A defeated foe (fallen at 0 HP) cannot use it.
+ * @returns {{allowed: boolean, reason: "turn"|"defeated"|null, gloom: number, actions: number}}
  */
-export function gloomUse({ inCombat = false, onOwnTurn = false, cost, actions }) {
+export function gloomUse({ inCombat = false, onOwnTurn = false, defeated = false, cost, actions }) {
   assertWhole("Cost", cost);
   assertWhole("Actions", actions);
+  if (defeated) return { allowed: false, reason: "defeated", gloom: 0, actions: 0 };
   if (!inCombat) return { allowed: true, reason: null, gloom: 0, actions: 0 };
   if (!onOwnTurn) return { allowed: false, reason: "turn", gloom: 0, actions: 0 };
   return { allowed: true, reason: null, gloom: cost, actions };

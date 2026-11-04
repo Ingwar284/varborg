@@ -87,7 +87,7 @@ export function checkPowerUse(actor, power, turn) {
  */
 export async function payPowerEmber(actor, use, paid) {
   if (!use.ember) return true;
-  if (await spendFromPool(POOL.EMBER, use.ember)) return true;
+  if (await spendFromPool(POOL.EMBER, use.ember, actor)) return true;
   const refund = dialogCost(paid.boon, paid.bane);
   if (refund) await actor.update({ "system.fortune": (actor.system.fortune ?? 0) + refund });
   return false;

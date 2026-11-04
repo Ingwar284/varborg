@@ -468,6 +468,12 @@ or Improving. Old characters are brought over when the world loads
 
 **Milestone 5 review:** a fight with Ember and Gloom on both sides, with a
 Warrior and a Wizard against the Bellman.
+*Done:* played through in Foundry; pools, powers, spells, life force,
+Toll, timers, Fortune, scrolls and the ember reset all matched the rules.
+Fixes: a fallen foe can no longer use gloom abilities; pool spend lines
+name the character or foe spending; wording on the spell and Toll
+dialogs and the scroll card. One open question: area spells and powers
+(GAPS 141).
 
 ## Milestone 6: Time and rest
 

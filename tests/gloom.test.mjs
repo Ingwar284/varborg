@@ -65,6 +65,12 @@ test("outside combat: nothing spent, no limit (GAPS 122)", () => {
   assert.throws(() => gloomUse({ cost: -1, actions: 2 }), RangeError);
 });
 
+test("a defeated foe cannot use a gloom ability, in or out of combat", () => {
+  const blocked = { allowed: false, reason: "defeated", gloom: 0, actions: 0 };
+  assert.deepEqual(gloomUse({ inCombat: true, onOwnTurn: true, defeated: true, cost: 3, actions: 2 }), blocked);
+  assert.deepEqual(gloomUse({ inCombat: false, defeated: true, cost: 3, actions: 2 }), blocked);
+});
+
 test("Prone does not change the Agility defence; other conditions do (GAPS 126)", () => {
   assert.deepEqual(gloomDefenderConditions(["prone"]), []);
   const mods = gloomDefenderConditions(["prone", "restrained", "fatigued"], 1);

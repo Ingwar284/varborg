@@ -62,9 +62,12 @@ export async function useGloomAbility(foe, power) {
   const system = power.system;
   const turn = turnState(foe);
   const inCombat = Boolean(turn.combatant);
-  const use = gloomUse({ inCombat, onOwnTurn: turn.onOwnTurn, cost: system.cost, actions: system.actions });
+  // Fallen at 0 HP: the defeated mark on the actor or on its combatant (GAPS 71).
+  const defeated = foe.statuses.has(CONFIG.specialStatusEffects.DEFEATED) || Boolean(turn.combatant?.isDefeated);
+  const use = gloomUse({ inCombat, onOwnTurn: turn.onOwnTurn, defeated, cost: system.cost, actions: system.actions });
   if (!use.allowed) {
-    ui.notifications.warn(i18n.format("VARBORG.Gloom.NotYourTurn", { name: power.name }));
+    const key = use.reason === "defeated" ? "VARBORG.Gloom.Defeated" : "VARBORG.Gloom.NotYourTurn";
+    ui.notifications.warn(i18n.format(key, { name: power.name, foe: foe.name }));
     return;
   }
   if (use.gloom) {
@@ -73,7 +76,7 @@ export async function useGloomAbility(foe, power) {
       ui.notifications.warn(i18n.format("VARBORG.Gloom.NotEnough", { name: power.name, cost: use.gloom, left }));
       return;
     }
-    if (!(await spendFromPool(POOL.GLOOM, use.gloom))) return;
+    if (!(await spendFromPool(POOL.GLOOM, use.gloom, foe))) return;
   }
   let pipNote = null;
   if (use.actions) {
@@ -152,7 +155,8 @@ export async function rollGloomTest(actor, power) {
   const options = await DialogV2.input({
     window: { title: i18n.format("VARBORG.Gloom.DialogTitle", { name: actor.name, ability: power.name }) },
     content,
-    ok: { label: "VARBORG.Defence.Roll", icon: "fa-solid fa-moon" },
+    // An ability's own test (Toll: Presence) is not a defence.
+    ok: { label: test.own ? "VARBORG.Gloom.RollTest" : "VARBORG.Defence.Roll", icon: "fa-solid fa-moon" },
     rejectClose: false
   });
   if (!options) return;
