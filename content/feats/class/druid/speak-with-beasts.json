@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui05000000",
+  "name": "Speak with Beasts",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You understand the intentions of animals and can speak to them in a limited way. You have Boon on tests to calm, bargain with or avoid beasts.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

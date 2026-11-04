@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang08000000",
+  "name": "Ambush predator",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You strike from the shadows. When you attack a surprised foe, your attack deals an additional d8 damage.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

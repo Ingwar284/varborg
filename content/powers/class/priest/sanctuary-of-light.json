@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPrie05000000",
+  "name": "Sanctuary of light",
+  "type": "power",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "A warm radiance fills a 20' radius around you. Sustained. At the start of each round, all allies within it regain d8 HP and have Boon on their Panic tests. While the sanctuary holds, allies inside it cannot be reduced below 1 HP. It ends if you take damage.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

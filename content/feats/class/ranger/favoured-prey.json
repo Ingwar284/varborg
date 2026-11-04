@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang05000000",
+  "name": "Favoured prey",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "Choose a Bestiary category (such as Animals and beasts, Duskborn and undead, or Monstrosities). You deal an additional d4 damage to foes of that category and have Boon on tests to track them. You may change your choice during Downtime.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

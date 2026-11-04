@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPala01000000",
+  "name": "Wings of glory",
+  "type": "power",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Gain wings of light. Sustained. You can fly at your normal movement speed, even in armour that would normally prevent it.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

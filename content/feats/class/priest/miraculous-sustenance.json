@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie03000000",
+  "name": "Miraculous sustenance",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Your flesh is bread, your blood is wine. At the start of the day, create enough food and drink to feed d4 people.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

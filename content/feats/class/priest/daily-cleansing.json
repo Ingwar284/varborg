@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie06000000",
+  "name": "Daily cleansing",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "At the start of the day, spend a minute praying over yourself or an ally and test Sanity (DR12). On a success, one ongoing negative condition ends.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

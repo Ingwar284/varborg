@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar07000000",
+  "name": "Ram-Plough",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "A cowcatcher of salvaged rail-iron is welded to the prow. The rig takes no damage from Ramming Speed, and it takes half the collision damage when you crash.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

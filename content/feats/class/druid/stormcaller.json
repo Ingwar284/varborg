@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui01000000",
+  "name": "Stormcaller",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A raging tempest swirls around you. Enter the stormcaller stance. Any ally that starts a move within your Primal Conduit aura gets +5' movement. Your Primal Blast hurls the target up to 20' in a direction you choose.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

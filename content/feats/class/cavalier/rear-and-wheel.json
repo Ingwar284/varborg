@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava04000000",
+  "name": "Rear and Wheel",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "When a foe attacks you in melee while you ride, you may use your reaction (↻) to make your destrier rear between you: you defend with -2 DR. On a Triumph, its hooves also strike the attacker for its attack's damage.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

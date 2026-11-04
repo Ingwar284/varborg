@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu01000000",
+  "name": "Nimble fingers",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "Picking a lock, disarming a trap or lifting a purse takes you a single ◈ action. When you fail such a test, you may try once more before anyone notices or the trap springs.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPHedg03000000",
+  "name": "Entropic Shield",
+  "type": "power",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "Shimmering air surrounds you for as long as you sustain it. Provides heavy cover, and any melee attacker takes d6 damage upon striking you.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

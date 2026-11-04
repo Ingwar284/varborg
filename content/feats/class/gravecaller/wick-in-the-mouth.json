@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav08000000",
+  "name": "Wick in the Mouth",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Once per encounter, as a free action (◇), you push a lit wick between a thrall's teeth: it sheds a cold blue light 10' until it is destroyed. Anything that hunts by light goes to it first.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

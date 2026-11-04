@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho03000000",
+  "name": "Cross-reference",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You can have two subjects at once.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

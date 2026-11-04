@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWiza01000000",
+  "name": "Read the weave",
+  "type": "power",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "You perceive the threads of magic around you. Within 60', you detect every magical effect, item and caster, and learn the nature of one of them.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRang06000000",
+  "name": "Grand snare",
+  "type": "power",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You lay a massive, hidden trap in a 20' radius within 30'. It triggers when the first foe enters. All foes in the area take 2d6 damage and are Restrained until they succeed on a Strength test (DR12).",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

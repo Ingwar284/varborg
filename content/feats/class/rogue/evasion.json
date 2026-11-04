@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu03000000",
+  "name": "Evasion",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "When you succeed on a defence test against an area attack or ability, you take no damage instead of half.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

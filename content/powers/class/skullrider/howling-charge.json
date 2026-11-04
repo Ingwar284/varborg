@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSkul00000000",
+  "name": "Howling Charge",
+  "type": "power",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You scream, your beast screams, and you come in hard. While riding, ride up to 40' (with no driving test unless the ground is difficult) and, at any point along the way, make one melee or thrown attack (DR12) without the penalty for attacking from a moving mount. A melee attack deals an extra d6 damage. If you hit a Pitiful or Weak foe, it tests Morale.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, but you still finish your ride.",
+      "ruin": "Your beast bucks: you stop where you are, and your next driving test this encounter is made with Bane."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

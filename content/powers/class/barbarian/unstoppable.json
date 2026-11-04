@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBarb04000000",
+  "name": "Unstoppable",
+  "type": "power",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You bellow and refuse to fall. Sustained. You cannot be knocked Prone, Restrained or Slowed. The first time you would drop to 0 HP, you stay on your feet at 1 HP and the power ends.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

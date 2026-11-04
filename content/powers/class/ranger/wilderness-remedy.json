@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRang02000000",
+  "name": "Wilderness remedy",
+  "type": "power",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You crush herbs into a quick salve. Touch an ally to heal d8 HP and end the Infected condition on them.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar01000000",
+  "name": "Bolted Plate",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You weld on everything that will hold. The rig's armour becomes -d4, but it moves 10' less per Move at every speed.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

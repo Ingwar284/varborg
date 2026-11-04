@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRang04000000",
+  "name": "Read the beast",
+  "type": "power",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You study your prey for a heartbeat. Learn the HP, armour and abilities of one foe within 60'. Sustained. All attacks against that foe by you and your allies ignore one tier of its armour.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

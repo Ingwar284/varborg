@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPFles06000000",
+  "name": "Tendril Barrage",
+  "type": "power",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "You explode in a 20-foot radius of hungry, lashing filaments. Every creature in range takes 3d6 damage. For every foe killed by this burst, you heal d6 HP as their biomass is consumed to repair your own form.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc07000000",
+  "name": "Pirouette",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "Your steps barely touch the ground. While you wear armour no heavier than t1, you can move through the spaces of foes, and you can stand up from Prone as part of a Move action.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

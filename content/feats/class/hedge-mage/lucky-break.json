@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg04000000",
+  "name": "Lucky Break",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "Whenever you spend ember on a spell, roll a d10. On a 10, no ember is consumed.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

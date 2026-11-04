@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul06000000",
+  "name": "Over the Rabble",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Your beast may ride through the spaces of Pitiful and Weak foes without a test. Each such foe it passes through is knocked Prone (once per turn for each foe), and your beast takes d4 damage from each.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

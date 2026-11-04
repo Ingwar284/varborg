@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin02000000",
+  "name": "Every Scar a Scripture",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "During Downtime, you can perform a death-defying act for the crowds of the Kettlewhistle Fair or a Gaslake gin house. Test Agility (DR14). Triumph: earn 2d6 × 10 s, and someone in the crowd wants to hire you. Success: earn d6 × 10 s. Failure: you earn nothing but bruises. Ruin: you fall badly, and begin your next adventure with one wound.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

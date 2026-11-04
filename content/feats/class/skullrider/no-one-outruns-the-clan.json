@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul05000000",
+  "name": "No One Outruns the Clan",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "When a foe within 60' flees or is demoralised, you may use your reaction (↻) to ride up to your beast's speed toward it.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

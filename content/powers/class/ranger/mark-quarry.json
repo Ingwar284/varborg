@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRang00000000",
+  "name": "Mark quarry",
+  "type": "power",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You fix your eyes on your prey. Name one foe you can see as your quarry until the end of the encounter. Your attacks against it deal an additional d4 damage, and it cannot hide from you or lose you in the wilds. You can have only one quarry at a time. If you strike the killing blow, you can mark a new quarry as a reaction.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

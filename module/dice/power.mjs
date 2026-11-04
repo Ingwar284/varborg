@@ -65,7 +65,8 @@ export function checkPowerUse(actor, power, turn) {
   const i18n = game.i18n;
   const use = powerUse({
     inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn,
-    cost: power.system.cost, actions: power.system.actions, usedOutside: power.system.usedOutside
+    cost: power.system.cost, actions: power.system.actions, usedOutside: power.system.usedOutside,
+    reaction: Boolean(power.system.reaction)
   });
   if (!use.allowed) {
     const key = use.reason === "used" ? "VARBORG.Power.AlreadyUsed" : "VARBORG.Power.NotYourTurn";
@@ -98,6 +99,11 @@ export async function payPowerEmber(actor, use, paid) {
  * @returns {Promise<string|null>} The card's note, such as "Used 2 actions."
  */
 export async function spendPowerActions(turn, use) {
+  if (turn.combatant && use.reactions) {
+    if (turn.combatant.reactionsLeft < use.reactions) ui.notifications.warn(game.i18n.localize("VARBORG.Power.NoReaction"));
+    await turn.combatant.adjustPips("reactions", -use.reactions);
+    return game.i18n.localize("VARBORG.Power.UsedReaction");
+  }
   if (!turn.combatant || !use.actions) return null;
   if (turn.combatant.actionsLeft < use.actions) ui.notifications.warn(game.i18n.localize("VARBORG.Power.NoActions"));
   await turn.combatant.adjustPips("actions", -use.actions);
@@ -218,9 +224,11 @@ async function rollPowerTest(actor, power) {
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Power.NoTarget"),
     how: i18n.format("VARBORG.Power.TestNote", { ability: abilityLabel, dr: startDr }),
-    useNote: use.ember || use.actions
-      ? i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions })
-      : i18n.localize("VARBORG.Power.OutsideCombat"),
+    useNote: use.reactions
+      ? i18n.format("VARBORG.Power.UseNoteReaction", { cost: use.ember })
+      : use.ember || use.actions
+        ? i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions })
+        : i18n.localize("VARBORG.Power.OutsideCombat"),
     armourNote: automatic.armourDr ? i18n.format("VARBORG.Test.ArmourDialogNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     encumberedNote: automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes: notes,

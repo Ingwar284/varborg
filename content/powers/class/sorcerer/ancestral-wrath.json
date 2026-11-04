@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSorc03000000",
+  "name": "Ancestral wrath",
+  "type": "power",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Your bloodline erupts from your veins in a 15' cone. Deal 2d6 damage to all foes in the cone, with an extra effect by bloodline. Arcane d4 persistent fire damage. Divine Blinded until the end of their next turn. Primal Prone. Profane Frightened until the end of their next turn.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

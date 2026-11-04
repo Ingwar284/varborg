@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava02000000",
+  "name": "Ride Down",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "No one runs from a Knight of the Hawk. Ride up to 40' and make a melee attack (DR14) against a foe at the end. It deals d10 instead of your weapon damage, and the attack has Boon if the foe is Prone or fleeing.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": true,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage.",
+      "ruin": "No effect, and your destrier carries you 10' past the foe."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

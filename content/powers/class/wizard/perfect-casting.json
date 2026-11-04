@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWiza05000000",
+  "name": "Perfect casting",
+  "type": "power",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "Every thread is in its place. Your next spell this turn costs no ember and is cast with Boon, and a Ruin is treated as a Failure (no roll on the Shadowblight table). Its DR is still set by its listed cost.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 1,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

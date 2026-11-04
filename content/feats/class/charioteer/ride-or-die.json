@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar08000000",
+  "name": "Ride or Die",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You drive so your crew can fight. Everyone aboard your rig, you included, attacks from it at normal speed without the +2 DR, and at fast speed with +2 DR instead of +4 DR.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPHedg04000000",
+  "name": "Polymorphic Burst",
+  "type": "power",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "A wild bolt of change leaps at a foe within 30'.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but for d4 + 2 rounds.",
+      "success": "The foe is turned into a harmless woodland creature (rabbit, chicken, turtle) for d4 rounds.",
+      "failure": "No effect.",
+      "ruin": "As Success, except it targets you."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

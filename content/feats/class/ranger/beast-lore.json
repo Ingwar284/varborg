@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang01000000",
+  "name": "Beast lore",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You have studied every horror in the bestiaries. When you first see a foe, learn its tier and one of its passives or abilities. You have Boon on tests to recall lore about monsters.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

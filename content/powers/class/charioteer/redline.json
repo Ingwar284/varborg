@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar06000000",
+  "name": "Redline",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You tie down the safety valve and let the needle climb past the brass. Test Agility (DR18). On a success, Sustained: the rig moves 20' further per Move at every speed, you gain one extra Move each turn that can only drive the rig, and Ramming Speed costs no ember (its DR does not change). At the end of each of your turns, the boiler takes d6 damage that armour does not reduce. When the power ends, the rig can only move at safe speed until a Short Rest.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "No effect, but the needle jumps: the boiler takes d6 damage that armour does not reduce.",
+      "ruin": "A pipe bursts: the boiler takes 2d6 damage that armour does not reduce, and the rig can only move at safe speed until a Short Rest."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

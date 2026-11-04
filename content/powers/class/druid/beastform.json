@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui01000000",
+  "name": "Beastform",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Shift into the form of a beast of a pitiful, weak or moderate foe for d10 rounds. You gain its attacks, armour and passives, and temporary HP equal to its HP. You cannot cast spells or use powers while transformed. When the temporary HP are gone, you revert to your own form. On a Ruin, you become one with the beast: you cannot turn back into your humanoid vessel until your next Long Rest.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

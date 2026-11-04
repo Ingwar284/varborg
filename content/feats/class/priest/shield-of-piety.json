@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie07000000",
+  "name": "Shield of piety",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Once per day, as a reaction, you or an ally within 30' completely ignore one spell or magical effect that targets them.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

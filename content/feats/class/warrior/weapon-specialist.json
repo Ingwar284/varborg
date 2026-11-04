@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr02000000",
+  "name": "Weapon specialist",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "Choose a weapon group (such as blades, axes, hammers, spears or bows). Your damage rolls with weapons of that group gain +2.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

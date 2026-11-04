@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava00000000",
+  "name": "Couched Charge",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "You lower your lance and spur forward. While riding, ride up to 40' in a straight line (with no driving test unless the ground is difficult) and make a melee attack (DR12) at the end. It deals an extra d6 damage from the weight of the charge, and the foe cannot make an Opportune Attack against you this turn.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, but you still finish your ride.",
+      "ruin": "Your destrier balks: you stop where you are, and your next driving test this encounter is made with Bane."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

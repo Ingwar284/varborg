@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard03000000",
+  "name": "Busker",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "After each combat encounter with bystanders, take a dramatic bow and gather d10 s from the crowd.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

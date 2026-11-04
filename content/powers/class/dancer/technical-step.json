@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDanc05000000",
+  "name": "Technical Step",
+  "type": "power",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "A complex, breathtaking display of acrobatics. You move twice and deal 2d6 damage to every foe whose space you pass through. Your dance partner becomes Quickened until the end of their next turn.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

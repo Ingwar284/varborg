@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor01000000",
+  "name": "Paper-Thin Grace",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "You cannot wear armour. However, as long as your sword is active, you defend with -2 DR as the blade parries for you.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

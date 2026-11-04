@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar09000000",
+  "name": "Sidecar",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You have attached a sidecar to your Rig, allowing for one additional passenger or two heavy items of cargo. You can mount a gun on the sidecar, which can be used to attack without the difficulty increase normally applied when attacking from a moving vehicle.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

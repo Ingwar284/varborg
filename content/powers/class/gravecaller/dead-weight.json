@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav02000000",
+  "name": "Dead Weight",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "A thrall adjacent to a foe throws its arms around it and goes limp. Test Sanity (DR14). On a success, Sustained: the foe is Encumbered while the thrall clings to it. The thrall is dragged along with the foe, and the foe can tear it off only by destroying it.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "No effect.",
+      "ruin": "The thrall comes apart in the foe's grip and is destroyed."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

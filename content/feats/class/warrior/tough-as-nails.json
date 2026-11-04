@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr03000000",
+  "name": "Tough as nails",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "You have taken more hits than most men have taken breaths. You have Boon on the Toughness test when you gain a wound, and on tests to resist or end persistent damage.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

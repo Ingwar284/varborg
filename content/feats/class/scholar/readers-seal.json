@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho01000000",
+  "name": "Reader's seal",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You hold a seal of the Great Archives. While in Emberglow, once per Downtime, you can research one question, and the Dark Master gives a true and useful answer, though perhaps not a complete one. The archivists always want something in return: a rare book, a favour or a fee.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

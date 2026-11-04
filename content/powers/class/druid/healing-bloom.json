@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui04000000",
+  "name": "Healing Bloom",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A pale flower erupts from the ground at a point within 30'. Sustained. At the start of each round, all allies within 10' of the bloom regain d6 HP. The bloom wilts when the power ends.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

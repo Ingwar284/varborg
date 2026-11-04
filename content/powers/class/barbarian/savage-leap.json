@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBarb02000000",
+  "name": "Savage Leap",
+  "type": "power",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You hurl yourself up to 20' and land on a foe with both feet and all your weight. Deal d10 damage and knock the target Prone. You land adjacent to it.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

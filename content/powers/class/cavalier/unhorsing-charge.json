@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava03000000",
+  "name": "Unhorsing Charge",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "You ride straight through a foe. Ride up to 60' in a straight line and make a melee attack (DR16) at the end. On a success, the foe takes d12 damage instead of your weapon damage, is pushed 15' and is knocked Prone; a mounted foe is thrown from its mount. Whatever the result, your destrier is blown: it cannot move on your next turn.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d12",
+    "addsWeaponDamage": true,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "Your weapon is wrenched from your hand and you are thrown from the saddle: you land Prone beside the foe."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

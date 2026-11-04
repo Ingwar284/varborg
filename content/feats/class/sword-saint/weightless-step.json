@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor03000000",
+  "name": "Weightless Step",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "You can step on your spirit-linked sword and hover above the ground. You gain a fly speed equal to your move speed, but your sword is occupied.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

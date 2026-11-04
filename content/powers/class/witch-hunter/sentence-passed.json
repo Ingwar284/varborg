@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc04000000",
+  "name": "Sentence Passed",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "The charge has been read; now the steel. Make a rapier attack against a foe that is Stupefied, Blinded or Restrained. On a hit, it deals 2d8 damage. Whatever the result, you are overcommitted to the lunge, and you defend with +2 DR until the start of your next turn.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "No effect."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

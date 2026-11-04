@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc05000000",
+  "name": "Silence the Witch",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "Trigger: A foe within 60' uses a gloom ability or casts a spell, and your pistol is loaded.\nYou fire before the last word leaves its lips. Make a shoot attack against it. On a hit, it takes 2d10 damage and the ability is wasted: the gloom is spent, but nothing happens.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 0,
+    "ability": "usual",
+    "damage": "2d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and it is Stupefied until the end of its next turn.",
+      "success": "",
+      "failure": "Half damage; the ability still takes effect.",
+      "ruin": "The pistol misfires: the ability takes effect, and your pistol cannot be fired again this encounter."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

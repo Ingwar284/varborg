@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu08000000",
+  "name": "Opportunist",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "Once per round, when an ally hits a foe within your reach, you may use your reaction to make an attack against that foe.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

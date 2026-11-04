@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul04000000",
+  "name": "Hurl at the Gallop",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Axes and spears leave your hand as easily at full tilt as standing still. You make thrown attacks from your beast without any penalty for attacking from a moving mount, even at fast speed.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

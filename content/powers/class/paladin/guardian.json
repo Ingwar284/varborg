@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPala02000000",
+  "name": "Guardian",
+  "type": "power",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Trigger: An ally within 40' is hit by an attack.\nYou move up to 40'. If you end adjacent to the ally, you take the damage instead.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 0,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

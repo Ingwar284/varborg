@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala02000000",
+  "name": "Armour of faith",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Faith shields you. Your armour reduces damage as if it were one tier higher (to a maximum of t4), without the Agility penalty of the higher tier.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

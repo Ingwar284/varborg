@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDanc03000000",
+  "name": "Shield Samba",
+  "type": "power",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "You spin in a protective blur. Your dance partner gains light cover. Sustained. After one round of sustaining, the cover becomes heavy cover.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc01000000",
+  "name": "Ritual Bells",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "Your ritual bells ring with a frequency that disturbs the unnatural. You defend with -2 DR against attacks from duskborn and undead.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

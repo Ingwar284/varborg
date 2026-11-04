@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard02000000",
+  "name": "Old flame",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Your love life is storied. Upon first meeting a new NPC, you can declare them an old flame of yours and roll for their reaction to determine how they remember you.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

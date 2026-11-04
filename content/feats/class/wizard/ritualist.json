@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza01000000",
+  "name": "Ritualist",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "Instead of an hour, you only take ten minutes to cast a spell to test with Boon.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

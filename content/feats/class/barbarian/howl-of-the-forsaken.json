@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb08000000",
+  "name": "Howl of the forsaken",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You let out a bloodcurdling scream of pure rage whenever you are wounded. All enemies within 10' test Morale; those who fail are demoralised.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

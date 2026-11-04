@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSwor05000000",
+  "name": "Thousand-Fold Flash",
+  "type": "power",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "Your blade becomes a single streak of light. You teleport to a target within 60' range and strike for 2d10 damage. If you reduce the target's HP to 0, you may jump to another target and repeat the attack.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

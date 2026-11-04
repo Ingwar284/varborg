@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho05000000",
+  "name": "I have read worse",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You have Boon on Panic tests, and you cannot become Frightened of a kind recorded in your field notes.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

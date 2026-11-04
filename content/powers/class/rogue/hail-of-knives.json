@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRogu06000000",
+  "name": "Hail of knives",
+  "type": "power",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You throw a dozen blades at once. Deal 3d6 damage to all foes in a 15' radius around a point within 30'.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWiza02000000",
+  "name": "Mage armour",
+  "type": "power",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "A weave of force wraps around you. Sustained. You gain natural t2 armour (-d4), which does not give Bane on spellcasting.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

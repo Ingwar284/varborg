@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc03000000",
+  "name": "Blood memory",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "The memories of your ancestors rise with the blood. You have Boon on tests to recall lore about creatures of your bloodline and to understand their languages.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

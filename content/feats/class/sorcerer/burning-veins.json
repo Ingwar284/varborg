@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc05000000",
+  "name": "Burning veins",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Each time you take a wound by spending life force, your next spell this turn deals an additional d6 damage.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPHedg05000000",
+  "name": "Prismatic Spray",
+  "type": "power",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "Eight multicoloured beams flash from your fingers, targeting d8 random foes within 60'. Each takes 3d6 damage.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

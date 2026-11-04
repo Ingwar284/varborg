@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc04000000",
+  "name": "Blood price",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Once per round, as a free action (◇), take d4 damage that cannot be reduced to regain 1 ember.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

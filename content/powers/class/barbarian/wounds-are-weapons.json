@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBarb03000000",
+  "name": "Wounds Are Weapons",
+  "type": "power",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You tear open your own scars and let the blood fly. Take d6 damage that cannot be reduced, then deal 2d8 damage to a foe within reach. The target takes d4 persistent bleeding damage.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

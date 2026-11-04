@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang06000000",
+  "name": "Silent step",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You move through the wild without a sound. You have Boon on tests to move quietly and hide in natural terrain, and you cannot be surprised while in the wilderness.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

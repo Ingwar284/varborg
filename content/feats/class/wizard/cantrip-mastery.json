@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza05000000",
+  "name": "Cantrip mastery",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "You may cast a cantrip without spending ember.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

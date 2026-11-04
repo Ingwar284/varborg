@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBarb05000000",
+  "name": "Earthrender",
+  "type": "power",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You bring your weapon down on the ground and the ground breaks. Deal 3d6 damage to all foes in a 15' cone, and they are knocked Prone. If you strike a floor, wall or ceiling, you may instead bring the whole structure down: everything within 30' takes 6d6 damage, you included if you are inside.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

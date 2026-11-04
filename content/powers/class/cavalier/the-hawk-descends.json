@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava05000000",
+  "name": "The Hawk Descends",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "The charge they sing about in the Citadel's mess hall, and seldom live to repeat. Ride up to 80' in a straight line and make a melee attack (DR18) against a foe at the end. On a success, it takes 2d10 damage plus your weapon damage, its armour is reduced by one tier, and it is thrown 20' and knocked Prone. If this kills it, you may ride up to 40' further along the same line and make one more melee attack in the same way against the next foe you reach (with the Bane for multiple attacks). Whatever the result, your destrier is blown: it cannot move on your next turn.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d10",
+    "addsWeaponDamage": true,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "You meet the foe like a wall: you and your destrier each take 3d6 damage, and you are thrown Prone."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

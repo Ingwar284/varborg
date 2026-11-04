@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin02000000",
+  "name": "Bootheel Kickoff",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Risky. You plant a boot in a foe's chest and spring away. Test Agility (DR14) against a foe within reach. On a success, it takes d8 damage and is pushed 15' away, and you leap 15' the other way without provoking Opportune Attacks.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and you leap away, but it is not pushed.",
+      "ruin": "Your heel slips: you are Prone at its feet."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

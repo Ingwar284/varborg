@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava05000000",
+  "name": "Shield-Side",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "You ride as the Order rides beside its convoys. Allies adjacent to your destrier have light cover against ranged attacks while you ride it.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

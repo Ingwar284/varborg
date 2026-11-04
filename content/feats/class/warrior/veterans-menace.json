@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr06000000",
+  "name": "Veteran’s menace",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "When you reduce a foe to 0 HP, all enemies within 10' that can see it must test Morale.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

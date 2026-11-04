@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRogu04000000",
+  "name": "Cunning feint",
+  "type": "power",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You fake a lunge and strike where they are not looking. Test Agility (DR16) against a foe within 5'. On a success, the foe is Stupefied until the end of your next turn, and your attacks against it have Boon.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRogu00000000",
+  "name": "Backstab",
+  "type": "power",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You attack with Boon. If the target is surprised, Restrained, Blinded or has one of your allies adjacent to it and you succeed on your attack, you score a Triumph instead.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

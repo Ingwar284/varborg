@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBard05000000",
+  "name": "Spin tale",
+  "type": "power",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "You spin a grand tale, enrapturing a foe of your choice that can hear and understand you. The target is Charmed for 1 round. At the start of each of your turns, you may spend a ◈ to command it and extend the effect for another round. Test Presence:",
+    "source": "class",
+    "belongsTo": "Bard",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As success, but the target can be commanded to harm both its allies and itself.",
+      "success": "The target is Charmed and can be commanded to harm its allies.",
+      "failure": "No effect.",
+      "ruin": "The power of your story attracts otherworldly attention. Something sinister takes hold of you on the next turn and compels you to act in what it deems the most dramatically cinematic manner possible. It cares not for your well-being."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

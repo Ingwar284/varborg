@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul02000000",
+  "name": "Blood-Bond",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Once per encounter, when your beast takes damage, you may use your reaction (↻) to take that damage instead. Your own armour applies, not its hide.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg03000000",
+  "name": "Luck Bender",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "The first time in a round that a creature within 30' (including you) rolls a natural 1 or a natural 20, you gain 1 ember.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

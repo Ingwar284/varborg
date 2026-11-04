@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin05000000",
+  "name": "Laugh in Its Face",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "When you score a Triumph on an attack while you have Adrenaline, you may use your reaction (↻) to grin at another foe within 30' that can see you. A Pitiful or Weak foe tests Morale; any other foe is Frightened of you until the end of its next turn.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

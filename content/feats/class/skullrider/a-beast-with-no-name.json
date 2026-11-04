@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul01000000",
+  "name": "A Beast with No Name",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Your beast came from beyond the cairn-lights, and it is not a horse. Choose one extra passive for it: Cliff-Clawed (it climbs walls and cliffs at half speed, with you on its back), Bog-Strider (it ignores difficult terrain) or Gut-Biter (its attack deals d8). Ordinary beasts know what it is: horses, mules and dogs within 30' of it will not stay calm, and you can have no other animal as a minion.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

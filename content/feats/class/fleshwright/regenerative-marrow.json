@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles08000000",
+  "name": "Regenerative Marrow",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Your flesh knits itself shut as fast as it tears. While you are at half your HP or lower, you regain d4 HP at the start of each of your turns.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

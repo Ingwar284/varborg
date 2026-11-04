@@ -767,7 +767,17 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       a flintlock pistol and rolls its d8 on the armour table only.
       The stat blocks and tables on class pages (Destrier, Raider-Beast,
       Thrall, the rig, the Photonic Surge) come in 48i.
-    - 48d. Class powers and class feats, a few classes at a time.
+    - 48d. ~~**Class powers and class feats.**~~ Done, all 21 classes at
+      once (the text is checked word for word, so batches were not
+      needed): 169 class feats in `content/feats/class/<class>/` and 147
+      powers (each class power and its six others) in
+      `content/powers/class/<class>/`. Cost, actions, a named test,
+      damage dice, adding weapon damage and Sustained are read from the
+      text; result lines go into the power's outcomes. Powers with damage
+      the dice cannot roll (maximum or triple weapon damage) or damage not
+      dealt on use (Mark quarry, Entropic Shield, Armoured Chitin) keep it
+      as text. New: reaction powers (↻), which use the reaction pip and
+      work on any turn (GAPS 184). The Power strike example moved there.
     - 48e. General feats (4.6).
     - 48f. Gear, weapons and armour (4.1).
     - 48g. Spells (4.7).

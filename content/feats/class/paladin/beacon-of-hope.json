@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala08000000",
+  "name": "Beacon of hope",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Inspire courage. Allies within 30' that can see you have Boon on Panic tests.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor05000000",
+  "name": "Two swords",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "You gain an extra spirit-linked sword, and each spirit-linked sword gains the agile trait.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

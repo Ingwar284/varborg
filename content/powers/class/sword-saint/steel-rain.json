@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSwor03000000",
+  "name": "Steel Rain",
+  "type": "power",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "Your blade moves so fast it appears to be in ten places at once. Deal 2d6 damage to all enemies in a 10' radius around a point you choose within reach.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

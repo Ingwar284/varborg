@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRogu05000000",
+  "name": "Assassinate",
+  "type": "power",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You strike from the dark. Make a melee attack against a foe that is surprised, unaware, Restrained or Blinded. On a hit, you deal triple damage and ignore armour. If the target is Weak tier or lower, it dies instantly.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui06000000",
+  "name": "Call the Tempest",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A storm erupts in a 30' radius within 60'. Foes in the area take 2d6 damage and are knocked Prone. Sustained. At the start of each round, you choose one: Lightning (one creature in the area takes 4d6 damage), Gale (all creatures in the area are pushed 20' in a direction you choose) or Downpour (all fire in the area is extinguished and the area becomes difficult terrain).",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d6",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr07000000",
+  "name": "Armourer’s hands",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "During a Short Rest, you can restore armour you or an ally wear that has been reduced in tier, and mend broken weapons.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav05000000",
+  "name": "Rawhide Dead",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Your thralls are sewn from tougher stock: they have 3 HP instead of 1, and are destroyed only when reduced to 0 HP, not by any damage that gets through. They are still mooks in every other way.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

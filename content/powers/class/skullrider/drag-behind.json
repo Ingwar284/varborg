@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSkul03000000",
+  "name": "Drag Behind",
+  "type": "power",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You snare a foe with a chain-hook or a rope and spur your beast away. Make a melee attack (DR16) against a foe within reach. On a success, it takes d12 damage and is knocked Prone. Sustained: it is Restrained by your chain, and each time you ride, it is dragged behind you and takes d4 damage. At the start of its turn, the Dark Master rolls a d20 and it breaks free on 14 or higher (a player character tests Strength DR14 instead). The Dark Master may rule a foe too vast to drag; then your beast is held in place instead.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d12",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and the chain slips free.",
+      "ruin": "The chain wraps your own arm: you are pulled from the saddle and land Prone beside the foe."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

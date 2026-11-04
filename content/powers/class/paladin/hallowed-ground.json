@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPala03000000",
+  "name": "Hallowed ground",
+  "type": "power",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Sanctify a 10' radius within 30'. Sustained. Undead, fiends and duskborn take d6 radiant damage when they enter the area or start their turn in it.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

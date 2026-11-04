@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPHedg02000000",
+  "name": "Bend Fate",
+  "type": "power",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "Trigger: You are hit by an attack.\nYou force an attacker to reroll their damage and take the lower result.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 0,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

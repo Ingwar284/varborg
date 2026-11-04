@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWarr03000000",
+  "name": "Sweeping cleave",
+  "type": "power",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "You cut a bloody arc through the line. Make a melee attack against up to three foes within reach. On a hit, each takes an additional d6 damage.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": true,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza07000000",
+  "name": "Contingency",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "After a Long Rest, choose a spell you know that costs 5 ember or less. Set a trigger (such as dropping below half HP). The next time the trigger occurs before your next Long Rest, the spell is immediately cast.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

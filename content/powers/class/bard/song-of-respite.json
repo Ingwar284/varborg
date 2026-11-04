@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBard01000000",
+  "name": "Song of respite",
+  "type": "power",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Peaceful tunes for restful times. All allies within 30' regain d8 HP.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

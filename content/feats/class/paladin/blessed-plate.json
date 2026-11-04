@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala03000000",
+  "name": "Blessed plate",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Your faith keeps your armour from smothering your prayers. You can cast spells in tier 2 and tier 3 armour without Bane.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

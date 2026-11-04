@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor04000000",
+  "name": "Bigger sword",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "Your spirit-linked sword grows in size, dealing d10 damage and gaining the Heavy trait.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

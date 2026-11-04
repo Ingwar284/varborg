@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBard04000000",
+  "name": "Shattering roast",
+  "type": "power",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "You weave a verse so biting and accurate that the target’s very equipment begins to fail under the weight of your mockery. A foe that can hear you takes 2d8 damage. On a Triumph, reduce their armour by one tier until the end of the encounter.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

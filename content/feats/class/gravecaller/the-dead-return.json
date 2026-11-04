@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav07000000",
+  "name": "The Dead Return",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "↻ Trigger A Pitiful, Weak or Moderate foe of roughly human size dies within 30' of you. A thrall rises in its space, at no ember cost.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

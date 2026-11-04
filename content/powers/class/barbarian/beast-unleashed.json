@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBarb06000000",
+  "name": "Beast Unleashed",
+  "type": "power",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You let go of every restraint. Sustained. While it lasts, your melee attacks deal an additional 2d8 damage and you are Quickened. You must attack the nearest creature each round, friend or foe. When the power ends, you become Fatigued (or gain one more level of Fatigued if you already are).",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d8",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

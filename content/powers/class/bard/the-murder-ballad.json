@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBard03000000",
+  "name": "The murder ballad",
+  "type": "power",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "You sing of gruesome, legendary deeds. Sustained. You and all allies within 30' when you cast it deal an additional d6 damage on every successful hit while the song lasts.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

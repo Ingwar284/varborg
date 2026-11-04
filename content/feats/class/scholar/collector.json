@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho08000000",
+  "name": "Collector",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You can preserve a part of a slain creature, such as a gland, a horn or a wick. A specimen sells for d6 × 10 s to the right buyer, or adds its kind to your field notes without your having studied it.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

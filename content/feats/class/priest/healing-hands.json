@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie04000000",
+  "name": "Healing hands",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Your hands mend even the gravest wounds. Allies you heal recover an extra d4 HP.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

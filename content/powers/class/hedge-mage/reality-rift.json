@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPHedg06000000",
+  "name": "Reality Rift",
+  "type": "power",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "You tear a hole in the world at a point within 60'. At the start of their turn, all creatures within 60' of the rift are pulled 10' towards it. Creatures within 20' of the rift take 3d6 damage at the start of their turn. The battlefield becomes wild for the rest of the fight; any spell cast here by anyone triggers a Photonic Surge.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

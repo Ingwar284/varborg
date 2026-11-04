@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles01000000",
+  "name": "Springheeled",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Your legs morph into a form better suited for explosive movement. You can leap twice as far and high, and you can jump as part of a move without a running start.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

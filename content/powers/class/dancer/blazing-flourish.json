@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDanc04000000",
+  "name": "Blazing Flourish",
+  "type": "power",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "Your blades ignite with the friction of your dance. Deal 2d6 damage and d4 persistent fire damage to a foe within reach.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

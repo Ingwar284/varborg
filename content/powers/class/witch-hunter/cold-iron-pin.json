@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc01000000",
+  "name": "Cold Iron Pin",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You drive your rapier through hand, hem or hoof and into the boards beneath. Make a rapier attack. On a hit, it deals d6 damage and the foe is Restrained until the end of its next turn, or until you let go of the hilt; at the start of its turn, the Dark Master rolls a d20 and it breaks free on 12 or higher. While it is pinned, you cannot attack with your rapier.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "The blade sticks fast in the boards: you must spend an action (◈) to wrench it free before you can attack with it again."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

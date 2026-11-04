@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin08000000",
+  "name": "Scramble",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "When a foe attacks you in melee while you have Adrenaline, you may use your reaction (↻) to tumble away: you defend with -2 DR, then move up to 10' whatever the result. The attacker may follow you if it wishes.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

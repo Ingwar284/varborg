@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala07000000",
+  "name": "Incorruptible",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Your mind is iron. You are immune to the Charmed condition.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

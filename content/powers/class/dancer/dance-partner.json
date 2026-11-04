@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDanc00000000",
+  "name": "Dance Partner",
+  "type": "power",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "Assign one ally as your dance partner until the end of the encounter or until you assign another ally. You and your partner are Quickened, but can only use the extra action to move toward your dance partner or attack a foe your dance partner has previously attacked this turn.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

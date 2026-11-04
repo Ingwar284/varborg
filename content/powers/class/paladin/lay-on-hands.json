@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPala00000000",
+  "name": "Lay on hands",
+  "type": "power",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Touch a creature and channel your faith. Heal a living creature for d8 HP, or deal d8 radiant damage to an undead, duskborn or fiend.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

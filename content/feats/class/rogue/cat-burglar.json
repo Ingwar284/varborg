@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu02000000",
+  "name": "Cat burglar",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You climb at your full speed without needing a free hand to balance, and you never need to test to climb an ordinary wall, drainpipe or rooftop.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

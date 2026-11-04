@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDanc01000000",
+  "name": "Cascade",
+  "type": "power",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "Make an attack with your weapon. On a hit, you and your dance partner may move up to 10' without drawing Opportune Attacks from foes.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

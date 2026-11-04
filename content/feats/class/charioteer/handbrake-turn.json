@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar04000000",
+  "name": "Handbrake Turn",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "Once per round, at the start of a Move, you can spin the rig to face any direction and drive it forward or in reverse without a test.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

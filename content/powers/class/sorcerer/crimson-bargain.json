@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSorc04000000",
+  "name": "Crimson bargain",
+  "type": "power",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "You trade pain for power. Gain a wound without rolling on the Table of Agony. Restore your HP to full and regain 3 ember.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

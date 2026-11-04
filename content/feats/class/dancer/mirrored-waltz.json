@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc03000000",
+  "name": "Mirrored Waltz",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "You and your dance partner move as two halves of a single soul. Whenever your dance partner moves, you may move 10' toward them as a free action (◇).",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

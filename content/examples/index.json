@@ -24,7 +24,7 @@
     "../classes/wizard.json",
     "../ancestries/human.json",
     "../backgrounds/butcher.json",
-    "items/power-strike.json",
+    "../powers/class/warrior/power-strike.json",
     "items/and-they-spoke-of-fire.json",
     "items/scroll-of-and-they-spoke-of-fire.json",
     "items/shard-of-the-great-brazier.json"

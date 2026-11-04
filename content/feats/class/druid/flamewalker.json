@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui03000000",
+  "name": "Flamewalker",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Ashes dance in your wake. Enter the flamewalker stance. Your Primal Conduit aura singes foes for d4 damage instead of 1, and your Primal Blast deals d4 persistent fire damage to the target.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles07000000",
+  "name": "Adhesive Grip",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Your hands and feet secrete a powerful, translucent resin. Grapple and climb with -2 DR.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

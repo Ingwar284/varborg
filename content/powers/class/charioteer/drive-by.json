@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar02000000",
+  "name": "Drive-By",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You hold the rig steady and give your crew the shot. Drive the rig up to its speed and test Agility (DR14). On a success, each ally aboard may use their reaction (↻) to make one attack against a creature within reach or range at any point along the way, without the penalty for attacking from a moving vehicle.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and their attacks have Boon.",
+      "success": "",
+      "failure": "The rig moves, but your crew get no clean shot.",
+      "ruin": "You lose control as on a driving test Failure."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

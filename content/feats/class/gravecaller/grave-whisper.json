@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav03000000",
+  "name": "Grave-Whisper",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Once per day, you can sing a corpse that has been dead less than a week into answering one question, in its own voice, as truthfully as it knew in life. The Silent Fraternity has hanged people for less.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

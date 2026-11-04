@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRogu01000000",
+  "name": "Cheap shot",
+  "type": "power",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "Fling grit, kick a shin, hit below the belt. Make a melee attack. On a hit, deal d6 damage and the target is Blinded until the end of its next turn.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

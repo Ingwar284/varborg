@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr04000000",
+  "name": "Unbroken",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "You have Boon on Panic tests, and the Frightened condition does not give you Bane on attack tests.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

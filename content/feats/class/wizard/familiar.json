@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza03000000",
+  "name": "Familiar",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "A small, strange creature has bound itself to you. You gain a Pitiful minion that can scout, carry small objects and deliver touch spells for you.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

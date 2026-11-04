@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSkul06000000",
+  "name": "Ride It to Death",
+  "type": "power",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You ask your beast for everything it has, and it gives it. Test Strength (DR18). On a success, Sustained: your beast moves 20' further per Move, you gain one extra Move each turn that can only move your beast, and its attacks deal 2d8. When the power ends, your beast collapses: it drops to 1 HP and cannot move until a Short Rest.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "strength",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "No effect, but your beast is winded: it moves 10' less per Move until the end of the encounter.",
+      "ruin": "Its heart stutters: it takes 2d6 damage that armour does not reduce."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

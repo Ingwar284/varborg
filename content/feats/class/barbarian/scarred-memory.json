@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb03000000",
+  "name": "Scarred memory",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "Your flesh is a tapestry of scars. You may permanently reduce your maximum HP by 1 to negate the effects of a wound. This creates a permanent scar.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

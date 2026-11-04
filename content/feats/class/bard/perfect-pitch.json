@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard06000000",
+  "name": "Perfect pitch",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Your ear misses nothing. You have Boon on tests to detect lies, notice faint sounds and identify music, and you can perfectly imitate any voice or sound you have heard.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

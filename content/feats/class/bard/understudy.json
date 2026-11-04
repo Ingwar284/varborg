@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard07000000",
+  "name": "Understudy",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "You know everyone's lines. Once per Long Rest, as a reaction, when an ally within 30' who can hear you fails a Presence test, you feed them the right words: they reroll it and keep the new result.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

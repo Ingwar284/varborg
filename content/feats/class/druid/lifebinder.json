@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui02000000",
+  "name": "Lifebinder",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Life twists and coils where you tread. Enter the lifebinder stance. Allies within your Primal Conduit aura are healed d4 HP instead of 1 HP. Your Primal Blast binds your prey in surging roots: the target is Restrained until it succeeds on a Strength test (DR12).",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

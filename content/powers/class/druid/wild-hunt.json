@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui05000000",
+  "name": "Wild Hunt",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You howl, and the beasts of the Hinterlands answer. d4 spectral beasts appear within 20' as Weak minions. They vanish at the end of the encounter.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

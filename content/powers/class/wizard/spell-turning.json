@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWiza06000000",
+  "name": "Spell turning",
+  "type": "power",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "Trigger: A spell, power or gloom ability targets you, or an area that includes you.\nYou catch the weave and throw it back. Test Sanity (DR18).",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 0,
+    "ability": "sanity",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "As Success, and the turned ability deals 2x damage.",
+      "success": "The ability does not affect you. Instead, it affects its user, or another target of your choice within its range.",
+      "failure": "The ability is not turned, but you take only half of its damage.",
+      "ruin": "The weave tangles around you: you take the ability as if you had rolled a Ruin to defend against it."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

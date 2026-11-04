@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPScho03000000",
+  "name": "Recite the binding",
+  "type": "power",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You read aloud an old warding text from your notes. A Fiend, Fey, Duskborn or Undead within 30' that can hear you is Restrained until the end of its next turn. Any other creature is Stupefied instead.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": "the name you read was yours. You are Frightened of the target until the end of the encounter."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

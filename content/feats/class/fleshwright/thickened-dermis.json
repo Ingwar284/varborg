@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles05000000",
+  "name": "Thickened Dermis",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Your skin turns bark-like or scaled at the moment of impact. Once per round, when you are hit, reduce the damage by d4 as a free action (◇). This stacks with armour, but a hit still deals at least 1 damage.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

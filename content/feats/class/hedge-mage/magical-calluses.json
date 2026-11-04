@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg01000000",
+  "name": "Magical Calluses",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "Your body is scarred from miscasts. Damage you take from spells, Photonic Surges and other clearly magical effects (the Dark Master's call) is reduced by d4. This applies alongside your armour, and a hit still deals at least 1 damage.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

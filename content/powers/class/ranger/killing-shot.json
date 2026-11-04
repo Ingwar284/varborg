@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRang05000000",
+  "name": "Killing shot",
+  "type": "power",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You take a long, perfect shot. Make a shoot attack against a foe within 120'. On a hit, deal 2d10 damage, or 3d10 if the foe is at half its HP or lower. If the foe is your quarry, deal 4d10 damage instead.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

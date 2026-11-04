@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho07000000",
+  "name": "Next chapter",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "When your subject dies or flees, you may use Study the specimen on a new creature as a free action ◇, paying its ember as normal.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

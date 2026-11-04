@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar00000000",
+  "name": "Ramming Speed",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You put your boot to the plate and aim the prow at a foe. Drive the rig up to its speed in a straight line and test Agility (DR12). On a success, the first foe in its path takes damage by your speed (safe d6, normal 2d6, fast 3d6) and is knocked Prone or pushed 10' (your choice), and the rig stops beside it. At fast speed, the rig also takes d6 damage. The Dark Master may rule a foe too vast to be moved.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and you lose control as on a driving test Failure.",
+      "ruin": "No damage: you crash, as on a driving test Ruin."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

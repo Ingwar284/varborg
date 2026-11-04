@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza02000000",
+  "name": "Arcane scholar",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "You have Boon on tests to identify magic, read runes and translate dead languages.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

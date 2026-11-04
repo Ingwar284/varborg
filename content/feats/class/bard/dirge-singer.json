@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard08000000",
+  "name": "Dirge-singer",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "The frightened listen to you. Once per encounter, as an action (◈), you sing a low dirge: every ally within 30' that can hear you ends the Frightened condition.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

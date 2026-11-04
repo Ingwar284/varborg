@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav05000000",
+  "name": "The Charnel Colossus",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Three or more of your thralls within 30' crawl into one another. Test Sanity (DR18). On a success, Sustained: they become a Colossus, a single thrall that is destroyed only at 0 HP. It has 6 HP per thrall consumed (up to 36), -d2 armour, and an attack of 2d8 (reach 10'), and is commanded like a thrall. Its active ability is Sweep ◈◈: everyone in a 10' cone takes 3d6 damage. When the power ends or the Colossus drops to 0 HP, it collapses into difficult terrain 20' across.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "No effect; the thralls are not consumed.",
+      "ruin": "The flesh rebels: the thralls are destroyed, and you take d6 damage."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

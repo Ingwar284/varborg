@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc01000000",
+  "name": "Answering Steel",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "When you score a Triumph on a defence test against a melee attack, you may use your reaction (↻) to make a rapier attack against the attacker.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

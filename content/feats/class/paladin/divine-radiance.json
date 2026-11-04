@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala06000000",
+  "name": "Divine radiance",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Light bursts forth from within you when you gain a wound. Deal 2d6 radiant damage to all enemies within 10', and they are Blinded until the end of their next turn.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

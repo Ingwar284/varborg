@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui04000000",
+  "name": "Stonewarden",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Shards of rock lash out from your shadow. Enter the stonewarden stance. Allies attacked within your Primal Conduit aura defend with -2 DR. Your Primal Blast slams the target to the ground with brutal force, leaving it Prone.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

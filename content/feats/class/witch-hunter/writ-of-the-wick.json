@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc08000000",
+  "name": "Writ of the Wick",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You carry a hunting-writ under the wick-and-flame seal of the Candle-Wicked Men. Within Emberglow, you have Boon on tests to demand entry, search a house or take a suspect into custody, and the Wickguard will not hinder you. The Order may send you a name at any hour. If you refuse it or fail it, the writ burns in your coat, and the Order remembers your face.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

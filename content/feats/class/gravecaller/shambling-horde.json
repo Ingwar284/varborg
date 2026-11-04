@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav06000000",
+  "name": "Shambling Horde",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "When you command a thrall, you may instead command up to three thralls within 30' to take one action each. Only one of them may attack.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

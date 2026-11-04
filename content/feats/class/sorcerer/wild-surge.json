@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc06000000",
+  "name": "Wild surge",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "When you score a Ruin on a spellcasting test, roll on the Shadowblight table twice and choose which result applies.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

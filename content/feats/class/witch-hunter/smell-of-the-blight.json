@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc07000000",
+  "name": "Smell of the Blight",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You know the reek of a spell gone sour. You have Boon on non-combat tests to detect witchcraft: recognising a spell as it is cast, reading a hex-mark or cult sigil, finding a hidden shrine, or telling whether someone carries the Shadowblight.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

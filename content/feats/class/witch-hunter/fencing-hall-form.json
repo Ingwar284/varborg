@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc03000000",
+  "name": "Fencing-Hall Form",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You learned the short, cruel lines of the fencing halls on Crown's Bluff. Your rapier gains the agile trait.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

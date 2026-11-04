@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho06000000",
+  "name": "Footnote",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Once per round, when your subject uses a gloom ability, you may use your reaction ↻ to shout a warning: one ally within 30' who can hear you defends against it with Boon.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

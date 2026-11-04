@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul03000000",
+  "name": "Hang from the Flank",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "When a ranged attack targets you while you ride, you may use your reaction (↻) to swing down behind your beast's body: you defend with -4 DR (heavy cover). On a Failure or Ruin, your beast takes the damage instead of you.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

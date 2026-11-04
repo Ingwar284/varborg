@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard01000000",
+  "name": "Cutting remark",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Your tongue is as sharp as a blade. Your Grave Insult attacks (Presence, 30', against a creature that can hear you) deal d6 damage.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

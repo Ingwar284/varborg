@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSorc00000000",
+  "name": "Open a vein",
+  "type": "power",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "You cut yourself and let the magic flow. Take d4 damage, which cannot be reduced. Regain ember equal to the damage taken.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

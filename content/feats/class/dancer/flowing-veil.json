@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc06000000",
+  "name": "Flowing Veil",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "You use your silks and ribbons to obscure your true position. While Grace in Motion applies to you, you gain light cover against ranged attacks.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

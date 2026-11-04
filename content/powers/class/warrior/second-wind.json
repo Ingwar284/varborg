@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWarr02000000",
+  "name": "Second wind",
+  "type": "power",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "You draw a ragged breath and push on. Heal d8 HP and end the Frightened, Stupefied or Slowed condition on yourself.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

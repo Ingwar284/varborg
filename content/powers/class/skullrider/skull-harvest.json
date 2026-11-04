@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSkul05000000",
+  "name": "Skull Harvest",
+  "type": "power",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You ride the length of the enemy line with your axe low. Ride up to 60' and test Strength (DR18). On a success, every foe that comes within your reach along the way takes 3d6 damage, and each Pitiful or Weak foe that sees one of them die tests Morale. You cannot stop early: you must ride the full 60' if the ground allows.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage.",
+      "ruin": "You are dragged from the saddle by grasping hands: you stop at the first foe and land Prone."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

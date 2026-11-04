@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr05000000",
+  "name": "Parry",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "Once per round, as a reaction, when you are hit by a melee attack, you may reroll your defence test with Boon.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

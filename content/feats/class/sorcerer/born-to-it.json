@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc01000000",
+  "name": "Born to it",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Magic is as natural to you as breathing. You do not have Bane on spellcasting when casting under duress.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

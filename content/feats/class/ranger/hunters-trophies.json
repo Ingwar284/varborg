@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang07000000",
+  "name": "Hunter’s trophies",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "Spend ten minutes harvesting a defeated foe of Moderate tier or stronger to gain a component. Once per encounter, spend a component to have Boon on a test against a foe of that type.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

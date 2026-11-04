@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav04000000",
+  "name": "Wall of the Dead",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Two or more of your thralls lock limbs and fuse into a wall of meat along their spaces; they are destroyed when it ends. Test Sanity (DR16). On a success, Sustained: the wall is 10' long and 10' high for each thrall in it, blocks movement and gives heavy cover. Each 10' section has 5 HP.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "The wall is slack: it gives light cover and does not block movement.",
+      "ruin": "The thralls collapse in a heap and are destroyed."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

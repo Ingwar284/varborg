@@ -65,6 +65,8 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       // "additional d6" (GAPS 121). Only the dice: no traits, not an attack.
       addsWeaponDamage: new BooleanField({ initial: false }),
       sustained: new BooleanField({ initial: false }),
+      // A reaction (↻): used on any turn, with the reaction instead of actions (GAPS 184).
+      reaction: new BooleanField({ initial: false }),
       // What each result does, when the power says. Empty uses the usual text.
       outcomes: new SchemaField({
         triumph: text(),

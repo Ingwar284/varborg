@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu07000000",
+  "name": "Master of disguise",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You can don a convincing disguise in a minute without a kit, and you can forge documents and seals. Anyone testing to see through your disguise or forgery does so with Bane.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

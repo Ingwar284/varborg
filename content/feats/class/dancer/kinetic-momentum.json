@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc02000000",
+  "name": "Kinetic Momentum",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "If you move at least 20' during your turn, your next attack deals +d4 damage.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin05000000",
+  "name": "Dead Man's Gamble",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Risky. Everything on one swing, as if the last lamp in Emberglow depended on it. Make a melee attack.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "Triple damage, and the foe's armour is reduced by one tier.",
+      "success": "Double damage.",
+      "failure": "Half damage.",
+      "ruin": "You overreach: the foe makes a melee attack against you at once, and you defend with Bane."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

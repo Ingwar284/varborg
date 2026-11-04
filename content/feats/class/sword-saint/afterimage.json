@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor06000000",
+  "name": "Afterimage",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "When you move, you leave a faint, glowing trail. You defend against ranged attacks at DR10 due to your shifting, blurred form.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPScho05000000",
+  "name": "The forbidden page",
+  "type": "power",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You read aloud a page that should never have been written. Every creature within 30' that can hear you, allies included, takes 3d6 damage and is Stupefied until the end of its next turn.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": "the words keep reading you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

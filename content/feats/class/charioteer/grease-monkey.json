@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar03000000",
+  "name": "Grease Monkey",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "Once per encounter, you can lean out over the boiler and hammer it back together mid-chase: as two actions (◈◈), the rig regains d8 HP. It keeps moving while you work.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

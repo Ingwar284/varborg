@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul08000000",
+  "name": "Skull-Hung Harness",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Your saddle rattles with the skulls of what you have killed. When an encounter begins while you are riding, each Pitiful foe that can see you tests Morale.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

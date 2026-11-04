@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWarr04000000",
+  "name": "Shield wall",
+  "type": "power",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "You plant your feet and lock shields. Sustained. You and all allies adjacent to you gain light cover (heavy cover if you wield a heavy shield). You cannot move while the wall holds.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

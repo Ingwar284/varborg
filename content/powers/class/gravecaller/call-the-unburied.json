@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav00000000",
+  "name": "Call the Unburied",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "You sing the first line of the dirge backwards, and the dead claw up through cobble, silt and soot. Test Sanity (DR12). On a success, two thralls rise in empty spaces within 30' of you, or one that you may command at once as part of this power.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "Three thralls rise, or two and you may command one at once.",
+      "success": "",
+      "failure": "One thrall rises, but it cannot act until your next turn.",
+      "ruin": "One thrall rises wrong: it attacks the nearest living creature (d4), then collapses."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

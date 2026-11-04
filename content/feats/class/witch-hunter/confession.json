@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc02000000",
+  "name": "Confession",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "Ten minutes alone with a captive is all you need. Test Presence (DR14) to question a captured creature that can speak. Triumph: it answers three questions truthfully, and gives up a name it was keeping back. Success: it answers two questions truthfully. Failure: it tells you nothing of use, and cannot be questioned again until the next day. Ruin: it feeds you a lie you believe, and whoever it served learns that you are coming.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

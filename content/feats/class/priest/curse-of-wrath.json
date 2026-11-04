@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie02000000",
+  "name": "Curse of wrath",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Call divine judgement on a foe. Once per encounter, as a reaction, when a foe hits an ally you can see, that ally rerolls their defence test and keeps the new result.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

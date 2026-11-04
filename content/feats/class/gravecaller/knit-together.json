@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav04000000",
+  "name": "Knit Together",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "As two of your actions (◈◈), three of your thralls that stand adjacent to one another fuse into a Carrion Hulk: a single thrall with 12 HP and -d2 armour, whose heavy limbs deal d6 and reach 10'. It is still a mook, but it is destroyed only at 0 HP. It is commanded like a thrall, and collapses when the encounter ends.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

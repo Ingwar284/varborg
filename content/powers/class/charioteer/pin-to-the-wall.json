@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar04000000",
+  "name": "Pin to the Wall",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "Drive the rig up to its speed into a foe with a wall, pillar or other solid prop no more than 10' behind it, and test Agility (DR16). On a success, it takes d12 damage and is pinned against the prop: it is Restrained until the end of its next turn, or until the rig moves. Whatever the result, the rig takes d6 damage and stops.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d12",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and it is not pinned.",
+      "ruin": "You miss the foe and hit the prop: you crash at your current speed, as on a driving test Ruin."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

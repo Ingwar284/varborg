@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava07000000",
+  "name": "Steady in the Saddle",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "When an effect would knock you Prone or throw you from your destrier, test Agility (DR12). Triumph: you stay in the saddle, and your next attack this turn has Boon. Success: you stay in the saddle. Failure: you fall as normal. Ruin: your boot catches in the stirrup, and you are dragged 10' and take d4 damage before you fall.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

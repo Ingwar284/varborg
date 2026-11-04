@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg05000000",
+  "name": "Harmonious Light",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "When a Photonic Surge occurs, you and all allies within 10' heal d4 HP.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

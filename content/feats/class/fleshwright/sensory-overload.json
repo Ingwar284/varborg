@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles06000000",
+  "name": "Sensory Overload",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "You can sprout dozens of tiny eyes or vibration-sensitive hairs. You always start at the top of initiative and you cannot be surprised.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

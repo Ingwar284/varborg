@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPrie06000000",
+  "name": "Absolution",
+  "type": "power",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Speak the words of release. All creatures within 30' heal to full HP.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

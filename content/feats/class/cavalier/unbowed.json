@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava08000000",
+  "name": "Unbowed",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "When your destrier dies, you do not break. Until the end of the encounter, grief turns to fury: your melee attacks deal +2 damage.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

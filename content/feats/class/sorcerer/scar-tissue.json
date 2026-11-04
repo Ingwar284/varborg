@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc07000000",
+  "name": "Scar tissue",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Your wounds harden into armour. While you carry at least one wound, you have natural -d2 armour. With two wounds it is -d4, and with three it is -d6. This armour does not give Bane on spellcasting.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

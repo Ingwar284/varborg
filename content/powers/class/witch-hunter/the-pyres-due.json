@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc06000000",
+  "name": "The Pyre's Due",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You press the muzzle to the wound your blade has opened and fire through it. Against a foe within your reach that is Stupefied, Blinded or Restrained, make one attack with your rapier and loaded pistol together (Agility). On a hit, it takes 2d10 damage and d6 persistent fire damage, and it cannot use gloom abilities until the end of its next turn. Whatever the result, your pistol is fouled with blood and powder and cannot be fired again until you spend ten minutes cleaning it.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 3,
+    "ability": "usual",
+    "damage": "2d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "The charge bursts in the barrel: you take d6 damage."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

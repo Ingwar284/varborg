@@ -132,8 +132,67 @@ test("each class's feature text is word for word in the rules", () => {
   }
 });
 
+const classFeats = readAll(join(root, "content", "feats", "class")).map(({ data }) => data);
+const classPowers = readAll(join(root, "content", "powers", "class")).map(({ data }) => data);
+/** The rules as one line, without bold and italic marks, for word-for-word checks. */
+const flatRules = rules.replace(/\*\*|(?<=[\s(])_|_(?=[\s.,;:)!?])/g, "").replace(/\s+/g, " ");
+/** A line of our text is in the rules (bullets and "Trigger:" are our own layout). */
+const inRules = line => flatRules.includes(line.replace(/^• /, "").replace(/^Trigger: /, "Trigger "));
+
+test("every class has its additional feats (8, the Charioteer 9) and 7 powers", () => {
+  for (const c of classes) {
+    const feats = classFeats.filter(f => f.system.belongsTo === c.name);
+    const powers = classPowers.filter(p => p.system.belongsTo === c.name);
+    assert.equal(feats.length, c.name === "Charioteer" ? 9 : 8, `${c.name} feats`);
+    assert.equal(powers.length, 7, `${c.name} powers`);
+  }
+  assert.equal(classFeats.length, 169);
+  assert.equal(classPowers.length, 147);
+});
+
+test("each class's class power is one of its powers, costing 🟒1", () => {
+  for (const c of classes) {
+    const name = /Class power: (.+?) 🟒/.exec(c.system.description)[1];
+    const power = classPowers.find(p => p.name === name && p.system.belongsTo === c.name);
+    assert.ok(power, `${c.name}: no power called ${name}`);
+    assert.equal(power.system.cost, 1, name);
+  }
+});
+
+test("class feats and powers are class ones, and their text is word for word in the rules", () => {
+  for (const f of classFeats) {
+    assert.equal(f.system.source, "class", f.name);
+    assert.equal(f.system.improving, false, f.name);
+    const [first, ...rest] = f.system.description.split("\n");
+    assert.ok(inRules(`${f.name} ${first}`), `feat ${f.name} does not match the rules`);
+    for (const line of rest) assert.ok(inRules(line), `feat ${f.name}: "${line}"`);
+  }
+  for (const p of classPowers) {
+    assert.equal(p.system.source, "class", p.name);
+    assert.equal(p.system.resource, "ember", p.name);
+    for (const line of p.system.description.split("\n")) assert.ok(inRules(line), `power ${p.name}: "${line.slice(0, 40)}…"`);
+    for (const [tier, text] of Object.entries(p.system.outcomes)) if (text) assert.ok(inRules(text), `power ${p.name} ${tier}`);
+  }
+});
+
+test("each power's cost and actions (or reaction ↻) are as the rules write them", () => {
+  for (const p of classPowers) {
+    const s = p.system;
+    const symbols = s.reaction ? "↻" : "◈".repeat(s.actions);
+    assert.ok(flatRules.includes(`${p.name} 🟒${s.cost} ${symbols}`), `${p.name}: 🟒${s.cost} ${symbols}`);
+  }
+  assert.equal(classPowers.filter(p => p.system.reaction).length, 7);
+});
+
+test("a power that names its own test uses that ability at DR 11 + cost", () => {
+  for (const p of classPowers.filter(p => p.system.ability !== "usual")) {
+    const ability = p.system.ability[0].toUpperCase() + p.system.ability.slice(1);
+    assert.ok(p.system.description.includes(`est ${ability} (DR${11 + p.system.cost})`), p.name);
+  }
+});
+
 test("a feat that says 'once per round/encounter/day' starts with that frequency", () => {
-  for (const f of ancestryFeats) {
+  for (const f of [...ancestryFeats, ...classFeats]) {
     assert.equal(f.system.frequency, frequencyFromText(f.system.description), f.name);
     assert.equal(f.system.frequencyUsed, false, f.name);
   }

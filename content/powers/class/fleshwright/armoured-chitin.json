@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPFles05000000",
+  "name": "Armoured Chitin",
+  "type": "power",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Morph. Thick, interlocking plates of chitinous soot-black mail erupt from your pores. You become a biological juggernaut and gain natural t4 armour (-d8). You are immune to being moved or knocked Prone, and your unarmed strikes deal 2d8 damage as you crush armour with sheer mass. The plates stay until you change your shape again.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

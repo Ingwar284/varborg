@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc06000000",
+  "name": "Salt in the Wound",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "Your shot is packed with shrine-salt and iron filings. A foe hit by your pistol cannot regain HP until the end of its next turn, whatever passive would mend it.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

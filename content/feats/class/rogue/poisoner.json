@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu05000000",
+  "name": "Poisoner",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "You can craft up to three doses of poison per day. A weapon coated with poison deals d6 persistent poison damage on its next hit.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

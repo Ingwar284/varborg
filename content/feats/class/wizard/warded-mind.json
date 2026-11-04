@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza04000000",
+  "name": "Warded mind",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "Your training has hardened your will. You have Boon on Sanity tests to resist spells and magical effects.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

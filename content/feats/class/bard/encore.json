@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard05000000",
+  "name": "Encore",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Every tale needs a dramatic end. Once per Long Rest, when an ally would die, delay their death until the end of their next turn.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

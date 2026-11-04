@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin01000000",
+  "name": "Bottle and Brick",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Anything within reach is a weapon. As a single action (◈), snatch up a loose object (a gin bottle, a chair leg, a cobble) and attack with it: a melee attack for d6 with the finesse trait, or a throw (20') for d4. The object breaks. If you smash a lit lamp or lantern over a foe, it also takes d4 persistent fire damage, and that light goes out. This attack is Risky.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor08000000",
+  "name": "Blind Master",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "You are permanently Blinded. You can sense creatures and terrain within the range of your spirit-linked blade, negating the effects of being Blinded.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

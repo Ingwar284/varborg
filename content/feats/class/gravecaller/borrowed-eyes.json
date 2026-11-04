@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFGrav01000000",
+  "name": "Borrowed Eyes",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "As an action (◈), you look out through one of your thralls until the start of your next turn: you see and hear what it would from where it stands, but you are Blinded and Deafened to your own surroundings while you do. A thrall sees no better than you, so it still needs light.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

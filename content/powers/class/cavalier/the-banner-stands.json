@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava06000000",
+  "name": "The Banner Stands",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "You raise the hawk in flight above the slaughter and roar the Order's oath. Test Strength (DR18). On a success, every ally within 30' that can see you ends Frightened and has Boon on Panic tests until the end of the encounter. Each Pitiful or Weak foe within 30' tests Morale, and every other foe there is Frightened of you until the end of its next turn. Whatever the result, every foe within 60' knows exactly where you are.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "strength",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Your allies end Frightened, no other effect.",
+      "ruin": "The banner falls: every ally within 30' tests Sanity DR12 or Panics."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

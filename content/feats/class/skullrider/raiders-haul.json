@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSkul07000000",
+  "name": "Raider's Haul",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "During Downtime, you can ride out with a Ger raiding party into the Hinterlands. Test Strength (DR14). Triumph: bring back 2d6 × 10 s of spoils and a trophy the clans will talk about. Success: bring back d6 × 10 s of spoils. Failure: you come back with nothing. Ruin: you come back alone, and begin your next adventure with one wound.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

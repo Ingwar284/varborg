@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho02000000",
+  "name": "Polyglot",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Given an hour and some light, you can read any written language, living or dead.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

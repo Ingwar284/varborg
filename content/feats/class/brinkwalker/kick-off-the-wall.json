@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin04000000",
+  "name": "Kick Off the Wall",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "If you start a Move action next to a prop, you move 30' instead of 20'.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

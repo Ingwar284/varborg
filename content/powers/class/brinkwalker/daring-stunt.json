@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin00000000",
+  "name": "Daring Stunt",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Risky. You hurl yourself into the fray. Move 10' to 20' and end next to a foe, then test Agility (DR12) to wrestle it about. On a success, choose one: push it 10' away from you, knock it Prone, or seize it so it is Restrained until the end of your next turn (this ends early if you move away from it; at the start of its turn, the Dark Master rolls a d20 and it breaks free on 12 or higher). The Dark Master may rule a foe too vast to be moved.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "Choose two.",
+      "success": "",
+      "failure": "No effect, but you keep your Adrenaline.",
+      "ruin": "The stunt backfires: you are Prone at its feet."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

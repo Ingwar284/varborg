@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala01000000",
+  "name": "Binding vow",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Take on a binding vow. Gain -2 DR when taking a test that directly aligns with your vow. Break your vow and you are Doomed until you redeem yourself.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

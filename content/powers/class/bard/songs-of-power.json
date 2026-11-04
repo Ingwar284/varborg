@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBard00000000",
+  "name": "Songs of power",
+  "type": "power",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "You enter a Chorus stance, which can be sustained. Choose one:\n• Allegro: Allies within 30' gain the Quickened condition, but the extra action can only be used to move.\n• Adagio: Foes within 5' are Slowed.\n• Defying Hymn: Allies within 15' defend with -2 DR.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

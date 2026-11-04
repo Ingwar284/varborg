@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc04000000",
+  "name": "Hammer and Flint",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "Once per encounter, you may fully reload a pistol as a free action (◇).",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

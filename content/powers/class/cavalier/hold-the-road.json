@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava04000000",
+  "name": "Hold the Road",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "You plant your destrier across the road like a gate. Sustained: neither of you can move, be pushed or be knocked Prone, and allies adjacent to your destrier have light cover. Using the power needs no test. Instead, when a foe enters your reach, you may use your reaction (↻) to make a melee attack against it: that attack is the power's test (DR16), and it deals d12 instead of your weapon damage.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": true,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage.",
+      "ruin": "No damage, and the foe slips past your guard: the power ends."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

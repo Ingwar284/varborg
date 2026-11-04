@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr08000000",
+  "name": "Shield-brother",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "Once per round, when an enemy attacks an adjacent ally, you may use your reaction to make the attack target you instead.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

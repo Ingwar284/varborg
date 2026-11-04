@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav03000000",
+  "name": "Charnel Charge",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Every thrall within 30' of you rushes up to 30' toward one foe and piles onto it. Test Sanity (DR16). On a success, the foe takes d12 damage and is knocked Prone. You may then destroy any of the thralls that reached it to add d4 damage for each, up to +3d4.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "d12",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "The thralls trip over one another: every thrall that charged is knocked Prone, and none reach the foe."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

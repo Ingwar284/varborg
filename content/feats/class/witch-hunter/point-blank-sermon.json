@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWitc05000000",
+  "name": "Point-Blank Sermon",
+  "type": "feat",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "Your shoot attacks against a foe within your reach do not provoke Opportune Attacks.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

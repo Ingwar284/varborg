@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar05000000",
+  "name": "Over the Maw",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "Hit the ramp, any ramp. Drive the rig up to twice its speed; at any point it leaves the ground and leaps up to 60' over gaps, walls, rubble or foes, then lands, and test Agility (DR18). On a success, everyone in a 10' burst where it lands, except those aboard, takes 3d6 damage and is knocked Prone, and you can keep driving with any Move you have left. Whatever the result, the rig takes 2d6 damage on landing, and everyone aboard who is not strapped in tests Agility DR12 or is knocked Prone.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage.",
+      "ruin": "You come down nose-first where the Dark Master chooses: you crash at fast speed, as on a driving test Ruin."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

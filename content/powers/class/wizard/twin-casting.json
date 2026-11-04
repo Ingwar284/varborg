@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWiza04000000",
+  "name": "Twin casting",
+  "type": "power",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "You weave a spell twice. Your next spell this turn that costs 3 ember or less affects a second target within range.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 1,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

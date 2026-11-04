@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar06000000",
+  "name": "Night-Runner",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "During Downtime, you can race in the crawler-runs of the Ger or the midnight laps of the Kettlewhistle Fair. Test Agility (DR14). Triumph: win 2d6 × 10 s, and a rival wants a rematch. Success: win d6 × 10 s. Failure: you lose and pay d6 × 10 s in repairs. Ruin: you crash; the rig is wrecked (rebuild it as above) and you begin your next adventure with one wound.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

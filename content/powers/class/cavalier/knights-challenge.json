@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPCava01000000",
+  "name": "Knight's Challenge",
+  "type": "power",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "You lift your visor and name your foe. Choose a foe within 60' that can see you and test Strength (DR14). On a success, until the end of its next turn, creatures other than you defend against its attacks with Boon, and if it does not attack you on its turn, your next melee attack against it deals an extra d8 damage.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "No effect.",
+      "ruin": "It laughs at you: you defend against its next attack with Bane."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

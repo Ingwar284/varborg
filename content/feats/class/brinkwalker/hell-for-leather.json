@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin03000000",
+  "name": "Hell-for-Leather",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "You learned to drive on the lamp-routes with a coach full of screaming passengers. Driving or riding at a furiously fast speed is Risky for you, and you make those driving tests with Boon.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

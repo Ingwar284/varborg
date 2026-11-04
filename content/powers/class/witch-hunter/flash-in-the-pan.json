@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc02000000",
+  "name": "Flash in the Pan",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You thumb back the hammer and fire only the priming powder into a foe's eyes. Test Agility (DR14) against a foe within 5'. On a success, it takes d4 damage and is Blinded until the end of its next turn. This does not unload your pistol.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "d4",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "The pan flares back into your face: you take d4 damage, and your pistol is unloaded."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg08000000",
+  "name": "Surge Surfer",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "Once per day, when a Photonic Surge occurs, you may roll the d100 twice and choose which result applies.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

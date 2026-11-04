@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui07000000",
+  "name": "Weatherwise",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You read the sky like a book. You always know the weather and omens for the coming day, have Boon on tests to navigate or survive in the wild, and ignore the effects of non-magical, non-extreme weather.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

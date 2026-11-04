@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc03000000",
+  "name": "Litany of the Brazier",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You recite the old words against the dark, loud enough to be heard over the gloom. Test Agility (DR16). On a success, you and allies within 20' of you defend against gloom abilities with -2 DR. Sustained. While you sustain it, you cannot make shoot attacks.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "No effect.",
+      "ruin": "You lose your place in the words: no effect, and you are Stupefied until the end of your next turn."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

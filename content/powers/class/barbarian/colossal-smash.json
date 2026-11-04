@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBarb00000000",
+  "name": "Colossal smash",
+  "type": "power",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You unleash an earth-shattering blow with a melee weapon. Gain Boon on the attack, and deal maximum weapon damage. In your blind wrath, your defences falter; Bane on defence tests until the start of your next turn.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

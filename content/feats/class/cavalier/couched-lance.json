@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava01000000",
+  "name": "Couched Lance",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "When you make a melee attack with a lance after riding at least 20' in a straight line this turn, the lance deals d10 instead of d6.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

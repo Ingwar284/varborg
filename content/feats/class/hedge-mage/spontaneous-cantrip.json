@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg07000000",
+  "name": "Spontaneous Cantrip",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "You know a dozen tricks. You gain -2 DR on non-combat tests where minor magic could reasonably help (prestidigitation, mage hand, etc.).",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

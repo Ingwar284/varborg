@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui00000000",
+  "name": "Primal Blast",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You gather the flaring energy of your aura into a directed blast. Deal d8 damage to a foe within 30'. Anyone within 5' of the target takes half damage (rounded down).",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

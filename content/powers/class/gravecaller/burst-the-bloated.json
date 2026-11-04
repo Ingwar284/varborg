@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav01000000",
+  "name": "Burst the Bloated",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "One of your thralls within 60' swells with grave-gas and bursts; it is destroyed whatever the result. Test Sanity (DR14). On a success, everyone in a 10' burst centred on it takes d8 damage.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage.",
+      "ruin": "It bursts with a wet sigh and nothing more, and the stench clings to you: Bane on your next test."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

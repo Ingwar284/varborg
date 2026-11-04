@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles03000000",
+  "name": "Internal Alchemy",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "You can shift your organs around. You are immune to the effects of poisons.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

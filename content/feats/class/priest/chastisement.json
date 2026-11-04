@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie05000000",
+  "name": "Chastisement",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Through suffering, you endure. You have Boon on tests to resist poison, infection and curses, and take half damage (rounded down) from Persistent Damage.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

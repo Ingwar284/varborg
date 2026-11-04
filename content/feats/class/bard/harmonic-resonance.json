@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBard04000000",
+  "name": "Harmonic resonance",
+  "type": "feat",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Your songs amplify magical effects. Your spells gain +10' range.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

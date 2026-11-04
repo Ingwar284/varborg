@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPala05000000",
+  "name": "Sacred flame",
+  "type": "power",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "A pillar of holy fire falls on a foe you can see within 60'. Deal 2d10 radiant damage, ignoring armour. An undead, duskborn or fiend of Weak tier or lower is destroyed outright.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

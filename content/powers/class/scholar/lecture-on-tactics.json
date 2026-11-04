@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPScho04000000",
+  "name": "Lecture on tactics",
+  "type": "power",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You bark a quick plan. Up to three allies within 30' who can hear you become Quickened, but the extra action can only be used to Strike your subject or move toward it. You cannot use reactions until your next turn.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

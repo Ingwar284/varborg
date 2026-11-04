@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala04000000",
+  "name": "Purify the corrupt",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Expel the impurities. Spend ten minutes to remove one lesser curse from an item or creature.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang03000000",
+  "name": "Pathfinder",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You never lose your way in the wild. You and your companions ignore difficult terrain created by natural plants, mud and snow while travelling.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

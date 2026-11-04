@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar03000000",
+  "name": "Blow the Valves",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You open every valve at once. Test Agility (DR16). On a success, everyone within 15' of the rig, except those aboard, takes d10 scalding damage, and the rig is wreathed in steam: it and everyone aboard have heavy cover until the start of your next turn.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "d10",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and light cover instead.",
+      "ruin": "The steam blows back into the cab: everyone aboard takes d6 damage."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

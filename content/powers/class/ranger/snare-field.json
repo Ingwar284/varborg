@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPRang03000000",
+  "name": "Snare field",
+  "type": "power",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You scatter snares and spikes across a 15' radius within 30'. Sustained. Foes that enter the area or start their turn in it take d6 damage and are Slowed until the end of their turn.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

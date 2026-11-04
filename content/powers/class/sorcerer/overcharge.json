@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSorc05000000",
+  "name": "Overcharge",
+  "type": "power",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Take a wound. Your next spell this turn is cast with Boon, and if it succeeds, it is treated as a Triumph.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPScho00000000",
+  "name": "Study the specimen",
+  "type": "power",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You pin a creature you can see within 60' with your gaze, like a beetle on a board. It becomes your subject until the end of the encounter, and you learn one fact about it of your choice: its strongest gloom ability, a weakness, or what it wants. Once per round, when an ally hits your subject, they deal an additional d6 damage, because you told them where to strike. You can have only one subject at a time.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "you learn a second fact.",
+      "success": "",
+      "failure": "",
+      "ruin": "this enigma confounds you. You are Stupefied until the end of your next turn."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang04000000",
+  "name": "Field medicine",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "Herbs, thread and a steady hand are all you need. You can cure the Infected condition on yourself or an ally using plants found in the wilderness, without a medicine box.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

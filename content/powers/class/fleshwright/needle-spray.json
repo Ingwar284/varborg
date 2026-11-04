@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPFles01000000",
+  "name": "Needle-Spray",
+  "type": "power",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "You sprout fine, glass-like spines across your skin and launch them at d3 targets within 60'. Deal d6 damage and the targets are distracted by the stinging (-2 DR to defend against their next attack).",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWarr01000000",
+  "name": "Shield expert",
+  "type": "feat",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "Raising a shield costs a free action (◇) instead of an action.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

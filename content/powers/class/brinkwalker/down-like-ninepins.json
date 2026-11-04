@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin06000000",
+  "name": "Down Like Ninepins",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Risky. You barrel through the crowd like a runaway brewer's dray. Move up to 40'. Choose up to three foes that come within your reach along the way, then test Agility (DR18) once for all of them. On a success, each takes 3d6 damage and, your choice for each, is knocked Prone or pushed 10'.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 3,
+    "ability": "usual",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "You go down with them: your movement ends beside the first foe, and you are Prone."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

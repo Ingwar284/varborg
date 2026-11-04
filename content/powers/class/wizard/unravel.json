@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWiza00000000",
+  "name": "Unravel",
+  "type": "power",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "You hook a loose thread of the weave and pull. Deal d8 damage to a creature within 60'. If the target is a caster, a magical creature (Fey, Fiend, Duskborn, Construct or Elemental) or under a magical effect, the torn thread comes back to you and the party regains 1 ember.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "double damage, and the party regains 2 ember instead.",
+      "success": "",
+      "failure": "",
+      "ruin": "the thread whips back. You take d4 damage, which cannot be reduced."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

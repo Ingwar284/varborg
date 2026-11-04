@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg02000000",
+  "name": "Runic Graffiti",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "You can mark objects with a finger-painted rune. You know exactly where that object is as long as it's within a mile, and can summon it to you through an action.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPChar01000000",
+  "name": "Sideswipe",
+  "type": "power",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "You throw the rig broadside and scrape it along the line. Drive the rig up to its speed and test Agility (DR14). On a success, each creature adjacent to its path takes d8 damage and is pushed 5' away from it. Whatever the result, the rig takes d4 damage.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and no one is pushed.",
+      "ruin": "No damage, and you lose control as on a driving test Failure."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

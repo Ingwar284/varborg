@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWitc00000000",
+  "name": "Silver Sentence",
+  "type": "power",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "You name the charge aloud and answer it with silver. Make an attack with your rapier or a loaded pistol. On a hit, it deals normal damage and the foe is Stupefied until the end of its next turn: it has no reaction, and creatures defend against its gloom abilities with Boon.",
+    "source": "class",
+    "belongsTo": "Witch Hunter",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": true,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, no other effect.",
+      "ruin": "Your voice cracks on the charge: no effect, and this power cannot Stupefy that foe again this encounter."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

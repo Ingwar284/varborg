@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui08000000",
+  "name": "Barkskin",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Your skin thickens like old oak. While you wear no armour, you have natural t2 armour (-d4). It does not give Bane on spellcasting.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

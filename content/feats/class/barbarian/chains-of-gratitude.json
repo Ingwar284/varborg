@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb05000000",
+  "name": "Chains of gratitude",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You saved someone, and they now owe you a life debt. You gain a permanent minion who assists you and would give their life for you. When it first joins you, roll a d3 for its strength: 1 Pitiful, 2 Weak, 3 Moderate.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

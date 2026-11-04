@@ -40,6 +40,9 @@ export const POWER_SOURCES = ["class", "ancestry", "general"];
 /** A power takes 0 (free) to 3 actions (◈◈◈). */
 export const MAX_POWER_ACTIONS = 3;
 
+/** A reaction power (↻) uses one reaction (GAPS 184). */
+export const REACTION_POWER_REACTIONS = 1;
+
 /** The Sustain action costs one action (rules 3.4). */
 export const SUSTAIN_ACTIONS = 1;
 
@@ -136,19 +139,23 @@ export function startsSustaining(sustained, tier) {
  * @param {number} options.cost
  * @param {number} options.actions
  * @param {boolean} [options.usedOutside]  Already used once outside combat since the last reset.
- * @returns {{allowed: boolean, reason: "turn"|"used"|null, ember: number, actions: number, marksUsed: boolean}}
+ * @param {boolean} [options.reaction]  A reaction power (↻): any turn, uses the reaction.
+ * @returns {{allowed: boolean, reason: "turn"|"used"|null, ember: number, actions: number, reactions: number, marksUsed: boolean}}
  *   marksUsed: this use is the free one outside combat, so the power is now used.
  */
-export function powerUse({ inCombat = false, onOwnTurn = false, cost, actions, usedOutside = false }) {
+export function powerUse({ inCombat = false, onOwnTurn = false, cost, actions, usedOutside = false, reaction = false }) {
   assertWhole("Cost", cost);
   assertWhole("Actions", actions);
-  const blocked = reason => ({ allowed: false, reason, ember: 0, actions: 0, marksUsed: false });
+  const blocked = reason => ({ allowed: false, reason, ember: 0, actions: 0, reactions: 0, marksUsed: false });
   if (!inCombat) {
     if (usedOutside) return blocked("used");
-    return { allowed: true, reason: null, ember: 0, actions: 0, marksUsed: true };
+    return { allowed: true, reason: null, ember: 0, actions: 0, reactions: 0, marksUsed: true };
   }
+  // A reaction power (↻) answers its trigger on anyone's turn and uses the
+  // reaction instead of actions (GAPS 184).
+  if (reaction) return { allowed: true, reason: null, ember: cost, actions: 0, reactions: REACTION_POWER_REACTIONS, marksUsed: false };
   if (!onOwnTurn) return blocked("turn");
-  return { allowed: true, reason: null, ember: cost, actions, marksUsed: false };
+  return { allowed: true, reason: null, ember: cost, actions, reactions: 0, marksUsed: false };
 }
 
 /**

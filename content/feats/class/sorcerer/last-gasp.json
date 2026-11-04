@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc08000000",
+  "name": "Last gasp",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "When you are reduced to 0 HP, you may use your reaction to cast a spell you know, paying its ember cost as normal.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

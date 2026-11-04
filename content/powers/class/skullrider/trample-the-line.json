@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSkul01000000",
+  "name": "Trample the Line",
+  "type": "power",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Your beast tramples a path through the press. Ride up to 40' in a straight line, through other creatures' spaces, then test Strength (DR14). On a success, each creature in the path takes d6 damage and is knocked Prone.",
+    "source": "class",
+    "belongsTo": "Skullrider",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and no one is knocked Prone.",
+      "ruin": "Your beast stumbles in the crush: you stop at the first creature in the path, and you are thrown Prone beside it."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin04000000",
+  "name": "Wrench and Twist",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Risky. You catch a foe's weapon, claw or arm and spin with it. Test Agility (DR16) against a foe within reach. On a success, its weapon flies 10' away or its limb is wrenched aside: creatures defend against its attacks with Boon until the end of its next turn.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but it lasts until the foe spends an action to recover, and a dropped weapon lands in your free hand if you have one.",
+      "success": "",
+      "failure": "Creatures defend against its next attack with Boon.",
+      "ruin": "It wrenches back: the Dark Master chooses whether you drop the weapon you hold or the foe makes a melee attack against you at once."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

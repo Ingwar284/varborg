@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc05000000",
+  "name": "Lead the Waltz",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "You are never where the enemy expects. Whenever your dance partner is targeted by an attack, you may use a reaction to move up to your movement speed. If this movement ends adjacent to the attacker, your dance partner defends with -2 DR against that attack.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

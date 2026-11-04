@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWarr01000000",
+  "name": "Shield bash",
+  "type": "power",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "Slam your shield (or pommel) into your foe’s face. Make a melee attack. On a hit, deal d6 damage and the target is Stupefied until the end of its next turn.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

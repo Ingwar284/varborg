@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDrui06000000",
+  "name": "Green Thumb",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Plants flourish at your touch. Once per day, in any wilderness that is not barren, you can find enough food and clean water for up to six people.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

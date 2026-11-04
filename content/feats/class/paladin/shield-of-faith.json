@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPala05000000",
+  "name": "Shield of faith",
+  "type": "feat",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "Once per day, manifest a heavy shield made of holy light. It gains the Thrown (30') trait when used as an improvised weapon. Recall it to your hands as a reaction.",
+    "source": "class",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

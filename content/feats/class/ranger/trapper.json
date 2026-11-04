@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRang02000000",
+  "name": "Trapper",
+  "type": "feat",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "Spend ten minutes to set a trap. The first creature that triggers it takes d8 damage and is Restrained until it succeeds on a Strength test (DR12). You can have up to three traps set.",
+    "source": "class",
+    "belongsTo": "Ranger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

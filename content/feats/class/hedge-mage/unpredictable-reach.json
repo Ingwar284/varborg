@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFHedg06000000",
+  "name": "Unpredictable Reach",
+  "type": "feat",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "The reach of your magic is a bit erratic. At the start of a day, roll a d4 to determine the range of all your spells for that day:\n1: reach is touch\n2: reach is 30'\n3: reach is 60'\n4: reach is 120'",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

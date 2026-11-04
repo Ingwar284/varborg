@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb07000000",
+  "name": "Beast or man",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "Your strikes become as savage as a starving wolf’s bite. Your unarmed attacks deal d6 damage. On a Triumph, the foe takes an additional d4 persistent bleeding damage.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

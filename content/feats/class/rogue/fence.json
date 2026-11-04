@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu06000000",
+  "name": "Fence",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "Your underworld contacts always pay. You can sell any loot, stolen or not, for 25% more, and have Boon on tests to find a buyer or a black market.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

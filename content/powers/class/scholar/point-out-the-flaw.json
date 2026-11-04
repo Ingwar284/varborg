@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPScho01000000",
+  "name": "Point out the flaw",
+  "type": "power",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "\"There, under the plate!\" Until the end of your next turn, attacks against your subject ignore its armour. You are too busy explaining to react, and cannot use reactions until then.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

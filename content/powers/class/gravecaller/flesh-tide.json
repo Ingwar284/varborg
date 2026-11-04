@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPGrav06000000",
+  "name": "Flesh Tide",
+  "type": "power",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "You unmake every thrall you have into a single wave of rotting flesh; all of them (at least one) are destroyed whatever the result. Test Sanity (DR18). On a success, everyone in a 60' line, 10' wide, starting from you takes 3d6 damage, plus d6 for each thrall destroyed beyond the first (up to +3d6), and is knocked Prone. The line is difficult terrain until the end of the encounter.",
+    "source": "class",
+    "belongsTo": "Gravecaller",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "sanity",
+    "damage": "3d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage.",
+      "ruin": "The tide turns back on you: you take 2d6 damage and are knocked Prone."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza06000000",
+  "name": "Signature spell",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "One spell is written into your bones. Choose a spell you know that costs 3 ember. You cast it with one action fewer (minimum ◈).",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

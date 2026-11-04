@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb02000000",
+  "name": "Mere inconvenience",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You are an expert at breaking things. You gain Boon on tests to destroy inanimate objects (doors, walls, etc.) and deal double damage to them.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb01000000",
+  "name": "Titan’s grip",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You can wield two-handed melee weapons in one hand. All two-handed weapons have the versatile tag to you.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

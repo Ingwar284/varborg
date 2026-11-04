@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar05000000",
+  "name": "Into the Skid",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "When you fail a driving test, you choose the direction the rig moves instead of the Dark Master.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

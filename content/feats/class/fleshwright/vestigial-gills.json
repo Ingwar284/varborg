@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles04000000",
+  "name": "Vestigial Gills",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Small slits behind your ears or on your ribs allow you to breathe underwater indefinitely.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

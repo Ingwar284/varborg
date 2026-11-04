@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSwor07000000",
+  "name": "Weapon Summoning",
+  "type": "feat",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "You can summon and dismiss your spirit-linked sword using an Interact action. At the start of combat, your spirit-linked sword automatically manifests.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

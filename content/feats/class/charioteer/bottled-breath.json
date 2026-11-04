@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFChar02000000",
+  "name": "Bottled Breath",
+  "type": "feat",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "Once per encounter, as a free action (◇), you vent a flask of deep-gas (Khael's own breath, the Gasmen swear) into the firebox. Your next Move this turn drives the rig twice its speed, and the boiler takes d6 damage that armour does not reduce.",
+    "source": "class",
+    "belongsTo": "Charioteer",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

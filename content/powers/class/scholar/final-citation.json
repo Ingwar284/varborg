@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPScho06000000",
+  "name": "Final citation",
+  "type": "power",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You name your subject's true weakness. Until the end of the encounter, every attack and ability against it has Boon, and its gloom abilities cost ☾1 more. If the encounter ends and your subject still lives, your theory was wrong: you are Frightened of its kind until your next Long Rest.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

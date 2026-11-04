@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBard06000000",
+  "name": "Not the face!",
+  "type": "power",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "Trigger: Your HP is reduced to 0.\nYou dramatically collapse to the ground and remain at 1 HP. As long as you do not act, you are indistinguishable from being dead.",
+    "source": "class",
+    "belongsTo": "Bard",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 0,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

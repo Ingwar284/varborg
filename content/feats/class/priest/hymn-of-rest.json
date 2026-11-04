@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFPrie08000000",
+  "name": "Hymn of rest",
+  "type": "feat",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Singing over the dead guarantees their peace. Their spirits will not rise again.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

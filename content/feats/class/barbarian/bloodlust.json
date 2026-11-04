@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb06000000",
+  "name": "Bloodlust",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "Every kill feeds the fury. Your damage rolls gain +2 for every foe you have personally killed during the current battle, to a maximum of +6. The bonus ends with the battle.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

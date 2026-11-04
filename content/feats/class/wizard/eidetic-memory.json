@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFWiza08000000",
+  "name": "Eidetic memory",
+  "type": "feat",
+  "img": "icons/magic/symbols/circle-ouroboros.webp",
+  "system": {
+    "description": "You never forget a word you have read. You have Boon on tests to recall information, and you cannot lose a memory or a spell to magic or the Shadowblight table.",
+    "source": "class",
+    "belongsTo": "Wizard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

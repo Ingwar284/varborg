@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc08000000",
+  "name": "Showstopper",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "You draw every eye in the room. Once per encounter, when a foe within 20' of you attacks an ally, you may use your reaction to dazzle it with a sudden flourish: the ally defends against that attack with -2 DR, and the foe's next attack before the end of its turn must target you.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPrie00000000",
+  "name": "Prayer of the faithful",
+  "type": "power",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "In moments of desperate need, call upon the might of your deity. Choose any Divine spell that costs 3 ember or less, and cast it for 1 ember instead.\nIf your despair is greater still, you may demand the impossible. Make any request and test Sanity:\nThe Dark Master determines the DR based on the severity of your request, and may outright refuse it.\nNote: a demand is never easier than DR16. As a guide: DR16 for a small mercy (a locked door gives way, a fever breaks, a lamp relights in the dark); DR18 for a great one (a storm turns, a foe is struck down, a collapsing tunnel holds); DR20 for a miracle that bends the world (the dead draw breath, the Gloaming recedes from a street for a night). Anything greater, the gods simply do not answer.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "Your request is fulfilled.",
+      "failure": "Your request goes unheard.",
+      "ruin": "Your deity smites you for your insolence. You are at Death’s Door."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

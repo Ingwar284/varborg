@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSorc02000000",
+  "name": "Bloodscent",
+  "type": "power",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Your blood hums with every heartbeat around you. For d10 rounds, you sense every living creature within 60' by the beat of its heart, even through walls and darkness.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

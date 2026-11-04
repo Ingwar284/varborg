@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFRogu04000000",
+  "name": "Quick hands",
+  "type": "feat",
+  "img": "icons/weapons/daggers/dagger-curved-black.webp",
+  "system": {
+    "description": "Once per turn, you can take an Interact action as a free action.",
+    "source": "class",
+    "belongsTo": "Rogue",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

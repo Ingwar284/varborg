@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui02000000",
+  "name": "Sporeburst",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Release a cloud of spores in a 10' radius around you. Foes in the cloud take d6 damage and are Blinded until the end of their next turn. On a Triumph, they are also Infected.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

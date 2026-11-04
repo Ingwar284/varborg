@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFFles02000000",
+  "name": "Reactive Pigmentation",
+  "type": "feat",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "Your skin shifts colour to match your surroundings. Test with -2 DR to remain unseen.",
+    "source": "class",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

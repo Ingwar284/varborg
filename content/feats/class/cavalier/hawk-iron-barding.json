@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava02000000",
+  "name": "Hawk-Iron Barding",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "Your destrier wears the riveted plate of the Order of the Hawk. Its armour becomes -d6, but it moves 10' less per Move at every speed.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

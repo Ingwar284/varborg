@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPDrui03000000",
+  "name": "Lightning Call",
+  "type": "power",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You raise your hand and the sky answers. Deal 2d8 damage to a foe within 60'. If the foe wears tier 2 or heavier armour, or carries a lot of metal, deal an additional d6 damage.",
+    "source": "class",
+    "belongsTo": "Druid",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d8",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFDanc04000000",
+  "name": "Last Dance",
+  "type": "feat",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "If you are reduced to 0 HP, your dance partner may use its reaction to make a melee attack against a foe within reach.",
+    "source": "class",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

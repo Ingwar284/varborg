@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin06000000",
+  "name": "Opening Gambit",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "When initiative is rolled, you may attempt a small stunt instead of rolling. Test Agility (DR14). Triumph: you act before every foe, and your first attack this encounter has Boon. Success: you act before every foe. Failure: you act after every foe. Ruin: as Failure, and you start the fight Prone. Whatever the result, you have Adrenaline on your first turn.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPHedg00000000",
+  "name": "Improvised Cantrip",
+  "type": "power",
+  "img": "icons/magic/symbols/runes-star-orange.webp",
+  "system": {
+    "description": "You throw a handful of salt, copper wire, or dried herbs at a foe within 30' and shove a spark of will into it.",
+    "source": "class",
+    "belongsTo": "Hedge Mage",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "2d8 damage, and you choose whether a Photonic Surge triggers on the target.",
+      "success": "d8 damage.",
+      "failure": "Half damage, and a Photonic Surge triggers.",
+      "ruin": "No damage, and a Photonic Surge triggers centred on you."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

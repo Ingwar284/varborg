@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBrin07000000",
+  "name": "Press the Advantage",
+  "type": "feat",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "While you have Adrenaline, your second attack in a turn is made without the Bane for multiple attacks (with an agile weapon, your third).",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

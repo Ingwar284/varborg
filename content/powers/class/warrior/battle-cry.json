@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPWarr06000000",
+  "name": "Battle cry",
+  "type": "power",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "You roar, and the line surges. All allies within 30' that can hear you are Quickened and have Boon on their next attack.",
+    "source": "class",
+    "belongsTo": "Warrior",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

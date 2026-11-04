@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPSwor04000000",
+  "name": "Guardian’s Orbit",
+  "type": "power",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "The blade circles you (or an ally) at high speed. The target has heavy cover against non-magical projectiles and reduces all incoming melee damage by d4. This effect can be sustained, but occupies your spirit-linked sword.",
+    "source": "class",
+    "belongsTo": "Sword Saint",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

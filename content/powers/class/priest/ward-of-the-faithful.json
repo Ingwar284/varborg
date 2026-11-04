@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPrie03000000",
+  "name": "Ward of the faithful",
+  "type": "power",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Choose up to three allies within 30'. Sustained. They defend with -2 DR and take d4 less damage from each hit.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d4",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

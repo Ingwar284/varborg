@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPPrie04000000",
+  "name": "Word of life",
+  "type": "power",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "Call back the fading. An ally within 30' that is at Death’s Door regains d8 HP and wakes, no longer at Death’s Door.",
+    "source": "class",
+    "belongsTo": "Priest",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

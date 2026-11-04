@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFScho04000000",
+  "name": "Thesis",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Choose one Bestiary category, such as Duskborn or Constructs. Against creatures of that category, Study the specimen teaches you two facts, and its additional damage becomes d8.",
+    "source": "class",
+    "belongsTo": "Scholar",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

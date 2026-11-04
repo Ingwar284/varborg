@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFBarb04000000",
+  "name": "A good time",
+  "type": "feat",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "You like your drinks as strong as you are. After you down a stiff drink (an Interact action), you fight like a tavern brawl given flesh: for the rest of the encounter, you have Boon on Panic and Strength tests, but Bane on Agility and Sanity tests.",
+    "source": "class",
+    "belongsTo": "Barbarian",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

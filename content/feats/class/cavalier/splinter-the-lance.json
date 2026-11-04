@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFCava06000000",
+  "name": "Splinter the Lance",
+  "type": "feat",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "When you score a Triumph with a lance, you may shatter it on the foe to deal an extra d10 damage. The lance is destroyed.",
+    "source": "class",
+    "belongsTo": "Cavalier",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

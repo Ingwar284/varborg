@@ -1,0 +1,14 @@
+{
+  "_id": "vbCFSorc02000000",
+  "name": "Innate casting",
+  "type": "feat",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "Your magic needs neither words nor gestures. You can cast spells while Silenced or Restrained.",
+    "source": "class",
+    "belongsTo": "Sorcerer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

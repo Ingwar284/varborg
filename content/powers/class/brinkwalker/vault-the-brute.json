@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin01000000",
+  "name": "Vault the Brute",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "Risky. You seize a foe within reach and flip over its head. Test Agility (DR14). On a success, you swap places with it without provoking Opportune Attacks, and your next melee attack against it this turn has Boon.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and it stumbles Prone.",
+      "success": "",
+      "failure": "You cannot get over it, but you may move 5' while staying next to it.",
+      "ruin": "You land on your back beside it: you are Prone, and you provoke its Opportune Attack."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbCPBrin03000000",
+  "name": "Brickwork Kiss",
+  "type": "power",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "With a foe Restrained by you and both of you next to a prop, you drive its head into the soot-black stone. Test Agility (DR16). On a success, it takes d12 damage and is Slowed until the end of its next turn, and it stays Restrained by you until the end of your next turn.",
+    "source": "class",
+    "belongsTo": "Brinkwalker",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "d12",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Half damage, and it slips your grip: it is no longer Restrained.",
+      "ruin": "It twists free and throws you down: you are Prone, and it is no longer Restrained."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}
