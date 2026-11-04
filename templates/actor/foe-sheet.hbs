@@ -94,6 +94,39 @@
   </section>
 
   <section class="inventory-section">
+    <h2>{{localize "VARBORG.Gloom.Abilities"}}</h2>
+    <ul class="item-list">
+      {{#each gloomAbilities}}
+      <li class="item-row" data-item-id="{{item.id}}">
+        <span class="attack-mark" aria-hidden="true">☾</span>
+        <img src="{{item.img}}" alt="">
+        <span class="item-name">{{item.name}}</span>
+        <span class="item-summary">{{cost}}{{#unless isGloom}} · {{localize "VARBORG.Gloom.NotGloom"}}{{/unless}}</span>
+        {{#if isGloom}}
+        <button type="button" class="icon-button" data-action="useGloom"
+                data-tooltip="{{localize 'VARBORG.Gloom.UseTooltip'}}" aria-label="{{localize 'VARBORG.Gloom.UseTooltip'}}">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        {{/if}}
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" class="add-item" data-action="createItem" data-type="power">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Gloom.Add"}}
+    </button>
+  </section>
+
+  <section class="inventory-section">
     <h2>{{localize "VARBORG.Foe.Passives"}}</h2>
     <ul class="item-list">
       {{#each passives as |item|}}

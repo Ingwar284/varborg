@@ -9,7 +9,7 @@
       <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
       {{/each}}
     </select>
-    <p class="hint">{{localize "VARBORG.Defence.AutomaticHint"}}</p>
+    <p class="hint">{{#if automaticHint}}{{automaticHint}}{{else}}{{localize "VARBORG.Defence.AutomaticHint"}}{{/if}}</p>
   </div>
   <div class="form-group">
     <label for="var-borg-defence-boon">{{localize "VARBORG.Test.Boon"}}</label>

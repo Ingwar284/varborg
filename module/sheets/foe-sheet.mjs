@@ -1,13 +1,16 @@
 /**
  * The foe sheet (ApplicationV2), laid out like a foe write-up in rules 6:
  * name and tier, description, HP, Morale and armour, then conditions (with
- * their Foe lines), attacks (weapon items) and passives (feat items). Every change is saved as soon as you
- * leave a field.
+ * their Foe lines), attacks (weapon items), gloom abilities (power items
+ * with resource Gloom) and passives (feat items). Every change is saved as
+ * soon as you leave a field.
  */
 
 import FoeData from "../data/foe.mjs";
 import { moraleChoices } from "../rules/foe.mjs";
 import { foeAttack } from "../dice/defence.mjs";
+import { useGloomAbility, gloomCostLabel } from "../dice/gloom.mjs";
+import { GLOOM_ACTIONS } from "../rules/gloom.mjs";
 import { rollMorale } from "../dice/morale.mjs";
 import { canRollMorale } from "../rules/morale.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
@@ -44,6 +47,7 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       editItem: FoeSheet.#onEditItem,
       deleteItem: FoeSheet.#onDeleteItem,
       attack: FoeSheet.#onAttack,
+      useGloom: FoeSheet.#onUseGloom,
       rollMorale: FoeSheet.#onRollMorale
     }
   };
@@ -73,6 +77,9 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.attacks = actor.itemTypes.weapon
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: attackSummary(item) }));
+    context.gloomAbilities = actor.itemTypes.power
+      .toSorted((a, b) => a.sort - b.sort)
+      .map(item => ({ item, cost: gloomCostLabel(item.system), isGloom: item.system.resource === "gloom" }));
     context.passives = actor.itemTypes.feat.toSorted((a, b) => a.sort - b.sort);
     context.conditions = sheetConditions(actor);
     return context;
@@ -91,11 +98,18 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     return data;
   }
 
-  /** The Add buttons make a new attack (weapon) or passive (feat) and open it. */
+  /** The Add buttons make a new attack (weapon), gloom ability (power) or passive (feat) and open it. */
   static async #onCreateItem(event, button) {
     const type = button.dataset.type;
-    const name = game.i18n.localize(type === "weapon" ? "VARBORG.Foe.NewAttack" : "VARBORG.Foe.NewPassive");
-    const system = type === "feat" ? { source: "passive" } : { kind: "melee" };
+    const names = { weapon: "VARBORG.Foe.NewAttack", power: "VARBORG.Gloom.New", feat: "VARBORG.Foe.NewPassive" };
+    const name = game.i18n.localize(names[type]);
+    const systems = {
+      weapon: { kind: "melee" },
+      // Rules 6: "Two actions unless stated". 3 is the cheapest gloom cost.
+      power: { resource: "gloom", cost: 3, actions: GLOOM_ACTIONS },
+      feat: { source: "passive" }
+    };
+    const system = systems[type];
     const [item] = await this.document.createEmbeddedDocuments("Item", [{ name, type, system }]);
     item?.sheet.render(true);
   }
@@ -104,6 +118,12 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static async #onAttack(event, button) {
     const item = this.#itemFor(button);
     if (item) await foeAttack(this.document, item);
+  }
+
+  /** The moon button uses a gloom ability and posts its card. */
+  static async #onUseGloom(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await useGloomAbility(this.document, item);
   }
 
   /** The Morale button rolls 2d6 against the foe's Morale (rules 3.12). */

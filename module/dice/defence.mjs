@@ -42,6 +42,7 @@ import { defenderConditions, attackingFoeConditions, totalModifiers, carryingWit
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { AGONY_TYPE_OPTION } from "../agony.mjs";
+import { addTimedCondition } from "../timers.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -278,6 +279,8 @@ export async function settleDefenceCard(actor, data) {
     armourNote,
     shieldNote,
     takeLabel: damage && !damage.invalid ? i18n.format("VARBORG.Defence.TakeDamage", { damage: damage.taken }) : null,
+    takeDamage: damage && !damage.invalid ? damage.taken : 0,
+    takeCondition: "",
     fortune: await fortuneSection(data, { tier, damage: Boolean(damage && !damage.invalid), taken: damage?.taken ?? 0 })
   });
   return { content, rolls };
@@ -288,7 +291,7 @@ export async function settleDefenceCard(actor, data) {
  * tier 3 and 4, and its soak die), a raised shield (cover) and Encumbered
  * (Bane).
  */
-function defenceModifiers(actor) {
+export function defenceModifiers(actor) {
   const items = actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }));
   const armour = wornArmour(items);
   const shield = strongestShield(items);
@@ -402,7 +405,8 @@ export async function lowerShield(actor) {
 
 /**
  * Buttons on chat cards: Defend on a foe's attack card, Take damage on a
- * defence card. Hooked to renderChatMessageHTML.
+ * defence card or a gloom ability's test card (which can also add a
+ * condition, such as Toll's Deafened). Hooked to renderChatMessageHTML.
  */
 export function addDefenceCardListeners(message, html) {
   for (const button of html.querySelectorAll("button[data-action='defend']")) {
@@ -438,7 +442,19 @@ export function addDefenceCardListeners(message, html) {
       return;
     }
     take.disabled = true;
-    const damage = Number(take.dataset.damage);
+    const damage = Number(take.dataset.damage) || 0;
+    const condition = take.dataset.condition || null;
+    // A gloom ability's condition, with its timer (module/timers.mjs).
+    const timer = take.dataset.timerKind ? { kind: take.dataset.timerKind, rounds: take.dataset.timerRounds } : null;
+    const conditionLine = condition ? await addTimedCondition(actor, condition, timer) : null;
+    if (!damage) {
+      await message.setFlag(SYSTEM, "damageTaken", true);
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: `<div class="var-borg-card"><p>${conditionLine}</p></div>`
+      });
+      return;
+    }
     // At Death's Door any damage kills (module/deaths-door.mjs).
     if (await killedByDamage(actor, damage)) {
       await message.setFlag(SYSTEM, "damageTaken", true);
@@ -452,6 +468,7 @@ export function addDefenceCardListeners(message, html) {
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
       content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Defence.Took", { name: actor.name, damage, from, to })}</p>`
+        + (conditionLine ? `<p>${conditionLine}</p>` : "")
         + (to === 0 ? `<p class="modifier">${game.i18n.localize("VARBORG.Defence.ZeroHp")}</p>` : "")
         + "</div>"
     });

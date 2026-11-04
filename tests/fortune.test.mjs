@@ -67,6 +67,10 @@ test("a defence that was hit offers a damage reroll and lowering while damage is
   assert.deepEqual(availableSpends({ card: CARD.DEFENCE, tier: "failure", damage: true, taken: 0 }),
     [SPEND.REROLL, SPEND.REROLL_DAMAGE]);
   assert.deepEqual(availableSpends({ card: CARD.DEFENCE, tier: "success" }), [SPEND.REROLL]);
+  // A gloom ability's test card works like a defence card (step 29).
+  assert.deepEqual(availableSpends({ card: CARD.GLOOM, tier: "failure", damage: true, taken: 3 }),
+    [SPEND.REROLL, SPEND.REROLL_DAMAGE, SPEND.LOWER_DAMAGE]);
+  assert.deepEqual(availableSpends({ card: CARD.GLOOM, tier: "triumph" }), [SPEND.REROLL, SPEND.SOFTEN]);
 });
 
 test("a settled card offers nothing", () => {

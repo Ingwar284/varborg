@@ -1,0 +1,18 @@
+<div class="var-borg-card foe-attack-card gloom-card">
+  <h3>{{title}} <span class="gloom-cost">{{cost}}</span></h3>
+  <p class="modifier">{{test}}</p>
+  {{#if description}}<p class="gloom-description">{{description}}</p>{{/if}}
+  <p class="hint">{{hint}}</p>
+  <div class="card-buttons">
+    {{#each targets}}
+    <button type="button" data-action="gloomTest" data-power-uuid="{{@root.powerUuid}}" data-actor-uuid="{{uuid}}">
+      <i class="fa-solid fa-moon"></i> {{label}}
+    </button>
+    {{else}}
+    <button type="button" data-action="gloomTest" data-power-uuid="{{powerUuid}}">
+      <i class="fa-solid fa-moon"></i> {{localize "VARBORG.Gloom.Test"}}
+    </button>
+    {{/each}}
+  </div>
+  {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
+</div>

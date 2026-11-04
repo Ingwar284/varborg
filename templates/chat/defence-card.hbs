@@ -27,7 +27,7 @@
     {{else}}
     <p class="damage-line">
       {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
-      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{damage.before}}
+      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{#if damage.halved}}{{damage.rolled}} × ½ = {{/if}}{{damage.before}}
     </p>
     {{#if damage.soakDie}}
     <p class="damage-line">{{localize "VARBORG.Defence.Soak"}} ({{damage.soakDie}}): −{{damage.soak}}</p>
@@ -39,11 +39,14 @@
       {{localize "VARBORG.Defence.Taken"}}: <strong class="damage-total">{{damage.taken}}</strong>
       {{#if damage.minimum}}<span class="modifier">{{localize "VARBORG.Defence.Minimum"}}</span>{{/if}}
     </p>
-    <button type="button" data-action="takeDamage" data-actor-uuid="{{actorUuid}}" data-damage="{{damage.taken}}" data-agony-type="{{agonyType}}">
-      <i class="fa-solid fa-heart-crack"></i> {{takeLabel}}
-    </button>
     {{/if}}
   </div>
+  {{/if}}
+  {{#if conditionNote}}<p class="modifier">{{conditionNote}}</p>{{/if}}
+  {{#if takeLabel}}
+  <button type="button" data-action="takeDamage" data-actor-uuid="{{actorUuid}}" data-damage="{{takeDamage}}" data-condition="{{takeCondition}}" data-timer-kind="{{takeTimer.kind}}" data-timer-rounds="{{takeTimer.rounds}}" data-agony-type="{{agonyType}}">
+    <i class="fa-solid fa-heart-crack"></i> {{takeLabel}}
+  </button>
   {{/if}}
   {{#if armourNote}}<p class="modifier">{{armourNote}}</p>{{/if}}
   {{{fortune}}}

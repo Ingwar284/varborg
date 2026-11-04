@@ -49,6 +49,11 @@ const DIALOG_TEMPLATE = "systems/var-borg/templates/dice/power-dialog.hbs";
  * @param {Item} power   The power item.
  */
 export async function usePower(actor, power) {
+  // Gloom abilities are used from the foe sheet (module/dice/gloom.mjs).
+  if (power.system.resource === "gloom") {
+    ui.notifications.warn(game.i18n.format("VARBORG.Power.GloomOnCharacter", { name: power.name }));
+    return;
+  }
   return rollPowerTest(actor, power);
 }
 

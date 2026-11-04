@@ -4,7 +4,13 @@
     {{#each conditions.list}}
     <li class="condition-row">
       <img src="{{img}}" alt="">
-      <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
+      <span class="condition-text"><strong>{{label}}</strong>{{#if timer}} <span class="condition-timer">({{timer}})</span>{{/if}} {{text}}</span>
+      {{#if canTime}}
+      <button type="button" class="icon-button" data-time-condition="{{id}}"
+              data-tooltip="{{localize 'VARBORG.Timer.Button'}}" aria-label="{{localize 'VARBORG.Timer.Button'}}">
+        <i class="fa-solid fa-hourglass-half"></i>
+      </button>
+      {{/if}}
       <button type="button" class="icon-button" data-remove-condition="{{id}}"
               data-tooltip="{{localize 'VARBORG.Condition.Remove'}}" aria-label="{{localize 'VARBORG.Condition.Remove'}}">
         <i class="fa-solid fa-xmark"></i>

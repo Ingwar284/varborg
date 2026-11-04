@@ -1,12 +1,16 @@
 /**
  * Data for a power (item type "power"): an ember ability such as the
- * Warrior's Power strike (🟒1 ◈◈).
+ * Warrior's Power strike (🟒1 ◈◈), or a foe's gloom ability such as the
+ * Bellman's Toll for the Departed (☾3 ◈◈).
  *
  * Rules: 3.10 Feats and powers, "The price of the light"; 3.4 Sustain;
- * GAPS 116–121. The maths lives in module/rules/powers.mjs.
+ * 6. Designing Foes, Gloom abilities; GAPS 116–128. The maths lives in
+ * module/rules/powers.mjs and module/rules/gloom.mjs.
  */
 
 import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS } from "../rules/powers.mjs";
+import { POWER_RESOURCES, GLOOM_CONDITIONS, GLOOM_DEFENCE_DR } from "../rules/gloom.mjs";
+import { TIMER_KINDS } from "../rules/timers.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -15,12 +19,22 @@ function labels(keys, prefix) {
   return Object.fromEntries(keys.map(key => [key, `VARBORG.${prefix}.${key}`]));
 }
 
+/** A condition's timer: its kind ("" for none) and, for rounds, how many. */
+function duration() {
+  return new SchemaField({
+    kind: new StringField({ required: true, blank: true, choices: ["", ...TIMER_KINDS], initial: "" }),
+    rounds: new StringField({ required: true, blank: true, initial: "1" })
+  });
+}
+
 export default class PowerData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const text = () => new StringField({ required: true, initial: "" });
     return {
       description: text(),
       source: new StringField({ required: true, choices: POWER_SOURCES, initial: POWER_SOURCES[0] }),
+      // Ember (a character's power) or Gloom (a foe's gloom ability).
+      resource: new StringField({ required: true, choices: POWER_RESOURCES, initial: POWER_RESOURCES[0] }),
       // The listed ember cost (🟒1, 🟒3 ...). The DR is always 11 + this.
       cost: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 1 }),
       // Actions it takes (◈◈ = 2).
@@ -28,7 +42,22 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       // "usual", or the ability the power names ("Test Agility (DR18)").
       ability: new StringField({ required: true, choices: POWER_TEST_ABILITIES, initial: "usual" }),
       // Its own damage dice, such as "d6". Empty when it deals none.
+      // For a gloom ability with its own test: the Failure damage.
       damage: text(),
+      // Gloom ability with its own test: the DR ("tests Presence DR12"),
+      // the Ruin damage, and the condition each result gives.
+      dr: new NumberField({ required: true, nullable: false, integer: true, min: 1, initial: GLOOM_DEFENCE_DR }),
+      ruinDamage: text(),
+      conditions: new SchemaField({
+        failure: new StringField({ required: true, blank: true, choices: GLOOM_CONDITIONS, initial: "" }),
+        ruin: new StringField({ required: true, blank: true, choices: GLOOM_CONDITIONS, initial: "" })
+      }),
+      // How long each result's condition lasts (GAPS 129): "" no timer,
+      // or a timer kind; rounds is a number or dice ("1", "d4").
+      durations: new SchemaField({
+        failure: duration(),
+        ruin: duration()
+      }),
       // Also rolls a chosen weapon's damage dice, such as Power strike's
       // "additional d6" (GAPS 121). Only the dice: no traits, not an attack.
       addsWeaponDamage: new BooleanField({ initial: false }),
@@ -50,6 +79,16 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
   }
 
   static SOURCES = labels(POWER_SOURCES, "Power.Source");
+  static RESOURCES = labels(POWER_RESOURCES, "Power.Resource");
+  static GLOOM_TESTS = Object.fromEntries(POWER_TEST_ABILITIES.map(key => [
+    key, key === "usual" ? "VARBORG.Gloom.UsualTest" : `VARBORG.Ability.${key}`
+  ]));
+  static TIMER_KINDS = Object.fromEntries(["", ...TIMER_KINDS].map(key => [
+    key, key ? `VARBORG.Timer.Kind.${key}` : "VARBORG.Timer.None"
+  ]));
+  static GLOOM_CONDITIONS = Object.fromEntries(GLOOM_CONDITIONS.map(key => [
+    key, key ? `VARBORG.Condition.${key}` : "VARBORG.Gloom.NoCondition"
+  ]));
   static TEST_ABILITIES = Object.fromEntries(POWER_TEST_ABILITIES.map(key => [
     key, key === "usual" ? "VARBORG.Power.UsualAbility" : `VARBORG.Ability.${key}`
   ]));

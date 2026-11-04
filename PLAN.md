@@ -409,13 +409,31 @@ or Improving. Old characters are brought over when the world loads
     *Test:* use Power strike twice outside combat. The second use is blocked
     until you press reset.
 
-29. **Gloom abilities.** A power with resource Gloom on foes. It posts a
+29. ~~**Gloom abilities.**~~ Done: `module/rules/gloom.mjs` with
+    `tests/gloom.test.mjs`, `module/dice/gloom.mjs` (Use on the foe sheet,
+    the card with a Test button for each target, the test card, which works
+    like a defence card with Fortune and Take), the power's Resource, DR,
+    Ruin damage and conditions, and Toll for the Departed on the Bellman
+    (GAPS 122–128). The Take button also adds the result's condition,
+    with its timer (step 29a).
+    A power with resource Gloom on foes. It posts a
     card with a button for each target. By default that is Agility DR12
     defence (Triumph no effect, Success half, Failure full, Ruin double);
     otherwise it is the ability's own test with its Failure and Ruin text.
     *Example:* the Bellman's Toll for the Departed (☾3, Presence DR12).
     *Test:* the Bellman uses Toll. Example Hero tests Presence and on a
     Failure takes d6 and becomes Deafened.
+
+29a. ~~**Condition timers.**~~ Done (added at the designer's request):
+    `module/rules/timers.mjs` with `tests/timers.test.mjs`,
+    `module/timers.mjs`, hooks in `module/combat.mjs`, a clock button
+    beside each condition on the sheets, and timers on gloom abilities'
+    conditions (Toll: 1 round on a Failure, d4 rounds on a Ruin)
+    (GAPS 127, 129–131). Rounds count down at the end of the creature's
+    own turns, like Panic results; "until the start of its next turn"
+    ends when its turn starts; every timed condition ends with combat.
+    *Test:* the Bellman tolls and Example Hero fails: Deafened shows
+    "1 round left" and ends at the end of the Hero's next turn.
 
 30. **Spells.** Spell item. Rule, with tests: Sanity against DR 11 + cost.
     Bane for another spell list, for tier 2+ metal armour and for "foe in

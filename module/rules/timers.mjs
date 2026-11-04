@@ -1,0 +1,96 @@
+/**
+ * Condition timers: how long a condition lasts, and when it ends.
+ * Plain JavaScript, no Foundry, so it can be tested on its own.
+ *
+ * The rules give durations such as "until the end of its next turn",
+ * "until the start of your next turn", "for d4 rounds" and "until the end
+ * of the encounter". Designer rulings (GAPS 129–131):
+ * - Rounds are counted like Panic results (GAPS 79, 85): the dice are
+ *   rolled when the condition is gained, and 1 is used at the end of each
+ *   of the creature's own turns. The turn it was gained in does not count.
+ *   "Until the end of its next turn" is 1 round.
+ * - "Until the start of its next turn" ends when its next turn starts.
+ * - When combat ends, every timed condition ends: the leftover rounds have
+ *   passed, and "until the end of the encounter" is over.
+ * Durations in minutes or hours are not timed yet.
+ */
+
+import { countDown } from "./panic.mjs";
+
+/**
+ * The kinds of timer:
+ * rounds       counts down at the end of the creature's own turns;
+ * startOfTurn  ends when the creature's next turn starts;
+ * encounter    ends when combat ends.
+ */
+export const TIMER_KINDS = ["rounds", "startOfTurn", "encounter"];
+
+/** How many rounds: a whole number such as 1, or dice such as d4 or 2d6. */
+export function isRoundsFormula(text) {
+  return /^\s*(?:[1-9]\d*|(?:[1-9]\d*)?d[1-9]\d*)\s*$/i.test(String(text ?? ""));
+}
+
+/**
+ * A new timer.
+ * @param {string} kind          One of TIMER_KINDS.
+ * @param {object} [options]
+ * @param {number} [options.rounds]     For "rounds": how many (already rolled).
+ * @param {boolean} [options.ownTurn]   Gained during the creature's own turn,
+ *   which does not count.
+ * @returns {{kind: string, rounds: number|null, freshTurn: boolean}}
+ */
+export function newTimer(kind, { rounds = null, ownTurn = false } = {}) {
+  if (!TIMER_KINDS.includes(kind)) throw new RangeError(`Unknown timer ${kind}`);
+  if (kind === "rounds" && (!Number.isInteger(rounds) || rounds < 1)) {
+    throw new RangeError(`Rounds must be a whole number of 1 or more, got ${rounds}`);
+  }
+  return { kind, rounds: kind === "rounds" ? rounds : null, freshTurn: Boolean(ownTurn) };
+}
+
+/**
+ * At the end of one of the creature's own turns.
+ * @returns {{timer: object, ends: boolean}}
+ */
+export function timerAtEndOfTurn(timer) {
+  if (timer.kind !== "rounds") return { timer: { ...timer, freshTurn: false }, ends: false };
+  const next = countDown(timer.rounds, timer.freshTurn);
+  return { timer: { ...timer, rounds: next.turnsLeft, freshTurn: false }, ends: next.ends };
+}
+
+/**
+ * At the start of one of the creature's own turns: "until the start of
+ * its next turn" ends.
+ * @returns {{timer: object, ends: boolean}}
+ */
+export function timerAtStartOfTurn(timer) {
+  return { timer, ends: timer.kind === "startOfTurn" };
+}
+
+/** When combat ends, every timer ends (GAPS 130). */
+export function timerEndsWithCombat(timer) {
+  return Boolean(timer);
+}
+
+/**
+ * How long a timer still has, for comparing: a timer that lasts until the
+ * encounter ends outlasts any number of rounds, and rounds outlast "until
+ * the start of its next turn". No timer (null) lasts until removed.
+ */
+function reach(timer) {
+  if (!timer) return Infinity;
+  if (timer.kind === "encounter") return 1e6;
+  if (timer.kind === "rounds") return timer.rounds + (timer.freshTurn ? 0.5 : 0);
+  return 0.25;
+}
+
+/**
+ * A condition the creature already has is gained again: it keeps
+ * whichever lasts longer (GAPS 131). A condition without a timer stays
+ * without one.
+ * @param {object|null} current  The timer it has (null: none, lasts until removed).
+ * @param {object} gained        The new timer.
+ * @returns {object|null}
+ */
+export function longerTimer(current, gained) {
+  return reach(gained) > reach(current) ? gained : current;
+}

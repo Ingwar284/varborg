@@ -11,6 +11,7 @@ import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import FeatData from "../data/feat.mjs";
 import PowerData from "../data/power.mjs";
 import { powerDr } from "../rules/powers.mjs";
+import { gloomTest } from "../rules/gloom.mjs";
 import { ClassData } from "../data/origins.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 
@@ -136,9 +137,11 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
 }
 
 /**
- * Powers (rules 3.10): the feat header (picture, name, source), then cost,
- * actions, attack, damage, Sustained and the outcome texts, then a
- * description.
+ * Powers (rules 3.10): the feat header (picture, name, source), then the
+ * resource, cost, actions, test, damage, Sustained and the outcome texts,
+ * then a description. A gloom ability (resource Gloom, rules 6) shows its
+ * own fields instead: the test (Agility DR12 defence or its own), DR,
+ * Failure and Ruin damage, and the condition each gives.
  */
 export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
@@ -162,6 +165,9 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.system = system;
     context.sources = PowerData.SOURCES;
     context.canImprove = false;
+    context.resources = PowerData.RESOURCES;
+    context.isGloom = system.resource === "gloom";
+    if (context.isGloom) return this.#gloomContext(context, system);
     context.testAbilities = PowerData.TEST_ABILITIES;
     const named = system.ability !== "usual";
     context.drHint = game.i18n.format(named ? "VARBORG.Power.DrHintNamed" : "VARBORG.Power.DrHint", {
@@ -173,6 +179,27 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       label: `VARBORG.Tier.${key}`,
       value: system.outcomes[key],
       placeholder: game.i18n.localize(`VARBORG.Power.Outcome.${key}`)
+    }));
+    return context;
+  }
+
+  /** The fields a gloom ability shows. */
+  #gloomContext(context, system) {
+    const i18n = game.i18n;
+    const test = gloomTest(system);
+    const kind = test.own ? "own" : "defence";
+    context.gloomTests = PowerData.GLOOM_TESTS;
+    context.gloomConditions = PowerData.GLOOM_CONDITIONS;
+    context.timerKinds = PowerData.TIMER_KINDS;
+    context.ownTest = test.own;
+    context.drHint = i18n.format(test.own ? "VARBORG.Gloom.OwnTest" : "VARBORG.Gloom.DefenceTest", {
+      ability: i18n.localize(`VARBORG.Ability.${test.ability}`), dr: test.dr
+    });
+    context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({
+      key,
+      label: `VARBORG.Tier.${key}`,
+      value: system.outcomes[key],
+      placeholder: i18n.localize(`VARBORG.Gloom.Outcome.${kind}.${key}`)
     }));
     return context;
   }

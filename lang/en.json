@@ -1251,7 +1251,97 @@
       "UsedOutsideHint": "Used once outside combat. It works again after an encounter or a rest, or when the Dark Master resets ember abilities. In combat, pay from the Ember pool as usual.",
       "Reset": "Reset ember abilities",
       "ResetTooltip": "Every character's ember abilities can be used once again outside combat.",
-      "ResetDone": "Ember abilities are reset: each can be used once again outside combat."
+      "ResetDone": "Ember abilities are reset: each can be used once again outside combat.",
+      "Resource": {
+        "ember": "Ember (🟒)",
+        "gloom": "Gloom (☾)"
+      },
+      "ResourceLabel": "Resource",
+      "ResourceHint": "Ember for a character's power, Gloom for a foe's gloom ability.",
+      "GloomOnCharacter": "{name} is a gloom ability. Gloom abilities belong to foes and are used from the foe sheet."
+    },
+    "Gloom": {
+      "Abilities": "Gloom abilities",
+      "Add": "Add gloom ability",
+      "New": "New gloom ability",
+      "NotGloom": "set to Ember, so it cannot be used",
+      "UseTooltip": "Use this gloom ability",
+      "Cost": "Gloom cost",
+      "CostHint": "Paid from the Gloom pool in combat. Abilities cost 3, 5, 7 or 9.",
+      "UsualTest": "Usual: Agility DR12 defence",
+      "TestHint2": "Leave on Usual unless the ability names its own test (“tests Presence DR12”).",
+      "DrHint": "The DR of the ability's own test. Weak foes use 12, Moderate 12 to 13, Strong 13 to 14, Mighty 14 to 16.",
+      "DamageHint": "The ability's damage dice, such as d6: half on a Success, full on a Failure, double on a Ruin.",
+      "FailureDamage": "Failure damage",
+      "FailureDamageHint": "Damage on a Failure, such as d6. Leave empty if none.",
+      "RuinDamage": "Ruin damage",
+      "RuinDamageHint": "Damage on a Ruin, such as 2d6. Leave empty if none.",
+      "FailureCondition": "Failure condition",
+      "RuinCondition": "Ruin condition",
+      "ConditionHint": "A condition the result gives. Set how long it lasts below.",
+      "NoCondition": "None",
+      "OutcomesHint": "Write what each result does when the ability says (“Deafened until the end of its next turn”). Empty uses the usual text.",
+      "Outcome": {
+        "defence": {
+          "triumph": "No effect.",
+          "success": "Half damage.",
+          "failure": "Full damage.",
+          "ruin": "Double damage."
+        },
+        "own": {
+          "triumph": "No effect.",
+          "success": "No effect.",
+          "failure": "As the ability says.",
+          "ruin": "As the ability says."
+        }
+      },
+      "DefenceTest": "{ability} DR{dr} defence",
+      "OwnTest": "Tests {ability} DR{dr}",
+      "NotYourTurn": "{name} uses actions, so in combat a foe can only use it on its own turn.",
+      "NotEnough": "{name} costs ☾{cost}, but the Gloom pool holds only {left}.",
+      "Paid": "Paid ☾{cost} from the Gloom pool.",
+      "OutsideCombat": "Outside combat: no Gloom is spent.",
+      "CardTitle": "{name}: {ability}",
+      "Test": "Test",
+      "TestAs": "Test as {name}",
+      "TestHint": "Each character it reaches makes the test.",
+      "Gone": "That gloom ability no longer exists.",
+      "DialogTitle": "{name} against {ability}",
+      "DefenceHint": "Defence is Agility DR12. Heavy and special armour (+2 DR), a raised shield, Encumbered and conditions are added for you. Prone does not count. Armour soaks the damage.",
+      "OwnHint": "Armour penalties, Encumbered and conditions are added for you. Armour soaks the damage.",
+      "TestTitle": "Test against {name}",
+      "ConditionNote": "Gives {condition}: {time}.",
+      "TakeBoth": "Take {damage} damage and become {condition}",
+      "Become": "Become {condition}",
+      "Became": "{name} is now {condition}."
+    },
+    "Timer": {
+      "None": "No timer (until removed)",
+      "Kind": {
+        "rounds": "For a number of rounds",
+        "startOfTurn": "Until the start of its next turn",
+        "encounter": "Until the end of the encounter"
+      },
+      "RoundLeft": "1 round left",
+      "RoundsLeft": "{rounds} rounds left",
+      "ForRounds": "for {rounds} round(s), rolled when taken",
+      "Untimed": "until removed by hand",
+      "For": "({time})",
+      "ForRolled": "({time}, rolled {formula})",
+      "KeptLonger": "It already had it for longer, so the longer time stays.",
+      "Ended": "{name} is no longer {condition}: its time is up.",
+      "Button": "Set how long this condition lasts",
+      "DialogTitle": "{condition} on {name}: how long?",
+      "DialogHint": "In combat, rounds count down at the end of each of its own turns; the turn it was gained in does not count. “Until the end of its next turn” is 1 round. Every timed condition ends when combat ends. Outside combat the timer does not run.",
+      "KindLabel": "Lasts",
+      "RoundsLabel": "Rounds",
+      "RoundsHint": "A number such as 1, or dice such as d4. Dice are rolled when it is set.",
+      "Set": "Set",
+      "BadRounds": "“{rounds}” is not a number of rounds. Use a number such as 1, or dice such as d4.",
+      "RolledFlavour": "How long {condition} lasts (rounds)",
+      "FieldHint": "How long the condition lasts. “Until the end of its next turn” is 1 round.",
+      "FailureLasts": "Failure condition lasts",
+      "RuinLasts": "Ruin condition lasts"
     }
   }
 }

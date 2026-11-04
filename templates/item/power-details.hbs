@@ -1,13 +1,71 @@
 <section class="var-borg-item-details">
   <div class="field-grid">
-    <label data-tooltip="{{localize 'VARBORG.Power.CostHint'}}">
-      <span>{{localize "VARBORG.Power.Cost"}}</span>
+    <label data-tooltip="{{localize 'VARBORG.Power.ResourceHint'}}">
+      <span>{{localize "VARBORG.Power.ResourceLabel"}}</span>
+      <select name="system.resource">{{selectOptions resources selected=system.resource localize=true}}</select>
+    </label>
+    <label data-tooltip="{{localize (ifThen isGloom 'VARBORG.Gloom.CostHint' 'VARBORG.Power.CostHint')}}">
+      <span>{{localize (ifThen isGloom "VARBORG.Gloom.Cost" "VARBORG.Power.Cost")}}</span>
       <input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1">
     </label>
     <label data-tooltip="{{localize 'VARBORG.Power.ActionsHint'}}">
       <span>{{localize "VARBORG.Power.Actions"}}</span>
       <input type="number" name="system.actions" value="{{system.actions}}" min="0" max="3" step="1">
     </label>
+    {{#if isGloom}}
+    <label data-tooltip="{{localize 'VARBORG.Gloom.TestHint2'}}">
+      <span>{{localize "VARBORG.Power.AbilityLabel"}}</span>
+      <select name="system.ability">{{selectOptions gloomTests selected=system.ability localize=true}}</select>
+    </label>
+    {{#if ownTest}}
+    <label data-tooltip="{{localize 'VARBORG.Gloom.DrHint'}}">
+      <span>{{localize "VARBORG.Test.DR"}}</span>
+      <input type="number" name="system.dr" value="{{system.dr}}" min="1" step="1">
+    </label>
+    {{/if}}
+    <label data-tooltip="{{localize (ifThen ownTest 'VARBORG.Gloom.FailureDamageHint' 'VARBORG.Gloom.DamageHint')}}">
+      <span>{{localize (ifThen ownTest "VARBORG.Gloom.FailureDamage" "VARBORG.Power.Damage")}}</span>
+      <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d6">
+    </label>
+    {{#if ownTest}}
+    <label data-tooltip="{{localize 'VARBORG.Gloom.RuinDamageHint'}}">
+      <span>{{localize "VARBORG.Gloom.RuinDamage"}}</span>
+      <input type="text" name="system.ruinDamage" value="{{system.ruinDamage}}" placeholder="2d6">
+    </label>
+    {{/if}}
+    <label data-tooltip="{{localize 'VARBORG.Gloom.ConditionHint'}}">
+      <span>{{localize "VARBORG.Gloom.FailureCondition"}}</span>
+      <select name="system.conditions.failure">{{selectOptions gloomConditions selected=system.conditions.failure localize=true}}</select>
+    </label>
+    {{#if system.conditions.failure}}
+    <label data-tooltip="{{localize 'VARBORG.Timer.FieldHint'}}">
+      <span>{{localize "VARBORG.Timer.FailureLasts"}}</span>
+      <select name="system.durations.failure.kind">{{selectOptions timerKinds selected=system.durations.failure.kind localize=true}}</select>
+    </label>
+    {{#if (eq system.durations.failure.kind "rounds")}}
+    <label data-tooltip="{{localize 'VARBORG.Timer.RoundsHint'}}">
+      <span>{{localize "VARBORG.Timer.RoundsLabel"}}</span>
+      <input type="text" name="system.durations.failure.rounds" value="{{system.durations.failure.rounds}}" placeholder="d4">
+    </label>
+    {{/if}}
+    {{/if}}
+    <label data-tooltip="{{localize 'VARBORG.Gloom.ConditionHint'}}">
+      <span>{{localize "VARBORG.Gloom.RuinCondition"}}</span>
+      <select name="system.conditions.ruin">{{selectOptions gloomConditions selected=system.conditions.ruin localize=true}}</select>
+    </label>
+    {{#if system.conditions.ruin}}
+    <label data-tooltip="{{localize 'VARBORG.Timer.FieldHint'}}">
+      <span>{{localize "VARBORG.Timer.RuinLasts"}}</span>
+      <select name="system.durations.ruin.kind">{{selectOptions timerKinds selected=system.durations.ruin.kind localize=true}}</select>
+    </label>
+    {{#if (eq system.durations.ruin.kind "rounds")}}
+    <label data-tooltip="{{localize 'VARBORG.Timer.RoundsHint'}}">
+      <span>{{localize "VARBORG.Timer.RoundsLabel"}}</span>
+      <input type="text" name="system.durations.ruin.rounds" value="{{system.durations.ruin.rounds}}" placeholder="d4">
+    </label>
+    {{/if}}
+    {{/if}}
+    {{else}}
     <label data-tooltip="{{localize 'VARBORG.Power.AbilityHint'}}">
       <span>{{localize "VARBORG.Power.AbilityLabel"}}</span>
       <select name="system.ability">{{selectOptions testAbilities selected=system.ability localize=true}}</select>
@@ -24,11 +82,12 @@
       <input type="checkbox" name="system.sustained" {{checked system.sustained}}>
       <span>{{localize "VARBORG.Power.SustainedLabel"}}</span>
     </label>
+    {{/if}}
   </div>
   <p class="hint">{{drHint}}</p>
   <fieldset>
     <legend>{{localize "VARBORG.Power.OutcomesLabel"}}</legend>
-    <p class="hint">{{localize "VARBORG.Power.OutcomesHint"}}</p>
+    <p class="hint">{{localize (ifThen isGloom "VARBORG.Gloom.OutcomesHint" "VARBORG.Power.OutcomesHint")}}</p>
     {{#each outcomes}}
     <label>
       <span>{{localize label}}</span>

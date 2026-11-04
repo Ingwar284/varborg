@@ -18,6 +18,8 @@ import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, isMorale } from "../module/
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
 import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS, powerDr, powerAbility } from "../module/rules/powers.mjs";
 import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
+import { GLOOM_CONDITIONS, gloomTest } from "../module/rules/gloom.mjs";
+import { isRoundsFormula } from "../module/rules/timers.mjs";
 import { SPELL_LISTS, STARTING_DICE, wealthFormula } from "../module/rules/origins.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
@@ -148,7 +150,18 @@ test("example foes follow the foe rules", () => {
     assert.equal(capHp(system.hp.value, system.hp.max), system.hp.value, `${file}: HP above max HP`);
     for (const item of data.items ?? []) {
       assert.match(item._id, /^[a-zA-Z0-9]{16}$/, `${file}: ${item.name} needs a 16-letter-or-digit _id`);
-      assert.ok(["weapon", "feat"].includes(item.type), `${file}: foes carry only attacks and passives`);
+      assert.ok(["weapon", "feat", "power"].includes(item.type), `${file}: foes carry only attacks, gloom abilities and passives`);
+      if (item.type === "power") {
+        const s = item.system;
+        assert.equal(s.resource, "gloom", `${file}: ${item.name} is a gloom ability`);
+        assert.ok([3, 5, 7, 9].includes(s.cost), `${file}: ${item.name} costs 3, 5, 7 or 9 (rules 6)`);
+        for (const key of ["damage", "ruinDamage"]) {
+          if (s[key]) assert.ok(isDamageFormula(s[key]), `${file}: ${item.name} ${key}`);
+        }
+        for (const key of ["failure", "ruin"]) {
+          assert.ok(GLOOM_CONDITIONS.includes(s.conditions[key]), `${file}: ${item.name} ${key} condition`);
+        }
+      }
       if (item.type === "weapon") assert.ok(isDamageFormula(item.system.damage), `${file}: ${item.name} damage`);
       if (item.type === "weapon") {
         // Foe attacks have no traits besides reach or range, and no expendable die (GAPS 59).
@@ -206,6 +219,22 @@ test("step 24: example classes, ancestry and background match rules 2.4 and 2.5"
   assert.deepEqual(pick(byName("Wizard")), ["sanity", 6, 1, "arcane", "d6"]);
   assert.equal(byName("Human").type, "ancestry");
   assert.deepEqual([byName("Butcher").system.wealth, byName("Butcher").system.keepsake], ["2d6 × 10 s", "Cleaver"]);
+});
+
+test("step 29: Toll for the Departed matches the Bellman's write-up (☾3 ◈◈, Presence DR12)", () => {
+  const bellman = examples.find(({ data }) => data.name === "Ash-Choked Bellman").data;
+  const toll = bellman.items.find(item => item.name === "Toll for the Departed")?.system;
+  assert.ok(toll, "the Bellman has Toll for the Departed");
+  assert.equal(toll.resource, "gloom");
+  assert.equal(toll.cost, 3);
+  assert.equal(toll.actions, 2);
+  assert.deepEqual(gloomTest(toll), { ability: "presence", dr: 12, own: true });
+  assert.equal(toll.damage, "d6");
+  assert.equal(toll.ruinDamage, "2d6");
+  assert.deepEqual(toll.conditions, { failure: "deafened", ruin: "deafened" });
+  // "until the end of its next turn" is 1 round; Ruin is "for d4 rounds" (GAPS 129).
+  assert.deepEqual(toll.durations, { failure: { kind: "rounds", rounds: "1" }, ruin: { kind: "rounds", rounds: "d4" } });
+  assert.ok(isRoundsFormula(toll.durations.ruin.rounds));
 });
 
 test("example powers follow the power rules", () => {

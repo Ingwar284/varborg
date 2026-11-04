@@ -830,3 +830,25 @@
 .var-borg-item-details fieldset label span {
   flex: 0 0 5rem;
 }
+
+/* Gloom abilities (step 29): the cost beside the card title, the rules
+   text, and the Take button below the damage lines. */
+.var-borg-card.gloom-card .gloom-cost {
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+.var-borg-card.gloom-card .gloom-description {
+  font-style: italic;
+  margin: 0.2rem 0;
+}
+
+.var-borg-card button[data-action="takeDamage"] {
+  margin-top: 0.3rem;
+}
+
+/* Condition timers: the time left beside a condition's name. */
+.var-borg-sheet .condition-timer {
+  font-style: italic;
+  opacity: 0.8;
+}

@@ -19,6 +19,7 @@ import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
 import { addAttackCardListeners, settleAttackCard } from "./dice/attack.mjs";
 import { addDefenceCardListeners, settleDefenceCard } from "./dice/defence.mjs";
+import { addGloomCardListeners, settleGloomCard } from "./dice/gloom.mjs";
 import { settleTestCard } from "./dice/ability-test.mjs";
 import { registerFortune } from "./fortune.mjs";
 import { CARD } from "./rules/fortune.mjs";
@@ -95,13 +96,16 @@ Hooks.once("init", () => {
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);
   // Defend on a foe's attack card, Take damage on a defence card (rules 3.4).
   Hooks.on("renderChatMessageHTML", addDefenceCardListeners);
+  // Test buttons on a foe's gloom ability card (rules 6, Gloom abilities).
+  Hooks.on("renderChatMessageHTML", addGloomCardListeners);
   // Inflict damage on an attack card, Morale on a foe damage card (rules 3.12).
   Hooks.on("renderChatMessageHTML", addMoraleCardListeners);
-  // Fortune buttons on test, attack and defence cards (rules 3.9).
+  // Fortune buttons on test, attack, defence and gloom test cards (rules 3.9).
   registerFortune({
     [CARD.TEST]: settleTestCard,
     [CARD.ATTACK]: settleAttackCard,
-    [CARD.DEFENCE]: settleDefenceCard
+    [CARD.DEFENCE]: settleDefenceCard,
+    [CARD.GLOOM]: settleGloomCard
   });
 
   // The world's data version, for bringing old data up to date.

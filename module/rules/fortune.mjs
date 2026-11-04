@@ -31,7 +31,7 @@ export const SPEND = {
 };
 
 /** The kinds of card that offer Fortune. */
-export const CARD = { TEST: "test", ATTACK: "attack", DEFENCE: "defence" };
+export const CARD = { TEST: "test", ATTACK: "attack", DEFENCE: "defence", GLOOM: "gloom" };
 
 /**
  * A Triumph reduced to a Success, a Ruin increased to a Failure.
@@ -118,7 +118,8 @@ export function availableSpends({ card, tier, damage = false, maximized = false,
     if (!maximized && attack) spends.push(SPEND.MAX_DAMAGE, SPEND.REROLL_DAMAGE);
     else if (!maximized) spends.push(SPEND.REROLL_DAMAGE);
   }
-  if (damage && card === CARD.DEFENCE) {
+  // A gloom ability's test card works like a defence card.
+  if (damage && (card === CARD.DEFENCE || card === CARD.GLOOM)) {
     spends.push(SPEND.REROLL_DAMAGE);
     if (taken > 0) spends.push(SPEND.LOWER_DAMAGE);
   }

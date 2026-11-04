@@ -21,6 +21,7 @@ import { panicName, sheetPanic, activatePanicControls } from "./panic.mjs";
 import { AGONY_EFFECTS } from "./rules/agony.mjs";
 import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
 import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
+import { conditionTimer, timerText, askConditionTimer } from "./timers.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -126,7 +127,10 @@ export function sheetConditions(actor) {
       label: id === "fatigued"
         ? i18n.format("VARBORG.Condition.WithLevel", { name: i18n.localize("VARBORG.Condition.fatigued"), level: Math.max(1, actor.system.fatigue) })
         : i18n.localize(`VARBORG.Condition.${id}`),
-      text: i18n.localize(`VARBORG.Condition.${isFoe && FOE_LINE_CONDITIONS.includes(id) ? "FoeText" : "Text"}.${id}`)
+      text: i18n.localize(`VARBORG.Condition.${isFoe && FOE_LINE_CONDITIONS.includes(id) ? "FoeText" : "Text"}.${id}`),
+      // Fatigued is ended by levels, not time; the rest can have a timer (GAPS 129).
+      canTime: id !== "fatigued",
+      timer: timerText(conditionTimer(actor, id))
     })),
     choices: CONDITIONS.filter(id => !actor.statuses.has(id))
       .map(id => ({ id, label: i18n.localize(`VARBORG.Condition.${id}`) }))
@@ -135,7 +139,7 @@ export function sheetConditions(actor) {
 
 /**
  * The sheet's condition controls: the "Add a condition" menu, each
- * condition's remove button, and the persistent damage, Panic, injury and
+ * condition's timer and remove buttons, and the persistent damage, Panic, injury and
  * Death's Door controls.
  * Called from the sheet's _onRender.
  */
@@ -146,6 +150,9 @@ export function activateConditionControls(element, actor) {
   });
   for (const button of element.querySelectorAll("[data-remove-condition]")) {
     button.addEventListener("click", () => actor.toggleStatusEffect(button.dataset.removeCondition, { active: false }));
+  }
+  for (const button of element.querySelectorAll("[data-time-condition]")) {
+    button.addEventListener("click", () => askConditionTimer(actor, button.dataset.timeCondition));
   }
   activatePersistentControls(element, actor);
   activatePanicControls(element, actor);

@@ -24,6 +24,7 @@ import { statusName } from "./conditions.mjs";
 import { askForAmmoRolls } from "./ammunition.mjs";
 import { fillPools, drainPools } from "./pools.mjs";
 import { endOfTurnSustain, resetEmberAbilities } from "./dice/power.mjs";
+import { startOfTurnTimers, endOfTurnTimers, endCombatTimers } from "./timers.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -49,7 +50,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
    * and by the Panic results Sluggish, Distracted and Faint (rules 3.12),
    * and no attacks made yet (for the multiple-attack Bane). Quickened and
    * Slowed then end (GAPS 74). A shield raised last turn is lowered: its
-   * cover lasts "until the start of your next turn" (rules 3.8).
+   * cover lasts "until the start of your next turn" (rules 3.8). Conditions
+   * timed "until the start of its next turn" end (GAPS 129).
    */
   async _onStartTurn(combatant, context) {
     await super._onStartTurn(combatant, context);
@@ -62,6 +64,7 @@ export class VarBorgCombat extends foundry.documents.Combat {
     if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) await postTurnStart(combatant, actions, reactions);
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
     if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
+    if (actor) await startOfTurnTimers(actor);
   }
 
   /**
@@ -84,8 +87,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
    * (rules 3.13), and its Panic results that last for turns lose one
    * (GAPS 79), and an unconscious character at Death's Door is a round
    * closer to waking (GAPS 92). A Sustained power that was not started or
-   * sustained this turn ends (rules 3.4). Foundry runs this on the Dark
-   * Master's client.
+   * sustained this turn ends (rules 3.4). Conditions timed in rounds count
+   * down (GAPS 129). Foundry runs this on the Dark Master's client.
    */
   async _onEndTurn(combatant, context) {
     await super._onEndTurn(combatant, context);
@@ -94,13 +97,15 @@ export class VarBorgCombat extends foundry.documents.Combat {
     await countDownPanic(combatant.actor);
     await countDownWaking(combatant.actor);
     await endOfTurnSustain(combatant.actor);
+    await endOfTurnTimers(combatant.actor);
   }
 
   /**
    * When combat ends, both pools empty (rules 3.10), and raised shields are
    * lowered: there is no next turn. Each weapon whose ammunition was used
    * asks for its expendable roll (rules 4.1, GAPS 39). The characters who
-   * fought can use each ember ability once again (rules 3.10).
+   * fought can use each ember ability once again (rules 3.10), and their
+   * timed conditions end (GAPS 130).
    */
   _onDelete(options, userId) {
     super._onDelete(options, userId);
@@ -113,6 +118,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     // The encounter is over: its characters' ember abilities work once
     // again outside combat (rules 3.10, GAPS 22).
     if (this.started) resetEmberAbilities(this.combatants.map(combatant => combatant.actor));
+    // Timed conditions end with the fight (GAPS 130).
+    endCombatTimers(this.combatants.map(combatant => combatant.actor).filter(Boolean));
   }
 }
 
