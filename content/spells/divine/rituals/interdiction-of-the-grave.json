@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi15000000",
+  "name": "Interdiction of the Grave",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You plant a golden banner or a staff of white wood and scream a command into the void, forbidding the Reaper to claim any more souls this day.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "6 hours",
+    "outcomes": {
+      "triumph": "As Success, and when the 24 hours end, the test is Toughness DR16.",
+      "success": "In a 100' radius around the ritual site, no living creature can die for 24 hours. When the time runs out, the weight of fate returns: anyone who should have died tests Toughness DR20 or dies as the delayed end catches them.",
+      "failure": "The ritual fails; the Reaper does not listen.",
+      "ruin": "The Reaper listens, and takes note of you: you are Doomed. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

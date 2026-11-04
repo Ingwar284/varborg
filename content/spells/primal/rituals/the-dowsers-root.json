@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim02000000",
+  "name": "The Dowser's Root",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You push a dry branch into the earth and listen for the heartbeat of the land.",
+    "spellList": "primal",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, and you also know how much there is and whether it is safe.",
+      "success": "You find the nearest source of clean water or edible plants within 5 miles. The branch leans toward it with a faint, pulsing heat.",
+      "failure": "The ritual fails; the branch stays still.",
+      "ruin": "The branch leads you to something else that drinks there. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf14000000",
+  "name": "Autonomous Shadow",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You cut your shadow from your heels with a silver blade.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "6 hours",
+    "outcomes": {
+      "triumph": "As Success, but you do not lose any Max HP.",
+      "success": "Your shadow becomes a Weak minion under your command. It can travel any distance, pass through keyholes, and spy or kill for you. While it is detached, you cast no shadow and your Max HP is reduced by d6.",
+      "failure": "The ritual fails, and you bleed a little for nothing.",
+      "ruin": "The shadow comes free, and it does not obey. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

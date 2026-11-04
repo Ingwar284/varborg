@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf05000000",
+  "name": "Consult the Echo",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You burn an item that belonged to a dead person.",
+    "spellList": "profane",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "You may ask four questions instead of three.",
+      "success": "You pull the lingering echo of the dead person into the room, looking as if made of shimmering oil. It must answer three questions truthfully.",
+      "failure": "The ritual fails; the item burns, and no one comes.",
+      "ruin": "Someone comes, but it is not them. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

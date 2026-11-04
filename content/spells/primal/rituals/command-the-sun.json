@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim16000000",
+  "name": "Command the Sun",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You raise your hands to the sky and scream a demand for more time to save the innocent.",
+    "spellList": "primal",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "6 hours",
+    "outcomes": {
+      "triumph": "As Success, but it lasts until you choose to end it.",
+      "success": "Within 5 miles of you, the sun or moon stands still. Time still passes for living creatures, but the day will not fade or the night will not end, allowing Long Rests or desperate escapes. It lasts until you sleep or fall unconscious.",
+      "failure": "The ritual fails; the sky does not listen.",
+      "ruin": "The sky listens, and moves the other way: night falls at once within 5 miles. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -14,7 +14,7 @@ import PowerData from "../data/power.mjs";
 import SpellData from "../data/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
-import { spellDr } from "../rules/spells.mjs";
+import { castingDr } from "../rules/spells.mjs";
 import { ClassData } from "../data/origins.mjs";
 import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
@@ -277,7 +277,10 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
  */
 function spellContext(context, system, drHintKey) {
   context.spellLists = SpellData.SPELL_LISTS;
-  context.drHint = game.i18n.format(drHintKey, { dr: spellDr(system.cost) });
+  // A ritual: its own DR and casting time, no ember cost (rules 7, GAPS 186).
+  context.isRitual = Boolean(system.ritual);
+  context.ritualDrs = SpellData.RITUAL_DRS;
+  context.drHint = game.i18n.format(context.isRitual ? "VARBORG.Spell.RitualSheetDrHint" : drHintKey, { dr: castingDr(system) });
   context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({
     key,
     label: `VARBORG.Tier.${key}`,

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf02000000",
+  "name": "Manual Labour (Spectral)",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You pour salt over a pile of bones or an empty suit of armour.",
+    "spellList": "profane",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "30 minutes",
+    "outcomes": {
+      "triumph": "As Success, but it works until the end of the next day.",
+      "success": "It rises as a mindless servant for 8 hours. It cannot fight, but it can carry gear, dig, or do repetitive work without tiring. It is a Pitiful minion and counts toward your minion limit.",
+      "failure": "The ritual fails; the salt and time are lost.",
+      "ruin": "It rises, works for an hour, then wanders off into the dark with your gear. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

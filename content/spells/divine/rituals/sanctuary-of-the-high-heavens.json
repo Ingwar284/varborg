@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi10000000",
+  "name": "Sanctuary of the High Heavens",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You draw a vast circle in the earth with blood.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "2 hours",
+    "outcomes": {
+      "triumph": "As Success, and the circle holds even if you sleep, until the next day begins.",
+      "success": "A zone of 100' radius becomes invisible and impassable to Undead and Duskborn. It lasts until you leave the circle or fall unconscious.",
+      "failure": "The ritual fails; the time and blood are lost.",
+      "ruin": "The circle draws them instead: Undead and Duskborn within a mile know where you are. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

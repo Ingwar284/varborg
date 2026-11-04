@@ -300,7 +300,7 @@ test("each gear item's price is as its line in 4.1, with its expendable die and 
 });
 
 // 48g: spells (the Arcane, Divine, Primal and Profane spell pages, rules 4.7).
-const spells = readAll(join(root, "content", "spells")).map(({ data }) => data);
+const spells = readAll(join(root, "content", "spells")).map(({ data }) => data).filter(s => !s.system.ritual);
 
 test("each spell list has its 16 spells, 4 at each cost (🟒3, 🟒5, 🟒7, 🟒9)", () => {
   assert.equal(spells.length, 64);
@@ -332,5 +332,44 @@ test("each spell's text and results are word for word in the rules", () => {
 test("a spell's damage dice are in its text or its Success line", () => {
   for (const s of spells.filter(s => s.system.damage)) {
     assert.ok(`${s.system.description} ${s.system.outcomes.success}`.includes(s.system.damage), s.name);
+  }
+});
+
+// 48g2: rituals (the Rituals part of each spell page, rules 4.7 and 7).
+const allSpellItems = readAll(join(root, "content", "spells")).map(({ data }) => data);
+const rituals = allSpellItems.filter(s => s.system.ritual);
+
+test("the spell pages' 63 rituals are there: 15 Arcane, 16 on each other list, at DR14 to DR20", () => {
+  assert.equal(rituals.length, 63);
+  const count = list => rituals.filter(r => r.system.spellList === list).length;
+  assert.deepEqual(["arcane", "divine", "primal", "profane"].map(count), [15, 16, 16, 16]);
+  for (const r of rituals) assert.ok([14, 16, 18, 20].includes(r.system.ritualDr), r.name);
+});
+
+test("each ritual's name, casting time, text and four results are word for word in the rules", () => {
+  for (const r of rituals) {
+    assert.ok(flatRules.includes(`${r.name} (${r.system.castingTime})`), `${r.name} (${r.system.castingTime})`);
+    for (const line of r.system.description.split("\n")) assert.ok(inRules(line), `${r.name}: "${line.slice(0, 40)}"`);
+    for (const [tier, text] of Object.entries(r.system.outcomes)) {
+      assert.ok(text, `${r.name} has no ${tier} line`);
+      assert.ok(inRules(text), `${r.name} ${tier}`);
+    }
+  }
+});
+
+test("each ritual sits under the DR heading it is stored with", () => {
+  const lines = rules.split(/\r?\n/).map(l => l.trim());
+  for (const r of rituals) {
+    const at = lines.findIndex(l => l.startsWith(`**${r.name}** (`));
+    const heading = lines.slice(0, at).findLast(l => /^DR\d+$/.test(l));
+    assert.equal(heading, `DR${r.system.ritualDr}`, r.name);
+  }
+});
+
+test("a ritual costs no actions and deals no damage dice; its cost keeps its tier's DR", () => {
+  for (const r of rituals) {
+    assert.equal(r.system.actions, 0, r.name);
+    assert.equal(r.system.damage, "", r.name);
+    assert.equal(r.system.cost + 11, r.system.ritualDr, r.name);
   }
 });

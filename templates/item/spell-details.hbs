@@ -5,6 +5,22 @@
       <span>{{localize "VARBORG.Spell.SpellList"}}</span>
       <select name="system.spellList">{{selectOptions spellLists selected=system.spellList localize=true}}</select>
     </label>
+    {{#unless scrollHint}}
+    <label data-tooltip="{{localize 'VARBORG.Spell.RitualHint'}}">
+      <input type="checkbox" name="system.ritual" {{checked system.ritual}}>
+      <span>{{localize "VARBORG.Spell.Ritual"}}</span>
+    </label>
+    {{/unless}}
+    {{#if isRitual}}
+    <label data-tooltip="{{localize 'VARBORG.Spell.RitualDrHint'}}">
+      <span>{{localize "VARBORG.Test.DR"}}</span>
+      <select name="system.ritualDr">{{selectOptions ritualDrs selected=system.ritualDr}}</select>
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Spell.RitualTimeHint'}}">
+      <span>{{localize "VARBORG.Spell.RitualTime"}}</span>
+      <input type="text" name="system.castingTime" value="{{system.castingTime}}" placeholder="10 minutes">
+    </label>
+    {{else}}
     <label data-tooltip="{{localize 'VARBORG.Power.CostHint'}}">
       <span>{{localize "VARBORG.Power.Cost"}}</span>
       <input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1">
@@ -13,10 +29,12 @@
       <span>{{localize "VARBORG.Power.Actions"}}</span>
       <input type="number" name="system.actions" value="{{system.actions}}" min="0" max="3" step="1">
     </label>
+    {{/if}}
     <label data-tooltip="{{localize 'VARBORG.Spell.DamageHint'}}">
       <span>{{localize "VARBORG.Power.Damage"}}</span>
       <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d8">
     </label>
+    {{#unless isRitual}}
     <label data-tooltip="{{localize 'VARBORG.Power.SustainedHint'}}">
       <input type="checkbox" name="system.sustained" {{checked system.sustained}}>
       <span>{{localize "VARBORG.Power.SustainedLabel"}}</span>
@@ -26,6 +44,7 @@
       <input type="checkbox" name="system.reaction" {{checked system.reaction}}>
       <span>{{localize "VARBORG.Power.ReactionLabel"}}</span>
     </label>
+    {{/unless}}
     {{/unless}}
   </div>
   <p class="hint">{{drHint}}</p>

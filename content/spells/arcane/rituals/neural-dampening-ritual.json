@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca12000000",
+  "name": "Neural Dampening Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You blow a handful of silver dust into the wind over a village or fortress.",
+    "spellList": "arcane",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, and no one feels any unease.",
+      "success": "Everyone in the village or fortress forgets one specific event from the last 24 hours. They feel a vague unease where the memory used to be.",
+      "failure": "The ritual fails; the time and materials are lost.",
+      "ruin": "You forget the event too, and why you cast the ritual. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

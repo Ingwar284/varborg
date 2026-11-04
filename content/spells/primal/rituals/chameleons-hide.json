@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim05000000",
+  "name": "Chameleon's Hide",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You rub mud or crushed leaves over the gear of up to six creatures.",
+    "spellList": "primal",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, but it lasts until the next day begins.",
+      "success": "For 4 hours, they have Boon on tests to hide or move unseen in the wilds. If they stand perfectly still, they are almost invisible.",
+      "failure": "The ritual fails; the time is lost.",
+      "ruin": "The mud draws every biting thing for miles: tests to hide are made with Bane for 4 hours. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

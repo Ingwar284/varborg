@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf15000000",
+  "name": "The Memory Forge",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You rewrite a person's life story with a quill made from a wraith's finger. Whatever the result, roll a d2 afterwards: on a 1, the fiction bleeds into your own mind and you lose this ritual.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "24 hours",
+    "outcomes": {
+      "triumph": "As Success, and you may rewrite two years.",
+      "success": "You permanently rewrite one year of the person's memory. You can make an enemy believe you are a lifelong friend, or a king believe he gave up his throne.",
+      "failure": "The ritual fails; the ink will not take.",
+      "ruin": "You rewrite your own year instead. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca15000000",
+  "name": "Topological Fold Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You pinch two points on a physical map together.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, and only those you choose can use the shortcut.",
+      "success": "You create a permanent shortcut: walking through a chosen archway in one place puts you through another archway in the second place. The distance between them effectively ceases to exist.",
+      "failure": "The ritual fails; the time and the map are lost.",
+      "ruin": "The fold opens, but not where you meant it to. The Dark Master chooses the second place. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf12000000",
+  "name": "Necrotic Sanctum",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You bury four jars of graveyard dirt at the corners of a property.",
+    "spellList": "profane",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "3 hours",
+    "outcomes": {
+      "triumph": "As Success, and the living can sleep there.",
+      "success": "In a 200' radius, time stops for the dead: corpses do not rot, and Undead cannot cross the boundary. The living cannot sleep there, for the air is full of a constant, silent screaming.",
+      "failure": "The ritual fails; the jars are only dirt.",
+      "ruin": "The dead are drawn to the boundary, and wait there. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

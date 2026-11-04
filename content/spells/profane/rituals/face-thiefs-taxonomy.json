@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf09000000",
+  "name": "Face-Thief's Taxonomy",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You peel a thin layer of wax from the face of a sleeping or dead person. Whatever the result, roll a d2 when you take the mask off: on a 1, you forget one of your own core memories.",
+    "spellList": "profane",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "2 hours",
+    "outcomes": {
+      "triumph": "As Success, and you also gain their voice.",
+      "success": "When you wear the wax mask, you become that person for 24 hours. You gain their appearance, scent and fingerprints.",
+      "failure": "The ritual fails; the wax crumbles.",
+      "ruin": "You become them, and cannot take the mask off until your next Downtime. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi13000000",
+  "name": "The Great Restoration Ritual",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You bathe a creature that has been dead for no more than a year in the blood of a willing hero.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "12 hours",
+    "outcomes": {
+      "triumph": "It returns with half its HP, and no worse for the journey.",
+      "success": "It returns to life with 1 HP and a spark in its eyes. It is changed, but it is here.",
+      "failure": "The ritual fails; the body does not stir, and the blood is spent.",
+      "ruin": "It returns, but something came back with it, and the Dark Master decides what. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -29,10 +29,12 @@
       <input id="var-borg-spell-duress" type="checkbox" name="duress">
       <p class="hint">{{localize "VARBORG.Spell.DuressHint"}}</p>
     </div>
+    {{#unless ritual}}
     <div class="form-group">
       <label for="var-borg-spell-time">{{localize "VARBORG.Spell.CastingTimeLabel"}}</label>
       <select id="var-borg-spell-time" name="castingTime">{{selectOptions castingTimes selected="normal" localize=true}}</select>
     </div>
+    {{/unless}}
     <div class="form-group">
       <label for="var-borg-spell-several">{{localize "VARBORG.Spell.SeveralCasters"}}</label>
       <input id="var-borg-spell-several" type="checkbox" name="severalCasters">

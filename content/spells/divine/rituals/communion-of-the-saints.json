@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi07000000",
+  "name": "Communion of the Saints",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You enter a deep trance, slowing your heart nearly to a stop.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "You may ask four questions instead of three.",
+      "success": "You ask your deity three questions. The answers are cryptic but truthful, and come as vivid, symbolic dreams.",
+      "failure": "The ritual fails; your god does not answer.",
+      "ruin": "Something else answers in your god's voice. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

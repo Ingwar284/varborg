@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi06000000",
+  "name": "Guardian's Watch",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You plant a staff or sword in the ground and swear an oath.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, and the sentry also points toward the threat.",
+      "success": "A spectral, unmoving sentry stands guard for 8 hours. It does not fight, but it sounds a deafening celestial trumpet blast if any hostile creature comes within 100'.",
+      "failure": "The ritual fails; the time is lost.",
+      "ruin": "The sentry appears, but it sounds its trumpet at midnight for no reason, waking everything within a mile. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

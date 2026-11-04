@@ -181,3 +181,41 @@ export function scrollUse({ inCombat = false, onOwnTurn = false, actions = 0 } =
 export function scrollModifiers(options = {}) {
   return spellModifiers({ ...options, outsideList: false });
 }
+
+/*
+ * Rituals (rules 4.7, the Rituals part of each spell page; rules 7,
+ * Rituals): "Rituals are spells cast over minutes or hours, outside combat.
+ * They cost no ember and no actions. The caster tests Sanity against the DR
+ * of the ritual's tier heading (14, 16, 18 or 20). The casting modifiers
+ * apply, except that the long casting time is already part of the ritual
+ * and gives no Boon or -2 DR." GAPS 186.
+ */
+
+/** The DRs of the ritual tier headings. */
+export const RITUAL_DRS = [14, 16, 18, 20];
+
+/**
+ * The DR a spell or ritual is cast at: a ritual's own DR (its tier
+ * heading), otherwise 11 + the ember cost.
+ * @param {{ritual?: boolean, ritualDr?: number, cost: number}} system
+ */
+export function castingDr(system) {
+  return system?.ritual ? system.ritualDr : spellDr(system.cost);
+}
+
+/**
+ * Can a ritual be cast now? Only outside combat, never with Ember or
+ * actions, and not limited to once: it is not an ember ability.
+ * @returns {{allowed: boolean, reason: "combat"|null, ember: 0, actions: 0, reactions: 0, marksUsed: false}}
+ */
+export function ritualUse({ inCombat = false } = {}) {
+  return { allowed: !inCombat, reason: inCombat ? "combat" : null, ember: 0, actions: 0, reactions: 0, marksUsed: false };
+}
+
+/**
+ * Everything that changes casting a ritual: as for any casting, but the
+ * casting time gives no Boon or −2 DR.
+ */
+export function ritualModifiers(options = {}) {
+  return spellModifiers({ ...options, castingTime: "normal" });
+}

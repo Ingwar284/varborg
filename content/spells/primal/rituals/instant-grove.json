@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim14000000",
+  "name": "Instant Grove",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You plant a single World-Seed in fertile ground.",
+    "spellList": "primal",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "24 hours",
+    "outcomes": {
+      "triumph": "As Success, and the grove's light holds back the dark for a mile around.",
+      "success": "Within minutes, a lush grove of fruit trees and protective brambles erupts. It is a permanent sanctuary: safe, comfortable, and a Long Rest here restores one additional wound.",
+      "failure": "The ritual fails, but the seed is not lost.",
+      "ruin": "The grove grows, but it is hungry. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

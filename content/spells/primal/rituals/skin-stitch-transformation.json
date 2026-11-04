@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim09000000",
+  "name": "Skin-Stitch Transformation",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You wrap yourself in the pelt or feathers of a beast.",
+    "spellList": "primal",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, but it lasts until you choose to end it or fall asleep.",
+      "success": "For 1 hour, you become an animal of your choice. You gain its senses and movement (flying, swimming and so on), but your mind remains your own.",
+      "failure": "The ritual fails; the pelt is only a pelt.",
+      "ruin": "You transform, but the beast's mind comes too: you are Stupefied for the hour. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi14000000",
+  "name": "Open the Pearly Gate",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You sing a song that rips the sky open. Whatever the result, roll a d2 afterwards: on a 1, your eyes are burned white and you lose this ritual.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, and the god is in a generous mood.",
+      "success": "A portal opens to a divine realm, and you may seek an audience with its god.",
+      "failure": "The sky tears, then heals; no portal opens.",
+      "ruin": "The portal opens onto the wrong realm. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

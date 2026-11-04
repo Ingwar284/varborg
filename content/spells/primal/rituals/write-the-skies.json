@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim10000000",
+  "name": "Write the Skies",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You bury a heart of gold, quite literally.",
+    "spellList": "primal",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "2 hours",
+    "outcomes": {
+      "triumph": "As Success, but for 2d6 days.",
+      "success": "You control the weather in a 5-mile radius for d6 days. At the start of each day, set the weather as you wish.",
+      "failure": "The ritual fails, and the gold is lost.",
+      "ruin": "The sky answers with a storm that lasts d6 days. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

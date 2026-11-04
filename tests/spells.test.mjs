@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import {
   SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers, spellOutcome,
   LIFE_FORCE_ABILITY, lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr,
-  scrollUse, scrollModifiers
+  scrollUse, scrollModifiers, RITUAL_DRS, castingDr, ritualUse, ritualModifiers
 } from "../module/rules/spells.mjs";
 import { diceMode, MODE } from "../module/rules/test-roll.mjs";
 import { modifiedDr } from "../module/rules/test-modifiers.mjs";
@@ -121,4 +121,23 @@ test("scrolls never have the other-list Bane, but other modifiers count", () => 
   assert.deepEqual(scrollModifiers({ outsideList: true }), { boons: 0, banes: 0, dr: 0 });
   assert.deepEqual(scrollModifiers({ outsideList: true, metalArmour: true }), { boons: 0, banes: 1, dr: 0 });
   assert.equal(modifiedDr(spellDr(3), scrollModifiers({}).dr), 14, "the spell's normal DR");
+});
+
+test("a ritual is cast at its own DR (its tier heading); a spell at 11 + cost", () => {
+  assert.deepEqual(RITUAL_DRS, [14, 16, 18, 20]);
+  assert.equal(castingDr({ ritual: true, ritualDr: 16, cost: 1 }), 16);
+  assert.equal(castingDr({ ritual: false, ritualDr: 16, cost: 3 }), 14);
+  assert.equal(castingDr({ cost: 5 }), 16, "a scroll or older spell without the ritual box");
+});
+
+test("a ritual is cast only outside combat, with no Ember, no actions and no once-only limit", () => {
+  const free = { allowed: true, reason: null, ember: 0, actions: 0, reactions: 0, marksUsed: false };
+  assert.deepEqual(ritualUse({ inCombat: false }), free);
+  assert.deepEqual(ritualUse({ inCombat: true }), { ...free, allowed: false, reason: "combat" });
+});
+
+test("a ritual's casting time gives no Boon or −2 DR; the other modifiers still apply", () => {
+  assert.deepEqual(ritualModifiers({ castingTime: "hour" }), { boons: 0, banes: 0, dr: 0 });
+  assert.deepEqual(ritualModifiers({ castingTime: "minute" }), { boons: 0, banes: 0, dr: 0 });
+  assert.deepEqual(ritualModifiers({ outsideList: true, metalArmour: true, severalCasters: true }), { boons: 1, banes: 2, dr: 0 });
 });

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi12000000",
+  "name": "Anoint the Chosen",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You mark an ally with a permanent, glowing sigil. Only one ally can be anointed at a time.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, and the sigil also lets you sense the ally's direction and whether they live.",
+      "success": "The ally cannot be Charmed, Doomed or made a Dark Vessel. If they die, their soul is taken to your deity's realm and cannot be raised as undead.",
+      "failure": "The ritual fails; the sigil fades by morning.",
+      "ruin": "The sigil burns wrong: the ally is Frightened of you until their next Long Rest. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

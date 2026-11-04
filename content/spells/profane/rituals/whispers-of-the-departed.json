@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf03000000",
+  "name": "Whispers of the Departed",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You place a silver coin on the tongue of a skull.",
+    "spellList": "profane",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "You may ask four questions instead of three.",
+      "success": "The skull answers three questions about what it saw in life. It is grumpy and cynical, and treats its own death as a clerical error.",
+      "failure": "The ritual fails; the skull stays silent, and keeps the coin.",
+      "ruin": "The skull answers, but lies with every word. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

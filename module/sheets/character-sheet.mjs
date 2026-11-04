@@ -17,7 +17,7 @@ import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
 import { castSpell } from "../dice/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
-import { spellDr } from "../rules/spells.mjs";
+import { castingDr } from "../rules/spells.mjs";
 import { raiseShield, lowerShield } from "../dice/defence.mjs";
 import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
@@ -123,11 +123,17 @@ function originSummary(item) {
 }
 
 /** One short line about a power: cost, actions, DR, source, Sustained. */
+/** The action symbols of a power or spell: ◈◈, ◇ for a free action, ↻ for a reaction. */
+function actionSymbols(system) {
+  if (system.reaction) return "↻";
+  return system.actions ? "◈".repeat(system.actions) : "◇";
+}
+
 function powerSummary(item) {
   const i18n = game.i18n;
   const system = item.system;
   return [
-    `🟒${system.cost}${system.actions ? ` ${"◈".repeat(system.actions)}` : " ◇"}`,
+    `🟒${system.cost} ${actionSymbols(system)}`,
     i18n.format("VARBORG.Power.DrShort", { dr: powerDr(system.cost) }),
     i18n.localize(`VARBORG.Power.Source.${system.source}`),
     system.belongsTo,
@@ -135,13 +141,19 @@ function powerSummary(item) {
   ].filter(Boolean).join(" · ");
 }
 
-/** One short line about a spell: cost, actions, DR, spell list, Sustained. */
+/**
+ * One short line about a spell: cost and actions (or reaction), DR, spell
+ * list, Sustained. A ritual: "Ritual · 10 minutes · DR14 · Arcane".
+ */
 function spellSummary(item) {
   const i18n = game.i18n;
   const system = item.system;
+  const use = system.ritual
+    ? [i18n.localize("VARBORG.Spell.Ritual"), system.castingTime]
+    : [`🟒${system.cost} ${actionSymbols(system)}`];
   return [
-    `🟒${system.cost}${system.actions ? ` ${"◈".repeat(system.actions)}` : " ◇"}`,
-    i18n.format("VARBORG.Power.DrShort", { dr: spellDr(system.cost) }),
+    ...use,
+    i18n.format("VARBORG.Power.DrShort", { dr: castingDr(system) }),
     i18n.localize(`VARBORG.Class.SpellList.${system.spellList}`),
     system.sustained ? i18n.localize("VARBORG.Power.SustainedLabel") : ""
   ].filter(Boolean).join(" · ");

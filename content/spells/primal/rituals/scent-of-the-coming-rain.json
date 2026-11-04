@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim03000000",
+  "name": "Scent of the Coming Rain",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You taste the air and feel its pressure on your skin.",
+    "spellList": "primal",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "1 minute",
+    "outcomes": {
+      "triumph": "As Success, and the Boon lasts for the whole day's travel.",
+      "success": "The next time you roll on the Weather table, roll twice and choose. Until then, you have Boon on navigation tests.",
+      "failure": "The ritual fails; the air tells you nothing.",
+      "ruin": "You read the sky wrong: the next time you roll on the Weather table, roll twice and the Dark Master chooses. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi01000000",
+  "name": "Speak in Tongues Ritual",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You burn sacred incense and inhale deeply.",
+    "spellList": "divine",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, but it lasts until your next Long Rest.",
+      "success": "For 1 hour, you can speak with and understand any sentient creature as your souls commune.",
+      "failure": "The ritual fails; the time and incense are lost.",
+      "ruin": "Your souls commune too well: you speak only in the creature's tongue for 1 hour. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

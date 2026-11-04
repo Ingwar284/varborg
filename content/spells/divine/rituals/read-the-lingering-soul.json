@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi05000000",
+  "name": "Read the Lingering Soul",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You sit in silence where a person died within the last day.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, and you also learn the last thing they were thinking.",
+      "success": "You see and hear the last 5 minutes of their life as a spectral playback.",
+      "failure": "The ritual fails; the time is lost.",
+      "ruin": "You feel their death as your own: you take d6 damage that cannot be reduced. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

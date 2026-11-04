@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi04000000",
+  "name": "Bread of Life",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You hold a meagre ration up to the sky.",
+    "spellList": "divine",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "5 minutes",
+    "outcomes": {
+      "triumph": "As Success, but it feeds 2d6 people.",
+      "success": "A handful of dry crusts or bitter roots becomes a full day's sustenance for d6 people.",
+      "failure": "The ritual fails; the ration stays as it was.",
+      "ruin": "The ration rots in your hands, and anyone who eats it is Infected. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

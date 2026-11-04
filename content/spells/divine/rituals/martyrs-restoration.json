@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi08000000",
+  "name": "Martyr's Restoration",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You touch a person who is Doomed, Infected or otherwise afflicted, and scream as you draw the corruption out of them and into yourself.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "They are cured, and you suffer the symptoms for only one day.",
+      "success": "They are cured instantly. You suffer the symptoms (but not the death) of the affliction for d4 days.",
+      "failure": "The ritual fails; the corruption will not move.",
+      "ruin": "The corruption spreads to you, and they are not cured. You suffer the symptoms for d4 days. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

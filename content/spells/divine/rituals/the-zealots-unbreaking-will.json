@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi09000000",
+  "name": "The Zealot's Unbreaking Will",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You lead your companions in a rhythmic chant, marking their brows with sacred ash or oil.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "1 hour",
+    "outcomes": {
+      "triumph": "As Success, and they also cannot become Frightened until the next day begins.",
+      "success": "Until the next day begins, you and every ally within 60' make Panic tests with Boon.",
+      "failure": "The ritual fails; the time is lost.",
+      "ruin": "Your faith falters in front of them: you and every ally within 60' make Panic tests with Bane until the next day begins. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi02000000",
+  "name": "Soothsaying",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You read the patterns in blood, tea or curling smoke.",
+    "spellList": "divine",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "1 minute",
+    "outcomes": {
+      "triumph": "As Success, and you also glimpse one detail of what lies ahead.",
+      "success": "Ask one yes-or-no question about something you plan to do within the next hour. The answer is felt as a warmth (yes) or a sudden chill (no).",
+      "failure": "The signs are muddied, and no answer comes.",
+      "ruin": "The answer comes, and it is a lie. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

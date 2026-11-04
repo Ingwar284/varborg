@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca03000000",
+  "name": "Frictional Negation Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You tie silk ribbons around the ankles of up to six creatures.",
+    "spellList": "arcane",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "5 minutes",
+    "outcomes": {
+      "triumph": "As Success, and they may stop moving without sinking or falling.",
+      "success": "For 1 hour, they can walk across liquid, thin ice or vertical surfaces, provided they do not stop moving.",
+      "failure": "The ritual fails; the time and materials are lost.",
+      "ruin": "The ribbons work too well on you: you have Bane on Agility tests for 1 hour as the ground slides beneath you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -9,7 +9,7 @@
  */
 
 import { MAX_POWER_ACTIONS } from "../rules/powers.mjs";
-import { SPELL_LISTS_OF_SPELLS } from "../rules/spells.mjs";
+import { SPELL_LISTS_OF_SPELLS, RITUAL_DRS } from "../rules/spells.mjs";
 import { CarriedData } from "./equipment.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
@@ -49,6 +49,12 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
       // A reaction (↻), such as No: cast on any turn with the reaction
       // instead of actions, as for powers (GAPS 184).
       reaction: new BooleanField({ initial: false }),
+      // A ritual (rules 4.7, 7): cast outside combat at its own DR (its tier
+      // heading), with no ember and no actions; its casting time is text,
+      // such as "10 minutes" (GAPS 186).
+      ritual: new BooleanField({ initial: false }),
+      ritualDr: new NumberField({ required: true, nullable: false, integer: true, choices: RITUAL_DRS, initial: RITUAL_DRS[0] }),
+      castingTime: new StringField({ required: true, initial: "" }),
       // As for powers: being sustained now, kept this turn, and the one free
       // use outside combat (rules 3.10).
       sustaining: new BooleanField({ initial: false }),
@@ -58,6 +64,7 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
   }
 
   static SPELL_LISTS = Object.fromEntries(SPELL_LISTS_OF_SPELLS.map(key => [key, `VARBORG.Class.SpellList.${key}`]));
+  static RITUAL_DRS = Object.fromEntries(RITUAL_DRS.map(dr => [dr, `DR${dr}`]));
 }
 
 /**

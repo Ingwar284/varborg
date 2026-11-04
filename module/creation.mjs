@@ -54,18 +54,18 @@ async function gatherSources() {
     if (!OFFERED_TYPES.includes(item.type)) continue;
     list.push({
       uuid: item.uuid, name: item.name, type: item.type, from: "",
-      source: item.system.source, cost: item.system.cost, spellList: item.system.spellList,
+      source: item.system.source, cost: item.system.cost, spellList: item.system.spellList, ritual: Boolean(item.system.ritual),
       belongsTo: item.system.belongsTo
     });
   }
   for (const pack of game.packs) {
     if (pack.documentName !== "Item" || !pack.visible) continue;
-    const index = await pack.getIndex({ fields: ["system.source", "system.cost", "system.spellList", "system.belongsTo"] });
+    const index = await pack.getIndex({ fields: ["system.source", "system.cost", "system.spellList", "system.belongsTo", "system.ritual"] });
     for (const entry of index) {
       if (!OFFERED_TYPES.includes(entry.type)) continue;
       list.push({
         uuid: entry.uuid, name: entry.name, type: entry.type, from: pack.metadata.label,
-        source: entry.system?.source, cost: entry.system?.cost, spellList: entry.system?.spellList,
+        source: entry.system?.source, cost: entry.system?.cost, spellList: entry.system?.spellList, ritual: Boolean(entry.system?.ritual),
         belongsTo: entry.system?.belongsTo
       });
     }
@@ -198,7 +198,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     const className = pickedClass?.name ?? actor.itemTypes.class?.[0]?.name ?? "";
     const classList = pickedClass?.spellList ?? actor.itemTypes.class?.[0]?.system.spellList ?? "none";
     const spells = sources.filter(s => s.type === "spell");
-    const learnable = new Set(learnableSpells(spells.map(s => ({ spellList: s.spellList, cost: s.cost ?? 0 })), classList));
+    const learnable = new Set(learnableSpells(spells.map(s => ({ spellList: s.spellList, cost: s.cost ?? 0, ritual: s.ritual })), classList));
 
     const arrayPlaces = state.array.map((sum, index) => ({
       index,

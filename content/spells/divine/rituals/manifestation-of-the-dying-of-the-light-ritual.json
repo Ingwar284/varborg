@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi16000000",
+  "name": "Manifestation of the Dying of the Light Ritual",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You hasten an end to the world's suffering, vomiting black bile into a sacred vessel and casting it to the winds.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "12 hours",
+    "outcomes": {
+      "triumph": "As Success, and you choose which Misery.",
+      "success": "The ritual triggers a Misery.",
+      "failure": "The ritual fails, but the bile remains, and so does the will to use it.",
+      "ruin": "A Misery is triggered, and it begins where you stand. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

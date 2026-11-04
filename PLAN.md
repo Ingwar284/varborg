@@ -803,13 +803,16 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       Assurance's "◈-◈◈◈" is stored as 1 action (GAPS 185). The example
       spell moved there; it and its scroll now end their Ruin with "Roll on
       the Shadowblight table", as the rules do.
-    - 48g2. **Rituals.** Each spell page also lists rituals: "**Name** (10
-      minutes)", under a DR heading, with four results. "Rituals are spells
-      cast over minutes or hours, outside combat. They cost no ember and no
-      actions", test Sanity against the heading's DR, and take no casting
-      time Boon or −2 DR (rules 7). Needs: a ritual item (or a spell marked
-      ritual) with its DR and casting time, and a Cast button that tests
-      Sanity without ember, actions or the once-outside-combat limit.
+    - 48g2. ~~**Rituals.**~~ Done: a spell can be marked Ritual, with its
+      own DR (14, 16, 18 or 20) and casting time
+      (`module/rules/spells.mjs`: `castingDr`, `ritualUse`,
+      `ritualModifiers`, with tests). The Cast button casts it outside
+      combat only, with no ember, no actions and no once-only limit, at its
+      DR, without the casting time choice; the other modifiers and life
+      force work as for spells. The sheet line reads "Ritual · 10 minutes
+      · DR14 · Arcane". The 63 rituals of the four spell pages are in
+      `content/spells/<list>/rituals/`, in the Spells compendium. Rituals
+      are not offered as the starting spell. Open questions: GAPS 186.
     - 48h. Relics (4.2).
     - 48i. Foes and tables.
 

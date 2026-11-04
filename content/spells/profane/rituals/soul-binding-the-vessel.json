@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf10000000",
+  "name": "Soul-Binding (The Vessel)",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You trap a willing or defeated ghost inside an object, such as a gem, a weapon or a lantern.",
+    "spellList": "profane",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "4 hours",
+    "outcomes": {
+      "triumph": "As Success, and the ghost is content and will never turn on you.",
+      "success": "The object becomes a Relic with one power that suits the ghost's nature (a Vengeful Dagger might deal extra damage; a Scholar's Lantern might read any language).",
+      "failure": "The ritual fails; the ghost slips away.",
+      "ruin": "The ghost is bound to you instead of the object, and it is not happy about it. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

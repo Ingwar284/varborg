@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf13000000",
+  "name": "The Grand Exchange",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You stand between a dead body and a living sacrifice. This is a cold, mathematical trade that the gods of the Unmaking always honour.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "12 hours",
+    "outcomes": {
+      "triumph": "As Success, and the dead remember nothing of the grave.",
+      "success": "The dead person returns to life with full HP. The living sacrifice dies and takes their place.",
+      "failure": "The ritual fails, and the sacrifice lives, for now.",
+      "ruin": "The sacrifice dies, but the dead do not return. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

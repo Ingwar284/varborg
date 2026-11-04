@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca14000000",
+  "name": "Total Molecular Reconstruction Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You touch a pile of raw materials (stone, metal, wood) and reorganise them over 12 hours.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "12 hours",
+    "outcomes": {
+      "triumph": "As Success, and the result is a masterwork that sells for twice its worth.",
+      "success": "The materials become a complex, non-living machine or a massive, masterwork statue of your choosing.",
+      "failure": "The ritual fails; the time is lost and the materials are scrap.",
+      "ruin": "The thing you made has a will of its own and resents you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

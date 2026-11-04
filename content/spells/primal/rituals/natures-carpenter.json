@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim06000000",
+  "name": "Nature's Carpenter",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You whistle a low, thrumming note that softens wood and stone like clay.",
+    "spellList": "primal",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "15 minutes",
+    "outcomes": {
+      "triumph": "As Success, but the shape is permanent.",
+      "success": "You reshape non-living natural material (fallen logs, vines, boulders) into simple tools, bridges or shelters. They are sturdy, but revert to their natural state after 24 hours.",
+      "failure": "The ritual fails; the material will not move.",
+      "ruin": "The shape holds for an hour, then collapses at the worst possible moment. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

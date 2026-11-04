@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf16000000",
+  "name": "The Phylactery Protocol",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "A gruelling process of removing your organs one by one and preserving them in alchemical jars.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "48 hours",
+    "outcomes": {
+      "triumph": "As Success, and you know at once if anyone touches the jars.",
+      "success": "You hide your life outside your body. If you die, your soul does not depart but stays in the jars. Anyone who has them can bring you back, without a test or ember, as long as a new body is provided.",
+      "failure": "The ritual fails, and you must wait a Downtime to recover before trying again.",
+      "ruin": "The jars hold your soul, but you are still alive: you are Doomed until the ritual is undone. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

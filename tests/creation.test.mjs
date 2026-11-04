@@ -138,4 +138,6 @@ test("one starting spell from the class list, at most 3 ember", () => {
   assert.deepEqual(learnableSpells(spells, "divine"), [2]);
   assert.deepEqual(learnableSpells(spells, "choose"), [0, 2]);
   assert.deepEqual(learnableSpells(spells, "none"), []);
+  // A DR14 ritual is stored with its tier's cost (3), but is not a starting spell (GAPS 186).
+  assert.deepEqual(learnableSpells([...spells, { spellList: "arcane", cost: 3, ritual: true }], "arcane"), [0]);
 });

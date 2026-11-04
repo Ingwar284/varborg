@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca02000000",
+  "name": "Molecular Suture Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You stitch threads of light from a light source over a broken object.",
+    "spellList": "arcane",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "30 minutes",
+    "outcomes": {
+      "triumph": "As Success, and the object is finer than before; armour mended this way may be restored to its original tier.",
+      "success": "A broken mundane item (a shattered sword, a torn sail, a smashed wagon wheel) is repaired.",
+      "failure": "The ritual fails; the time and materials are lost.",
+      "ruin": "The light burns through the object, which is ruined for good. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

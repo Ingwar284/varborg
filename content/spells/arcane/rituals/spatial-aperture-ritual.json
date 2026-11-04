@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca05000000",
+  "name": "Spatial Aperture Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You draw a doorframe in chalk on a solid surface up to 10' thick.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, but the portal lasts 1 hour.",
+      "success": "The drawing becomes a portal through the wall for d6 minutes.",
+      "failure": "The ritual fails; the time and materials are lost.",
+      "ruin": "The portal opens and slams shut on you: you take d6 damage and are Restrained in the wall until someone spends ◈ to pull you free. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

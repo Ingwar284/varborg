@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca13000000",
+  "name": "Spontaneous Structural Synthesis Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You sketch a building in the dirt with a diamond, which is consumed.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 20,
+    "castingTime": "6 hours",
+    "outcomes": {
+      "triumph": "As Success, and the building has a hidden room only you can find.",
+      "success": "A fully furnished, sturdy stone house or small tower erupts from the ground. It is warm, safe and has its own clean well.",
+      "failure": "The ritual fails; the time is lost, but the diamond is not consumed.",
+      "ruin": "The building rises with someone, or something, already living in it. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

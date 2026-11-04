@@ -28,8 +28,9 @@
  */
 
 import {
-  SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers,
-  lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr, scrollUse, scrollModifiers
+  SPELL_ABILITY, CASTING_TIMES, castingDr, outsideSpellList, metalArmourBane, spellModifiers,
+  lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr, scrollUse, scrollModifiers,
+  ritualUse, ritualModifiers
 } from "../rules/spells.mjs";
 import { DR_TABLE, diceMode, diceFormula } from "../rules/test-roll.mjs";
 import { wornArmour } from "../rules/test-modifiers.mjs";
@@ -81,6 +82,19 @@ function checkScrollUse(scroll, turn) {
   return use;
 }
 
+/**
+ * Can the ritual be cast now? Only outside combat (rules 7, GAPS 186).
+ * Warns and returns null if not.
+ */
+function checkRitualUse(ritual, turn) {
+  const use = ritualUse({ inCombat: Boolean(turn.combatant) });
+  if (!use.allowed) {
+    ui.notifications.warn(game.i18n.format("VARBORG.Spell.RitualInCombat", { name: ritual.name }));
+    return null;
+  }
+  return use;
+}
+
 /** What armour, Encumbered and conditions do to a test of this ability. */
 function abilityMods(actor, ability) {
   const automatic = actorTestModifiers(actor, ability);
@@ -102,14 +116,15 @@ function diceShown(roll) {
 export async function castSpell(actor, spell) {
   const i18n = game.i18n;
   const scroll = spell.type === "scroll";
+  const ritual = !scroll && Boolean(spell.system.ritual);
   const turn = turnState(actor);
-  const use = scroll ? checkScrollUse(spell, turn) : checkPowerUse(actor, spell, turn);
+  const use = scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn);
   if (!use) return;
   const target = [...game.user.targets][0]?.actor ?? null;
 
   const facts = castingFacts(actor, spell);
   const sanity = abilityMods(actor, SPELL_ABILITY);
-  const startDr = spellDr(spell.system.cost);
+  const startDr = castingDr(spell.system);
   const spellListLabel = i18n.localize(`VARBORG.Class.SpellList.${spell.system.spellList}`);
   const classListLabel = facts.classList ? i18n.localize(`VARBORG.Class.SpellList.${facts.classList}`) : i18n.localize("VARBORG.Spell.NoClass");
   const wounds = actor.system.wounds;
@@ -117,13 +132,16 @@ export async function castSpell(actor, spell) {
 
   let useNote;
   if (scroll) useNote = i18n.localize("VARBORG.Spell.ScrollNoEmber");
+  else if (ritual) useNote = i18n.format("VARBORG.Spell.RitualUseNote", { time: spell.system.castingTime || i18n.localize("VARBORG.Spell.RitualNoTime") });
   else if (use.reactions) useNote = i18n.format("VARBORG.Power.UseNoteReaction", { cost: use.ember });
   else if (use.ember || use.actions) useNote = i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions });
   else useNote = i18n.localize("VARBORG.Power.OutsideCombat");
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Power.NoTarget"),
-    how: i18n.format(scroll ? "VARBORG.Spell.ScrollTestNote" : "VARBORG.Spell.TestNote", { dr: startDr }),
+    how: i18n.format(scroll ? "VARBORG.Spell.ScrollTestNote" : ritual ? "VARBORG.Spell.RitualTestNote" : "VARBORG.Spell.TestNote", { dr: startDr }),
+    // A ritual's long casting time is already part of it: no casting time choice.
+    ritual,
     useNote,
     drs: DR_TABLE.map(dr => ({
       value: dr,
@@ -177,7 +195,7 @@ export async function castSpell(actor, spell) {
   // The wounds are taken now; HP does not change (rules 3.11).
   if (lifeWounds) await actor.update({ "system.wounds.value": woundsBefore + lifeWounds });
 
-  const castingTime = CASTING_TIMES.includes(options.castingTime) ? options.castingTime : "normal";
+  const castingTime = !ritual && CASTING_TIMES.includes(options.castingTime) ? options.castingTime : "normal";
   const modifierOptions = {
     outsideList: Boolean(options.outsideList),
     metalArmour: Boolean(options.metalArmour),
@@ -185,7 +203,7 @@ export async function castSpell(actor, spell) {
     castingTime,
     severalCasters: Boolean(options.severalCasters)
   };
-  const casting = scroll ? scrollModifiers(modifierOptions) : spellModifiers(modifierOptions);
+  const casting = scroll ? scrollModifiers(modifierOptions) : ritual ? ritualModifiers(modifierOptions) : spellModifiers(modifierOptions);
   const boons = casting.boons + (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const banes = casting.banes + (options.bane ? 1 : 0) + (paid.bane ? 1 : 0)
     + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
@@ -231,10 +249,10 @@ export async function castSpell(actor, spell) {
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: spell.name,
     // The card treats a spell as a power, with the spell's Ruin text.
-    power: { ...powerInputs(spell), kind: "spell", sustained: scroll ? false : spell.system.sustained },
+    power: { ...powerInputs(spell), kind: "spell", sustained: scroll || ritual ? false : spell.system.sustained },
     context: {
       title,
-      how: i18n.format(scroll ? "VARBORG.Spell.ScrollHow" : "VARBORG.Spell.How", { ability: abilityLabel, list: spellListLabel }),
+      how: i18n.format(scroll ? "VARBORG.Spell.ScrollHow" : ritual ? "VARBORG.Spell.RitualHow" : "VARBORG.Spell.How", { ability: abilityLabel, list: spellListLabel }),
       target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : null,
       modeLabel: modeLabel(diceRule, boons, banes),
       ability: signed(abilityScore),
@@ -246,7 +264,9 @@ export async function castSpell(actor, spell) {
         automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
         ...notes,
         paid.note,
-        scroll ? i18n.localize("VARBORG.Spell.ScrollNoEmber") : emberNote(use, Boolean(turn.combatant)),
+        scroll ? i18n.localize("VARBORG.Spell.ScrollNoEmber")
+          : ritual ? i18n.format("VARBORG.Spell.RitualUseNote", { time: spell.system.castingTime || i18n.localize("VARBORG.Spell.RitualNoTime") })
+            : emberNote(use, Boolean(turn.combatant)),
         ...scrollNotes
       ].filter(Boolean),
       thrownNote: null,

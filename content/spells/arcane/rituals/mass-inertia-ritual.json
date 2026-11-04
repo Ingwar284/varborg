@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca08000000",
+  "name": "Mass Inertia Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You touch a massive object, up to the size of a cottage.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, but it lasts 1 hour.",
+      "success": "The object becomes weightless for 10 minutes. You could push a boulder with your little finger or carry a capsized barge on your back.",
+      "failure": "The ritual fails; the time and materials are lost.",
+      "ruin": "The weight comes to you instead: you are Encumbered for 1 hour. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiProf04000000",
+  "name": "The Unlucky Omen",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You tie a knot in a strand of black hair and hide it in or on a mundane object (a door lock, a wagon wheel, a sword).",
+    "spellList": "profane",
+    "cost": 3,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 14,
+    "castingTime": "5 minutes",
+    "outcomes": {
+      "triumph": "As Success, and the curse lasts for the next three uses.",
+      "success": "The next time a player character uses the object, they test with Bane, and it likely breaks or fails. If a foe uses it, it simply breaks or fails.",
+      "failure": "The ritual fails; the knot slips loose.",
+      "ruin": "The bad luck clings to you: your next test is made with Bane. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

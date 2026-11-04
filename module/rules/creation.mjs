@@ -243,6 +243,7 @@ export function learnableSpells(spells, classList) {
   if (!classList || classList === "none") return [];
   return spells
     .map((spell, index) => ({ spell, index }))
-    .filter(({ spell }) => spell.cost <= STARTING_SPELL_MAX_COST && (classList === "choose" || spell.spellList === classList))
+    // Rituals are not starting spells (GAPS 186).
+    .filter(({ spell }) => !spell.ritual && spell.cost <= STARTING_SPELL_MAX_COST && (classList === "choose" || spell.spellList === classList))
     .map(({ index }) => index);
 }

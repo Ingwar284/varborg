@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiArca07000000",
+  "name": "Teleport Ritual",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You map the precise spatial vector between where you stand and a place you have visited before.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 16,
+    "castingTime": "10 minutes",
+    "outcomes": {
+      "triumph": "As Success, and you may bring up to three willing creatures you touch.",
+      "success": "You vanish and reappear at that place.",
+      "failure": "The ritual fails; the time and materials are lost.",
+      "ruin": "You arrive d6 miles off course, somewhere the Dark Master chooses. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

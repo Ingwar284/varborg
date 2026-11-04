@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiDivi11000000",
+  "name": "The Inescapable Vow Ritual",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You and a willing creature clasp hands over a flame or a sharp blade, and it gives its word freely.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "30 minutes",
+    "outcomes": {
+      "triumph": "As Success, and you will know at once if the vow is broken.",
+      "success": "The promise is woven into its life-thread. If it knowingly breaks the vow, it becomes Doomed.",
+      "failure": "The ritual fails; the words are only words.",
+      "ruin": "The vow binds you as well: if the promise is broken, you are both Doomed. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

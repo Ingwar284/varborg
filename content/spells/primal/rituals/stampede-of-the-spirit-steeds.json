@@ -1,0 +1,27 @@
+{
+  "_id": "vbRiPrim12000000",
+  "name": "Stampede of the Spirit-Steeds",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You draw silhouettes of horses or wolves in the dust and howl.",
+    "spellList": "primal",
+    "cost": 7,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "ritual": true,
+    "ritualDr": 18,
+    "castingTime": "15 minutes",
+    "outcomes": {
+      "triumph": "As Success, and the mounts can take one hit each before vanishing.",
+      "success": "Spectral mounts appear for your party. They move at triple speed and do not tire. They vanish when the next day begins, or as soon as they take any damage.",
+      "failure": "The ritual fails; the dust stays dust.",
+      "ruin": "The steeds come, and they stampede over you: you take d6 damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}
