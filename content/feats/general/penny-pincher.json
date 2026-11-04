@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen039000000",
+  "name": "Penny-pincher",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You know how to live on nothing. Your lifestyle costs half as much during Downtime (round down), and you have Boon on the Toughness test to rest while living Wretched.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

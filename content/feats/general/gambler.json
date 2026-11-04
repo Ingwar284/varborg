@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen019000000",
+  "name": "Gambler",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Vex smiles on you, most nights. Boon on non-combat tests that involve games of chance and skill. Such tests may include playing cards or dice, reading another player's tells, spotting a cheat, or cheating without being caught.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

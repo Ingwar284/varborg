@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen036000000",
+  "name": "Master of medicine",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You know how to patch up wounds. Boon on non-combat tests that involve medicine. Such tests may include recalling knowledge or inspecting injuries or diseases, identifying poisons, administering aid, or treating poisons or diseases.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

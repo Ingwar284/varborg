@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen007000000",
+  "name": "Carry-all",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You are built like a pack mule. Your limit for heavy items is twice your Toughness (minimum 2).",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

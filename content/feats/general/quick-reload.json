@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen043000000",
+  "name": "Quick reload",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Powder, ball and ramrod move without thought. Weapons with the Reload trait take one fewer Interact action to reload (minimum 1).",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

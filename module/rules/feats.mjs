@@ -8,9 +8,22 @@
 
 /**
  * Where a feat comes from. Ancestry, class and general feats are the three
- * kinds in rules 3.10; "passive" is a foe's passive (rules 6, GAPS 57).
+ * kinds in rules 3.10; "passive" is a foe's passive (rules 6, GAPS 57);
+ * "difficulty" is Harkin's Reprieve or Doomsworn (rules 4.6, Difficulty
+ * feats).
  */
-export const FEAT_SOURCES = ["general", "ancestry", "class", "passive"];
+export const FEAT_SOURCES = ["general", "ancestry", "class", "passive", "difficulty"];
+
+/**
+ * Feats that are never gained through Improving: foe passives, and the
+ * difficulty feats ("It cannot be gained through 2.8 Improving", rules 4.6).
+ */
+export const NEVER_IMPROVING_SOURCES = ["passive", "difficulty"];
+
+/** Can a feat of this source be gained through Improving (rules 2.8, 4.6)? */
+export function canBeImproving(source) {
+  return !NEVER_IMPROVING_SOURCES.includes(source);
+}
 
 /** The sources that belong to one ancestry or class (GAPS 180). */
 export const BELONGING_SOURCES = ["ancestry", "class"];

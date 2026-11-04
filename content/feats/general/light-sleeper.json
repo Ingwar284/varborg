@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen032000000",
+  "name": "Light sleeper",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You sleep with one eye open, as anyone sensible does. You cannot be surprised while resting, and you have Boon on Toughness tests to keep the benefit of an interrupted rest.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

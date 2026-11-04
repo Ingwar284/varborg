@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen003000000",
+  "name": "Animal handler",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Beasts trust you, or at least fear you less. Boon on non-combat tests that involve handling animals. Such tests may include calming a frightened beast, training or commanding an animal that is not your minion, reading an animal's mood, or getting a stubborn mule to move.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

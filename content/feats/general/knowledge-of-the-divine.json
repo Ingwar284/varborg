@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen026000000",
+  "name": "Knowledge of the divine",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You've amassed knowledge of the divine, the deities watching over this world and their doctrines. Boon on non-combat tests that involve knowledge of the divine. Such tests may include recalling information on deities, religion, obscure beliefs, or creatures and locations of religious significance.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

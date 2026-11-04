@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen047000000",
+  "name": "Soot-lunged",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You grew up downwind of the flare-stacks. Boon on Toughness tests against gas, smoke, spores and foul air, and you can hold your breath for a number of minutes equal to your Toughness (minimum 1).",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

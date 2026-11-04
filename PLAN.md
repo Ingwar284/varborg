@@ -778,7 +778,14 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       dealt on use (Mark quarry, Entropic Shield, Armoured Chitin) keep it
       as text. New: reaction powers (↻), which use the reaction pip and
       work on any turn (GAPS 184). The Power strike example moved there.
-    - 48e. General feats (4.6).
+    - 48e. ~~**General feats.**~~ Done: the 53 general feats of 4.6 in
+      `content/feats/general/` and the two difficulty feats (Harkin's
+      Reprieve with its d6 table, Doomsworn) in `content/feats/difficulty/`.
+      New feat source "Difficulty feat": never marked "Gained through
+      Improving", and dropping one while choosing an Improving feat does
+      not count as the choice (4.6). Not yet done: the creation helper does
+      not offer a difficulty feat, and nothing stops a character having
+      both; their effects are text, like other feats (step 49).
     - 48f. Gear, weapons and armour (4.1).
     - 48g. Spells (4.7).
     - 48h. Relics (4.2).

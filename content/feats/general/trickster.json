@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen053000000",
+  "name": "Trickster",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You're a master of trickery and subterfuge. Boon on non-combat tests that involve trickery. Such tests may include creating a diversion, disguising yourself, impersonating someone, or lying.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

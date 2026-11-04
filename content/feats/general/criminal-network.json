@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen010000000",
+  "name": "Criminal network",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You have dealings with a variety of unsavoury characters, which you can leverage to trade favours or meet powerful people. When you're in an area where you have connections, you can arrange a meeting with an important criminal, such as a thieves' guild leader, or ask for a favour in exchange for a later favour in return.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

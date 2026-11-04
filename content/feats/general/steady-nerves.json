@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen048000000",
+  "name": "Steady nerves",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You have seen the dark and kept your wits. Once per day, when you fail a Panic test, you may hold yourself together and treat the result as a Success. Whatever happens next, the effort costs you: you gain one level of Fatigued.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

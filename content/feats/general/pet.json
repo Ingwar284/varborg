@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen041000000",
+  "name": "Pet",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You keep a small animal, such as a soot-rat, a crow or a mangy cur. It is a Pitiful minion and counts toward your minion limit. It cannot fight well, but it can fetch, carry small objects, raise an alarm or squeeze where you cannot.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

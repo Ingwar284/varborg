@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen023000000",
+  "name": "Iron will",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your mind is a locked door, and you have thrown away the key. Boon on tests to resist becoming Charmed or Stupefied, and on tests to end either condition.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -6,7 +6,13 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { BELONGING_SOURCES, belongsTo } from "../module/rules/feats.mjs";
+import { BELONGING_SOURCES, belongsTo, canBeImproving } from "../module/rules/feats.mjs";
+
+test("foe passives and difficulty feats are never gained through Improving (rules 2.8, 4.6)", () => {
+  assert.equal(canBeImproving("passive"), false);
+  assert.equal(canBeImproving("difficulty"), false);
+  for (const source of ["general", "ancestry", "class"]) assert.equal(canBeImproving(source), true, source);
+});
 
 test("only ancestry and class feats and powers belong to one", () => {
   assert.deepEqual(BELONGING_SOURCES, ["ancestry", "class"]);

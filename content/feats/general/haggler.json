@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen020000000",
+  "name": "Haggler",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "No price in Emberglow is the real price. Once per visit to a settlement, test Presence DR12 before you trade. This applies to gear and services, not to valuables or relics.\nTriumph: Until you leave, you buy at three-quarters of the price and sell gear at its full price.\nSuccess: Until you leave, choose one: you buy at three-quarters of the price, or you sell gear at three-quarters of its price instead of half.\nFailure: You pay and are paid the usual prices.\nRuin: Word gets around. Until your next Downtime, every merchant in that settlement charges you a quarter more.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

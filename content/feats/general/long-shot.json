@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen033000000",
+  "name": "Long shot",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You learned to shoot across the Gaslake in a fog. The listed range of your ranged and thrown weapons increases by half (a longbow's 120' becomes 180').",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

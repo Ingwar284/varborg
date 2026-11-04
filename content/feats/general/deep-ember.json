@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen011000000",
+  "name": "Deep ember",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "The spark in your chest burns longer than most. Outside combat, once per day, you may use an ember ability again before it has reset.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

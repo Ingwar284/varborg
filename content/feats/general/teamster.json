@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen050000000",
+  "name": "Teamster",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You have driven wagons down roads no one else would take. Boon on driving tests, for vehicles and mounts alike (see Subsystem: Vehicles). A mount you ride never refuses to walk into darkness.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

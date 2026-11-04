@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen002000000",
+  "name": "Adopted",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You were adopted. Pick an ancestry feat or ancestry power from an ancestry other than your own and gain it as part of this feat.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

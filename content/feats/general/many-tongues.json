@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen034000000",
+  "name": "Many tongues",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "All tongues can be found in Emberglow, and you have picked up a little of each. Boon on non-combat tests to understand, or be understood in, a language you do not speak, including borough dialects, thieves' cant and Hinterlands hand-sign. You can always make your basic needs understood.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

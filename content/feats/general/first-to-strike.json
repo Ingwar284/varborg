@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen016000000",
+  "name": "First to strike",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your hand is always near your weapon. Roll initiative twice and keep the higher result.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

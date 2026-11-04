@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen024000000",
+  "name": "Keen senses",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Little escapes your notice. Boon on non-combat tests that involve perceiving your surroundings. Such tests may include spotting a hidden door or trap, searching a room, listening at a wall, or noticing that someone is following you.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

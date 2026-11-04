@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFDif002000000",
+  "name": "Doomsworn",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "You have sworn yourself to the dark, and the dark has heard. Your maximum wounds are reduced by one (minimum 1), you have d2 Fortune instead of d3 (and regain d2), and at Death's Door you roll twice and keep the worse result. In return, the dark respects courage: whenever you walk out of a Deadly encounter alive, you regain 1 Fortune, even above your maximum. When you die, your name is carved on the pillar in the river Clear.",
+    "source": "difficulty",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

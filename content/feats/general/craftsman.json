@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen009000000",
+  "name": "Craftsman",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You like cobbling things together. Boon on non-combat tests that involve crafting something. Such tests may include building obstacles, performing makeshift repairs, disabling devices, or recalling information on how something is built or made.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

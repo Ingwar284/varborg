@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFDif001000000",
+  "name": "Harkin's Reprieve",
+  "type": "feat",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "Harkin is not ready for you yet. You cannot die. Whenever you would die (a \"Dead\" result at Death's Door, a killing blow, a second Dark Vessel, the Table of Agony, crushing weight, the Darklands), the scene fades to black for you instead. You do not rise as a Shade. You wake d6 hours later, back to full HP and with one wound less than your maximum, somewhere the Dark Master chooses or rolls below. You keep your gear unless the scenario says otherwise. The rest of the party plays on without you until you return.\nd6: You wake...\n1: On the black sand of the Gaslake shore, among the offerings that the barges of Harkin's Last Hall did not take.\n2: On a slab in a Silent Fraternity ossuary, as a Silent Mourner stares down at you in silent disapproval.\n3: In a Wickguard cell, charged with something you did not do. Your gear is in the evidence room.\n4: In a Hinterlands farmhouse, tended by strangers who will want something in return.\n5: Beside a guttering campfire with your companions, who swear they saw you die.\n6: Where you fell, hours later. The fight is over, the dark has moved on, and someone has gone through your pockets: you lose one item of the Dark Master's choice.",
+    "source": "difficulty",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

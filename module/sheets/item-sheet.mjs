@@ -9,7 +9,7 @@
 
 import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import FeatData from "../data/feat.mjs";
-import { BELONGING_SOURCES } from "../rules/feats.mjs";
+import { BELONGING_SOURCES, canBeImproving } from "../rules/feats.mjs";
 import PowerData from "../data/power.mjs";
 import SpellData from "../data/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
@@ -164,8 +164,9 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.system = this.document.system;
     context.sources = FeatData.SOURCES;
     Object.assign(context, belongingContext(this.document.system));
-    // Foes, minions and vehicles never improve, so their passives can't be gained through Improving.
-    context.canImprove = !["foe", "minion", "vehicle"].includes(this.document.actor?.type) && this.document.system.source !== "passive";
+    // Foes, minions and vehicles never improve, so their passives can't be
+    // gained through Improving; nor can difficulty feats (rules 4.6).
+    context.canImprove = !["foe", "minion", "vehicle"].includes(this.document.actor?.type) && canBeImproving(this.document.system.source);
     context.frequencies = FREQUENCY_LABELS;
     return context;
   }

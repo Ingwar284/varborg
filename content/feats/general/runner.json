@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen044000000",
+  "name": "Runner",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You ran messages through the boroughs before you could read them. Boon on non-combat tests that involve running. Such tests may include winning a chase through crowded streets, fleeing pursuit, keeping pace with a horse, or carrying word across the city before the gates close.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

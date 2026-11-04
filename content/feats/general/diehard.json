@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen012000000",
+  "name": "Diehard",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "When you would otherwise die, you instead wake up d4 hours later with a vague recollection of the unlikely events that led to your survival. This takes its toll: whenever you avoid death in this manner, you lose a feat of your choice other than Diehard, and reduce your highest ability by 1. Diehard cannot save you from a second Dark Vessel before a Long Rest.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -50,6 +50,6 @@ test("foe armour is written with a minus sign, and no armour as nothing", () => 
   assert.equal(formatFoeArmour(""), "");
 });
 
-test("feats come from an ancestry, a class, general training, or are a foe's passive", () => {
-  assert.deepEqual(FEAT_SOURCES.toSorted(), ["ancestry", "class", "general", "passive"]);
+test("feats come from an ancestry, a class, general training, a difficulty choice, or are a foe's passive", () => {
+  assert.deepEqual(FEAT_SOURCES.toSorted(), ["ancestry", "class", "difficulty", "general", "passive"]);
 });

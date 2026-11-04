@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen045000000",
+  "name": "Scavenger",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You know where the dead keep their silver. When you search a fallen humanoid for treasure, roll the d6 twice and keep the better result. Beasts and mindless foes still carry nothing.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen017000000",
+  "name": "Folk hero",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You are a local hero to the common folk. Boon on non-combat social tests with the common folk, such as peasants, labourers or the downtrodden. However, authorities and those in power view you with immediate suspicion.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

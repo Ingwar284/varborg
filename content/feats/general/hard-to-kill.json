@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen021000000",
+  "name": "Hard to Kill",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Results on the Table of Agony cannot kill you outright. Any result that would kill you puts you at Death's Door instead.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

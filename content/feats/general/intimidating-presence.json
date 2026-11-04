@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen022000000",
+  "name": "Intimidating presence",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Where some use honeyed words, you use threats (and sometimes a little bit more). Boon on non-combat tests that involve intimidating people. Such tests may include coercing or demoralising people.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen029000000",
+  "name": "Knowledge of the wild world",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You've amassed knowledge of the natural world, be it flora or fauna. Boon on non-combat tests that involve knowledge of nature. Such tests may include recalling information on natural creatures or plants and how to handle them, the weather, and natural environments.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

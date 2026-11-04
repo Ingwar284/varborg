@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen030000000",
+  "name": "Lamplighter",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You once walked the lamp-routes with a ladder and a long wick. Lighting a candle, torch, lantern or campfire is a free action (◇) for you. Once per day, you can coax one more hour out of a light source that has just run out.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

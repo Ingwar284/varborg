@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen008000000",
+  "name": "Catlike",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You always end up on your feet. You take half damage from falls and never land Prone.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

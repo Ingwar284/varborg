@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen035000000",
+  "name": "Mapmaker",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You chart every step in chalk and charcoal. As long as you have light and something to draw on, you keep a map of every place you explore. In a place you have mapped, you can always retrace your route to anywhere you have been, and you always know how far you are from the way out.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

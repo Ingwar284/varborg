@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen015000000",
+  "name": "Fast feet",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Each Move action moves you 30' instead of 20'.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

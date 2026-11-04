@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen031000000",
+  "name": "Lifelong study",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You are well-learned in a narrow niche of knowledge, such as pre-Gloaming architecture, Emberglow heraldry, or the scriptures of a specific deity. When you take this feat, specify a very niche field of knowledge. If a non-combat test ever involves your specified field, you automatically get a Triumph.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

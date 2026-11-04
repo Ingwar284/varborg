@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen046000000",
+  "name": "Sneakthief",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You can't help it: things that aren't yours always somehow end up sticking to your fingers. Boon on non-combat tests that involve thievery. Such tests may involve pickpocketing, palming small objects, or picking locks.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen025000000",
+  "name": "Knowledge of the arcane",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You've amassed knowledge of the arcane, be it creature or magic. Boon on non-combat tests that involve knowledge of the arcane. Such tests may include recalling information on creatures or arcane theories, identifying magic, or deciphering arcane writing.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

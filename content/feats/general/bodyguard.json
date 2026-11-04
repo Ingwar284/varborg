@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen005000000",
+  "name": "Bodyguard",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You were paid to stand in the way, and you never lost the habit. ↻ Trigger: A foe's attack hits an ally within 5' of you. You step into the blow: the attack hits you instead, and you take its damage without testing defence. Your armour still reduces it.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

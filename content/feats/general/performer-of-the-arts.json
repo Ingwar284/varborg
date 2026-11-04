@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen040000000",
+  "name": "Performer of the arts",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You thrive in front of a crowd, and those who look upon you are often captivated. Boon on non-combat tests that involve performing. Such tests may involve acting, dancing, playing an instrument, orating, or singing.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

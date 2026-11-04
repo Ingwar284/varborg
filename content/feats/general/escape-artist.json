@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen014000000",
+  "name": "Escape artist",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "No knot holds you for long. Boon on tests to slip ropes, chains and manacles, to wriggle out of a grapple, and to break free of the Restrained condition.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

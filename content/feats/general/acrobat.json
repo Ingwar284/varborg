@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen001000000",
+  "name": "Acrobat",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your life has left you both nimble and limber. Boon on non-combat tests that involve acrobatics. Such tests may include balancing across narrow surfaces or uneven ground, performing difficult manoeuvres mid-flight, or squeezing yourself through small spaces.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

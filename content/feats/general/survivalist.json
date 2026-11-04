@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen049000000",
+  "name": "Survivalist",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You're adept at subsisting wherever you go. Boon on non-combat tests that involve survival. Such tests may involve surviving in inhospitable places, foraging, finding your way, and tracking prey.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

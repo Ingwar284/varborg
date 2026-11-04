@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen052000000",
+  "name": "Tough",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your body refuses to give in. Increase your maximum wounds by one.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

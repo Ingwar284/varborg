@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen013000000",
+  "name": "Diplomat",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your silver tongue speaks honeyed words. Boon on non-combat tests that involve diplomacy. Such tests may include negotiation and flattery, gathering information, making an impression on someone, or requesting something from someone.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

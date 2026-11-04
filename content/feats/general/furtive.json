@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen018000000",
+  "name": "Furtive",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You've always had a knack for staying out of sight. Boon on non-combat tests that involve stealth. Such tests may involve sneaking past foes, hiding, or concealing an item.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

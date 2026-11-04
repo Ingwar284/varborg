@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen038000000",
+  "name": "Papers in order",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You are properly entered in the Iron Ledger, and you carry the stamps to prove it. Boon on non-combat tests that involve officialdom, such as Wickguard checkpoints, permits, licences, petitions and the Archives. While your papers are in order, the Wickguard cannot hold you without cause. Lose them, and you are nobody.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

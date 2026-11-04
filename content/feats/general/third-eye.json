@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen051000000",
+  "name": "Third eye",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You have a third eye in the middle of your forehead. Open it as an action (◈). Until the end of the encounter, you can see magic and invisible creatures, but Duskborn and spirits can see you too, and you cannot hide from them.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

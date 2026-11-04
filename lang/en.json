@@ -360,7 +360,8 @@
         "general": "General feat",
         "ancestry": "Ancestry feat",
         "class": "Class feat",
-        "passive": "Foe passive"
+        "passive": "Foe passive",
+        "difficulty": "Difficulty feat"
       },
       "Improving": "Gained through Improving",
       "ImprovingHint": "Tick this if the feat was chosen when Improving. Only these feats raise the DR of the Death’s Door Sanity test.",

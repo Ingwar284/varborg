@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen028000000",
+  "name": "Knowledge of the tamed world",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You've amassed knowledge of the world of mortals and its many rules. Boon on non-combat tests that involve knowledge of mortal society. Such tests may include recalling information on local history, important people, societal structure, legal institutions, and other cultural trappings.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

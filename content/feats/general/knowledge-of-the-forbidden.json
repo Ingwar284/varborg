@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen027000000",
+  "name": "Knowledge of the forbidden",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You've amassed knowledge of the forbidden, the esoteric, the obscure, and above all the supernatural. Boon on non-combat tests that involve knowledge of the occult. Such tests may include recalling information on supernatural creatures, ancient mysteries, or occult phenomena.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

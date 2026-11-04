@@ -136,8 +136,16 @@ const classFeats = readAll(join(root, "content", "feats", "class")).map(({ data 
 const classPowers = readAll(join(root, "content", "powers", "class")).map(({ data }) => data);
 /** The rules as one line, without bold and italic marks, for word-for-word checks. */
 const flatRules = rules.replace(/\*\*|(?<=[\s(])_|_(?=[\s.,;:)!?])/g, "").replace(/\s+/g, " ");
-/** A line of our text is in the rules (bullets and "Trigger:" are our own layout). */
-const inRules = line => flatRules.includes(line.replace(/^• /, "").replace(/^Trigger: /, "Trigger "));
+/**
+ * A line of our text is in the rules. Bullets, the colon after "Trigger" or a
+ * result word, and "1: " for a table row are our own layout.
+ */
+const inRules = line => {
+  if (flatRules.includes(line)) return true;
+  const ours = line.replace(/^• /, "").replace(/(^|↻ )(Trigger|Triumph|Success|Failure|Ruin): /, "$1$2 ");
+  const row = /^(\w+): (.+)$/.exec(ours);
+  return flatRules.includes(ours) || Boolean(row && flatRules.includes(`| ${row[1]} | ${row[2]} |`));
+};
 
 test("every class has its additional feats (8, the Charioteer 9) and 7 powers", () => {
   for (const c of classes) {
@@ -191,8 +199,32 @@ test("a power that names its own test uses that ability at DR 11 + cost", () => 
   }
 });
 
+const generalFeats = readAll(join(root, "content", "feats", "general")).map(({ data }) => data);
+const difficultyFeats = readAll(join(root, "content", "feats", "difficulty")).map(({ data }) => data);
+
+test("the 53 general feats of rules 4.6 are there, word for word", () => {
+  assert.equal(generalFeats.length, 53);
+  for (const f of generalFeats) {
+    assert.equal(f.system.source, "general", f.name);
+    assert.equal(f.system.belongsTo, "", f.name);
+    assert.ok(inRules(`${f.name} ${f.system.description.split("\n")[0]}`), `${f.name} does not match the rules`);
+    for (const line of f.system.description.split("\n").slice(1)) assert.ok(inRules(line), `${f.name}: "${line}"`);
+  }
+});
+
+test("the two difficulty feats are Harkin's Reprieve (with its d6 table) and Doomsworn", () => {
+  assert.deepEqual(difficultyFeats.map(f => f.name).sort(), ["Doomsworn", "Harkin's Reprieve"]);
+  for (const f of difficultyFeats) {
+    assert.equal(f.system.source, "difficulty", f.name);
+    assert.ok(inRules(`${f.name} ${f.system.description.split("\n")[0]}`), f.name);
+  }
+  const harkin = difficultyFeats.find(f => f.name === "Harkin's Reprieve").system.description.split("\n");
+  for (const line of harkin.slice(1)) assert.ok(inRules(line), `Harkin's Reprieve: "${line.slice(0, 40)}"`);
+  assert.equal(harkin.filter(line => /^[1-6]: /.test(line)).length, 6);
+});
+
 test("a feat that says 'once per round/encounter/day' starts with that frequency", () => {
-  for (const f of [...ancestryFeats, ...classFeats]) {
+  for (const f of [...ancestryFeats, ...classFeats, ...generalFeats, ...difficultyFeats]) {
     assert.equal(f.system.frequency, frequencyFromText(f.system.description), f.name);
     assert.equal(f.system.frequencyUsed, false, f.name);
   }

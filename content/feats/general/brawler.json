@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen006000000",
+  "name": "Brawler",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You learned to fight in the gin houses of the Gaslake. Your unarmed attacks deal d4 damage instead of d2, and keep the Agile trait.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

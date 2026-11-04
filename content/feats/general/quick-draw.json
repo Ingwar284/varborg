@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen042000000",
+  "name": "Quick draw",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Steel finds your hand before fear does. Once per round, you may draw or stow a weapon as a free action (◇).",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false
+  }
+}

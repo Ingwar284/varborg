@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen004000000",
+  "name": "Athletic build",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You have amassed impressive musculature during your life. Boon on non-combat tests that involve feats of physical prowess. Such tests may include actions that let you manipulate or move through your surroundings, such as climbing, leaping, or breaking open doors.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

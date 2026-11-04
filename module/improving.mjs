@@ -25,6 +25,7 @@ import {
 } from "./rules/improving.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
 import { CLASS_BOOST } from "./rules/origins.mjs";
+import { canBeImproving } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -141,7 +142,7 @@ export async function improveCharacter(actor) {
  */
 export function markImprovingFeat(system) {
   const item = system.parent;
-  if (!choosingFeat(item.actor) || system.source === "passive" || system.improving) return false;
+  if (!choosingFeat(item.actor) || !canBeImproving(system.source) || system.improving) return false;
   item.updateSource({ "system.improving": true });
   return true;
 }
@@ -156,6 +157,8 @@ export function markImprovingFeat(system) {
 export async function endChoiceWith(item, userId) {
   const actor = item.actor;
   if (userId !== game.user.id || !choosingFeat(actor)) return;
+  // A difficulty feat is never the feat of an Improving (rules 4.6).
+  if (item.type === "feat" && !canBeImproving(item.system.source)) return;
   await actor.unsetFlag(SYSTEM, PENDING_FLAG);
   const i18n = game.i18n;
   const key = item.type === "feat" ? "VARBORG.Improving.FeatChosen" : "VARBORG.Improving.PowerChosen";

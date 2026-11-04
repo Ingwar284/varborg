@@ -1,0 +1,14 @@
+{
+  "_id": "vbGFGen037000000",
+  "name": "Of the faith",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You were raised in a holy order, and it has not forgotten you. Choose one of the ten gods. Boon on non-combat social tests with that god's clergy and faithful, and once per Downtime its order will give you shelter, a meal or a small favour. Speak against your god, and the order will remember that too.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}
