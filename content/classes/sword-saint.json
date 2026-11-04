@@ -1,0 +1,15 @@
+{
+  "_id": "vbClSwordSaint00",
+  "name": "Sword Saint",
+  "type": "class",
+  "img": "icons/weapons/swords/sword-flanged-lightning.webp",
+  "system": {
+    "description": "While others cling to heavy plate and rusted shields, you entrust your life to a single, singing piece of steel that dances at your command. You are a nomad of the dying winds, a poet of the edge.\n\nClass feature: Spirit-Linked Steel\nYou own a named flying sword (d6, 30' reach). Your spirit and that of your sword are joined. You use Presence instead of Strength for attack rolls with this sword. If the blade is ever broken or lost, you are Doomed until it is recovered or reforged.\n\nClass power: Darting Needle 🟒1 ◈◈",
+    "boostedAbility": "presence",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d8",
+    "startingWeapons": []
+  }
+}

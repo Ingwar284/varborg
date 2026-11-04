@@ -120,7 +120,21 @@ export const WEAPONRY_TABLE = [
     { damage: "d8", price: 40, twoHanded: true, damageType: "bleeding" })]
 ];
 
-const BANDOLEER = container("bandoleer", "icons/equipment/waist/belt-buckle-arrow-brown.webp", 5, 4);
+/**
+ * The weapons of the weaponry table, by key. A class can start with some of
+ * them instead of rolling on the table: the Witch Hunter begins with a rapier
+ * and a flintlock pistol with gunpowder shot, and rolls on the armour table
+ * only (GAPS 183).
+ */
+export const WEAPONRY_KEYS = WEAPONRY_TABLE.flat().filter(spec => spec.type === "weapon").map(spec => spec.key);
+
+/** The weaponry table's items for these keys, in the order given. Unknown keys are left out. */
+export function fixedWeaponry(keys) {
+  const all = WEAPONRY_TABLE.flat();
+  return (keys ?? []).map(key => all.find(spec => spec.key === key && spec.type === "weapon")).filter(Boolean);
+}
+
+const BANDOLEER =container("bandoleer", "icons/equipment/waist/belt-buckle-arrow-brown.webp", 5, 4);
 const SATCHEL = container("satchel", "icons/containers/bags/pack-leather-brown.webp", 10, 8);
 const BACKPACK = container("backpack", "icons/containers/bags/pack-engraved-leather-tan.webp", 15, 12);
 const SMALL_WAGON = gear("smallWagon", "icons/environment/settlement/wagon.webp", { price: 40 });
@@ -195,16 +209,18 @@ function withSanity(spec, sanity) {
  * @param {number} rolls.tools     d8.
  * @param {number} rolls.odds      d10.
  * @param {number} sanity          Sanity in use (for torches and oil).
+ * @param {string[]} fixedWeapons  The class's fixed starting weapons, if it
+ *   has any: then they are the weaponry and rolls.weaponry is not used.
  * @returns {{armour: object[], weaponry: object[], carrying: object[],
  *   carryingChoice: object[]|null, tools: object[], odds: object[]}}
  *   The items for each table (DOG for the dog). carryingChoice lists what
  *   the player may take instead, when the row offers a choice.
  */
-export function startingEquipment(rolls, sanity) {
+export function startingEquipment(rolls, sanity, fixedWeapons = []) {
   const carrying = row(CARRYING_TABLE, rolls.carrying);
   return {
     armour: row(ARMOUR_TABLE, rolls.armour).items,
-    weaponry: row(WEAPONRY_TABLE, rolls.weaponry).items,
+    weaponry: fixedWeapons.length ? fixedWeaponry(fixedWeapons) : row(WEAPONRY_TABLE, rolls.weaponry).items,
     carrying: carrying.items,
     carryingChoice: carrying.choice,
     tools: row(TOOLS_TABLE, rolls.tools).items.map(spec => withSanity(spec, sanity)),

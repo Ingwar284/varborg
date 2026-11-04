@@ -1,0 +1,15 @@
+{
+  "_id": "vbClDruid0000000",
+  "name": "Druid",
+  "type": "class",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Nature’s wrath is a force that crushes all, tearing stone and steel to dust, turning castles to kindling, burying the proud beneath snow and mud, or dragging them to watery graves. It offers beauty to the humble and death to the arrogant. You have heard the voice of the storm, the whisper of the roots, the song of the wild, and you have pledged yourself to it. You are but a vessel for its fury, a servant of its untamed will, standing in awe of its power, ready to wield it or be consumed by it.\n\nClass feature: Primal Conduit\nYour very being is suffused with primal power, manifesting as an aura in a 5' radius around you. In combat, the aura flares: any ally that starts their turn within it regains 1 HP, and any foe that starts their turn within it takes 1 damage.\n\nClass power: Primal Blast 🟒1 ◈◈",
+    "boostedAbility": "sanity",
+    "hpBase": 6,
+    "maxWounds": 1,
+    "spellList": "primal",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

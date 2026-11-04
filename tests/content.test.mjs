@@ -80,6 +80,58 @@ test("every background's wealth can be rolled", () => {
   for (const b of backgrounds) assert.ok(wealthFormula(b.system.wealth), `${b.name}: ${b.system.wealth}`);
 });
 
+const classes = readAll(join(root, "content", "classes")).map(({ data }) => data);
+const SPELL_LIST_WORDS = { none: "None", arcane: "Arcane", divine: "Divine", primal: "Primal", profane: "Profane", bloodline: "Pick one (bloodline)", choose: "Choose (swappable)" };
+
+test("the 20 classes of the class table and the Witch Hunter are there (GAPS 1, 183)", () => {
+  assert.equal(classes.length, 21);
+  assert.ok(classes.some(c => c.name === "Witch Hunter"));
+});
+
+test("the Witch Hunter matches its page: Agility, 8 + Toughness, 2 wounds, rapier and pistol, d8 on armour only", () => {
+  const w = classes.find(c => c.name === "Witch Hunter").system;
+  const page = rules.slice(rules.indexOf("\n# Witch Hunter\n"));
+  assert.match(page, /^Boosted ability: Agility$/m);
+  assert.match(page, /^HP: "8 \+ Toughness"$/m);
+  assert.match(page, /^Max wounds: "2"$/m);
+  assert.match(page, /^Spell list: None$/m);
+  assert.match(page, /You begin with a rapier and a flintlock pistol with gunpowder shot\. Roll a d8 on the armour table only\./);
+  assert.deepEqual([w.boostedAbility, w.hpBase, w.maxWounds, w.spellList, w.startingDie], ["agility", 8, 2, "none", "d8"]);
+  assert.deepEqual(w.startingWeapons, ["rapier", "flintlockPistol"]);
+});
+
+test("the other classes roll on the weaponry table (no fixed weapons)", () => {
+  for (const c of classes.filter(c => c.name !== "Witch Hunter")) assert.deepEqual(c.system.startingWeapons, [], c.name);
+});
+
+test("the classes of the class table each match their row", () => {
+  for (const c of classes.filter(c => c.name !== "Witch Hunter")) {
+    const s = c.system;
+    const boost = s.boostedAbility[0].toUpperCase() + s.boostedAbility.slice(1);
+    const row = `| ${c.name} | ${s.hpBase} + Toughness | ${s.maxWounds} | ${boost} | ${SPELL_LIST_WORDS[s.spellList]} |`;
+    assert.ok(rules.includes(row), `${c.name} does not match the class table`);
+  }
+});
+
+test("each class's starting die is the one on its page", () => {
+  for (const c of classes) {
+    const page = rules.slice(rules.indexOf(`\n# ${c.name}\n`));
+    const die = /Roll a (d\d+) on the (?:weapons\/armour|armour) table/.exec(page)?.[1];
+    assert.equal(c.system.startingDie, die, c.name);
+  }
+});
+
+test("each class's feature text is word for word in the rules", () => {
+  const flat = rules.replace(/\*\*|(?<=[\s(])_|_(?=[\s.,;:)])/g, "").replace(/\s+/g, " ");
+  for (const c of classes) {
+    const text = c.system.description;
+    const feature = text.slice(text.indexOf("Class feature: ") + 15, text.indexOf("\n\nClass power: "));
+    for (const line of feature.split("\n")) {
+      assert.ok(flat.includes(line.replace(/^• /, "")), `${c.name}: "${line.slice(0, 40)}…" is not in the rules`);
+    }
+  }
+});
+
 test("a feat that says 'once per round/encounter/day' starts with that frequency", () => {
   for (const f of ancestryFeats) {
     assert.equal(f.system.frequency, frequencyFromText(f.system.description), f.name);

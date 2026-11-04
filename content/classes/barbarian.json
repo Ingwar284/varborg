@@ -1,0 +1,15 @@
+{
+  "_id": "vbClBarbarian000",
+  "name": "Barbarian",
+  "type": "class",
+  "img": "icons/weapons/axes/axe-battle-black.webp",
+  "system": {
+    "description": "A red mist blinds you when the slaughter begins. You revel in bloodshed, swinging heavy, brutal weapons to tear through flesh and bone, shunning the shackles of technique and discipline. Your rage is a primal, vicious thing, a beast, a spirit, the raw fury of your own soul gnawing at your insides. Some barbarians let this fury shatter all restraint, seeing every foe as nothing but meat for the blade; others cage their wrath until the perfect moment, when they unleash it to drown the world in ruin.\n\nClass feature: Barbaric Rage\nYou are fury incarnate. You enrage upon rolling initiative and unleash the fury within. Whilst raging, you gain the following benefits:\n• Boon on all Strength Tests that aren't attacks;\n• Your melee strikes hit hard and deal +2 damage; and\n• Your muscles are like steel; count as t2 armour. Agility Tests remain unburdened, and no force can reduce this protection below t2 whilst raging.\nYour rage ends once the encounter is over.\n\nClass power: Colossal smash 🟒1 ◈◈",
+    "boostedAbility": "strength",
+    "hpBase": 12,
+    "maxWounds": 4,
+    "spellList": "none",
+    "startingDie": "d10",
+    "startingWeapons": []
+  }
+}

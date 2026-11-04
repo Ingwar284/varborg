@@ -1,0 +1,15 @@
+{
+  "_id": "vbClDancer000000",
+  "name": "Dancer",
+  "type": "class",
+  "img": "icons/skills/movement/feet-winged-boots-brown.webp",
+  "system": {
+    "description": "The Dancer is a rhythmic defiance against the encroaching dark. Clad in iridescent silks and ringing bells that cut through the gloom, you believe that as long as the heart beats a rhythm, the soul cannot be extinguished. You fight with a kinetic, swirling grace that inspires those around you to stand taller against the inevitable.\n\nClass feature: Grace in Motion\nIf you move at least 20' during your turn, you defend with -2 DR until the start of your next turn and cannot be targeted by Opportune Attacks. This effect does not apply if you wear armour heavier than t1.\n\nClass power: Dance Partner 🟒1 ◈◈",
+    "boostedAbility": "agility",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

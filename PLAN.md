@@ -756,7 +756,17 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       table (2.4, the same as 4.4) in `content/backgrounds/`, each with
       its wealth and keepsake and its d100 number in the description. The
       Butcher example moved there too. A roll table for them comes in 48i.
-    - 48c. Classes (2.5, 4.5, all 20, GAPS 1).
+    - 48c. ~~**Classes.**~~ Done: the 20 classes of the class table
+      (GAPS 1) and the Witch Hunter (GAPS 183) in `content/classes/`, each with its boosted ability, HP,
+      max wounds, spell list and starting die, checked against both the
+      class page and the table. The description holds the class's opening
+      paragraph, its class feature in full and the name of its class power
+      (the power itself comes in 48d). The Warrior and Wizard examples
+      moved there too. A class can list fixed starting weapons
+      (`system.startingWeapons`): the Witch Hunter starts with a rapier and
+      a flintlock pistol and rolls its d8 on the armour table only.
+      The stat blocks and tables on class pages (Destrier, Raider-Beast,
+      Thrall, the rig, the Photonic Surge) come in 48i.
     - 48d. Class powers and class feats, a few classes at a time.
     - 48e. General feats (4.6).
     - 48f. Gear, weapons and armour (4.1).

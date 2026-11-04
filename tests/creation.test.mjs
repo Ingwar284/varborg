@@ -9,7 +9,7 @@ import {
   ABILITY_METHODS, ROLL_SUM_FORMULA, CARRYING_DIE, TOOLS_DIE, ODDS_DIE, DOG,
   ARMOUR_TABLE, WEAPONRY_TABLE, CARRYING_TABLE, TOOLS_TABLE, ODDS_TABLE,
   dieFaces, scoresFromSums, scoresFromArray, zeroScores, sanityPlusFour,
-  startingEquipment, learnableSpells
+  startingEquipment, learnableSpells, WEAPONRY_KEYS, fixedWeaponry
 } from "../module/rules/creation.mjs";
 
 test("the three methods and dice of rules 2.2 and 2.6", () => {
@@ -75,6 +75,20 @@ test("weaponry rows with a shield give two items", () => {
   assert.deepEqual(hammer.map(item => item.key), ["warhammer", "heavyShield"]);
   assert.equal(hammer[0].system.price + hammer[1].system.price, 75);
   assert.equal(hammer[1].system.size, "heavy");
+});
+
+test("a class with fixed weapons gets them instead of the weaponry roll (Witch Hunter, GAPS 183)", () => {
+  const found = startingEquipment({ armour: 3, weaponry: undefined, carrying: 1, tools: 1, odds: 1 }, 0, ["rapier", "flintlockPistol"]);
+  assert.deepEqual(found.weaponry.map(item => item.key), ["rapier", "flintlockPistol"]);
+  assert.equal(found.weaponry[1].system.expendable, "d4", "the pistol comes with its gunpowder shot");
+  assert.deepEqual(found.armour, startingEquipment({ armour: 3, weaponry: 1, carrying: 1, tools: 1, odds: 1 }, 0).armour);
+});
+
+test("the weapon keys are the table's weapons, not its shields", () => {
+  assert.equal(WEAPONRY_KEYS.length, 10);
+  assert.ok(WEAPONRY_KEYS.includes("rapier") && WEAPONRY_KEYS.includes("flintlockPistol"));
+  assert.ok(!WEAPONRY_KEYS.includes("lightShield"));
+  assert.deepEqual(fixedWeaponry(["nonsense", "dagger"]).map(item => item.key), ["dagger"]);
 });
 
 test("weapons carry the traits of the table", () => {

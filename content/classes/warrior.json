@@ -1,0 +1,15 @@
+{
+  "_id": "vbExampleWarrior",
+  "name": "Warrior",
+  "type": "class",
+  "img": "icons/environment/people/infantry-armored.webp",
+  "system": {
+    "description": "When the gods fell silent, someone had to hold the line. You are that someone: a soldier, a sellsword, a veteran of a hundred stinking battlefields where the lamps ran out before the war did. You trust your steel, your armour and the shield-brother at your side, because nothing else in this world has ever held. You need neither magic nor mercy, only the next breath and the next blow.\n\nClass feature: Armour mastery\nYears of war have taught you to move in iron. You ignore the Agility and defence penalties of armour of tier 3 or lower. Tier 4 armour keeps its full penalties.\n\nClass power: Power strike 🟒1 ◈◈",
+    "boostedAbility": "strength",
+    "hpBase": 10,
+    "maxWounds": 3,
+    "spellList": "none",
+    "startingDie": "d10",
+    "startingWeapons": []
+  }
+}

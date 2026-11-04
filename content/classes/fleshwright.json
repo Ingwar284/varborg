@@ -1,0 +1,15 @@
+{
+  "_id": "vbClFleshwright0",
+  "name": "Fleshwright",
+  "type": "class",
+  "img": "icons/magic/unholy/hand-claw-fire-blue.webp",
+  "system": {
+    "description": "You are a sculptor of the self, a heretic of the skin. Whilst the world darkens, you treat your own marrow as wet clay. By stoking the ember inside of you, you command your anatomy to shift: bone knits into new shapes, skin stretches over new appendages, and organs shift like rats. You are a walking mutation, a living ship of Theseus.\n\nClass feature: Malleable Body\nYour body is malleable and your bones are like heavy rubber. You can shift your general appearance at a moment's notice, you take no damage from falls, and you can squeeze through gaps the size of a human head.\n\nClass power: Morphic Surge 🟒1 ◈◈",
+    "boostedAbility": "strength",
+    "hpBase": 10,
+    "maxWounds": 3,
+    "spellList": "profane",
+    "startingDie": "d8",
+    "startingWeapons": []
+  }
+}

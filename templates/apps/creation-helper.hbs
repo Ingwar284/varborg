@@ -109,7 +109,7 @@
   <section class="creation-step">
     <h2>{{localize "VARBORG.Creation.Step.equipment"}}</h2>
     {{#if hasClass}}
-    <p class="hint">{{localize "VARBORG.Creation.Equipment.Hint" die=startingDie}}</p>
+    <p class="hint">{{#if fixedWeapons}}{{localize "VARBORG.Creation.Equipment.HintFixed" die=startingDie}}{{else}}{{localize "VARBORG.Creation.Equipment.Hint" die=startingDie}}{{/if}}</p>
     {{#if equipmentRolled}}<p class="creation-now">{{localize "VARBORG.Creation.Equipment.Rolled"}}</p>{{/if}}
     <button type="button" class="text-button" data-action="rollEquipment"><i class="fa-solid fa-dice"></i> {{localize "VARBORG.Creation.Equipment.Roll"}}</button>
     {{else}}

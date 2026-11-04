@@ -1,0 +1,15 @@
+{
+  "_id": "vbClSkullrider00",
+  "name": "Skullrider",
+  "type": "class",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "In the Ger, only strength counts, and the strongest ride. You were raised among the felt tents and steam-crawlers beyond the crumbled western wall, and you could stay on a beast's back before you could walk. Every season the clans ride out into the Hinterlands and come back with spoils, skulls and fewer riders. You hang your kills from your saddle so the dark can see what is coming for it, and when you charge, you scream, and so does your beast.\n\nClass feature: War-Gallop\nYou ride a beast of the Hinterlands: a shaggy horse gone half-wild, a tusked strider, or something the clans caught beyond the last cairns and broke with their bare hands. Whatever its shape, it uses the Raider-Beast stat block below. It is a permanent Moderate minion and counts toward your minion limit. While you ride it, you move it with your own Move actions as a mount (see Subsystem: Vehicles), and command it (◈) only to make it attack or use its active ability. In the saddle, you attack at normal speed without the +2 DR for attacking from a moving mount, and your thrown attacks use Strength instead of Agility. After you ride at least 20' on your turn, your melee and thrown attacks deal +2 damage until the start of your next turn. If your beast dies, you can take a new one only by breaking it during Downtime (a horse costs 80 s; anything wilder costs what the Dark Master asks).\n\nClass power: Howling Charge 🟒1 ◈◈",
+    "boostedAbility": "strength",
+    "hpBase": 10,
+    "maxWounds": 3,
+    "spellList": "none",
+    "startingDie": "d10",
+    "startingWeapons": []
+  }
+}

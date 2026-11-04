@@ -9,8 +9,9 @@
 
 import { ABILITIES } from "../rules/abilities.mjs";
 import { SPELL_LISTS, STARTING_DICE } from "../rules/origins.mjs";
+import { WEAPONRY_KEYS } from "../rules/creation.mjs";
 
-const { NumberField, StringField } = foundry.data.fields;
+const { ArrayField, NumberField, StringField } = foundry.data.fields;
 
 /** A whole number that can never go below `min`. */
 function wholeNumber({ min = 0, max, initial = 0 } = {}) {
@@ -40,11 +41,15 @@ export class ClassData extends foundry.abstract.TypeDataModel {
       maxWounds: wholeNumber({ initial: 2 }),
       spellList: choice(SPELL_LISTS),
       // The die rolled on the armour and weaponry tables (rules 2.6).
-      startingDie: choice(STARTING_DICE)
+      startingDie: choice(STARTING_DICE),
+      // Weapons the class starts with instead of rolling on the weaponry
+      // table, such as the Witch Hunter's rapier and pistol (GAPS 183).
+      startingWeapons: new ArrayField(new StringField({ required: true, choices: WEAPONRY_KEYS }))
     };
   }
 
   static ABILITIES = labels(ABILITIES, "Ability");
+  static WEAPONRY = labels(WEAPONRY_KEYS, "Creation.Item");
   static SPELL_LISTS = labels(SPELL_LISTS, "Class.SpellList");
   static STARTING_DICE = Object.fromEntries(STARTING_DICE.map(die => [die, die]));
 }

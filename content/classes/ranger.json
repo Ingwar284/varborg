@@ -1,0 +1,15 @@
+{
+  "_id": "vbClRanger000000",
+  "name": "Ranger",
+  "type": "class",
+  "img": "icons/environment/people/archer.webp",
+  "system": {
+    "description": "You know this world’s rot too well. Civilisation gnaws at itself, and the beasts at its edges grow bolder with every dying light. Perhaps you guard the last hearths from what hunts them, perhaps you defend what is left of the wild from those who would pillage it, perhaps both. Either way, you are a shadow at the edge of all things: a scout, a tracker, a hunter of man and monster who lives off the land and strikes when the time is right.\n\nClass feature: Wilderness hunter\nYou live and die by the land. You have Boon on tests to track, forage and navigate the wilderness, and you use Agility instead of Presence for shoot attacks.\n\nClass power: Mark quarry 🟒1 ◈◈",
+    "boostedAbility": "agility",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d10",
+    "startingWeapons": []
+  }
+}

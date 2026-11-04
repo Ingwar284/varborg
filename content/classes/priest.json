@@ -1,0 +1,15 @@
+{
+  "_id": "vbClPriest000000",
+  "name": "Priest",
+  "type": "class",
+  "img": "icons/environment/people/cleric-grey.webp",
+  "system": {
+    "description": "The gods twist their will into this rotten world, and you are the hand they use to hold it together. Marked by divine power, you carry the symbols of a half-forgotten creed and answer every cry for help. Your prayers close wounds, lift curses and drag the fading back from the edge, and your devotion is as harsh as the mercy it buys. Where the faithful kneel and the heretics burn, you stand between them and the dark.\n\nClass feature: Call upon the divine\nThe whispers of your god linger always, their power faintly tethered to your mortal coil. So long as you bear their mark, your god shields you and those you care for. Once per day, you may reroll a single failed test, either your own or that of an ally you can see within 30'. Accept whatever fate comes from the second roll.\n\nClass power: Prayer of the faithful 🟒1 ◈◈",
+    "boostedAbility": "sanity",
+    "hpBase": 6,
+    "maxWounds": 1,
+    "spellList": "divine",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

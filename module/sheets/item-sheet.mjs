@@ -343,6 +343,7 @@ export class ClassSheet extends OriginSheet {
     context.abilities = ClassData.ABILITIES;
     context.spellLists = ClassData.SPELL_LISTS;
     context.startingDice = ClassData.STARTING_DICE;
+    context.weaponry = ClassData.WEAPONRY;
     return context;
   }
 }

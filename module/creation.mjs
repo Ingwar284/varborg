@@ -242,6 +242,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       },
       hasClass: Boolean(actor.itemTypes.class?.[0]),
       startingDie: actor.itemTypes.class?.[0]?.system.startingDie ?? "",
+      fixedWeapons: Boolean(actor.itemTypes.class?.[0]?.system.startingWeapons?.length),
       equipmentRolled: Boolean(actor.getFlag(SYSTEM, EQUIPMENT_FLAG))
     });
     return context;
@@ -448,15 +449,17 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     }
 
     const die = cls.system.startingDie;
+    // A class with fixed starting weapons rolls on the armour table only (GAPS 183).
+    const fixedWeapons = cls.system.startingWeapons ?? [];
     const rolls = [];
     const results = {
       armour: await rollInto(rolls, `1${die}`),
-      weaponry: await rollInto(rolls, `1${die}`),
+      weaponry: fixedWeapons.length ? null : await rollInto(rolls, `1${die}`),
       carrying: await rollInto(rolls, `1d${CARRYING_DIE}`),
       tools: await rollInto(rolls, `1d${TOOLS_DIE}`),
       odds: await rollInto(rolls, `1d${ODDS_DIE}`)
     };
-    const found = startingEquipment(results, actor.system.abilities.sanity);
+    const found = startingEquipment(results, actor.system.abilities.sanity, fixedWeapons);
     if (found.carryingChoice) found.carrying = [await this.#chooseCarrying(found.carryingChoice)];
 
     const dice = { armour: die, weaponry: die, carrying: `d${CARRYING_DIE}`, tools: `d${TOOLS_DIE}`, odds: `d${ODDS_DIE}` };
@@ -475,12 +478,11 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
         toCreate.push(data);
         names.push(data.system.quantity > 1 ? `${data.name} ×${data.system.quantity}` : data.name);
       }
-      lines.push(i18n.format("VARBORG.Creation.Equipment.Line", {
-        table: i18n.localize(`VARBORG.Creation.Equipment.Table.${table}`),
-        die: dice[table],
-        roll: results[table],
-        items: names.join(", ") || i18n.localize("VARBORG.Creation.Equipment.Nothing")
-      }));
+      const items = names.join(", ") || i18n.localize("VARBORG.Creation.Equipment.Nothing");
+      const tableName = i18n.localize(`VARBORG.Creation.Equipment.Table.${table}`);
+      lines.push(results[table] === null
+        ? i18n.format("VARBORG.Creation.Equipment.FixedLine", { table: tableName, items })
+        : i18n.format("VARBORG.Creation.Equipment.Line", { table: tableName, die: dice[table], roll: results[table], items }));
     }
     if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate);
     await actor.setFlag(SYSTEM, EQUIPMENT_FLAG, true);

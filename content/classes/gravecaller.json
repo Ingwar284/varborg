@@ -1,0 +1,15 @@
+{
+  "_id": "vbClGravecaller0",
+  "name": "Gravecaller",
+  "type": "class",
+  "img": "icons/magic/death/skull-horned-goat-pentagram-red.webp",
+  "system": {
+    "description": "The Silent Fraternity performs the final rite over every corpse without a word, and only then is it truly dead; you learned the rite backwards, and you learned to sing it. Perhaps you were one of the Shroud Brethren on the barges of Harkin's Last Hall who heard the cargo whisper before it was fed to the Gaslake, a stoker at the Pyre who could not bring yourself to burn them, or a reader of forbidden things who found the dirge in a grimoire bound in someone's skin. The dead come when you sing, and they never ask why. The Fraternity would hang you from the Sepulcher wall if it knew, and some nights you think they would be right.\n\nClass feature: Dirge of the Unburied\nYou can raise thralls: mindless dead that shamble at your word (see the Thrall stat block below). Thralls are mooks, not minions: they have 1 HP, any damage that gets through destroys them, they fail every test they would make, and creatures can move through their spaces as difficult terrain. Thralls do not count toward your minion limit. Command a thrall (◈) to spend its two actions; when it attacks, you make the attack with Sanity (DR12), and it counts toward your Bane for multiple attacks. Thralls collapse when the encounter ends, or after 10 minutes outside combat.\n\nClass power: Call the Unburied 🟒1 ◈◈",
+    "boostedAbility": "sanity",
+    "hpBase": 6,
+    "maxWounds": 1,
+    "spellList": "profane",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

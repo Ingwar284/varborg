@@ -62,7 +62,13 @@ export async function addOrigin(actor, data) {
     lines.push(i18n.format("VARBORG.Origin.SpellList", {
       list: i18n.localize(`VARBORG.Class.SpellList.${data.system.spellList}`)
     }));
-    lines.push(i18n.format("VARBORG.Origin.StartingDie", { die: data.system.startingDie }));
+    const fixed = data.system.startingWeapons ?? [];
+    lines.push(fixed.length
+      ? i18n.format("VARBORG.Origin.StartingDieFixed", {
+        die: data.system.startingDie,
+        weapons: fixed.map(key => i18n.localize(`VARBORG.Creation.Item.${key}`)).join(", ")
+      })
+      : i18n.format("VARBORG.Origin.StartingDie", { die: data.system.startingDie }));
   }
 
   const [item] = await actor.createEmbeddedDocuments("Item", [data]);

@@ -1,0 +1,15 @@
+{
+  "_id": "vbClPaladin00000",
+  "name": "Paladin",
+  "type": "class",
+  "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
+  "system": {
+    "description": "You are the bloodied fist of a forgotten god, the voice of a dying prayer. Bound to a code that separates you from the rabble, you walk a path of brutal faith. As a champion of whatever flickering light remains, you are a beacon to the helpless and a shield against the shadows. Your strength protects the weak, your wrath burns the wicked, and in the end you are the last light before the darkness swallows all.\n\nClass feature: Holy smite\nYour weapon burns with light. Whenever you score a Triumph on an attack, you deal an additional d6 radiant damage.\n\nClass power: Lay on hands 🟒1 ◈◈",
+    "boostedAbility": "presence",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "divine",
+    "startingDie": "d8",
+    "startingWeapons": []
+  }
+}

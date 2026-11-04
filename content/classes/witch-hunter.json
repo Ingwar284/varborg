@@ -1,0 +1,18 @@
+{
+  "_id": "vbClWitchHunter0",
+  "name": "Witch Hunter",
+  "type": "class",
+  "img": "icons/weapons/guns/gun-pistol-flintlock.webp",
+  "system": {
+    "description": "Somebody must go into the dark after the things that call it. Perhaps you walked the streets as a hireling hood for the Candle-Wicked Men until your candle went out, collected the Anti-Arcane League's bounties name by name from its ledger of Blighted casters, or buried a sister who sang to the void and swore it would never happen again. You carry a rapier for the close work and a pistol for the rest, each ball cast in silver and salted at a shrine. Every witch you put down is one less thief of the last light. One day the name on the writ will be someone you love, and you have already decided what you will do.\n\nClass feature: Steel and Shot\nYou fight with a rapier in one hand and a pistol in the other, the way the old hunters taught it. You use Agility instead of Presence for shoot attacks with pistols, and while you hold a one-handed blade you can reload a pistol without a free hand. Once per turn, after you hit a foe with one of the two weapons, your next attack against that foe this turn with the other is made without the Bane for multiple attacks.\n\nClass power: Silver Sentence 🟒1 ◈◈",
+    "boostedAbility": "agility",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d8",
+    "startingWeapons": [
+      "rapier",
+      "flintlockPistol"
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "_id": "vbClCavalier0000",
+  "name": "Cavalier",
+  "type": "class",
+  "img": "icons/environment/people/cavalry-heavy.webp",
+  "system": {
+    "description": "The roads are the city's veins, and someone must ride them with a lance. Perhaps you were a squire of the Order of the Hawk who raised a beast from the egg in the Citadel's deep stables, a knight who outlived the other nine of your lance, or a Hawk-Marshal's bastard who took the oath without the blessing. You wear iron, ride iron, and meet the dark head-on, because the convoys behind you cannot outrun it. Few of you die old, and fewer still die in the city.\n\nClass feature: Sworn to the Saddle\nYou are bound to a destrier: a warhorse, or something stranger from the deep stables, scaled or feathered or without a name the Order will speak aloud. Whatever its shape, it uses the Destrier stat block below. It is a permanent Moderate minion and counts toward your minion limit. While you ride it, you move it with your own Move actions as a mount (see Subsystem: Vehicles), and command it (◈) only to make it attack or use its active ability. In the saddle, you attack at normal speed without the +2 DR for attacking from a moving mount, and you ignore the Agility and defence penalties of armour up to tier 3 (tier 4 still defends at +2 DR). If your destrier dies, you can bind yourself to a new one only by raising or breaking it during Downtime (a horse costs 80 s; stranger beasts cost what the Dark Master asks).\n\nClass power: Couched Charge 🟒1 ◈◈",
+    "boostedAbility": "strength",
+    "hpBase": 10,
+    "maxWounds": 3,
+    "spellList": "none",
+    "startingDie": "d10",
+    "startingWeapons": []
+  }
+}

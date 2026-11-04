@@ -1,0 +1,15 @@
+{
+  "_id": "vbClSorcerer0000",
+  "name": "Sorcerer",
+  "type": "class",
+  "img": "icons/magic/fire/flame-burning-hand-orange.webp",
+  "system": {
+    "description": "You never asked for this, but the blood in your veins holds power, a twisted, chaotic force that whispers in your bones. Maybe your ancestor kissed a god’s feet, or lay with a beast of the wilds, or had their flesh marked in some foul ritual; it doesn’t matter. You were born with the magic, and it answers only to the blood that carries it. Every cut lets more of it out, and you walk a path between brilliance and madness: each wound brings you closer to either mastery or utter ruin.\n\nClass feature: Blood of power\nThe magic in your veins is not learned but inherited. Your power burns brighter as your blood is spilled. Your spells deal +2 damage for each wound you carry (maximum +6), and when you spend life force to cast a spell, you reduce the DR by d6 for each wound you take, instead of d4. When you die, your blood detonates: all creatures within 20' take 3d6 damage.\n\nClass power: Open a vein 🟒1 ◈◈",
+    "boostedAbility": "toughness",
+    "hpBase": 6,
+    "maxWounds": 3,
+    "spellList": "bloodline",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

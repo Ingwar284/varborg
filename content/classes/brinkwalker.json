@@ -1,0 +1,15 @@
+{
+  "_id": "vbClBrinkwalker0",
+  "name": "Brinkwalker",
+  "type": "class",
+  "img": "icons/skills/movement/figure-running-gray.webp",
+  "system": {
+    "description": "The light is going out, and you have decided to enjoy the fall. You learned your trade on the steam-rides of the Kettlewhistle Fair or in the rafters of the Lord's House, leaping from gas-lamp to gable while the crowd below laid bets on your neck. Where others see a wall, you see a springboard; where they see a foe, you see something to throw into it. Every scar is a story, and you mean to die with too many to tell.\n\nClass feature: Adrenaline\nThe thrill of danger burns in your blood like gas in a mantle. You gain Adrenaline whenever you do something Risky: use an ability marked Risky, move through a foe's tile, leap a gap or drop of 10' or more, or anything else the Dark Master judges could hurt you if it goes wrong. You gain it before you roll and keep it even if you fail. It lasts until the start of your next turn, and ends when the encounter ends. While you have Adrenaline, a foe you force to move into a prop (a wall, pillar, gas-main, heavy furniture or a creature larger than it) takes d6 damage.\n\nClass power: Daring Stunt 🟒1 ◈◈",
+    "boostedAbility": "agility",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d8",
+    "startingWeapons": []
+  }
+}

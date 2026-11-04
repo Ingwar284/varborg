@@ -1,0 +1,15 @@
+{
+  "_id": "vbClCharioteer00",
+  "name": "Charioteer",
+  "type": "class",
+  "img": "icons/svg/clockwork.svg",
+  "system": {
+    "description": "The Fabricators of the Sacred Gear license every steam wagon in Emberglow by number, and yours has none. You built it from crawler-scrap in the Ger, won it in a night-run down the Bastion Road, or drove it out of a Spindlecore foundry yard with the boiler still warm. It is loud, it leaks, and it is the only thing in the Dusklands you trust as much as the people riding in it. The dark is coming for everyone; you intend to make it chase you.\n\nClass feature: No Number\nYou own a rig: a low steam-chariot of riveted scrap (see The rig below). You drive it as a vehicle (see Subsystem: Vehicles); it is not a minion and does not count toward your minion limit. When you drive under difficult circumstances at fast speed, you test at DR12 instead of DR14. If the rig is destroyed, you can rebuild it during Downtime for 150 s of parts.\n\nClass power: Ramming Speed 🟒1 ◈◈",
+    "boostedAbility": "agility",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d8",
+    "startingWeapons": []
+  }
+}

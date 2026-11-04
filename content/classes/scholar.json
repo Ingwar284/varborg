@@ -1,0 +1,15 @@
+{
+  "_id": "vbClScholar00000",
+  "name": "Scholar",
+  "type": "class",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Somewhere in the Great Archives a candle gutters over a page no one has read in three hundred years, and you are the one reading it. You know the dark is not a mystery. It is a text, and texts can be studied, annotated and refuted. You walk beyond the cairn-lights with ink-stained fingers and a battered journal, because the only thing worse than meeting a horror is meeting it twice and learning nothing.\n\nClass feature: Field notes\nYou keep a journal of every horror you have survived. After an encounter in which you studied a creature, record its kind (a Bestiary entry, such as Wax Ox or Gloamlice). Against a kind in your notes, you know its tier and Morale on sight, you have Boon on defence tests against its gloom abilities, and your Study the specimen against it cannot Ruin. Lose the journal, and you lose this benefit until you rewrite it during Downtime.\n\nClass power: Study the specimen 🟒1 ◈◈",
+    "boostedAbility": "sanity",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

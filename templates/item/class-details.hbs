@@ -20,5 +20,9 @@
       <span>{{localize "VARBORG.Class.StartingDie"}}</span>
       <select name="system.startingDie">{{selectOptions startingDice selected=system.startingDie}}</select>
     </label>
+    <label class="wide" data-tooltip="{{localize 'VARBORG.Class.StartingWeaponsHint'}}">
+      <span>{{localize "VARBORG.Class.StartingWeapons"}}</span>
+      <multi-select name="system.startingWeapons">{{selectOptions weaponry selected=system.startingWeapons localize=true}}</multi-select>
+    </label>
   </div>
 </section>

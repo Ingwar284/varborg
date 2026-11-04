@@ -1,0 +1,15 @@
+{
+  "_id": "vbClBard00000000",
+  "name": "Bard",
+  "type": "class",
+  "img": "icons/tools/instruments/lute-gold-brown.webp",
+  "system": {
+    "description": "You are a wielder of words and whispers, a seeker of forbidden truths, and a charmer with a tongue like a serpent’s coil. Your performances are weapons, bending minds and stirring hearts, driving even the weak to acts of heroism, or madness. Some call you leader, others whisper ‘trickster’, but all feel the pull of your voice. Many fools dismiss you as a mere jester, but they forget that your every word is a blade.\n\nClass feature: Bard of Renown\nWherever you go, your reputation precedes you. When meeting creatures whose reaction is uncertain, the Dark Master rolls for their reaction twice instead of once. You decide which outcome to take.\n\nClass power: Songs of power 🟒1 ◈◈",
+    "boostedAbility": "presence",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "profane",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}
