@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic006000000",
+  "name": "Stoker's coal",
+  "type": "relic",
+  "img": "icons/magic/fire/flame-burning-embers-yellow.webp",
+  "system": {
+    "description": "An ember from the Spindlecore foundries that never goes out. Once per day, it lights any lamp, torch or fire instantly, even in wind or rain, and you ignore the effects of cold weather. Expendable d20.",
+    "lastRite": "◈ Throw it within 30': it bursts into a bonfire in a 15' burst. Creatures inside take 3d6 fire damage and d4 persistent fire damage. The fire burns as a campfire for 8 hours, and no wind, rain or water puts it out.",
+    "drawback": "You feel the cold to the bone: Bane on Toughness tests against cold and weather.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 100,
+    "factionValue": 250,
+    "faction": "the Worshipful Company of Smiths and Metalmasters",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

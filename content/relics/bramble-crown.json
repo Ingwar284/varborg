@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic020000000",
+  "name": "Bramble crown",
+  "type": "relic",
+  "img": "icons/magic/nature/root-vine-thorned-coil-green.webp",
+  "system": {
+    "description": "A circlet of black thorn the Wardens of the Flow cut from the last orchard in the Heartlands to bear fruit. Once per day, as ◈◈, a 10' burst within 30' erupts in thorns until the encounter ends: it is difficult terrain, and any creature that ends its turn inside takes d4 damage. Allies are not spared. Expendable d20.",
+    "lastRite": "◈◈ Plant it within 60': a 30' burst becomes a thicket for 1 hour. It is difficult terrain, and every creature inside when it grows is Restrained until the end of its next turn. Allies are not spared.",
+    "drawback": "Nele's thorns grow inward: you take d4 persistent bleeding damage at the start of every combat until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 450,
+    "faction": "the Wardens of the Flow",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

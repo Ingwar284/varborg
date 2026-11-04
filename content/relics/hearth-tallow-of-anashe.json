@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic014000000",
+  "name": "Hearth-tallow of Anashe",
+  "type": "relic",
+  "img": "icons/sundries/lights/candle-lit-red.webp",
+  "system": {
+    "description": "A stub of tenement candle the Order of the Seamless Shroud keeps lit for families who lost everyone. Once per day, light it when the party begins a rest: it sheds light 10', the rest cannot be interrupted, and nothing that does not already know where you are finds you by its light. Expendable d20.",
+    "lastRite": "Burn it whole when the party begins a Long Rest: the rest cannot be interrupted, and it counts as Downtime for everyone in its light.",
+    "drawback": "The hearth goes cold behind you: every test to avoid an interrupted rest is made with Bane until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 450,
+    "faction": "the Order of the Seamless Shroud",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

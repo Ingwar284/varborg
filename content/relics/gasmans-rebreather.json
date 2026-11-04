@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic004000000",
+  "name": "Gasman's rebreather",
+  "type": "relic",
+  "img": "icons/equipment/head/mask-plague-leather-brown.webp",
+  "system": {
+    "description": "A brass-and-leather mask from the Siphons. While you wear it, you are immune to gas, smoke, spores and Oilmist, and you can breathe in air that drowns. Expendable d20 (rolled once per day, the first time it protects you).",
+    "lastRite": "◈ Crack its valves open: for 1 hour, every creature you choose within 30' of you shares its protection.",
+    "drawback": "Your lungs remember the gas: Bane on Toughness tests until your next Downtime.",
+    "alwaysOn": true,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 250,
+    "factionValue": 500,
+    "faction": "the Gasmen of the Undercity",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

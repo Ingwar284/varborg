@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic012000000",
+  "name": "Page of the Iron Ledger",
+  "type": "relic",
+  "img": "icons/sundries/documents/document-torn-diagram-tan.webp",
+  "system": {
+    "description": "A single page of the debt-book, listing names you do not recognise. Once per day, a creature that owes you anything (a coin, a favour, its life) must answer one question truthfully. Expendable d20.",
+    "lastRite": "Write a name on it and burn it: one debt you owe that person (coin, favour or blood) is forgiven as if it had never been.",
+    "drawback": "Whoever finds it now holds your debts. Someone will come to collect.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 500,
+    "faction": "the Iron Ledger Society",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

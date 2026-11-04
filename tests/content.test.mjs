@@ -373,3 +373,26 @@ test("a ritual costs no actions and deals no damage dice; its cost keeps its tie
     assert.equal(r.system.cost + 11, r.system.ritualDr, r.name);
   }
 });
+
+// 48h: relics (rules 4.2).
+const relics = readAll(join(root, "content", "relics")).map(({ data }) => data);
+
+test("all 22 relics of the table in 4.2 are there, each matching its row", () => {
+  assert.equal(relics.length, 22);
+  const rows = rules.split(/\r?\n/).map(l => l.trim());
+  for (const r of relics) {
+    const s = r.system;
+    const tail = `| ${r.name} | ${s.description} | ${s.lastRite} | ${s.drawback} | ${s.saleValue} s / ${s.factionValue} s (${s.faction}) |`;
+    assert.ok(rows.some(l => /^\| \d+ \| /.test(l) && l.endsWith(tail)), `${r.name} does not match its row`);
+  }
+});
+
+test("relics are once per day; those rolled once per day are always on; the Shard adds 3 ember (GAPS 174)", () => {
+  for (const r of relics) {
+    assert.equal(r.system.frequency, "day", r.name);
+    assert.equal(r.system.alwaysOn, /rolled once per day/i.test(r.system.description), r.name);
+    assert.equal(r.system.emberGain, r.name === "Shard of the Great Brazier" ? 3 : 0, r.name);
+    assert.equal(r.system.destroyed, false, r.name);
+  }
+  assert.deepEqual(relics.filter(r => r.system.alwaysOn).map(r => r.name).sort(), ["Directorate compass", "Gasman's rebreather"]);
+});

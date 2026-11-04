@@ -813,7 +813,13 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       · DR14 · Arcane". The 63 rituals of the four spell pages are in
       `content/spells/<list>/rituals/`, in the Spells compendium. Rituals
       are not offered as the starting spell. Open questions: GAPS 186.
-    - 48h. Relics (4.2).
+    - 48h. ~~**Relics.**~~ Done: the 22 relics of the table in 4.2 in
+      `content/relics/`: effect, Last Rite, drawback ("If lost or
+      destroyed"), sale and faction values and the faction. All are once
+      per day; the rebreather and the compass ("rolled once per day") are
+      always on; the Shard adds 3 ember (GAPS 174). The Shard example moved
+      there unchanged. The "Rolling a relic" table (d2, then d12 or d10 +
+      12) comes with the other tables in 48i.
     - 48i. Foes and tables.
 
 49. **Automating feats.** After all content is in (designer's choice at

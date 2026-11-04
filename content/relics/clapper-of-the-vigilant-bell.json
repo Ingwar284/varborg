@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic008000000",
+  "name": "Clapper of the Vigilant Bell",
+  "type": "relic",
+  "img": "icons/tools/instruments/bell-brass-brown.webp",
+  "system": {
+    "description": "An iron clapper wrapped in black cord. Once per day, ring it as an action (◈): every ally within 30' who can hear it ends the Frightened condition and has Boon on their next Panic test. Expendable d20.",
+    "lastRite": "◈◈ Ring it until it cracks: every ally within 120' who hears it ends Frightened and Charmed and is immune to both until the end of the encounter. Every foe that hears it rolls Morale at once.",
+    "drawback": "You hear the bell in your sleep: your next Long Rest gives no benefit.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 450,
+    "faction": "the Moon-Watchers",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

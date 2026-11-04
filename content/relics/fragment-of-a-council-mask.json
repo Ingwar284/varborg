@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic005000000",
+  "name": "Fragment of a Council mask",
+  "type": "relic",
+  "img": "icons/commodities/treasure/mask-jeweled-gold.webp",
+  "system": {
+    "description": "A shard of a consecrated brass mask that still whispers. Once per day, you have Boon on a Presence test to command, persuade or intimidate. Expendable d20.",
+    "lastRite": "◈ Speak in the Council's voice: every humanoid within 60' that hears you, except Strong and Mighty foes, is Charmed by you for 1 minute. It ends for any creature you harm.",
+    "drawback": "The Council of Many learns your face. The Wickguard treats you as a suspect.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 500,
+    "faction": "the Council of Many",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

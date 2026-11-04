@@ -27,6 +27,6 @@
     "../powers/class/warrior/power-strike.json",
     "../spells/arcane/and-they-spoke-of-fire.json",
     "items/scroll-of-and-they-spoke-of-fire.json",
-    "items/shard-of-the-great-brazier.json"
+    "../relics/shard-of-the-great-brazier.json"
   ]
 }

@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic001000000",
+  "name": "Wick of the First Lamplighter",
+  "type": "relic",
+  "img": "icons/sundries/lights/candle-lit-yellow.webp",
+  "system": {
+    "description": "A candle stub from the Candle-Wicked Men's first vigil. Once per day, light it: for 1 hour it sheds light 30', and Undead and Duskborn that enter or start their turn in its light take d6 damage. Expendable d20.",
+    "lastRite": "◈ Snap the wick: for 10 rounds it sheds light 60', and every Undead and Duskborn that starts its turn in the light takes 2d6 damage and is Frightened of you.",
+    "drawback": "You are Frightened of complete darkness until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 450,
+    "faction": "the Solemn Order of the Candle-Wicked Men",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic007000000",
+  "name": "Directorate compass",
+  "type": "relic",
+  "img": "icons/tools/navigation/compass-brass-blue-red.webp",
+  "system": {
+    "description": "A surveyor's compass from the Second Directorate of External Stabilisation. It always points to the nearest light that will keep you safe for a night. You have Boon on navigation tests. Expendable d20 (rolled once per day, the first time you rely on it).",
+    "lastRite": "Smash the glass and name a place you have heard of: the needle leads the party there by the safest road, and the Dark Master rolls no random encounters on the way.",
+    "drawback": "You lose your bearings: Bane on navigation tests until your next Downtime.",
+    "alwaysOn": true,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 250,
+    "factionValue": 550,
+    "faction": "the Second Directorate of External Stabilisation",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

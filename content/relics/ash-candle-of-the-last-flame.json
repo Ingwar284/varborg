@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic022000000",
+  "name": "Ash-candle of the Last Flame",
+  "type": "relic",
+  "img": "icons/sundries/lights/candle-lit-angelic.webp",
+  "system": {
+    "description": "A candle of grey wax that burns with a black flame and gives no light, made by the cult that welcomes the dark. Once per day, light it: for 1 hour, Duskborn and Shades within 30' take you for one of their own and do not attack you unless you harm them or stand in light. Expendable d20.",
+    "lastRite": "Burn it to nothing at dusk: until the next day begins, Duskborn, Shades and undead do not notice the party unless one of you harms them. It gives no light; the dark is still dark.",
+    "drawback": "The dark has learned your scent. The next time you are in complete darkness, a Duskborn foe finds you.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 150,
+    "factionValue": 400,
+    "faction": "the cult of the Last Flame",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

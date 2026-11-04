@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic021000000",
+  "name": "Rivet of the Last Wall",
+  "type": "relic",
+  "img": "icons/equipment/hand/gauntlet-iron-riveted-brown.webp",
+  "system": {
+    "description": "A soot-black rivet from the curtain-wall the Brotherhood of the Forge-Heart held during the Gloaming, blessed in Brask's name. Once per day, as ↻ when you are hit, your armour counts as one tier heavier against that hit (no armour counts as t1). Expendable d20.",
+    "lastRite": "◈ Strike it into the ground: until the end of the encounter, you and your allies within 10' of it count your armour as two tiers heavier (up to t4, without the heavier tier's penalties) and cannot be moved or knocked Prone.",
+    "drawback": "The Brotherhood marks you a deserter of the wall. Its soldiers will not shelter, heal or aid you until it is returned.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 250,
+    "factionValue": 550,
+    "faction": "the Brotherhood of the Forge-Heart",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

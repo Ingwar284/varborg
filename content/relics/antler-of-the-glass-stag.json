@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic011000000",
+  "name": "Antler of the Glass Stag",
+  "type": "relic",
+  "img": "icons/commodities/bones/horn-antler-pink-white.webp",
+  "system": {
+    "description": "A clear, ringing antler shard from a thin place. Once per day, when you would become Charmed or Frightened, you do not. Expendable d20.",
+    "lastRite": "◈◈ Break it: you and up to four allies within 10' step through a thin place and come out anywhere you have been within a day's walk.",
+    "drawback": "The fey court notices its loss: something follows you, and the Dark Master decides what.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 300,
+    "factionValue": 650,
+    "faction": "the Aetheric Order of Flux-Weavers",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

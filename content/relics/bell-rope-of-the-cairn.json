@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic017000000",
+  "name": "Bell-rope of the Cairn",
+  "type": "relic",
+  "img": "icons/equipment/waist/belt-rope.webp",
+  "system": {
+    "description": "A length of rope from an ossuary bell of the Silent Fraternity, braided from the hair of novices who died at their vigil. Once per day, as ↻ when an ally within 30' would gain a wound, you gain it instead (test Toughness as normal). Expendable d20.",
+    "lastRite": "◈◈ Pull it until it snaps: every ally within 30' at Death's Door wakes at d4 HP. You gain one wound for each of them (test Toughness as normal).",
+    "drawback": "Harkin keeps count. The next time you would gain a wound, you gain two.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 250,
+    "factionValue": 550,
+    "faction": "the Silent Fraternity of the Cairn",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

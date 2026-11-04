@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic018000000",
+  "name": "Vex's loaded die",
+  "type": "relic",
+  "img": "icons/sundries/gaming/dice-pair-white-green.webp",
+  "system": {
+    "description": "A yellowed bone die from the gaming tables of the Unseen Deanery, every face worn smooth but one. Once per day, after you roll a d20 test, turn the die over: the result becomes 21 minus the roll. The new number is not a natural 1 or 20. Expendable d20.",
+    "lastRite": "◇ After anyone makes a d20 roll, before its outcome is known, set it to any number you choose. A 20 set this way counts as a natural 20.",
+    "drawback": "Your luck is owed. Once, at a moment of their choosing, the Dark Master turns one of your d20 rolls over the same way.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 300,
+    "factionValue": 650,
+    "faction": "the Unseen Deanery",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

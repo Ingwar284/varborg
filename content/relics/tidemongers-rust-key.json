@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic019000000",
+  "name": "Tidemonger's rust-key",
+  "type": "relic",
+  "img": "icons/sundries/misc/key-ornate-iron-black.webp",
+  "system": {
+    "description": "A key of red, flaking iron that the Tidemongers say opened Caraz's first temple before it crumbled. Once per day, as ◈, touch a lock, chain or metal object: it rusts through and gives way. Against a foe in metal armour, make a melee attack (Strength DR12) instead. Success: its armour drops one tier until the encounter ends. Failure: no effect. Ruin: your own weapon rusts; Bane on attacks with it until you spend a Short Rest cleaning it. Expendable d20.",
+    "lastRite": "◈ Turn it in the air and snap it: every lock, chain and bar within 30' gives way, and all metal armour within 30', yours included, drops to no armour until repaired.",
+    "drawback": "Change turns on you: the next time you roll a natural 1 with a weapon, it breaks.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 200,
+    "factionValue": 450,
+    "faction": "the Tidemongers",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

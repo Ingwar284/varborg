@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic009000000",
+  "name": "Mourner's veil",
+  "type": "relic",
+  "img": "icons/equipment/head/hood-cloth-brown.webp",
+  "system": {
+    "description": "A grey veil of the Shroud Brethren. Once per day, while wearing it, you may ask a corpse one question, and it answers truthfully in a whisper. Expendable d20.",
+    "lastRite": "Lay the veil over a corpse: for 10 minutes the dead speaks freely and truthfully, and it can name its killer even if it never saw them.",
+    "drawback": "The dead keep whispering: Bane on Sanity tests until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 150,
+    "factionValue": 350,
+    "faction": "the Shroud Brethren",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

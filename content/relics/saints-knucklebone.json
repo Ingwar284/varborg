@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic003000000",
+  "name": "Saint's knucklebone",
+  "type": "relic",
+  "img": "icons/commodities/bones/bone-simple-white.webp",
+  "system": {
+    "description": "A bone of one of Harkin's saints, wrapped in grave-silk. Once per day, when you roll on the Death's Door table, roll twice and choose. Expendable d20.",
+    "lastRite": "◈ Within 1 minute of a creature's death, grind the bone over the body: it returns to life at 1 HP, unconscious, and is Doomed.",
+    "drawback": "You are Doomed until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 300,
+    "factionValue": 700,
+    "faction": "the Silent Fraternity of the Cairn",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

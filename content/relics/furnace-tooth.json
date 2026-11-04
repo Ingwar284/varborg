@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic010000000",
+  "name": "Furnace-tooth",
+  "type": "relic",
+  "img": "icons/creatures/abilities/fang-tooth-blood-red.webp",
+  "system": {
+    "description": "A fang of black glass blessed in Brask's name, bound to a weapon. Once per day, your next hit with that weapon deals an additional d6 fire damage and d4 persistent fire damage. Expendable d20.",
+    "lastRite": "◇ Shatter it into the blade: until the end of the encounter, every hit with that weapon deals an additional d6 fire damage and d4 persistent fire damage.",
+    "drawback": "The weapon turns cold in your hand: Bane on your first attack in every combat until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 250,
+    "factionValue": 550,
+    "faction": "the smith-priests of the Obsidian Bastion",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

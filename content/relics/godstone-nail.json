@@ -1,0 +1,22 @@
+{
+  "_id": "vbRelic015000000",
+  "name": "Godstone nail",
+  "type": "relic",
+  "img": "icons/tools/fasteners/rivet-mount-post-steel.webp",
+  "system": {
+    "description": "A nail of Khael's petrified blood, prised from the oldest shrine of the Obsidian Bastion. It is warm, and glows faintly when struck. Once per day, as ◈◈, hammer it into a door, gate or wall: nothing weaker than a Mighty foe can open or break through until a new day begins. Expendable d20.",
+    "lastRite": "◈◈ Drive it into the ground and speak Khael's name: for 1 hour, nothing that is not of flesh and blood (Duskborn, undead, Shades, constructs, elementals) can enter a 30' circle around it.",
+    "drawback": "The Fabricators of the Sacred Gear count every vein of Godstone. They know it is gone, and they send someone to ask you where.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 0,
+    "destroyed": false,
+    "saleValue": 350,
+    "factionValue": 800,
+    "faction": "the Fabricators of the Sacred Gear",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}
