@@ -663,7 +663,14 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
 
 ## Milestone 7: Minions, relics and vehicles
 
-42. **Minions.** Minion actor (HP, Morale, armour, owner). It tests at +0,
+42. ~~**Minions.**~~ Done: `module/rules/minions.mjs` with
+    `tests/minions.test.mjs`, `compareTurnOrder` in
+    `module/rules/initiative.mjs`, the minion actor and sheet
+    (`module/data/minion.mjs`, `module/sheets/minion-sheet.mjs`), the
+    Minions list and Command button on the character sheet
+    (`module/minions.mjs`), minions defending in `module/dice/defence.mjs`,
+    the small vicious dog example (GAPS 169–172).
+    Minion actor (HP, Morale, armour, owner). It tests at +0,
     has 2 actions and 0 reactions, acts on its owner's initiative right
     after them, and the limit is Presence (minimum 1). There is a "Command a
     minion" action (◈).
@@ -671,7 +678,13 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
     *Test:* in combat the dog sits right after its owner and acts when
     commanded.
 
-43. **Relics.** Relic item: use it (then roll the expendable d20, or daily
+43. ~~**Relics.**~~ Done: `module/rules/relics.mjs` with
+    `tests/relics.test.mjs`, the relic item and sheet
+    (`module/data/relic.mjs`, `RelicSheet`), the Use, Daily roll and Last
+    Rite buttons in the Inventory tab (`module/relics.mjs`), `gainEmber` in
+    `module/pools.mjs`, the Shard of the Great Brazier example
+    (GAPS 173, 174).
+    Relic item: use it (then roll the expendable d20, or daily
     for always-on relics), its Last Rite (always works and destroys the
     relic), and its "if lost" drawback shown when it is destroyed.
     "Once per day" uses the frequency and Use button of step 36b (GAPS
@@ -679,7 +692,13 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
     *Example:* Shard of the Great Brazier (+3 to the Ember pool).
     *Test:* use the Shard. The pool goes up by 3 and the d20 is rolled.
 
-44. **Vehicles.** Vehicle actor (HP, armour, three speeds, crew, passengers,
+44. ~~**Vehicles.**~~ Done: `module/rules/vehicles.mjs` with
+    `tests/vehicles.test.mjs`, the vehicle actor and sheet
+    (`module/data/vehicle.mjs`, `module/sheets/vehicle-sheet.mjs`), the
+    Drive dialog and driving card with Prone tests and collision damage
+    (`module/vehicles.mjs`), the Cargo list with passenger room, Encumbered
+    and overloaded (GAPS 178), the steam wagon example (GAPS 34, 175–178).
+    Vehicle actor (HP, armour, three speeds, crew, passengers,
     fuel). Driving tests by speed and situation (Agility DR10, 12 or 14).
     Collision damage (1d6, 3d6 or 5d6) applies to the driver and passengers,
     after armour.

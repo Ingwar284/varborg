@@ -1,0 +1,22 @@
+{
+  "_id": "vbExampleShard00",
+  "name": "Shard of the Great Brazier",
+  "type": "relic",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "description": "A sliver of black iron, still warm. Once per day, at the start of a round, the party's ember pool gains an extra 3. Expendable d20.",
+    "lastRite": "◇ At the start of a round, press it to your tongue: the party's ember pool is filled to twice its usual amount this round.",
+    "drawback": "You are Doomed until it is recovered.",
+    "alwaysOn": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "emberGain": 3,
+    "destroyed": false,
+    "saleValue": 400,
+    "factionValue": 900,
+    "faction": "the Lord of Light",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": ""
+  }
+}

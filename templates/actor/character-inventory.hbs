@@ -32,7 +32,7 @@
     <h3>{{localize section.label}}</h3>
     <ul class="item-list">
       {{#each section.items}}
-      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}" data-item-id="{{item.id}}">
+      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}{{#if relicDestroyed}} used-up{{/if}}" data-item-id="{{item.id}}">
         {{#if section.canEquip}}
         <button type="button" class="icon-button" data-action="toggleEquipped"
                 data-tooltip="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}"
@@ -47,6 +47,7 @@
         {{/if}}
         <span class="item-name">{{item.name}}</span>
         <span class="item-summary">{{summary}}</span>
+        {{#if drawback}}<span class="relic-drawback" data-tooltip="{{localize 'VARBORG.Relic.DrawbackHint'}}">{{drawback}}</span>{{/if}}
         {{#each states}}
         <span class="item-state {{key}}">{{localize label}}</span>
         {{/each}}
@@ -93,6 +94,16 @@
         </button>
         {{/if}}
         {{> "systems/var-borg/templates/actor/use-button.hbs"}}
+        {{#if isRelic}}
+        <button type="button" class="icon-button use-limited" data-action="useRelic" {{#unless canUseRelic}}disabled{{/unless}}
+                data-tooltip="{{relicUseTooltip}}" aria-label="{{relicUseTooltip}}">
+          <i class="fa-solid {{#if relicDaily}}fa-dice-d20{{else}}fa-hand-sparkles{{/if}}"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="lastRite" {{#unless canLastRite}}disabled{{/unless}}
+                data-tooltip="{{localize 'VARBORG.Relic.LastRiteTooltip'}}" aria-label="{{localize 'VARBORG.Relic.LastRiteTooltip'}}">
+          <i class="fa-solid fa-fire-burner"></i>
+        </button>
+        {{/if}}
         {{#if canExpendable}}
         <button type="button" class="icon-button" data-action="rollExpendable"
                 data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"

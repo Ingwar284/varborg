@@ -27,6 +27,9 @@ import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { rollPanicTest } from "../panic.mjs";
 import { addOrigin, isOrigin } from "../origins.mjs";
 import { ORIGIN_TYPES, currentAbilities } from "../rules/origins.mjs";
+import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
+import { moveCargo } from "../vehicles.mjs";
+import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -34,7 +37,7 @@ const { ActorSheetV2 } = foundry.applications.sheets;
 const TEMPLATES = "systems/var-borg/templates/actor";
 
 /** Item types shown in the Inventory tab, in this order. */
-const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container", "scroll"];
+const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container", "scroll", "relic"];
 
 /** Item types that can be equipped. */
 const EQUIPPABLE_TYPES = ["weapon", "armour", "shield"];
@@ -66,6 +69,8 @@ function itemSummary(item, stored) {
       return i18n.format("VARBORG.Container.Holds", { count: stored.get(item.id) ?? 0, capacity: system.capacity });
     case "scroll":
       return spellSummary(item);
+    case "relic":
+      return relicSummary(item);
   }
   return "";
 }
@@ -91,6 +96,8 @@ function itemStates(item) {
     states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
   }
   if (hasLimitedUse(item) && system.frequencyUsed) states.push({ key: "used", label: "VARBORG.Uses.Used" });
+  if (item.type === "relic" && system.destroyed) states.push({ key: "destroyed", label: "VARBORG.Relic.Destroyed" });
+  else if (item.type === "relic" && system.frequencyUsed) states.push({ key: "used", label: "VARBORG.Uses.Used" });
   return states;
 }
 
@@ -165,7 +172,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       usePower: CharacterSheet.#onUsePower,
       castSpell: CharacterSheet.#onCastSpell,
       sustainPower: CharacterSheet.#onSustainPower,
-      endPower: CharacterSheet.#onEndPower
+      endPower: CharacterSheet.#onEndPower,
+      commandMinion: CharacterSheet.#onCommandMinion,
+      useRelic: CharacterSheet.#onUseRelic,
+      lastRite: CharacterSheet.#onLastRite,
+      openMinion: CharacterSheet.#onOpenMinion
     }
   };
 
@@ -250,6 +261,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canMedicine: canUseMedicine(item),
           canLight: canLightItem(item),
           ...useButton(item),
+          ...(item.type === "relic" ? relicRow(item) : {}),
           canExpendable: canRollExpendable(item.system),
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
@@ -294,6 +306,23 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       system.abilities.toughness
     );
     context.carrying = { ...carried, stateLabel: `VARBORG.Carrying.State.${carried.state}` };
+
+    // Minions serving this character, and the limit: Presence, minimum 1 (rules 3.14).
+    const minions = minionCount(actor);
+    context.minions = {
+      heading: i18n.format("VARBORG.Minion.Heading", { count: minions.count, limit: minions.limit }),
+      over: minions.over,
+      list: ownedMinions(actor).map(minion => ({
+        id: minion.id,
+        img: minion.img,
+        name: minion.name,
+        summary: [
+          i18n.localize(`VARBORG.Minion.Tier.${minion.system.tier}`),
+          i18n.format("VARBORG.Minion.HpShort", { value: minion.system.hp.value, max: minion.system.hp.max })
+        ].join(" · "),
+        dead: minion.system.hp.value === 0
+      }))
+    };
     context.conditions = sheetConditions(actor);
 
     // A raised shield: which one counts, and its cover (GAPS 46).
@@ -328,10 +357,14 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
 
   /**
    * A dropped class, ancestry or background replaces the one the character
-   * has and is applied (module/origins.mjs). Anything else is added as usual.
+   * has and is applied (module/origins.mjs). Cargo from a vehicle is moved
+   * here (module/vehicles.mjs). Anything else is added as usual.
    * @override
    */
   async _onDropItem(event, item) {
+    // Cargo dragged off a vehicle moves onto the character (GAPS 178).
+    const moved = await moveCargo(this.actor, item);
+    if (moved !== undefined) return moved;
     if (!isOrigin(item.type)) return super._onDropItem(event, item);
     if (!this.actor.isOwner || this.actor.uuid === item.parent?.uuid) return null;
     const data = item.inCompendium ? game.items.fromCompendium(item, { clearFolder: true }) : item.toObject();
@@ -440,6 +473,29 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onEndPower(event, button) {
     const item = this.#itemFor(button);
     if (item) await endPower(this.document, item);
+  }
+
+  /** The relic's Use (or Daily roll) button: its effect, then the Expendable d20 (rules 4.2). */
+  static async #onUseRelic(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await useRelic(this.document, item);
+  }
+
+  /** The relic's Last Rite button: it always works and destroys the relic (rules 4.2). */
+  static async #onLastRite(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await performLastRite(this.document, item);
+  }
+
+  /** The Command button: ◈ to give the minion two actions on its turn (rules 3.14). */
+  static async #onCommandMinion(event, button) {
+    const minion = game.actors.get(button.closest("[data-minion-id]")?.dataset.minionId);
+    if (minion) await commandMinion(this.document, minion);
+  }
+
+  /** A minion's name opens its sheet. */
+  static #onOpenMinion(event, button) {
+    game.actors.get(button.closest("[data-minion-id]")?.dataset.minionId)?.sheet.render(true);
   }
 
   /** The item a button in the inventory belongs to. */

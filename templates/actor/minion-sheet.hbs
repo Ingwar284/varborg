@@ -1,0 +1,130 @@
+<section class="var-borg-sheet foe-sheet minion-sheet">
+  <header class="sheet-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    <div class="foe-title">
+      <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+      <div class="foe-meta">
+        <label data-tooltip="{{tierHint}}">
+          <span>{{localize "VARBORG.Foe.TierLabel"}}</span>
+          <select name="system.tier">{{selectOptions tiers selected=system.tier localize=true}}</select>
+        </label>
+        <button type="button" class="text-button" data-action="applyTier" data-tooltip="{{tierHint}}">
+          <i class="fa-solid fa-wand-magic"></i> {{localize "VARBORG.Minion.ApplyTier"}}
+        </button>
+      </div>
+      <div class="foe-meta">
+        <label data-tooltip="{{localize 'VARBORG.Minion.OwnerHint'}}">
+          <span>{{localize "VARBORG.Minion.Owner"}}</span>
+          <select name="system.owner">{{selectOptions ownerOptions selected=system.owner}}</select>
+        </label>
+        {{#if owner}}
+        <button type="button" class="text-button{{#if ownerOver}} over-limit{{/if}}" data-action="openOwner">{{ownerLine}}</button>
+        {{/if}}
+      </div>
+    </div>
+  </header>
+
+  <section class="details">
+    <label>
+      <span>{{localize "VARBORG.Foe.Description"}}</span>
+      <textarea name="system.description" rows="3">{{system.description}}</textarea>
+    </label>
+    <p class="hint">{{localize "VARBORG.Minion.RulesHint"}}</p>
+  </section>
+
+  <section class="resources foe-stats">
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.HP"}}</span>
+      <span class="pair">
+        <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">
+        <span>/</span>
+        <input type="number" name="system.hp.max" value="{{system.hp.max}}" min="0" step="1">
+      </span>
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Minion.MoraleHint'}}">
+      <span>{{localize "VARBORG.Foe.MoraleLabel"}}</span>
+      <select name="system.morale">{{selectOptions moraleOptions selected=morale}}</select>
+      <button type="button" class="morale-button" data-action="rollMorale" {{#unless canRollMorale}}disabled{{/unless}}
+              data-tooltip="{{moraleTooltip}}">
+        <i class="fa-solid fa-person-running"></i> {{localize "VARBORG.MoraleRoll.Button"}}
+      </button>
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Minion.ArmourHint'}}">
+      <span>{{localize "VARBORG.Foe.ArmourLabel"}}</span>
+      <select name="system.armour">{{selectOptions armourDice selected=system.armour localize=true}}</select>
+      <input type="text" class="armour-name" name="system.armourName" value="{{system.armourName}}"
+             placeholder="{{localize 'VARBORG.Foe.ArmourNamePlaceholder'}}" aria-label="{{localize 'VARBORG.Foe.ArmourName'}}">
+    </label>
+  </section>
+
+  {{#if system.attackRuin}}
+  <section class="attack-ruin">
+    <p><strong>{{localize "VARBORG.Attack.RuinedTitle"}}</strong> {{localize "VARBORG.Attack.RuinedHint"}}</p>
+    <button type="button" data-action="recover">
+      <i class="fa-solid fa-hand-fist"></i> {{localize "VARBORG.Attack.Recover"}}
+    </button>
+  </section>
+  {{/if}}
+
+  {{> "systems/var-borg/templates/actor/conditions.hbs"}}
+
+  <section class="inventory-section">
+    <h2>{{localize "VARBORG.Foe.Attacks"}}</h2>
+    <ul class="item-list">
+      {{#each attacks}}
+      <li class="item-row" data-item-id="{{item.id}}">
+        <span class="attack-mark" aria-hidden="true">⚔</span>
+        <img src="{{item.img}}" alt="">
+        <span class="item-name">{{item.name}}</span>
+        <span class="item-summary">{{summary}}</span>
+        <button type="button" class="icon-button" data-action="attack"
+                data-tooltip="{{localize 'VARBORG.Minion.AttackTooltip'}}" aria-label="{{localize 'VARBORG.Minion.AttackTooltip'}}">
+          <i class="fa-solid fa-khanda"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" class="add-item" data-action="createItem" data-type="weapon">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Foe.AddAttack"}}
+    </button>
+  </section>
+
+  <section class="inventory-section">
+    <h2>{{localize "VARBORG.Minion.Abilities"}}</h2>
+    <ul class="item-list">
+      {{#each abilityItems}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><strong>{{item.name}}</strong> {{#if frequency}}<span class="item-summary">{{frequency}}</span>{{/if}}
+          {{#if item.system.frequencyUsed}}<span class="item-state used">{{localize "VARBORG.Uses.Used"}}</span>{{/if}}
+          {{item.system.description}}</span>
+        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" class="add-item" data-action="createItem" data-type="feat">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Minion.AddAbility"}}
+    </button>
+  </section>
+  <p class="hint">{{localize "VARBORG.Minion.DropHint"}}</p>
+</section>

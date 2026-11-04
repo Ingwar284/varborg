@@ -113,6 +113,25 @@
     </ul>
   </section>
 
+  <section class="inventory-section minions">
+    <h2 class="{{#if minions.over}}over-limit{{/if}}" data-tooltip="{{localize 'VARBORG.Minion.LimitHint'}}">{{minions.heading}}</h2>
+    <ul class="item-list">
+      {{#each minions.list}}
+      <li class="item-row feat-row{{#if dead}} used-up{{/if}}" data-minion-id="{{id}}">
+        <img src="{{img}}" alt="">
+        <span class="feat-text"><button type="button" class="link-button" data-action="openMinion"><strong>{{name}}</strong></button>
+          <span class="item-summary">{{summary}}</span></span>
+        <button type="button" class="text-button" data-action="commandMinion" {{#if dead}}disabled{{/if}}
+                data-tooltip="{{localize 'VARBORG.Minion.CommandTooltip'}}">
+          ◈ {{localize "VARBORG.Minion.Command"}}
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Minion.NoneYet"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
   <section class="inventory-section powers">
     <h2>{{localize "VARBORG.Sheet.Powers"}}</h2>
     <ul class="item-list">

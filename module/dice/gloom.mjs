@@ -21,7 +21,6 @@ import { gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderCondi
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
-import { soakDie } from "../rules/defence.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { CARD, lowerDamage } from "../rules/fortune.mjs";
 import { POOL, canPay } from "../rules/pools.mjs";
@@ -30,7 +29,7 @@ import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
-import { defenceModifiers } from "./defence.mjs";
+import { defenceModifiers, DEFENDERS } from "./defence.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -85,7 +84,8 @@ export async function useGloomAbility(foe, power) {
     pipNote = i18n.format("VARBORG.Power.UsedActions", { count: use.actions });
   }
 
-  const targets = [...game.user.targets].map(token => token.actor).filter(actor => actor?.type === "character");
+  // Characters and their minions take the test (GAPS 169).
+  const targets = [...game.user.targets].map(token => token.actor).filter(actor => DEFENDERS.includes(actor?.type));
   const test = gloomTest(system);
   const content = await renderTemplate(USE_CARD_TEMPLATE, {
     title: i18n.format("VARBORG.Gloom.CardTitle", { name: foe.name, ability: power.name }),
@@ -131,7 +131,7 @@ export async function rollGloomTest(actor, power) {
     conditionMods = gloomDefenderConditions(conditions, fatigue);
   }
   // Armour soaks the damage either way (GAPS 123).
-  const soak = gear.armour ? { die: soakDie(gear.armour), name: gear.armourName } : null;
+  const soak = gear.soakDie ? { die: gear.soakDie, name: gear.armourName } : null;
   const notes = [
     automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
@@ -326,7 +326,7 @@ export function addGloomCardListeners(message, html) {
         return;
       }
       const actor = button.dataset.actorUuid ? await fromUuid(button.dataset.actorUuid) : ownCharacter();
-      if (!actor || actor.type !== "character") {
+      if (!actor || !DEFENDERS.includes(actor.type)) {
         ui.notifications.warn(game.i18n.localize("VARBORG.Defence.NoCharacter"));
         return;
       }

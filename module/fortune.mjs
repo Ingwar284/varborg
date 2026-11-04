@@ -140,7 +140,8 @@ async function spendOnCard(message, action) {
     ui.notifications.warn(i18n.localize("VARBORG.Fortune.Gone"));
     return false;
   }
-  const spender = actor.isOwner ? actor : game.user.character;
+  // A minion has no Fortune: on its card your own character pays (GAPS 105, 169).
+  const spender = actor.isOwner && actor.type === "character" ? actor : game.user.character;
   if (spender?.type !== "character") {
     ui.notifications.warn(i18n.localize("VARBORG.Fortune.NoCharacter"));
     return false;

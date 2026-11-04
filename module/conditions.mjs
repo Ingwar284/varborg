@@ -119,7 +119,7 @@ export function sheetConditions(actor) {
   return {
     fatigue: actor.system.fatigue,
     // Characters only: days without food (rules 3.16, module/days.mjs).
-    food: isFoe ? null : { days: actor.system.daysWithoutFood, starving: isStarving(actor.system.daysWithoutFood) },
+    food: actor.type !== "character" ? null : { days: actor.system.daysWithoutFood, starving: isStarving(actor.system.daysWithoutFood) },
     persistent: sheetPersistent(actor),
     panic: sheetPanic(actor),
     injuries: sheetInjuries(actor),

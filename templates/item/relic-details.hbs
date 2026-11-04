@@ -1,0 +1,49 @@
+<section class="var-borg-item-details relic-details">
+  <p class="hint">{{localize "VARBORG.Relic.SheetHint"}}</p>
+  <div class="field-grid">
+    <label data-tooltip="{{localize 'VARBORG.Relic.AlwaysOnHint'}}">
+      <span>{{localize "VARBORG.Relic.AlwaysOn"}}</span>
+      <input type="checkbox" name="system.alwaysOn" {{checked system.alwaysOn}}>
+    </label>
+    {{#unless system.alwaysOn}}
+    <label data-tooltip="{{localize 'VARBORG.Uses.FrequencyHint'}}">
+      <span>{{localize "VARBORG.Uses.FrequencyLabel"}}</span>
+      <select name="system.frequency">{{selectOptions frequencies selected=system.frequency localize=true}}</select>
+    </label>
+    {{/unless}}
+    {{#if system.frequency}}
+    <label data-tooltip="{{localize 'VARBORG.Uses.UsedHint'}}">
+      <span>{{localize "VARBORG.Uses.Used"}}</span>
+      <input type="checkbox" name="system.frequencyUsed" {{checked system.frequencyUsed}}>
+    </label>
+    {{/if}}
+    <label data-tooltip="{{localize 'VARBORG.Relic.EmberGainHint'}}">
+      <span>{{localize "VARBORG.Relic.EmberGain"}}</span>
+      <input type="number" name="system.emberGain" value="{{system.emberGain}}" min="0" step="1">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Relic.DestroyedHint'}}">
+      <span>{{localize "VARBORG.Relic.Destroyed"}}</span>
+      <input type="checkbox" name="system.destroyed" {{checked system.destroyed}}>
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Relic.SaleValueHint'}}">
+      <span>{{localize "VARBORG.Relic.SaleValue"}}</span>
+      <input type="number" name="system.saleValue" value="{{system.saleValue}}" min="0" step="1">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Relic.FactionValueHint'}}">
+      <span>{{localize "VARBORG.Relic.FactionValue"}}</span>
+      <input type="number" name="system.factionValue" value="{{system.factionValue}}" min="0" step="1">
+    </label>
+  </div>
+  <label class="wide">
+    <span>{{localize "VARBORG.Relic.Faction"}}</span>
+    <input type="text" name="system.faction" value="{{system.faction}}">
+  </label>
+  <label class="wide">
+    <span>{{localize "VARBORG.Relic.LastRite"}}</span>
+    <textarea name="system.lastRite" rows="3">{{system.lastRite}}</textarea>
+  </label>
+  <label class="wide">
+    <span>{{localize "VARBORG.Relic.Drawback"}}</span>
+    <textarea name="system.drawback" rows="2">{{system.drawback}}</textarea>
+  </label>
+</section>

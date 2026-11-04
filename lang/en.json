@@ -2,7 +2,9 @@
   "TYPES": {
     "Actor": {
       "character": "Character",
-      "foe": "Foe"
+      "foe": "Foe",
+      "minion": "Minion",
+      "vehicle": "Vehicle"
     },
     "Item": {
       "weapon": "Weapon",
@@ -16,7 +18,8 @@
       "background": "Background",
       "power": "Power",
       "spell": "Spell",
-      "scroll": "Scroll"
+      "scroll": "Scroll",
+      "relic": "Relic"
     }
   },
   "VARBORG": {
@@ -55,7 +58,7 @@
         "Edit": "Edit",
         "Delete": "Delete",
         "None": "None",
-        "DropHint": "Drag weapons, armour, shields, gear and containers from the Items sidebar onto this sheet."
+        "DropHint": "Drag weapons, armour, shields, gear, containers, scrolls and relics from the Items sidebar onto this sheet."
       },
       "Gear": "VÅR BORG gear sheet",
       "Container": "VÅR BORG container sheet",
@@ -69,7 +72,8 @@
         "shield": "Shields",
         "gear": "Gear",
         "container": "Containers",
-        "scroll": "Scrolls"
+        "scroll": "Scrolls",
+        "relic": "Relics"
       },
       "Foe": "VÅR BORG foe sheet",
       "Feat": "VÅR BORG feat sheet",
@@ -81,7 +85,10 @@
       "Powers": "Powers",
       "Spells": "Spells",
       "Spell": "VÅR BORG spell sheet",
-      "Scroll": "VÅR BORG scroll sheet"
+      "Scroll": "VÅR BORG scroll sheet",
+      "Minion": "VÅR BORG minion sheet",
+      "Relic": "VÅR BORG relic sheet",
+      "Vehicle": "VÅR BORG vehicle sheet"
     },
     "Item": {
       "Price": "Price (s)",
@@ -448,7 +455,8 @@
       "NoCombat": "There is no pool outside combat.",
       "GMOnly": "Only the Dark Master can do that with the {pool} pool.",
       "NoGM": "The Dark Master must be connected to spend from the {pool} pool.",
-      "Bad": "That is not a valid change to the {pool} pool."
+      "Bad": "That is not a valid change to the {pool} pool.",
+      "Gained": "{name} adds {symbol}{amount} to the {pool} pool with {source} ({left} now)."
     },
     "Day": {
       "Label": "Day {day}",
@@ -614,8 +622,8 @@
       "RaiseNotYourTurn": "Raising a shield uses an action, so in combat you can only do it on your own turn.",
       "RaiseNoActions": "No actions left this turn. Raising the shield anyway; the Dark Master decides.",
       "AttackGone": "That attack no longer exists.",
-      "NoCharacter": "No character to defend. Target a character, select its token, or have a character assigned to you.",
-      "NotYours": "You do not own {name}."
+      "NotYours": "You do not own {name}.",
+      "NoCharacter": "No character or minion to defend. Target one, select its token, or have a character assigned to you."
     },
     "FoeDamage": {
       "CardTitle": "Damage to {name}",
@@ -1962,15 +1970,42 @@
       "Misfit": "This hardship suits other places best. In the Heartlands, roll again or pick the nearest fit.",
       "EachPC": "Unless the entry says otherwise, every PC tests separately.",
       "Result": {
-        "weather": { "Name": "The weather suddenly shifts", "Text": "The weather moves on the hex flower using 2d6." },
-        "uneventful": { "Name": "Uneventful", "Text": "The world passes by, uneventful." },
-        "scenery": { "Name": "Scenery", "Text": "The Dark Master describes something seen along the way." },
-        "hardship": { "Name": "Travel hardship", "Text": "" },
-        "omenRandom": { "Name": "Omen", "Text": "" },
-        "omenNearest": { "Name": "Omen", "Text": "" },
-        "easy": { "Name": "Easy encounter", "Text": "" },
-        "standard": { "Name": "Standard encounter", "Text": "" },
-        "hard": { "Name": "Hard encounter", "Text": "" }
+        "weather": {
+          "Name": "The weather suddenly shifts",
+          "Text": "The weather moves on the hex flower using 2d6."
+        },
+        "uneventful": {
+          "Name": "Uneventful",
+          "Text": "The world passes by, uneventful."
+        },
+        "scenery": {
+          "Name": "Scenery",
+          "Text": "The Dark Master describes something seen along the way."
+        },
+        "hardship": {
+          "Name": "Travel hardship",
+          "Text": ""
+        },
+        "omenRandom": {
+          "Name": "Omen",
+          "Text": ""
+        },
+        "omenNearest": {
+          "Name": "Omen",
+          "Text": ""
+        },
+        "easy": {
+          "Name": "Easy encounter",
+          "Text": ""
+        },
+        "standard": {
+          "Name": "Standard encounter",
+          "Text": ""
+        },
+        "hard": {
+          "Name": "Hard encounter",
+          "Text": ""
+        }
       },
       "Place": {
         "hinterlands": "Hinterlands",
@@ -2059,6 +2094,180 @@
           "Effect": "A roadside cairn, its lamp still burning, shelters a shrine to a half-forgotten god. The party may take a Long Rest here without testing for interruptions, and anyone who leaves an offering of food or light regains d4 HP."
         }
       }
+    },
+    "Minion": {
+      "Tier": {
+        "pitiful": "Pitiful minion",
+        "weak": "Weak minion",
+        "moderate": "Moderate minion"
+      },
+      "TierAbilities": {
+        "pitiful": "no abilities",
+        "weak": "one passive",
+        "moderate": "one passive and one ◈◈ active ability"
+      },
+      "TierHint": "This tier: HP {hp}, Morale {morale}, armour {armour}, attack {attack}, {abilities} (rules 3.14).",
+      "ApplyTier": "Use tier",
+      "ApplyTierAsk": "Set HP, Morale, armour and the first attack's damage to those of a {tier}? What is there now is replaced.",
+      "DefaultAttack": "Attack",
+      "Owner": "Owner",
+      "OwnerHint": "The character it serves. A character can have minions up to their Presence (minimum 1); an owner already at the limit is refused. The owner's players can command it and roll for it.",
+      "NoOwner": "Nobody",
+      "OwnerCount": "{name}: {count}/{limit} minions",
+      "ItsOwner": "its owner",
+      "RulesHint": "A minion has 2 actions and 0 reactions, and acts only when commanded (◈). It tests, attacks and defends at +0, has no Fortune and no wounds, and dies at 0 HP. In combat it acts right after its owner.",
+      "MoraleHint": "Roll 2d6: above its Morale, the minion is demoralised. Morale – never rolls.",
+      "ArmourHint": "Subtracted from damage that hits the minion. A defence Ruin steps it down one.",
+      "AttackTooltip": "Attack at +0: opens the attack dialog",
+      "Abilities": "Passives and active abilities",
+      "AddAbility": "Add ability",
+      "NewAbility": "New ability",
+      "DropHint": "Drag weapons (attacks) and feats (passives and active abilities) from the Items sidebar onto this sheet, or use the Add buttons.",
+      "Heading": "Minions ({count}/{limit})",
+      "LimitHint": "You can have minions up to your Presence (minimum 1). Every minion counts, summoned ones too (rules 3.14).",
+      "NoneYet": "None. Give a minion this character as its owner on the minion's sheet.",
+      "HpShort": "HP {value}/{max}",
+      "Command": "Command",
+      "CommandTooltip": "Command a minion (◈): in combat, on your own turn, spend one action. Its turn, right after yours, has two actions.",
+      "OverLimit": "{owner} already has {limit} minions, their limit (Presence, minimum 1). Dismiss, release or abandon one before {name} can join.",
+      "NotYourTurn": "You can only command a minion on your own turn.",
+      "NotInCombat": "{name} is not in this combat. Add its token to the Combat Tracker first.",
+      "NotYours": "You do not own {name}. Ask the Dark Master to give it an owner on its sheet.",
+      "AlreadyCommanded": "{name} has already been commanded for its next turn.",
+      "NoActions": "No actions left this turn. The command is given anyway; the Dark Master decides.",
+      "Commanded": "{owner} commands {name} (◈). It acts right after {owner}, with two actions.",
+      "CommandedOutside": "{owner} commands {name}.",
+      "TurnCommanded": "{name} was commanded: {actions} actions, no reactions.",
+      "TurnIdle": "{name} was not commanded by {owner}: no actions. It only acts to escape obvious harm.",
+      "Fell": "{name} falls at 0 HP and is dead.",
+      "ArmourLowered": "{name}'s armour steps down from {from} to {to}.",
+      "ItsArmour": "Its armour"
+    },
+    "Relic": {
+      "SheetHint": "The Description box below is the relic's effect. Every relic has the Expendable d20 trait: after each use roll a d20, and on a 1 it is used up (rules 4.2).",
+      "AlwaysOn": "Always on",
+      "AlwaysOnHint": "Its effect is always on, like the rebreather or the compass. Instead of Use it has a Daily roll: the Expendable d20, once per day, the first time its effect matters.",
+      "EmberGain": "Ember pool gain",
+      "EmberGainHint": "Added to the Ember pool when the relic is used, such as 3 for the Shard of the Great Brazier. Only in combat, as there is no pool outside it. Leave at 0 for none.",
+      "GainShort": "🟒+{amount}",
+      "GainLine": "The Ember pool gains 🟒{amount}.",
+      "Destroyed": "Destroyed",
+      "DestroyedHint": "Used up or burnt out by its Last Rite: its drawback applies. Untick it when the relic is recovered; it can then be used again.",
+      "DestroyedTooltip": "Destroyed. Untick Destroyed on the relic if it is recovered.",
+      "SaleValue": "Sale value (s)",
+      "SaleValueHint": "What a fence or collector pays. Its drawback strikes the moment it leaves your hands.",
+      "FactionValue": "Faction value (s)",
+      "FactionValueHint": "What its faction pays to take it home. Then the drawback does not apply.",
+      "Faction": "Faction",
+      "LastRite": "Last Rite",
+      "Drawback": "If lost or destroyed",
+      "DrawbackHint": "This relic is destroyed, so its drawback applies until it is recovered.",
+      "NoDrawback": "(no drawback written on the relic)",
+      "UseTooltip": "Use it: posts its effect, then rolls the Expendable d20",
+      "DailyTooltip": "Daily roll: the Expendable d20, the first time today its effect matters",
+      "LastRiteTooltip": "Last Rite: it always works, needs no ember and no Expendable roll, and destroys the relic",
+      "UseTitle": "{name} uses {item}",
+      "DailyTitle": "{name} relies on {item}",
+      "Roll": "Expendable d20: {roll}.",
+      "Holds": "The relic holds.",
+      "UsedUp": "Used up: the relic is destroyed!",
+      "IsDestroyed": "{item} is destroyed. Untick Destroyed on it if it is recovered.",
+      "NeedsCombat": "{item} adds to the Ember pool, and there is no pool outside combat.",
+      "LastRiteAskTitle": "Last Rite: {item}",
+      "LastRiteAsk": "Burn {item} out for its Last Rite? It always works, and the relic is destroyed.",
+      "LastRiteTitle": "{name} performs the Last Rite of {item}",
+      "LastRiteRule": "A Last Rite always works, needs no ember and no Expendable roll.",
+      "BurntOut": "The relic is burnt out and destroyed.",
+      "RecoverHint": "If it is recovered, the Dark Master unticks Destroyed on the relic."
+    },
+    "Vehicle": {
+      "Speed": {
+        "safe": "Safe speed",
+        "normal": "Normal speed",
+        "fast": "Fast speed"
+      },
+      "Manoeuvre": {
+        "driving": "Driving",
+        "reverse": "Driving in reverse",
+        "difficult": "Under difficult circumstances"
+      },
+      "Role": {
+        "driver": "Driver",
+        "crew": "Crew",
+        "passenger": "Passenger"
+      },
+      "RoleLabel": "Role",
+      "SpeedLabel": "Speed per Move",
+      "SpeedHint": "Feet per Move action at safe, normal and fast speed. The driver spends their Move actions to move the vehicle.",
+      "SpeedOption": "{speed} ({feet}′ per Move)",
+      "ManoeuvreLabel": "What the driver does",
+      "ArmourHint": "Subtracted from collision damage the vehicle takes.",
+      "ArmourNamePlaceholder": "Riveted iron plates",
+      "Crew": "Crew",
+      "Passengers": "Passengers",
+      "Fuel": "Fuel",
+      "MovingAttack": "Attacking from it while it moves: +{normal} DR at normal speed, +{fast} DR at fast speed, not possible at safe speed. Add it in the attack dialog.",
+      "Aboard": "Aboard",
+      "AboardHint": "Drag characters, minions or foes from the Actors sidebar onto this sheet. The driver rolls the driving tests; everyone aboard takes collision damage.",
+      "NobodyAboard": "Nobody. Drag characters, minions or foes here from the Actors sidebar.",
+      "Gone": "(gone)",
+      "Strapped": "Strapped in",
+      "StrappedHint": "A seatbelt or the likes: halves collision damage, and is not thrown in a fast crash.",
+      "Remove": "Off the vehicle",
+      "Rules": "Special rules",
+      "AddRule": "Add special rule",
+      "NewRule": "New special rule",
+      "Drive": "Drive",
+      "DriveTooltip": "Choose the speed and what the driver does; the driver tests Agility when the table needs it.",
+      "DriveTitle": "Drive: {name}",
+      "DriveHint": "Driving at safe or normal speed needs no test. A Triumph gives Boon on the next driving test this encounter.",
+      "NA": "No test",
+      "Collision": "Collision",
+      "NoDriver": "Nobody is driving {name}. Drag a character onto its sheet and set the role to Driver.",
+      "NotYourDriver": "You do not own {name}, the driver.",
+      "How": "{vehicle}: {manoeuvre} at {speed} ({feet}′ per Move).",
+      "NoTest": "No driving test is needed.",
+      "BoonFromTriumph": "Boon from the last driving Triumph.",
+      "BoonReady": "Boon on next driving test",
+      "CardTitle": "Driving {name} at {speed}",
+      "Outcome": {
+        "triumph": "You thread the gap perfectly: the vehicle moves as you wish, and you have Boon on your next driving test this encounter.",
+        "success": "The vehicle moves as you wish.",
+        "failure": "You lose control for a moment. The vehicle moves only half its speed ({feet}′), in a direction the Dark Master chooses.",
+        "ruin": "You crash. The vehicle stops dead or overturns."
+      },
+      "ProneTests": "Everyone aboard tests Agility DR{dr} or is knocked Prone.",
+      "ProneButton": "{name}: Agility DR{dr}",
+      "PronePurpose": "Staying on your feet as the vehicle loses control (a Failure or Ruin knocks you Prone).",
+      "FoeDecides": "{name}: foes do not roll; the Dark Master decides.",
+      "KnockedProne": "{name} is knocked Prone.",
+      "CollisionHalf": "It clips an obstacle: half the collision damage. Collision {formula}: {rolled}.",
+      "CollisionFull": "The vehicle and everyone aboard take the full collision damage. Collision {formula}: {rolled}.",
+      "StrappedHalf": "strapped in: halved",
+      "SoakNote": "armour {die}: −{soak}",
+      "Thrown": "not strapped in: thrown {feet}′, Prone",
+      "Take": "{name}: take {damage}",
+      "TakeThrown": "{name}: take {damage}, Prone",
+      "ThrownLine": "{name} is thrown {feet}′ and lands Prone.",
+      "DarkMasterMoves": "The Dark Master moves the vehicle.",
+      "Cargo": "Cargo",
+      "NoCargo": "Nothing. Drag items here from a character (they move) or from the Items sidebar.",
+      "PassengerSeats": "Passenger seats",
+      "PassengerSeatsHint": "How many passengers it carries, such as 6 for the steam wagon. Each one aboard with the Passenger role takes cargo limit ÷ seats of cargo room (rounded up).",
+      "CargoLimit": "Cargo limit",
+      "CargoLimitHint": "How many heavy (cumbersome) items it carries, such as 20 for the steam wagon. Above it the vehicle is Encumbered, above twice it the vehicle cannot move. 0: no limit written down, nothing is counted.",
+      "LoadLine": "{used}/{limit} used: {heavy} heavy items, {room} for passengers",
+      "LoadUntracked": "{heavy} heavy items (no cargo limit set)",
+      "LoadHint": "Heavy (cumbersome) cargo counts once per piece; each passenger takes {room}. Driver and crew take no room. Above the limit: Encumbered (safe speed only, Bane on driving tests). Above twice the limit: it cannot move.",
+      "Load": {
+        "encumbered": "Encumbered",
+        "overloaded": "Overloaded"
+      },
+      "EncumberedNote": "Encumbered ({used}/{limit}): safe speed only, and Bane on the driving test.",
+      "EncumberedBane": "Bane: the vehicle is Encumbered ({used}/{limit}).",
+      "Overloaded": "{name} carries {used} against a limit of {limit}: more than twice it, so it cannot move.",
+      "NotCargo": "{item} cannot be carried as cargo. Vehicles take weapons, armour, shields, gear, containers, scrolls and relics, and feats as special rules.",
+      "CannotMove": "You must own both {from} and where {item} is going to move it."
     }
   }
 }

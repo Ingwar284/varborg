@@ -8,13 +8,21 @@ import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
 import FoeData from "./data/foe.mjs";
 import FoeSheet from "./sheets/foe-sheet.mjs";
+import MinionData from "./data/minion.mjs";
+import MinionSheet from "./sheets/minion-sheet.mjs";
+import { registerMinions } from "./minions.mjs";
+import VehicleData from "./data/vehicle.mjs";
+import VehicleSheet from "./sheets/vehicle-sheet.mjs";
+import { registerVehicles } from "./vehicles.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
 import FeatData from "./data/feat.mjs";
 import PowerData from "./data/power.mjs";
 import SpellData, { ScrollData } from "./data/spell.mjs";
 import { ClassData, AncestryData, BackgroundData } from "./data/origins.mjs";
+import RelicData from "./data/relic.mjs";
 import {
-  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, SpellSheet, ScrollSheet, ClassSheet, AncestrySheet, BackgroundSheet
+  WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, SpellSheet, ScrollSheet, ClassSheet, AncestrySheet, BackgroundSheet,
+  RelicSheet
 } from "./sheets/item-sheet.mjs";
 import { ImportExamplesApp } from "./examples.mjs";
 import { VarBorgCombat, VarBorgCombatant, addTrackerPips } from "./combat.mjs";
@@ -43,6 +51,8 @@ Hooks.once("init", () => {
   CONFIG.Actor.documentClass = VarBorgActor;
   CONFIG.Actor.dataModels.character = CharacterData;
   CONFIG.Actor.dataModels.foe = FoeData;
+  CONFIG.Actor.dataModels.minion = MinionData;
+  CONFIG.Actor.dataModels.vehicle = VehicleData;
 
   // Actor sheets.
   const Actors = foundry.documents.collections.Actors;
@@ -52,6 +62,8 @@ Hooks.once("init", () => {
     label: "VARBORG.Sheet.Character"
   });
   Actors.registerSheet("var-borg", FoeSheet, { types: ["foe"], makeDefault: true, label: "VARBORG.Sheet.Foe" });
+  Actors.registerSheet("var-borg", MinionSheet, { types: ["minion"], makeDefault: true, label: "VARBORG.Sheet.Minion" });
+  Actors.registerSheet("var-borg", VehicleSheet, { types: ["vehicle"], makeDefault: true, label: "VARBORG.Sheet.Vehicle" });
 
   // Item data and sheets: weapons, armour, shields, gear, containers, feats,
   // powers, spells, scrolls, and the class, ancestry and background a character comes from.
@@ -67,6 +79,7 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.class = ClassData;
   CONFIG.Item.dataModels.ancestry = AncestryData;
   CONFIG.Item.dataModels.background = BackgroundData;
+  CONFIG.Item.dataModels.relic = RelicData;
 
   const Items = foundry.documents.collections.Items;
   Items.registerSheet("var-borg", WeaponSheet, { types: ["weapon"], makeDefault: true, label: "VARBORG.Sheet.Weapon" });
@@ -81,6 +94,7 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", ClassSheet, { types: ["class"], makeDefault: true, label: "VARBORG.Sheet.Class" });
   Items.registerSheet("var-borg", AncestrySheet, { types: ["ancestry"], makeDefault: true, label: "VARBORG.Sheet.Ancestry" });
   Items.registerSheet("var-borg", BackgroundSheet, { types: ["background"], makeDefault: true, label: "VARBORG.Sheet.Background" });
+  Items.registerSheet("var-borg", RelicSheet, { types: ["relic"], makeDefault: true, label: "VARBORG.Sheet.Relic" });
 
   // Combat: initiative, turn order and action pips (rules 3.4).
   CONFIG.Combat.documentClass = VarBorgCombat;
@@ -106,6 +120,10 @@ Hooks.once("init", () => {
   registerMedicine();
   // The Use button on once-per-round, -encounter and -day items (step 36b).
   registerUses();
+  // Minions: their owners' sheets follow them (step 42).
+  registerMinions();
+  // Vehicles: the buttons on driving cards (step 44).
+  registerVehicles();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

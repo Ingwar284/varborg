@@ -1,0 +1,64 @@
+{
+  "_id": "vbExampleWagon00",
+  "name": "Steam wagon",
+  "type": "vehicle",
+  "img": "icons/svg/clockwork.svg",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 0,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "description": "A boxy iron carriage on six spoked wheels, its boiler hissing at the back and a coal-stoker riding the footplate. The Fabricators of the Sacred Gear build them in the foundries of Spindlecore, and the Council licenses each one by number.",
+    "hp": {
+      "value": 30,
+      "max": 30
+    },
+    "armour": "d4",
+    "armourName": "Riveted iron plates",
+    "speed": {
+      "safe": 20,
+      "normal": 40,
+      "fast": 60
+    },
+    "crew": "1 driver and 1 stoker",
+    "passengers": "6, or 20 heavy items of cargo",
+    "passengerSeats": 6,
+    "cargoLimit": 20,
+    "fuel": "A sack of coal runs it for 4 hours (expendable d6 for a day's travel). Out of coal, it stops.",
+    "price": 600,
+    "occupants": [],
+    "driveBoon": false
+  },
+  "items": [
+    {
+      "_id": "vbWagonBoiler000",
+      "name": "Boiler",
+      "type": "feat",
+      "img": "icons/svg/fire.svg",
+      "system": {
+        "description": "The stoker keeps the pressure up. If the wagon has no stoker at the start of the driver's turn, it can move only at safe speed. When the wagon is reduced to 0 HP, the boiler bursts: everything within 15' tests Agility DR14: Failure 4d6. Ruin 4d6 and d6 persistent fire damage.",
+        "source": "passive",
+        "improving": false
+      }
+    },
+    {
+      "_id": "vbWagonLamps0000",
+      "name": "Lamps",
+      "type": "feat",
+      "img": "icons/svg/light.svg",
+      "system": {
+        "description": "Twin brass lanterns light 60' ahead. Anything that hunts by light sees the wagon coming from miles away.",
+        "source": "passive",
+        "improving": false
+      }
+    }
+  ]
+}

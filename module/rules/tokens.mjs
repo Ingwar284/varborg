@@ -8,6 +8,10 @@
  *   reaches the sheet). Everyone always sees their HP and Wounds bars.
  * - Foes are hostile and not linked, so each copy has its own HP. Everyone
  *   sees the HP bar on hover.
+ * - Minions are friendly and linked to their actor, like characters, with
+ *   the HP bar always shown (step 42).
+ * - Vehicles are neutral and linked to their actor, with the HP bar shown
+ *   on hover (step 44).
  */
 
 /** Foundry's CONST.TOKEN_DISPLAY_MODES (who sees a name or bar). */
@@ -29,6 +33,22 @@ export const TOKEN_DEFAULTS = {
   foe: {
     actorLink: false,
     disposition: DISPOSITION.HOSTILE,
+    displayName: DISPLAY.HOVER,
+    displayBars: DISPLAY.HOVER,
+    bar1: { attribute: "hp" },
+    bar2: { attribute: null }
+  },
+  minion: {
+    actorLink: true,
+    disposition: DISPOSITION.FRIENDLY,
+    displayName: DISPLAY.HOVER,
+    displayBars: DISPLAY.ALWAYS,
+    bar1: { attribute: "hp" },
+    bar2: { attribute: null }
+  },
+  vehicle: {
+    actorLink: true,
+    disposition: DISPOSITION.NEUTRAL,
     displayName: DISPLAY.HOVER,
     displayBars: DISPLAY.HOVER,
     bar1: { attribute: "hp" },

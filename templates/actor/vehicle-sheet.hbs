@@ -1,0 +1,166 @@
+<section class="var-borg-sheet foe-sheet vehicle-sheet">
+  <header class="sheet-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    <div class="foe-title">
+      <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+      <div class="foe-meta">
+        <button type="button" class="text-button drive-button" data-action="drive" {{#unless hasDriver}}disabled{{/unless}}
+                data-tooltip="{{localize 'VARBORG.Vehicle.DriveTooltip'}}">
+          <i class="fa-solid fa-truck-monster"></i> {{localize "VARBORG.Vehicle.Drive"}}
+        </button>
+        {{#if system.driveBoon}}<span class="item-state used" data-tooltip="{{localize 'VARBORG.Vehicle.BoonFromTriumph'}}">{{localize "VARBORG.Vehicle.BoonReady"}}</span>{{/if}}
+      </div>
+    </div>
+  </header>
+
+  <section class="details">
+    <label>
+      <span>{{localize "VARBORG.Foe.Description"}}</span>
+      <textarea name="system.description" rows="3">{{system.description}}</textarea>
+    </label>
+  </section>
+
+  <section class="resources foe-stats">
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.HP"}}</span>
+      <span class="pair">
+        <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">
+        <span>/</span>
+        <input type="number" name="system.hp.max" value="{{system.hp.max}}" min="0" step="1">
+      </span>
+    </label>
+    <label class="resource" data-tooltip="{{localize 'VARBORG.Vehicle.ArmourHint'}}">
+      <span>{{localize "VARBORG.Foe.ArmourLabel"}}</span>
+      <select name="system.armour">{{selectOptions armourDice selected=system.armour localize=true}}</select>
+      <input type="text" class="armour-name" name="system.armourName" value="{{system.armourName}}"
+             placeholder="{{localize 'VARBORG.Vehicle.ArmourNamePlaceholder'}}" aria-label="{{localize 'VARBORG.Foe.ArmourName'}}">
+    </label>
+    <div class="resource vehicle-speeds" data-tooltip="{{localize 'VARBORG.Vehicle.SpeedHint'}}">
+      <span>{{localize "VARBORG.Vehicle.SpeedLabel"}}</span>
+      <span class="pair">
+        <input type="number" name="system.speed.safe" value="{{system.speed.safe}}" min="0" step="5" aria-label="{{localize 'VARBORG.Vehicle.Speed.safe'}}">
+        <input type="number" name="system.speed.normal" value="{{system.speed.normal}}" min="0" step="5" aria-label="{{localize 'VARBORG.Vehicle.Speed.normal'}}">
+        <input type="number" name="system.speed.fast" value="{{system.speed.fast}}" min="0" step="5" aria-label="{{localize 'VARBORG.Vehicle.Speed.fast'}}">
+      </span>
+    </div>
+    <label class="resource">
+      <span>{{localize "VARBORG.Item.Price"}}</span>
+      <input type="number" name="system.price" value="{{system.price}}" min="0" step="1">
+    </label>
+  </section>
+
+  <section class="details">
+    <label>
+      <span>{{localize "VARBORG.Vehicle.Crew"}}</span>
+      <input type="text" name="system.crew" value="{{system.crew}}">
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Vehicle.Passengers"}}</span>
+      <input type="text" name="system.passengers" value="{{system.passengers}}">
+    </label>
+    <div class="vehicle-capacity">
+      <label data-tooltip="{{localize 'VARBORG.Vehicle.PassengerSeatsHint'}}">
+        <span>{{localize "VARBORG.Vehicle.PassengerSeats"}}</span>
+        <input type="number" name="system.passengerSeats" value="{{system.passengerSeats}}" min="0" step="1">
+      </label>
+      <label data-tooltip="{{localize 'VARBORG.Vehicle.CargoLimitHint'}}">
+        <span>{{localize "VARBORG.Vehicle.CargoLimit"}}</span>
+        <input type="number" name="system.cargoLimit" value="{{system.cargoLimit}}" min="0" step="1">
+      </label>
+    </div>
+    <label>
+      <span>{{localize "VARBORG.Vehicle.Fuel"}}</span>
+      <input type="text" name="system.fuel" value="{{system.fuel}}">
+    </label>
+    <p class="hint">{{movingAttack}}</p>
+  </section>
+
+  <section class="inventory-section">
+    <h2 data-tooltip="{{localize 'VARBORG.Vehicle.AboardHint'}}">{{localize "VARBORG.Vehicle.Aboard"}}</h2>
+    <ul class="item-list">
+      {{#each occupants}}
+      <li class="item-row" data-index="{{index}}">
+        <img src="{{img}}" alt="">
+        <span class="item-name"><button type="button" class="link-button" data-action="openOccupant">{{name}}</button></span>
+        <select data-occupant-role data-index="{{index}}" aria-label="{{localize 'VARBORG.Vehicle.RoleLabel'}}">
+          {{selectOptions @root.roles selected=role localize=true}}
+        </select>
+        <label class="strapped" data-tooltip="{{localize 'VARBORG.Vehicle.StrappedHint'}}">
+          <input type="checkbox" data-occupant-strapped data-index="{{index}}" {{checked strapped}}>
+          <span>{{localize "VARBORG.Vehicle.Strapped"}}</span>
+        </label>
+        <button type="button" class="icon-button" data-action="removeOccupant"
+                data-tooltip="{{localize 'VARBORG.Vehicle.Remove'}}" aria-label="{{localize 'VARBORG.Vehicle.Remove'}}">
+          <i class="fa-solid fa-person-walking-arrow-right"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Vehicle.NobodyAboard"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="inventory-section cargo carrying-{{load.state}}">
+    <h2 data-tooltip="{{load.hint}}">{{localize "VARBORG.Vehicle.Cargo"}}</h2>
+    <p class="carrying-line">
+      <span>{{load.line}}</span>
+      {{#if load.stateLabel}}<span class="carrying-state">{{load.stateLabel}}</span>{{/if}}
+    </p>
+    <ul class="item-list">
+      {{#each cargo}}
+      <li class="item-row draggable" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        {{#if hasQuantity}}
+        <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="1" step="1"
+               aria-label="{{localize 'VARBORG.Item.Quantity'}}" data-tooltip="{{localize 'VARBORG.Item.Quantity'}}">
+        {{/if}}
+        <span class="item-name">{{item.name}}</span>
+        <span class="item-summary">{{localize typeLabel}}</span>
+        <button type="button" class="icon-button cumbersome-toggle{{#if item.system.cumbersome}} active{{/if}}" data-action="toggleCumbersome"
+                data-tooltip="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
+                aria-label="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
+                aria-pressed="{{#if item.system.cumbersome}}true{{else}}false{{/if}}">
+          <i class="fa-solid fa-weight-hanging"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Vehicle.NoCargo"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="inventory-section">
+    <h2>{{localize "VARBORG.Vehicle.Rules"}}</h2>
+    <ul class="item-list">
+      {{#each rulesItems}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><strong>{{item.name}}</strong> {{#if frequency}}<span class="item-summary">{{frequency}}</span>{{/if}}
+          {{item.system.description}}</span>
+        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+    <button type="button" class="add-item" data-action="createItem">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Vehicle.AddRule"}}
+    </button>
+  </section>
+</section>

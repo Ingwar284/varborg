@@ -117,6 +117,19 @@ export async function adjustPoolBy(pool, delta) {
   return sendChange({ pool, kind: "adjust", amount: delta });
 }
 
+/**
+ * Add charges to the Ember pool from something a character uses, such as
+ * the Shard of the Great Brazier (step 43, GAPS 174). Anyone may, in
+ * combat; the chat line names who did it.
+ * @param {number} amount  Charges to add, 1 or more.
+ * @param {Actor} actor    Who adds them.
+ * @param {string} [source]  What adds them, such as the relic's name.
+ * @returns {Promise<boolean>} Whether they were added.
+ */
+export async function gainEmber(amount, actor, source = "") {
+  return sendChange({ pool: POOL.EMBER, kind: "gain", amount, actorUuid: actor?.uuid ?? null, source });
+}
+
 /** Run the change here (Dark Master) or ask the Dark Master to run it. */
 async function sendChange(request) {
   let result;
@@ -159,7 +172,7 @@ function changePool(request, user) {
   return run;
 }
 
-async function applyChange({ pool, kind, amount, actorUuid }, user) {
+async function applyChange({ pool, kind, amount, actorUuid, source = "" }, user) {
   if (!Object.values(POOL).includes(pool) || !Number.isInteger(amount)) return { error: "VARBORG.Pools.Bad" };
   if (!runningCombat()) return { error: "VARBORG.Pools.NoCombat" };
   const pools = getPools();
@@ -169,6 +182,14 @@ async function applyChange({ pool, kind, amount, actorUuid }, user) {
     if (!user.isGM) return { error: "VARBORG.Pools.GMOnly" };
     pools[pool] = adjustPool(left, amount);
     await game.settings.set(SYSTEM, SETTING, pools);
+    return { ok: true, left: pools[pool] };
+  }
+
+  if (kind === "gain") {
+    if (pool !== POOL.EMBER || amount < 1) return { error: "VARBORG.Pools.Bad" };
+    pools[pool] = adjustPool(left, amount);
+    await game.settings.set(SYSTEM, SETTING, pools);
+    await postGain(pool, amount, pools[pool], user, spenderOf(actorUuid, user), String(source ?? ""));
     return { ok: true, left: pools[pool] };
   }
 
@@ -196,6 +217,18 @@ async function postSpend(pool, amount, left, user, actor) {
   const name = actor?.name ?? user.name;
   const text = game.i18n.format("VARBORG.Pools.Spent", {
     name, symbol: poolSymbol(pool), amount, pool: poolLabel(pool), left
+  });
+  await ChatMessage.create({
+    speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },
+    content: `<div class="var-borg-card pool-card ${pool}"><p>${text}</p></div>`
+  });
+}
+
+/** A chat line: "Example Hero adds 🟒3 to the Ember pool with Shard of the Great Brazier (8 now)." */
+async function postGain(pool, amount, left, user, actor, source) {
+  const esc = foundry.utils.escapeHTML;
+  const text = game.i18n.format("VARBORG.Pools.Gained", {
+    name: esc(actor?.name ?? user.name), symbol: poolSymbol(pool), amount, pool: poolLabel(pool), left, source: esc(source)
   });
   await ChatMessage.create({
     speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },

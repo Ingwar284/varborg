@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { DISPLAY, DISPOSITION, TOKEN_DEFAULTS, missingTokenDefaults } from "../module/rules/tokens.mjs";
 
 test("every token shows its name on hover to anyone", () => {
-  for (const type of ["character", "foe"]) assert.equal(TOKEN_DEFAULTS[type].displayName, DISPLAY.HOVER);
+  for (const type of ["character", "foe", "minion", "vehicle"]) assert.equal(TOKEN_DEFAULTS[type].displayName, DISPLAY.HOVER);
 });
 
 test("characters: linked, friendly, HP and Wounds bars always shown", () => {
@@ -47,6 +47,23 @@ test("settings the actor already has are kept", () => {
   assert.equal(missing["prototypeToken.bar2.attribute"], "wounds");
 });
 
+test("minions: linked, friendly, HP bar always shown", () => {
+  const m = TOKEN_DEFAULTS.minion;
+  assert.equal(m.actorLink, true);
+  assert.equal(m.disposition, DISPOSITION.FRIENDLY);
+  assert.equal(m.displayBars, DISPLAY.ALWAYS);
+  assert.equal(m.bar1.attribute, "hp");
+  assert.equal(m.bar2.attribute, null);
+});
+
+test("vehicles: linked, neutral, HP bar on hover", () => {
+  const v = TOKEN_DEFAULTS.vehicle;
+  assert.equal(v.actorLink, true);
+  assert.equal(v.disposition, DISPOSITION.NEUTRAL);
+  assert.equal(v.displayBars, DISPLAY.HOVER);
+  assert.equal(v.bar1.attribute, "hp");
+});
+
 test("an unknown actor type gets nothing", () => {
-  assert.deepEqual(missingTokenDefaults("vehicle", {}), {});
+  assert.deepEqual(missingTokenDefaults("airship", {}), {});
 });

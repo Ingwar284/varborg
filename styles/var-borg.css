@@ -1245,3 +1245,116 @@
   color: #eee;
   text-align: center;
 }
+
+/* Minions (step 42) */
+
+.var-borg-sheet .text-button {
+  flex: 0 0 auto;
+  width: auto;
+  height: 1.8rem;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .link-button {
+  display: inline;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  line-height: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.var-borg-sheet .link-button:hover { text-decoration: underline; }
+
+.var-borg-sheet .over-limit,
+.var-borg-sheet h2.over-limit {
+  color: #b71c1c;
+  font-weight: bold;
+}
+
+.var-borg-sheet .item-row.used-up .feat-text strong {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+/* Relics (step 43) */
+
+.var-borg-item-details label.wide {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
+}
+
+.var-borg-item-details label.wide textarea { resize: vertical; }
+
+.var-borg-sheet .item-row:has(.relic-drawback) { flex-wrap: wrap; }
+
+.var-borg-sheet .item-row .relic-drawback {
+  order: 99;
+  flex: 1 1 100%;
+  padding-left: 2rem;
+  color: #b71c1c;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.var-borg-card.relic-card .relic-drawback { color: #b71c1c; }
+
+/* Vehicles (step 44) */
+
+.var-borg-sheet .vehicle-speeds .pair input { width: 3.2rem; }
+
+.var-borg-sheet .vehicle-sheet .details input[type="text"] { width: 100%; }
+
+.var-borg-sheet .vehicle-sheet .item-row select {
+  flex: 0 0 7rem;
+  width: 7rem;
+}
+
+.var-borg-sheet .vehicle-sheet .item-row .strapped {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .vehicle-sheet .item-row .item-name { flex: 1; }
+
+.vehicle-dialog .vehicle-table {
+  width: 100%;
+  margin: 0.4rem 0;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.vehicle-dialog .vehicle-table th:first-child { text-align: left; }
+
+.var-borg-card.vehicle-card .collision-list {
+  list-style: none;
+  margin: 0.3rem 0;
+  padding: 0;
+}
+
+.var-borg-card.vehicle-card .collision-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Vehicle cargo (step 44) */
+
+.var-borg-sheet .vehicle-sheet .vehicle-capacity {
+  display: flex;
+  gap: 1rem;
+}
+
+.var-borg-sheet .vehicle-sheet .vehicle-capacity label { flex: 1; }
+.var-borg-sheet .vehicle-sheet .vehicle-capacity input { width: 4rem; }

@@ -13,6 +13,8 @@
  * Shields: Raise shield (one action in combat) gives light or heavy cover
  * until the start of your next turn. An attack that only the cover stopped
  * strikes the shield: heavy becomes light, light is destroyed.
+ * Minions defend the same way, at +0 (GAPS 169): their armour die soaks,
+ * and a Ruin steps it down one, like a foe's.
  * Conditions (rules 3.13): the defender's own (Prone, Restrained, Fatigued,
  * Dark Vessel) and the attacking foe's Foe lines (Prone, Blinded,
  * Restrained, Encumbered, Fatigued) are added for you.
@@ -27,7 +29,7 @@ import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll
 import { modifiedDr, wornArmour, isEncumbered } from "../rules/test-modifiers.mjs";
 import { carrying } from "../rules/carrying.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
-import { damageFormula } from "../rules/attack.mjs";
+import { damageFormula, stepDownArmourDie } from "../rules/attack.mjs";
 import { hpAfterDamage } from "../rules/health.mjs";
 import { killedByDamage } from "../deaths-door.mjs";
 import {
@@ -52,6 +54,9 @@ const FOE_CARD_TEMPLATE = "systems/var-borg/templates/chat/foe-attack-card.hbs";
 const DIALOG_TEMPLATE = "systems/var-borg/templates/dice/defence-dialog.hbs";
 const CARD_TEMPLATE = "systems/var-borg/templates/chat/defence-card.hbs";
 
+/** Who defends against a foe's attack: characters and their minions (GAPS 169). */
+export const DEFENDERS = ["character", "minion"];
+
 /**
  * The foe sheet's Attack button: post a card with a Defend button for each
  * targeted character. In combat it uses the foe's action on its own turn,
@@ -63,7 +68,7 @@ export async function foeAttack(foe, item) {
   const i18n = game.i18n;
   const targets = [...game.user.targets]
     .map(token => token.actor)
-    .filter(actor => actor?.type === "character");
+    .filter(actor => DEFENDERS.includes(actor?.type));
 
   let pipNote = null;
   const turn = turnState(foe);
@@ -140,7 +145,9 @@ export async function rollDefence(actor, attack) {
     attackDamage: attack.system.damage,
     // The armour and shield as they were before this attack.
     armour: automatic.armour ? { id: automatic.armour.id, tier: automatic.armour.tier, originalTier: automatic.armour.originalTier } : null,
-    soakDie: soakDie(automatic.armour),
+    soakDie: automatic.soakDie,
+    // A minion's armour die, which a Ruin steps down (GAPS 169).
+    minionArmour: actor.type === "minion" ? actor.system.armour : null,
     shield: automatic.cover ? { id: automatic.shield.id, size: automatic.shield.size } : null,
     cover: automatic.cover,
     context: {
@@ -244,6 +251,19 @@ export async function settleDefenceCard(actor, data) {
     applied.armourLowered = false;
     armourNote = i18n.format("VARBORG.Fortune.ArmourTierBack", { name: armourItem.name, tier: inputs.armour.tier });
   }
+  // A minion's armour die steps down one on a Ruin, and back if Fortune undoes it.
+  if (inputs.minionArmour && outcome.lowerArmour) {
+    const to = stepDownArmourDie(inputs.minionArmour);
+    if (!applied.armourLowered) await actor.update({ "system.armour": to });
+    applied.armourLowered = true;
+    armourNote = i18n.format("VARBORG.Minion.ArmourLowered", {
+      name: actor.name, from: dieLabel(inputs.minionArmour), to: dieLabel(to)
+    });
+  } else if (inputs.minionArmour && applied.armourLowered) {
+    await actor.update({ "system.armour": inputs.minionArmour });
+    applied.armourLowered = false;
+    armourNote = i18n.format("VARBORG.Fortune.ArmourBack", { name: actor.name, die: dieLabel(inputs.minionArmour) });
+  }
 
   // The cover alone stopped the attack: it strikes the shield (GAPS 66).
   // If an earlier result struck it and this one does not, it is mended.
@@ -292,6 +312,7 @@ export async function settleDefenceCard(actor, data) {
  * (Bane).
  */
 export function defenceModifiers(actor) {
+  if (actor.type === "minion") return minionDefenceModifiers(actor);
   const items = actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }));
   const armour = wornArmour(items);
   const shield = strongestShield(items);
@@ -302,11 +323,35 @@ export function defenceModifiers(actor) {
     armour,
     armourName: nameOf(armour),
     armourDr: armourDefenceDr(armour),
+    soakDie: soakDie(armour),
     shield,
     shieldName: nameOf(shield),
     cover: shieldCover(shield, actor.system.shieldRaised),
     encumberedBane: isEncumbered(carryingState)
   };
+}
+
+/**
+ * A minion's defence: no armour items, no shield and no load; its armour
+ * die soaks (GAPS 169).
+ */
+function minionDefenceModifiers(actor) {
+  return {
+    armour: null,
+    // "Its armour" when the armour has no name.
+    armourName: actor.system.armourName || game.i18n.localize("VARBORG.Minion.ItsArmour"),
+    armourDr: 0,
+    soakDie: actor.system.armour || "",
+    shield: null,
+    shieldName: null,
+    cover: 0,
+    encumberedBane: false
+  };
+}
+
+/** "−d2", or "None". */
+function dieLabel(die) {
+  return game.i18n.localize(`VARBORG.Foe.Armour.${die || "none"}`);
 }
 
 /**
@@ -332,7 +377,7 @@ function defenceConditions(actor, attack) {
 async function askDefenceOptions(actor, attack, automatic, conditions) {
   const i18n = game.i18n;
   const foe = attack.parent;
-  const soak = soakDie(automatic.armour);
+  const soak = automatic.soakDie;
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     against: i18n.format("VARBORG.Defence.Against", { name: foe?.name ?? "", attack: attack.name }),
     damage: attack.system.damage,
@@ -417,7 +462,7 @@ export function addDefenceCardListeners(message, html) {
         return;
       }
       const actor = button.dataset.actorUuid ? await fromUuid(button.dataset.actorUuid) : ownCharacter();
-      if (!actor || actor.type !== "character") {
+      if (!actor || !DEFENDERS.includes(actor.type)) {
         ui.notifications.warn(game.i18n.localize("VARBORG.Defence.NoCharacter"));
         return;
       }

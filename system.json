@@ -28,7 +28,9 @@
   "documentTypes": {
     "Actor": {
       "character": {},
-      "foe": {}
+      "foe": {},
+      "minion": {},
+      "vehicle": {}
     },
     "Item": {
       "weapon": {},
@@ -42,7 +44,8 @@
       "scroll": {},
       "class": {},
       "ancestry": {},
-      "background": {}
+      "background": {},
+      "relic": {}
     }
   },
   "initiative": "1d6",

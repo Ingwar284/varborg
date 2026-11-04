@@ -14,12 +14,12 @@
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
   <div class="form-group">
     <label for="var-borg-test-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-test-boon" type="checkbox" name="boon">
+    <input id="var-borg-test-boon" type="checkbox" name="boon" {{#if boon}}checked{{/if}}>
     <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
   </div>
   <div class="form-group">
     <label for="var-borg-test-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-test-bane" type="checkbox" name="bane">
+    <input id="var-borg-test-bane" type="checkbox" name="bane" {{#if bane}}checked{{/if}}>
     <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
   </div>
   {{{fortuneFields}}}

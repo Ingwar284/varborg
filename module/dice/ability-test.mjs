@@ -41,16 +41,18 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/test-card.hbs";
  * @param {number} [options.dr]       The DR the dialog starts at (12 if not given).
  * @param {string} [options.purpose]  What the test is for, shown on the dialog and card.
  * @param {boolean} [options.fortune] Put Fortune buttons on the card (tests from the sheet).
+ * @param {boolean} [options.boon]    Start with the Boon box ticked (such as a driving Triumph's Boon).
+ * @param {boolean} [options.bane]    Start with the Bane box ticked (such as an Encumbered vehicle's driving test).
  * @returns {Promise<object|null>}    The rules result (with its tier), or null if closed.
  */
-export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null, fortune = false } = {}) {
+export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null, fortune = false, boon = false, bane = false } = {}) {
   const abilityLabel = game.i18n.localize(`VARBORG.Ability.${ability}`);
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
   const conditionMods = testConditions(conditions, fatigue, ability);
   const fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
-  const options = await askTestOptions(actor, abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose);
+  const options = await askTestOptions(actor, abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose, boon, bane);
   if (!options) return null;
   // A Boon or Bane bought with Fortune is paid before rolling (rule 3.9).
   const paid = await payDialogFortune(actor, options.data);
@@ -176,10 +178,12 @@ export function actorTestModifiers(actor, ability) {
  * @param {string[]} reminders       Situational Bane for the player to judge.
  * @param {number} startDr            The DR selected when the dialog opens.
  * @param {string|null} purpose       What the test is for, if anything.
+ * @param {boolean} boon              Start with Boon ticked.
+ * @param {boolean} bane              Start with Bane ticked.
  * @returns {Promise<{dr: number, boon: boolean, bane: boolean, aidSuccesses: number, aidFailures: number, data: object}|null>}
  *   data is the whole form, for the Fortune boxes.
  */
-async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null) {
+async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null, boon = false, bane = false) {
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     drs: DR_TABLE.map(dr => ({
       value: dr,
@@ -193,6 +197,8 @@ async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [
     conditionNotes,
     reminders,
     purpose,
+    boon,
+    bane,
     fortuneFields: await fortuneFields(actor, "test")
   });
 

@@ -22,8 +22,11 @@ export function registerUses() {
   foundry.applications.handlebars.loadTemplates(["systems/var-borg/templates/actor/use-button.hbs"]);
 }
 
-/** Item types that can have a limited use. */
+/** Item types that can have a limited use with the shared Use button. */
 const TYPES = ["feat", "gear"];
+
+/** Item types whose uses come back: relics too, which have their own buttons (module/relics.mjs). */
+const RESET_TYPES = [...TYPES, "relic"];
 
 /** Whether the sheet shows a Use button for this item. */
 export function hasLimitedUse(item) {
@@ -97,7 +100,7 @@ export async function resetLimitedUses(actors, event) {
   if (!game.user.isGM) return back;
   for (const actor of new Set(actors)) {
     if (!actor) continue;
-    const items = actor.items.filter(item => TYPES.includes(item.type));
+    const items = actor.items.filter(item => RESET_TYPES.includes(item.type));
     const ids = itemsToReset(items, event);
     if (!ids.length) continue;
     await actor.updateEmbeddedDocuments("Item", ids.map(_id => ({ _id, "system.frequencyUsed": false })));

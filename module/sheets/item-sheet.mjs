@@ -49,8 +49,8 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.system = this.document.system;
     // Gear and containers are carried, never equipped.
     context.canEquip = "equipped" in this.document.system;
-    // A foe's attack has no price, traits or expendable die, and is not carried.
-    context.forFoe = this.document.actor?.type === "foe";
+    // A foe's or minion's attack has no price, traits or expendable die, and is not carried.
+    context.forFoe = ["foe", "minion"].includes(this.document.actor?.type);
     return context;
   }
 }
@@ -115,6 +115,22 @@ export class ContainerSheet extends EquipmentSheet {
 }
 
 /**
+ * Relics (rules 4.2): carried like gear, with Always on, the use, the
+ * Ember pool gain, Destroyed, the two values, the Last Rite and the
+ * drawback. The description is the relic's effect.
+ */
+export class RelicSheet extends EquipmentSheet {
+  static detailsTemplate = `${TEMPLATES}/relic-details.hbs`;
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.frequencies = FREQUENCY_LABELS;
+    return context;
+  }
+}
+
+/**
  * Feats are not carried, so their sheet has its own header (picture, name,
  * source, gained through Improving) and no price or cumbersome box.
  */
@@ -137,8 +153,8 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = this.document;
     context.system = this.document.system;
     context.sources = FeatData.SOURCES;
-    // Foes never improve, so their passives can't be gained through Improving.
-    context.canImprove = this.document.actor?.type !== "foe" && this.document.system.source !== "passive";
+    // Foes, minions and vehicles never improve, so their passives can't be gained through Improving.
+    context.canImprove = !["foe", "minion", "vehicle"].includes(this.document.actor?.type) && this.document.system.source !== "passive";
     context.frequencies = FREQUENCY_LABELS;
     return context;
   }

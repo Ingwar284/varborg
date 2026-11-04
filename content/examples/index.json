@@ -1,7 +1,9 @@
 {
   "Actor": [
     "actors/example-hero.json",
-    "actors/ash-choked-bellman.json"
+    "actors/ash-choked-bellman.json",
+    "actors/small-vicious-dog.json",
+    "actors/steam-wagon.json"
   ],
   "Item": [
     "items/dagger.json",
@@ -24,6 +26,7 @@
     "items/butcher.json",
     "items/power-strike.json",
     "items/and-they-spoke-of-fire.json",
-    "items/scroll-of-and-they-spoke-of-fire.json"
+    "items/scroll-of-and-they-spoke-of-fire.json",
+    "items/shard-of-the-great-brazier.json"
   ]
 }

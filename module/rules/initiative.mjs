@@ -16,12 +16,48 @@ export const CHARACTER_INITIATIVE_FORMULA = "1d6 + @abilities.agility";
 export const FOE_INITIATIVE_FORMULA = "1d6 + @initiative";
 
 /**
+ * Minions: a plain d6. A minion acts right after its owner (GAPS 32), so
+ * this roll only counts when its owner is not in the combat (GAPS 172).
+ */
+export const MINION_INITIATIVE_FORMULA = "1d6";
+
+/**
  * The initiative formula for an actor type. Anything that is not a player
- * character rolls like a foe.
- * @param {string} actorType  "character", "foe", …
+ * character or a minion rolls like a foe.
+ * @param {string} actorType  "character", "foe", "minion", …
  */
 export function initiativeFormula(actorType) {
-  return actorType === "character" ? CHARACTER_INITIATIVE_FORMULA : FOE_INITIATIVE_FORMULA;
+  if (actorType === "character") return CHARACTER_INITIATIVE_FORMULA;
+  if (actorType === "minion") return MINION_INITIATIVE_FORMULA;
+  return FOE_INITIATIVE_FORMULA;
+}
+
+/**
+ * Whether an actor type is on the players' side for ties ("Ties go to the
+ * players"): characters and their minions.
+ */
+export function isPlayerSide(actorType) {
+  return actorType === "character" || actorType === "minion";
+}
+
+/**
+ * Turn order with minions. Each combatant's facts may carry `leader`: the
+ * facts of its owner's combatant, for a minion whose owner is in the
+ * combat (GAPS 32). A minion takes its owner's place in the order and
+ * comes right after them; two minions of one owner keep a steady order.
+ * Everyone else is ordered by compareInitiative.
+ * @param {{id: string, leader?: object|null}} a
+ * @param {{id: string, leader?: object|null}} b
+ */
+export function compareTurnOrder(a, b) {
+  if (a.id !== undefined && a.id === b.id) return 0;
+  const la = a.leader ?? a;
+  const lb = b.leader ?? b;
+  if (la.id !== lb.id) return compareInitiative(la, lb);
+  // Same owner: the owner first, then their minions.
+  if (!a.leader) return -1;
+  if (!b.leader) return 1;
+  return String(a.id ?? "") > String(b.id ?? "") ? 1 : -1;
 }
 
 /**

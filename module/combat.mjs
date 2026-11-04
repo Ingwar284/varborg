@@ -12,9 +12,13 @@
  *   maxReactions  reactions gained at the start of this turn
  * A combatant without these flags has a full turn. Conditions change what
  * a turn starts with (rules 3.13, module/rules/conditions.mjs).
+ *
+ * Minions (rules 3.14, module/minions.mjs) come right after their owner in
+ * the turn order (GAPS 32). A minion's turn has 2 actions and 0 reactions
+ * when its owner commanded it, otherwise none (GAPS 170).
  */
 
-import { initiativeFormula, compareInitiative } from "./rules/initiative.mjs";
+import { initiativeFormula, isPlayerSide, compareTurnOrder } from "./rules/initiative.mjs";
 import { ACTIONS_PER_TURN, REACTIONS_PER_TURN, adjustLeft, pips } from "./rules/actions.mjs";
 import { turnAllowance } from "./rules/conditions.mjs";
 import { tickPersistentDamage } from "./persistent.mjs";
@@ -28,23 +32,46 @@ import { startOfTurnTimers, endOfTurnTimers, endCombatTimers } from "./timers.mj
 import { resetLimitedUses } from "./uses.mjs";
 import { currentWeather } from "./weather.mjs";
 import { conditionsForTurn, turnConditionFor } from "./rules/weather-effects.mjs";
+import { startMinionTurn, postMinionTurn } from "./minions.mjs";
 
 const SYSTEM = "var-borg";
 
 /** The plain facts compareInitiative needs about a Foundry combatant. */
-function orderFacts(combatant) {
+function ownFacts(combatant) {
   return {
     initiative: Number.isNumeric(combatant.initiative) ? Number(combatant.initiative) : null,
-    isPC: combatant.actor?.type === "character",
+    isPC: isPlayerSide(combatant.actor?.type),
     tiebreak: combatant.getFlag(SYSTEM, "tiebreak"),
     id: combatant.id
   };
 }
 
+/**
+ * The facts compareTurnOrder needs: a minion whose owner is in the same
+ * combat carries its owner's facts as its leader (GAPS 32).
+ */
+function orderFacts(combatant) {
+  const facts = ownFacts(combatant);
+  const actor = combatant.actor;
+  if (actor?.type !== "minion" || !actor.system.owner) return facts;
+  const leader = combatant.combat?.combatants.find(c => c.actor?.id === actor.system.owner && c.actor?.type === "character");
+  return { ...facts, leader: leader ? ownFacts(leader) : null };
+}
+
+/** What a combatant has before its first turn: a minion has nothing until commanded. */
+function baseTurn(combatant) {
+  return combatant.actor?.type === "minion"
+    ? { actions: 0, reactions: 0 }
+    : { actions: ACTIONS_PER_TURN, reactions: REACTIONS_PER_TURN };
+}
+
 export class VarBorgCombat extends foundry.documents.Combat {
-  /** Turn order: highest first, PCs win ties, then random (rules 3.4, GAPS 38). */
+  /**
+   * Turn order: highest first, PCs win ties, then random (rules 3.4,
+   * GAPS 38). Minions come right after their owner (GAPS 32).
+   */
   _sortCombatants(a, b) {
-    return compareInitiative(orderFacts(a), orderFacts(b));
+    return compareTurnOrder(orderFacts(a), orderFacts(b));
   }
 
   /**
@@ -65,13 +92,18 @@ export class VarBorgCombat extends foundry.documents.Combat {
     const own = actor?.statuses ?? new Set();
     const { hazard } = currentWeather();
     const conditions = conditionsForTurn(own, hazard);
-    const { actions, reactions, ended: worked } = turnAllowance(conditions, ACTIONS_PER_TURN, REACTIONS_PER_TURN);
+    // A minion: 2 actions and 0 reactions if commanded, else none (GAPS 170).
+    const minion = actor?.type === "minion" ? await startMinionTurn(combatant) : null;
+    const base = minion ?? { actions: ACTIONS_PER_TURN, reactions: REACTIONS_PER_TURN };
+    let { actions, reactions, ended: worked } = turnAllowance(conditions, base.actions, base.reactions);
+    if (minion && !minion.commanded) actions = reactions = 0;
     // Only the conditions the actor really has are taken off.
     const ended = worked.filter(id => own.has(id));
     await combatant.update({
       [`flags.${SYSTEM}`]: { actions, reactions, maxActions: actions, maxReactions: reactions, attacks: 0 }
     });
-    if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) {
+    if (minion) await postMinionTurn(combatant, minion.commanded, actions);
+    else if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) {
       await postTurnStart(combatant, actions, reactions, conditions, turnConditionFor(hazard) ? hazard : null);
     }
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
@@ -140,29 +172,29 @@ export class VarBorgCombat extends foundry.documents.Combat {
 }
 
 export class VarBorgCombatant extends foundry.documents.Combatant {
-  /** PCs roll d6 + Agility, foes d6 + their initiative bonus. */
+  /** PCs roll d6 + Agility, foes d6 + their initiative bonus, minions a d6. */
   _getInitiativeFormula() {
     return initiativeFormula(this.actor?.type);
   }
 
   /** Actions left this turn. */
   get actionsLeft() {
-    return this.getFlag(SYSTEM, "actions") ?? ACTIONS_PER_TURN;
+    return this.getFlag(SYSTEM, "actions") ?? baseTurn(this).actions;
   }
 
   /** Reactions left this turn. */
   get reactionsLeft() {
-    return this.getFlag(SYSTEM, "reactions") ?? REACTIONS_PER_TURN;
+    return this.getFlag(SYSTEM, "reactions") ?? baseTurn(this).reactions;
   }
 
   /** Actions gained at the start of this turn (4 when Quickened, 2 when Slowed). */
   get maxActions() {
-    return this.getFlag(SYSTEM, "maxActions") ?? ACTIONS_PER_TURN;
+    return this.getFlag(SYSTEM, "maxActions") ?? baseTurn(this).actions;
   }
 
   /** Reactions gained at the start of this turn (0 when Slowed or Stupefied). */
   get maxReactions() {
-    return this.getFlag(SYSTEM, "maxReactions") ?? REACTIONS_PER_TURN;
+    return this.getFlag(SYSTEM, "maxReactions") ?? baseTurn(this).reactions;
   }
 
   /** Attacks made on this combatant's own turn so far (rules 3.4, GAPS 18). */

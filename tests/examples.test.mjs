@@ -23,6 +23,9 @@ import { isRoundsFormula } from "../module/rules/timers.mjs";
 import { LIGHT_KINDS, lightFromName } from "../module/rules/light.mjs";
 import { SPELL_LISTS, STARTING_DICE, wealthFormula } from "../module/rules/origins.mjs";
 import { SPELL_LISTS_OF_SPELLS, spellDr } from "../module/rules/spells.mjs";
+import { MINION_TIERS, tierStats } from "../module/rules/minions.mjs";
+import { FREQUENCIES } from "../module/rules/uses.mjs";
+import { SPEEDS } from "../module/rules/vehicles.mjs";
 
 const folder = new URL("../content/examples/", import.meta.url);
 const readJson = file => JSON.parse(readFileSync(new URL(file, folder), "utf8"));
@@ -304,4 +307,60 @@ test("the scroll of And They Spoke of Fire carries the same spell, at the DR14 s
   for (const key of ["spellList", "cost", "actions", "damage", "sustained"]) assert.equal(data.system[key], fire[key], key);
   assert.deepEqual(data.system.outcomes, fire.outcomes);
   assert.equal(data.system.price, 140, "rules 4. Economy: a DR14 (🟒3) scroll costs 140 s");
+});
+
+test("step 42: the small vicious dog is a Pitiful minion (HP 5, Morale 6, d4)", () => {
+  const { file, data } = examples.find(({ data }) => data.name === "Small vicious dog");
+  assert.equal(data.type, "minion");
+  const system = data.system;
+  assert.ok(MINION_TIERS.includes(system.tier), `${file}: unknown tier`);
+  assert.equal(system.tier, "pitiful");
+  const stats = tierStats("pitiful");
+  assert.deepEqual(system.hp, { value: stats.hp, max: stats.hp });
+  assert.equal(system.morale, stats.morale);
+  assert.equal(system.armour, stats.armour);
+  const attacks = data.items.filter(item => item.type === "weapon");
+  assert.equal(attacks.length, 1);
+  assert.equal(attacks[0].system.damage, stats.attack);
+  assert.ok(DAMAGE_TYPES.includes(attacks[0].system.damageType), `${file}: damage type`);
+});
+
+test("example relics have an effect, a Last Rite, a drawback and allowed choices", () => {
+  const relics = ofType("relic");
+  assert.ok(relics.length, "there is at least one example relic");
+  for (const { file, data } of relics) {
+    const system = data.system;
+    for (const key of ["description", "lastRite", "drawback"]) assert.ok(system[key], `${file}: ${key}`);
+    assert.ok(FREQUENCIES.includes(system.frequency), `${file}: frequency`);
+    assert.ok(Number.isInteger(system.emberGain) && system.emberGain >= 0, `${file}: Ember pool gain`);
+    assert.equal(system.destroyed, false, `${file}: starts whole`);
+  }
+});
+
+test("step 43: the Shard of the Great Brazier gives +3 to the Ember pool once per day (rules 4.2)", () => {
+  const { data } = examples.find(({ data }) => data.name === "Shard of the Great Brazier");
+  assert.equal(data.type, "relic");
+  assert.equal(data.system.frequency, "day");
+  assert.equal(data.system.emberGain, 3);
+  assert.equal(data.system.alwaysOn, false);
+  assert.deepEqual([data.system.saleValue, data.system.factionValue], [400, 900]);
+});
+
+test("step 44: the steam wagon matches its stat block in Subsystem: Vehicles", () => {
+  const { file, data } = examples.find(({ data }) => data.name === "Steam wagon");
+  assert.equal(data.type, "vehicle");
+  const system = data.system;
+  assert.deepEqual(system.hp, { value: 30, max: 30 });
+  assert.equal(system.armour, "d4");
+  assert.ok(FOE_ARMOUR_DICE.includes(system.armour), `${file}: armour die`);
+  assert.deepEqual(SPEEDS.map(speed => system.speed[speed]), [20, 40, 60]);
+  assert.equal(system.price, 600);
+  assert.deepEqual([system.passengerSeats, system.cargoLimit], [6, 20], "6, or 20 heavy items of cargo");
+  assert.deepEqual(system.occupants, []);
+  assert.deepEqual(data.items.map(item => item.name), ["Boiler", "Lamps"]);
+  for (const item of data.items) {
+    assert.equal(item.type, "feat");
+    assert.equal(item.system.source, "passive");
+    assert.match(item._id, /^[a-zA-Z0-9]{16}$/, `${file}: ${item.name} needs a 16-letter-or-digit _id`);
+  }
 });
