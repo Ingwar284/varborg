@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000003",
+  "name": "Wolf-Pack Instinct",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You fight with the coordinated ferocity of a predator that knows its kin’s heartbeat. When an ally within 30' gains a wound, you have Boon on all attacks until the end of your next turn.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

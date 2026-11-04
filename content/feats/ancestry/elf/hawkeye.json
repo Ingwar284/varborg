@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000004",
+  "name": "Hawkeye",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "Your vision is a predatory precision honed over centuries of watching the wind. When using a bow, you may reroll any damage result of a 1, and you can accurately perceive fine details up to a mile away.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

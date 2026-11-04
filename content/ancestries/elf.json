@@ -1,0 +1,9 @@
+{
+  "_id": "vbAncElf00000000",
+  "name": "Elf",
+  "type": "ancestry",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "Pale, distant, and touched by too many years, Elves carry the ache of beauty lost and time unkind. Their traditions are brittle but not broken; their songs quieter, but still sung.\nChoose one elf ancestry feat (rules 4.3.3)."
+  }
+}

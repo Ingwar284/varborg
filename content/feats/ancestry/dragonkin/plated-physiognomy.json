@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin001",
+  "name": "Plated Physiognomy",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "Your hide is a mosaic of overlapping, reinforced scales. You possess a natural t1 armour.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

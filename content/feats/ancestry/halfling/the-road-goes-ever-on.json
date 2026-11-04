@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHalfling0005",
+  "name": "The Road Goes Ever On",
+  "type": "feat",
+  "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+  "system": {
+    "description": "Your soles are as tough as cured leather. You can march twice as long as others before tiring, carry two extra heavy items before you are encumbered, and you perform all tests for endurance at -2 DR.",
+    "source": "ancestry",
+    "belongsTo": "Halfling",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

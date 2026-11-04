@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin004",
+  "name": "Ancestral Resonance",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "Your ancestry is bound to an element. Choose an element; you reduce any damage of that element by d6.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

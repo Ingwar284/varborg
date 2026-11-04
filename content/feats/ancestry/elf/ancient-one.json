@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000008",
+  "name": "Ancient One",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "The weight of centuries has turned your past into a mosaic of forgotten mastery. Choose one passive feat from a class other than your own; you possess this talent as a remnant of a life you lived long before the Gloaming.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

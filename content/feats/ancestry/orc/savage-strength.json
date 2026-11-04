@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000002",
+  "name": "Savage Strength",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You can reroll a failed Strength test to lift, break, or move an object. If the second roll is also a Failure, you draw unwanted attention.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

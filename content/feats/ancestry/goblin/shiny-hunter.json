@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000005",
+  "name": "Shiny Hunter",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "You possess a supernatural obsession with anything that glimmers. You gain Boon on all tests to detect hidden compartments, mechanical traps, or small valuables in a room.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

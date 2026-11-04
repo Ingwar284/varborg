@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000008",
+  "name": "Clan Heirloom",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "You carry an ancestral item blessed by your forefathers. You gain the Clan Heirloom relic, which can be used once a day to regain 1 Fortune; if the item is lost or destroyed, you are Doomed until it is recovered.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

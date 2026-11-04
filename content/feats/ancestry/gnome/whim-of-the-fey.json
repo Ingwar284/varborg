@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000003",
+  "name": "Whim of the Fey",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "You are a creature of chaotic probability, often succeeding simply because you refuse to accept a boring outcome. When you roll a Ruin on a test, you may reroll it; however, if the second roll is also a Failure or Ruin, you must immediately roll on the Shadowblight table.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

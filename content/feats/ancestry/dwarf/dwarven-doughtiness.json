@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000003",
+  "name": "Dwarven Doughtiness",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "You possess a stoic, immovable spirit that views the end of the world as a mere structural flaw. You gain a Boon on all Panic tests, and any result of a Ruin on such tests is treated as a standard Failure instead.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

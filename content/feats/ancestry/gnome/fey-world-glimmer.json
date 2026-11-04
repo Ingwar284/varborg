@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000004",
+  "name": "Fey-World Glimmer",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "You exist only partially in this reality, shimmering like a haze when danger nears. You defend with -2 DR as your body instinctively flickers in and out of the light.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

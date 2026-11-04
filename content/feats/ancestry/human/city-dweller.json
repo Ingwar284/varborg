@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHuman0000005",
+  "name": "City Dweller",
+  "type": "feat",
+  "img": "icons/environment/people/commoner.webp",
+  "system": {
+    "description": "You are intimately familiar with the stone jungles and crowded alleys of human civilisation. You gain a Boon on all Agility tests to navigate, hide, or chase others while within the confines of a city, town, or large village.",
+    "source": "ancestry",
+    "belongsTo": "Human",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

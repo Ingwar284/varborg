@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0060",
+  "name": "Assassin",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 6 on the d100 table (rules 2.4).",
+    "wealth": "3d4 × 10 s",
+    "keepsake": "Poisoned dagger"
+  }
+}

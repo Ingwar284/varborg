@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000003",
+  "name": "Spite of the Small",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "Your small stature hides an overcompensating violent streak directed at anything taller than you. When attacking a creature larger than yourself, you deal an extra d4 damage.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

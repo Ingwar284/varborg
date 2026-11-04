@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000003",
+  "name": "Fleet-Footed",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "Your stride is a silent dance that skims the surface of the earth. You ignore difficult terrain, even when it is magical, and you leave no tracks unless you choose to.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0240",
+  "name": "Disgraced noble",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 24 on the d100 table (rules 2.4).",
+    "wealth": "3d4 × 10 s",
+    "keepsake": "Family ring"
+  }
+}

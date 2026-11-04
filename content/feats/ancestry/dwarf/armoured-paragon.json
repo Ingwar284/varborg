@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000007",
+  "name": "Armoured Paragon",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "You were born to wear steel as if it were a second skin. You take no more than a +2 DR penalty to Agility tests when wearing t3+ armour, and you ignore the defence penalty of heavy armour.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

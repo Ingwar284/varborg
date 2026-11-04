@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000007",
+  "name": "Pierce the Veil",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "To you, the fabric of reality is a thin, poorly-stitched curtain. You immediately notice the presence of any illusion, magical disguise, or invisible creature within 10' of you.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

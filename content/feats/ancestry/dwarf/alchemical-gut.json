@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000004",
+  "name": "Alchemical Gut",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "A lifetime of Dwarven \"bread\" has strengthened your stomach. You cannot be Infected from ingesting tainted food or water, and you gain a Boon on all Toughness tests against swallowed poisons.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

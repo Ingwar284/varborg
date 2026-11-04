@@ -743,5 +743,33 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
 
 48. **Full content.** Enter all classes, ancestries, backgrounds, feats,
     gear, spells, relics, tables and foes from the rules into `content/`, a
-    few files per step.
+    few files per step. Text is copied from the rules document by a script,
+    not retyped, and `tests/content.test.mjs` checks it word for word.
     *Test:* spot-check entries against the rules.
+
+    - 48a. ~~**Ancestries and ancestry feats.**~~ Done: the eight
+      ancestries of 2.3 in `content/ancestries/` and their 64 optional
+      feats (4.3.1–4.3.8) in `content/feats/ancestry/<ancestry>/`. The
+      Human example moved there too (the Import examples button still
+      finds it). Feats stay text only, as before.
+    - 48b. ~~**Backgrounds.**~~ Done: the 100 backgrounds of the d100
+      table (2.4, the same as 4.4) in `content/backgrounds/`, each with
+      its wealth and keepsake and its d100 number in the description. The
+      Butcher example moved there too. A roll table for them comes in 48i.
+    - 48c. Classes (2.5, 4.5, all 20, GAPS 1).
+    - 48d. Class powers and class feats, a few classes at a time.
+    - 48e. General feats (4.6).
+    - 48f. Gear, weapons and armour (4.1).
+    - 48g. Spells (4.7).
+    - 48h. Relics (4.2).
+    - 48i. Foes and tables.
+
+49. **Automating feats.** After all content is in (designer's choice at
+    step 48a). Feats are text only so far. Automate the ones the system can
+    judge, in groups: numbers always on the sheet (such as Fey-World
+    Glimmer, Mountain of Meat, Plated Physiognomy); hooks into features
+    already built (Panic, the Chance Die, rest, Death's Door, damage);
+    buttons for rerolls and rolls; a reminder line for the rest. Ancestry
+    and class feats are ruled on together first, with one GAPS entry per
+    open question (Dragon's Shadow is GAPS 182).
+    *Test:* each automated feat changes the roll or sheet as its text says.

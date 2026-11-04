@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin008",
+  "name": "Searing Ichor",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "Your blood is vile and harmful to the touch. Whenever your HP is reduced to 0, anyone within 5' of you takes d6 damage as they are splattered with your blood.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

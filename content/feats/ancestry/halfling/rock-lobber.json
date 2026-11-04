@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHalfling0007",
+  "name": "Rock Lobber",
+  "type": "feat",
+  "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+  "system": {
+    "description": "You have perfected the simple art of throwing stones. You attack at -2 DR and deal +2 damage with thrown objects and slings.",
+    "source": "ancestry",
+    "belongsTo": "Halfling",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

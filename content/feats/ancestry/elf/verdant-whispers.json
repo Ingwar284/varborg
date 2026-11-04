@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000001",
+  "name": "Verdant Whispers",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "You speak the forgotten tongue of the pulse and the root. You can communicate simple ideas and questions to plants, perceiving their responses as sensory impressions or sudden emotional shifts.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHuman0000008",
+  "name": "The Traveller’s Constitution",
+  "type": "feat",
+  "img": "icons/environment/people/commoner.webp",
+  "system": {
+    "description": "Your kind has wandered every road from the frozen peaks to the sun-scorched dunes. You gain a Boon on all Toughness tests to resist exhaustion, disease, or the effects of extreme weather and environmental hazards.",
+    "source": "ancestry",
+    "belongsTo": "Human",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "_id": "vbAncOrc00000000",
+  "name": "Orc",
+  "type": "ancestry",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Scarred, strong, and still standing, Orcs have always survived in a world that never wanted them. Born for war, they now struggle for a higher cause: for kin, for freedom, for something better than ashes.\nChoose one orc ancestry feat (rules 4.3.8)."
+  }
+}

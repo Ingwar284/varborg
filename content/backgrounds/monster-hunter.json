@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0560",
+  "name": "Monster hunter",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 56 on the d100 table (rules 2.4).",
+    "wealth": "2d6 × 10 s",
+    "keepsake": "Silver dagger"
+  }
+}

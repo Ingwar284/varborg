@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000008",
+  "name": "Nimble Nuisance",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "Your small, wiry frame is as slippery as an eel in a bucket of lard. You can squeeze through any gap wide enough for your head, and you gain a permanent Boon on all tests to escape being Restrained, grappled, or bound.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin002",
+  "name": "Inviolable Integrity",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "Your blood reacts to the truth. Determine a blood-oath you must uphold. You test with Boon on all Presence and Toughness tests to determine lies relating to your blood-oath.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

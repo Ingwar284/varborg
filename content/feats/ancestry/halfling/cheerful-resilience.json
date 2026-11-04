@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHalfling0006",
+  "name": "Cheerful Resilience",
+  "type": "feat",
+  "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+  "system": {
+    "description": "Your unshakable optimism is catching. When you succeed on a Panic test, every ally within 10' who can hear you gains Boon on their own Panic test.",
+    "source": "ancestry",
+    "belongsTo": "Halfling",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

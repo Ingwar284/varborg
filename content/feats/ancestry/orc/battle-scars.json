@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000001",
+  "name": "Battle Scars",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Every wound is a lesson burned into your hide. You deal +1 melee damage for each wound you carry, up to +3.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

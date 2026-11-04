@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000005",
+  "name": "Liquid Courage",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "For a dwarf, alcohol is a vital metabolic lubricant. Alcoholic beverages heal you for d6 HP; however, for every drink consumed beyond your Toughness, you become Fatigued (or gain one more level of Fatigued if you already are).",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000005",
+  "name": "Beast-Tamer",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Your hands are stained with the musk of monsters you have broken to your will. You gain a fighting beast, such as a war-hound or a pit-boar. It is a Weak minion, and it obeys you even when you are out of its sight.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

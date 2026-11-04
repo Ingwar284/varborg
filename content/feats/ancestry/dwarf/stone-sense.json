@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000006",
+  "name": "Stone-Sense",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "You feel the secrets of the stone through the soles of your feet. You gain a Boon on all tests for navigating underground, detecting hidden passages, or spotting traps and structural weaknesses in stonework.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

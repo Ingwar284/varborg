@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000001",
+  "name": "Iron-Blooded",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "Iron flows in your veins and magic finds no purchase in your marrow. You cannot use magic in any way and are entirely unaffected by magical spells or effects, whether they are harmful or helpful.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

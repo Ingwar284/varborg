@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000005",
+  "name": "Knack for the Odd",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "Your mind perceives the hidden potential in the discarded and the strange. You instinctively know the purpose and function of any bizarre or seemingly useless object you encounter.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

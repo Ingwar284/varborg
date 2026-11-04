@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin005",
+  "name": "Great-Wyrm",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "You are denser and heavier than you look. You cannot be moved, pushed, or knocked Prone by any creature smaller than you.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

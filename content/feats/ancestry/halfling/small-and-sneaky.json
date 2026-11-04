@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHalfling0003",
+  "name": "Small and Sneaky",
+  "type": "feat",
+  "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+  "system": {
+    "description": "Your diminutive frame and light step allow you to vanish from the sight of taller folk. You perform all tests to hide or sneak at -2 DR.",
+    "source": "ancestry",
+    "belongsTo": "Halfling",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

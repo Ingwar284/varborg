@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHuman0000002",
+  "name": "Human Ingenuity",
+  "type": "feat",
+  "img": "icons/environment/people/commoner.webp",
+  "system": {
+    "description": "You possess a natural knack for solving problems with whatever tools are at hand. Once per day, you may treat a failed test involving a tool or piece of equipment as a success, provided you can describe an improvised way you bypassed the problem.",
+    "source": "ancestry",
+    "belongsTo": "Human",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

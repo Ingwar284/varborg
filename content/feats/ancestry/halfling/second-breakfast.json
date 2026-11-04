@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHalfling0002",
+  "name": "Second Breakfast",
+  "type": "feat",
+  "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+  "system": {
+    "description": "You possess a metabolic joy that turns a simple crust of bread into a font of restoration. If you eat a double ration during a Long Rest, you restore one additional wound.",
+    "source": "ancestry",
+    "belongsTo": "Halfling",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

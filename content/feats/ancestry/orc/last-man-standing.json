@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000007",
+  "name": "Last Man Standing",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Others may fall, but you will not. If you are the last man standing, you gain Boon on all Tests until an ally has recovered or the threat has passed.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

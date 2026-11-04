@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHuman0000004",
+  "name": "Diplomatic Viper",
+  "type": "feat",
+  "img": "icons/environment/people/commoner.webp",
+  "system": {
+    "description": "You understand that silken words can be just as sharp as iron swords in the pursuit of power. You gain a Boon on all Presence tests to deceive or manipulate others into a position of disadvantage, provided you are speaking in a formal or professional setting.",
+    "source": "ancestry",
+    "belongsTo": "Human",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0530",
+  "name": "Militia captain",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 53 on the d100 table (rules 2.4).",
+    "wealth": "3d4 × 10 s",
+    "keepsake": "Commander’s whistle"
+  }
+}

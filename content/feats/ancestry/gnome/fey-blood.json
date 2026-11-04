@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000002",
+  "name": "Fey Blood",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "Erratic energy pulses through your veins instead of mundane ichor. You learn a random spell; however, you can cast it only by spending your life force.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

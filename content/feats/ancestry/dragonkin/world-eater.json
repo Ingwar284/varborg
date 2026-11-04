@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin007",
+  "name": "World Eater",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "Your internal chemistry is a violent furnace capable of breaking down the most stubborn matter. You can consume almost any organic or mineral material to fulfil your daily rations. Once per day, eating metal or stone also heals you for d4 HP.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

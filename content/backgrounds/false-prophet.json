@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0300",
+  "name": "False prophet",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 30 on the d100 table (rules 2.4).",
+    "wealth": "2d6 × 10 s",
+    "keepsake": "Holy symbol"
+  }
+}

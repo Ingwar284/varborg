@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000006",
+  "name": "Borrowed Time",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "You burn with a frantic intensity to stave off the Bleaching. Whenever you take a move or action that puts your life at great risk (determined by the Dark Master), you perform the associated test with a Boon.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

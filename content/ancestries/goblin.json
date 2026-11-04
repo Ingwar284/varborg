@@ -1,0 +1,9 @@
+{
+  "_id": "vbAncGoblin00000",
+  "name": "Goblin",
+  "type": "ancestry",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "Grimy, fanged, and weirdly obsessed with fire, Goblins thrive in the cracks of the world. They scurry through ash and ruin—and in their chaos burns a strange kind of brilliance.\nChoose one goblin ancestry feat (rules 4.3.5)."
+  }
+}

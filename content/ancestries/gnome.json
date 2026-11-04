@@ -1,0 +1,9 @@
+{
+  "_id": "vbAncGnome000000",
+  "name": "Gnome",
+  "type": "ancestry",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "Clever, curious, and incandescent, Gnomes dance on the edge of unravelling. Magic coils through their laughter and leaps from their hands, wild and brilliant.\nChoose one gnome ancestry feat (rules 4.3.4)."
+  }
+}

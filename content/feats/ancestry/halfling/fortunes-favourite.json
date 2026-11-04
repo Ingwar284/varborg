@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHalfling0001",
+  "name": "Fortune’s Favourite",
+  "type": "feat",
+  "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
+  "system": {
+    "description": "Your fortune intervenes at the eleventh hour. Whenever you roll a natural 1 on a test, you may reroll it; if you succeed, describe how you are saved by a stroke of improbable luck.",
+    "source": "ancestry",
+    "belongsTo": "Halfling",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

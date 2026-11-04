@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000007",
+  "name": "Goblin Appetite",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "Your digestive tract is truly impressive. You can consume almost any organic or mineral material, including scrap and carrion, to fulfil your daily rations, and you need only half the usual amount of food.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

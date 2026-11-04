@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDwarf0000002",
+  "name": "Tempered by the Forge",
+  "type": "feat",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "The magma-fed furnaces of your ancestors have hardened you against the flame. You take half damage from fire, you ignore environmental heat, and you can handle red-hot materials with your bare hands.",
+    "source": "ancestry",
+    "belongsTo": "Dwarf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

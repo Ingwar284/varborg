@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFDragonkin003",
+  "name": "Gold-Scent",
+  "type": "feat",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "You do not see the world as others do. You can smell precious metals or active magical resonances within 30', even through solid walls or magical darkness.",
+    "source": "ancestry",
+    "belongsTo": "Dragonkin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

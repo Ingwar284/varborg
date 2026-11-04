@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFHuman0000003",
+  "name": "Sovereign Ambition",
+  "type": "feat",
+  "img": "icons/environment/people/commoner.webp",
+  "system": {
+    "description": "You carry the innate belief that you are the master of your own fate. You gain a Boon on all tests to resist being Charmed, magically commanded, or intimidated by creatures of higher status or greater power than yourself.",
+    "source": "ancestry",
+    "belongsTo": "Human",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

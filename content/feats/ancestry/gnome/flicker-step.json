@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000008",
+  "name": "Flicker-Step",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "You move with a jagged, staccato rhythm that defies linear physics. You can move through spaces occupied by enemies, and you do not trigger Opportune Attacks.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

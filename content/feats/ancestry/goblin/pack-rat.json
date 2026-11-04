@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000002",
+  "name": "Pack Rat",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "Your fingers are fast and your pockets are deep. Once per day, roll a Chance Die. On a positive result, you pull a small, specific item from your pack that exactly fits your current needs.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false
+  }
+}

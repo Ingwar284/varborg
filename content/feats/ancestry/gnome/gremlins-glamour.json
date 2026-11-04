@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGnome0000001",
+  "name": "Gremlin’s Glamour",
+  "type": "feat",
+  "img": "icons/magic/nature/dreamcatcher-green.webp",
+  "system": {
+    "description": "Your physical form is as fluid as a half-remembered dream. You can shift the colour of your skin or hair at will, and with an hour of focused effort, you can entirely transform your appearance.",
+    "source": "ancestry",
+    "belongsTo": "Gnome",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000001",
+  "name": "Jury Rigger",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "You possess an intuitive understanding of how broken things can be made to work once more. You can cobble together crude mechanical contraptions that function miraculously for d6 rounds on a successful Sanity test, though a Ruin causes it to explode.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

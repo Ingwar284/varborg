@@ -1,0 +1,9 @@
+{
+  "_id": "vbAncDragonkin00",
+  "name": "Dragonkin",
+  "type": "ancestry",
+  "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
+  "system": {
+    "description": "Scales, ancient blood, and a strong sense of honour, Dragonkin are the last flickers of a forgotten legacy. Born of wyrms, oaths, or the smouldering remnants of old power, they carry greatness coiled within.\nChoose one dragonkin ancestry feat (rules 4.3.1)."
+  }
+}

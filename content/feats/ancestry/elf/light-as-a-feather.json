@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000006",
+  "name": "Light as a Feather",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "Your physical form possesses an otherworldly buoyancy that mocks gravity. When you fall, you drift down at 60' per round and land without harm, and you can walk across fragile surfaces such as thin ice, rotten boards or crusted ash without breaking through.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000002",
+  "name": "Forest Dweller",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "You move through the tangled veins of the world like a ghost through a graveyard. When in a natural area, you can climb vertical surfaces at your full movement speed, and thick underbrush or dense foliage provide heavy cover to you.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

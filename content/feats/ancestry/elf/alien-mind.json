@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFElf000000007",
+  "name": "Alien Mind",
+  "type": "feat",
+  "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
+  "system": {
+    "description": "Your thoughts are a labyrinth of ancient echoes that mortal minds cannot navigate. You can communicate telepathically with any creature you can see; additionally, you gain a Boon on all tests to resist being Charmed.",
+    "source": "ancestry",
+    "belongsTo": "Elf",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

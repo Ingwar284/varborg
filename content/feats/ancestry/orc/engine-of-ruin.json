@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000008",
+  "name": "Engine of Ruin",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "Your momentum is a physical catastrophe that feeds on the blood of the fallen. Whenever you kill an enemy, you may move as a free action.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

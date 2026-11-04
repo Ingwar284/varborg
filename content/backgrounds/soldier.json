@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0810",
+  "name": "Soldier",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 81 on the d100 table (rules 2.4).",
+    "wealth": "2d6 × 10 s",
+    "keepsake": "Heavy shield"
+  }
+}

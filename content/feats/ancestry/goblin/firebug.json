@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFGoblin000004",
+  "name": "Firebug",
+  "type": "feat",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "You find a spiritual, almost romantic comfort in the flickering of a flame. You deal +2 damage with all fire-based attacks, but when you roll a Ruin using fire, you take d4 persistent fire damage.",
+    "source": "ancestry",
+    "belongsTo": "Goblin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

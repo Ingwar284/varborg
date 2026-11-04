@@ -1,0 +1,9 @@
+{
+  "_id": "vbAncDwarf000000",
+  "name": "Dwarf",
+  "type": "ancestry",
+  "img": "icons/tools/smithing/anvil.webp",
+  "system": {
+    "description": "Stubborn as stone and twice as enduring, Dwarves were shaped in the deep dark, bound by blood, craft, and tradition. They bear the weight of history like a shield, not to be buried, but to stand firm.\nChoose one dwarf ancestry feat (rules 4.3.2)."
+  }
+}

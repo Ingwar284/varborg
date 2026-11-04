@@ -1,0 +1,11 @@
+{
+  "_id": "vbBackground0800",
+  "name": "Snake oil salesman",
+  "type": "background",
+  "img": "icons/sundries/documents/document-letter-tan.webp",
+  "system": {
+    "description": "Background 80 on the d100 table (rules 2.4).",
+    "wealth": "2d4 × 10 s",
+    "keepsake": "Bottle of panacea"
+  }
+}

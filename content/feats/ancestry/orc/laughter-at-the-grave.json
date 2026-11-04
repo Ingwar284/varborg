@@ -1,0 +1,14 @@
+{
+  "_id": "vbAFOrc000000004",
+  "name": "Laughter at the Grave",
+  "type": "feat",
+  "img": "icons/commodities/bones/skull-tusked-grey.webp",
+  "system": {
+    "description": "You laugh at death. When you would go to Death’s Door, you stay conscious and on your feet for one full turn before the condition takes effect.",
+    "source": "ancestry",
+    "belongsTo": "Orc",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}
