@@ -37,6 +37,23 @@
       {{/if}}
     </div>
   </div>
+  <div class="misery-row{{#if misery.end}} end{{/if}}">
+    <i class="fa-solid fa-skull misery-icon" aria-hidden="true"></i>
+    <div class="misery-text">
+      <span class="misery-label">{{localize "VARBORG.Misery.Label"}}</span>
+      <span class="misery-name">{{misery.name}}</span>
+      {{#if misery.omen}}<span class="misery-omen">{{misery.omen}}</span>{{/if}}
+      {{#if misery.sunless}}
+        <span class="misery-sunless"><i class="fa-solid fa-moon"></i> {{localize "VARBORG.Misery.NoSunToday"}}</span>
+      {{/if}}
+      {{#if misery.end}}<span class="misery-sunless">{{localize "VARBORG.Misery.EndTitle"}}</span>{{/if}}
+      {{#if isGM}}
+        <span class="misery-light">{{localize "VARBORG.Misery.LightIs" light=misery.light}}</span>
+        <button type="button" class="set-misery" data-action="setMisery"
+          data-tooltip="{{localize 'VARBORG.Misery.SetTooltip'}}"><i class="fa-solid fa-skull"></i> {{localize "VARBORG.Misery.Set"}}</button>
+      {{/if}}
+    </div>
+  </div>
   {{#if isGM}}
     <div class="day-row">
       <button type="button" class="new-day" data-action="newDay"

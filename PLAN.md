@@ -603,7 +603,12 @@ on its open gaps.
     Master can set it by hand. (GAPS 155)
     *Test:* start several days and follow the weather on the flower.
 
-39. **Miseries.** The Misery (I to VI) on the panel, the daily die at the
+39. ~~**Miseries.**~~ Done: `module/rules/misery.mjs` with
+    `tests/misery.test.mjs`, `module/misery.mjs` (the Misery setting, the
+    light die and sunrise die at each new day, the omen and end cards, Set
+    Misery for the Dark Master), the Misery row on the Calendar panel
+    (GAPS 156, 167).
+    The Misery (I to VI) on the panel, the daily die at the
     start of each day, the d6 omen card, and the end card at VII. The Dark
     Master can set the Misery by hand. (GAPS 156)
     *Test:* set Misery VI and start days until no sun rises.

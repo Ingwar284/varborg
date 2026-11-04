@@ -1152,3 +1152,73 @@
   color: #c62828;
   margin: 0.1rem 0;
 }
+
+/* ---------- The Miseries (step 39) ---------- */
+
+.var-borg-table-panel .misery-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .misery-icon {
+  font-size: 1.4rem;
+  width: 1.6rem;
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+
+.var-borg-table-panel .misery-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.var-borg-table-panel .misery-label,
+.var-borg-table-panel .misery-light {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-table-panel .misery-name {
+  font-weight: bold;
+}
+
+.var-borg-table-panel .misery-omen {
+  font-size: 0.9em;
+}
+
+.var-borg-table-panel .misery-sunless,
+.var-borg-table-panel .misery-row.end .misery-name {
+  color: #c62828;
+  font-weight: bold;
+}
+
+.var-borg-table-panel button.set-misery {
+  margin-top: 0.2rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+.var-borg-card.misery-card .misery-omen {
+  margin: 0.3rem 0;
+  padding-top: 0.3rem;
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+}
+
+.var-borg-card.misery-card .misery-sun.sunless {
+  color: #c62828;
+  font-weight: bold;
+}
+
+.var-borg-card.misery-card .misery-end {
+  margin-top: 0.3rem;
+  padding: 0.3rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: #eee;
+  text-align: center;
+}

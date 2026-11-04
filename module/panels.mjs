@@ -1,9 +1,10 @@
 /**
  * The three shared table panels, each with its own button in the token
  * controls (the toolbar on the left):
- * - Calendar: the date, weekday, phase and hour, today's weather, and the
- *   Dark Master's clock, New day, Rest and Set weather buttons
- *   (module/calendar.mjs, days.mjs, rest.mjs, weather.mjs).
+ * - Calendar: the date, weekday, phase and hour, today's weather, the
+ *   Misery, and the Dark Master's clock, New day, Rest, Set weather and
+ *   Set Misery buttons (module/calendar.mjs, days.mjs, rest.mjs,
+ *   weather.mjs, misery.mjs).
  * - Light: the light timer (module/light.mjs).
  * - Ember and Gloom: the pools and Reset ember abilities (module/pools.mjs).
  *
@@ -18,6 +19,7 @@ import { registerDays, newDay } from "./days.mjs";
 import { registerCalendar, calendarContext, nextPhase, moveHours } from "./calendar.mjs";
 import { rest } from "./rest.mjs";
 import { registerWeather, weatherContext, setWeatherByHand } from "./weather.mjs";
+import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
 import { registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight } from "./light.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
@@ -56,7 +58,7 @@ class SharedPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 }
 
-/** The calendar: date, time of day, weather, New day and Rest (steps 37, 38). */
+/** The calendar: date, time of day, weather, Misery, New day and Rest (steps 37 to 39). */
 export class CalendarPanel extends SharedPanel {
   static KEY = "calendar";
 
@@ -69,7 +71,8 @@ export class CalendarPanel extends SharedPanel {
       rest: CalendarPanel.#onRest,
       nextPhase: CalendarPanel.#onNextPhase,
       moveHours: CalendarPanel.#onMoveHours,
-      setWeather: CalendarPanel.#onSetWeather
+      setWeather: CalendarPanel.#onSetWeather,
+      setMisery: CalendarPanel.#onSetMisery
     }
   };
 
@@ -78,7 +81,7 @@ export class CalendarPanel extends SharedPanel {
   };
 
   async _prepareContext(options) {
-    return { calendar: calendarContext(), weather: weatherContext(), isGM: game.user.isGM };
+    return { calendar: calendarContext(), weather: weatherContext(), misery: miseryContext(), isGM: game.user.isGM };
   }
 
   /** Dark Master only: ask who ate, then start the next day (rules 3.16). */
@@ -109,6 +112,12 @@ export class CalendarPanel extends SharedPanel {
   static async #onSetWeather(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, setWeatherByHand);
+  }
+
+  /** Dark Master only: set the Misery by hand (step 39). */
+  static async #onSetMisery(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, setMiseryByHand);
   }
 }
 
@@ -247,6 +256,8 @@ export function registerPanels() {
   registerCalendar(refreshCalendar);
   // Today's weather on the hex flower (module/weather.mjs).
   registerWeather(refreshCalendar);
+  // The Misery (module/misery.mjs).
+  registerMisery(refreshCalendar);
   // The light timer (module/light.mjs).
   registerLight(refreshLight);
 

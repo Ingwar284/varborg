@@ -17,7 +17,8 @@
  *
  * Each new day also moves Foundry's world clock on to that day's dawn
  * (step 37, module/calendar.mjs), unless the clock is already past it,
- * and moves the weather on the hex flower (step 38, module/weather.mjs).
+ * moves the weather on the hex flower (step 38, module/weather.mjs), and
+ * rolls the Misery dice (step 39, module/misery.mjs).
  *
  * The maths lives in module/rules/days.mjs.
  */
@@ -31,6 +32,7 @@ import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { resetLimitedUses, actorsForNewDay } from "./uses.mjs";
 import { endNewDayTimers } from "./timers.mjs";
 import { weatherForNewDay } from "./weather.mjs";
+import { miseryForNewDay } from "./misery.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -133,6 +135,8 @@ export async function startDays(characters, { ate, slept }, count = 1) {
     });
     // The weather moves one hex on the flower (step 38).
     await weatherForNewDay();
+    // The light die and the sunrise die of the Miseries (step 39).
+    await miseryForNewDay();
     await dawnForEveryone();
     for (const actor of characters) {
       if (isDead(actor)) continue;
