@@ -1,0 +1,129 @@
+<div class="var-borg-sheet creation-body">
+  <p class="hint">{{localize "VARBORG.Creation.Intro"}}</p>
+
+  {{!-- Step 1: Abilities (rules 2.2) --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.abilities"}}</h2>
+    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{currentScores}}</p>
+    <div class="form-group">
+      <label>{{localize "VARBORG.Creation.Abilities.Method"}}</label>
+      <select name="method">
+        {{#each methods}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{localize label}}</option>{{/each}}
+      </select>
+    </div>
+    <p class="hint">{{localize methodHint}}</p>
+    {{#if isIndividual}}
+    <button type="button" class="text-button" data-action="rollIndividual"><i class="fa-solid fa-dice"></i> {{localize "VARBORG.Creation.Abilities.RollIndividual"}}</button>
+    {{/if}}
+    {{#if isTogether}}
+    <div class="creation-array">
+      {{#each array}}<input type="number" name="array.{{index}}" value="{{sum}}" min="3" max="18" step="1">{{/each}}
+      <button type="button" class="text-button" data-action="rollArray"><i class="fa-solid fa-dice"></i> {{localize "VARBORG.Creation.Abilities.RollArray"}}</button>
+    </div>
+    {{#each assign}}
+    <div class="form-group">
+      <label>{{localize label}}</label>
+      <select name="assigned.{{key}}">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each places}}<option value="{{index}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    {{/each}}
+    <button type="button" class="text-button" data-action="applyArray"><i class="fa-solid fa-check"></i> {{localize "VARBORG.Creation.Abilities.ApplyArray"}}</button>
+    {{/if}}
+    {{#if isZero}}
+    <button type="button" class="text-button" data-action="applyZero"><i class="fa-solid fa-check"></i> {{localize "VARBORG.Creation.Abilities.ApplyZero"}}</button>
+    {{/if}}
+  </section>
+
+  {{!-- Step 2: Ancestry (rules 2.3) --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.ancestry"}}</h2>
+    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{#if now.ancestry}}{{now.ancestry}}{{else}}{{localize "VARBORG.Creation.None"}}{{/if}}{{#if now.ancestryFeat}} · {{now.ancestryFeat}}{{/if}}</p>
+    <div class="form-group">
+      <label>{{localize "TYPES.Item.ancestry"}}</label>
+      <select name="ancestry">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each ancestries}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "VARBORG.Creation.Ancestry.Feat"}}</label>
+      <select name="ancestryFeat">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each ancestryFeats}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <p class="hint">{{localize "VARBORG.Creation.Ancestry.Hint"}}</p>
+    <button type="button" class="text-button" data-action="applyAncestry"><i class="fa-solid fa-check"></i> {{localize "VARBORG.Creation.Apply"}}</button>
+  </section>
+
+  {{!-- Step 3: Background (rules 2.4) --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.background"}}</h2>
+    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{#if now.background}}{{now.background}}{{else}}{{localize "VARBORG.Creation.None"}}{{/if}}</p>
+    <div class="form-group">
+      <label>{{localize "TYPES.Item.background"}}</label>
+      <select name="background">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each backgrounds}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <p class="hint">{{localize "VARBORG.Creation.Background.Hint"}}</p>
+    <button type="button" class="text-button" data-action="applyBackground"><i class="fa-solid fa-check"></i> {{localize "VARBORG.Creation.Apply"}}</button>
+  </section>
+
+  {{!-- Step 4: Class (rules 2.5) --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.class"}}</h2>
+    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{#if now.class}}{{now.class}}{{else}}{{localize "VARBORG.Creation.None"}}{{/if}}{{#if now.power}} · {{now.power}}{{/if}}{{#if now.spell}} · {{now.spell}}{{/if}}</p>
+    <div class="form-group">
+      <label>{{localize "TYPES.Item.class"}}</label>
+      <select name="cls">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each classes}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>{{localize "VARBORG.Creation.Class.Power"}}</label>
+      <select name="power">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each powers}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    {{#if hasSpellList}}
+    <div class="form-group">
+      <label>{{localize "VARBORG.Creation.Class.Spell"}}</label>
+      <select name="spell">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each spells}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <p class="hint">{{spellHint}}</p>
+    {{/if}}
+    <p class="hint">{{localize "VARBORG.Creation.Class.Hint"}}</p>
+    <button type="button" class="text-button" data-action="applyClass"><i class="fa-solid fa-check"></i> {{localize "VARBORG.Creation.Apply"}}</button>
+  </section>
+
+  {{!-- Step 5: Starting equipment (rules 2.6) --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.equipment"}}</h2>
+    {{#if hasClass}}
+    <p class="hint">{{localize "VARBORG.Creation.Equipment.Hint" die=startingDie}}</p>
+    {{#if equipmentRolled}}<p class="creation-now">{{localize "VARBORG.Creation.Equipment.Rolled"}}</p>{{/if}}
+    <button type="button" class="text-button" data-action="rollEquipment"><i class="fa-solid fa-dice"></i> {{localize "VARBORG.Creation.Equipment.Roll"}}</button>
+    {{else}}
+    <p class="hint">{{localize "VARBORG.Creation.Equipment.NeedClass"}}</p>
+    {{/if}}
+  </section>
+
+  {{!-- Step 6: Details --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.details"}}</h2>
+    <div class="form-group">
+      <label>{{localize "VARBORG.Sheet.Name"}}</label>
+      <input type="text" name="name" value="{{actor.name}}">
+    </div>
+    <p class="hint">{{localize "VARBORG.Creation.Details.Hint"}}</p>
+  </section>
+</div>

@@ -1,6 +1,12 @@
 <section class="tab var-borg-sheet {{tabs.main.cssClass}}" data-group="primary" data-tab="main">
   <section class="inventory-section origins">
-    <h2 data-tooltip="{{localize 'VARBORG.Origin.DropHint'}}">{{localize "VARBORG.Origin.Heading"}}</h2>
+    <h2 class="heading-with-button"><span data-tooltip="{{localize 'VARBORG.Origin.DropHint'}}">{{localize "VARBORG.Origin.Heading"}}</span>
+      {{#if editable}}
+      <button type="button" class="text-button" data-action="openCreation" data-tooltip="{{localize 'VARBORG.Creation.Tooltip'}}">
+        <i class="fa-solid fa-user-plus"></i> {{localize "VARBORG.Creation.Button"}}
+      </button>
+      {{/if}}
+    </h2>
     <ul class="item-list">
       {{#each origins}}
       {{#if item}}

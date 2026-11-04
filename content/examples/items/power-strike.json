@@ -6,6 +6,7 @@
   "system": {
     "description": "You put your whole weight behind the blow. Make a melee attack. On a hit, deal an additional d6 damage and either push the target 10' away or knock it Prone.",
     "source": "class",
+    "belongsTo": "Warrior",
     "ability": "usual",
     "cost": 1,
     "actions": 2,

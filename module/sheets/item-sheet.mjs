@@ -9,6 +9,7 @@
 
 import { WeaponData, ShieldData, GearData } from "../data/equipment.mjs";
 import FeatData from "../data/feat.mjs";
+import { BELONGING_SOURCES } from "../rules/feats.mjs";
 import PowerData from "../data/power.mjs";
 import SpellData from "../data/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
@@ -131,6 +132,15 @@ export class RelicSheet extends EquipmentSheet {
 }
 
 /**
+ * The "Belongs to" box of an ancestry or class feat or power (GAPS 180),
+ * labelled "Ancestry" or "Class".
+ */
+function belongingContext(system) {
+  const show = BELONGING_SOURCES.includes(system.source);
+  return { showBelongsTo: show, belongsToLabel: show ? `VARBORG.Feat.BelongsTo.${system.source}` : "" };
+}
+
+/**
  * Feats are not carried, so their sheet has its own header (picture, name,
  * source, gained through Improving) and no price or cumbersome box.
  */
@@ -153,6 +163,7 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = this.document;
     context.system = this.document.system;
     context.sources = FeatData.SOURCES;
+    Object.assign(context, belongingContext(this.document.system));
     // Foes, minions and vehicles never improve, so their passives can't be gained through Improving.
     context.canImprove = !["foe", "minion", "vehicle"].includes(this.document.actor?.type) && this.document.system.source !== "passive";
     context.frequencies = FREQUENCY_LABELS;
@@ -188,6 +199,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = this.document;
     context.system = system;
     context.sources = PowerData.SOURCES;
+    Object.assign(context, belongingContext(system));
     context.canImprove = false;
     context.resources = PowerData.RESOURCES;
     context.isGloom = system.resource === "gloom";

@@ -18,6 +18,8 @@ export default class FeatData extends foundry.abstract.TypeDataModel {
     return {
       description: new StringField({ required: true, initial: "" }),
       source: new StringField({ required: true, choices: FEAT_SOURCES, initial: FEAT_SOURCES[0] }),
+      // The ancestry or class it belongs to, by name, such as "Human" (GAPS 180).
+      belongsTo: new StringField({ required: true, initial: "" }),
       // Gained through Improving (rules 2.8). Only these count for the
       // Death's Door Sanity test (GAPS 16).
       improving: new BooleanField({ initial: false }),

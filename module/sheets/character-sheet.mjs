@@ -31,6 +31,7 @@ import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
 import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
 import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs";
+import { openCreationHelper } from "../creation.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -129,6 +130,7 @@ function powerSummary(item) {
     `🟒${system.cost}${system.actions ? ` ${"◈".repeat(system.actions)}` : " ◇"}`,
     i18n.format("VARBORG.Power.DrShort", { dr: powerDr(system.cost) }),
     i18n.localize(`VARBORG.Power.Source.${system.source}`),
+    system.belongsTo,
     system.sustained ? i18n.localize("VARBORG.Power.SustainedLabel") : ""
   ].filter(Boolean).join(" · ");
 }
@@ -179,7 +181,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       lastRite: CharacterSheet.#onLastRite,
       openMinion: CharacterSheet.#onOpenMinion,
       improve: CharacterSheet.#onImprove,
-      skipFeat: CharacterSheet.#onSkipFeat
+      skipFeat: CharacterSheet.#onSkipFeat,
+      openCreation: CharacterSheet.#onOpenCreation
     }
   };
 
@@ -287,6 +290,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         item,
         summary: [
           game.i18n.localize(`VARBORG.Feat.Source.${item.system.source}`),
+          item.system.belongsTo,
           item.system.improving ? game.i18n.localize("VARBORG.Feat.Improving") : "",
           hasLimitedUse(item) ? frequencyLabel(item) : ""
         ].filter(Boolean).join(" · "),
@@ -502,6 +506,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Skip button: no feat or power is taken for this Improving. */
   static async #onSkipFeat(event, button) {
     await skipFeatChoice(this.document);
+  }
+
+  /** The Creation helper button: the steps of rules 2.1 in one window. */
+  static #onOpenCreation(event, button) {
+    openCreationHelper(this.document);
   }
 
   /** The Command button: ◈ to give the minion two actions on its turn (rules 3.14). */

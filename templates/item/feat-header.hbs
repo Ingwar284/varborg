@@ -7,6 +7,12 @@
         <span>{{localize "VARBORG.Feat.SourceLabel"}}</span>
         <select name="system.source">{{selectOptions sources selected=system.source localize=true}}</select>
       </label>
+      {{#if showBelongsTo}}
+      <label data-tooltip="{{localize 'VARBORG.Feat.BelongsTo.Hint'}}">
+        <span>{{localize belongsToLabel}}</span>
+        <input type="text" name="system.belongsTo" value="{{system.belongsTo}}" placeholder="{{localize 'VARBORG.Feat.BelongsTo.Placeholder'}}">
+      </label>
+      {{/if}}
       {{#if canImprove}}
       <label data-tooltip="{{localize 'VARBORG.Feat.ImprovingHint'}}">
         <input type="checkbox" name="system.improving" {{checked system.improving}}>

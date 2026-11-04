@@ -721,7 +721,11 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
     (`system.hpFixed`, GAPS 111). Tested.
     *Test:* tests pass. Improve the example Warrior and check each step.
 
-46. **Character creation helper.** Optional guided creation: the ability
+46. ~~**Character creation helper.**~~ Done: `module/rules/creation.mjs`
+    with `tests/creation.test.mjs`, the Creation helper window
+    (`module/creation.mjs`, `templates/apps/creation-helper.hbs`) opened
+    from the Origins heading of the character sheet (GAPS 180).
+    Optional guided creation: the ability
     method, ancestry feat, background, class, and starting equipment by the
     class die.
     *Test:* make a character with the helper and check it against 2.1.

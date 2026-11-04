@@ -1407,3 +1407,35 @@
 
 .var-borg-card.improving-card .improving-up { color: #2e7d32; }
 .var-borg-card.improving-card .improving-down { color: #b71c1c; }
+
+/* Character creation helper (step 46) */
+
+/* The window keeps its size; the steps scroll inside it. */
+.creation-helper .window-content {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.creation-helper .creation-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+.creation-helper .creation-step {
+  border-top: 1px solid var(--color-border-light-tertiary, #ccc);
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.creation-helper .creation-step h2 { margin: 0; font-size: 1.1em; }
+.creation-helper .creation-now { margin: 0; font-style: italic; }
+.creation-helper .hint { margin: 0; font-size: 0.85em; opacity: 0.8; }
+.creation-helper .creation-array { display: flex; gap: 0.25rem; align-items: center; }
+.creation-helper .creation-array input { width: 3.2rem; text-align: center; }
+.creation-helper .text-button { align-self: flex-start; }

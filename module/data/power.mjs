@@ -34,6 +34,8 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
     return {
       description: text(),
       source: new StringField({ required: true, choices: POWER_SOURCES, initial: POWER_SOURCES[0] }),
+      // The ancestry or class it belongs to, by name, such as "Warrior" (GAPS 180).
+      belongsTo: new StringField({ required: true, initial: "" }),
       // Ember (a character's power) or Gloom (a foe's gloom ability).
       resource: new StringField({ required: true, choices: POWER_RESOURCES, initial: POWER_RESOURCES[0] }),
       // The listed ember cost (🟒1, 🟒3 ...). The DR is always 11 + this.
