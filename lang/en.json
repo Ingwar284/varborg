@@ -2268,6 +2268,37 @@
       "Overloaded": "{name} carries {used} against a limit of {limit}: more than twice it, so it cannot move.",
       "NotCargo": "{item} cannot be carried as cargo. Vehicles take weapons, armour, shields, gear, containers, scrolls and relics, and feats as special rules.",
       "CannotMove": "You must own both {from} and where {item} is going to move it."
+    },
+    "Improving": {
+      "Button": "Improve",
+      "Tooltip": "Improving (rules 2.8): roll for each ability, more HP and a find, then the player chooses a feat. Dark Master only.",
+      "AskTitle": "Improve {name}",
+      "Ask": "Improve {name} now? Each ability rolls a d6, then 6d10 for more HP and a d6 on the find table. Afterwards the player chooses a feat or power.",
+      "Title": "{name} improves",
+      "HpFixedNow": "Max HP no longer follows Toughness from now on: Improving fixes it.",
+      "Step": {
+        "abilities": "I. Ability changes",
+        "feat": "II. Gain a feat",
+        "hp": "III. More HP",
+        "find": "IV. Amidst shadowed crevices you find…"
+      },
+      "FeatCard": "Choose or roll for one general feat, or one feat or power of your ancestry or class, and drop it on your sheet. A feat is marked “Gained through Improving”.",
+      "HpGain": "6d10: {total}, at least max HP {max}. Max HP and HP go up by d6: {gain} (max HP {newMax}).",
+      "HpNone": "6d10: {total}, below max HP {max}. No more HP.",
+      "Find": {
+        "nothing": "Nothing.",
+        "trinket": "A trinket.",
+        "weapon": "A weapon.",
+        "silverRolled": "3d10 s: {silver} s, added to silver (now {total} s).",
+        "relic": "A relic.",
+        "spellTome": "A spell tome holding a random spell (see Learning spells in rules 3.11)."
+      },
+      "TreasureHint": "Trinkets, relics and random spells are rolled on the Treasure tables (rules 5). The Dark Master hands it out.",
+      "Choose": "Improving: choose a general feat, or a feat or power of your ancestry or class, and drop it here.",
+      "Skip": "Skip",
+      "SkipTooltip": "Take no feat or power for this Improving",
+      "FeatChosen": "{name} gains {item} through Improving.",
+      "PowerChosen": "{name} gains the power {item} through Improving."
     }
   }
 }

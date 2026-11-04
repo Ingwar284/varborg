@@ -30,6 +30,7 @@ import { ORIGIN_TYPES, currentAbilities } from "../rules/origins.mjs";
 import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
 import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
+import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -176,7 +177,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       commandMinion: CharacterSheet.#onCommandMinion,
       useRelic: CharacterSheet.#onUseRelic,
       lastRite: CharacterSheet.#onLastRite,
-      openMinion: CharacterSheet.#onOpenMinion
+      openMinion: CharacterSheet.#onOpenMinion,
+      improve: CharacterSheet.#onImprove,
+      skipFeat: CharacterSheet.#onSkipFeat
     }
   };
 
@@ -290,6 +293,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         states: itemStates(item),
         ...useButton(item)
       }));
+
+    // Improving (rules 2.8): the Dark Master's button, and the feat still to choose.
+    context.isGM = game.user.isGM;
+    context.choosingFeat = choosingFeat(actor);
 
     // Powers, with a line such as "🟒1 ◈◈ · DR12 · Class power".
     context.powers = actor.itemTypes.power
@@ -485,6 +492,16 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onLastRite(event, button) {
     const item = this.#itemFor(button);
     if (item) await performLastRite(this.document, item);
+  }
+
+  /** The Improve button (Dark Master only): rules 2.8, all on one card. */
+  static async #onImprove(event, button) {
+    await improveCharacter(this.document);
+  }
+
+  /** The Skip button: no feat or power is taken for this Improving. */
+  static async #onSkipFeat(event, button) {
+    await skipFeatChoice(this.document);
   }
 
   /** The Command button: ◈ to give the minion two actions on its turn (rules 3.14). */

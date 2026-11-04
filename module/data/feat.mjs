@@ -9,6 +9,7 @@
 
 import { FEAT_SOURCES } from "../rules/feats.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
+import { markImprovingFeat, endChoiceWith } from "../improving.mjs";
 
 const { StringField, BooleanField } = foundry.data.fields;
 
@@ -25,11 +26,22 @@ export default class FeatData extends foundry.abstract.TypeDataModel {
     };
   }
 
-  /** On creation, "Once per day" in the text sets the frequency (GAPS 164). */
+  /**
+   * On creation, "Once per day" in the text sets the frequency (GAPS 164).
+   * While its character is choosing the feat of an Improving, it is marked
+   * "Gained through Improving" (rules 2.8, module/improving.mjs).
+   */
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
     presetFrequency(this, data);
+    markImprovingFeat(this);
+  }
+
+  /** The feat of an Improving ends the choice. */
+  _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
+    endChoiceWith(this.parent, userId);
   }
 
   static SOURCES = Object.fromEntries(FEAT_SOURCES.map(key => [key, `VARBORG.Feat.Source.${key}`]));

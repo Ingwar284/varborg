@@ -708,7 +708,12 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
 
 ## Milestone 8: Growth and content
 
-45. **Improving.** A button that runs rules 2.8. Each ability rolls d6: on a
+45. ~~**Improving.**~~ Done: `module/rules/improving.mjs` with
+    `tests/improving.test.mjs`, the Dark Master's Improve button, the
+    "choose a feat" line with Skip, and the Improving card
+    (`module/improving.mjs`, `templates/chat/improving-card.hbs`); a feat
+    dropped while choosing is marked (GAPS 179).
+    A button that runs rules 2.8. Each ability rolls d6: on a
     1 or below the ability it goes down 1, otherwise up 1 (−3 … +6). Choose a
     feat (marked "gained through Improving"). Roll 6d10, and if it is at
     least your max HP, max HP goes up d6. Then roll the d6 find table.

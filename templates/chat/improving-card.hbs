@@ -1,0 +1,25 @@
+<div class="var-borg-card improving-card">
+  <h3>{{title}}</h3>
+  {{#if hpFixedNow}}<p class="sum">{{localize "VARBORG.Improving.HpFixedNow"}}</p>{{/if}}
+
+  <h4>{{localize "VARBORG.Improving.Step.abilities"}}</h4>
+  <ul class="improving-abilities">
+    {{#each abilities}}
+    <li class="improving-{{direction}}">
+      <span class="label">{{label}}</span>
+      <span class="die">{{roll}}</span>
+      <span>{{arrow}} {{from}} → <strong>{{to}}</strong></span>
+    </li>
+    {{/each}}
+  </ul>
+
+  <h4>{{localize "VARBORG.Improving.Step.feat"}}</h4>
+  <p>{{localize "VARBORG.Improving.FeatCard"}}</p>
+
+  <h4>{{localize "VARBORG.Improving.Step.hp"}}</h4>
+  <p class="{{#if hp.gained}}improving-up{{/if}}">{{hp.line}}</p>
+
+  <h4>{{localize "VARBORG.Improving.Step.find"}}</h4>
+  <p><span class="die">{{find.roll}}</span> {{find.line}}</p>
+  {{#if find.treasure}}<p class="sum">{{localize "VARBORG.Improving.TreasureHint"}}</p>{{/if}}
+</div>

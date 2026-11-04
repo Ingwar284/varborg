@@ -11,6 +11,7 @@
 import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS } from "../rules/powers.mjs";
 import { POWER_RESOURCES, GLOOM_CONDITIONS, GLOOM_DEFENCE_DR } from "../rules/gloom.mjs";
 import { TIMER_KINDS } from "../rules/timers.mjs";
+import { endChoiceWith } from "../improving.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -76,6 +77,15 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       // combat, a rest, or the Dark Master's reset button.
       usedOutside: new BooleanField({ initial: false })
     };
+  }
+
+  /**
+   * A power taken in place of the feat of an Improving ends the choice. It
+   * is not marked: only feats count for Death's Door (GAPS 16, 179).
+   */
+  _onCreate(data, options, userId) {
+    super._onCreate(data, options, userId);
+    endChoiceWith(this.parent, userId);
   }
 
   static SOURCES = labels(POWER_SOURCES, "Power.Source");

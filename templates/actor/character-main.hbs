@@ -90,7 +90,21 @@
   {{> "systems/var-borg/templates/actor/conditions.hbs"}}
 
   <section class="inventory-section">
-    <h2>{{localize "VARBORG.Sheet.Feats"}}</h2>
+    <h2 class="heading-with-button">{{localize "VARBORG.Sheet.Feats"}}
+      {{#if isGM}}
+      <button type="button" class="text-button" data-action="improve" data-tooltip="{{localize 'VARBORG.Improving.Tooltip'}}">
+        <i class="fa-solid fa-arrow-trend-up"></i> {{localize "VARBORG.Improving.Button"}}
+      </button>
+      {{/if}}
+    </h2>
+    {{#if choosingFeat}}
+    <p class="improving-choice">
+      <span>{{localize "VARBORG.Improving.Choose"}}</span>
+      <button type="button" class="text-button" data-action="skipFeat" data-tooltip="{{localize 'VARBORG.Improving.SkipTooltip'}}">
+        {{localize "VARBORG.Improving.Skip"}}
+      </button>
+    </p>
+    {{/if}}
     <ul class="item-list">
       {{#each feats}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
