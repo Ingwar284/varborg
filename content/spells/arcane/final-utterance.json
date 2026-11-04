@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca13000000",
+  "name": "Final Utterance",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You speak a sentence, and reality bends to obey. The more impossible the wish, the more likely you unravel instead. Whatever the result, roll a d2 afterwards: on a 1, you lose this spell.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and you may speak one more sentence.",
+      "success": "Your sentence comes true, as the Dark Master interprets it.",
+      "failure": "Reality obeys only in part, and twists the rest.",
+      "ruin": "Your sentence comes true, but against you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

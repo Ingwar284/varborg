@@ -117,6 +117,7 @@ export async function castSpell(actor, spell) {
 
   let useNote;
   if (scroll) useNote = i18n.localize("VARBORG.Spell.ScrollNoEmber");
+  else if (use.reactions) useNote = i18n.format("VARBORG.Power.UseNoteReaction", { cost: use.ember });
   else if (use.ember || use.actions) useNote = i18n.format("VARBORG.Power.UseNote", { cost: use.ember, actions: use.actions });
   else useNote = i18n.localize("VARBORG.Power.OutsideCombat");
 

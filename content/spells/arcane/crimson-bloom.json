@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca08000000",
+  "name": "Crimson Bloom",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "A bead of flame blossoms into a screaming, ravenous fire in a 20' radius at a point within 60'.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 2,
+    "damage": "2d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage on the first burst.",
+      "success": "Every creature in the area takes 2d6 damage. The flames burn for three rounds as difficult terrain, and a creature that starts its turn inside takes d4 damage.",
+      "failure": "Half damage, and the flames die at once.",
+      "ruin": "The bead bursts in your palm: you take d6 damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

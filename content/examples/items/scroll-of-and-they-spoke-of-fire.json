@@ -17,7 +17,7 @@
       "triumph": "As Success, 2x damage, and creatures in the cone take d4 persistent fire damage.",
       "success": "Every creature in the cone takes d8 damage.",
       "failure": "Half damage.",
-      "ruin": "The screams are yours: you take d4 damage and are Deafened until the end of your next turn."
+      "ruin": "The screams are yours: you take d4 damage and are Deafened until the end of your next turn. Roll on the Shadowblight table."
     }
   }
 }

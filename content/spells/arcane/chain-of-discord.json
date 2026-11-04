@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca12000000",
+  "name": "Chain of Discord",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "A bolt of lightning leaps between the hearts of the wicked, striking d6 creatures, each within 30' of the last. If no foe is in reach, it leaps to an ally.",
+    "spellList": "arcane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "3d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "Each creature struck takes 3d6 damage. A creature already damaged by another source this round takes an additional d6.",
+      "failure": "The bolt strikes only the first creature, for half damage.",
+      "ruin": "The last leap comes home: you take d6 damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim05000000",
+  "name": "Blood-Frenzy",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You howl, and a creature within 30' feels the old hunger in the blood.",
+    "spellList": "primal",
+    "cost": 5,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but the frenzy lasts until the end of its second turn.",
+      "success": "Until the end of its next turn, the creature is Quickened, deals an additional d6 damage on each hit, and must attack the nearest creature, friend or foe. A frenzied foe cannot be demoralised.",
+      "failure": "No effect.",
+      "ruin": "The hunger takes you: on your next turn, you must attack the nearest creature. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

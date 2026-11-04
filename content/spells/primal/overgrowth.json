@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim07000000",
+  "name": "Overgrowth",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "The ground erupts in a violent tangle of briars and roots in a 20' radius at a point within 30'. Sustained. While you sustain it, your feet are rooted and you cannot move.",
+    "spellList": "primal",
+    "cost": 5,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and every creature inside when it erupts takes 2d6 damage.",
+      "success": "The area is difficult terrain, creatures inside are Slowed, and a creature that enters takes d6 damage. If you sustain the spell for three rounds, the thorns bear fruit: eating one is an Interact action and restores d6 HP.",
+      "failure": "The area is difficult terrain until the end of your next turn, and nothing more.",
+      "ruin": "The roots grip you: you are Restrained until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

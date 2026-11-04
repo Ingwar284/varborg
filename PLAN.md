@@ -795,7 +795,21 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       expendable dice, light sources and the medicine box are set from the
       text; each weapon's damage type is the obvious one (GAPS 15). The 14
       gear examples moved there. Services and beasts are prices, not items.
-    - 48g. Spells (4.7).
+    - 48g. ~~**Spells.**~~ Done: the 64 spells of the Arcane, Divine, Primal
+      and Profane pages (16 each, 4 at each cost) in
+      `content/spells/<list>/`, read like powers (cost, actions, damage dice
+      from the text or the Success line, Sustained, all four results).
+      Spells can now be reactions (↻), like powers (No; GAPS 184). Bolts of
+      Assurance's "◈-◈◈◈" is stored as 1 action (GAPS 185). The example
+      spell moved there; it and its scroll now end their Ruin with "Roll on
+      the Shadowblight table", as the rules do.
+    - 48g2. **Rituals.** Each spell page also lists rituals: "**Name** (10
+      minutes)", under a DR heading, with four results. "Rituals are spells
+      cast over minutes or hours, outside combat. They cost no ember and no
+      actions", test Sanity against the heading's DR, and take no casting
+      time Boon or −2 DR (rules 7). Needs: a ritual item (or a spell marked
+      ritual) with its DR and casting time, and a Cast button that tests
+      Sanity without ember, actions or the once-outside-combat limit.
     - 48h. Relics (4.2).
     - 48i. Foes and tables.
 

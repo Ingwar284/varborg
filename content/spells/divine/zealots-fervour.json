@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi05000000",
+  "name": "Zealot's Fervour",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "Your blood boils with heat, and you become a conduit of wrath. Sustained. You cannot retreat from a foe you have struck, and you take d4 damage at the end of each of your turns in which you did not attack.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 2,
+    "damage": "",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and your first hit deals 2x damage.",
+      "success": "While you sustain the spell, your melee attacks deal d12 damage.",
+      "failure": "Your melee attacks deal d12 damage until the end of your next turn, and the spell cannot be sustained.",
+      "ruin": "The fever burns inward: you take d4 persistent fire damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

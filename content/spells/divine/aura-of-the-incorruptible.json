@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi11000000",
+  "name": "Aura of the Incorruptible",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You manifest the presence of your deity. Sustained. You cannot move while it burns, and you cannot lie.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 2,
+    "damage": "3d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and the first pulse strikes as soon as you cast the spell.",
+      "success": "At the start of each of your turns while you sustain the prayer, every foe within 30' takes 3d6 radiant damage.",
+      "failure": "The aura pulses once at the start of your next turn for half damage, then fades.",
+      "ruin": "Your god looks closely at you: you cannot lie until your next Long Rest. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi09000000",
+  "name": "Unwilling Mending",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "Touch a creature, and its flesh seals in jagged patterns. It hurts more than the wounds did, and it leaves a visible scar of your god's hand.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and the creature also ends one Persistent Damage or the Infected condition.",
+      "success": "The creature regains all its HP and is Stupefied until the end of its next turn.",
+      "failure": "The creature regains half its missing HP and is Stupefied until the end of its next turn.",
+      "ruin": "Your god's hand takes rather than gives: the creature is Stupefied and regains nothing. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

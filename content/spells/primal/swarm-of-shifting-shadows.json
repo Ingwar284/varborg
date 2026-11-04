@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim03000000",
+  "name": "Swarm of Shifting Shadows",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A swarm of biting insects fills a 10' radius at a point within 15'. Sustained. On each of your turns, the swarm moves 10' at no cost toward the nearest warm creature, which may be you.",
+    "spellList": "primal",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but you choose where the swarm moves.",
+      "success": "A creature that starts its turn inside the swarm takes d6 damage, and is Blinded while inside.",
+      "failure": "The swarm forms but scatters at the end of your next turn.",
+      "ruin": "The swarm forms around you: you are Blinded until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

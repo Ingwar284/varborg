@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim06000000",
+  "name": "Venomous Maw",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A spectral serpent's head lunges from your shoulder at a foe within 5'.",
+    "spellList": "primal",
+    "cost": 5,
+    "actions": 2,
+    "damage": "d12",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the foe is Slowed on its next turn.",
+      "success": "The foe takes d12 damage and d6 persistent poison damage.",
+      "failure": "Half damage, and no poison.",
+      "ruin": "The serpent turns on you: you take d6 persistent poison damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

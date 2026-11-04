@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf13000000",
+  "name": "The Obsidian Erasure",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You categorise a foe within 60' as \"non-existent\". Reality attempts to correct the error.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "3d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "The foe takes 3d10 damage. If this reduces it to 0 HP, it leaves no corpse and is forgotten by all but you. The Dark Master may rewrite one fact about the world to account for its absence.",
+      "failure": "Half damage, and nothing is forgotten.",
+      "ruin": "Reality corrects the wrong error: until your next Long Rest, no one remembers who you are. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

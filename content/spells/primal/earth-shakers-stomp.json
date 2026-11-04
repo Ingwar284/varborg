@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim11000000",
+  "name": "Earth-Shaker's Stomp",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You strike the ground with the weight of a falling mountain. Structures within 20' take double damage.",
+    "spellList": "primal",
+    "cost": 7,
+    "actions": 2,
+    "damage": "d12",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "Every other creature within 20' takes d12 damage, is knocked Prone and is Restrained, buried in debris and mud. A creature can spend ◈ to dig itself out.",
+      "failure": "Half damage, and creatures are knocked Prone but not buried.",
+      "ruin": "The ground gives way under you: you are Prone and Restrained. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

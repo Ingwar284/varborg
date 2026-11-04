@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf14000000",
+  "name": "Hunger of the Deepest Night",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "A black hole of shadow opens in a 40' radius at a point within 100' and feeds on the existence of everything inside. All light sources in the area go out, leaving complete darkness. Sustained. Each round you sustain it, it feeds on you too, and you take d6 damage.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "4d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage when it opens.",
+      "success": "Every creature in the area takes 4d6 damage when it opens and at the start of each of your turns, plus an additional d6 for each round it has been sustained.",
+      "failure": "It opens for one round only, deals half damage and closes.",
+      "ruin": "It feeds on you first: you take d6 damage and every light you carry goes out. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf04000000",
+  "name": "Bell of the Buried",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "A funeral bell tolls from beneath the earth in a 20' radius at a point within 60'.",
+    "spellList": "profane",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and every Undead within 60' is drawn 10' toward the bell.",
+      "success": "Every creature in the area takes d6 damage and is Deafened for d6 rounds. Undead in the area are drawn 10' toward its centre.",
+      "failure": "Half damage.",
+      "ruin": "The bell tolls for you: every Undead within 60' is drawn 10' toward you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

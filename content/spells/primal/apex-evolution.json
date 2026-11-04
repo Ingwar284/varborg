@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim12000000",
+  "name": "Apex Evolution",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You flood an ally you touch with the raw essence of the World-Beast. They grow claws, scales or horns, whichever the beast prefers.",
+    "spellList": "primal",
+    "cost": 7,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and the ally may choose whether to keep a trait instead of testing.",
+      "success": "For d4 rounds, the ally is Quickened at the start of each turn and their melee attacks deal an additional d10 damage. When it ends, they test Toughness DR16 or keep one trait permanently.",
+      "failure": "The ally's melee attacks deal an additional d10 damage until the end of their next turn, and nothing more.",
+      "ruin": "The beast chooses you: you grow a trait and must test Toughness DR16 or keep it. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf09000000",
+  "name": "Anatomy of the Abyss",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You reach into the shadow of a foe within 30' and crush what lies inside.",
+    "spellList": "profane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "2d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "The foe takes 2d10 damage. If it survives, it takes d6 persistent bleeding damage and is Slowed until the bleeding stops.",
+      "failure": "Half damage, and no bleeding.",
+      "ruin": "Your hand comes back wet with your own blood: you take d6 persistent bleeding damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf08000000",
+  "name": "Eclipse of Reason",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You drain all colour and light from a 20' radius at a point within 30', leaving only grey dread. Those inside hear every lie they ever told, whispered.",
+    "spellList": "profane",
+    "cost": 5,
+    "actions": 2,
+    "damage": "d8",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the conditions last d4 rounds.",
+      "success": "Every creature in the area takes d8 damage and is Blinded and Slowed until the end of its next turn.",
+      "failure": "Half damage.",
+      "ruin": "You hear your own lies: you are Stupefied until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

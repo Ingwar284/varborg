@@ -298,3 +298,39 @@ test("each gear item's price is as its line in 4.1, with its expendable die and 
   const lights = Object.fromEntries(gearItems.filter(g => g.system.light).map(g => [g.name, g.system.light]));
   assert.deepEqual(lights, { Candle: "burns", Lantern: "lamp", "Lantern oil": "fuel", Torch: "burns" });
 });
+
+// 48g: spells (the Arcane, Divine, Primal and Profane spell pages, rules 4.7).
+const spells = readAll(join(root, "content", "spells")).map(({ data }) => data);
+
+test("each spell list has its 16 spells, 4 at each cost (🟒3, 🟒5, 🟒7, 🟒9)", () => {
+  assert.equal(spells.length, 64);
+  for (const list of ["arcane", "divine", "primal", "profane"]) {
+    const own = spells.filter(s => s.system.spellList === list);
+    assert.equal(own.length, 16, list);
+    for (const cost of [3, 5, 7, 9]) assert.equal(own.filter(s => s.system.cost === cost).length, 4, `${list} 🟒${cost}`);
+  }
+});
+
+test("each spell's cost and actions (or reaction ↻) are as the rules write them", () => {
+  for (const s of spells) {
+    const symbols = s.system.reaction ? "↻" : s.name === "Bolts of Assurance" ? "◈-◈◈◈" : "◈".repeat(s.system.actions);
+    assert.ok(flatRules.includes(`${s.name} 🟒${s.system.cost} ${symbols}`), `${s.name}: 🟒${s.system.cost} ${symbols}`);
+  }
+  assert.deepEqual(spells.filter(s => s.system.reaction).map(s => s.name), ["No"]);
+});
+
+test("each spell's text and results are word for word in the rules", () => {
+  for (const s of spells) {
+    for (const line of s.system.description.split("\n")) assert.ok(inRules(line), `${s.name}: "${line.slice(0, 40)}…"`);
+    for (const [tier, text] of Object.entries(s.system.outcomes)) {
+      assert.ok(text, `${s.name} has no ${tier} line`);
+      assert.ok(inRules(text), `${s.name} ${tier}`);
+    }
+  }
+});
+
+test("a spell's damage dice are in its text or its Success line", () => {
+  for (const s of spells.filter(s => s.system.damage)) {
+    assert.ok(`${s.system.description} ${s.system.outcomes.success}`.includes(s.system.damage), s.name);
+  }
+});

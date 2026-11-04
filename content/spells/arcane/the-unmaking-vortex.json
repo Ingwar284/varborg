@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca16000000",
+  "name": "The Unmaking Vortex",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You open a small hole into the Silence at a point within 30'. Sustained. Each round you sustain it, the Silence tugs at you and you take d6 damage.\n,\nRituals are cast outside combat and cost no ember. Test Sanity against the DR of the ritual's heading.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "2d12",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage in the first round.",
+      "success": "While you sustain the spell, every other creature within 60' of the hole is pulled 20' toward it at the start of its turn and takes 2d12 damage. Unattended objects within 60' vanish at the end of each round.",
+      "failure": "The hole opens for one round only and deals half damage, then closes.",
+      "ruin": "The Silence brushes against you: you are Deafened and Silenced until the end of the encounter. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

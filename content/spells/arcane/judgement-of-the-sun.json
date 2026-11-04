@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca11000000",
+  "name": "Judgement of the Sun",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "A pillar of pure photonic light spears a foe within 100'. It leaves a scorched glyph on the ground that sheds light 30' for an hour.",
+    "spellList": "arcane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "2d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "The foe takes 2d10 damage. It and every creature adjacent to it are Blinded until the end of their next turn.",
+      "failure": "Half damage, and no one is Blinded.",
+      "ruin": "The light comes down on you: you are Blinded until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

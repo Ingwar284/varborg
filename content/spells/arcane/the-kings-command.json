@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca10000000",
+  "name": "The King's Command",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Your voice carries the weight of a dying star. Choose a creature within 30'. Sustained.",
+    "spellList": "arcane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "2d8",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and it breaks free only on 18 or higher.",
+      "success": "The creature takes 2d8 psychic damage and is Restrained while you sustain the spell. At the end of each of its turns, the Dark Master rolls a d20 and it breaks free on 16 or higher (a player character tests Sanity DR16 instead).",
+      "failure": "Half damage, and it is not Restrained.",
+      "ruin": "The weight falls on you: you are Restrained until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

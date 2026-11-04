@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf03000000",
+  "name": "Brain-Fog Monologue",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You speak a sentence of perfectly reasoned nonsense to a foe within 30' that can hear you.",
+    "spellList": "profane",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the foe forgets what it was doing: it is Slowed on its next turn.",
+      "success": "The foe takes d6 damage and is Stupefied for d4 rounds.",
+      "failure": "Half damage.",
+      "ruin": "You lose the thread of your own sentence: you are Stupefied until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

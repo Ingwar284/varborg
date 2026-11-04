@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca05000000",
+  "name": "The Unseen Blight",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "You vanish from sight. You leave no trace and no sound, and those who saw you forget your face while you are gone. Sometimes, so do you. Sustained.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 2,
+    "damage": "",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but the spell ends after your second attack instead of your first.",
+      "success": "While you sustain the spell, foes cannot see you: they cannot target you with attacks or abilities that rely on sight, and you defend with Boon against anything that reaches you. Your first attack from hiding has Boon, then the spell ends.",
+      "failure": "You flicker: you defend with Boon until the start of your next turn, then reappear.",
+      "ruin": "You cannot recall your own name until your next Long Rest. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf10000000",
+  "name": "Grave-Soil Surge",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "The earth erupts with the necrotic energy of a thousand forgotten deaths in a 20' radius at a point within 60'. Sustained.",
+    "spellList": "profane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "3d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the skeletons rise as Weak minions.",
+      "success": "Every creature in the area takes 3d6 damage. d4 Grave Skeletons rise as Pitiful minions under your command and act on your next turn. They count toward your minion limit and crumble to dust when the spell ends.",
+      "failure": "Half damage, and nothing rises.",
+      "ruin": "One Grave Skeleton rises, and it hates you: it is a Pitiful foe that acts on your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

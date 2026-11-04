@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi06000000",
+  "name": "Break the Pact",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You command a summoned or otherworldly creature within 30', such as a Fiend, a Fey or a summoned minion, to begone.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 2,
+    "damage": "2d8",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "The creature screams as it vanishes, and cannot return until the next day begins. A Strong or Mighty creature takes 2x damage instead.",
+      "success": "The creature takes 2d8 damage.",
+      "failure": "Half damage.",
+      "ruin": "The entity notices you: its next gloom ability targets you if it can. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

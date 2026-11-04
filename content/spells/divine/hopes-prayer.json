@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi03000000",
+  "name": "Hope's Prayer",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "Utter a sacred syllable to a creature within 30' that can hear you. Malice and mercy are close brethren.",
+    "spellList": "divine",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d8",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage or healing.",
+      "success": "The creature takes d8 radiant damage or regains d8 HP, as you choose. An Undead or Fiend that takes the damage rolls Morale; a mindless one (Morale \"-\") takes an additional d4 radiant damage instead.",
+      "failure": "Half damage or healing.",
+      "ruin": "Mercy and malice change places: the creature receives the opposite of what you chose. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

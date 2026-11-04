@@ -21,6 +21,12 @@
       <input type="checkbox" name="system.sustained" {{checked system.sustained}}>
       <span>{{localize "VARBORG.Power.SustainedLabel"}}</span>
     </label>
+    {{#unless scrollHint}}
+    <label data-tooltip="{{localize 'VARBORG.Power.ReactionHint'}}">
+      <input type="checkbox" name="system.reaction" {{checked system.reaction}}>
+      <span>{{localize "VARBORG.Power.ReactionLabel"}}</span>
+    </label>
+    {{/unless}}
   </div>
   <p class="hint">{{drHint}}</p>
   <fieldset>

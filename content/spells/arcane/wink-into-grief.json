@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca03000000",
+  "name": "Wink into Grief",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Vanish in silver smoke and reappear in a space you can see within 30'. This movement does not provoke Opportune Attacks.",
+    "spellList": "arcane",
+    "cost": 3,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "You defend with Boon against every attack made against you until the start of your next turn.",
+      "success": "The smoke lingers as your shape: you defend with Boon against the first attack made against you before your next turn.",
+      "failure": "You reappear, but the smoke scatters at once.",
+      "ruin": "You arrive with d4 persistent bleeding damage and are Slowed on your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

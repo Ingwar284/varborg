@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi02000000",
+  "name": "Finger of the Divine",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "Touch an ally to bless them. Faith is a loan, and your god keeps the ledger.",
+    "spellList": "divine",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "The ally has Boon on their next test, and you suffer no backlash whatever the result.",
+      "success": "The ally has Boon on their next test. If they fail it, the backlash deals d6 damage to you. If they succeed, you regain d4 HP.",
+      "failure": "No effect.",
+      "ruin": "The ledger is called in: you take d6 damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

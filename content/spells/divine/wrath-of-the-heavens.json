@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi10000000",
+  "name": "Wrath of the Heavens",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "A pillar of fire or light spears a foe within 60'. The ground is scorched forever in the shape of your god's symbol.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 2,
+    "damage": "2d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the pillar leaps to a second foe within 15'.",
+      "success": "The foe takes 2d10 damage.",
+      "failure": "Half damage.",
+      "ruin": "The pillar falls short, at your feet: you take d6 radiant damage. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

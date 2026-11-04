@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim10000000",
+  "name": "Season of the Scythe",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A creature within 30' endures a year of ageing and decay in seconds.",
+    "spellList": "primal",
+    "cost": 7,
+    "actions": 2,
+    "damage": "2d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and its armour is reduced by one tier as it rusts, rots or dulls.",
+      "success": "The creature takes 2d10 damage and is Stupefied and Slowed until the end of its next turn as its joints lock and its mind fades.",
+      "failure": "Half damage.",
+      "ruin": "The year is yours: you gain one level of Fatigued. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

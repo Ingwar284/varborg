@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf05000000",
+  "name": "Soul-Sever",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You picture the tether between the body and soul of a foe within 30', and snap it.",
+    "spellList": "profane",
+    "cost": 5,
+    "actions": 2,
+    "damage": "d12",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the foe is Stupefied for d4 rounds instead.",
+      "success": "The foe takes d12 damage. Its body acts on without will: it is Stupefied until the end of its next turn.",
+      "failure": "Half damage.",
+      "ruin": "Your own tether frays: you are Stupefied until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

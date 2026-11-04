@@ -46,6 +46,9 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
     return {
       description: new StringField({ required: true, initial: "" }),
       ...spellFields(),
+      // A reaction (↻), such as No: cast on any turn with the reaction
+      // instead of actions, as for powers (GAPS 184).
+      reaction: new BooleanField({ initial: false }),
       // As for powers: being sustained now, kept this turn, and the one free
       // use outside combat (rules 3.10).
       sustaining: new BooleanField({ initial: false }),

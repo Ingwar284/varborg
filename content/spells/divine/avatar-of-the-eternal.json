@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi15000000",
+  "name": "Avatar of the Eternal",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You become a living vessel for your deity. Whatever the result, you are Fatigued afterwards and cannot cast spells again until your next Long Rest.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 2,
+    "damage": "2d12",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and you cannot be Charmed or Frightened while it lasts.",
+      "success": "For the rest of the encounter, your attacks and defence use DR8, your attacks deal 2d12 damage, and you can fly.",
+      "failure": "The god fills you only until the end of your next turn.",
+      "ruin": "Your god finds the vessel wanting, and nothing fills you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

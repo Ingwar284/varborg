@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca09000000",
+  "name": "Back to the Womb",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Speak a word and vanish to your sanctuary, taking up to three willing creatures within 10' with you. Name the sanctuary when you learn the spell; you may change it by spending a Downtime activity there.",
+    "spellList": "arcane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and you may take up to six creatures.",
+      "success": "You and your companions arrive at your sanctuary.",
+      "failure": "Only you make the journey.",
+      "ruin": "You arrive, but the sanctuary is not as you left it, and something there has noticed you were gone. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

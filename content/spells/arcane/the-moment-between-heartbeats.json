@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca14000000",
+  "name": "The Moment Between Heartbeats",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Time halts. You move; everything else does not. At the edge of your vision, figures stand watching.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but you take two extra turns.",
+      "success": "You take one extra turn while the world stands still. You cannot harm or affect other creatures, but you may move, reload, ready yourself or take unattended items.",
+      "failure": "Time only stutters: you are Quickened.",
+      "ruin": "The watchers notice you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

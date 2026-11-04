@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi12000000",
+  "name": "Celestial Intercession",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "For a brief moment, your god stands in your place. Sustained. When the spell ends, you have glimpsed what stands behind the sky.",
+    "spellList": "divine",
+    "cost": 7,
+    "actions": 2,
+    "damage": "",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and you need not test when the spell ends.",
+      "success": "While you sustain the spell, you are immune to all damage and conditions, but you cannot move or attack; you can only pray. When it ends, test Sanity DR16 or be Stupefied for d4 rounds.",
+      "failure": "The protection lasts only until the start of your next turn, and you need not test.",
+      "ruin": "What stands behind the sky glimpses you: you are Stupefied for d4 rounds. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

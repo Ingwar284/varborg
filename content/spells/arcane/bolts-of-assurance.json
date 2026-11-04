@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca01000000",
+  "name": "Bolts of Assurance",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Loose one dart of pale flux for each ◈ you spend, at one or several foes within 60'. The darts ignore cover.",
+    "spellList": "arcane",
+    "cost": 3,
+    "actions": 1,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "Each dart deals damage equal to your Sanity (minimum 1).",
+      "failure": "Each dart deals half damage.",
+      "ruin": "One dart finds you and deals its damage to you; the rest fizzle. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

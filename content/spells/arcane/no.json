@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca07000000",
+  "name": "No",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Trigger: A creature within 60' casts a spell or uses a power or gloom ability that costs 5 or less.\nA single whispered word, spoken at the right instant, severs another's magic.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 0,
+    "damage": "",
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "As Success, and the party regains ember equal to the countered cost.",
+      "success": "The ability is countered and has no effect.",
+      "failure": "The ability resolves as normal.",
+      "ruin": "The ability resolves, and the backlash deals d6 damage to you. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

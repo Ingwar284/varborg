@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim04000000",
+  "name": "Vines of the Strangler",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "Vines coil like snakes across a 20' radius at a point within 30'. Sustained.",
+    "spellList": "primal",
+    "cost": 3,
+    "actions": 2,
+    "damage": "d4",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and every creature inside when the vines erupt is Restrained until the start of its next turn.",
+      "success": "The area is difficult terrain, and a creature that starts its turn inside takes d4 damage. A creature that tries to leave is Restrained until the start of its next turn unless it tears free (a player character tests Strength DR12; for a foe, the Dark Master rolls a d20 and it tears free on 12 or higher).",
+      "failure": "The area is difficult terrain until the end of your next turn, and nothing more.",
+      "ruin": "The vines take your ankles: you are Restrained until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

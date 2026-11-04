@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi14000000",
+  "name": "The Rapture",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "A wave of divine energy separates the wheat from the chaff in a 40' emanation around you. Whatever the result, you are Fatigued afterwards.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage and healing.",
+      "success": "Roll 4d6 once. Every foe in the area takes that much damage, and every ally regains that many HP instead. Undead and Fiends take double damage.",
+      "failure": "Half damage and healing.",
+      "ruin": "The chaff is you: you gain two levels of Fatigued instead of one. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

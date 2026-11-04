@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf06000000",
+  "name": "Umbral Possession",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "Your shadow slides into a creature within 20' and hollows it out.",
+    "spellList": "profane",
+    "cost": 5,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the possession lasts d4 + 2 rounds.",
+      "success": "The creature takes d6 damage and is Charmed by you for d4 rounds; it acts when you command it (◈), as a minion. A Strong or Mighty creature is Stupefied for d4 rounds instead.",
+      "failure": "Half damage.",
+      "ruin": "Your shadow does not come back: you cast no shadow until your next Downtime, and the dark knows you (Bane on tests to hide). Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

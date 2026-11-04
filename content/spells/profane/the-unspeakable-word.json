@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf11000000",
+  "name": "The Unspeakable Word",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You utter a syllable that should never be spoken, at a creature within 30'. Everyone within 30' hears it.",
+    "spellList": "profane",
+    "cost": 7,
+    "actions": 2,
+    "damage": "2d6",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "The target takes 2d6 damage and is Doomed. Every other player character within 30' tests Sanity DR16 or is Frightened of the target until the end of their next turn, and every other foe within 30' rolls Morale.",
+      "failure": "Half damage. The word catches in your throat, and no one is Doomed.",
+      "ruin": "You hear it too: you are Frightened of the target until the end of the encounter. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

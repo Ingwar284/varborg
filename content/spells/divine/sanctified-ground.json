@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi07000000",
+  "name": "Sanctified Ground",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "The earth in a 20' radius around you becomes holy, repelling the dark. Sustained. Moving ends the spell.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 2,
+    "damage": "d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but the radius is 30'.",
+      "success": "Allies standing in the area defend with -2 DR. An Undead or Fiend that enters the area or starts its turn inside takes d6 radiant damage.",
+      "failure": "The ground holds only until the end of your next turn, and cannot be sustained.",
+      "ruin": "The ground rejects you: you are knocked Prone. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

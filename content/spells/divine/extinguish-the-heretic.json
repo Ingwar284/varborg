@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi13000000",
+  "name": "Extinguish the Heretic",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You speak the True Name of a foe's destruction. Choose a foe within 90'.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 2,
+    "damage": "3d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage.",
+      "success": "The foe takes 3d10 radiant damage. If it survives, it is permanently Blinded and Deafened until healed by a miracle.",
+      "failure": "Half damage, and nothing lasts.",
+      "ruin": "The Name echoes back: you are Deafened until your next Long Rest. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

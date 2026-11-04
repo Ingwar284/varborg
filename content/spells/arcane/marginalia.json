@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca04000000",
+  "name": "Marginalia",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "Scrawl a glowing correction across a foe within 30', as an editor strikes a line.",
+    "spellList": "arcane",
+    "cost": 3,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but it lasts until the end of your turn after next.",
+      "success": "Until the end of your next turn, attacks against the foe have Boon, and it gains nothing from cover.",
+      "failure": "The ink smudges: the foe gains nothing from cover until the end of your next turn, but attacks gain no Boon.",
+      "ruin": "The ink runs back up your arm: you defend with Bane until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

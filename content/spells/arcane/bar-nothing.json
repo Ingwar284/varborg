@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca06000000",
+  "name": "Bar Nothing",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "A translucent, indestructible wall, 10' by 10', stands where you point within 60'. Nothing passes through it, not even light, and the wall remembers whoever touched it last. Sustained.",
+    "spellList": "arcane",
+    "cost": 5,
+    "actions": 2,
+    "damage": "2d8",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the wall may be up to 20' by 10'.",
+      "success": "The wall stands while you sustain it. Summoned through a foe, it deals 2d8 damage and shoves the foe to a side of your choice.",
+      "failure": "The wall stands only until the end of your next turn, and a foe it passes through takes half damage.",
+      "ruin": "The wall closes around you instead: you are Restrained until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

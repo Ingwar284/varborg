@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpProf16000000",
+  "name": "The Absolute Sensory Null",
+  "type": "spell",
+  "img": "icons/magic/unholy/hand-claw-glow-orange.webp",
+  "system": {
+    "description": "You strip every biological sense from a 40' radius at a point within 60', leaving only the Obsidian Silence. You are unaffected, but you cannot cast other spells while it holds. Sustained.\n,\nRituals are cast outside combat and cost no ember. Test Sanity against the DR of the ritual's heading.",
+    "spellList": "profane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "3d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and a foe breaks free only on a 20.",
+      "success": "Every creature in the area takes 3d6 damage and is Blinded, Deafened and Slowed while you sustain the spell. At the start of each of its turns, the Dark Master rolls a d20 for each foe, and it breaks free on 18 or higher (a player character tests Toughness DR18 instead).",
+      "failure": "Half damage, and creatures are Blinded until the end of their next turn only.",
+      "ruin": "Your own senses go first: you are Blinded and Deafened until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

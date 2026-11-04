@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim14000000",
+  "name": "Petrifying Glare",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "You turn a creature within 60' into living stone.",
+    "spellList": "primal",
+    "cost": 9,
+    "actions": 2,
+    "damage": "2d10",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage, and the stone cracks only on a 20.",
+      "success": "The creature takes 2d10 damage and is Restrained and Stupefied. At the start of each of its turns, the Dark Master rolls a d20 and the stone cracks on 18 or higher, ending the effect (a player character tests Toughness DR18 instead). A creature reduced to 0 HP while petrified is a statue, and shatters if struck again.",
+      "failure": "Half damage, and the creature is Slowed on its next turn as stone creeps over it and falls away.",
+      "ruin": "Your own feet turn to stone: you are Restrained until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

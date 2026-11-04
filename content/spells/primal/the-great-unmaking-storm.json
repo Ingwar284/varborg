@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpPrim13000000",
+  "name": "The Great Unmaking Storm",
+  "type": "spell",
+  "img": "icons/magic/nature/leaf-glow-maple-green.webp",
+  "system": {
+    "description": "A hurricane of debris, lightning and hail rages in a 40' radius at a point within 100', moving 20' per round in a direction you choose. Sustained. While you sustain it, the winds tug at you and you are Slowed.",
+    "spellList": "primal",
+    "cost": 9,
+    "actions": 2,
+    "damage": "4d6",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, 2x damage when the storm forms.",
+      "success": "Every creature inside takes 4d6 damage when the storm forms and at the start of each of your turns, and is Blinded, Deafened and Slowed while inside.",
+      "failure": "The storm blows out after one round, dealing half damage.",
+      "ruin": "The storm forms around you for one round. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi16000000",
+  "name": "Harkin's Last Word",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You speak the Final Rite over a creature that died within the last minute.\n,\nRituals are cast outside combat and cost no ember. Test Sanity against the DR of the ritual's heading.",
+    "spellList": "divine",
+    "cost": 9,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "It returns with half its HP and no shadow at its back: skip the d2 roll.",
+      "success": "It returns at 1 HP, but remembers the other side. Roll a d2: on a 1, something else returns with it, and the Dark Master decides what.",
+      "failure": "It stirs, speaks one sentence, and falls still for good.",
+      "ruin": "Something returns, but it is not them. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

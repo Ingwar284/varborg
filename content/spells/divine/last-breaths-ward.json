@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi01000000",
+  "name": "Last Breath's Ward",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "Your exhaled breath solidifies into a shimmering, holy mist around you or an ally within 10'. Sustained. You cannot speak while it holds.",
+    "spellList": "divine",
+    "cost": 3,
+    "actions": 2,
+    "damage": "",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and the attacker takes d6 radiant damage.",
+      "success": "The mist blocks the next attack against the warded creature, then crumbles to ash.",
+      "failure": "The mist only softens the blow: the warded creature defends with Boon against the next attack, then the mist is gone.",
+      "ruin": "The breath catches in your throat: you are Silenced until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpDivi08000000",
+  "name": "Chant of the Pious",
+  "type": "spell",
+  "img": "icons/magic/holy/prayer-hands-glowing-yellow.webp",
+  "system": {
+    "description": "You chant a sacred hymn, invigorating all around you. Sustained. While you chant, you cannot cast other spells.",
+    "spellList": "divine",
+    "cost": 5,
+    "actions": 2,
+    "damage": "",
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, and foes that can hear you are Slowed on their next turn as the music overwhelms them.",
+      "success": "Every ally within 30' regains 2d6 HP when you cast it, and d6 HP at the start of each of your turns while you sustain it.",
+      "failure": "Every ally within 30' regains d6 HP, and the spell cannot be sustained.",
+      "ruin": "Your voice cracks: you are Silenced until the end of your next turn. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}

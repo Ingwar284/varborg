@@ -25,7 +25,7 @@
     "../ancestries/human.json",
     "../backgrounds/butcher.json",
     "../powers/class/warrior/power-strike.json",
-    "items/and-they-spoke-of-fire.json",
+    "../spells/arcane/and-they-spoke-of-fire.json",
     "items/scroll-of-and-they-spoke-of-fire.json",
     "items/shard-of-the-great-brazier.json"
   ]

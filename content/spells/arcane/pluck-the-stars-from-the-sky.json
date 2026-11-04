@@ -1,0 +1,24 @@
+{
+  "_id": "vbSpArca15000000",
+  "name": "Pluck the Stars from the Sky",
+  "type": "spell",
+  "img": "icons/magic/symbols/runes-star-pentagon-blue.webp",
+  "system": {
+    "description": "d6 blazing meteors are called down on random creatures within 100' of you, allies included. They land at the start of your next turn, so everyone can see the falling light and has one turn to flee. The glowing craters remain as difficult terrain.",
+    "spellList": "arcane",
+    "cost": 9,
+    "actions": 2,
+    "damage": "",
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "As Success, but you choose where each meteor falls.",
+      "success": "Each meteor explodes in a 15' radius and reduces every creature caught in it to 0 HP.",
+      "failure": "Only one meteor falls, on a random creature.",
+      "ruin": "One meteor falls where you stand now. Roll on the Shadowblight table."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false
+  }
+}
