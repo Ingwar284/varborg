@@ -124,22 +124,31 @@ export function startsSustaining(sustained, tier) {
 
 /**
  * Can the power be used now, and what does it take?
- * Out of combat: no pool and no action pips (ember outside combat comes in
- * step 28). In combat: only on your own turn, paying the cost from the
- * Ember pool and spending its actions.
+ * In combat: only on your own turn, paying the cost from the Ember pool and
+ * spending its actions.
+ * Out of combat (rules 3.10): "there is no pool. Each ember ability can be
+ * used once without spending ember; test it as normal. It can be used
+ * again after you finish an encounter or a rest." No action pips either.
+ * Cantrips count too (GAPS 26).
  * @param {object} options
  * @param {boolean} options.inCombat
  * @param {boolean} options.onOwnTurn
  * @param {number} options.cost
  * @param {number} options.actions
- * @returns {{allowed: boolean, ember: number, actions: number}}
+ * @param {boolean} [options.usedOutside]  Already used once outside combat since the last reset.
+ * @returns {{allowed: boolean, reason: "turn"|"used"|null, ember: number, actions: number, marksUsed: boolean}}
+ *   marksUsed: this use is the free one outside combat, so the power is now used.
  */
-export function powerUse({ inCombat = false, onOwnTurn = false, cost, actions }) {
+export function powerUse({ inCombat = false, onOwnTurn = false, cost, actions, usedOutside = false }) {
   assertWhole("Cost", cost);
   assertWhole("Actions", actions);
-  if (!inCombat) return { allowed: true, ember: 0, actions: 0 };
-  if (!onOwnTurn) return { allowed: false, ember: 0, actions: 0 };
-  return { allowed: true, ember: cost, actions };
+  const blocked = reason => ({ allowed: false, reason, ember: 0, actions: 0, marksUsed: false });
+  if (!inCombat) {
+    if (usedOutside) return blocked("used");
+    return { allowed: true, reason: null, ember: 0, actions: 0, marksUsed: true };
+  }
+  if (!onOwnTurn) return blocked("turn");
+  return { allowed: true, reason: null, ember: cost, actions, marksUsed: false };
 }
 
 /**

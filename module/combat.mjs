@@ -23,7 +23,7 @@ import { countDownWaking } from "./deaths-door.mjs";
 import { statusName } from "./conditions.mjs";
 import { askForAmmoRolls } from "./ammunition.mjs";
 import { fillPools, drainPools } from "./pools.mjs";
-import { endOfTurnSustain } from "./dice/power.mjs";
+import { endOfTurnSustain, resetEmberAbilities } from "./dice/power.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -99,7 +99,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
   /**
    * When combat ends, both pools empty (rules 3.10), and raised shields are
    * lowered: there is no next turn. Each weapon whose ammunition was used
-   * asks for its expendable roll (rules 4.1, GAPS 39).
+   * asks for its expendable roll (rules 4.1, GAPS 39). The characters who
+   * fought can use each ember ability once again (rules 3.10).
    */
   _onDelete(options, userId) {
     super._onDelete(options, userId);
@@ -109,6 +110,9 @@ export class VarBorgCombat extends foundry.documents.Combat {
       if (combatant.actor?.system.shieldRaised) combatant.actor.update({ "system.shieldRaised": false });
     }
     if (this.started) askForAmmoRolls(this);
+    // The encounter is over: its characters' ember abilities work once
+    // again outside combat (rules 3.10, GAPS 22).
+    if (this.started) resetEmberAbilities(this.combatants.map(combatant => combatant.actor));
   }
 }
 

@@ -1245,7 +1245,13 @@
       "Bare": {
         "unarmed": "Unarmed",
         "improvised": "Improvised weapon"
-      }
+      },
+      "AlreadyUsed": "{name} has already been used outside combat. It can be used again after an encounter or a rest, or when the Dark Master resets ember abilities.",
+      "UsedOutside": "Used",
+      "UsedOutsideHint": "Used once outside combat. It works again after an encounter or a rest, or when the Dark Master resets ember abilities. In combat, pay from the Ember pool as usual.",
+      "Reset": "Reset ember abilities",
+      "ResetTooltip": "Every character's ember abilities can be used once again outside combat.",
+      "ResetDone": "Ember abilities are reset: each can be used once again outside combat."
     }
   }
 }

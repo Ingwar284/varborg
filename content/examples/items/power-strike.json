@@ -19,6 +19,7 @@
       "ruin": ""
     },
     "sustaining": false,
-    "kept": false
+    "kept": false,
+    "usedOutside": false
   }
 }

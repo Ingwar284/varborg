@@ -118,7 +118,8 @@
       <li class="item-row feat-row power-row" data-item-id="{{item.id}}">
         <img src="{{item.img}}" alt="">
         <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span>
-          {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}</span>
+          {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}
+          {{#if item.system.usedOutside}}<span class="item-state used-outside" data-tooltip="{{localize 'VARBORG.Power.UsedOutsideHint'}}">{{localize "VARBORG.Power.UsedOutside"}}</span>{{/if}}</span>
         {{#if item.system.sustaining}}
         <button type="button" class="text-button" data-action="sustainPower" data-tooltip="{{localize 'VARBORG.Power.SustainTooltip'}}">
           ◈ {{localize "VARBORG.Power.Sustain"}}

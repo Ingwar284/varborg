@@ -802,6 +802,19 @@
   color: #ef6c00;
 }
 
+/* Ember abilities outside combat (step 28) */
+
+.var-borg-sheet .item-row .item-state.used-outside {
+  margin-left: 0.3rem;
+  color: #757575;
+  font-style: italic;
+}
+
+.var-borg-table-panel button.reset-ember {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
 .var-borg-card .power-description {
   font-style: italic;
   opacity: 0.85;

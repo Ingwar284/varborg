@@ -14,6 +14,7 @@
  */
 
 import { POOL, COSTS, fillForRound, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
+import { resetEmberAbilities } from "./dice/power.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
@@ -202,8 +203,9 @@ function addPanelButton(controls) {
 }
 
 /**
- * The shared table panel. For now it holds the Ember and Gloom pools; the
- * day counter, light timer and ember reset come in later steps.
+ * The shared table panel: the Ember and Gloom pools, and the Dark Master's
+ * Reset ember abilities button. The day counter and light timer come in
+ * later steps.
  */
 export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
@@ -213,7 +215,8 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     position: { width: 280, top: 70, left: 120 },
     actions: {
       spend: TablePanel.#onSpend,
-      adjust: TablePanel.#onAdjust
+      adjust: TablePanel.#onAdjust,
+      resetEmber: TablePanel.#onResetEmber
     }
   };
 
@@ -251,5 +254,13 @@ export class TablePanel extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #onAdjust(event, button) {
     await adjustPoolBy(button.dataset.pool, Number(button.dataset.delta));
+  }
+
+  /** Dark Master only: every character's ember abilities work once again outside combat (GAPS 22). */
+  static async #onResetEmber(event, button) {
+    if (!game.user.isGM) return;
+    button.disabled = true;
+    await resetEmberAbilities(game.actors.contents, { announce: true });
+    button.disabled = false;
   }
 }

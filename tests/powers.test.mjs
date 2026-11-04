@@ -57,10 +57,26 @@ test("a Sustained power starts only when it takes effect", () => {
 
 test("in combat a power uses its actions and its cost from the Ember pool, on your own turn only", () => {
   // Power strike: 🟒1 ◈◈.
-  assert.deepEqual(powerUse({ inCombat: true, onOwnTurn: true, cost: 1, actions: 2 }), { allowed: true, ember: 1, actions: 2 });
-  assert.deepEqual(powerUse({ inCombat: true, onOwnTurn: false, cost: 1, actions: 2 }), { allowed: false, ember: 0, actions: 0 });
-  // Outside combat there is no pool and no action pips.
-  assert.deepEqual(powerUse({ inCombat: false, cost: 1, actions: 2 }), { allowed: true, ember: 0, actions: 0 });
+  assert.deepEqual(powerUse({ inCombat: true, onOwnTurn: true, cost: 1, actions: 2 }),
+    { allowed: true, reason: null, ember: 1, actions: 2, marksUsed: false });
+  assert.deepEqual(powerUse({ inCombat: true, onOwnTurn: false, cost: 1, actions: 2 }),
+    { allowed: false, reason: "turn", ember: 0, actions: 0, marksUsed: false });
+});
+
+test("outside combat: once without spending ember, then blocked until reset (rules 3.10)", () => {
+  // The first use: no pool, no action pips, and it marks the power as used.
+  assert.deepEqual(powerUse({ inCombat: false, cost: 1, actions: 2 }),
+    { allowed: true, reason: null, ember: 0, actions: 0, marksUsed: true });
+  // The second use is blocked.
+  assert.deepEqual(powerUse({ inCombat: false, cost: 1, actions: 2, usedOutside: true }),
+    { allowed: false, reason: "used", ember: 0, actions: 0, marksUsed: false });
+  // Cantrips count too (GAPS 26): a 🟒1 power is no exception, nor is a 🟒9 one.
+  assert.equal(powerUse({ inCombat: false, cost: 9, actions: 3, usedOutside: true }).allowed, false);
+});
+
+test("in combat the free use outside combat does not matter: the pool pays", () => {
+  assert.deepEqual(powerUse({ inCombat: true, onOwnTurn: true, cost: 1, actions: 2, usedOutside: true }),
+    { allowed: true, reason: null, ember: 1, actions: 2, marksUsed: false });
 });
 
 test("Sustain spends one action on your own turn", () => {

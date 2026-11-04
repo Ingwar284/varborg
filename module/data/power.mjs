@@ -42,7 +42,10 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       }),
       // Being sustained right now, and whether it was started or sustained this turn.
       sustaining: new BooleanField({ initial: false }),
-      kept: new BooleanField({ initial: false })
+      kept: new BooleanField({ initial: false }),
+      // Used its one free use outside combat (rules 3.10). Cleared after a
+      // combat, a rest, or the Dark Master's reset button.
+      usedOutside: new BooleanField({ initial: false })
     };
   }
 

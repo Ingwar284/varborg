@@ -30,4 +30,11 @@
       {{/if}}
     </div>
   {{/each}}
+
+  {{#if isGM}}
+    <button type="button" class="reset-ember" data-action="resetEmber"
+      data-tooltip="{{localize 'VARBORG.Power.ResetTooltip'}}">
+      <i class="fa-solid fa-rotate-left"></i> {{localize "VARBORG.Power.Reset"}}
+    </button>
+  {{/if}}
 </section>

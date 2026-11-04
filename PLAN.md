@@ -397,7 +397,12 @@ or Improving. Old characters are brought over when the world loads
     *Test:* tests pass. Use Power strike on the Bellman: it is DR12, Ember
     drops by 1 and two action pips are used.
 
-28. **Ember abilities outside combat.** With no combat running, each ember
+28. ~~**Ember abilities outside combat.**~~ Done: `powerUse` in
+    `module/rules/powers.mjs` (tested), the power's `usedOutside` mark,
+    `resetEmberAbilities` in `module/dice/power.mjs` (called when a started
+    combat ends, for its characters, and by the Dark Master's button on the
+    Table panel, for every character). Rests will call it in Milestone 6.
+    With no combat running, each ember
     ability (cantrips included) works once without spending Ember. It unlocks
     after a combat or a rest, or when the GM presses **Reset ember
     abilities**.

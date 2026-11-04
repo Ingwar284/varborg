@@ -59,10 +59,12 @@ export async function usePower(actor, power) {
 export function checkPowerUse(actor, power, turn) {
   const i18n = game.i18n;
   const use = powerUse({
-    inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn, cost: power.system.cost, actions: power.system.actions
+    inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn,
+    cost: power.system.cost, actions: power.system.actions, usedOutside: power.system.usedOutside
   });
   if (!use.allowed) {
-    ui.notifications.warn(i18n.format("VARBORG.Power.NotYourTurn", { name: power.name }));
+    const key = use.reason === "used" ? "VARBORG.Power.AlreadyUsed" : "VARBORG.Power.NotYourTurn";
+    ui.notifications.warn(i18n.format(key, { name: power.name }));
     return null;
   }
   const left = getPools()[POOL.EMBER];
@@ -229,6 +231,8 @@ async function rollPowerTest(actor, power) {
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;
   if (!(await payPowerEmber(actor, use, paid))) return;
+  // Outside combat: this was the one free use (rules 3.10).
+  if (use.marksUsed) await power.update({ "system.usedOutside": true });
 
   const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
@@ -335,6 +339,37 @@ export async function endOfTurnSustain(actor) {
     await power.update({ "system.sustaining": next.sustaining, "system.kept": next.kept });
     if (next.ended) await postLine(actor, game.i18n.format("VARBORG.Power.NotSustained", { power: power.name, name: actor.name }));
   }
+}
+
+/**
+ * Unlock ember abilities again: each can be used once more outside combat
+ * (rules 3.10, GAPS 22). Called when a combat ends (for the characters who
+ * fought in it), by the Dark Master's Reset ember abilities button (for
+ * every character), and later by rests. Runs on the Dark Master's client.
+ * @param {Actor[]} actors
+ * @param {object} [options]
+ * @param {boolean} [options.announce]  Post a chat line saying so.
+ * @returns {Promise<number>} How many powers were unlocked.
+ */
+export async function resetEmberAbilities(actors, { announce = false } = {}) {
+  if (!game.user.isGM) return 0;
+  let count = 0;
+  for (const actor of new Set(actors)) {
+    if (actor?.type !== "character") continue;
+    const updates = actor.itemTypes.power
+      .filter(power => power.system.usedOutside)
+      .map(power => ({ _id: power.id, "system.usedOutside": false }));
+    if (!updates.length) continue;
+    await actor.updateEmbeddedDocuments("Item", updates);
+    count += updates.length;
+  }
+  if (announce) {
+    await ChatMessage.create({
+      speaker: { alias: game.user.name },
+      content: `<div class="var-borg-card power-card"><p>${game.i18n.localize("VARBORG.Power.ResetDone")}</p></div>`
+    });
+  }
+  return count;
 }
 
 /** Does the power name its own test ability? */
