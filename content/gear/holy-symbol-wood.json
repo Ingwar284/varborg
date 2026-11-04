@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0190000000",
+  "name": "Holy symbol (wood)",
+  "type": "gear",
+  "img": "icons/commodities/treasure/token-engraved-pickaxe-pink.webp",
+  "system": {
+    "description": "",
+    "price": 8,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

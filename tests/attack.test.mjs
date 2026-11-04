@@ -12,7 +12,7 @@ import {
   attackDamage, stepDownArmourDie, ruinedAfterAttack, recoverCost, RECOVER_ACTIONS
 } from "../module/rules/attack.mjs";
 
-const example = name => JSON.parse(readFileSync(new URL(`../content/examples/items/${name}.json`, import.meta.url))).system;
+const example = name => JSON.parse(readFileSync(new URL(`../content/weapons/${name}.json`, import.meta.url))).system;
 const dagger = example("dagger");
 const greatsword = example("greatsword");
 const pistol = example("flintlock-pistol");

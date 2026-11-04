@@ -229,3 +229,72 @@ test("a feat that says 'once per round/encounter/day' starts with that frequency
     assert.equal(f.system.frequencyUsed, false, f.name);
   }
 });
+
+// 48f: weapons, armour, shields and gear (rules 4.1).
+const weapons = readAll(join(root, "content", "weapons")).map(({ data }) => data);
+const armourItems = readAll(join(root, "content", "armour")).map(({ data }) => data);
+const gearItems = readAll(join(root, "content", "gear")).map(({ data }) => data);
+/** The lines of rules 4.1, trimmed. */
+const gearLines = (() => {
+  const lines = rules.split(/\r?\n/);
+  const start = lines.findIndex(l => l.trim() === "# 4.1 Gear");
+  const end = lines.findIndex((l, i) => i > start && /^# /.test(l));
+  return lines.slice(start, end).map(l => l.trim());
+})();
+const priceText = price => (price === 0 ? "-" : `${price} s`);
+const lineFor = prefix => gearLines.find(l => l.startsWith(prefix));
+
+test("all 50 weapons of 4.1 are there: 38 melee, 9 ranged and 3 grenades", () => {
+  assert.equal(weapons.filter(w => w.system.kind === "melee").length, 38);
+  assert.equal(weapons.filter(w => w.system.kind === "shoot").length, 9);
+  assert.equal(weapons.filter(w => w.system.kind === "throw").length, 3);
+});
+
+test("each weapon's damage, price and traits are as its line in 4.1", () => {
+  for (const w of weapons) {
+    const s = w.system;
+    const line = lineFor(`${w.name} ${s.damage} ${priceText(s.price)}`);
+    assert.ok(line, `${w.name}: no line "${w.name} ${s.damage} ${priceText(s.price)}"`);
+    const traits = line.slice(`${w.name} ${s.damage} ${priceText(s.price)}`.length).toLowerCase();
+    for (const [key, word] of [["agile", "agile"], ["finesse", "finesse"], ["heavy", "heavy"], ["twoHanded", "two-handed"], ["versatile", "versatile"]]) {
+      assert.equal(s[key], traits.includes(word), `${w.name}: ${key}`);
+    }
+    for (const key of ["reach", "thrown", "ranged"]) {
+      const m = new RegExp(`${key} \\((\\d+)'\\)`).exec(traits);
+      assert.equal(s[key], m ? +m[1] : 0, `${w.name}: ${key}`);
+    }
+    assert.equal(s.reload, +(/reload (\d+)/.exec(traits)?.[1] ?? 0), `${w.name}: reload`);
+    assert.equal(s.expendable, /expendable (d\d+)/.exec(traits)?.[1] ?? "", `${w.name}: expendable`);
+    assert.equal(s.cumbersome, s.heavy || s.twoHanded, `${w.name}: cumbersome (GAPS 48)`);
+  }
+});
+
+test("each armour's price and tier are as its line in 4.1; tier 2 and up is metal (GAPS 27)", () => {
+  const armour = armourItems.filter(a => a.type === "armour");
+  assert.equal(armour.length, 14);
+  for (const a of armour) {
+    assert.ok(lineFor(`${a.name} ${priceText(a.system.price)} t${a.system.tier}`), a.name);
+    assert.equal(a.system.originalTier, a.system.tier, a.name);
+    assert.equal(a.system.metal, a.system.tier >= 2, a.name);
+    assert.equal(a.system.cumbersome, a.system.tier >= 1, a.name);
+  }
+  const shields = armourItems.filter(a => a.type === "shield");
+  assert.deepEqual(shields.map(s => `${s.name} ${s.system.price} ${s.system.size}`).sort(), ["Heavy shield 40 heavy", "Light shield 20 light"]);
+});
+
+test("each gear item's price is as its line in 4.1, with its expendable die and effect", () => {
+  assert.equal(gearItems.length, 51, "43 gear, 3 containers, 3 ammunition, fire pot and smoke bomb");
+  for (const g of gearItems) {
+    // Bombs write their damage before the price: "Fire pot Special 15 s", "Smoke bomb - 10 s".
+    const line = lineFor(`${g.name} ${priceText(g.system.price)}`)
+      ?? gearLines.find(l => l.startsWith(`${g.name} Special ${priceText(g.system.price)}`) || l.startsWith(`${g.name} - ${priceText(g.system.price)}`));
+    assert.ok(line, `${g.name}: no line with its price`);
+    if (g.type !== "gear") continue;
+    const die = /[Ee]xpendable (d\d+)$/.exec(line)?.[1] ?? "";
+    assert.equal(g.system.expendable, /on (Failure|Ruin) expendable/i.test(line) ? "" : die, `${g.name}: expendable`);
+  }
+  const capacity = Object.fromEntries(gearItems.filter(g => g.type === "container").map(g => [g.name, g.system.capacity]));
+  assert.deepEqual(capacity, { Backpack: 15, Bandoleer: 5, Satchel: 10 });
+  const lights = Object.fromEntries(gearItems.filter(g => g.system.light).map(g => [g.name, g.system.light]));
+  assert.deepEqual(lights, { Candle: "burns", Lantern: "lamp", "Lantern oil": "fuel", Torch: "burns" });
+});

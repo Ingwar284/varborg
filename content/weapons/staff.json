@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0260000000",
+  "name": "Staff",
+  "type": "weapon",
+  "img": "icons/weapons/staves/staff-engraved-wood.webp",
+  "system": {
+    "description": "",
+    "price": 5,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d6",
+    "kind": "melee",
+    "damageType": "blunt",
+    "agile": false,
+    "finesse": true,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": true,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

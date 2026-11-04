@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0360000000",
+  "name": "Travel rations",
+  "type": "gear",
+  "img": "icons/consumables/food/ration-canned-fish.webp",
+  "system": {
+    "description": "As meal.",
+    "price": 5,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "d10",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

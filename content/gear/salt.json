@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0430000000",
+  "name": "Salt",
+  "type": "gear",
+  "img": "icons/consumables/food/salt-seasoning-spice-pink.webp",
+  "system": {
+    "description": "",
+    "price": 3,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

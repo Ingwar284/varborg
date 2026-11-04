@@ -1,0 +1,21 @@
+{
+  "_id": "vbAmmo0030000000",
+  "name": "Gunpowder shot",
+  "type": "gear",
+  "img": "icons/commodities/gems/powder-raw-white.webp",
+  "system": {
+    "description": "Each purchase is a full supply: it refills your ammunition, so you roll its expendable die afresh.",
+    "price": 15,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

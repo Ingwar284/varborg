@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0010000000",
+  "name": "Rags",
+  "type": "armour",
+  "img": "icons/equipment/chest/shirt-collared-brown.webp",
+  "system": {
+    "description": "",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 0,
+    "originalTier": 0,
+    "metal": false
+  }
+}

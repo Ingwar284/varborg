@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0040000000",
+  "name": "Bedroll",
+  "type": "gear",
+  "img": "icons/sundries/survival/bedroll-brown.webp",
+  "system": {
+    "description": "",
+    "price": 3,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

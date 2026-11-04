@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0080000000",
+  "name": "Improvised armour",
+  "type": "armour",
+  "img": "icons/equipment/chest/breastplate-banded-simple-leather-brown.webp",
+  "system": {
+    "description": "",
+    "price": 10,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 1,
+    "originalTier": 1,
+    "metal": false
+  }
+}

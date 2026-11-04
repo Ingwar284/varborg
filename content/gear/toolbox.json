@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0410000000",
+  "name": "Toolbox",
+  "type": "gear",
+  "img": "icons/containers/boxes/crate-reinforced-brown.webp",
+  "system": {
+    "description": "10 nails, hammer, small saw, tongs.",
+    "price": 20,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

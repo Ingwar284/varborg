@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0180000000",
+  "name": "Holy symbol (silver)",
+  "type": "gear",
+  "img": "icons/commodities/treasure/token-silver-blue.webp",
+  "system": {
+    "description": "",
+    "price": 60,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

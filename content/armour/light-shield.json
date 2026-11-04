@@ -1,0 +1,15 @@
+{
+  "_id": "vbExampleLightSh",
+  "name": "Light shield",
+  "type": "shield",
+  "img": "icons/equipment/shield/buckler-wooden-boss.webp",
+  "system": {
+    "description": "Shields can be used to provide cover.",
+    "price": 20,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "size": "light",
+    "destroyed": false
+  }
+}

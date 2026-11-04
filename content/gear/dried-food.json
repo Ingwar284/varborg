@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0110000000",
+  "name": "Dried food",
+  "type": "gear",
+  "img": "icons/consumables/food/berries-ration-round-red.webp",
+  "system": {
+    "description": "1 day.",
+    "price": 1,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

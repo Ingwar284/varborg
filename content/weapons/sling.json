@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0400000000",
+  "name": "Sling",
+  "type": "weapon",
+  "img": "icons/weapons/slings/sling-leather.webp",
+  "system": {
+    "description": "Find your own stones.",
+    "price": 5,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d4",
+    "kind": "shoot",
+    "damageType": "blunt",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 40,
+    "reload": 1,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

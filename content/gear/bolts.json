@@ -1,0 +1,21 @@
+{
+  "_id": "vbAmmo0020000000",
+  "name": "Bolts",
+  "type": "gear",
+  "img": "icons/weapons/crossbows/crossbow-golden-bolt.webp",
+  "system": {
+    "description": "Each purchase is a full supply: it refills your ammunition, so you roll its expendable die afresh.",
+    "price": 10,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0150000000",
+  "name": "Hatchet",
+  "type": "weapon",
+  "img": "icons/tools/hand/hatchet-steel-grey.webp",
+  "system": {
+    "description": "",
+    "price": 20,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d6",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 20,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

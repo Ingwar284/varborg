@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0380000000",
+  "name": "Small wagon",
+  "type": "gear",
+  "img": "icons/environment/settlement/wagon.webp",
+  "system": {
+    "description": "Needs a mule or horse to pull it.",
+    "price": 40,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

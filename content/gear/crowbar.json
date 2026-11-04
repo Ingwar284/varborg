@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0100000000",
+  "name": "Crowbar",
+  "type": "gear",
+  "img": "icons/tools/hand/pick-simple-wood.webp",
+  "system": {
+    "description": "",
+    "price": 8,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

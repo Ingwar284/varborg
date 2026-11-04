@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0220000000",
+  "name": "Iron nails",
+  "type": "gear",
+  "img": "icons/tools/hand/hammer-and-nail.webp",
+  "system": {
+    "description": "10 nails.",
+    "price": 2,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 10,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

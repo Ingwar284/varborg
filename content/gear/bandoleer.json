@@ -1,0 +1,13 @@
+{
+  "_id": "vbCont0020000000",
+  "name": "Bandoleer",
+  "type": "container",
+  "img": "icons/equipment/waist/belt-buckle-arrow-brown.webp",
+  "system": {
+    "description": "",
+    "price": 4,
+    "cumbersome": false,
+    "storedIn": "",
+    "capacity": 5
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0140000000",
+  "name": "Full plate",
+  "type": "armour",
+  "img": "icons/equipment/chest/breastplate-gorget-steel.webp",
+  "system": {
+    "description": "",
+    "price": 750,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 4,
+    "originalTier": 4,
+    "metal": true
+  }
+}

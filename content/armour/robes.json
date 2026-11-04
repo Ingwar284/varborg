@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0040000000",
+  "name": "Robes",
+  "type": "armour",
+  "img": "icons/equipment/chest/robe-collared-blue.webp",
+  "system": {
+    "description": "",
+    "price": 10,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 0,
+    "originalTier": 0,
+    "metal": false
+  }
+}

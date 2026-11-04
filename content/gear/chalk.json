@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0080000000",
+  "name": "Chalk",
+  "type": "gear",
+  "img": "icons/commodities/stone/clay-grey.webp",
+  "system": {
+    "description": "",
+    "price": 1,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

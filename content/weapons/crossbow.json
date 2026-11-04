@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0460000000",
+  "name": "Crossbow",
+  "type": "weapon",
+  "img": "icons/weapons/crossbows/crossbow-blue.webp",
+  "system": {
+    "description": "",
+    "price": 40,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d8",
+    "kind": "shoot",
+    "damageType": "shot",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 100,
+    "reload": 2,
+    "expendable": "d6",
+    "loaded": true,
+    "usedUp": false
+  }
+}

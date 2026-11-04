@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0230000000",
+  "name": "Ladder",
+  "type": "gear",
+  "img": "icons/sundries/misc/ladder.webp",
+  "system": {
+    "description": "",
+    "price": 7,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

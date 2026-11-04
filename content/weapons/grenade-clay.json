@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0490000000",
+  "name": "Grenade (clay)",
+  "type": "weapon",
+  "img": "icons/weapons/thrown/bomb-fuse-brown.webp",
+  "system": {
+    "description": "Light the fuse and toss, test Agility DR12 to hit a target:\nTriumph: Everyone in a 10' burst takes damage.\nSuccess: Everyone in a 5' burst takes damage.\nFailure: The bomb misses and/or is inert.\nRuin: Drop the bomb, it explodes at your feet.",
+    "price": 30,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "2d6",
+    "kind": "throw",
+    "damageType": "fire",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 20,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

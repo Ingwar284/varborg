@@ -1,0 +1,15 @@
+{
+  "_id": "vbShld0020000000",
+  "name": "Heavy shield",
+  "type": "shield",
+  "img": "icons/equipment/shield/heater-steel-boss-red.webp",
+  "system": {
+    "description": "Shields can be used to provide cover.",
+    "price": 40,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "size": "heavy",
+    "destroyed": false
+  }
+}

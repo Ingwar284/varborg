@@ -1,0 +1,13 @@
+{
+  "_id": "vbCont0010000000",
+  "name": "Backpack",
+  "type": "container",
+  "img": "icons/containers/bags/pack-engraved-leather-tan.webp",
+  "system": {
+    "description": "",
+    "price": 12,
+    "cumbersome": false,
+    "storedIn": "",
+    "capacity": 15
+  }
+}

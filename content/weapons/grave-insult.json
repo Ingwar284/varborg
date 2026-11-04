@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0390000000",
+  "name": "Grave insult",
+  "type": "weapon",
+  "img": "icons/skills/social/intimidation-impressing.webp",
+  "system": {
+    "description": "",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d2",
+    "kind": "shoot",
+    "damageType": "blunt",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 30,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

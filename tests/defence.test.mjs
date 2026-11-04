@@ -12,7 +12,7 @@ import {
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
 } from "../module/rules/defence.mjs";
 
-const example = name => ({ type: name.includes("shield") ? "shield" : "armour", ...JSON.parse(readFileSync(new URL(`../content/examples/items/${name}.json`, import.meta.url))).system });
+const example = name => ({ type: name.includes("shield") ? "shield" : "armour", ...JSON.parse(readFileSync(new URL(`../content/armour/${name}.json`, import.meta.url))).system });
 const breastplate = example("breastplate");
 const lightShield = example("light-shield");
 

@@ -1,0 +1,21 @@
+{
+  "_id": "vbExampleRope000",
+  "name": "Rope",
+  "type": "gear",
+  "img": "icons/sundries/survival/rope-coiled-brown.webp",
+  "system": {
+    "description": "30 feet.",
+    "price": 4,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0130000000",
+  "name": "Flint and steel",
+  "type": "gear",
+  "img": "icons/sundries/survival/fire-lighter-brass-lit.webp",
+  "system": {
+    "description": "",
+    "price": 4,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

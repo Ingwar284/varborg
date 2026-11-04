@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0330000000",
+  "name": "Muzzle",
+  "type": "gear",
+  "img": "icons/sundries/misc/pet-collar-spiked-brown.webp",
+  "system": {
+    "description": "",
+    "price": 6,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

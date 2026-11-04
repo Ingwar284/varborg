@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0270000000",
+  "name": "Lockpicks",
+  "type": "gear",
+  "img": "icons/tools/hand/lockpicks-steel-grey.webp",
+  "system": {
+    "description": "On Failure expendable d6, on Ruin expendable d2.",
+    "price": 5,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

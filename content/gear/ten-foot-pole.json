@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0390000000",
+  "name": "Ten-foot pole",
+  "type": "gear",
+  "img": "icons/commodities/wood/wood-pole.webp",
+  "system": {
+    "description": "",
+    "price": 1,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

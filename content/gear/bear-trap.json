@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0030000000",
+  "name": "Bear trap",
+  "type": "gear",
+  "img": "icons/environment/traps/trap-jaw-steel.webp",
+  "system": {
+    "description": "Presence DR14 to spot, d8 damage.",
+    "price": 20,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "d2",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

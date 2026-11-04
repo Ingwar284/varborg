@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0200000000",
+  "name": "Instrument (poor)",
+  "type": "gear",
+  "img": "icons/tools/instruments/flute-simple-wood.webp",
+  "system": {
+    "description": "",
+    "price": 15,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0280000000",
+  "name": "Magnesium strip",
+  "type": "gear",
+  "img": "icons/commodities/metal/barstock-heated-steel.webp",
+  "system": {
+    "description": "",
+    "price": 4,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0450000000",
+  "name": "Musket",
+  "type": "weapon",
+  "img": "icons/weapons/guns/gun-wood.webp",
+  "system": {
+    "description": "",
+    "price": 80,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "2d6",
+    "kind": "shoot",
+    "damageType": "shot",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 120,
+    "reload": 2,
+    "expendable": "d4",
+    "loaded": true,
+    "usedUp": false
+  }
+}

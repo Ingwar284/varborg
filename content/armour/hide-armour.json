@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0090000000",
+  "name": "Hide armour",
+  "type": "armour",
+  "img": "icons/equipment/chest/breastplate-collared-leather-brown.webp",
+  "system": {
+    "description": "",
+    "price": 20,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 1,
+    "originalTier": 1,
+    "metal": false
+  }
+}

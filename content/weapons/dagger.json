@@ -1,0 +1,28 @@
+{
+  "_id": "vbExampleDagger0",
+  "name": "Dagger",
+  "type": "weapon",
+  "img": "icons/weapons/daggers/dagger-straight-thin-black.webp",
+  "system": {
+    "description": "",
+    "price": 10,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d4",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": true,
+    "finesse": true,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 20,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0170000000",
+  "name": "Heavy chain",
+  "type": "gear",
+  "img": "icons/commodities/metal/chain-steel.webp",
+  "system": {
+    "description": "15 feet.",
+    "price": 10,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

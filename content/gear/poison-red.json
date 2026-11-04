@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0350000000",
+  "name": "Poison (red)",
+  "type": "gear",
+  "img": "icons/consumables/potions/bottle-round-corked-red.webp",
+  "system": {
+    "description": "Toughness DR12: Failure d10 damage. Ruin d10 damage and d4 persistent poison damage.",
+    "price": 20,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "d4",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

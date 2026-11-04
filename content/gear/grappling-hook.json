@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0140000000",
+  "name": "Grappling hook",
+  "type": "gear",
+  "img": "icons/sundries/survival/climbing-anchor-steel-grey.webp",
+  "system": {
+    "description": "",
+    "price": 12,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

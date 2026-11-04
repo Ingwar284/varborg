@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0060000000",
+  "name": "Hot weather clothes",
+  "type": "armour",
+  "img": "icons/equipment/chest/shirt-simple-white.webp",
+  "system": {
+    "description": "",
+    "price": 15,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 0,
+    "originalTier": 0,
+    "metal": false
+  }
+}

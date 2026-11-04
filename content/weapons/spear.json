@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0250000000",
+  "name": "Spear",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/spear-simple-engraved.webp",
+  "system": {
+    "description": "",
+    "price": 10,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d6",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 20,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

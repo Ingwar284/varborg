@@ -786,7 +786,15 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       not count as the choice (4.6). Not yet done: the creation helper does
       not offer a difficulty feat, and nothing stops a character having
       both; their effects are text, like other feats (step 49).
-    - 48f. Gear, weapons and armour (4.1).
+    - 48f. ~~**Gear, weapons and armour.**~~ Done: from 4.1, 50 weapons in
+      `content/weapons/` (38 melee, 9 ranged, the three grenades as thrown
+      weapons), 14 armours and 2 shields in `content/armour/`, and 51 items
+      in `content/gear/` (43 gear, the backpack, bandoleer and satchel as
+      containers, arrows, bolts and gunpowder shot with the refill rule,
+      and the fire pot and smoke bomb, which roll no damage dice). Traits,
+      expendable dice, light sources and the medicine box are set from the
+      text; each weapon's damage type is the obvious one (GAPS 15). The 14
+      gear examples moved there. Services and beasts are prices, not items.
     - 48g. Spells (4.7).
     - 48h. Relics (4.2).
     - 48i. Foes and tables.

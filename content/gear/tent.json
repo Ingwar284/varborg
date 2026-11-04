@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0400000000",
+  "name": "Tent",
+  "type": "gear",
+  "img": "icons/environment/settlement/tent.webp",
+  "system": {
+    "description": "",
+    "price": 12,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

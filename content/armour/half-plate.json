@@ -1,0 +1,16 @@
+{
+  "_id": "vbArmr0130000000",
+  "name": "Half plate",
+  "type": "armour",
+  "img": "icons/equipment/chest/breastplate-cuirass-steel-grey.webp",
+  "system": {
+    "description": "",
+    "price": 250,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "tier": 3,
+    "originalTier": 3,
+    "metal": true
+  }
+}

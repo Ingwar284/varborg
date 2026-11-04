@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0100000000",
+  "name": "Sickle",
+  "type": "weapon",
+  "img": "icons/tools/hand/sickle-steel-grey.webp",
+  "system": {
+    "description": "",
+    "price": 8,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d4",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": true,
+    "finesse": true,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

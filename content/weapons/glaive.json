@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0310000000",
+  "name": "Glaive",
+  "type": "weapon",
+  "img": "icons/weapons/polearms/glaive-simple.webp",
+  "system": {
+    "description": "",
+    "price": 35,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d8",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": false,
+    "finesse": false,
+    "heavy": true,
+    "twoHanded": true,
+    "versatile": false,
+    "reach": 10,
+    "thrown": 0,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

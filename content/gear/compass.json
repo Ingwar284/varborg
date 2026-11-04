@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0090000000",
+  "name": "Compass",
+  "type": "gear",
+  "img": "icons/tools/navigation/compass-brass-blue-red.webp",
+  "system": {
+    "description": "",
+    "price": 60,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

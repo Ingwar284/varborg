@@ -1,0 +1,21 @@
+{
+  "_id": "vbBomb0010000000",
+  "name": "Fire pot",
+  "type": "gear",
+  "img": "icons/weapons/thrown/bomb-fuse-red-black.webp",
+  "system": {
+    "description": "Thrown (20'). Sets a 5' square ablaze for d6 rounds: anyone in or entering the square takes d4 persistent fire damage.\nLight the fuse and toss, test Agility DR12 to hit a target:\nTriumph: Everyone in a 10' burst takes damage.\nSuccess: Everyone in a 5' burst takes damage.\nFailure: The bomb misses and/or is inert.\nRuin: Drop the bomb, it explodes at your feet.",
+    "price": 15,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

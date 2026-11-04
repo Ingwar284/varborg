@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0440000000",
+  "name": "Grappling gun",
+  "type": "weapon",
+  "img": "icons/weapons/guns/gun-topbarrel.webp",
+  "system": {
+    "description": "Special: test Strength DR12:\nSuccess: enemy is pulled\nFailure: you are pulled",
+    "price": 60,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d6",
+    "kind": "shoot",
+    "damageType": "blunt",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 40,
+    "reload": 3,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

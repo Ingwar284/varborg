@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0260000000",
+  "name": "Large iron hook",
+  "type": "gear",
+  "img": "icons/weapons/fist/hook.webp",
+  "system": {
+    "description": "",
+    "price": 9,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

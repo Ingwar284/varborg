@@ -1,0 +1,21 @@
+{
+  "_id": "vbBomb0020000000",
+  "name": "Smoke bomb",
+  "type": "gear",
+  "img": "icons/commodities/tech/smoke-bomb-purple.webp",
+  "system": {
+    "description": "Thrown (20'). Fills a 10' radius for d6 rounds; anyone within the area is Blinded.\nLight the fuse and toss, test Agility DR12 to hit a target:\nTriumph: Everyone in a 10' burst takes damage.\nSuccess: Everyone in a 5' burst takes damage.\nFailure: The bomb misses and/or is inert.\nRuin: Drop the bomb, it explodes at your feet.",
+    "price": 10,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "",
+    "lightMinutes": 60,
+    "lightRange": 40,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

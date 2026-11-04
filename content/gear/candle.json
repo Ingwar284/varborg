@@ -1,0 +1,21 @@
+{
+  "_id": "vbGear0070000000",
+  "name": "Candle",
+  "type": "gear",
+  "img": "icons/sundries/lights/candle-lit-angelic.webp",
+  "system": {
+    "description": "1 hour, 10 feet.",
+    "price": 1,
+    "cumbersome": false,
+    "storedIn": "",
+    "quantity": 1,
+    "expendable": "",
+    "usedUp": false,
+    "medicine": false,
+    "light": "burns",
+    "lightMinutes": 60,
+    "lightRange": 10,
+    "frequency": "",
+    "frequencyUsed": false
+  }
+}

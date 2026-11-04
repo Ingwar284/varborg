@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0270000000",
+  "name": "Talwar",
+  "type": "weapon",
+  "img": "icons/weapons/swords/scimitar-broad.webp",
+  "system": {
+    "description": "",
+    "price": 25,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d6",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": false,
+    "finesse": true,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false
+  }
+}

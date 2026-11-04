@@ -1,0 +1,28 @@
+{
+  "_id": "vbWeap0470000000",
+  "name": "Blunderbuss",
+  "type": "weapon",
+  "img": "icons/weapons/guns/gun-blunderbuss-worn-brown.webp",
+  "system": {
+    "description": "Special: d10 damage if within range, d4 damage if outside",
+    "price": 65,
+    "cumbersome": true,
+    "storedIn": "",
+    "equipped": false,
+    "damage": "d10/d4",
+    "kind": "shoot",
+    "damageType": "shot",
+    "agile": false,
+    "finesse": false,
+    "heavy": true,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 10,
+    "reload": 2,
+    "expendable": "d4",
+    "loaded": true,
+    "usedUp": false
+  }
+}
