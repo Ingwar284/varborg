@@ -1,0 +1,674 @@
+{
+  "_id": "vbTableSurge0000",
+  "name": "Photonic Surge",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Hedge Mage: Surges always originate on the target of the magic. A surge that doesn't specify an area of effect affects the entire battlefield.</p>",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableSuR001000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Gravity Flux</strong> Gravity reverses in a 30' radius. Everyone falls up 30' before falling down at the start of their turn.</p>",
+      "weight": 1,
+      "range": [
+        1,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR002000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Flash Freeze</strong> The floor in a 40' radius becomes slick ice. Test Agility DR12 or fall Prone when moving.</p>",
+      "weight": 1,
+      "range": [
+        3,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR003000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Spatial Fold</strong> Every creature on the battlefield is teleported to a random unoccupied space within 60'.</p>",
+      "weight": 1,
+      "range": [
+        5,
+        6
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR004000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Verdant Overgrowth</strong> Grassy vines erupt within a 30' radius. The entire area becomes difficult terrain; creatures already in the area of effect are Restrained and must test Strength DR12 to escape.</p>",
+      "weight": 1,
+      "range": [
+        7,
+        8
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR005000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Mirror Dimension</strong> A 20' tall, 60' long shimmering glass wall cuts the battlefield in half. It is opaque and blocks line of sight.</p>",
+      "weight": 1,
+      "range": [
+        9,
+        10
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR006000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Fog of War</strong> Heavy magical smoke fills a 30' radius. Every creature inside is Blinded and has heavy cover from attacks from outside the smoke.</p>",
+      "weight": 1,
+      "range": [
+        11,
+        12
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR007000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Lava Leaks</strong> Small fissures open. At the start of each round, d4 random squares become pools of lava (4d6 damage and d6 persistent fire damage).</p>",
+      "weight": 1,
+      "range": [
+        13,
+        14
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR008000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Magnetic Pulse</strong> All creatures wearing metal armour or holding metal weapons are pulled 20' toward the surge at the start of their turn.</p>",
+      "weight": 1,
+      "range": [
+        15,
+        16
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR009000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Antimagic Bubble</strong> A 15' radius sphere becomes an anti-magic field.</p>",
+      "weight": 1,
+      "range": [
+        17,
+        18
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR010000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Temporal Stutter</strong> The next round of combat partially unravels. At the end of a creature's turn, they return to the position they were in at the start of their turn.</p>",
+      "weight": 1,
+      "range": [
+        19,
+        20
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR011000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Crystalline Spikes</strong> Jagged crystals rise from the ground in a 15' radius. Moving through the area deals d4 damage for every 5' moved.</p>",
+      "weight": 1,
+      "range": [
+        21,
+        22
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR012000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Weightless Air</strong> All creatures gain a flying speed of 30', but lose their walking speed for 1 minute.</p>",
+      "weight": 1,
+      "range": [
+        23,
+        24
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR013000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>The Floor is Mochi</strong> The ground becomes incredibly sticky. All terrain is difficult terrain, creatures are Slowed as long as they are touching the ground, and jumping is impossible.</p>",
+      "weight": 1,
+      "range": [
+        25,
+        26
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR014000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Blinding Radiance</strong> The battlefield is bathed in sunlight. All creatures are Blinded until the end of their next turn.</p>",
+      "weight": 1,
+      "range": [
+        27,
+        28
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR015000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Ego Swap</strong> At the start of each round, two random creatures (one ally, one foe) swap physical locations and initiative counts.</p>",
+      "weight": 1,
+      "range": [
+        29,
+        30
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR016000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Rushing Rapids</strong> Two inches of water instantly coat the floor. A current pushes everyone 10' in the same random direction at the start of a round.</p>",
+      "weight": 1,
+      "range": [
+        31,
+        32
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR017000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Silence Zone</strong> No sounds exist within a 60' radius sphere.</p>",
+      "weight": 1,
+      "range": [
+        33,
+        34
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR018000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Iron Rain</strong> Spectral swords fall from the sky. Every creature not under cover takes d6 damage at the start of their turn.</p>",
+      "weight": 1,
+      "range": [
+        35,
+        36
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR019000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Kaiju Fight</strong> All creatures grow to humongous size. If the surroundings do not allow for a kaiju-sized battle, each creature takes d10 damage before shrinking to their normal size once more.</p>",
+      "weight": 1,
+      "range": [
+        37,
+        38
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR020000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Sudden Pitfall</strong> A 20' deep, 10' wide pit opens directly under the target of the spell.</p>",
+      "weight": 1,
+      "range": [
+        39,
+        40
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR021000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Bouncy Walls</strong> Hard surfaces become rubbery. Jumps double in distance, and anyone pushed into a surface bounces back double the distance.</p>",
+      "weight": 1,
+      "range": [
+        41,
+        42
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR022000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Emberlight</strong> The battlefield is flooded in a soft and warm light. All powers cost half as much ember.</p>",
+      "weight": 1,
+      "range": [
+        43,
+        44
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR023000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Monstrous Infestation</strong> 2d6 pitiful foes appear in random spots. They are hostile to everyone.</p>",
+      "weight": 1,
+      "range": [
+        45,
+        46
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR024000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Midas Touch</strong> The ground in a 20' radius turns to fool's gold. It’s incredibly slippery and reflects light blindingly.</p>",
+      "weight": 1,
+      "range": [
+        47,
+        48
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR025000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Gale Force</strong> A windstorm blows. Ranged weapon attacks are impossible, and tiny and small creatures must hold onto something or be blown 20'.</p>",
+      "weight": 1,
+      "range": [
+        49,
+        50
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR026000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Memory Hole</strong> Everyone forgets who and why they were fighting for 1 round. All creatures are considered neutral until damaged.</p>",
+      "weight": 1,
+      "range": [
+        51,
+        52
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR027000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Echoing Steps</strong> Every time a creature moves, they leave a ghost behind. Attacking the ghost deals half damage to the real creature.</p>",
+      "weight": 1,
+      "range": [
+        53,
+        54
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR028000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Healing Mist</strong> A pink fog fills a 10' radius. It heals every creature within it for d8 HP at the start of their turn.</p>",
+      "weight": 1,
+      "range": [
+        55,
+        56
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR029000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Petrifying Dust</strong> Grey dust falls. Any creature that doesn't move at least 10' on their turn is Doomed as it begins to turn to stone.</p>",
+      "weight": 1,
+      "range": [
+        57,
+        58
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR030000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Infinite Loop</strong> The edges of the battlefield loop. Walking off the north side makes you appear on the south side.</p>",
+      "weight": 1,
+      "range": [
+        59,
+        60
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR031000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Shadow Tendrils</strong> Shadows detach from their owners and enter the fight.</p>",
+      "weight": 1,
+      "range": [
+        61,
+        62
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR032000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Slow Motion</strong> Every creature in a 40' radius is Slowed.</p>",
+      "weight": 1,
+      "range": [
+        63,
+        64
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR033000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Fast Motion</strong> Every creature in a 40' radius is Quickened.</p>",
+      "weight": 1,
+      "range": [
+        65,
+        66
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR034000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Blood Lust</strong> Every creature on the battlefield must use at least one action to move its full speed toward the nearest creature.</p>",
+      "weight": 1,
+      "range": [
+        67,
+        68
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR035000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Webbed Roof</strong> Sticky webs cover the ceiling (or sky). Anything that jumps or flies higher than 10' is caught and Restrained.</p>",
+      "weight": 1,
+      "range": [
+        69,
+        70
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR036000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Aura of Triumph</strong> All rolls on the battlefield are made with Boon for 1 round.</p>",
+      "weight": 1,
+      "range": [
+        71,
+        72
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR037000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Aura of Ruin</strong> All rolls on the battlefield are made with Bane for 1 round.</p>",
+      "weight": 1,
+      "range": [
+        73,
+        74
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR038000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Necrotic Ash</strong> The ground turns black in a 15' radius. Any creature that dies on this terrain immediately rises as an undead on the start of their next turn.</p>",
+      "weight": 1,
+      "range": [
+        75,
+        76
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR039000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Telepathic Link</strong> Everyone on the battlefield can hear everyone else's surface thoughts.</p>",
+      "weight": 1,
+      "range": [
+        77,
+        78
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR040000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Volcanic Vent</strong> A geyser of steam erupts, dealing 3d6 damage and launching anyone 30' up.</p>",
+      "weight": 1,
+      "range": [
+        79,
+        80
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR041000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Prismatic Floor</strong> A 10' square becomes prismatic, reducing damage taken by d8 for anyone standing on it. The square moves each round.</p>",
+      "weight": 1,
+      "range": [
+        81,
+        82
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR042000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Summon Cover</strong> d6 wooden crates and d4 stone pillars magically appear in unoccupied spaces.</p>",
+      "weight": 1,
+      "range": [
+        83,
+        84
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR043000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Earthquake</strong> Everyone falls Prone. Anyone sustaining a spell must test Toughness DR12 or lose their spell.</p>",
+      "weight": 1,
+      "range": [
+        85,
+        86
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR044000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Toxic Air</strong> A 10' radius cloud of poisonous gas moves 10' in a random direction each round. Creatures that start their turn inside take 2d6 poison damage.</p>",
+      "weight": 1,
+      "range": [
+        87,
+        88
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR045000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Chain Lightning Floor</strong> If two creatures are standing within 5' of each other, electricity arcs between them for d10 damage.</p>",
+      "weight": 1,
+      "range": [
+        89,
+        90
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR046000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Mirror Images</strong> Silver smoke wraps every creature on the battlefield, as the Arcane spell Wink into Grief. Until the end of the next round, player characters defend with Boon against the first attack made against them, and the first attack made against each foe is made with Bane.</p>",
+      "weight": 1,
+      "range": [
+        91,
+        92
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR047000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>The Spotlight</strong> A beam of light follows the creature that has dealt the most damage this fight (the Dark Master's call). They attack and defend with -2 DR, but all foes know exactly where they are, and they cannot hide or benefit from darkness while the beam lasts. It fades when the combat ends.</p>",
+      "weight": 1,
+      "range": [
+        93,
+        94
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR048000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Slow-Sand</strong> The floor becomes quicksand. Creatures that end their turn without moving sink and become Slowed.</p>",
+      "weight": 1,
+      "range": [
+        95,
+        96
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR049000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>Miniature Black Hole</strong> A black hole manifests. The surge pulls everyone 20' toward it at the start of their turn. Anyone in the black hole takes 3d10 damage.</p>",
+      "weight": 1,
+      "range": [
+        97,
+        98
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR050000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>The Great Reset</strong> All status effects are cleared and all wounds and HP are restored to full.</p>",
+      "weight": 1,
+      "range": [
+        99,
+        99
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSuR051000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p><strong>God's Eye</strong> The caster chooses any 3 effects from this table to happen simultaneously.</p>",
+      "weight": 1,
+      "range": [
+        100,
+        100
+      ],
+      "drawn": false
+    }
+  ]
+}

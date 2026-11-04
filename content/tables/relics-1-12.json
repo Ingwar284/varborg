@@ -1,0 +1,179 @@
+{
+  "_id": "vbTableRelicLow0",
+  "name": "Relics 1–12",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 4.2: on a 1 on the d2, roll a d12 for relics 1–12.</p>",
+  "formula": "1d12",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableReR001000",
+      "type": "document",
+      "name": "Wick of the First Lamplighter",
+      "img": "icons/sundries/lights/candle-lit-yellow.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic001000000",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR002000",
+      "type": "document",
+      "name": "Shard of the Great Brazier",
+      "img": "icons/svg/fire.svg",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbExampleShard00",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR003000",
+      "type": "document",
+      "name": "Saint's knucklebone",
+      "img": "icons/commodities/bones/bone-simple-white.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic003000000",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR004000",
+      "type": "document",
+      "name": "Gasman's rebreather",
+      "img": "icons/equipment/head/mask-plague-leather-brown.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic004000000",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR005000",
+      "type": "document",
+      "name": "Fragment of a Council mask",
+      "img": "icons/commodities/treasure/mask-jeweled-gold.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic005000000",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR006000",
+      "type": "document",
+      "name": "Stoker's coal",
+      "img": "icons/magic/fire/flame-burning-embers-yellow.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic006000000",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR007000",
+      "type": "document",
+      "name": "Directorate compass",
+      "img": "icons/tools/navigation/compass-brass-blue-red.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic007000000",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR008000",
+      "type": "document",
+      "name": "Clapper of the Vigilant Bell",
+      "img": "icons/tools/instruments/bell-brass-brown.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic008000000",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR009000",
+      "type": "document",
+      "name": "Mourner's veil",
+      "img": "icons/equipment/head/hood-cloth-brown.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic009000000",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR010000",
+      "type": "document",
+      "name": "Furnace-tooth",
+      "img": "icons/creatures/abilities/fang-tooth-blood-red.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic010000000",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR011000",
+      "type": "document",
+      "name": "Antler of the Glass Stag",
+      "img": "icons/commodities/bones/horn-antler-pink-white.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic011000000",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR012000",
+      "type": "document",
+      "name": "Page of the Iron Ledger",
+      "img": "icons/sundries/documents/document-torn-diagram-tan.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic012000000",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false
+    }
+  ]
+}

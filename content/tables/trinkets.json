@@ -1,0 +1,271 @@
+{
+  "_id": "vbTableTrinket00",
+  "name": "Trinkets",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 5 Treasure: small, strange things with a story attached. Trinkets fetch 1–10 s from a curious buyer.</p>",
+  "formula": "1d20",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableTrR001000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A candle stub that never burns below halfway.</p>",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR002000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A glass eye that weeps on the day before rain.</p>",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR003000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A key to a door no one has found.</p>",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR004000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A child's tin soldier with its face scratched off.</p>",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR005000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A Wickguard badge with a different name on the back.</p>",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR006000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A pressed flower that smells of a summer before the Gloaming.</p>",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR007000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A pocket mirror that shows the room a moment late.</p>",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR008000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A rosary of knucklebones, one too many.</p>",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR009000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A brass cog that turns slowly by itself.</p>",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR010000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A page torn from the Great Archives, written in a hand you know.</p>",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR011000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A music box that plays three notes and stops.</p>",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR012000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A pouch of grave soil from Harkin's Last Hall.</p>",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR013000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A coin with two heads, both of them yours.</p>",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR014000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A wax seal of a house that no longer exists.</p>",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR015000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A soot-black feather that is warm to the touch.</p>",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR016000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A tooth with a tiny map carved into it.</p>",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR017000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A ticket to a play at the Seven Visages, for a performance forty years ago.</p>",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR018000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A vial of Gaslake water that glows when shaken.</p>",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR019000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A lucky charm. Once ever, you may reroll one die; then it crumbles.</p>",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableTrR020000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A small brass lantern-hook shaped like a hand. Hung on it, a lantern never blows out in wind.</p>",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false
+    }
+  ]
+}

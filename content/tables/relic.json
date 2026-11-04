@@ -1,0 +1,39 @@
+{
+  "_id": "vbTableRelic0000",
+  "name": "Relic",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 4.2 Rolling a relic: roll a d2. On a 1, roll a d12 for relics 1–12. On a 2, roll a d10 and add 12 for relics 13–22.</p>",
+  "formula": "1d2",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableReR001000",
+      "type": "document",
+      "name": "Relics 1–12",
+      "img": "icons/svg/d20-black.svg",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.tables.RollTable.vbTableRelicLow0",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR002000",
+      "type": "document",
+      "name": "Relics 13–22",
+      "img": "icons/svg/d20-black.svg",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.tables.RollTable.vbTableRelicHi00",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    }
+  ]
+}

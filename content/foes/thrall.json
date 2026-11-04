@@ -1,0 +1,75 @@
+{
+  "_id": "vbFoeThrall00000",
+  "name": "Thrall",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "pitiful",
+    "category": "",
+    "description": "A drowned barge-corpse from the Gaslake, a pauper from the Pyre's waiting room, a body the final rite never reached. It wears whatever it died in and remembers nothing, except, sometimes, the way to its own front door.",
+    "hp": {
+      "value": 1,
+      "max": 1
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": true
+  },
+  "items": [
+    {
+      "_id": "vbFoeThrallIt001",
+      "name": "Grasping hands and teeth",
+      "type": "weapon",
+      "img": "icons/svg/sword.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 0,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "bleeding",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbFoeThrallIt002",
+      "name": "Shambling",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "It moves 15' per Move and acts only when commanded. As a mook, it fails every test it would make, and creatures can move through its space without a test, as difficult terrain.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

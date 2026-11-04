@@ -60,6 +60,15 @@ test("sorting puts each kind of entry in the right pack", () => {
   assert.equal(packFor({ type: "character" }), null);
 });
 
+test("roll tables (no type, a formula and results) go into the Roll Tables pack, with keys for their results", () => {
+  const rollTable = { _id: "d".repeat(16), name: "Spoils", formula: "1d20", results: [{ _id: "e".repeat(16), type: "text" }] };
+  assert.equal(packFor(rollTable).name, "tables");
+  const keyed = withKeys(rollTable);
+  assert.equal(keyed._key, `!tables!${"d".repeat(16)}`);
+  assert.equal(keyed.results[0]._key, `!tables.results!${"d".repeat(16)}.${"e".repeat(16)}`);
+  assert.equal(packFor({ type: "relic", results: [] }).name, "relics", "an item with a results field is still an item");
+});
+
 test("foes are hidden from players; other packs can be read by players", () => {
   for (const entry of manifestPacks()) {
     assert.equal(entry.ownership.PLAYER, entry.name === "foes" ? "NONE" : "OBSERVER", entry.name);

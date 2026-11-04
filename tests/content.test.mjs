@@ -404,16 +404,22 @@ const flatNoMarks = flatRules.replace(/⚔ /g, "");
 /** Text made safe to put inside a regular expression. */
 const escapeRe = text => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-test("the rules' 182 foe stat blocks and 2 minion stat blocks are there", () => {
-  assert.equal(foeActors.length, 182);
+test("the rules' 182 foe stat blocks, the Gravecaller's Thrall and 2 minion stat blocks are there", () => {
+  assert.equal(foeActors.length, 183);
   assert.deepEqual(minionActors.map(m => m.name).sort(), ["Destrier", "Raider-Beast"]);
+});
+
+test("the Thrall is a mook: 1 HP, Morale -, no armour (GAPS 187)", () => {
+  const thrall = foeActors.find(f => f.name === "Thrall").system;
+  assert.ok(flatRules.includes("Thrall Mook A drowned barge-corpse"));
+  assert.deepEqual([thrall.mook, thrall.hp.max, thrall.morale, thrall.armour], [true, 1, null, ""]);
 });
 
 test("each foe's tier, HP, Morale and armour are as its stat block", () => {
   for (const f of [...foeActors, ...minionActors]) {
     const s = f.system;
     const tier = s.tier[0].toUpperCase() + s.tier.slice(1);
-    assert.ok(new RegExp(`${escapeRe(f.name)} _?${tier} (Foe|foe|minion)`).test(flatRules), `${f.name}: tier`);
+    if (!s.mook) assert.ok(new RegExp(`${escapeRe(f.name)} _?${tier} (Foe|foe|minion)`).test(flatRules), `${f.name}: tier`);
     assert.ok(flatRules.includes(`HP ${s.hp.max}/${s.hp.max}`), `${f.name}: HP`);
     assert.ok(s.morale === null || flatRules.includes(`Morale ${s.morale}`), `${f.name}: Morale`);
     if (s.armour) assert.ok(flatRules.includes(`-${s.armour}`), `${f.name}: armour`);
@@ -446,4 +452,77 @@ test("a gloom ability's own test gives its Failure and Ruin damage and condition
   assert.deepEqual([trick.ability, trick.dr, trick.damage, trick.ruinDamage], ["agility", 12, "d6", "d8"]);
   assert.deepEqual(trick.conditions, { failure: "blinded", ruin: "blinded" });
   assert.deepEqual(trick.durations, { failure: { kind: "rounds", rounds: "1" }, ruin: { kind: "rounds", rounds: "d4" } });
+});
+
+// 48j: roll tables (rules 2.4, 4.2, 4.6, 5 and the Hedge Mage's Photonic Surge).
+const rollTables = readAll(join(root, "content", "tables")).map(({ data }) => data);
+/** Every content file's id, by pack name, to check the tables' links. */
+const allContent = readAll(join(root, "content")).map(({ data }) => data);
+
+/** The smallest and largest roll of a formula such as "1d12" or "1d10 + 12". */
+function rollSpan(formula) {
+  const m = /^(\d+)d(\d+)(?: ?\+ ?(\d+))?$/.exec(formula.replace(/\s+/g, " ").trim());
+  const [count, faces, add] = [+m[1], +m[2], +(m[3] ?? 0)];
+  return [count + add, count * faces + add];
+}
+
+test("the ten roll tables are there", () => {
+  assert.deepEqual(rollTables.map(t => t.name).sort(), [
+    "Backgrounds", "Harkin's Reprieve: you wake…", "Photonic Surge", "Relic", "Relics 13–22", "Relics 1–12",
+    "Searching the fallen", "Spoils", "Trinkets", "Valuables"
+  ]);
+});
+
+test("each table's results cover every roll of its formula once, with no gaps", () => {
+  for (const t of rollTables) {
+    const [low, high] = rollSpan(t.formula);
+    const covered = [];
+    for (const r of t.results) for (let n = r.range[0]; n <= r.range[1]; n++) covered.push(n);
+    covered.sort((a, b) => a - b);
+    assert.deepEqual(covered, Array.from({ length: high - low + 1 }, (_, i) => low + i), t.name);
+    for (const r of t.results) assert.match(r._id, /^[a-zA-Z0-9]{16}$/, `${t.name}: result id`);
+  }
+});
+
+test("every link in a table points to an entry that exists, in the right compendium", () => {
+  const ids = new Set(allContent.map(d => d._id));
+  for (const t of rollTables) {
+    for (const r of t.results.filter(r => r.type === "document")) {
+      const m = /^Compendium\.var-borg\.(\w+)\.(Item|RollTable)\.([a-zA-Z0-9]{16})$/.exec(r.documentUuid);
+      assert.ok(m, `${t.name}: ${r.documentUuid}`);
+      assert.ok(ids.has(m[3]), `${t.name}: ${r.name} links to a missing entry`);
+      const target = allContent.find(d => d._id === m[3]);
+      assert.equal(target.name, r.name, `${t.name}: link name`);
+    }
+  }
+});
+
+test("the relic tables give the odds of rules 4.2: d2, then d12 or d10 + 12", () => {
+  const byName = name => rollTables.find(t => t.name === name);
+  assert.equal(byName("Relic").formula, "1d2");
+  assert.equal(byName("Relics 1–12").formula, "1d12");
+  assert.equal(byName("Relics 13–22").formula, "1d10 + 12");
+  assert.equal(byName("Relics 1–12").results.length + byName("Relics 13–22").results.length, 22);
+});
+
+test("the text results are word for word in the rules", () => {
+  const plain = html => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim();
+  for (const t of rollTables.filter(t => !["Photonic Surge", "Searching the fallen", "Valuables"].includes(t.name))) {
+    for (const r of t.results.filter(r => r.type === "text")) assert.ok(rules.includes(`| ${plain(r.description)} |`), `${t.name}: ${plain(r.description)}`);
+  }
+  // The rules run each surge's name into its effect ("Gravity FluxGravity reverses…").
+  for (const r of rollTables.find(t => t.name === "Photonic Surge").results) {
+    const [, name, effect] = /^<p><strong>(.+?)<\/strong> (.+)<\/p>$/.exec(r.description);
+    assert.ok(rules.includes(`${plain(name)}${plain(effect)} |`), `surge ${r.range}`);
+  }
+});
+
+test("the Charioteer's rig is a vehicle as its stat block writes it", () => {
+  const rig = readAll(join(root, "content", "vehicles")).map(({ data }) => data).find(v => v.name === "The rig");
+  const s = rig.system;
+  assert.deepEqual([s.hp.max, s.armour, s.armourName, s.speed.safe, s.speed.normal, s.speed.fast, s.passengerSeats, s.cargoLimit],
+    [20, "d2", "Bolted scrap", 30, 50, 70, 3, 8]);
+  assert.ok(flatRules.includes("Speed 30' safe, 50' normal, 70' fast per Move"));
+  assert.ok(flatRules.includes(`Passengers ${s.passengers}`));
+  for (const item of rig.items) assert.ok(inRules(`${item.name} ${item.system.description}`), item.name);
 });

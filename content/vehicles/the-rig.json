@@ -1,0 +1,98 @@
+{
+  "_id": "vbVehicleRig0000",
+  "name": "The rig",
+  "type": "vehicle",
+  "img": "icons/svg/clockwork.svg",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 0,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "description": "A three-wheeled steam-chariot of bolted scrap, its boiler slung low between the rear wheels and a gas-lamp riding the prow. Every rig is different, and every one of them is illegal.",
+    "hp": {
+      "value": 20,
+      "max": 20
+    },
+    "armour": "d2",
+    "armourName": "Bolted scrap",
+    "speed": {
+      "safe": 30,
+      "normal": 50,
+      "fast": 70
+    },
+    "crew": "1 driver (no stoker needed: you feed the firebox with your boot)",
+    "passengers": "3, or 8 heavy items of cargo",
+    "passengerSeats": 3,
+    "cargoLimit": 8,
+    "fuel": "A sack of coal runs it for 4 hours (expendable d6 for a day's travel). Out of coal, it stops.",
+    "price": 0,
+    "occupants": [],
+    "driveBoon": false
+  },
+  "items": [
+    {
+      "_id": "vbVehicleRigIt01",
+      "name": "Boiler",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "When the rig is reduced to 0 HP, the boiler bursts: everything within 10' tests Agility DR14: Failure 3d6. Ruin 3d6 and d4 persistent fire damage.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbVehicleRigIt02",
+      "name": "Prow-lamp",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Lights 60' ahead. Anything that hunts by light sees you coming.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbVehicleRigIt03",
+      "name": "Repairs",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "During a Short Rest with a toolbox, the rig regains all its HP.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    },
+    {
+      "_id": "vbVehicleRigIt04",
+      "name": "Wear and tear",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "Damage the rig takes from your own rams, scrapes, jumps and boiler ignores its armour.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

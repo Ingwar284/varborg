@@ -1,0 +1,89 @@
+{
+  "_id": "vbTableHarkin000",
+  "name": "Harkin's Reprieve: you wake…",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 4.6, Harkin's Reprieve: you wake d6 hours later, somewhere the Dark Master chooses or rolls.</p>",
+  "formula": "1d6",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableHaR001000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>On the black sand of the Gaslake shore, among the offerings that the barges of Harkin's Last Hall did not take.</p>",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableHaR002000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>On a slab in a Silent Fraternity ossuary, as a Silent Mourner stares down at you in silent disapproval.</p>",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableHaR003000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>In a Wickguard cell, charged with something you did not do. Your gear is in the evidence room.</p>",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableHaR004000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>In a Hinterlands farmhouse, tended by strangers who will want something in return.</p>",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableHaR005000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Beside a guttering campfire with your companions, who swear they saw you die.</p>",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableHaR006000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Where you fell, hours later. The fight is over, the dark has moved on, and someone has gone through your pockets: you lose one item of the Dark Master's choice.</p>",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false
+    }
+  ]
+}

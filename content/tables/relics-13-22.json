@@ -1,0 +1,151 @@
+{
+  "_id": "vbTableRelicHi00",
+  "name": "Relics 13–22",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 4.2: on a 2 on the d2, roll a d10 and add 12 for relics 13–22.</p>",
+  "formula": "1d10 + 12",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableReR001000",
+      "type": "document",
+      "name": "Lun's Cataract",
+      "img": "icons/tools/scribal/lens-blue.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic013000000",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR002000",
+      "type": "document",
+      "name": "Hearth-tallow of Anashe",
+      "img": "icons/sundries/lights/candle-lit-red.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic014000000",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR003000",
+      "type": "document",
+      "name": "Godstone nail",
+      "img": "icons/tools/fasteners/rivet-mount-post-steel.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic015000000",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR004000",
+      "type": "document",
+      "name": "Ara's burning-glass",
+      "img": "icons/commodities/treasure/lense-pipe-bronze.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic016000000",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR005000",
+      "type": "document",
+      "name": "Bell-rope of the Cairn",
+      "img": "icons/equipment/waist/belt-rope.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic017000000",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR006000",
+      "type": "document",
+      "name": "Vex's loaded die",
+      "img": "icons/sundries/gaming/dice-pair-white-green.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic018000000",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR007000",
+      "type": "document",
+      "name": "Tidemonger's rust-key",
+      "img": "icons/sundries/misc/key-ornate-iron-black.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic019000000",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR008000",
+      "type": "document",
+      "name": "Bramble crown",
+      "img": "icons/magic/nature/root-vine-thorned-coil-green.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic020000000",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR009000",
+      "type": "document",
+      "name": "Rivet of the Last Wall",
+      "img": "icons/equipment/hand/gauntlet-iron-riveted-brown.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic021000000",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableReR010000",
+      "type": "document",
+      "name": "Ash-candle of the Last Flame",
+      "img": "icons/sundries/lights/candle-lit-angelic.webp",
+      "description": "",
+      "documentUuid": "Compendium.var-borg.relics.Item.vbRelic022000000",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false
+    }
+  ]
+}

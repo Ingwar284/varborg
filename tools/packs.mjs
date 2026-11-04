@@ -26,7 +26,9 @@ export const PACKS = [
   { name: "relics",    label: "Relics",            documentName: "Item",  types: ["relic"] },
   { name: "foes",      label: "Foes",              documentName: "Actor", types: ["foe"], gmOnly: true },
   { name: "minions",   label: "Minions",           documentName: "Actor", types: ["minion"] },
-  { name: "vehicles",  label: "Vehicles",          documentName: "Actor", types: ["vehicle"] }
+  { name: "vehicles",  label: "Vehicles",          documentName: "Actor", types: ["vehicle"] },
+  // Roll tables have no type: every roll table goes here (step 48j).
+  { name: "tables",    label: "Roll Tables",       documentName: "RollTable", types: [] }
 ];
 
 /**
@@ -36,13 +38,17 @@ export const PACKS = [
 export const UNPACKED_TYPES = ["character"];
 
 /** Foundry's database collection name for each document class. */
-const COLLECTIONS = { Actor: "actors", Item: "items" };
+const COLLECTIONS = { Actor: "actors", Item: "items", RollTable: "tables" };
 
 /** Item and Actor types can share no names, so the type alone tells which document class a file is. */
 const ACTOR_TYPES = new Set(["character", "foe", "minion", "vehicle"]);
 
-/** "Actor" or "Item" for a content file's data. */
+/**
+ * "Actor", "Item" or "RollTable" for a content file's data. A roll table
+ * has no type, but has a formula and results.
+ */
 export function documentNameOf(data) {
+  if (data.type === undefined && typeof data.formula === "string" && Array.isArray(data.results)) return "RollTable";
   return ACTOR_TYPES.has(data.type) ? "Actor" : "Item";
 }
 
@@ -50,6 +56,7 @@ export function documentNameOf(data) {
 export function packFor(data) {
   if (UNPACKED_TYPES.includes(data.type)) return null;
   const documentName = documentNameOf(data);
+  if (documentName === "RollTable") return PACKS.find(pack => pack.documentName === "RollTable") ?? null;
   return PACKS.find(pack => pack.documentName === documentName && pack.types.includes(data.type)) ?? null;
 }
 
@@ -66,6 +73,8 @@ export function withKeys(data) {
   if (collection === "actors") {
     for (const item of doc.items ?? []) item._key = `!actors.items!${doc._id}.${item._id}`;
     for (const effect of doc.effects ?? []) effect._key = `!actors.effects!${doc._id}.${effect._id}`;
+  } else if (collection === "tables") {
+    for (const result of doc.results ?? []) result._key = `!tables.results!${doc._id}.${result._id}`;
   } else {
     for (const effect of doc.effects ?? []) effect._key = `!items.effects!${doc._id}.${effect._id}`;
   }

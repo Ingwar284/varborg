@@ -1,0 +1,271 @@
+{
+  "_id": "vbTableSpoils000",
+  "name": "Spoils",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 5 Treasure: the practical finds of a delve.</p>",
+  "formula": "1d20",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableSpR001000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Nothing but bones, rags and a bad smell.</p>",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR002000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A weapon (roll on the weaponry table in 2.6 Starting Equipment).</p>",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR003000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A weapon (roll on the weaponry table in 2.6 Starting Equipment).</p>",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR004000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Armour (roll a d10 on the armour table in 2.6 Starting Equipment; it is damaged, one tier lower, minimum t1).</p>",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR005000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A healing potion (heals d6 HP, expendable d2).</p>",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR006000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A medicine box (expendable d6).</p>",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR007000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>d4 torches and a flask of lantern oil.</p>",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR008000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A clay grenade (2d6, thrown 20').</p>",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR009000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A fire pot.</p>",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR010000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A vial of black or red poison (equal odds).</p>",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR011000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>d4 days of travel rations.</p>",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR012000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>30 feet of rope and a grappling hook.</p>",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR013000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A set of lockpicks.</p>",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR014000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A purse of 3d10 s.</p>",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR015000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A purse of 3d10 s.</p>",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR016000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A trinket.</p>",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR017000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A trinket.</p>",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR018000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A valuable.</p>",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR019000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A spell scroll.</p>",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableSpR020000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Roll twice more on this table.</p>",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false
+    }
+  ]
+}

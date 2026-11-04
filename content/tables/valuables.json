@@ -1,0 +1,167 @@
+{
+  "_id": "vbTableValuable0",
+  "name": "Valuables",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 5 Treasure. Valuables sell for the listed value.</p>",
+  "formula": "1d12",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableVaR001000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A tarnished silver locket holding a lock of grey hair (20 s)</p>",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR002000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A jar of saffron, still sealed with Heartlands wax (30 s)</p>",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR003000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A brass pocket watch that runs backwards (40 s)</p>",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR004000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A bolt of Theatery silk in deep indigo (40 s)</p>",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR005000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A pair of jet earrings from a Gaslake widow (50 s)</p>",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR006000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A brass astrolabe set for stars that no longer shine (60 s)</p>",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR007000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A wax-sealed Council bond, payable at the Brass Citadel (75 s)</p>",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR008000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A reliquary of gilded bone, its saint long since stolen (80 s)</p>",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR009000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A Fabricators' gear-seal of pure brass (100 s)</p>",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR010000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A cut ember-glass gem that glows faintly in the dark (120 s)</p>",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR011000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>A noble house's signet ring (dangerous to sell in Emberglow) (150 s)</p>",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTableVaR012000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>An ingot of Council silver, stamped with a mask (250 s)</p>",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false
+    }
+  ]
+}

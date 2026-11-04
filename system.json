@@ -191,6 +191,17 @@
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
       }
+    },
+    {
+      "name": "tables",
+      "label": "Roll Tables",
+      "system": "var-borg",
+      "path": "packs/tables",
+      "type": "RollTable",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
     }
   ],
   "packFolders": [
@@ -211,7 +222,8 @@
         "relics",
         "foes",
         "minions",
-        "vehicles"
+        "vehicles",
+        "tables"
       ]
     }
   ],

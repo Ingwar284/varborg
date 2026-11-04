@@ -828,9 +828,20 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       damage, conditions and timers read from the text; passives as foe
       passive feats. Odd lines (", and the target is knocked Prone…",
       "Stuck: …") stay as text. Categories and damage types: GAPS 187.
-    - 48j. Tables: the roll tables of the rules (relics, backgrounds,
-      treasure and the like) as Foundry roll tables, and the vehicle (the
-      Charioteer's rig) and the Gravecaller's Thrall if they need entries.
+    - 48j. ~~**Tables.**~~ Done: a fourteenth compendium, Roll Tables
+      (`tools/packs.mjs` now packs roll tables, with tests), holding ten
+      Foundry roll tables in `content/tables/`: Backgrounds (d100, linked
+      to the background items), Relic (d2, linked to Relics 1–12, d12, and
+      Relics 13–22, d10 + 12, linked to the relic items), Spoils (d20),
+      Valuables (d12), Trinkets (d20), Searching the fallen (d6, its 6
+      linked to Spoils), the Hedge Mage's Photonic Surge (d100) and
+      Harkin's Reprieve (d6). Tables the system already rolls (Agony,
+      Death's Door, Shadowblight, travel, weather, starting equipment) and
+      adventure tables are not repeated; the spell scroll roll (list, tier,
+      spell) stays as text. Also the Charioteer's rig (a vehicle) and the
+      Gravecaller's Thrall (a mook foe, GAPS 187).
+
+    **Step 48 is complete.** Next: the Milestone 8 review, then step 49.
 
 49. **Automating feats.** After all content is in (designer's choice at
     step 48a). Feats are text only so far. Automate the ones the system can
