@@ -88,6 +88,8 @@
       "Equipped": "Equipped",
       "Description": "Description",
       "Expendable": "Expendable die",
+      "Medicine": "Medicine box",
+      "MedicineHint": "Ticked for a medicine box: it gets a Use button on the character sheet that heals d6 HP, cures Infected or ends persistent bleeding.",
       "Quantity": "Quantity",
       "QuantityHint": "How many you carry, such as 6 torches or 10 iron nails. Each one counts towards cumbersome items and container space. Lower it by hand when you use one up.",
       "Cumbersome": "Cumbersome",
@@ -723,6 +725,32 @@
         }
       },
       "persistentDamage": "Persistent Damage"
+    },
+    "Medicine": {
+      "Tooltip": "Use the medicine box (◈). Target a character to treat them, or none to treat yourself.",
+      "DialogTitle": "Medicine box",
+      "Self": "You treat yourself.",
+      "Patient": "You treat {name}.",
+      "DialogHint": "Costs one action (◈). The box's expendable die is rolled either way. The patient tests Toughness DR{dr}; on a Success it works.",
+      "Apply": "Use",
+      "Use": {
+        "heal": "Heal d6 HP",
+        "infected": "Cure Infected",
+        "bleeding": "End persistent bleeding"
+      },
+      "OneTarget": "Target only one character, or none to treat yourself.",
+      "CharactersOnly": "A medicine box can only treat a character.",
+      "NotYourTurn": "In combat you can only use a medicine box on your own turn.",
+      "CardTitle": "{name} uses a medicine box",
+      "CardText": "On {patient}: {use}.",
+      "CardHint": "The patient tests Toughness DR{dr}. On a Success it works.",
+      "TestButton": "Test Toughness (DR{dr})",
+      "Purpose": "Medicine box: {use}.",
+      "ResultTitle": "Medicine box: {use}",
+      "Failed": "The treatment does not help {name}.",
+      "Healed": "{name} heals {amount} HP.",
+      "Cured": "{name} is no longer Infected.",
+      "BleedingEnds": "{name}'s persistent bleeding ends."
     },
     "Persistent": {
       "Label": "Persistent damage",

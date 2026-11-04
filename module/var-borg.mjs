@@ -33,6 +33,7 @@ import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
 import { registerPools } from "./pools.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
+import { registerMedicine } from "./medicine.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -99,6 +100,8 @@ Hooks.once("init", () => {
   registerPools();
   // The Shadowblight table button on a spell's Ruin card (rules 3.11).
   registerShadowblight();
+  // The Toughness button on medicine box cards (step 34).
+  registerMedicine();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

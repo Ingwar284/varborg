@@ -10,6 +10,7 @@
     "storedIn": "",
     "quantity": 1,
     "expendable": "d6",
-    "usedUp": false
+    "usedUp": false,
+    "medicine": true
   }
 }

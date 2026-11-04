@@ -10,6 +10,7 @@ import { rollAbilityTest, signed } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
+import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
 import { castSpell } from "../dice/spell.mjs";
@@ -149,6 +150,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       toggleEquipped: CharacterSheet.#onToggleEquipped,
       toggleCumbersome: CharacterSheet.#onToggleCumbersome,
       rollExpendable: CharacterSheet.#onRollExpendable,
+      useMedicine: CharacterSheet.#onUseMedicine,
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
       attack: CharacterSheet.#onAttack,
@@ -240,6 +242,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canAttack: item.type === "weapon",
           canCast: item.type === "scroll",
           canRaise: item.type === "shield" && item.system.equipped && !item.system.destroyed && !system.shieldRaised,
+          canMedicine: canUseMedicine(item),
           canExpendable: canRollExpendable(item.system),
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
@@ -352,6 +355,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onRollExpendable(event, button) {
     const item = this.#itemFor(button);
     if (item) await rollExpendable(this.document, item);
+  }
+
+  /** The medical kit button uses a medicine box. */
+  static async #onUseMedicine(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await useMedicineBox(this.document, item);
   }
 
   /** The Fire button empties a loaded weapon with Reload. */

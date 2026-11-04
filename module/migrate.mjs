@@ -6,6 +6,9 @@
  * Version 1 (Milestone 4 review, GAPS 111): characters store their scores as
  * rolled. Before, a class's +1 (remembered on the class item as the flag
  * "classBoost") and lost Sanity were written into the scores.
+ *
+ * Version 2 (step 34, GAPS 149): gear named "Medicine box" gets the new
+ * "Medicine box" tick, in the Items tab and on every actor.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -15,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 1;
+export const DATA_VERSION = 2;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -38,6 +41,7 @@ export async function migrateWorld() {
   if (version < 1) {
     for (const actor of game.actors.filter(actor => actor.type === "character")) await toRolledAbilities(actor);
   }
+  if (version < 2) await markMedicineBoxes();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -55,4 +59,19 @@ async function toRolledAbilities(actor) {
   });
   await actor.update({ "system.abilities": rolled }, { [MIGRATION_OPTION]: true });
   if (boost) await cls.unsetFlag(SYSTEM, OLD_BOOST_FLAG);
+}
+
+/** The example's name, in the language it was saved in. */
+const MEDICINE_BOX_NAME = "medicine box";
+
+/** Version 2: tick "Medicine box" on gear called Medicine box. */
+async function markMedicineBoxes() {
+  const isBox = item => item.type === "gear" && !item.system.medicine
+    && item.name.trim().toLowerCase() === MEDICINE_BOX_NAME;
+  const worldItems = game.items.filter(isBox).map(item => ({ _id: item.id, "system.medicine": true }));
+  if (worldItems.length) await Item.updateDocuments(worldItems);
+  for (const actor of game.actors) {
+    const updates = actor.items.filter(isBox).map(item => ({ _id: item.id, "system.medicine": true }));
+    if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  }
 }

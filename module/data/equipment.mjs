@@ -176,7 +176,9 @@ export class GearData extends CarriedData {
       expendable: choice(EXPENDABLE_DICE, ""),
       // The expendable die rolled a 1. The item stays until someone deletes
       // or refills it (GAPS 52).
-      usedUp: new BooleanField({ initial: false })
+      usedUp: new BooleanField({ initial: false }),
+      // A medicine box: gets a Use button on the sheet (rules 4.1, GAPS 149).
+      medicine: new BooleanField({ initial: false })
     };
   }
 

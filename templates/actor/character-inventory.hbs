@@ -80,6 +80,12 @@
           <i class="fa-solid fa-rotate-right"></i>
         </button>
         {{/if}}
+        {{#if canMedicine}}
+        <button type="button" class="icon-button" data-action="useMedicine"
+                data-tooltip="{{localize 'VARBORG.Medicine.Tooltip'}}" aria-label="{{localize 'VARBORG.Medicine.Tooltip'}}">
+          <i class="fa-solid fa-kit-medical"></i>
+        </button>
+        {{/if}}
         {{#if canExpendable}}
         <button type="button" class="icon-button" data-action="rollExpendable"
                 data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"

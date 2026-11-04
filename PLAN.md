@@ -503,7 +503,13 @@ dialogs and the scroll card. One open question: area spells and powers
     (`system.hpFixed`, GAPS 111).
     *Test:* rest an Infected character. No healing, d6 damage.
 
-34. **Medicine box.** Using it costs one action. The character tests
+34. ~~**Medicine box.**~~ Done: `module/rules/medicine.mjs` with
+    `tests/medicine.test.mjs`, `module/medicine.mjs` (the Use button on a
+    gear item with "Medicine box" ticked, the choice dialog, the patient's
+    Toughness button on the card), data version 2 ticks existing medicine
+    boxes (GAPS 149). Healing d6 HP and ending persistent bleeding are in
+    too, each with the same test.
+    Using it costs one action. The character tests
     Toughness DR12 to remove Infected, and the box's expendable die is rolled
     either way.
     *Test:* use the medicine box example on an Infected character.
