@@ -538,7 +538,7 @@ dialogs and the scroll card. One open question: area spells and powers
 *Code review done:* rests, days, the medicine box and the light timer
 match the rules; 420 tests pass. Fix: the medicine box's "no actions
 left" warning had the reloading text. Rulings from the review (GAPS
-161–163) add steps 36a and 36b and a line to step 37. The play-test in
+161–163) add steps 36a and 36b and a line to step 43 (Relics). The play-test in
 Foundry is still to do.
 
 36a. ~~**Healing at Death's Door.**~~ Done: `wakesFromHealing` in
@@ -642,10 +642,28 @@ on its open gaps.
 
 **Milestone 6b review:** a three-day journey with weather, a Misery and a
 rest at a wayshrine.
+*Code review done:* the calendar, the hex flower (all 19 hexes, the six
+directions, walls and wraps of GAPS 155), the Miseries, overland travel
+(encounter and hardship tables, Boon by night or in the Hinterlands) and
+the five weather effects match the rules and rulings; every text key
+exists; 480 tests pass. No fixes needed. The Wayshrine works with the rest
+dialog as it is (leave "Interrupted" unticked; the offering's d4 HP is
+the Dark Master's). Rulings from the review: GAPS 165 and 167 confirmed,
+and a day with no sun works like Looming dark (GAPS 167), which adds step
+41a. The play-test in Foundry is still to do.
+
+41a. **A day with no sun.** On a sunless day (GAPS 167), outdoors,
+    anywhere lights do not reach is complete darkness, as in the Looming
+    dark weather (rules 3.15: Bane on all tests, a random encounter roll
+    for every hour in it). The system shows it as a reminder, it does not
+    apply the Bane by itself: a line on the Misery card at that dawn, on
+    the Misery row of the Calendar panel, and on travel cards that day.
+    *Test:* use Set Misery to tick "No sun today" and see the reminder on
+    the card and the panel; travel and see it on the travel card.
 
 ## Milestone 7: Minions, relics and vehicles
 
-36. **Minions.** Minion actor (HP, Morale, armour, owner). It tests at +0,
+42. **Minions.** Minion actor (HP, Morale, armour, owner). It tests at +0,
     has 2 actions and 0 reactions, acts on its owner's initiative right
     after them, and the limit is Presence (minimum 1). There is a "Command a
     minion" action (◈).
@@ -653,7 +671,7 @@ rest at a wayshrine.
     *Test:* in combat the dog sits right after its owner and acts when
     commanded.
 
-37. **Relics.** Relic item: use it (then roll the expendable d20, or daily
+43. **Relics.** Relic item: use it (then roll the expendable d20, or daily
     for always-on relics), its Last Rite (always works and destroys the
     relic), and its "if lost" drawback shown when it is destroyed.
     "Once per day" uses the frequency and Use button of step 36b (GAPS
@@ -661,7 +679,7 @@ rest at a wayshrine.
     *Example:* Shard of the Great Brazier (+3 to the Ember pool).
     *Test:* use the Shard. The pool goes up by 3 and the d20 is rolled.
 
-38. **Vehicles.** Vehicle actor (HP, armour, three speeds, crew, passengers,
+44. **Vehicles.** Vehicle actor (HP, armour, three speeds, crew, passengers,
     fuel). Driving tests by speed and situation (Agility DR10, 12 or 14).
     Collision damage (1d6, 3d6 or 5d6) applies to the driver and passengers,
     after armour.
@@ -671,7 +689,7 @@ rest at a wayshrine.
 
 ## Milestone 8: Growth and content
 
-39. **Improving.** A button that runs rules 2.8. Each ability rolls d6: on a
+45. **Improving.** A button that runs rules 2.8. Each ability rolls d6: on a
     1 or below the ability it goes down 1, otherwise up 1 (−3 … +6). Choose a
     feat (marked "gained through Improving"). Roll 6d10, and if it is at
     least your max HP, max HP goes up d6. Then roll the d6 find table.
@@ -679,18 +697,18 @@ rest at a wayshrine.
     (`system.hpFixed`, GAPS 111). Tested.
     *Test:* tests pass. Improve the example Warrior and check each step.
 
-40. **Character creation helper.** Optional guided creation: the ability
+46. **Character creation helper.** Optional guided creation: the ability
     method, ancestry feat, background, class, and starting equipment by the
     class die.
     *Test:* make a character with the helper and check it against 2.1.
 
-41. **Compendium packs.** Turn `content/` into real compendiums that ship
+47. **Compendium packs.** Turn `content/` into real compendiums that ship
     with the system. Building packs from JSON files needs Foundry's official
     command-line tool (an npm package), so **I will ask before installing
     it**.
     *Test:* the compendiums appear in a new world and their entries work.
 
-42. **Full content.** Enter all classes, ancestries, backgrounds, feats,
+48. **Full content.** Enter all classes, ancestries, backgrounds, feats,
     gear, spells, relics, tables and foes from the rules into `content/`, a
     few files per step.
     *Test:* spot-check entries against the rules.
