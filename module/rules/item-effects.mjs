@@ -26,7 +26,26 @@ import { CONDITIONS } from "./conditions.mjs";
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist"];
 
 /** The kinds the system works out so far; the sheet only offers these. */
-export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use"];
+export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice"];
+
+/**
+ * What a choice effect asks for when its item is dropped on a character
+ * (step 49h): one of the character's weapons (Weapon specialist), a feat or
+ * a spell from the compendiums, added to the character (Ancient One,
+ * Magically Attuned), a Bestiary category (Favoured prey), a damage type,
+ * or a word written down (a god).
+ */
+export const CHOICE_KINDS = ["weapon", "feat", "spell", "category", "damageType", "text"];
+
+/**
+ * Where a feat or spell choice comes from: any; an ancestry feat or power
+ * of another ancestry; a class feat of another class; a spell the
+ * character already knows (only written down); a random spell.
+ */
+export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random"];
+
+/** Only against foes of the item's chosen Bestiary category (Favoured prey). */
+export const VERSUS = ["", "chosenCategory"];
 
 /**
  * The moments a hook effect can act at (step 49f):
@@ -115,7 +134,7 @@ export const ROLL_MODES = ["auto", "optional"];
  * Only with this kind of weapon (step 49e): the way it attacks (melee,
  * shoot, throw) or one of its traits. Blank means any, or no weapon.
  */
-export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "twoHanded", "versatile", "agile"];
+export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "twoHanded", "versatile", "agile", "chosen"];
 
 /** Extra damage once, or once per wound the character has (Battle Scars, step 49e). */
 export const DAMAGE_PER = ["", "wound"];
@@ -125,7 +144,8 @@ export function blankEffect(kind = "stat") {
   return {
     kind,
     target: STAT_TARGETS[0], op: "add", value: 0,
-    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", mode: "auto", grant: "", dr: 0, damage: "", per: "",
+    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", mode: "auto", grant: "", dr: 0, damage: "", per: "",
+    choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "",
     note: ""
   };
@@ -193,7 +213,12 @@ export function collectEffects(items) {
     if (!isActive(item)) continue;
     (item.system?.effects ?? []).forEach((effect, index) => {
       // The item's limited use (once per day…), for hooks (step 49f).
-      found.push({ ...effect, item: item.name, itemId: item.id ?? "", index, frequency: item.system?.frequency ?? "", used: Boolean(item.system?.frequencyUsed) });
+      found.push({
+        ...effect, item: item.name, itemId: item.id ?? "", index,
+        frequency: item.system?.frequency ?? "", used: Boolean(item.system?.frequencyUsed),
+        // What the item's choice effects hold, for "the chosen weapon" and so on (step 49h).
+        choices: choicesOf(item.system?.effects)
+      });
     });
   }
   return found;
@@ -265,7 +290,11 @@ export function fitsRoll(effect, context) {
   if (![context.roll].flat().includes(effect.roll)) return false;
   if (effect.ability && effect.ability !== context.ability) return false;
   if (effect.against && ![context.against].flat().includes(effect.against)) return false;
-  if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
+  if (effect.weapon === "chosen") {
+    // The weapon picked by the item's choice (step 49h).
+    if (!effect.choices?.weapon || effect.choices.weapon !== context.weaponId) return false;
+  } else if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
+  if (effect.vs === "chosenCategory" && (!effect.choices?.category || effect.choices.category !== context.targetCategory)) return false;
   return true;
 }
 
@@ -347,6 +376,10 @@ export function effectProblems(effect) {
       if (!ROLL_TWICE_EVENTS.includes(effect.event)) problems.push(`rollTwice at ${effect.event}`);
     }
   }
+  if (effect.kind === "choice") {
+    check("choose", CHOICE_KINDS);
+    check("from", CHOICE_FROM);
+  }
   if (effect.kind === "use") {
     check("action", USE_ACTIONS);
     if (["heal", "roll", "gainEmber"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
@@ -357,6 +390,7 @@ export function effectProblems(effect) {
     check("mode", ROLL_MODES);
     check("grant", GRANTS);
     check("weapon", WEAPON_TAGS);
+    check("vs", VERSUS);
     check("per", DAMAGE_PER);
     if (effect.damage && !isDamagePart(effect.damage)) problems.push(`damage: ${effect.damage}`);
   }
@@ -443,4 +477,44 @@ export function rerollItems(effects, rollKind) {
     if (!found.has(effect.itemId)) found.set(effect.itemId, { item: effect.item, itemId: effect.itemId });
   }
   return [...found.values()];
+}
+
+/**
+ * What an item's choice effects hold, by kind: { weapon: itemId,
+ * category: "beast", damageType, feat, spell, text }. The first choice of
+ * each kind counts; unmade choices are left out (step 49h).
+ * @param {object[]} effects  The item's own effects (system.effects).
+ */
+export function choicesOf(effects) {
+  const choices = {};
+  for (const effect of effects ?? []) {
+    if (effect.kind === "choice" && effect.chosen && !(effect.choose in choices)) choices[effect.choose] = effect.chosen;
+  }
+  return choices;
+}
+
+/**
+ * The feats or spells a choice may pick from, sorted by name (step 49h).
+ * @param {object[]} entries  Plain items: { id, name, type, system: { source, belongsTo, cost, ritual } }.
+ * @param {object} choice     The choice effect: { choose, from, value } (value: the highest
+ *   ember cost of a spell, 0 for any).
+ * @param {object} owner      { ancestry, className }: the character's, by name.
+ */
+export function choiceCandidates(entries, choice, owner = {}) {
+  const fits = entry => {
+    const system = entry.system ?? {};
+    if (choice.choose === "spell") {
+      if (entry.type !== "spell" || system.ritual) return false;
+      return !(choice.value > 0) || (system.cost ?? 0) <= choice.value;
+    }
+    if (choice.choose !== "feat") return false;
+    if (choice.from === "otherAncestry") {
+      return ["feat", "power"].includes(entry.type) && system.source === "ancestry" && system.belongsTo !== (owner.ancestry ?? "");
+    }
+    if (choice.from === "otherClass") {
+      return entry.type === "feat" && system.source === "class" && system.belongsTo !== (owner.className ?? "");
+    }
+    return entry.type === "feat" && ["ancestry", "class", "general"].includes(system.source);
+  };
+  return (entries ?? []).filter(fits).toSorted((a, b) => a.name.localeCompare(b.name));
 }

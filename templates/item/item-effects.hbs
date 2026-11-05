@@ -26,6 +26,7 @@
     <select data-effect-field="ability" aria-label="{{localize 'VARBORG.Effects.AbilityLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../abilities selected=ability localize=true}}</select>
     <select data-effect-field="against" data-tooltip="{{localize 'VARBORG.Effects.AgainstHint'}}" aria-label="{{localize 'VARBORG.Effects.AgainstLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../conditions selected=against localize=true}}</select>
     <select data-effect-field="weapon" data-tooltip="{{localize 'VARBORG.Effects.WeaponHint'}}" aria-label="{{localize 'VARBORG.Effects.WeaponLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../weapons selected=weapon localize=true}}</select>
+    <select data-effect-field="vs" data-tooltip="{{localize 'VARBORG.Effects.VersusHint'}}" aria-label="{{localize 'VARBORG.Effects.VersusLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../versusList selected=vs localize=true}}</select>
     <select data-effect-field="grant" aria-label="{{localize 'VARBORG.Effects.GrantLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../grants selected=grant localize=true}}</select>
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.DrHint'}}">
       <span>{{localize "VARBORG.Effects.DrLabel"}}</span>
@@ -55,6 +56,22 @@
     {{/if}}
     <select data-effect-field="requires" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../requireList selected=requires localize=true}}</select>
     <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.HookModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../hookModes selected=mode localize=true}}</select>
+    {{/if}}
+    {{#if isChoice}}
+    <select data-effect-field="choose" aria-label="{{localize 'VARBORG.Effects.Choice.KindLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../choiceKinds selected=choose localize=true}}</select>
+    {{#if choiceHasFrom}}
+    <select data-effect-field="from" aria-label="{{localize 'VARBORG.Effects.Choice.FromLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../choiceFrom selected=from localize=true}}</select>
+    {{/if}}
+    {{#if choiceIsSpell}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.Choice.MaxCostHint'}}">
+      <span>{{localize "VARBORG.Effects.Choice.MaxCost"}}</span>
+      <input type="number" step="1" min="0" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    <span class="effect-chosen">{{#if chosenName}}{{localize "VARBORG.Effects.Choice.Chosen" name=chosenName}}{{else}}{{localize "VARBORG.Effects.Choice.NotYet"}}{{/if}}</span>
+    {{#if ../canChoose}}
+    <button type="button" data-action="chooseEffect" data-tooltip="{{localize 'VARBORG.Effects.Choice.ChooseHint'}}"><i class="fa-solid fa-hand-pointer"></i> {{localize "VARBORG.Effects.Choice.Choose"}}</button>
+    {{/if}}
     {{/if}}
     {{#if isUse}}
     <select data-effect-field="action" data-tooltip="{{localize 'VARBORG.Effects.UseHint'}}" aria-label="{{localize 'VARBORG.Effects.ActionLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../useActions selected=action localize=true}}</select>

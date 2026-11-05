@@ -218,11 +218,13 @@ async function rollPowerTest(actor, power) {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
   // Item effects on powers count like conditions (PLAN step 49c).
-  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "power", ability })];
+  // The target's category, for effects against a chosen category (step 49h).
+  const effectContext = { roll: "power", ability, targetCategory: target?.system?.category ?? "" };
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
   let fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
   // Item effects for the player to tick when they apply (PLAN step 49d).
-  const optional = itemOptionalMods(actor, { roll: "power", ability });
+  const optional = itemOptionalMods(actor, effectContext);
   const startDr = powerDr(power.system.cost);
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
 

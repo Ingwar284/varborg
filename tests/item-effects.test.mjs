@@ -9,7 +9,7 @@ import {
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
-  useEffects, rerollItems, ALL_ACTIONS
+  useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -242,4 +242,50 @@ test("Use effects: what the Use button does, and rerolls offered on cards (step 
   assert.deepEqual(effectProblems(use({ action: "roll", amount: "d10" })), []);
   assert.deepEqual(effectProblems(use({ action: "rollTwice" })), ["action: rollTwice"]);
   assert.deepEqual(effectProblems(use({ action: "reroll", roll: "dance" })), ["roll: dance"]);
+});
+
+const choice = (fields) => ({ ...blankEffect("choice"), ...fields });
+
+test("an item's choices are kept with each of its effects, and filters use them (step 49h)", () => {
+  const specialist = {
+    id: "w", name: "Weapon specialist", system: {
+      effects: [choice({ choose: "weapon", chosen: "axe1", chosenName: "Greataxe" }), roll({ roll: "attack", weapon: "chosen", damage: "2" })]
+    }
+  };
+  const prey = {
+    id: "p", name: "Favoured prey", system: {
+      effects: [choice({ choose: "category", chosen: "beast" }), roll({ roll: "attack", vs: "chosenCategory", damage: "d4" })]
+    }
+  };
+  const effects = collectEffects([specialist, prey]);
+  assert.deepEqual(effects[1].choices, { weapon: "axe1" });
+  assert.equal(rollEffects(effects, { roll: "attack", weaponId: "axe1" }).auto.length, 1);
+  assert.equal(rollEffects(effects, { roll: "attack", weaponId: "dagger" }).auto.length, 0);
+  assert.equal(rollEffects(effects, { roll: "attack", weaponId: "axe1", targetCategory: "beast" }).auto.length, 2);
+  assert.equal(rollEffects(effects, { roll: "attack", targetCategory: "fiend" }).auto.length, 0);
+  // An unmade choice never fits.
+  const unmade = collectEffects([{ id: "u", name: "U", system: { effects: [choice({ choose: "weapon" }), roll({ roll: "attack", weapon: "chosen" })] } }]);
+  assert.equal(rollEffects(unmade, { roll: "attack", weaponId: "" }).auto.length, 0);
+  assert.deepEqual(choicesOf([choice({ choose: "text", chosen: "Harkin" }), choice({ choose: "text", chosen: "Other" })]), { text: "Harkin" });
+});
+
+test("feat and spell choices list what fits, by name (step 49h)", () => {
+  const entries = [
+    { name: "Stone-Sense", type: "feat", system: { source: "ancestry", belongsTo: "Dwarf" } },
+    { name: "Alien Mind", type: "feat", system: { source: "ancestry", belongsTo: "Elf" } },
+    { name: "Breath", type: "power", system: { source: "ancestry", belongsTo: "Dragonkin" } },
+    { name: "Parry", type: "feat", system: { source: "class", belongsTo: "Warrior" } },
+    { name: "Tough", type: "feat", system: { source: "general" } },
+    { name: "Spark", type: "spell", system: { cost: 3 } },
+    { name: "Inferno", type: "spell", system: { cost: 7 } },
+    { name: "Long rite", type: "spell", system: { cost: 0, ritual: true } }
+  ];
+  const names = (choiceArgs, owner) => choiceCandidates(entries, choiceArgs, owner).map(e => e.name);
+  assert.deepEqual(names({ choose: "feat", from: "otherAncestry" }, { ancestry: "Elf" }), ["Breath", "Stone-Sense"]);
+  assert.deepEqual(names({ choose: "feat", from: "otherClass" }, { className: "Wizard" }), ["Parry"]);
+  assert.deepEqual(names({ choose: "feat", from: "otherClass" }, { className: "Warrior" }), []);
+  assert.deepEqual(names({ choose: "feat", from: "any" }), ["Alien Mind", "Parry", "Stone-Sense", "Tough"]);
+  assert.deepEqual(names({ choose: "spell", from: "any", value: 3 }), ["Spark"]);
+  assert.deepEqual(names({ choose: "spell", from: "any", value: 0 }), ["Inferno", "Spark"]);
+  assert.deepEqual(effectProblems(choice({ choose: "pet" })), ["choose: pet"]);
 });

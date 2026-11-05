@@ -2600,7 +2600,7 @@
       "OptionalLabel": "{name}: {effect}",
       "FromActor": "{item}, {name}",
       "WeaponLabel": "With weapon",
-      "WeaponHint": "Only on attacks with this kind of weapon, such as melee strikes. Other rolls never count it.",
+      "WeaponHint": "Only on attacks with this kind of weapon, such as melee strikes, or with the weapon picked by this item's choice. Other rolls never count it.",
       "Weapon": {
         "any": "Any weapon (or none)",
         "melee": "Melee attacks",
@@ -2610,7 +2610,8 @@
         "finesse": "Finesse weapons",
         "twoHanded": "Two-handed weapons",
         "versatile": "Versatile weapons",
-        "agile": "Agile weapons"
+        "agile": "Agile weapons",
+        "chosen": "The chosen weapon"
       },
       "PerLabel": "How often",
       "Per": {
@@ -2685,7 +2686,58 @@
       "RerollHint": "Which cards get the item’s Reroll button.",
       "RerollButton": "Reroll ({item})",
       "RerollLog": "{name} uses {item}: reroll",
-      "RerollSpent": "{item} is already used."
+      "RerollSpent": "{item} is already used.",
+      "VersusLabel": "Against",
+      "VersusHint": "Only against foes of the Bestiary category picked by this item's choice (Favoured prey).",
+      "Versus": {
+        "any": "Any target",
+        "chosenCategory": "Foes of the chosen category"
+      },
+      "Choice": {
+        "KindLabel": "Choose",
+        "Kind": {
+          "weapon": "One of your weapons",
+          "feat": "A feat (added to you)",
+          "spell": "A spell (added to you)",
+          "category": "A Bestiary category",
+          "damageType": "A damage type",
+          "text": "Something written down"
+        },
+        "FromLabel": "From",
+        "From": {
+          "any": "Any",
+          "otherAncestry": "Another ancestry",
+          "otherClass": "Another class",
+          "known": "Spells you know (only noted)",
+          "random": "At random"
+        },
+        "MaxCost": "Max ember",
+        "MaxCostHint": "For a spell: the highest ember cost it may have. 0 means any.",
+        "Chosen": "Chosen: {name}",
+        "NotYet": "Not chosen yet",
+        "Choose": "Choose",
+        "ChooseHint": "Make or change this choice for the character who has this item.",
+        "Title": "{item}: choose",
+        "Ok": "Choose",
+        "Ask": {
+          "weapon": "Choose one of your weapons.",
+          "feat": "Choose a feat. It is added to your character.",
+          "spell": "Choose a spell.",
+          "category": "Choose a Bestiary category.",
+          "damageType": "Choose a damage type.",
+          "text": "Write down your choice."
+        },
+        "None": {
+          "weapon": "{name} has no weapon to choose for {item}. Add one, then press Choose in the item's Effects.",
+          "feat": "No feat fits {item}'s choice.",
+          "spell": "No spell fits {item}'s choice.",
+          "category": "No category to choose.",
+          "damageType": "No damage type to choose.",
+          "text": "Nothing to choose."
+        },
+        "Made": "{name} chooses {chosen} for {item}.",
+        "Added": "{name} gains {chosen} through {item}."
+      }
     }
   }
 }

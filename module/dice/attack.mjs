@@ -84,7 +84,10 @@ export async function rollAttack(actor, item) {
   // Item effects for the player to tick when they apply (PLAN step 49d),
   // for the weapon's usual ability.
   const usualMode = attackModes(weapon)[0];
-  const optional = itemOptionalMods(actor, { roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode) });
+  const optional = itemOptionalMods(actor, {
+    roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode),
+    weaponId: item.id, targetCategory: target?.system?.category ?? ""
+  });
   const optionalEffects = await optionalEffectsField(optional);
   const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
   if (!options) return;
@@ -97,7 +100,7 @@ export async function rollAttack(actor, item) {
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
   const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
-  const conditions = attackConditions(actor, target, mode, ability, weapon);
+  const conditions = attackConditions(actor, target, mode, ability, item);
   conditions.own.push(...tickedMods(optional, options.data));
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
   const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
@@ -311,10 +314,14 @@ export async function settleAttackCard(actor, data) {
  * conditions (PLAN step 49c).
  * @returns {{own: object[], target: object[]}}
  */
-function attackConditions(actor, target, mode, ability, weapon) {
+function attackConditions(actor, target, mode, ability, item) {
   const own = conditionsOf(actor);
   const against = target?.type === "foe" ? conditionsOf(target) : null;
-  const effectContext = { roll: "attack", ability, weapon: weaponTags(weapon, mode) };
+  // The weapon's tags and item (the chosen weapon) and the target's category (step 49h).
+  const effectContext = {
+    roll: "attack", ability, weapon: weaponTags(item.system, mode),
+    weaponId: item.id, targetCategory: target?.system?.category ?? ""
+  };
   return {
     own: [...attackerConditions(own.conditions, own.fatigue, ability), ...itemRollMods(actor, effectContext)],
     target: against ? attackTargetConditions(against.conditions, against.fatigue, mode) : []
@@ -347,7 +354,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
   }
 
   // For the usual way of attacking; the card shows the final numbers.
-  const conditions = attackConditions(actor, target, modes[0], abilities[0], weapon);
+  const conditions = attackConditions(actor, target, modes[0], abilities[0], item);
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     modes: modes.length > 1 ? modes.map(mode => ({ value: mode, label: `VARBORG.Weapon.Kind.${mode}` })) : null,
@@ -368,7 +375,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     turnNote,
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
-    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]) })],
+    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]), weaponId: item.id })],
     optionalEffects,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")

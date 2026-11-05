@@ -6,7 +6,7 @@
 
 import {
   EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES
+  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, CHOICE_KINDS, CHOICE_FROM, VERSUS
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -37,6 +37,8 @@ export function effectFields() {
       against: choice(["", ...CONDITIONS], ""),
       // Only with this kind of weapon (step 49e).
       weapon: choice(WEAPON_TAGS, ""),
+      // Only against foes of the chosen Bestiary category (step 49h).
+      vs: choice(VERSUS, ""),
       mode: choice(ROLL_MODES),
       grant: choice(GRANTS, ""),
       dr: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
@@ -50,6 +52,11 @@ export function effectFields() {
       condition: choice(["", ...CONDITIONS], ""),
       keep: choice(KEEPS),
       requires: choice(HOOK_REQUIRES, ""),
+      // choice (step 49h): what is chosen, from where, and what was chosen (an id or key, and its name).
+      choose: choice(CHOICE_KINDS),
+      from: choice(CHOICE_FROM),
+      chosen: new StringField({ required: true, blank: true, initial: "" }),
+      chosenName: new StringField({ required: true, blank: true, initial: "" }),
       // When it applies, in a few words ("on tests involving balance").
       note: new StringField({ required: true, blank: true, initial: "" })
     })),

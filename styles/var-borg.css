@@ -1517,3 +1517,8 @@
   padding: 0 0.3rem;
   font-weight: bold;
 }
+
+.var-borg-item-effects .effect-chosen {
+  font-style: italic;
+  opacity: 0.85;
+}

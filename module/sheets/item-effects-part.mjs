@@ -9,8 +9,9 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, CHOICE_KINDS, CHOICE_FROM, VERSUS, blankEffect
 } from "../rules/item-effects.mjs";
+import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 
@@ -51,6 +52,11 @@ export function effectsContext(document) {
       keeps: labels(KEEPS, "Effects.Keep"),
       requireList: labels(HOOK_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       hookConditions: labels(CONDITIONS, "Condition"),
+      choiceKinds: labels(CHOICE_KINDS, "Effects.Choice.Kind"),
+      choiceFrom: labels(CHOICE_FROM, "Effects.Choice.From"),
+      versusList: labels(VERSUS, "Effects.Versus", "VARBORG.Effects.Versus.any"),
+      // The Choose button needs a character to choose for.
+      canChoose: Boolean(document.actor) && document.isOwner,
       list: system.effects.map((effect, index) => ({
         ...effect,
         index,
@@ -61,6 +67,9 @@ export function effectsContext(document) {
         isRoll: effect.kind === "roll",
         isHook: effect.kind === "hook",
         isUse: effect.kind === "use",
+        isChoice: effect.kind === "choice",
+        choiceHasFrom: ["feat", "spell"].includes(effect.choose),
+        choiceIsSpell: effect.choose === "spell",
         isReroll: effect.action === "reroll",
         hasAmount: ["heal", "roll", "gainEmber"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
@@ -92,8 +101,14 @@ async function removeEffect(event, target) {
   await this.document.update({ "system.effects": effects });
 }
 
+/** The Choose button on a choice effect: ask again (step 49h). */
+async function chooseEffect(event, target) {
+  const index = Number(target.closest("[data-effect-index]")?.dataset.effectIndex);
+  await makeChoice(this.document, index);
+}
+
 /** For a sheet's DEFAULT_OPTIONS.actions. */
-export const EFFECT_ACTIONS = { addEffect, removeEffect };
+export const EFFECT_ACTIONS = { addEffect, removeEffect, chooseEffect };
 
 /** Called from the sheet's _onRender: saves a changed effect field. */
 export function listenToEffects(sheet) {
@@ -110,6 +125,11 @@ export function listenToEffects(sheet) {
       const effect = effects[index];
       if (field === "kind" && effect.kind === "use" && !USE_ACTIONS.includes(effect.action)) effect.action = USE_ACTIONS[0];
       if (field === "kind" && effect.kind === "hook" && !HOOK_ACTIONS.includes(effect.action)) effect.action = HOOK_ACTIONS[0];
+      // A different kind of choice forgets the old choice (step 49h).
+      if (["choose", "from"].includes(field)) {
+        effect.chosen = "";
+        effect.chosenName = "";
+      }
       await sheet.document.update({ "system.effects": effects });
     });
   }

@@ -1009,9 +1009,22 @@ targeted token, sharing one damage roll (GAPS 141).
     *Test:* use Lucky Break and see its d10. A once-per-Long-Rest feat comes
     back after a Long Rest.
 
-49h. **Choices.** Dropping an item with a choice opens a small dialog and
-    stores the choice; its effects use it.
-    *Test:* drop Weapon specialist, choose a group, and attacks with it get
+49h. ~~**Choices.**~~ Done: a new kind of effect, **Choice** (`choice`):
+    one of the character's weapons (the designer's reading of "weapon
+    group", GAPS 193), a feat or a spell from the compendiums (from any,
+    another ancestry, another class, at random, or a spell already known,
+    with a highest ember cost for spells), a Bestiary category, a damage
+    type, or something written down. `module/choices.mjs` asks for every
+    unmade choice when the item lands on a character, stores it on the
+    effect ("Chosen: Greataxe"), and adds a picked feat or spell to the
+    character; the Choose button in the Effects section asks again.
+    Roll modifiers can use the choice: "With weapon: the chosen weapon"
+    and "Against: foes of the chosen category" (attacks, powers and spells
+    know their weapon and target). `choicesOf`, `choiceCandidates`, with
+    tests. Not yet: damage types chosen for resistances (step 52a), and
+    "passive feat" (Ancient One) cannot be told apart, so every class feat
+    of another class is listed.
+    *Test:* drop Weapon specialist, choose a weapon, and attacks with it get
     the bonus.
 
 49i. **Report, tests and existing worlds.** `tools/automation-report.mjs`
