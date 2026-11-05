@@ -2609,7 +2609,61 @@
         "once": "once",
         "wound": "per wound"
       },
-      "DamagePart": "+{damage} damage"
+      "DamagePart": "+{damage} damage",
+      "EventLabel": "When",
+      "Event": {
+        "turnStart": "At the start of your turn",
+        "initiative": "When initiative is rolled",
+        "zeroHp": "When your HP drops to 0",
+        "wound": "When you gain a wound",
+        "deathsDoor": "When you roll on the Death’s Door table",
+        "panicSuccess": "When you pass a Panic test",
+        "panicFailure": "When you fail a Panic test",
+        "rest": "After any rest",
+        "longRest": "After a Long Rest or Downtime",
+        "newDay": "At the start of each day"
+      },
+      "ActionLabel": "Do",
+      "Action": {
+        "reminder": "Post a reminder",
+        "heal": "Regain HP",
+        "roll": "Roll and post",
+        "gainEmber": "Add to the Ember pool",
+        "addCondition": "Gain a condition",
+        "rollTwice": "Roll twice"
+      },
+      "AmountLabel": "Amount",
+      "AmountHint": "A number such as 1, or dice such as d4.",
+      "ConditionLabel": "Condition",
+      "KeepLabel": "Keep",
+      "Keep": {
+        "better": "the better",
+        "worse": "the worse",
+        "choose": "the player chooses"
+      },
+      "RequiresLabel": "Only while",
+      "Requires": {
+        "always": "always",
+        "halfHp": "at half HP or lower"
+      },
+      "HookMode": {
+        "auto": "Do it",
+        "optional": "Remind only"
+      },
+      "HookModeHint": "Do it: the system does it by itself. Remind only: it posts a reminder with the item’s note, for the table to decide.",
+      "HookTitle": "{name}: {item}",
+      "HookReminder": "{item}: {note}",
+      "HookOptional": "{item} may apply: {note}",
+      "HookHeal": "{item}: {name} regains {amount} HP ({from} → {to}).",
+      "HookRoll": "{item}: rolled {total}. {note}",
+      "HookEmber": "{item}: the Ember pool gains {amount}.",
+      "HookEmberNoCombat": "{item}: there is no Ember pool outside combat.",
+      "HookCondition": "{item}: {name} is {condition}.",
+      "HookUsed": "{item} is used until it comes back.",
+      "RolledTwice": "Rolled twice: {first} and {second}, kept {kept} ({items}).",
+      "ChooseTitle": "{name}: choose a roll",
+      "ChooseHint": "{items}: you rolled twice. Choose the result to keep.",
+      "SeeText": "see its text."
     }
   }
 }

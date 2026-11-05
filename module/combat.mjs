@@ -34,6 +34,7 @@ import { currentWeather } from "./weather.mjs";
 import { conditionsForTurn, turnConditionFor } from "./rules/weather-effects.mjs";
 import { startMinionTurn, postMinionTurn } from "./minions.mjs";
 import { withStat } from "./rules/item-effects.mjs";
+import { runItemHooks, initiativeKeep } from "./effects.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -110,6 +111,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
     if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
     if (actor) await startOfTurnTimers(actor);
+    // Item effects at the start of the turn, such as Regenerative Marrow (step 49f).
+    if (actor) await runItemHooks(actor, "turnStart");
   }
 
   /**
@@ -179,7 +182,9 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
    */
   _getInitiativeFormula() {
     const bonus = withStat(0, this.actor?.system.statBonuses?.initiative);
-    return initiativeFormula(this.actor?.type, bonus);
+    // Roll twice and keep one (First to strike, step 49f).
+    const keep = this.actor?.type === "character" ? initiativeKeep(this.actor) : null;
+    return initiativeFormula(this.actor?.type, bonus, keep);
   }
 
   /** Actions left this turn. */

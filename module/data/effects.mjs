@@ -5,7 +5,8 @@
  */
 
 import {
-  EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER
+  EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
+  HOOK_EVENTS, HOOK_ACTIONS, KEEPS, HOOK_REQUIRES
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -42,6 +43,13 @@ export function effectFields() {
       damage: new StringField({ required: true, blank: true, initial: "" }),
       // Extra damage once, or once per wound (step 49e).
       per: choice(DAMAGE_PER, ""),
+      // hook (step 49f): when, what, how much, which condition, which roll to keep, only while…
+      event: choice(HOOK_EVENTS),
+      action: choice(HOOK_ACTIONS),
+      amount: new StringField({ required: true, blank: true, initial: "" }),
+      condition: choice(["", ...CONDITIONS], ""),
+      keep: choice(KEEPS),
+      requires: choice(HOOK_REQUIRES, ""),
       // When it applies, in a few words ("on tests involving balance").
       note: new StringField({ required: true, blank: true, initial: "" })
     })),

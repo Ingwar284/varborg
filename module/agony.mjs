@@ -29,6 +29,7 @@ import {
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { addPersistentDamage } from "./persistent.mjs";
 import { enterDeathsDoor, killCharacter } from "./deaths-door.mjs";
+import { runItemHooks } from "./effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -77,6 +78,8 @@ export function injuryEffects(actor) {
 export async function postWoundCard(actor, wound) {
   // At max wounds: Death's Door, with its own card (module/deaths-door.mjs).
   if (!wound.wounded) return enterDeathsDoor(actor);
+  // Item effects when a wound is gained (step 49f).
+  await runItemHooks(actor, "wound");
   const i18n = game.i18n;
   const max = actor.system.wounds.max;
   const content = await renderTemplate(WOUND_TEMPLATE, {
@@ -120,6 +123,7 @@ export async function postLifeForceWoundCards(actor, before, count) {
     });
     await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content });
   }
+  if (count > 0) await runItemHooks(actor, "wound");
 }
 
 /**
@@ -147,6 +151,7 @@ export async function postDoomedWoundCard(actor, doom) {
     } : null
   });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content });
+  if (doom.added) await runItemHooks(actor, "wound");
 }
 
 /**

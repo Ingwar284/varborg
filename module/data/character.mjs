@@ -20,6 +20,7 @@ import { rollStartingFortune, postStartingFortune } from "../fortune.mjs";
 import { wakesFromHealing } from "../rules/deaths-door.mjs";
 import { atDeathsDoor, isDead, healedAtDeathsDoor } from "../deaths-door.mjs";
 import { collectEffects, statBonuses, withStat, withAbilityBonuses } from "../rules/item-effects.mjs";
+import { runItemHooks } from "../effects.mjs";
 
 /** Passes "gained HP at Death's Door" from _preUpdate to _onUpdate (GAPS 163). */
 const HEALED_AT_DOOR_OPTION = "varBorgHealedAtDeathsDoor";
@@ -196,7 +197,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
     if (userId !== game.user.id) return;
-    if (options[WOUND_OPTION]) postWoundCard(this.parent, options[WOUND_OPTION]);
+    // Item effects when HP drops to 0 (step 49f), then the wound card.
+    if (options[WOUND_OPTION]) runItemHooks(this.parent, "zeroHp").then(() => postWoundCard(this.parent, options[WOUND_OPTION]));
     if (options[HEALED_AT_DOOR_OPTION]) healedAtDeathsDoor(this.parent);
   }
 }

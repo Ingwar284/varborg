@@ -27,13 +27,17 @@ export const MINION_INITIATIVE_FORMULA = "1d6";
  * @param {string} actorType  "character", "foe", "minion", …
  * @param {number} [bonus]     Initiative from items (PLAN step 49b), such as
  *   +2 or −1, added to the formula.
+ * @param {string|null} [keep] "better" or "worse": roll twice and keep the
+ *   higher or lower total (First to strike, step 49f).
  */
-export function initiativeFormula(actorType, bonus = 0) {
+export function initiativeFormula(actorType, bonus = 0, keep = null) {
   let formula = FOE_INITIATIVE_FORMULA;
   if (actorType === "character") formula = CHARACTER_INITIATIVE_FORMULA;
   if (actorType === "minion") formula = MINION_INITIATIVE_FORMULA;
-  if (!bonus) return formula;
-  return `${formula} ${bonus > 0 ? "+" : "-"} ${Math.abs(bonus)}`;
+  if (bonus) formula = `${formula} ${bonus > 0 ? "+" : "-"} ${Math.abs(bonus)}`;
+  if (keep === "better") return `{${formula}, ${formula}}kh`;
+  if (keep === "worse") return `{${formula}, ${formula}}kl`;
+  return formula;
 }
 
 /**

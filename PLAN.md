@@ -967,11 +967,25 @@ targeted token, sharing one damage roll (GAPS 141).
     (Bloodlust's kills).
     *Test:* Battle Scars with two wounds adds +2 damage.
 
-49f. **Event hooks.** `runItemHooks` is called from rest, new day, turn
-    start, initiative, wounds, Death's Door, Panic, and the natural 1, Ruin
-    and kill points. Each hook runs one of a short, tested list of actions
-    (heal, roll twice and keep, gain Ember, add or prevent a condition,
-    Boon on the next roll, post a reminder).
+49f. ~~**Event hooks.**~~ Done: a new kind of effect, **Event** (`hook`),
+    with When (start of your turn, initiative, HP drops to 0, a wound is
+    gained, Death's Door roll, Panic test passed or failed, any rest, Long
+    Rest or Downtime, start of the day), Do (post a reminder, regain HP,
+    roll and post, add to the Ember pool, gain a condition, roll twice),
+    an amount, a condition, which roll to keep (the better, the worse, the
+    player chooses), "only while at half HP or lower", and "Do it" or
+    "Remind only". `runItemHooks` in `module/effects.mjs` is called from
+    `module/combat.mjs`, `module/data/character.mjs`, `module/agony.mjs`
+    (wounds at 0 HP, from life force and Doomed), `module/panic.mjs`,
+    `module/rest.mjs` and `module/days.mjs` (after once-per-day uses come
+    back), and posts one card per event. Rolling twice works for
+    initiative (`initiativeFormula`, choosing counts as the better) and
+    Death's Door (`rollTwiceFor`, with a choice dialog); a better or a
+    choice with a worse cancel out (GAPS 192, provisional). An item with a
+    limited use acts only while unused and is then marked used. Maths:
+    `hookEffects`, `rollTwiceKeep`, `keptRoll`, with tests. Not yet: the
+    natural 1, Ruin and kill moments, preventing a condition (step 52a's
+    immunities) and Boon on the next roll.
     *Test:* Regenerative Marrow heals at turn start; Saint's knucklebone
     gives two Death's Door rolls.
 

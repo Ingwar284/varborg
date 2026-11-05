@@ -7,15 +7,16 @@
  * This file knows nothing about Foundry. Items come in as plain objects:
  * { id, name, type, system: { effects, equipped?, destroyed? } }.
  *
- * Kinds of effect (only stat, roll and reminder are worked out so far; the
- * others arrive in their own steps):
+ * Kinds of effect (stat, roll, reminder and hook are worked out so far;
+ * the others arrive in their own steps):
  * - stat:     adds to, sets or puts a minimum on a sheet number (step 49b).
  * - roll:     Boon, Bane, a DR change or extra damage on one kind of roll,
  *             automatic or an optional tick in the dialog (steps 49c–49e).
  * - reminder: shows the item in one kind of roll's dialog (step 49c).
- * - hook, use, choice: steps 49f–49h. immune, resist: step 52a.
+ * - hook:     does one thing at one moment of play (step 49f).
+ * - use, choice: steps 49g–49h. immune, resist: step 52a.
  *
- * Rulings: GAPS 182, 188–191.
+ * Rulings: GAPS 182, 188–192.
  */
 
 import { ABILITIES, clampAbility } from "./abilities.mjs";
@@ -25,7 +26,44 @@ import { CONDITIONS } from "./conditions.mjs";
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist"];
 
 /** The kinds the system works out so far; the sheet only offers these. */
-export const BUILT_KINDS = ["stat", "roll", "reminder"];
+export const BUILT_KINDS = ["stat", "roll", "reminder", "hook"];
+
+/**
+ * The moments a hook effect can act at (step 49f):
+ * turnStart: the start of the character's turn in combat.
+ * initiative: when initiative is rolled (roll twice only).
+ * zeroHp: when HP drops to 0 (before the wound or Death's Door).
+ * wound: when a wound is gained (at 0 HP, from life force or Doomed).
+ * deathsDoor: when rolling on the Death's Door table (roll twice only).
+ * panicSuccess, panicFailure: after a Panic test.
+ * rest: after any rest. longRest: after a Long Rest or Downtime.
+ * newDay: at the start of each day.
+ */
+export const HOOK_EVENTS = [
+  "turnStart", "initiative", "zeroHp", "wound", "deathsDoor",
+  "panicSuccess", "panicFailure", "rest", "longRest", "newDay"
+];
+
+/**
+ * What a hook does:
+ * reminder: posts the item's note to chat.
+ * heal: the character regains `amount` HP.
+ * roll: rolls `amount` and posts it with the note (Unpredictable Reach).
+ * gainEmber: adds `amount` to the Ember pool (in combat only).
+ * addCondition: gives the character `condition`.
+ * rollTwice: rolls twice and keeps the better, the worse, or lets the
+ *   player choose (initiative and Death's Door only).
+ */
+export const HOOK_ACTIONS = ["reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice"];
+
+/** The events where rolling twice means something. */
+export const ROLL_TWICE_EVENTS = ["initiative", "deathsDoor"];
+
+/** Which of two rolls to keep. On both tables higher is better. */
+export const KEEPS = ["better", "worse", "choose"];
+
+/** Only while…: blank for always, halfHp for at half HP or lower (Regenerative Marrow). */
+export const HOOK_REQUIRES = ["", "halfHp"];
 
 /**
  * How far an item is automated. Blank means nobody has looked yet.
@@ -77,6 +115,7 @@ export function blankEffect(kind = "stat") {
     kind,
     target: STAT_TARGETS[0], op: "add", value: 0,
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", mode: "auto", grant: "", dr: 0, damage: "", per: "",
+    event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "",
     note: ""
   };
 }
@@ -142,7 +181,8 @@ export function collectEffects(items) {
   for (const item of items ?? []) {
     if (!isActive(item)) continue;
     (item.system?.effects ?? []).forEach((effect, index) => {
-      found.push({ ...effect, item: item.name, itemId: item.id ?? "", index });
+      // The item's limited use (once per day…), for hooks (step 49f).
+      found.push({ ...effect, item: item.name, itemId: item.id ?? "", index, frequency: item.system?.frequency ?? "", used: Boolean(item.system?.frequencyUsed) });
     });
   }
   return found;
@@ -284,6 +324,18 @@ export function effectProblems(effect) {
     if (effect.ability) check("ability", ABILITIES);
     if (effect.against) check("against", CONDITIONS);
   }
+  if (effect.kind === "hook") {
+    check("event", HOOK_EVENTS);
+    check("action", HOOK_ACTIONS);
+    check("mode", ROLL_MODES);
+    check("requires", HOOK_REQUIRES);
+    if (["heal", "roll", "gainEmber"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (effect.action === "addCondition") check("condition", CONDITIONS);
+    if (effect.action === "rollTwice") {
+      check("keep", KEEPS);
+      if (!ROLL_TWICE_EVENTS.includes(effect.event)) problems.push(`rollTwice at ${effect.event}`);
+    }
+  }
   if (effect.kind === "roll") {
     check("mode", ROLL_MODES);
     check("grant", GRANTS);
@@ -304,4 +356,48 @@ export function statDrMods(bonus) {
   return (bonus?.sources ?? [])
     .filter(source => source.op === "add" && source.value)
     .map(source => ({ item: source.item, note: "", dr: source.value }));
+}
+
+/**
+ * The hook effects that act at an event (step 49f). An item whose limited
+ * use is spent (once per day and so on) does not act until it comes back.
+ * @param {object[]} effects  From collectEffects.
+ * @param {string} event      One of HOOK_EVENTS.
+ * @param {object} [facts]    { hp, hpMax }: for "only while at half HP".
+ */
+export function hookEffects(effects, event, facts = {}) {
+  return (effects ?? []).filter(effect => {
+    if (effect.kind !== "hook" || effect.event !== event) return false;
+    if (effect.frequency && effect.used) return false;
+    if (effect.requires === "halfHp" && !(facts.hpMax > 0 && facts.hp <= facts.hpMax / 2)) return false;
+    return true;
+  });
+}
+
+/**
+ * Which roll to keep when hooks say to roll twice (GAPS 192): "better",
+ * "worse" or "choose", or null to roll once. A better or a choice together
+ * with a worse cancel out, like Boon and Bane. Choosing beats keeping the
+ * better. Only automatic hooks count.
+ * @param {object[]} hooks  From hookEffects, for one event.
+ */
+export function rollTwiceKeep(hooks) {
+  const keeps = (hooks ?? []).filter(hook => hook.action === "rollTwice" && hook.mode !== "optional").map(hook => hook.keep);
+  const good = keeps.filter(keep => keep === "better" || keep === "choose");
+  const bad = keeps.filter(keep => keep === "worse");
+  if (good.length && bad.length) return null;
+  if (keeps.includes("choose")) return "choose";
+  if (good.length) return "better";
+  if (bad.length) return "worse";
+  return null;
+}
+
+/**
+ * The roll kept of two, for "better" or "worse" (higher is better).
+ * "choose" is the player's: this returns null for it.
+ */
+export function keptRoll(first, second, keep) {
+  if (keep === "better") return Math.max(first, second);
+  if (keep === "worse") return Math.min(first, second);
+  return null;
 }

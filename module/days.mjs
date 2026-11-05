@@ -33,6 +33,7 @@ import { resetLimitedUses, actorsForNewDay } from "./uses.mjs";
 import { endNewDayTimers } from "./timers.mjs";
 import { weatherForNewDay } from "./weather.mjs";
 import { miseryForNewDay } from "./misery.mjs";
+import { runItemHooks } from "./effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -181,6 +182,8 @@ async function startDayFor(actor, ate, slept) {
   if (fatigue !== system.fatigue) await postLine(actor, game.i18n.format("VARBORG.Day.NoSleep", { name: actor.name, level: fatigue }));
   if (outcome.doom) await postDoomedWoundCard(actor, outcome.doom);
   if (outcome.starving) await starve(actor, outcome.daysWithoutFood);
+  // Item effects at the start of the day (step 49f).
+  await runItemHooks(actor, "newDay");
 }
 
 /** Starvation: d6 damage, posted with the roll. */

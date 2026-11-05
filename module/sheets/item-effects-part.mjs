@@ -8,7 +8,8 @@
  */
 
 import {
-  BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER, blankEffect
+  BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
+  HOOK_EVENTS, HOOK_ACTIONS, KEEPS, HOOK_REQUIRES, blankEffect
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -37,8 +38,14 @@ export function effectsContext(document) {
       conditions: labels(["", ...CONDITIONS], "Condition", "VARBORG.Effects.AnyCondition"),
       grants: labels(GRANTS, "Effects.Grant", "VARBORG.Effects.Grant.none"),
       modes: labels(ROLL_MODES, "Effects.Mode"),
+      hookModes: labels(ROLL_MODES, "Effects.HookMode"),
       weapons: labels(WEAPON_TAGS, "Effects.Weapon", "VARBORG.Effects.Weapon.any"),
       pers: labels(DAMAGE_PER, "Effects.Per", "VARBORG.Effects.Per.once"),
+      events: labels(HOOK_EVENTS, "Effects.Event"),
+      actions: labels(HOOK_ACTIONS, "Effects.Action"),
+      keeps: labels(KEEPS, "Effects.Keep"),
+      requireList: labels(HOOK_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
+      hookConditions: labels(CONDITIONS, "Condition"),
       list: system.effects.map((effect, index) => ({
         ...effect,
         index,
@@ -47,6 +54,10 @@ export function effectsContext(document) {
         kinds: labels([...new Set([...BUILT_KINDS, effect.kind])], "Effects.Kind"),
         isStat: effect.kind === "stat",
         isRoll: effect.kind === "roll",
+        isHook: effect.kind === "hook",
+        hasAmount: ["heal", "roll", "gainEmber"].includes(effect.action),
+        hasCondition: effect.action === "addCondition",
+        hasKeep: effect.action === "rollTwice",
         isReminder: effect.kind === "reminder"
       }))
     }

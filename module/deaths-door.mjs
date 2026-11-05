@@ -36,6 +36,7 @@ import {
 import { countDown } from "./rules/panic.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
+import { rollTwiceFor } from "./effects.mjs";
 import { turnState } from "./combat.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -155,18 +156,30 @@ async function askAndRoll(actor) {
  */
 export async function rollDeathsDoor(actor, chosen = null) {
   const i18n = game.i18n;
-  const roll = new Roll(chosen ? String(chosen) : DEATHS_DOOR_DICE);
-  await roll.evaluate();
-  const id = deathsDoorResult(roll.total);
+  // Item effects can roll twice and keep one (Saint's knucklebone,
+  // Doomsworn; step 49f, GAPS 192). A Dark Master's choice is never rolled.
+  const twice = chosen ? null : await rollTwiceFor(actor, "deathsDoor", DEATHS_DOOR_DICE);
+  let total;
+  let tableRolls;
+  if (twice) {
+    total = twice.total;
+    tableRolls = twice.rolls;
+  } else {
+    const roll = new Roll(chosen ? String(chosen) : DEATHS_DOOR_DICE);
+    await roll.evaluate();
+    total = roll.total;
+    tableRolls = [roll];
+  }
+  const id = deathsDoorResult(total);
   const { lines, rolls, button } = await applyResult(actor, id);
   await postCard(actor, {
     title: i18n.format("VARBORG.DeathsDoor.ResultTitle", { name: actor.name }),
-    rolled: i18n.format(chosen ? "VARBORG.DeathsDoor.Chosen" : "VARBORG.DeathsDoor.Rolled", { roll: roll.total }),
+    rolled: i18n.format(chosen ? "VARBORG.DeathsDoor.Chosen" : "VARBORG.DeathsDoor.Rolled", { roll: total }),
     result: i18n.localize(`VARBORG.DeathsDoor.Result.${id}.name`),
     text: i18n.localize(`VARBORG.DeathsDoor.Result.${id}.text`),
-    lines,
+    lines: twice ? [twice.line, ...lines] : lines,
     button
-  }, [roll, ...rolls]);
+  }, [...tableRolls, ...rolls]);
 }
 
 /**

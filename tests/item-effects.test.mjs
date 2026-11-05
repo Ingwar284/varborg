@@ -8,7 +8,7 @@ import {
   EFFECT_KINDS, BUILT_KINDS, AUTOMATION, STAT_TARGETS, ROLL_KINDS,
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
-  isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags
+  isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -185,4 +185,42 @@ test("a weapon filter fits only attacks with that weapon tag (step 49e)", () => 
 
 test("effect problems check the weapon, per and damage fields (step 49e)", () => {
   assert.deepEqual(effectProblems(roll({ weapon: "spoon", per: "kill", damage: "d4+1" })), ["weapon: spoon", "per: kill", "damage: d4+1"]);
+});
+
+const hook = (fields) => ({ ...blankEffect("hook"), ...fields });
+
+test("hooks act at their event, unless spent or not at half HP (step 49f)", () => {
+  const items = [
+    { id: "m", name: "Regenerative Marrow", system: { effects: [hook({ event: "turnStart", action: "heal", amount: "d4", requires: "halfHp" })] } },
+    { id: "k", name: "Saint's knucklebone", system: { frequency: "day", frequencyUsed: true, effects: [hook({ event: "deathsDoor", action: "rollTwice", keep: "choose" })] } },
+    { id: "r", name: "Unpredictable Reach", system: { effects: [hook({ event: "newDay", action: "roll", amount: "d4" })] } }
+  ];
+  const effects = collectEffects(items);
+  assert.equal(hookEffects(effects, "turnStart", { hp: 5, hpMax: 10 }).length, 1);
+  assert.equal(hookEffects(effects, "turnStart", { hp: 6, hpMax: 10 }).length, 0);
+  assert.equal(hookEffects(effects, "deathsDoor").length, 0);
+  assert.deepEqual(hookEffects(effects, "newDay").map(h => h.item), ["Unpredictable Reach"]);
+  items[1].system.frequencyUsed = false;
+  assert.equal(hookEffects(collectEffects(items), "deathsDoor").length, 1);
+});
+
+test("rolling twice: better, worse or choose, and better with worse cancel (GAPS 192)", () => {
+  const twice = (keep, mode = "auto") => hook({ event: "deathsDoor", action: "rollTwice", keep, mode });
+  assert.equal(rollTwiceKeep([]), null);
+  assert.equal(rollTwiceKeep([twice("better")]), "better");
+  assert.equal(rollTwiceKeep([twice("worse")]), "worse");
+  assert.equal(rollTwiceKeep([twice("better"), twice("choose")]), "choose");
+  assert.equal(rollTwiceKeep([twice("choose"), twice("worse")]), null);
+  assert.equal(rollTwiceKeep([twice("better", "optional")]), null);
+  assert.equal(keptRoll(4, 9, "better"), 9);
+  assert.equal(keptRoll(4, 9, "worse"), 4);
+  assert.equal(keptRoll(4, 9, "choose"), null);
+});
+
+test("hook problems: event, action, amount, condition and where rolling twice works (step 49f)", () => {
+  assert.deepEqual(effectProblems(hook({})), []);
+  assert.deepEqual(effectProblems(hook({ action: "heal", amount: "lots" })), ["amount: lots"]);
+  assert.deepEqual(effectProblems(hook({ action: "addCondition", condition: "sleepy" })), ["condition: sleepy"]);
+  assert.deepEqual(effectProblems(hook({ event: "newDay", action: "rollTwice" })), ["rollTwice at newDay"]);
+  assert.deepEqual(effectProblems(hook({ event: "lunch" })), ["event: lunch"]);
 });

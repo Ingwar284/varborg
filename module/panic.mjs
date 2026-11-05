@@ -31,6 +31,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { turnState } from "./combat.mjs";
 import { AGONY_RESULTS } from "./rules/agony.mjs";
 import { endsAfterHours, hoursLeft, hasEnded } from "./rules/calendar.mjs";
+import { runItemHooks } from "./effects.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -85,6 +86,8 @@ export async function rollPanicTest(actor) {
     kind: "panic"
   });
   if (!result) return;
+  // Item effects after a Panic test (step 49f).
+  await runItemHooks(actor, ["failure", "ruin"].includes(result.tier) ? "panicFailure" : "panicSuccess");
 
   const dice = panicDice(result.tier);
   if (dice) {

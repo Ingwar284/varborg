@@ -91,3 +91,9 @@ test("an initiative bonus from items is added to the formula (PLAN step 49b)", (
   assert.equal(initiativeFormula("character", -1), "1d6 + @abilities.agility - 1");
   assert.equal(initiativeFormula("character", 0), CHARACTER_INITIATIVE_FORMULA);
 });
+
+test("rolling initiative twice keeps the higher or lower total (step 49f)", () => {
+  assert.equal(initiativeFormula("character", 0, "better"), "{1d6 + @abilities.agility, 1d6 + @abilities.agility}kh");
+  assert.equal(initiativeFormula("character", 2, "worse"), "{1d6 + @abilities.agility + 2, 1d6 + @abilities.agility + 2}kl");
+  assert.equal(initiativeFormula("character", 0, null), CHARACTER_INITIATIVE_FORMULA);
+});
