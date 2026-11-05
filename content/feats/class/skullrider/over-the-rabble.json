@@ -8,7 +8,7 @@
     "source": "class",
     "belongsTo": "Skullrider",
     "improving": false,
-    "frequency": "",
+    "frequency": "turn",
     "frequencyUsed": false
   }
 }

@@ -9,7 +9,7 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, KEEPS, HOOK_REQUIRES, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, blankEffect
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -22,6 +22,9 @@ function labels(keys, prefix, blankKey) {
 }
 
 const NUMBER_FIELDS = ["value", "dr"];
+
+/** The cards a reroll can be offered on (step 49g). */
+const REROLL_CARDS = ["test", "attack", "defence", "gloomTest", "power", "spell"];
 
 /** The sheet's part of the context, or nothing for an item without effects. */
 export function effectsContext(document) {
@@ -43,6 +46,8 @@ export function effectsContext(document) {
       pers: labels(DAMAGE_PER, "Effects.Per", "VARBORG.Effects.Per.once"),
       events: labels(HOOK_EVENTS, "Effects.Event"),
       actions: labels(HOOK_ACTIONS, "Effects.Action"),
+      useActions: labels(USE_ACTIONS, "Effects.Action"),
+      rerollRolls: labels(REROLL_CARDS, "Effects.RerollCard"),
       keeps: labels(KEEPS, "Effects.Keep"),
       requireList: labels(HOOK_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       hookConditions: labels(CONDITIONS, "Condition"),
@@ -55,6 +60,8 @@ export function effectsContext(document) {
         isStat: effect.kind === "stat",
         isRoll: effect.kind === "roll",
         isHook: effect.kind === "hook",
+        isUse: effect.kind === "use",
+        isReroll: effect.action === "reroll",
         hasAmount: ["heal", "roll", "gainEmber"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
@@ -99,6 +106,10 @@ export function listenToEffects(sheet) {
       const effects = storedEffects(sheet.document);
       if (!effects[index]) return;
       effects[index][field] = NUMBER_FIELDS.includes(field) ? Math.trunc(Number(input.value) || 0) : input.value;
+      // A new kind starts with an action it can have (step 49g).
+      const effect = effects[index];
+      if (field === "kind" && effect.kind === "use" && !USE_ACTIONS.includes(effect.action)) effect.action = USE_ACTIONS[0];
+      if (field === "kind" && effect.kind === "hook" && !HOOK_ACTIONS.includes(effect.action)) effect.action = HOOK_ACTIONS[0];
       await sheet.document.update({ "system.effects": effects });
     });
   }

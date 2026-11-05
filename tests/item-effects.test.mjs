@@ -8,7 +8,8 @@ import {
   EFFECT_KINDS, BUILT_KINDS, AUTOMATION, STAT_TARGETS, ROLL_KINDS,
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
-  isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll
+  isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
+  useEffects, rerollItems, ALL_ACTIONS
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -223,4 +224,22 @@ test("hook problems: event, action, amount, condition and where rolling twice wo
   assert.deepEqual(effectProblems(hook({ action: "addCondition", condition: "sleepy" })), ["condition: sleepy"]);
   assert.deepEqual(effectProblems(hook({ event: "newDay", action: "rollTwice" })), ["rollTwice at newDay"]);
   assert.deepEqual(effectProblems(hook({ event: "lunch" })), ["event: lunch"]);
+});
+
+const use = (fields) => ({ ...blankEffect("use"), ...fields });
+
+test("Use effects: what the Use button does, and rerolls offered on cards (step 49g)", () => {
+  const items = [
+    { id: "l", name: "Lucky Break", system: { frequency: "day", effects: [use({ action: "roll", amount: "d10" })] } },
+    { id: "p", name: "Prayer", system: { frequency: "day", frequencyUsed: false, effects: [use({ action: "reroll", roll: "test" }), use({ action: "reroll", roll: "test" })] } },
+    { id: "s", name: "Spent", system: { frequency: "day", frequencyUsed: true, effects: [use({ action: "reroll", roll: "test" })] } }
+  ];
+  const effects = collectEffects(items);
+  assert.deepEqual(useEffects(effects).map(e => e.item), ["Lucky Break"]);
+  assert.deepEqual(rerollItems(effects, "test"), [{ item: "Prayer", itemId: "p" }]);
+  assert.deepEqual(rerollItems(effects, "attack"), []);
+  assert.ok(ALL_ACTIONS.includes("reroll") && ALL_ACTIONS.includes("rollTwice"));
+  assert.deepEqual(effectProblems(use({ action: "roll", amount: "d10" })), []);
+  assert.deepEqual(effectProblems(use({ action: "rollTwice" })), ["action: rollTwice"]);
+  assert.deepEqual(effectProblems(use({ action: "reroll", roll: "dance" })), ["roll: dance"]);
 });

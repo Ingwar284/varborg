@@ -8,7 +8,7 @@
     "source": "class",
     "belongsTo": "Bard",
     "improving": false,
-    "frequency": "",
+    "frequency": "longRest",
     "frequencyUsed": false
   }
 }

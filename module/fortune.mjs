@@ -17,7 +17,19 @@
  * attack.mjs and defence.mjs, registered here by registerFortune.
  */
 
-import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
+import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
+import { collectEffects, rerollItems } from "./rules/item-effects.mjs";
+import { hasFrequency } from "./rules/uses.mjs";
+
+/** An item's reroll button on a card: its action is "item:<item id>" (step 49g). */
+const ITEM_PREFIX = "item:";
+
+/** The kind of roll a card shows, for item rerolls (step 49g). */
+function cardRoll(data) {
+  if (data.card === CARD.ATTACK) return data.inputs?.power ? (data.inputs.power.kind === "spell" ? "spell" : "power") : "attack";
+  if (data.card === CARD.GLOOM) return "gloomTest";
+  return data.card;
+}
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -89,19 +101,32 @@ export function fortuneFlags(data) {
 export async function fortuneSection(data, shown) {
   const i18n = game.i18n;
   data.offered = availableSpends({ card: data.card, ...shown });
+  // Items of the card's character that offer a reroll, while their use is
+  // not spent, wherever Fortune could reroll (step 49g).
+  const actor = data.offered.includes(SPEND.REROLL) ? await fromUuid(data.actorUuid) : null;
+  const items = actor?.items ? rerollItems(collectEffects(actor.items), cardRoll(data)) : [];
+  data.offered.push(...items.map(entry => `${ITEM_PREFIX}${entry.itemId}`));
   return renderTemplate(BUTTONS_TEMPLATE, {
-    buttons: data.offered.map(action => ({
-      action,
-      icon: ICONS[action],
-      label: i18n.format("VARBORG.Fortune.Button", {
-        use: i18n.localize(action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${shown.tier}` : `VARBORG.Fortune.Use.${action}`),
-        cost: FORTUNE_COST
-      })
-    })),
-    log: data.state.log.map(entry => i18n.format("VARBORG.Fortune.Spent", {
-      name: entry.name,
-      use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
-    }) + (entry.value ? ` (${entry.value})` : ""))
+    buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
+      ? {
+        action,
+        icon: ICONS[SPEND.REROLL],
+        label: i18n.format("VARBORG.Effects.RerollButton", { item: items.find(entry => action === `${ITEM_PREFIX}${entry.itemId}`)?.item ?? "" })
+      }
+      : {
+        action,
+        icon: ICONS[action],
+        label: i18n.format("VARBORG.Fortune.Button", {
+          use: i18n.localize(action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${shown.tier}` : `VARBORG.Fortune.Use.${action}`),
+          cost: FORTUNE_COST
+        })
+      })),
+    log: data.state.log.map(entry => (entry.item
+      ? i18n.format("VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item })
+      : i18n.format("VARBORG.Fortune.Spent", {
+        name: entry.name,
+        use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
+      }) + (entry.value ? ` (${entry.value})` : "")))
   });
 }
 
@@ -140,13 +165,15 @@ async function spendOnCard(message, action) {
     ui.notifications.warn(i18n.localize("VARBORG.Fortune.Gone"));
     return false;
   }
+  // An item's reroll is paid with that item's use, by its own character (step 49g).
+  const byItem = action.startsWith(ITEM_PREFIX);
   // A minion has no Fortune: on its card your own character pays (GAPS 105, 169).
-  const spender = actor.isOwner && actor.type === "character" ? actor : game.user.character;
+  const spender = byItem ? actor : actor.isOwner && actor.type === "character" ? actor : game.user.character;
   if (spender?.type !== "character") {
     ui.notifications.warn(i18n.localize("VARBORG.Fortune.NoCharacter"));
     return false;
   }
-  if (!canSpend(spender.system.fortune)) {
+  if (!byItem && !canSpend(spender.system.fortune)) {
     ui.notifications.warn(i18n.format("VARBORG.Fortune.None", { name: spender.name }));
     return false;
   }
@@ -192,13 +219,24 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   const actor = await fromUuid(data.actorUuid);
   const spender = await fromUuid(spenderUuid);
   if (!actor || !spender) return { error: "VARBORG.Fortune.Gone" };
-  if (!canSpend(spender.system.fortune)) return { error: "VARBORG.Fortune.None" };
-
-  await spender.update({ "system.fortune": spend(spender.system.fortune) });
   const entry = { name: spender.name, action };
+  if (action.startsWith(ITEM_PREFIX)) {
+    // An item's reroll: its use is spent instead of Fortune (step 49g).
+    const item = actor.items.get(action.slice(ITEM_PREFIX.length));
+    if (!item) return { error: "VARBORG.Fortune.Gone" };
+    if (hasFrequency(item.system)) {
+      if (item.system.frequencyUsed) return { error: "VARBORG.Fortune.NotNow" };
+      await item.update({ "system.frequencyUsed": true });
+    }
+    entry.action = SPEND.REROLL;
+    entry.item = item.name;
+  } else {
+    if (!canSpend(spender.system.fortune)) return { error: "VARBORG.Fortune.None" };
+    await spender.update({ "system.fortune": spend(spender.system.fortune) });
+  }
   const extraRolls = [];
   const state = data.state;
-  switch (action) {
+  switch (entry.action) {
     case SPEND.REROLL:
       // New dice; an earlier Triumph → Success belonged to the old roll.
       state.dice = null;

@@ -24,6 +24,10 @@
  * dawn of the day the day counter has reached (a new world: 1 Dawning,
  * year 1, at 06:00), and Cowardice or Paranoid a character already has
  * gets an end time on the clock, its hours counted from now.
+ *
+ * Version 7 (step 49g, GAPS 190): feats and gear with no frequency whose
+ * text says "once per turn", "once per Long Rest", "once per Downtime"
+ * or "once per visit" get that frequency (the version 5 step, run again).
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -37,7 +41,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 6;
+export const DATA_VERSION = 7;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -65,6 +69,7 @@ export async function migrateWorld() {
   if (version < 4) await setLightRanges();
   if (version < 5) await setFrequencies();
   if (version < 6) await startClock();
+  if (version < 7) await setFrequencies();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }

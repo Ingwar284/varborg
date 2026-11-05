@@ -106,6 +106,49 @@ async function markUsed(actor, itemId) {
 }
 
 /**
+ * Do one hook's or Use effect's action: heal, roll, add to the Ember
+ * pool, gain a condition, or a reminder ("Remind only" hooks just give
+ * their note). Shared by events (step 49f) and the Use button (step 49g).
+ * @param {Actor} actor
+ * @param {object} effect  A collected effect (collectEffects).
+ * @returns {Promise<{lines: string[], rolls: Roll[], acted: boolean}>}
+ *   acted: false for reminders and when nothing could be done.
+ */
+export async function doEffectAction(actor, effect) {
+  const i18n = game.i18n;
+  const item = effect.item;
+  const note = effect.note || i18n.localize("VARBORG.Effects.SeeText");
+  if (effect.mode === "optional" || effect.action === "reminder") {
+    const key = effect.mode === "optional" ? "VARBORG.Effects.HookOptional" : "VARBORG.Effects.HookReminder";
+    return { lines: [i18n.format(key, { item, note })], rolls: [], acted: false };
+  }
+  if (["heal", "roll", "gainEmber"].includes(effect.action)) {
+    if (effect.action === "gainEmber" && !game.combat?.started) {
+      return { lines: [i18n.format("VARBORG.Effects.HookEmberNoCombat", { item })], rolls: [], acted: false };
+    }
+    const roll = await new Roll(effect.amount || "0").evaluate();
+    let line;
+    if (effect.action === "heal") {
+      const from = actor.system.hp.value;
+      await actor.update({ "system.hp.value": from + roll.total });
+      line = i18n.format("VARBORG.Effects.HookHeal", { item, name: actor.name, amount: roll.total, from, to: actor.system.hp.value });
+    } else if (effect.action === "roll") {
+      line = i18n.format("VARBORG.Effects.HookRoll", { item, total: roll.total, note: effect.note });
+    } else {
+      await gainEmber(roll.total, actor, item);
+      line = i18n.format("VARBORG.Effects.HookEmber", { item, amount: roll.total });
+    }
+    return { lines: [line], rolls: [roll], acted: true };
+  }
+  if (effect.action === "addCondition" && effect.condition) {
+    if (!actor.statuses.has(effect.condition)) await actor.toggleStatusEffect(effect.condition, { active: true });
+    const condition = i18n.localize(`VARBORG.Condition.${effect.condition}`);
+    return { lines: [i18n.format("VARBORG.Effects.HookCondition", { item, name: actor.name, condition })], rolls: [], acted: true };
+  }
+  return { lines: [], rolls: [], acted: false };
+}
+
+/**
  * Do what a character's hooks say at an event, and post one card with a
  * line each: heal, roll, add to the Ember pool, gain a condition, or a
  * reminder. "Remind only" hooks just post their note. Rolling twice is
@@ -122,36 +165,12 @@ export async function runItemHooks(actor, event) {
   const lines = [];
   const rolls = [];
   for (const hook of hooks) {
-    const item = hook.item;
-    const note = hook.note || i18n.localize("VARBORG.Effects.SeeText");
-    if (hook.mode === "optional" || hook.action === "reminder") {
-      lines.push(i18n.format(hook.mode === "optional" ? "VARBORG.Effects.HookOptional" : "VARBORG.Effects.HookReminder", { item, note }));
-      continue;
-    }
-    if (["heal", "roll", "gainEmber"].includes(hook.action)) {
-      const roll = await new Roll(hook.amount || "0").evaluate();
-      rolls.push(roll);
-      if (hook.action === "heal") {
-        const from = actor.system.hp.value;
-        await actor.update({ "system.hp.value": from + roll.total });
-        lines.push(i18n.format("VARBORG.Effects.HookHeal", { item, name: actor.name, amount: roll.total, from, to: actor.system.hp.value }));
-      } else if (hook.action === "roll") {
-        lines.push(i18n.format("VARBORG.Effects.HookRoll", { item, total: roll.total, note: hook.note }));
-      } else if (game.combat?.started) {
-        await gainEmber(roll.total, actor, item);
-        lines.push(i18n.format("VARBORG.Effects.HookEmber", { item, amount: roll.total }));
-      } else {
-        lines.push(i18n.format("VARBORG.Effects.HookEmberNoCombat", { item }));
-        continue;
-      }
-    }
-    if (hook.action === "addCondition" && hook.condition) {
-      if (!actor.statuses.has(hook.condition)) await actor.toggleStatusEffect(hook.condition, { active: true });
-      lines.push(i18n.format("VARBORG.Effects.HookCondition", { item, name: actor.name, condition: i18n.localize(`VARBORG.Condition.${hook.condition}`) }));
-    }
-    if (hook.frequency) {
+    const done = await doEffectAction(actor, hook);
+    lines.push(...done.lines);
+    rolls.push(...done.rolls);
+    if (hook.frequency && done.acted) {
       await markUsed(actor, hook.itemId);
-      lines.push(i18n.format("VARBORG.Effects.HookUsed", { item }));
+      lines.push(i18n.format("VARBORG.Effects.HookUsed", { item: hook.item }));
     }
   }
   const title = i18n.format("VARBORG.Effects.HookTitle", { name: actor.name, item: [...new Set(hooks.map(hook => hook.item))].join(", ") });

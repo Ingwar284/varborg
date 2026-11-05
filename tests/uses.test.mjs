@@ -17,7 +17,7 @@ test("the frequency is read from the item's text", () => {
 });
 
 test("only items with a frequency can be used once", () => {
-  assert.deepEqual(FREQUENCIES, ["", "round", "encounter", "day"]);
+  assert.deepEqual(FREQUENCIES, ["", "round", "turn", "encounter", "day", "longRest", "downtime", "visit"]);
   assert.equal(hasFrequency({ frequency: "" }), false);
   assert.equal(hasFrequency({ frequency: "week" }), false);
   assert.equal(canUseOnce({ frequency: "day", frequencyUsed: false }), true);
@@ -46,4 +46,22 @@ test("a new day brings back only the used once-per-day items", () => {
   ];
   assert.deepEqual(itemsToReset(items, "newDay"), ["a"]);
   assert.deepEqual(itemsToReset(items, "combatEnd"), ["c"]);
+});
+
+test("the new frequencies are read from text and come back at their moments (GAPS 190)", () => {
+  assert.equal(frequencyFromText("Once per Long Rest, when an ally would die"), "longRest");
+  assert.equal(frequencyFromText("Once per turn, you can take an Interact action"), "turn");
+  assert.equal(frequencyFromText("once per Downtime, you can research"), "downtime");
+  assert.equal(frequencyFromText("Once per visit to a settlement, test Presence"), "visit");
+  assert.equal(resetsOn("turn", "turnStart"), true);
+  assert.equal(resetsOn("turn", "combatEnd"), true);
+  assert.equal(resetsOn("turn", "roundStart"), false);
+  assert.equal(resetsOn("longRest", "longRest"), true);
+  assert.equal(resetsOn("longRest", "downtime"), true);
+  assert.equal(resetsOn("longRest", "newDay"), false);
+  assert.equal(resetsOn("downtime", "longRest"), false);
+  assert.equal(resetsOn("downtime", "downtime"), true);
+  assert.equal(resetsOn("visit", "visit"), true);
+  assert.equal(resetsOn("visit", "newDay"), false);
+  assert.equal(resetsOn("day", "longRest"), false);
 });

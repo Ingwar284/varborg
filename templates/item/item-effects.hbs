@@ -56,6 +56,21 @@
     <select data-effect-field="requires" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../requireList selected=requires localize=true}}</select>
     <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.HookModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../hookModes selected=mode localize=true}}</select>
     {{/if}}
+    {{#if isUse}}
+    <select data-effect-field="action" data-tooltip="{{localize 'VARBORG.Effects.UseHint'}}" aria-label="{{localize 'VARBORG.Effects.ActionLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../useActions selected=action localize=true}}</select>
+    {{#if hasAmount}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.AmountHint'}}">
+      <span>{{localize "VARBORG.Effects.AmountLabel"}}</span>
+      <input type="text" data-effect-field="amount" value="{{amount}}" placeholder="d4" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    {{#if hasCondition}}
+    <select data-effect-field="condition" aria-label="{{localize 'VARBORG.Effects.ConditionLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../hookConditions selected=condition localize=true}}</select>
+    {{/if}}
+    {{#if isReroll}}
+    <select data-effect-field="roll" data-tooltip="{{localize 'VARBORG.Effects.RerollHint'}}" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rerollRolls selected=roll localize=true}}</select>
+    {{/if}}
+    {{/if}}
     {{#if isReminder}}
     <select data-effect-field="roll" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rolls selected=roll localize=true}}</select>
     {{/if}}

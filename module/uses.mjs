@@ -16,6 +16,8 @@
  */
 
 import { canUseOnce, hasFrequency, itemsToReset } from "./rules/uses.mjs";
+import { collectEffects, useEffects } from "./rules/item-effects.mjs";
+import { doEffectAction } from "./effects.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -28,14 +30,23 @@ const TYPES = ["feat", "gear"];
 /** Item types whose uses come back: relics too, which have their own buttons (module/relics.mjs). */
 const RESET_TYPES = [...TYPES, "relic"];
 
-/** Whether the sheet shows a Use button for this item. */
-export function hasLimitedUse(item) {
-  return TYPES.includes(item.type) && hasFrequency(item.system);
+/** The item's Use effects that the button does (step 49g). */
+function itemUseEffects(item) {
+  return useEffects(collectEffects([item]));
 }
 
-/** Whether the Use button can be pressed now. */
+/**
+ * Whether the sheet shows a Use button for this item: it has a limited use,
+ * or Use effects (step 49g).
+ */
+export function hasLimitedUse(item) {
+  return TYPES.includes(item.type) && (hasFrequency(item.system) || itemUseEffects(item).length > 0);
+}
+
+/** Whether the Use button can be pressed now: unspent, or with no limit. */
 export function canUseItem(item) {
-  return TYPES.includes(item.type) && canUseOnce(item.system);
+  if (!TYPES.includes(item.type)) return false;
+  return hasFrequency(item.system) ? canUseOnce(item.system) : itemUseEffects(item).length > 0;
 }
 
 /** "Once per day". */
@@ -77,14 +88,26 @@ export async function useLimitedItem(actor, item) {
     ui.notifications.warn(i18n.format("VARBORG.Uses.AlreadyUsed", { item: item.name, frequency: frequencyLabel(item).toLowerCase() }));
     return;
   }
-  await item.update({ "system.frequencyUsed": true });
+  const limited = hasFrequency(item.system);
+  if (limited) await item.update({ "system.frequencyUsed": true });
+  // The item's Use effects: roll, heal, Ember, a condition (step 49g).
+  const lines = [];
+  const rolls = [];
+  for (const effect of itemUseEffects(item)) {
+    const done = await doEffectAction(actor, effect);
+    lines.push(...done.lines);
+    rolls.push(...done.rolls);
+  }
   const esc = foundry.utils.escapeHTML;
   const text = cardText(item.system.description);
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<div class="var-borg-card uses-card"><h3>${i18n.format("VARBORG.Uses.CardTitle", { name: esc(actor.name), item: esc(item.name) })}</h3>`
-      + `<p class="sum">${i18n.format("VARBORG.Uses.CardLine", { frequency: frequencyLabel(item) })}</p>`
-      + (text ? `<p>${text}</p>` : "") + `</div>`
+      + (limited ? `<p class="sum">${i18n.format("VARBORG.Uses.CardLine", { frequency: frequencyLabel(item) })}</p>` : "")
+      + lines.map(line => `<p class="sum">${esc(line)}</p>`).join("")
+      + (text ? `<p>${text}</p>` : "") + `</div>`,
+    rolls,
+    sound: rolls.length ? CONFIG.sounds.dice : null
   });
 }
 
@@ -122,4 +145,32 @@ export function actorsForNewDay() {
     }
   }
   return actors;
+}
+
+/**
+ * Bring back these actors' uses at a moment and post a line per actor
+ * saying which came back, such as after a Long Rest (step 49g).
+ * @param {Actor[]} actors
+ * @param {string} event  One of RESET_EVENTS.
+ */
+export async function resetAndAnnounce(actors, event) {
+  const back = await resetLimitedUses(actors, event);
+  const esc = foundry.utils.escapeHTML;
+  for (const [actor, names] of back) {
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Uses.BackNow", { name: esc(actor.name), items: names.map(esc).join(", ") })}</p></div>`
+    });
+  }
+  return back;
+}
+
+/**
+ * The Dark Master's button: once-per-visit uses come back for everyone,
+ * as when the party reaches a new settlement (GAPS 190).
+ */
+export async function resetVisitUses() {
+  if (!game.user.isGM) return;
+  const back = await resetAndAnnounce(actorsForNewDay(), "visit");
+  if (!back.size) ui.notifications.info(game.i18n.localize("VARBORG.Uses.NoVisitUses"));
 }

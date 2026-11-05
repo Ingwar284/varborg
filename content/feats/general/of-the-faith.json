@@ -8,7 +8,7 @@
     "source": "general",
     "belongsTo": "",
     "improving": false,
-    "frequency": "",
+    "frequency": "downtime",
     "frequencyUsed": false
   }
 }

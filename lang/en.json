@@ -780,12 +780,16 @@
     },
     "Uses": {
       "FrequencyLabel": "Use",
-      "FrequencyHint": "How often it can be used. Once used, its Use button is off until it comes back: once per round at the start of each round and when combat ends, once per encounter when combat ends, once per day at each new day. New items take this from “once per …” in their text.",
+      "FrequencyHint": "How often it can be used. Once used, its Use button is off until it comes back: once per round at the start of each round and when combat ends, once per turn at the start of the character’s turn and when combat ends, once per encounter when combat ends, once per day at each new day, once per Long Rest at a Long Rest or Downtime, once per Downtime at Downtime, once per visit when the Dark Master presses Reset visit uses. New items take this from “once per …” in their text.",
       "Frequency": {
         "none": "No limit",
         "round": "Once per round",
         "encounter": "Once per encounter",
-        "day": "Once per day"
+        "day": "Once per day",
+        "turn": "Once per turn",
+        "longRest": "Once per Long Rest",
+        "downtime": "Once per Downtime",
+        "visit": "Once per visit"
       },
       "Used": "Used",
       "UsedHint": "Used: its Use button is off until it comes back. Untick to give the use back by hand.",
@@ -794,7 +798,11 @@
       "AlreadyUsed": "{item} is already used ({frequency}).",
       "CardTitle": "{name} uses {item}",
       "CardLine": "{frequency}: used until it comes back.",
-      "BackToday": "{name} can use these again today: {items}."
+      "BackToday": "{name} can use these again today: {items}.",
+      "BackNow": "{name} can use these again: {items}.",
+      "ResetVisit": "Reset visit uses",
+      "ResetVisitTooltip": "The party reaches a new settlement: every “once per visit” use (such as Haggler) comes back.",
+      "NoVisitUses": "No once-per-visit uses were spent."
     },
     "Light": {
       "Label": "Light",
@@ -2630,7 +2638,8 @@
         "roll": "Roll and post",
         "gainEmber": "Add to the Ember pool",
         "addCondition": "Gain a condition",
-        "rollTwice": "Roll twice"
+        "rollTwice": "Roll twice",
+        "reroll": "Offer a reroll on cards"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2663,7 +2672,20 @@
       "RolledTwice": "Rolled twice: {first} and {second}, kept {kept} ({items}).",
       "ChooseTitle": "{name}: choose a roll",
       "ChooseHint": "{items}: you rolled twice. Choose the result to keep.",
-      "SeeText": "see its text."
+      "SeeText": "see its text.",
+      "RerollCard": {
+        "test": "Ability test cards",
+        "attack": "Attack cards",
+        "defence": "Defence cards",
+        "gloomTest": "Cards of tests against gloom abilities",
+        "power": "Power cards",
+        "spell": "Spell cards"
+      },
+      "UseHint": "What pressing the item’s Use button does, after posting its text. A reroll is not done from the button: the item offers a Reroll button on its owner’s cards while its use is not spent.",
+      "RerollHint": "Which cards get the item’s Reroll button.",
+      "RerollButton": "Reroll ({item})",
+      "RerollLog": "{name} uses {item}: reroll",
+      "RerollSpent": "{item} is already used."
     }
   }
 }

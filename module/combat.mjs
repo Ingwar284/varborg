@@ -111,7 +111,9 @@ export class VarBorgCombat extends foundry.documents.Combat {
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
     if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
     if (actor) await startOfTurnTimers(actor);
-    // Item effects at the start of the turn, such as Regenerative Marrow (step 49f).
+    // Once-per-turn uses come back (step 49g), then item effects at the
+    // start of the turn, such as Regenerative Marrow (step 49f).
+    if (actor) await resetLimitedUses([actor], "turnStart");
     if (actor) await runItemHooks(actor, "turnStart");
   }
 

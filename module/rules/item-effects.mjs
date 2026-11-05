@@ -26,7 +26,7 @@ import { CONDITIONS } from "./conditions.mjs";
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist"];
 
 /** The kinds the system works out so far; the sheet only offers these. */
-export const BUILT_KINDS = ["stat", "roll", "reminder", "hook"];
+export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use"];
 
 /**
  * The moments a hook effect can act at (step 49f):
@@ -55,6 +55,17 @@ export const HOOK_EVENTS = [
  *   player choose (initiative and Death's Door only).
  */
 export const HOOK_ACTIONS = ["reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice"];
+
+/**
+ * What a Use effect does when the item's Use button is pressed (step 49g):
+ * roll, heal, gainEmber and addCondition as for hooks. reroll: the item
+ * offers a reroll button on its owner's test cards (like Fortune's) while
+ * its use is not spent; `roll` names which cards.
+ */
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll"];
+
+/** Every action a hook or Use effect can have. */
+export const ALL_ACTIONS = [...new Set([...HOOK_ACTIONS, ...USE_ACTIONS])];
 
 /** The events where rolling twice means something. */
 export const ROLL_TWICE_EVENTS = ["initiative", "deathsDoor"];
@@ -336,6 +347,12 @@ export function effectProblems(effect) {
       if (!ROLL_TWICE_EVENTS.includes(effect.event)) problems.push(`rollTwice at ${effect.event}`);
     }
   }
+  if (effect.kind === "use") {
+    check("action", USE_ACTIONS);
+    if (["heal", "roll", "gainEmber"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (effect.action === "addCondition") check("condition", CONDITIONS);
+    if (effect.action === "reroll") check("roll", ROLL_KINDS);
+  }
   if (effect.kind === "roll") {
     check("mode", ROLL_MODES);
     check("grant", GRANTS);
@@ -400,4 +417,30 @@ export function keptRoll(first, second, keep) {
   if (keep === "better") return Math.max(first, second);
   if (keep === "worse") return Math.min(first, second);
   return null;
+}
+
+/**
+ * The Use effects of a list of effects that do something when the Use
+ * button is pressed (everything but reroll), step 49g.
+ */
+export function useEffects(effects) {
+  return (effects ?? []).filter(effect => effect.kind === "use" && effect.action !== "reroll");
+}
+
+/**
+ * The items that offer a reroll on a card of this kind of roll (step 49g):
+ * their Use effect is reroll, the roll fits, and their limited use is not
+ * spent. One per item.
+ * @param {object[]} effects  From collectEffects.
+ * @param {string} rollKind   The card's roll: "test", "attack", "defence", "gloomTest", "power" or "spell".
+ * @returns {Array<{item: string, itemId: string}>}
+ */
+export function rerollItems(effects, rollKind) {
+  const found = new Map();
+  for (const effect of effects ?? []) {
+    if (effect.kind !== "use" || effect.action !== "reroll" || effect.roll !== rollKind) continue;
+    if (effect.frequency && effect.used) continue;
+    if (!found.has(effect.itemId)) found.set(effect.itemId, { item: effect.item, itemId: effect.itemId });
+  }
+  return [...found.values()];
 }

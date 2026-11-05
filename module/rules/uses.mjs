@@ -14,33 +14,55 @@
  * - once per day: at each new day (New day, Long Rest, Downtime).
  * The Dark Master can untick it by hand at any time. A new item whose text
  * says "once per round/encounter/day" starts with that frequency.
+ *
+ * More frequencies (GAPS 190, step 49g):
+ * - once per turn: at the start of the character's turn, and when combat ends;
+ * - once per Long Rest: at a Long Rest or Downtime;
+ * - once per Downtime: at Downtime;
+ * - once per visit (to a settlement): when the Dark Master resets them.
+ * "The first time in a round" is once per round.
  */
 
 /** The frequencies. "" means the item has no limited use. */
-export const FREQUENCIES = ["", "round", "encounter", "day"];
+export const FREQUENCIES = ["", "round", "turn", "encounter", "day", "longRest", "downtime", "visit"];
 
 /**
  * The moments uses come back:
  * roundStart  a new combat round starts;
+ * turnStart   the character's turn starts;
  * combatEnd   combat ends;
- * newDay      a new day begins.
+ * newDay      a new day begins;
+ * longRest    a Long Rest or Downtime;
+ * downtime    Downtime;
+ * visit       the Dark Master's reset of once-per-visit uses.
  */
-export const RESET_EVENTS = ["roundStart", "combatEnd", "newDay"];
+export const RESET_EVENTS = ["roundStart", "turnStart", "combatEnd", "newDay", "longRest", "downtime", "visit"];
 
 const RESETS = {
   round: ["roundStart", "combatEnd"],
+  turn: ["turnStart", "combatEnd"],
   encounter: ["combatEnd"],
-  day: ["newDay"]
+  day: ["newDay"],
+  longRest: ["longRest", "downtime"],
+  downtime: ["downtime"],
+  visit: ["visit"]
+};
+
+/** The words in item text for each frequency, as in "once per Long Rest". */
+const FREQUENCY_WORDS = {
+  round: "round", turn: "turn", encounter: "encounter", day: "day",
+  "long rest": "longRest", downtime: "downtime", visit: "visit"
 };
 
 /**
  * The frequency an item's text suggests: the first "once per round",
- * "once per encounter" or "once per day" in it, or "" if none.
+ * "once per turn", "once per encounter", "once per day", "once per Long
+ * Rest", "once per Downtime" or "once per visit" in it, or "" if none.
  * @param {string} text
  */
 export function frequencyFromText(text) {
-  const match = /\bonce\s+per\s+(round|encounter|day)\b/i.exec(String(text ?? ""));
-  return match ? match[1].toLowerCase() : "";
+  const match = /\bonce\s+per\s+(round|turn|encounter|day|long\s+rest|downtime|visit)\b/i.exec(String(text ?? ""));
+  return match ? FREQUENCY_WORDS[match[1].toLowerCase().replace(/\s+/g, " ")] : "";
 }
 
 /** Whether an item has a limited use. */

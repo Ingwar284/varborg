@@ -169,7 +169,7 @@
         "source": "passive",
         "belongsTo": "",
         "improving": false,
-        "frequency": "",
+        "frequency": "encounter",
         "frequencyUsed": false
       }
     }

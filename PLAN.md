@@ -989,10 +989,23 @@ targeted token, sharing one damage roll (GAPS 141).
     *Test:* Regenerative Marrow heals at turn start; Saint's knucklebone
     gives two Death's Door rolls.
 
-49g. **Uses and new frequencies.** Use effects give the Use button its
-    actions (roll a die, heal, gain Ember, a reroll button on the last card,
-    built like the Fortune buttons), and the frequencies ruled in step 49
-    are added.
+49g. ~~**Uses and new frequencies.**~~ Done: the frequencies of GAPS 190
+    (`module/rules/uses.mjs`, tested): once per turn (back at the start of
+    the character's turn and when combat ends), once per Long Rest (back
+    at a Long Rest or Downtime), once per Downtime, and once per visit
+    (back when the Dark Master presses **Reset visit uses** on the Ember
+    and Gloom panel); "once per …" in an item's text sets them. Seven
+    content feats and three foe passives got the frequency their text
+    names, and data version 7 does the same in existing worlds. A new kind
+    of effect, **Use button** (`use`): roll and post, regain HP, add to the
+    Ember pool, gain a condition (`doEffectAction`, shared with events), or
+    offer a reroll: the item puts a "Reroll (item)" button on its owner's
+    cards of one kind (ability test, attack, defence, gloom test, power,
+    spell) wherever Fortune could reroll, paid with the item's use instead
+    of Fortune (`rerollItems`, `module/fortune.mjs`). A feat or gear item
+    with Use effects gets a Use button even without a limit. Not yet:
+    relics' own Use buttons do not run Use effects (step 53a), and a reroll
+    is only offered on its owner's own cards (Understudy helps an ally).
     *Test:* use Lucky Break and see its d10. A once-per-Long-Rest feat comes
     back after a Long Rest.
 

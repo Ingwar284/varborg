@@ -6,7 +6,7 @@
 
 import {
   EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, KEEPS, HOOK_REQUIRES
+  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -45,7 +45,7 @@ export function effectFields() {
       per: choice(DAMAGE_PER, ""),
       // hook (step 49f): when, what, how much, which condition, which roll to keep, only while…
       event: choice(HOOK_EVENTS),
-      action: choice(HOOK_ACTIONS),
+      action: choice(ALL_ACTIONS),
       amount: new StringField({ required: true, blank: true, initial: "" }),
       condition: choice(["", ...CONDITIONS], ""),
       keep: choice(KEEPS),

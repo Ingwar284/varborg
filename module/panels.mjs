@@ -17,6 +17,7 @@ import {
   registerPools, getPools, spendFromPool, adjustPoolBy, runningCombat, poolLabel, poolSymbol, weatherPoolBonus
 } from "./pools.mjs";
 import { resetEmberAbilities } from "./dice/power.mjs";
+import { resetVisitUses } from "./uses.mjs";
 import { registerDays, newDay } from "./days.mjs";
 import { registerCalendar, calendarContext, nextPhase, moveHours } from "./calendar.mjs";
 import { rest } from "./rest.mjs";
@@ -191,7 +192,8 @@ export class PoolsPanel extends SharedPanel {
     actions: {
       spend: PoolsPanel.#onSpend,
       adjust: PoolsPanel.#onAdjust,
-      resetEmber: PoolsPanel.#onResetEmber
+      resetEmber: PoolsPanel.#onResetEmber,
+      resetVisit: PoolsPanel.#onResetVisit
     }
   };
 
@@ -244,6 +246,12 @@ export class PoolsPanel extends SharedPanel {
   static async #onResetEmber(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, () => resetEmberAbilities(game.actors.contents, { announce: true }));
+  }
+
+  /** Dark Master only: once-per-visit uses come back, as at a new settlement (GAPS 190). */
+  static async #onResetVisit(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, () => resetVisitUses());
   }
 }
 

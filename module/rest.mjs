@@ -29,6 +29,7 @@ import { resetEmberAbilities } from "./dice/power.mjs";
 import { livingCharacters, startDays } from "./days.mjs";
 import { atDeathsDoor, killedByDamage } from "./deaths-door.mjs";
 import { runItemHooks } from "./effects.mjs";
+import { resetAndAnnounce } from "./uses.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -207,7 +208,9 @@ async function restFor(actor, kind, ate, interruptionTier) {
   });
 
   if (actor.statuses.has("infected")) await infectionDamage(actor);
-  // Item effects after a rest (step 49f).
+  // Once-per-Long-Rest and once-per-Downtime uses come back (step 49g),
+  // then item effects after a rest (step 49f).
+  if (isLongRest(kind)) await resetAndAnnounce([actor], kind === REST.DOWNTIME ? "downtime" : "longRest");
   await runItemHooks(actor, "rest");
   if (isLongRest(kind)) await runItemHooks(actor, "longRest");
 }
