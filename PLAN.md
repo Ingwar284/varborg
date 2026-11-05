@@ -820,8 +820,10 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       always on; the Shard adds 3 ember (GAPS 174). The Shard example moved
       there unchanged. The "Rolling a relic" table (d2, then d12 or d10 +
       12) comes with the other tables in 48i.
-    - 48i. ~~**Foes.**~~ Done: every stat block in the rules with stats,
-      182 foes in `content/foes/` and the Destrier and Raider-Beast in
+    - 48i. ~~**Foes.**~~ Done: every stat block in the rules with stats
+      outside the adventures (Operation and Exeunt pages, and the Carcosan
+      Marionette of the Entities appendix, are left out for
+      now, at the designer's wish), 149 foes in `content/foes/` and the Destrier and Raider-Beast in
       `content/minions/`. Tier, HP, Morale ("-" never rolls), armour die
       and name; attacks as weapons (melee or shoot, reach or range); gloom
       abilities as gloom powers with their own test, DR, Failure and Ruin

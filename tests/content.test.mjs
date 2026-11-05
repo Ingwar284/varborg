@@ -404,8 +404,8 @@ const flatNoMarks = flatRules.replace(/⚔ /g, "");
 /** Text made safe to put inside a regular expression. */
 const escapeRe = text => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-test("the rules' 182 foe stat blocks, the Gravecaller's Thrall and 2 minion stat blocks are there", () => {
-  assert.equal(foeActors.length, 183);
+test("the rules' 149 foe stat blocks outside the adventures, the Gravecaller's Thrall and 2 minion stat blocks are there", () => {
+  assert.equal(foeActors.length, 150);
   assert.deepEqual(minionActors.map(m => m.name).sort(), ["Destrier", "Raider-Beast"]);
 });
 
@@ -525,4 +525,13 @@ test("the Charioteer's rig is a vehicle as its stat block writes it", () => {
   assert.ok(flatRules.includes("Speed 30' safe, 50' normal, 70' fast per Move"));
   assert.ok(flatRules.includes(`Passengers ${s.passengers}`));
   for (const item of rig.items) assert.ok(inRules(`${item.name} ${item.system.description}`), item.name);
+});
+
+test("no foe comes from an adventure page (Operation:, Exeunt: or the Entities appendix), for now", () => {
+  const lines = rules.split(/\r?\n/);
+  for (const f of foeActors.filter(f => !f.system.mook)) {
+    const at = lines.findIndex((l, i) => l.trim() === `**${f.name}**` && /^_(Pitiful|Weak|Moderate|Strong|Mighty) (Foe|foe)/.test(lines[i + 1]?.trim() ?? ""));
+    const page = lines.slice(0, at).findLast(l => /^# /.test(l));
+    assert.ok(!/^# (Operation:|Exeunt:|Appendix: Entities and Artifacts$)/.test(page), `${f.name} is on ${page}`);
+  }
 });
