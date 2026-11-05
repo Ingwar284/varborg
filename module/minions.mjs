@@ -36,7 +36,7 @@ export function ownedMinions(character, { except = null } = {}) {
  */
 export function minionCount(character) {
   const count = ownedMinions(character).length;
-  const limit = minionLimit(character.system.abilities.presence);
+  const limit = minionLimit(character.system.abilities.presence, character.system.statBonuses?.minionLimit);
   return { count, limit, over: count > limit };
 }
 
@@ -48,9 +48,9 @@ export function refuseOverLimit(ownerId, minionId, name) {
   const owner = game.actors?.get(ownerId);
   if (!owner || owner.type !== "character") return false;
   const count = ownedMinions(owner, { except: minionId }).length;
-  if (canTakeMinion(count, owner.system.abilities.presence)) return false;
+  if (canTakeMinion(count, owner.system.abilities.presence, owner.system.statBonuses?.minionLimit)) return false;
   ui.notifications.warn(game.i18n.format("VARBORG.Minion.OverLimit", {
-    name, owner: owner.name, limit: minionLimit(owner.system.abilities.presence)
+    name, owner: owner.name, limit: minionLimit(owner.system.abilities.presence, owner.system.statBonuses?.minionLimit)
   }));
   return true;
 }

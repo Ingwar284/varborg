@@ -162,7 +162,7 @@ export function fortuneTier(tier, softened) {
 export function actorTestModifiers(actor, ability) {
   const items = actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }));
   const armour = wornArmour(items);
-  const { state } = carrying(items, actor.system.abilities.toughness);
+  const { state } = carrying(items, actor.system.abilities.toughness, actor.system.statBonuses);
   const carryingState = carryingWithConditions(actor.statuses, state);
   const modifiers = testModifiers({ ability, armour, carryingState });
   return { ...modifiers, armourName: armour ? actor.items.get(armour.id)?.name ?? null : null };

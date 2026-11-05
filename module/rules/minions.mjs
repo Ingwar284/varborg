@@ -21,6 +21,8 @@
  * owner who already has their limit of minions is refused (GAPS 171).
  */
 
+import { withStat } from "./item-effects.mjs";
+
 /** The minion tiers, weakest first (rules 3.14). */
 export const MINION_TIERS = ["pitiful", "weak", "moderate"];
 
@@ -54,19 +56,22 @@ export function tierStats(tier) {
 /**
  * How many minions a character can have: their Presence, minimum 1.
  * @param {number} presence
+ * @param {object} [bonus]  The minionLimit entry of statBonuses
+ *   (item-effects.mjs), applied after the minimum (PLAN step 49b).
  */
-export function minionLimit(presence) {
+export function minionLimit(presence, bonus) {
   if (!Number.isInteger(presence)) throw new RangeError(`Presence must be a whole number, got ${presence}`);
-  return Math.max(1, presence);
+  return Math.max(0, withStat(Math.max(1, presence), bonus));
 }
 
 /**
  * Can a character with `count` minions take one more?
  * @param {number} count     Minions they have now, not counting the new one.
  * @param {number} presence  Their Presence.
+ * @param {object} [bonus]   As for minionLimit.
  */
-export function canTakeMinion(count, presence) {
-  return count < minionLimit(presence);
+export function canTakeMinion(count, presence, bonus) {
+  return count < minionLimit(presence, bonus);
 }
 
 /**

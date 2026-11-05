@@ -316,7 +316,7 @@ export function defenceModifiers(actor) {
   const items = actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }));
   const armour = wornArmour(items);
   const shield = strongestShield(items);
-  const { state } = carrying(items, actor.system.abilities.toughness);
+  const { state } = carrying(items, actor.system.abilities.toughness, actor.system.statBonuses);
   const carryingState = carryingWithConditions(actor.statuses, state);
   const nameOf = data => (data ? actor.items.get(data.id)?.name ?? null : null);
   return {

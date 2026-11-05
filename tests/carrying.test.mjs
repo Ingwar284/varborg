@@ -97,3 +97,15 @@ test("three cumbersome barrels in one stack are three cumbersome items", () => {
   assert.deepEqual(carrying([barrels, torches], 2),
     { cumbersome: 3, limit: 2, state: "encumbered", movement: 20 });
 });
+
+test("item effects change the limit and movement, but overloaded stays 0 (PLAN step 49b)", () => {
+  const bulky = { type: "gear", cumbersome: true };
+  const plus = (add) => ({ add, set: null, min: null, sources: [] });
+  // Carry +2: Toughness 0 carries 3 before Encumbered.
+  assert.deepEqual(carrying([bulky, bulky, bulky], 0, { carryLimit: plus(2) }),
+    { cumbersome: 3, limit: 3, state: "normal", movement: 20 });
+  // Movement +5, and the limit never below 1.
+  assert.deepEqual(carrying([bulky], 0, { carryLimit: plus(-4), movement: plus(5) }),
+    { cumbersome: 1, limit: 1, state: "normal", movement: 25 });
+  assert.equal(carrying([bulky, bulky, bulky], 0, { movement: plus(5) }).movement, 0);
+});

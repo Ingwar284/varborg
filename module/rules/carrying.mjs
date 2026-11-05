@@ -11,6 +11,8 @@
  * limit sets movement to 0 (GAPS 21).
  */
 
+import { withStat } from "./item-effects.mjs";
+
 /** A creature moves 20' in one Move action unless told otherwise (rules 3.7). */
 export const BASE_MOVEMENT = 20;
 
@@ -80,13 +82,17 @@ export function isCumbersomeByDefault(type, system) {
  * Everything the sheet needs to know about what a character carries.
  * @param {object[]} items   Items as in countsAsCumbersome.
  * @param {number} toughness
+ * @param {object} [bonuses]  From statBonuses (item-effects.mjs): carryLimit
+ *   changes the limit (never below 1), movement changes the movement unless
+ *   overloaded, which stays 0 (PLAN step 49b).
  * @returns {{cumbersome: number, limit: number, state: string, movement: number}}
  */
-export function carrying(items, toughness) {
+export function carrying(items, toughness, bonuses = {}) {
   const cumbersome = items.filter(countsAsCumbersome).reduce((sum, item) => sum + itemCount(item), 0);
-  const limit = cumbersomeLimit(toughness);
+  const limit = Math.max(1, withStat(cumbersomeLimit(toughness), bonuses.carryLimit));
   const state = carryingState(cumbersome, limit);
-  return { cumbersome, limit, state, movement: movement(state) };
+  const moves = state === "overloaded" ? 0 : Math.max(0, withStat(movement(state), bonuses.movement));
+  return { cumbersome, limit, state, movement: moves };
 }
 
 /** A container holds that many normal-sized items (rules 4.1). */

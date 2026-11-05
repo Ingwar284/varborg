@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import {
   EFFECT_KINDS, BUILT_KINDS, AUTOMATION, STAT_TARGETS, ROLL_KINDS,
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
-  fitsRoll, rollEffects, effectProblems
+  fitsRoll, rollEffects, effectProblems, withAbilityBonuses
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -107,4 +107,15 @@ test("effect problems name the bad field", () => {
   assert.deepEqual(effectProblems({ ...blankEffect("roll"), roll: "dance", grant: "maybe" }), ["roll: dance", "grant: maybe"]);
   assert.deepEqual(effectProblems({ ...blankEffect("roll"), against: "sleepy" }), ["against: sleepy"]);
   assert.deepEqual(effectProblems({ kind: "magic" }), ["kind: magic"]);
+});
+
+test("abilities take their stat effects and stay within −3 … +6 (step 49b)", () => {
+  const bonuses = statBonuses([
+    { ...stat("strength", 1), item: "A" },
+    { ...stat("agility", 4), item: "B" },
+    { ...stat("sanity", 2, "min"), item: "C" }
+  ]);
+  const result = withAbilityBonuses({ strength: 2, agility: 4, toughness: -1, presence: 0, sanity: -2 }, bonuses);
+  assert.deepEqual(result, { strength: 3, agility: 6, toughness: -1, presence: 0, sanity: 2 });
+  assert.deepEqual(withAbilityBonuses({ strength: 1 }, {}), { strength: 1 });
 });

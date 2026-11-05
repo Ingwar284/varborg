@@ -94,3 +94,11 @@ test("a combatant compared with itself is equal", () => {
   const hero = { id: "hero", initiative: 3, isPC: true };
   assert.equal(compareTurnOrder(hero, hero), 0);
 });
+
+test("item effects change the minion limit, after the minimum of 1 (PLAN step 49b)", () => {
+  const plus = (add) => ({ add, set: null, min: null, sources: [] });
+  assert.equal(minionLimit(0, plus(1)), 2);
+  assert.equal(minionLimit(3, plus(2)), 5);
+  assert.equal(canTakeMinion(2, 1, plus(2)), true);
+  assert.equal(canTakeMinion(3, 1, plus(2)), false);
+});

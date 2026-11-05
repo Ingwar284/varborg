@@ -7,6 +7,7 @@
       <span>{{localize "VARBORG.Carrying.Movement"}}: {{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
     </p>
     <p class="hint">{{localize (concat "VARBORG.Carrying.Hint." carrying.state)}}</p>
+    {{#if carrying.effects}}<p class="hint">{{carrying.effects}}</p>{{/if}}
   </section>
 
   {{#if system.attackRuin}}

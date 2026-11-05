@@ -18,7 +18,7 @@
  * Rulings: GAPS 182, 188–191.
  */
 
-import { ABILITIES } from "./abilities.mjs";
+import { ABILITIES, clampAbility } from "./abilities.mjs";
 import { CONDITIONS } from "./conditions.mjs";
 
 /** Every kind of effect, in the order the sheet offers them. */
@@ -136,6 +136,19 @@ export function withStat(value, bonus) {
   let result = bonus.set ?? value;
   result += bonus.add;
   if (bonus.min !== null) result = Math.max(result, bonus.min);
+  return result;
+}
+
+/**
+ * The abilities in use after stat effects, each kept within −3 … +6.
+ * @param {object} abilities  { strength, agility, … } before effects.
+ * @param {object} bonuses    From statBonuses.
+ */
+export function withAbilityBonuses(abilities, bonuses) {
+  const result = { ...abilities };
+  for (const ability of ABILITIES) {
+    if (bonuses?.[ability] && Number.isInteger(result[ability])) result[ability] = clampAbility(withStat(result[ability], bonuses[ability]));
+  }
   return result;
 }
 

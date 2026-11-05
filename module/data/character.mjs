@@ -19,6 +19,7 @@ import { missingTokenDefaults } from "../rules/tokens.mjs";
 import { rollStartingFortune, postStartingFortune } from "../fortune.mjs";
 import { wakesFromHealing } from "../rules/deaths-door.mjs";
 import { atDeathsDoor, isDead, healedAtDeathsDoor } from "../deaths-door.mjs";
+import { collectEffects, statBonuses, withStat, withAbilityBonuses } from "../rules/item-effects.mjs";
 
 /** Passes "gained HP at Death's Door" from _preUpdate to _onUpdate (GAPS 163). */
 const HEALED_AT_DOOR_OPTION = "varBorgHealedAtDeathsDoor";
@@ -94,7 +95,19 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     super.prepareDerivedData();
     this.keyAbility = this.parent.itemTypes.class?.[0]?.system.boostedAbility ?? null;
     this.rolledAbilities = { ...this._source.abilities };
-    Object.assign(this.abilities, currentAbilities(this.rolledAbilities, this.keyAbility, this.sanityLost));
+    // Sheet numbers from item effects (PLAN step 49b), such as Mountain of
+    // Meat's +4 max HP. Max HP and max wounds are stored without them.
+    this.statBonuses = statBonuses(collectEffects(this.parent.items));
+    const inUse = currentAbilities(this.rolledAbilities, this.keyAbility, this.sanityLost);
+    Object.assign(this.abilities, withAbilityBonuses(inUse, this.statBonuses));
+    this.hp.max = this.#withBonus("hpMax", this._source.hp.max);
+    this.wounds.max = this.#withBonus("woundsMax", this._source.wounds.max);
+    this.hp.value = capHp(this.hp.value, this.hp.max);
+  }
+
+  /** A stored max (HP or wounds) with its item effects, never below 0. */
+  #withBonus(target, stored) {
+    return Math.max(0, withStat(stored, this.statBonuses?.[target]));
   }
 
   /**
@@ -136,7 +149,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     if (!options[MIGRATION_OPTION]) this.#followToughness(changes);
     const hp = changes.system?.hp;
     if (!hp || !("value" in hp || "max" in hp)) return;
-    const max = hp.max ?? this.hp.max;
+    // A typed max is stored without item effects; HP is kept within the max in use.
+    const max = hp.max !== undefined ? this.#withBonus("hpMax", hp.max) : this.hp.max;
     hp.value = capHp(hp.value ?? this.hp.value, max);
     if (wakesFromHealing({ atDeathsDoor: atDeathsDoor(this.parent), dead: isDead(this.parent), from: this.hp.value, to: hp.value })) {
       options[HEALED_AT_DOOR_OPTION] = true;
@@ -144,7 +158,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     if (!strikesZero(this.hp.value, hp.value)) return;
 
     const wounds = changes.system.wounds ?? {};
-    const outcome = atZeroHp(wounds.value ?? this.wounds.value, wounds.max ?? this.wounds.max, max);
+    const maxWounds = wounds.max !== undefined ? this.#withBonus("woundsMax", wounds.max) : this.wounds.max;
+    const outcome = atZeroHp(wounds.value ?? this.wounds.value, maxWounds, max);
     if (outcome.wounded) {
       hp.value = outcome.hp;
       foundry.utils.setProperty(changes, "system.wounds.value", outcome.wounds);
@@ -162,13 +177,14 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     const toughness = changes.system?.abilities?.toughness;
     if (!cls || this.hpFixed || toughness === undefined || toughness === this._source.abilities.toughness) return;
     const hp = changes.system.hp ?? {};
-    if (hp.max !== undefined && hp.max !== this.hp.max) return;
+    if (hp.max !== undefined && hp.max !== this._source.hp.max) return;
     const rolled = { ...this._source.abilities, toughness };
     const followed = followHp({
       hpBase: cls.system.hpBase,
       toughness: currentAbilities(rolled, cls.system.boostedAbility).toughness,
       hp: hp.value ?? this.hp.value,
-      max: this.hp.max
+      // The stored max, without item effects (PLAN step 49b).
+      max: this._source.hp.max
     });
     foundry.utils.setProperty(changes, "system.hp", { ...hp, ...followed });
   }

@@ -81,7 +81,9 @@ export async function improveCharacter(actor) {
   let hpGain = 0;
   if (gainsHp(hpTotal, maxHp)) {
     hpGain = await roll(HP_GAIN_DIE);
-    await actor.update({ "system.hp.max": maxHp + hpGain, "system.hp.value": actor.system.hp.value + hpGain });
+    // Max HP is stored without item effects such as Mountain of Meat (PLAN step 49b).
+    const storedMax = actor._source.system.hp.max;
+    await actor.update({ "system.hp.max": storedMax + hpGain, "system.hp.value": actor.system.hp.value + hpGain });
   }
 
   // IV. The find table; only the silver is added (GAPS 179).

@@ -25,11 +25,15 @@ export const MINION_INITIATIVE_FORMULA = "1d6";
  * The initiative formula for an actor type. Anything that is not a player
  * character or a minion rolls like a foe.
  * @param {string} actorType  "character", "foe", "minion", …
+ * @param {number} [bonus]     Initiative from items (PLAN step 49b), such as
+ *   +2 or −1, added to the formula.
  */
-export function initiativeFormula(actorType) {
-  if (actorType === "character") return CHARACTER_INITIATIVE_FORMULA;
-  if (actorType === "minion") return MINION_INITIATIVE_FORMULA;
-  return FOE_INITIATIVE_FORMULA;
+export function initiativeFormula(actorType, bonus = 0) {
+  let formula = FOE_INITIATIVE_FORMULA;
+  if (actorType === "character") formula = CHARACTER_INITIATIVE_FORMULA;
+  if (actorType === "minion") formula = MINION_INITIATIVE_FORMULA;
+  if (!bonus) return formula;
+  return `${formula} ${bonus > 0 ? "+" : "-"} ${Math.abs(bonus)}`;
 }
 
 /**

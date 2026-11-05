@@ -2569,7 +2569,15 @@
         "optional": "Optional tick"
       },
       "NoteLabel": "When",
-      "NotePlaceholder": "When it applies, in a few words"
+      "NotePlaceholder": "When it applies, in a few words",
+      "Part": {
+        "add": "{value} {item}",
+        "set": "{item}: {value}",
+        "min": "{item}: at least {value}"
+      },
+      "OnLimit": "Cumbersome limit {part}",
+      "OnMovement": "Movement {part}",
+      "OnMinionLimit": "Minion limit: {parts}"
     }
   }
 }

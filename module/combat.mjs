@@ -33,6 +33,7 @@ import { resetLimitedUses } from "./uses.mjs";
 import { currentWeather } from "./weather.mjs";
 import { conditionsForTurn, turnConditionFor } from "./rules/weather-effects.mjs";
 import { startMinionTurn, postMinionTurn } from "./minions.mjs";
+import { withStat } from "./rules/item-effects.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -172,9 +173,13 @@ export class VarBorgCombat extends foundry.documents.Combat {
 }
 
 export class VarBorgCombatant extends foundry.documents.Combatant {
-  /** PCs roll d6 + Agility, foes d6 + their initiative bonus, minions a d6. */
+  /**
+   * PCs roll d6 + Agility, foes d6 + their initiative bonus, minions a d6.
+   * A character's item effects can add to it (PLAN step 49b).
+   */
   _getInitiativeFormula() {
-    return initiativeFormula(this.actor?.type);
+    const bonus = withStat(0, this.actor?.system.statBonuses?.initiative);
+    return initiativeFormula(this.actor?.type, bonus);
   }
 
   /** Actions left this turn. */

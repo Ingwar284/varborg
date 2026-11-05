@@ -85,3 +85,9 @@ test("the same two combatants always sort the same way", () => {
   assert.ok(compareInitiative(a, b) < 0);
   assert.ok(compareInitiative(b, a) > 0);
 });
+
+test("an initiative bonus from items is added to the formula (PLAN step 49b)", () => {
+  assert.equal(initiativeFormula("character", 2), "1d6 + @abilities.agility + 2");
+  assert.equal(initiativeFormula("character", -1), "1d6 + @abilities.agility - 1");
+  assert.equal(initiativeFormula("character", 0), CHARACTER_INITIATIVE_FORMULA);
+});

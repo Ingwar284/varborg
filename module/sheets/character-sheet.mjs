@@ -33,6 +33,16 @@ import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs
 import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs";
 import { openCreationHelper } from "../creation.mjs";
 
+/**
+ * The item effects on one sheet number, as text parts such as
+ * "+4 Mountain of Meat" (PLAN step 49b).
+ * @param {object} [bonus]  One entry of the character's statBonuses.
+ */
+function effectParts(bonus) {
+  const i18n = game.i18n;
+  return (bonus?.sources ?? []).map(({ item, op, value }) => i18n.format(`VARBORG.Effects.Part.${op}`, { item, value: op === "add" ? signed(value) : value }));
+}
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -235,6 +245,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         if (boost) parts.push(i18n.format("VARBORG.Sheet.ClassPart", { boost, name: cls.name }));
       }
       if (key === "sanity" && system.sanityLost) parts.push(i18n.format("VARBORG.Sheet.LostPart", { lost: system.sanityLost }));
+      parts.push(...effectParts(system.statBonuses?.[key]));
       return {
         key,
         label: `VARBORG.Ability.${key}`,
@@ -244,6 +255,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     });
     // Max HP follows X + Toughness until it is fixed (GAPS 111).
     context.hpHint = cls && !system.hpFixed ? i18n.format("VARBORG.Sheet.HpFollows", { base: cls.system.hpBase }) : "";
+    // The max boxes hold max HP and max wounds without item effects; under
+    // them, what the effects add and the max in use (PLAN step 49b).
+    const maxNote = (target, max) => {
+      const parts = effectParts(system.statBonuses?.[target]);
+      return parts.length ? i18n.format("VARBORG.Sheet.AbilityInUse", { parts: parts.join(", "), score: max }) : "";
+    };
+    context.maxes = {
+      hp: system._source.hp.max,
+      wounds: system._source.wounds.max,
+      hpNote: maxNote("hpMax", system.hp.max),
+      woundsNote: maxNote("woundsMax", system.wounds.max)
+    };
 
     // Containers on this character, and how many items each one holds.
     // An item pointing at a container that is gone counts as loose.
@@ -326,14 +349,24 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
 
     const carried = carrying(
       actor.items.map(item => ({ type: item.type, ...item.system })),
-      system.abilities.toughness
+      system.abilities.toughness,
+      system.statBonuses
     );
-    context.carrying = { ...carried, stateLabel: `VARBORG.Carrying.State.${carried.state}` };
+    context.carrying = {
+      ...carried,
+      stateLabel: `VARBORG.Carrying.State.${carried.state}`,
+      // Item effects on the limit and movement (PLAN step 49b).
+      effects: [
+        ...effectParts(system.statBonuses?.carryLimit).map(part => i18n.format("VARBORG.Effects.OnLimit", { part })),
+        ...effectParts(system.statBonuses?.movement).map(part => i18n.format("VARBORG.Effects.OnMovement", { part }))
+      ].join(", ")
+    };
 
     // Minions serving this character, and the limit: Presence, minimum 1 (rules 3.14).
     const minions = minionCount(actor);
     context.minions = {
       heading: i18n.format("VARBORG.Minion.Heading", { count: minions.count, limit: minions.limit }),
+      effects: effectParts(system.statBonuses?.minionLimit).join(", "),
       over: minions.over,
       list: ownedMinions(actor).map(minion => ({
         id: minion.id,

@@ -63,16 +63,18 @@
       <span class="pair">
         <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">
         <span>/</span>
-        <input type="number" name="system.hp.max" value="{{system.hp.max}}" min="0" step="1">
+        <input type="number" name="system.hp.max" value="{{maxes.hp}}" min="0" step="1">
       </span>
+      {{#if maxes.hpNote}}<span class="ability-in-use">{{maxes.hpNote}}</span>{{/if}}
     </label>
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Wounds"}}</span>
       <span class="pair">
         <input type="number" name="system.wounds.value" value="{{system.wounds.value}}" min="0" step="1">
         <span>/</span>
-        <input type="number" name="system.wounds.max" value="{{system.wounds.max}}" min="0" step="1">
+        <input type="number" name="system.wounds.max" value="{{maxes.wounds}}" min="0" step="1">
       </span>
+      {{#if maxes.woundsNote}}<span class="ability-in-use">{{maxes.woundsNote}}</span>{{/if}}
     </label>
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Fortune"}}</span>
@@ -90,6 +92,7 @@
       <span>{{localize "VARBORG.Carrying.Movement"}}</span>
       <span class="movement-value">{{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
       {{#unless (eq carrying.state "normal")}}<span class="carrying-state">{{localize carrying.stateLabel}}</span>{{/unless}}
+      {{#if carrying.effects}}<span class="ability-in-use">{{carrying.effects}}</span>{{/if}}
     </div>
   </section>
 
@@ -135,6 +138,7 @@
 
   <section class="inventory-section minions">
     <h2 class="{{#if minions.over}}over-limit{{/if}}" data-tooltip="{{localize 'VARBORG.Minion.LimitHint'}}">{{minions.heading}}</h2>
+    {{#if minions.effects}}<p class="hint">{{localize "VARBORG.Effects.OnMinionLimit" parts=minions.effects}}</p>{{/if}}
     <ul class="item-list">
       {{#each minions.list}}
       <li class="item-row feat-row{{#if dead}} used-up{{/if}}" data-minion-id="{{id}}">

@@ -901,16 +901,27 @@ targeted token, sharing one damage roll (GAPS 141).
     at all. Nothing reads the effects yet (from step 49b on).
     *Test:* tests pass. Give a feat an effect on its sheet; it is kept.
 
-49b. **Numbers on the sheet.** Stat effects are added in the character's
-    derived data on top of the stored values and shown under them ("+4
-    Mountain of Meat"). Max HP stays stored, so `hpFixed` is unchanged.
-    Carrying, movement and the minion limit take a bonus.
+49b. ~~**Numbers on the sheet.**~~ Done: the character's derived data
+    (`module/data/character.mjs`) collects its items' sheet-number effects
+    (`system.statBonuses`) and adds them to max HP, max wounds and the
+    abilities in use (`withAbilityBonuses`, kept within −3 … +6). Max HP
+    and max wounds are stored without them: the sheet's boxes show the
+    stored number, with "+4 Mountain of Meat → 14" under it, and HP is
+    kept within the max in use. Improving adds its d6 to the stored max.
+    `carrying` (limit never below 1; overloaded movement stays 0),
+    `minionLimit` and `initiativeFormula` take the bonuses, with tests;
+    the sheet names them under movement, carrying and minions.
+    Not yet: a Toughness bonus from an item does not move max HP while it
+    follows Toughness (GAPS 111). The armour tier and defence DR targets
+    are used in step 49c with the defence roll.
     *Test:* Mountain of Meat and Tough give +4 max HP and +1 max wounds,
     and removing them takes it back.
 
 49c. **Automatic roll modifiers.** One helper, `itemRollMods` in
     `module/effects.mjs`, called from every roll; its entries join the
-    condition modifiers and show on the dialog and card.
+    condition modifiers and show on the dialog and card. The defence roll
+    also uses the natural armour tier and the defence DR targets of step
+    49b (GAPS 188, 189).
     *Test:* with Iron will, a test to resist Charmed shows Boon and the
     feat's name.
 
