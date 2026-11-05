@@ -79,6 +79,8 @@ async function itemData(uuid) {
   if (!doc) return null;
   const data = doc.toObject();
   delete data._id;
+  // Remember the compendium it came from, so later effects reach it (step 49i).
+  if (doc.compendium) data._stats = { ...data._stats, compendiumSource: doc.uuid };
   return data;
 }
 

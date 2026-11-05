@@ -1027,11 +1027,26 @@ targeted token, sharing one damage roll (GAPS 141).
     *Test:* drop Weapon specialist, choose a weapon, and attacks with it get
     the bonus.
 
-49i. **Report, tests and existing worlds.** `tools/automation-report.mjs`
-    (`npm run report:automation`) lists every item by status; the content
-    tests check that every effect is valid and every status is set; data
-    version 7 copies effects and status onto world items that came from the
-    compendiums.
+49i. ~~**Report, tests and existing worlds.**~~ Done:
+    `tools/automation-report.mjs` with `tools/automation.mjs` (tested in
+    `tests/automation.test.mjs`): `npm run report:automation` prints a
+    table of the 1526 automatable compendium items by folder and status,
+    `-- <folder>` lists one folder's items, `-- --open` lists every item
+    not reviewed or waiting for a ruling, and effects with problems are
+    listed at the end. `tests/content.test.mjs` fails on an effect the
+    system would not understand, an unknown status, or an item marked
+    fully or partly automated with no effects. `module/refresh-effects.mjs`
+    copies a compendium entry's effects and status onto world items that
+    came from it and have none of their own (Items tab, actors' items, and
+    the items inside foes copied from the compendium), never touching items
+    set by hand: by itself on load when `EFFECTS_CONTENT` is newer than the
+    world's, and with the Dark Master's **Copy compendium effects** button
+    in the game settings. The creation helper and feat or spell choices now
+    remember the compendium an item came from. (The world copy uses its own
+    counter instead of a data version, because every content step needs
+    it.)
+    **Rule for Milestones 10 to 13:** every step that adds effects to
+    `content/` raises `EFFECTS_CONTENT` by one and rebuilds the packs.
     *Test:* run the report; an old world's compendium feat gets its effects
     after reloading.
 

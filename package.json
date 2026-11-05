@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/",
-    "build:packs": "node tools/build-packs.mjs"
+    "build:packs": "node tools/build-packs.mjs",
+    "report:automation": "node tools/automation-report.mjs"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "3.0.5"

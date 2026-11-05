@@ -39,6 +39,7 @@ import { registerAgony } from "./agony.mjs";
 import { registerDeathsDoor } from "./deaths-door.mjs";
 import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
+import { registerEffectsRefresh, refreshWorldEffects, RefreshEffectsApp } from "./refresh-effects.mjs";
 import { registerPanels } from "./panels.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
@@ -145,6 +146,7 @@ Hooks.once("init", () => {
 
   // The world's data version, for bringing old data up to date.
   registerMigrations();
+  registerEffectsRefresh();
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {
@@ -155,9 +157,21 @@ Hooks.once("init", () => {
     type: ImportExamplesApp,
     restricted: true
   });
+
+  // GM-only "Copy compendium effects" button (step 49i).
+  game.settings.registerMenu("var-borg", "refreshEffects", {
+    name: "VARBORG.Effects.MenuName",
+    label: "VARBORG.Effects.MenuLabel",
+    hint: "VARBORG.Effects.MenuHint",
+    icon: "fa-solid fa-wand-magic-sparkles",
+    type: RefreshEffectsApp,
+    restricted: true
+  });
 });
 
 Hooks.once("ready", async () => {
   console.log("VÅR BORG | Ready");
   await migrateWorld();
+  // Compendium item effects newer than the world's are copied in (step 49i).
+  await refreshWorldEffects();
 });

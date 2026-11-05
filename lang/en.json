@@ -2737,7 +2737,15 @@
         },
         "Made": "{name} chooses {chosen} for {item}.",
         "Added": "{name} gains {chosen} through {item}."
-      }
+      },
+      "Refreshed": "VÅR BORG: item effects from the compendiums were copied onto {count} items in this world.",
+      "MenuName": "Compendium effects",
+      "MenuLabel": "Copy compendium effects",
+      "MenuHint": "Copy the effects and automation status of VÅR BORG compendium items onto the items in this world that came from them and have none of their own. Worlds do this by themselves when the system brings new effects.",
+      "RefreshTitle": "Copy compendium effects",
+      "RefreshExplanation": "Every item in this world that came from a VÅR BORG compendium, and has no effects or automation status of its own, gets the compendium entry’s effects and status. Items you have given effects by hand are left alone. A choice copied this way is not made yet: press Choose on the item.",
+      "RefreshButton": "Copy now",
+      "RefreshDone": "Compendium effects copied onto {count} items."
     }
   }
 }

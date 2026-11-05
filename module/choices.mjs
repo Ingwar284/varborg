@@ -117,7 +117,10 @@ export async function makeChoice(item, index) {
   if (picked.uuid) {
     const doc = await fromUuid(picked.uuid);
     if (doc) {
-      const [created] = await actor.createEmbeddedDocuments("Item", [{ ...doc.toObject(), flags: { [SYSTEM]: { grantedBy: item.id } } }]);
+      const data = doc.toObject();
+      // Remember the compendium it came from, so later effects reach it (step 49i).
+      if (doc.compendium) data._stats = { ...data._stats, compendiumSource: doc.uuid };
+      const [created] = await actor.createEmbeddedDocuments("Item", [{ ...data, flags: { [SYSTEM]: { grantedBy: item.id } } }]);
       chosen = created?.id ?? chosen;
     }
   }

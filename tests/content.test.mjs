@@ -12,6 +12,8 @@ import { fileURLToPath } from "node:url";
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
 import { frequencyFromText } from "../module/rules/uses.mjs";
 import { wealthFormula } from "../module/rules/origins.mjs";
+import { AUTOMATION, effectProblems } from "../module/rules/item-effects.mjs";
+import { automationEntries } from "../tools/automation.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const rules = readFileSync(join(root, "_reference", "AI BRIDGE - VÅR BORG.md"), "utf8");
@@ -533,5 +535,18 @@ test("no foe comes from an adventure page (Operation:, Exeunt: or the Entities a
     const at = lines.findIndex((l, i) => l.trim() === `**${f.name}**` && /^_(Pitiful|Weak|Moderate|Strong|Mighty) (Foe|foe)/.test(lines[i + 1]?.trim() ?? ""));
     const page = lines.slice(0, at).findLast(l => /^# /.test(l));
     assert.ok(!/^# (Operation:|Exeunt:|Appendix: Entities and Artifacts$)/.test(page), `${f.name} is on ${page}`);
+  }
+});
+
+// 49i: item effects and automation status (PLAN Milestone 9).
+test("every content item's effects are understood and its automation status is valid", () => {
+  const files = readAll(join(root, "content")).filter(({ file }) => !file.endsWith("index.json"));
+  const entries = automationEntries(files.map(({ file, data }) => ({ folder: file, data })));
+  assert.ok(entries.length > 1000, "the report finds the content items");
+  for (const entry of entries) {
+    assert.ok(AUTOMATION.includes(entry.status), `${entry.name}: automation "${entry.status}"`);
+    for (const effect of entry.rawEffects) assert.deepEqual(effectProblems(effect), [], `${entry.name}: ${JSON.stringify(effect)}`);
+    // An item marked fully or partly automated has at least one effect.
+    if (["auto", "partial"].includes(entry.status)) assert.ok(entry.effects > 0, `${entry.name} is marked ${entry.status} but has no effects`);
   }
 });
