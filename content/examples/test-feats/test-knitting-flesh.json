@@ -1,0 +1,76 @@
+{
+  "_id": "vbTestFeat000004",
+  "name": "Test: Knitting Flesh",
+  "type": "feat",
+  "img": "icons/svg/regen.svg",
+  "system": {
+    "description": "Play-test feat (event). While at half your HP or lower, regain d4 HP at the start of each of your turns. When you gain a wound, a reminder is posted.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "heal",
+        "amount": "d4",
+        "condition": "",
+        "keep": "better",
+        "requires": "halfHp",
+        "note": ""
+      },
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "wound",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": "everyone close by sees you bleed"
+      }
+    ],
+    "automation": "auto"
+  },
+  "flags": {
+    "var-borg": {
+      "notPacked": true
+    }
+  }
+}

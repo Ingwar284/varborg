@@ -1,0 +1,76 @@
+{
+  "_id": "vbTestFeat000002",
+  "name": "Test: Battle Fury",
+  "type": "feat",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "description": "Play-test feat (automatic roll modifiers). Boon on Strength tests. Your melee attacks deal +1 damage per wound you have.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "strength",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "boon",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": ""
+      },
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "attack",
+        "ability": "",
+        "against": "",
+        "weapon": "melee",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "1",
+        "per": "wound",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": "per wound"
+      }
+    ],
+    "automation": "auto"
+  },
+  "flags": {
+    "var-borg": {
+      "notPacked": true
+    }
+  }
+}

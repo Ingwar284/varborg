@@ -95,8 +95,14 @@ test("every content file has a unique 16-character id, and so do the items actor
   }
 });
 
-test("every content file goes into a pack, except player characters", () => {
+test("every content file goes into a pack, except player characters and play-test items", () => {
   for (const { file, data } of contentFiles) {
-    assert.ok(packFor(data) || UNPACKED_TYPES.includes(data.type), `${file} (${data.type}) has no pack`);
+    const testItem = Boolean(data.flags?.["var-borg"]?.notPacked);
+    assert.ok(packFor(data) || UNPACKED_TYPES.includes(data.type) || testItem, `${file} (${data.type}) has no pack`);
   }
+});
+
+test("play-test items marked notPacked stay out of the compendiums (Milestone 9 review)", () => {
+  assert.equal(packFor({ type: "feat", flags: { "var-borg": { notPacked: true } } }), null);
+  assert.equal(packFor({ type: "feat" }).name, "feats");
 });

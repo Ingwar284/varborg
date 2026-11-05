@@ -55,6 +55,8 @@ export function documentNameOf(data) {
 /** The pack a content file belongs in, or null if it is not packed. */
 export function packFor(data) {
   if (UNPACKED_TYPES.includes(data.type)) return null;
+  // Test items for play-tests (Milestone 9 review) stay out of the compendiums.
+  if (data.flags?.["var-borg"]?.notPacked) return null;
   const documentName = documentNameOf(data);
   if (documentName === "RollTable") return PACKS.find(pack => pack.documentName === "RollTable") ?? null;
   return PACKS.find(pack => pack.documentName === documentName && pack.types.includes(data.type)) ?? null;

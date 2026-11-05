@@ -1052,6 +1052,32 @@ targeted token, sharing one damage roll (GAPS 141).
 
 **Milestone 9 review:** a fight with five hand-made test feats, one of
 each kind.
+*Code review done:* every text key the new code uses exists (also the
+ones built at run time); the shared helpers are wired into every roll,
+event and sheet as PLAN describes; 647 tests pass. No fixes needed. Added
+for the play-test: seven test feats in `content/examples/test-feats/`
+(one per kind of effect, brought in by **Import examples**), marked
+"not packed" so they never reach the compendiums (`packFor`, tested).
+Open for the content steps: does an event that heals (Regenerative
+Marrow) wake a character at Death's Door, as other healing does
+(GAPS 163)? To be asked at step 50d (Fleshwright).
+*Play-test (to do in Foundry):* press Import examples, then give Example
+Hero the seven "Test:" feats, a dagger and the greatsword, and fight the
+Bellman:
+- Sturdy Frame: max HP +4, movement 25 ft; take off the armour and the
+  defence soaks d2 (natural t1) at −2 DR.
+- Battle Fury: Strength tests have Boon; with 2 wounds the greatsword
+  deals "+ 2".
+- Light Feet: an Agility test offers "on tests involving balance"; the
+  attack dialog shows the reminder.
+- Knitting Flesh: at half HP or lower, d4 HP at the start of each turn; a
+  reminder when a wound is gained.
+- Lucky Charm: Use rolls a d10; or press "Reroll (Test: Lucky Charm)" on
+  an ability test card; either way it is used until the next day.
+- Favourite Weapon: choose the dagger when it is dropped; dagger attacks
+  get +2.
+- Dreadful Presence: the Bellman's Morale asks about it; ticked, 3d6 with
+  the two highest kept.
 
 ## Milestone 10: Feats
 

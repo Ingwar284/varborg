@@ -27,6 +27,13 @@
     "../powers/class/warrior/power-strike.json",
     "../spells/arcane/and-they-spoke-of-fire.json",
     "items/scroll-of-and-they-spoke-of-fire.json",
-    "../relics/shard-of-the-great-brazier.json"
+    "../relics/shard-of-the-great-brazier.json",
+    "test-feats/test-sturdy-frame.json",
+    "test-feats/test-battle-fury.json",
+    "test-feats/test-light-feet.json",
+    "test-feats/test-knitting-flesh.json",
+    "test-feats/test-lucky-charm.json",
+    "test-feats/test-favourite-weapon.json",
+    "test-feats/test-dreadful-presence.json"
   ]
 }

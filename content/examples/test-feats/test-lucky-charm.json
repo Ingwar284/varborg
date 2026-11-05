@@ -1,0 +1,76 @@
+{
+  "_id": "vbTestFeat000005",
+  "name": "Test: Lucky Charm",
+  "type": "feat",
+  "img": "icons/svg/coins.svg",
+  "system": {
+    "description": "Play-test feat (Use button). Once per day, roll a d10 for luck, or reroll one of your ability tests.",
+    "source": "general",
+    "belongsTo": "",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "use",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "roll",
+        "amount": "d10",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": "Luck."
+      },
+      {
+        "kind": "use",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reroll",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": ""
+      }
+    ],
+    "automation": "auto"
+  },
+  "flags": {
+    "var-borg": {
+      "notPacked": true
+    }
+  }
+}
