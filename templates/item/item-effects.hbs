@@ -25,6 +25,7 @@
     <select data-effect-field="roll" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rolls selected=roll localize=true}}</select>
     <select data-effect-field="ability" aria-label="{{localize 'VARBORG.Effects.AbilityLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../abilities selected=ability localize=true}}</select>
     <select data-effect-field="against" data-tooltip="{{localize 'VARBORG.Effects.AgainstHint'}}" aria-label="{{localize 'VARBORG.Effects.AgainstLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../conditions selected=against localize=true}}</select>
+    <select data-effect-field="weapon" data-tooltip="{{localize 'VARBORG.Effects.WeaponHint'}}" aria-label="{{localize 'VARBORG.Effects.WeaponLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../weapons selected=weapon localize=true}}</select>
     <select data-effect-field="grant" aria-label="{{localize 'VARBORG.Effects.GrantLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../grants selected=grant localize=true}}</select>
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.DrHint'}}">
       <span>{{localize "VARBORG.Effects.DrLabel"}}</span>
@@ -34,6 +35,7 @@
       <span>{{localize "VARBORG.Effects.DamageLabel"}}</span>
       <input type="text" data-effect-field="damage" value="{{damage}}" placeholder="d4" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
+    <select data-effect-field="per" aria-label="{{localize 'VARBORG.Effects.PerLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../pers selected=per localize=true}}</select>
     <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.ModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../modes selected=mode localize=true}}</select>
     {{/if}}
     {{#if isReminder}}

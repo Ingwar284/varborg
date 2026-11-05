@@ -5,7 +5,7 @@
  */
 
 import {
-  EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES
+  EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -34,10 +34,14 @@ export function effectFields() {
       roll: choice(ROLL_KINDS),
       ability: choice(["", ...ABILITIES], ""),
       against: choice(["", ...CONDITIONS], ""),
+      // Only with this kind of weapon (step 49e).
+      weapon: choice(WEAPON_TAGS, ""),
       mode: choice(ROLL_MODES),
       grant: choice(GRANTS, ""),
       dr: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
       damage: new StringField({ required: true, blank: true, initial: "" }),
+      // Extra damage once, or once per wound (step 49e).
+      per: choice(DAMAGE_PER, ""),
       // When it applies, in a few words ("on tests involving balance").
       note: new StringField({ required: true, blank: true, initial: "" })
     })),

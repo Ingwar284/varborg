@@ -8,7 +8,7 @@
  */
 
 import {
-  BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, blankEffect
+  BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER, blankEffect
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -37,6 +37,8 @@ export function effectsContext(document) {
       conditions: labels(["", ...CONDITIONS], "Condition", "VARBORG.Effects.AnyCondition"),
       grants: labels(GRANTS, "Effects.Grant", "VARBORG.Effects.Grant.none"),
       modes: labels(ROLL_MODES, "Effects.Mode"),
+      weapons: labels(WEAPON_TAGS, "Effects.Weapon", "VARBORG.Effects.Weapon.any"),
+      pers: labels(DAMAGE_PER, "Effects.Per", "VARBORG.Effects.Per.once"),
       list: system.effects.map((effect, index) => ({
         ...effect,
         index,

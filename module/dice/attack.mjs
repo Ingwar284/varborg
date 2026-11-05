@@ -52,6 +52,7 @@ import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { weaponTags, withExtraDamage } from "../rules/item-effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
 
@@ -82,7 +83,8 @@ export async function rollAttack(actor, item) {
   const ruined = actor.system.attackRuin;
   // Item effects for the player to tick when they apply (PLAN step 49d),
   // for the weapon's usual ability.
-  const optional = itemOptionalMods(actor, { roll: "attack", ability: attackAbilities(weapon, attackModes(weapon)[0])[0] });
+  const usualMode = attackModes(weapon)[0];
+  const optional = itemOptionalMods(actor, { roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode) });
   const optionalEffects = await optionalEffectsField(optional);
   const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
   if (!options) return;
@@ -95,7 +97,7 @@ export async function rollAttack(actor, item) {
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
   const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
-  const conditions = attackConditions(actor, target, mode, ability);
+  const conditions = attackConditions(actor, target, mode, ability, weapon);
   conditions.own.push(...tickedMods(optional, options.data));
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
   const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
@@ -147,7 +149,8 @@ export async function rollAttack(actor, item) {
     formula: `${diceFormula(diceRule)} + @ability`,
     rollData: { ability: abilityScore },
     diceRule, abilityScore, dr,
-    damageFormula: isDamageFormula(formula) ? formula : null,
+    // Extra damage from item effects (step 49e), such as "d8 + 2".
+    damageFormula: isDamageFormula(formula) ? withExtraDamage(formula, conditions.own) : null,
     weaponDamage: weapon.damage,
     ruinedBefore: ruined,
     // Characters defend instead, so only a foe or no target gets Inflict damage.
@@ -308,11 +311,12 @@ export async function settleAttackCard(actor, data) {
  * conditions (PLAN step 49c).
  * @returns {{own: object[], target: object[]}}
  */
-function attackConditions(actor, target, mode, ability) {
+function attackConditions(actor, target, mode, ability, weapon) {
   const own = conditionsOf(actor);
   const against = target?.type === "foe" ? conditionsOf(target) : null;
+  const effectContext = { roll: "attack", ability, weapon: weaponTags(weapon, mode) };
   return {
-    own: [...attackerConditions(own.conditions, own.fatigue, ability), ...itemRollMods(actor, { roll: "attack", ability })],
+    own: [...attackerConditions(own.conditions, own.fatigue, ability), ...itemRollMods(actor, effectContext)],
     target: against ? attackTargetConditions(against.conditions, against.fatigue, mode) : []
   };
 }
@@ -343,7 +347,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
   }
 
   // For the usual way of attacking; the card shows the final numbers.
-  const conditions = attackConditions(actor, target, modes[0], abilities[0]);
+  const conditions = attackConditions(actor, target, modes[0], abilities[0], weapon);
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     modes: modes.length > 1 ? modes.map(mode => ({ value: mode, label: `VARBORG.Weapon.Kind.${mode}` })) : null,
@@ -364,7 +368,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     turnNote,
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
-    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0] })],
+    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]) })],
     optionalEffects,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")

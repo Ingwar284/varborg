@@ -7,7 +7,8 @@ import assert from "node:assert/strict";
 import {
   EFFECT_KINDS, BUILT_KINDS, AUTOMATION, STAT_TARGETS, ROLL_KINDS,
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
-  fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods
+  fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
+  isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -148,4 +149,40 @@ test("added sheet numbers become DR modifiers, one per item (GAPS 189)", () => {
     { item: "Paper-Thin Grace", note: "", dr: -2 }
   ]);
   assert.deepEqual(statDrMods(undefined), []);
+});
+
+test("extra damage: a number or dice, once or per wound (step 49e)", () => {
+  assert.equal(isDamagePart("2"), true);
+  assert.equal(isDamagePart("d4"), true);
+  assert.equal(isDamagePart("2d6"), true);
+  assert.equal(isDamagePart("d4+1"), false);
+  assert.equal(isDamagePart(""), false);
+  const scars = roll({ roll: "attack", damage: "1", per: "wound" });
+  assert.equal(effectDamage(scars, { wounds: 2 }), "2");
+  assert.equal(effectDamage(scars, { wounds: 0 }), "");
+  assert.equal(effectDamage({ ...scars, damage: "d4" }, { wounds: 3 }), "d4 + d4 + d4");
+  assert.equal(effectDamage(roll({ damage: "d6" }), {}), "d6");
+  assert.equal(effectDamage(roll({ damage: "lots" }), {}), "");
+  assert.equal(withExtraDamage("d8", [{ damage: "2" }, { boon: true }, { damage: "d4" }]), "d8 + 2 + d4");
+  assert.equal(withExtraDamage("d8", []), "d8");
+});
+
+test("per-wound damage follows the facts given with the roll (step 49e)", () => {
+  const effects = collectEffects([{ id: "s", name: "Battle Scars", system: { effects: [roll({ roll: "attack", damage: "1", per: "wound" })] } }]);
+  assert.deepEqual(rollEffects(effects, { roll: "attack", facts: { wounds: 2 } }).auto, [{ item: "Battle Scars", itemId: "s", index: 0, note: "", damage: "2" }]);
+  assert.deepEqual(withEffect(rollEffects(effects, { roll: "attack", facts: { wounds: 0 } }).auto), []);
+});
+
+test("a weapon filter fits only attacks with that weapon tag (step 49e)", () => {
+  const rage = roll({ roll: "attack", weapon: "melee", damage: "2" });
+  const sword = { heavy: true, finesse: false, twoHanded: true, versatile: false, agile: false };
+  assert.deepEqual(weaponTags(sword, "melee"), ["melee", "heavy", "twoHanded"]);
+  assert.equal(fitsRoll(rage, { roll: "attack", weapon: weaponTags(sword, "melee") }), true);
+  assert.equal(fitsRoll(rage, { roll: "attack", weapon: weaponTags(sword, "throw") }), false);
+  assert.equal(fitsRoll(rage, { roll: "attack" }), false);
+  assert.equal(fitsRoll(roll({ roll: "attack", weapon: "heavy" }), { roll: "attack", weapon: ["melee", "heavy"] }), true);
+});
+
+test("effect problems check the weapon, per and damage fields (step 49e)", () => {
+  assert.deepEqual(effectProblems(roll({ weapon: "spoon", per: "kill", damage: "d4+1" })), ["weapon: spoon", "per: kill", "damage: d4+1"]);
 });

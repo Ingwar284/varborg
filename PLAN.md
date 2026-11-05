@@ -953,9 +953,18 @@ targeted token, sharing one damage roll (GAPS 141).
     *Test:* with Acrobat, an Agility test shows "Acrobat: Boon" unticked;
     ticked, the card shows Boon.
 
-49e. **Damage and weapon effects.** Extra damage, weapon-group filters, and
-    amounts that follow the character ("+1 per wound") on attack and power
-    damage.
+49e. ~~**Damage and weapon effects.**~~ Done: a roll modifier's Damage (a
+    number or dice) is added to the damage of attacks, and of powers and
+    spells that deal damage, automatically or when ticked, and shows as
+    "+2 damage" in the notes; a Triumph doubles it and a power's Failure
+    halves it with the rest. "Per wound" repeats it for each wound the
+    character has (Battle Scars). "With weapon" limits an effect to attacks
+    with melee, shooting or thrown weapons, or with a trait (heavy,
+    finesse, two-handed, versatile, agile), such as the Barbarian's +2 on
+    melee strikes. `isDamagePart`, `effectDamage`, `withExtraDamage`,
+    `weaponTags`, with tests. Not yet: weapon groups such as axes or
+    swords, and a chosen weapon (step 49h), and counts other than wounds
+    (Bloodlust's kills).
     *Test:* Battle Scars with two wounds adds +2 damage.
 
 49f. **Event hooks.** `runItemHooks` is called from rest, new day, turn

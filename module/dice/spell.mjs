@@ -40,6 +40,7 @@ import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { withExtraDamage } from "../rules/item-effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
@@ -106,7 +107,7 @@ function abilityMods(actor, ability, extra = []) {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
   const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability }), ...extra];
-  return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods) };
+  return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods), mods: conditionMods };
 }
 
 /** The d4s a life force roll showed, such as "3, 1". */
@@ -196,7 +197,7 @@ export async function castSpell(actor, spell) {
   // Life force: Toughness instead of Sanity, and the DR drops by d4 per wound.
   const lifeWounds = scroll ? 0 : lifeForceWounds(options.lifeForce, wounds.value, wounds.max);
   const ability = castingAbility(lifeWounds);
-  const { automatic, fromConditions, notes } = abilityMods(actor, ability, tickedMods(optional, options));
+  const { automatic, fromConditions, notes, mods } = abilityMods(actor, ability, tickedMods(optional, options));
   const lifeFormula = lifeForceFormula(lifeWounds);
   const lifeRoll = lifeFormula ? await new Roll(lifeFormula).evaluate() : null;
   const reduction = lifeRoll?.total ?? 0;
@@ -250,7 +251,8 @@ export async function castSpell(actor, spell) {
     formula,
     rollData: { ability: abilityScore },
     diceRule, abilityScore, dr,
-    damageFormula: damage.formula,
+    // Extra damage from item effects on spells (step 49e).
+    damageFormula: damage.formula ? withExtraDamage(damage.formula, mods) : damage.formula,
     damageInvalid: damage.invalid,
     weaponDamage: damage.text,
     ruinedBefore: actor.system.attackRuin,

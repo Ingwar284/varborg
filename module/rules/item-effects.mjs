@@ -62,14 +62,62 @@ export const GRANTS = ["", "boon", "bane"];
 /** auto: always applied. optional: an unticked box in the dialog (designer's choice, Milestone 9). */
 export const ROLL_MODES = ["auto", "optional"];
 
+/**
+ * Only with this kind of weapon (step 49e): the way it attacks (melee,
+ * shoot, throw) or one of its traits. Blank means any, or no weapon.
+ */
+export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "twoHanded", "versatile", "agile"];
+
+/** Extra damage once, or once per wound the character has (Battle Scars, step 49e). */
+export const DAMAGE_PER = ["", "wound"];
+
 /** A blank effect, as the sheet's Add button makes it. */
 export function blankEffect(kind = "stat") {
   return {
     kind,
     target: STAT_TARGETS[0], op: "add", value: 0,
-    roll: ROLL_KINDS[0], ability: "", against: "", mode: "auto", grant: "", dr: 0, damage: "",
+    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", mode: "auto", grant: "", dr: 0, damage: "", per: "",
     note: ""
   };
+}
+
+/** A damage part an effect can add: a number such as 2, or dice such as d4 or 2d6. */
+export function isDamagePart(text) {
+  return /^(\d+|\d*d\d+)$/.test(String(text ?? "").trim());
+}
+
+/**
+ * The tags of a weapon used in an attack, for weapon filters: the way it
+ * attacks and its flag traits.
+ * @param {object} weapon  The weapon's system data.
+ * @param {string} mode    "melee", "shoot" or "throw".
+ */
+export function weaponTags(weapon, mode) {
+  return [mode, ...WEAPON_TAGS.filter(tag => tag && tag !== mode && weapon?.[tag] === true)];
+}
+
+/**
+ * The extra damage an effect adds, after "per wound": "" for none.
+ * Dice repeat once per wound ("d4 + d4"), numbers multiply.
+ * @param {object} facts  { wounds }: the character's facts.
+ */
+export function effectDamage(effect, facts = {}) {
+  const part = String(effect.damage ?? "").trim();
+  if (!isDamagePart(part)) return "";
+  if (effect.per !== "wound") return part;
+  const count = Math.max(0, Math.trunc(facts.wounds ?? 0));
+  if (!count) return "";
+  if (/^\d+$/.test(part)) return String(Number(part) * count);
+  return Array(count).fill(part).join(" + ");
+}
+
+/**
+ * A damage formula with the extra damage of some modifiers added on, such
+ * as "d8 + 2". Modifiers without damage are skipped.
+ */
+export function withExtraDamage(formula, mods) {
+  const extra = (mods ?? []).map(mod => mod.damage).filter(Boolean);
+  return [formula, ...extra].filter(Boolean).join(" + ");
 }
 
 /**
@@ -154,16 +202,19 @@ export function withAbilityBonuses(abilities, bonuses) {
 
 /**
  * Whether a roll or reminder effect fits a roll.
- * @param {object} context  { roll, ability?, against? }: the kind of roll,
- *   the ability tested, and the condition the roll resists (for "Boon on
- *   tests to resist being Charmed"). roll and against can be lists: a
- *   Panic test is both an ability test and a Panic test; a gloom ability
- *   can give several conditions.
+ * @param {object} context  { roll, ability?, against?, weapon?, facts? }:
+ *   the kind of roll, the ability tested, the condition the roll resists
+ *   (for "Boon on tests to resist being Charmed"), the weapon's tags
+ *   (weaponTags) and the character's facts ({ wounds }, for per wound).
+ *   roll and against can be lists: a Panic test is both an ability test
+ *   and a Panic test; a gloom ability can give several conditions. An
+ *   effect with a weapon filter only fits a roll with that weapon tag.
  */
 export function fitsRoll(effect, context) {
   if (![context.roll].flat().includes(effect.roll)) return false;
   if (effect.ability && effect.ability !== context.ability) return false;
   if (effect.against && ![context.against].flat().includes(effect.against)) return false;
+  if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
   return true;
 }
 
@@ -173,6 +224,15 @@ export function fitsRoll(effect, context) {
  */
 export function testOnly(mods) {
   return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr);
+}
+
+/**
+ * The modifiers that do something: Boon, Bane, a DR change or extra damage
+ * (step 49e). Extra damage only counts where the roll deals damage
+ * (attacks, powers, spells); elsewhere it is ignored.
+ */
+export function withEffect(mods) {
+  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage);
 }
 
 /**
@@ -198,7 +258,8 @@ export function rollEffects(effects, context) {
     if (effect.grant === "boon") mod.boon = true;
     if (effect.grant === "bane") mod.bane = true;
     if (Number(effect.dr)) mod.dr = Number(effect.dr);
-    if (effect.damage) mod.damage = effect.damage;
+    const damage = effectDamage(effect, context.facts);
+    if (damage) mod.damage = damage;
     (effect.mode === "optional" ? result.optional : result.auto).push(mod);
   }
   return result;
@@ -226,6 +287,9 @@ export function effectProblems(effect) {
   if (effect.kind === "roll") {
     check("mode", ROLL_MODES);
     check("grant", GRANTS);
+    check("weapon", WEAPON_TAGS);
+    check("per", DAMAGE_PER);
+    if (effect.damage && !isDamagePart(effect.damage)) problems.push(`damage: ${effect.damage}`);
   }
   return problems;
 }

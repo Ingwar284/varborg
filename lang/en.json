@@ -2566,7 +2566,7 @@
       "DrLabel": "DR",
       "DrHint": "Added to the DR: −2 makes the roll easier.",
       "DamageLabel": "Damage",
-      "DamageHint": "Extra damage dice or a number, such as d4 or 2.",
+      "DamageHint": "Extra damage on attacks, powers and spells that deal damage: a number such as 2, or dice such as d4 or 2d6. Per wound repeats it for each wound the character has.",
       "ModeLabel": "Applied",
       "ModeHint": "Always: the system applies it by itself. Optional: the dialog shows an unticked box, for situations only the Dark Master can judge.",
       "Mode": {
@@ -2590,7 +2590,26 @@
       "OptionalTitle": "Does it apply?",
       "OptionalHint": "These items only count in some situations. Tick the ones that apply to this roll (the Dark Master has the last word).",
       "OptionalLabel": "{name}: {effect}",
-      "FromActor": "{item}, {name}"
+      "FromActor": "{item}, {name}",
+      "WeaponLabel": "With weapon",
+      "WeaponHint": "Only on attacks with this kind of weapon, such as melee strikes. Other rolls never count it.",
+      "Weapon": {
+        "any": "Any weapon (or none)",
+        "melee": "Melee attacks",
+        "shoot": "Shooting attacks",
+        "throw": "Thrown attacks",
+        "heavy": "Heavy weapons",
+        "finesse": "Finesse weapons",
+        "twoHanded": "Two-handed weapons",
+        "versatile": "Versatile weapons",
+        "agile": "Agile weapons"
+      },
+      "PerLabel": "How often",
+      "Per": {
+        "once": "once",
+        "wound": "per wound"
+      },
+      "DamagePart": "+{damage} damage"
     }
   }
 }

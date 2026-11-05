@@ -12,7 +12,7 @@
  * (the usual Agility defence).
  */
 
-import { collectEffects, rollEffects, testOnly } from "./rules/item-effects.mjs";
+import { collectEffects, rollEffects, withEffect } from "./rules/item-effects.mjs";
 
 /**
  * The item effects on one roll.
@@ -22,7 +22,9 @@ import { collectEffects, rollEffects, testOnly } from "./rules/item-effects.mjs"
  */
 export function itemRollEffects(actor, context) {
   if (!actor?.items) return { auto: [], optional: [], reminders: [] };
-  return rollEffects(collectEffects(actor.items), context);
+  // The character's facts, for damage per wound (step 49e).
+  const facts = { wounds: actor.system.wounds?.value ?? 0 };
+  return rollEffects(collectEffects(actor.items), { facts, ...context });
 }
 
 /**
@@ -31,7 +33,7 @@ export function itemRollEffects(actor, context) {
  * totalModifiers (conditions) take them as they are.
  */
 export function itemRollMods(actor, context) {
-  return testOnly(itemRollEffects(actor, context).auto);
+  return withEffect(itemRollEffects(actor, context).auto);
 }
 
 /** The item reminders for a roll's dialog, such as "Hawkeye: when you can see far". */
@@ -49,7 +51,7 @@ const OPTIONAL_TEMPLATE = "systems/var-borg/templates/dice/optional-effects.hbs"
  * the Dark Master can judge (PLAN step 49d). Same shape as itemRollMods.
  */
 export function itemOptionalMods(actor, context) {
-  return testOnly(itemRollEffects(actor, context).optional);
+  return withEffect(itemRollEffects(actor, context).optional);
 }
 
 /**
@@ -66,6 +68,7 @@ export async function optionalEffectsField(mods) {
     if (mod.boon) parts.push(i18n.localize("VARBORG.Test.Boon"));
     if (mod.bane) parts.push(i18n.localize("VARBORG.Test.Bane"));
     if (mod.dr) parts.push(i18n.format("VARBORG.Condition.DR", { dr: mod.dr > 0 ? `+${mod.dr}` : `−${Math.abs(mod.dr)}` }));
+    if (mod.damage) parts.push(i18n.format("VARBORG.Effects.DamagePart", { damage: mod.damage }));
     const name = mod.note ? i18n.format("VARBORG.Effects.ItemWithNote", { item: mod.item, note: mod.note }) : mod.item;
     return { label: i18n.format("VARBORG.Effects.OptionalLabel", { name, effect: parts.join(", ") }) };
   });

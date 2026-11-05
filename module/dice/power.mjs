@@ -35,6 +35,7 @@ import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { withExtraDamage } from "../rules/item-effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -286,7 +287,8 @@ async function rollPowerTest(actor, power) {
     formula,
     rollData: { ability: abilityScore },
     diceRule, abilityScore, dr,
-    damageFormula: damage.formula,
+    // Extra damage from item effects on powers (step 49e).
+    damageFormula: damage.formula ? withExtraDamage(damage.formula, [...conditionMods, ...ticked]) : damage.formula,
     damageInvalid: damage.invalid,
     weaponDamage: damage.text,
     ruinedBefore: actor.system.attackRuin,
