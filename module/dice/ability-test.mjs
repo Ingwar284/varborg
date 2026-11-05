@@ -26,6 +26,7 @@ import { CARD, softenTier } from "../rules/fortune.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
+import { itemRollMods, itemReminderNotes } from "../effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -43,16 +44,20 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/test-card.hbs";
  * @param {boolean} [options.fortune] Put Fortune buttons on the card (tests from the sheet).
  * @param {boolean} [options.boon]    Start with the Boon box ticked (such as a driving Triumph's Boon).
  * @param {boolean} [options.bane]    Start with the Bane box ticked (such as an Encumbered vehicle's driving test).
+ * @param {string} [options.kind]     The feature's own kind of roll for item effects, such as "panic" or "driving" (PLAN step 49c).
  * @returns {Promise<object|null>}    The rules result (with its tier), or null if closed.
  */
-export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null, fortune = false, boon = false, bane = false } = {}) {
+export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT, purpose = null, fortune = false, boon = false, bane = false, kind = null } = {}) {
   const abilityLabel = game.i18n.localize(`VARBORG.Ability.${ability}`);
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = testConditions(conditions, fatigue, ability);
+  // Item effects count like conditions (PLAN step 49c).
+  const effectContext = { roll: kind ? ["test", kind] : "test", ability };
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
   const fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
-  const options = await askTestOptions(actor, abilityLabel, automatic, notes, reminderNotes(actor, "test"), startDr, purpose, boon, bane);
+  const reminders = [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, effectContext)];
+  const options = await askTestOptions(actor, abilityLabel, automatic, notes, reminders, startDr, purpose, boon, bane);
   if (!options) return null;
   // A Boon or Bane bought with Fortune is paid before rolling (rule 3.9).
   const paid = await payDialogFortune(actor, options.data);

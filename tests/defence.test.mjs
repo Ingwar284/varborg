@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, strongestShield, shieldCover,
+  DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, bestSoak, startingDefenceDr, strongestShield, shieldCover,
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
 } from "../module/rules/defence.mjs";
 
@@ -148,4 +148,21 @@ test("raising a shield costs one action on your turn, none out of combat (GAPS 6
   assert.deepEqual(raiseShieldCost({ inCombat: false }), { allowed: true, actions: 0 });
   assert.deepEqual(raiseShieldCost({ inCombat: true, onOwnTurn: true }), { allowed: true, actions: 1 });
   assert.deepEqual(raiseShieldCost({ inCombat: true, onOwnTurn: false }), { allowed: false, actions: 0 });
+});
+
+test("natural armour counts only when stronger than worn armour (GAPS 188)", () => {
+  assert.deepEqual(bestSoak(null, 0), { die: "", natural: false });
+  assert.deepEqual(bestSoak(null, 1), { die: "d2", natural: true });
+  assert.deepEqual(bestSoak(armour(2), 1), { die: "d4", natural: false });
+  assert.deepEqual(bestSoak(armour(2), 2), { die: "d4", natural: false });
+  assert.deepEqual(bestSoak(armour(1), 3), { die: "d6", natural: true });
+  assert.deepEqual(bestSoak(null, 9), { die: "d8", natural: true });
+});
+
+test("a ranged defence can start at an item's DR; melee always starts at 12 (GAPS 189)", () => {
+  const afterimage = { add: 0, set: 10, min: null, sources: [] };
+  assert.equal(startingDefenceDr("shoot", afterimage), 10);
+  assert.equal(startingDefenceDr("throw", afterimage), 10);
+  assert.equal(startingDefenceDr("melee", afterimage), 12);
+  assert.equal(startingDefenceDr("shoot", undefined), 12);
 });

@@ -33,7 +33,7 @@ import { damageFormula, stepDownArmourDie } from "../rules/attack.mjs";
 import { hpAfterDamage } from "../rules/health.mjs";
 import { killedByDamage } from "../deaths-door.mjs";
 import {
-  DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, strongestShield, shieldCover,
+  DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, bestSoak, startingDefenceDr, strongestShield, shieldCover,
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
 } from "../rules/defence.mjs";
 import { signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
@@ -45,6 +45,8 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { AGONY_TYPE_OPTION } from "../agony.mjs";
 import { addTimedCondition } from "../timers.mjs";
+import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { withStat, statDrMods } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -309,7 +311,8 @@ export async function settleDefenceCard(actor, data) {
 /**
  * What the character's gear does to a defence: the worn armour (+2 DR for
  * tier 3 and 4, and its soak die), a raised shield (cover) and Encumbered
- * (Bane).
+ * (Bane). Natural armour from item effects soaks instead when it is
+ * stronger, with no penalties (GAPS 188); soakName names what soaks.
  */
 export function defenceModifiers(actor) {
   if (actor.type === "minion") return minionDefenceModifiers(actor);
@@ -319,11 +322,14 @@ export function defenceModifiers(actor) {
   const { state } = carrying(items, actor.system.abilities.toughness, actor.system.statBonuses);
   const carryingState = carryingWithConditions(actor.statuses, state);
   const nameOf = data => (data ? actor.items.get(data.id)?.name ?? null : null);
+  const natural = actor.system.statBonuses?.soak;
+  const soak = bestSoak(armour, withStat(0, natural));
   return {
     armour,
     armourName: nameOf(armour),
     armourDr: armourDefenceDr(armour),
-    soakDie: soakDie(armour),
+    soakDie: soak.die,
+    soakName: soak.natural ? natural.sources.map(source => source.item).join(", ") : nameOf(armour),
     shield,
     shieldName: nameOf(shield),
     cover: shieldCover(shield, actor.system.shieldRaised),
@@ -342,6 +348,7 @@ function minionDefenceModifiers(actor) {
     armourName: actor.system.armourName || game.i18n.localize("VARBORG.Minion.ItsArmour"),
     armourDr: 0,
     soakDie: actor.system.armour || "",
+    soakName: actor.system.armourName || game.i18n.localize("VARBORG.Minion.ItsArmour"),
     shield: null,
     shieldName: null,
     cover: 0,
@@ -357,6 +364,9 @@ function dieLabel(die) {
 /**
  * The conditions on this defence: the defender's own, and the attacking
  * foe's Foe lines (rules 3.13). Melee or ranged follows the foe's attack.
+ * The defender's item effects count with their own conditions: roll
+ * modifiers on defence and the Defence DR sheet number (PLAN step 49c,
+ * GAPS 189).
  * @returns {{own: object[], foe: object[]}}
  */
 function defenceConditions(actor, attack) {
@@ -365,7 +375,11 @@ function defenceConditions(actor, attack) {
   const own = conditionsOf(actor);
   const theirs = foe?.type === "foe" ? conditionsOf(foe) : null;
   return {
-    own: defenderConditions(own.conditions, own.fatigue, kind),
+    own: [
+      ...defenderConditions(own.conditions, own.fatigue, kind),
+      ...itemRollMods(actor, { roll: "defence" }),
+      ...statDrMods(actor.system.statBonuses?.defenceDr)
+    ],
     foe: theirs ? attackingFoeConditions(theirs.conditions, theirs.fatigue, kind) : []
   };
 }
@@ -378,23 +392,30 @@ async function askDefenceOptions(actor, attack, automatic, conditions) {
   const i18n = game.i18n;
   const foe = attack.parent;
   const soak = automatic.soakDie;
+  // Afterimage: a ranged defence starts at DR10 (GAPS 189).
+  const ranged = actor.system.statBonuses?.rangedDefenceDr;
+  const startDr = startingDefenceDr(attack.system.kind, ranged);
+  const startNote = startDr !== DEFENCE_DR
+    ? i18n.format("VARBORG.Effects.StartingDr", { items: ranged.sources.map(source => source.item).join(", "), dr: startDr })
+    : null;
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     against: i18n.format("VARBORG.Defence.Against", { name: foe?.name ?? "", attack: attack.name }),
     damage: attack.system.damage,
     drs: DR_TABLE.map(dr => ({
       value: dr,
       label: i18n.format("VARBORG.Test.DROption", { dr, name: i18n.localize(`VARBORG.DR.${dr}`) }),
-      selected: dr === DEFENCE_DR
+      selected: dr === startDr
     })),
     notes: [
+      startNote,
       automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
       automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
-      soak ? i18n.format("VARBORG.Defence.SoakNote", { die: soak, name: automatic.armourName }) : null,
+      soak ? i18n.format("VARBORG.Defence.SoakNote", { die: soak, name: automatic.soakName }) : null,
       automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
       ...conditionNotes(conditions.own),
       ...conditionNotes(conditions.foe, foe?.name)
     ].filter(Boolean),
-    reminders: [...reminderNotes(actor, "defence"), ...foeReminders(foe)],
+    reminders: [...reminderNotes(actor, "defence"), ...itemReminderNotes(actor, { roll: "defence" }), ...foeReminders(foe)],
     fortuneFields: await fortuneFields(actor, "defence")
   });
 

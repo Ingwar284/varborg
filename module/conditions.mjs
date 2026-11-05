@@ -92,6 +92,9 @@ function conditionLabel(mod) {
 export function conditionNotes(mods, name = null) {
   const i18n = game.i18n;
   return mods.map(mod => {
+    // An item effect (PLAN step 49c) names its item, and can give Boon or
+    // Bane and a DR change at once.
+    if (mod.item) return itemNote(mod, name);
     const effect = mod.dr !== undefined
       ? i18n.format("VARBORG.Condition.DR", { dr: signed(mod.dr) })
       : i18n.localize(mod.boon ? "VARBORG.Test.Boon" : "VARBORG.Test.Bane");
@@ -100,6 +103,23 @@ export function conditionNotes(mods, name = null) {
       ? i18n.format("VARBORG.Condition.TheirNote", { name, condition, effect })
       : i18n.format("VARBORG.Condition.Note", { condition, effect });
   });
+}
+
+/**
+ * An item effect's line, such as "Fey-World Glimmer: −2 DR, added for you"
+ * or "Iron will (to resist Charmed): Boon, added for you".
+ */
+function itemNote(mod, name) {
+  const i18n = game.i18n;
+  const parts = [];
+  if (mod.boon) parts.push(i18n.localize("VARBORG.Test.Boon"));
+  if (mod.bane) parts.push(i18n.localize("VARBORG.Test.Bane"));
+  if (mod.dr) parts.push(i18n.format("VARBORG.Condition.DR", { dr: signed(mod.dr) }));
+  const condition = mod.note ? i18n.format("VARBORG.Effects.ItemWithNote", { item: mod.item, note: mod.note }) : mod.item;
+  const effect = parts.join(", ");
+  return name
+    ? i18n.format("VARBORG.Condition.TheirNote", { name, condition, effect })
+    : i18n.format("VARBORG.Condition.Note", { condition, effect });
 }
 
 /** The situational reminders for this kind of roll (GAPS 75). */

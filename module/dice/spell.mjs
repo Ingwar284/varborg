@@ -39,6 +39,7 @@ import { CARD } from "../rules/fortune.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { itemRollMods, itemReminderNotes } from "../effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
@@ -95,11 +96,15 @@ function checkRitualUse(ritual, turn) {
   return use;
 }
 
-/** What armour, Encumbered and conditions do to a test of this ability. */
+/**
+ * What armour, Encumbered, conditions and item effects on spellcasting
+ * (PLAN step 49c) do to a casting test of this ability (Sanity, or
+ * Toughness with life force).
+ */
 function abilityMods(actor, ability) {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = testConditions(conditions, fatigue, ability);
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability })];
   return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods) };
 }
 
@@ -167,7 +172,7 @@ export async function castSpell(actor, spell) {
         : i18n.localize("VARBORG.Spell.LifeForceNone")
     },
     conditionNotes: sanity.notes,
-    reminders: reminderNotes(actor, "test"),
+    reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "spell", ability: SPELL_ABILITY })],
     fortuneFields: await fortuneFields(actor, "spell")
   });
   const options = await DialogV2.input({

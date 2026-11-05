@@ -32,6 +32,8 @@
 
 import { isDestroyed } from "./test-modifiers.mjs";
 import { SHIELD_SIZES } from "./equipment.mjs";
+import { withStat } from "./item-effects.mjs";
+import { isRanged } from "./conditions.mjs";
 
 /** Defence is an Agility test at DR12 (rules 3.4). */
 export const DEFENCE_DR = 12;
@@ -62,6 +64,32 @@ export function armourDefenceDr(armour) {
 export function soakDie(armour) {
   if (!armour || isDestroyed(armour)) return "";
   return ARMOUR_SOAK_DICE[armour.tier] ?? "";
+}
+
+/**
+ * The soak that counts: worn armour or natural armour from item effects,
+ * whichever is stronger; they never add up (GAPS 188). A tie goes to the
+ * worn armour.
+ * @param {object|null} armour  The worn armour, as for soakDie.
+ * @param {number} naturalTier  0 for none, 1–4.
+ * @returns {{die: string, natural: boolean}}
+ */
+export function bestSoak(armour, naturalTier = 0) {
+  const worn = soakDie(armour);
+  const tier = Math.min(ARMOUR_SOAK_DICE.length - 1, Math.max(0, naturalTier));
+  if (tier > Math.max(0, ARMOUR_SOAK_DICE.indexOf(worn))) return { die: ARMOUR_SOAK_DICE[tier], natural: true };
+  return { die: worn, natural: false };
+}
+
+/**
+ * The DR a defence starts at: 12, or against a ranged attack whatever an
+ * item effect sets (Afterimage: 10). Armour, cover, conditions and other
+ * effects still change it (GAPS 189).
+ * @param {string} kind     The attack's way: "melee", "shoot" or "throw".
+ * @param {object} [bonus]  The rangedDefenceDr entry of statBonuses.
+ */
+export function startingDefenceDr(kind, bonus) {
+  return isRanged(kind) && bonus ? withStat(DEFENCE_DR, bonus) : DEFENCE_DR;
 }
 
 /**

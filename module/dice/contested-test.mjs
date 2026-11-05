@@ -17,6 +17,7 @@ import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
 import { conditionsOf, conditionNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
+import { itemRollMods } from "../effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -87,7 +88,8 @@ export async function rollContestedTest(actor) {
 function characterSide(actor, abilityKey, boon, bane) {
   const { encumberedBane, armourDr, armourName } = actorTestModifiers(actor, abilityKey);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = testConditions(conditions, fatigue, abilityKey);
+  // A contested test is an ability test too: item effects on either count (PLAN step 49c).
+  const conditionMods = [...testConditions(conditions, fatigue, abilityKey), ...itemRollMods(actor, { roll: ["contest", "test"], ability: abilityKey })];
   const fromConditions = totalModifiers(conditionMods);
   const boons = (boon ? 1 : 0) + fromConditions.boons;
   const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0) + fromConditions.banes;

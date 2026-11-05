@@ -30,7 +30,8 @@ import {
   drivingDr, drivingOutcome, collisionDamage, driverOf, addOccupant,
   CARGO_TYPES, cargoLoad, allowedSpeeds, drivingBane
 } from "./rules/vehicles.mjs";
-import { soakDie } from "./rules/defence.mjs";
+import { bestSoak } from "./rules/defence.mjs";
+import { withStat } from "./rules/item-effects.mjs";
 import { wornArmour } from "./rules/test-modifiers.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
@@ -131,10 +132,15 @@ export async function moveCargo(target, item) {
   return created;
 }
 
-/** The soak die of anyone aboard, or of the vehicle: worn armour for a character, the armour die otherwise. */
+/**
+ * The soak die of anyone aboard, or of the vehicle: worn armour or natural
+ * armour, whichever is stronger, for a character (GAPS 188), the armour die
+ * otherwise.
+ */
 function soakDieOf(actor) {
   if (actor.type === "character") {
-    return soakDie(wornArmour(actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }))));
+    const armour = wornArmour(actor.items.map(item => ({ id: item.id, type: item.type, ...item.system })));
+    return bestSoak(armour, withStat(0, actor.system.statBonuses?.soak)).die;
   }
   return actor.system.armour || "";
 }
@@ -195,7 +201,7 @@ export async function driveVehicle(vehicle) {
     boon ? i18n.localize("VARBORG.Vehicle.BoonFromTriumph") : "",
     bane ? i18n.format("VARBORG.Vehicle.EncumberedBane", { used: load.used, limit: load.limit }) : ""
   ].filter(Boolean).join(" ");
-  const result = await rollAbilityTest(driver, DRIVING_ABILITY, { dr, boon, bane, purpose });
+  const result = await rollAbilityTest(driver, DRIVING_ABILITY, { dr, boon, bane, purpose, kind: "driving" });
   if (!result) return;
   const outcome = drivingOutcome(result.tier, speed);
   // The Triumph's Boon is used by this test; a new Triumph gives it again.

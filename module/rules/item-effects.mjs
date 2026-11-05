@@ -53,7 +53,7 @@ export const STAT_OPS = ["add", "set", "min"];
 /** The kinds of roll a roll or reminder effect can apply to. */
 export const ROLL_KINDS = [
   "test", "attack", "defence", "spell", "power", "panic", "contest",
-  "gloomTest", "driving", "chance", "morale"
+  "gloomTest", "driving"
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */
@@ -156,13 +156,23 @@ export function withAbilityBonuses(abilities, bonuses) {
  * Whether a roll or reminder effect fits a roll.
  * @param {object} context  { roll, ability?, against? }: the kind of roll,
  *   the ability tested, and the condition the roll resists (for "Boon on
- *   tests to resist being Charmed").
+ *   tests to resist being Charmed"). roll and against can be lists: a
+ *   Panic test is both an ability test and a Panic test; a gloom ability
+ *   can give several conditions.
  */
 export function fitsRoll(effect, context) {
-  if (effect.roll !== context.roll) return false;
+  if (![context.roll].flat().includes(effect.roll)) return false;
   if (effect.ability && effect.ability !== context.ability) return false;
-  if (effect.against && effect.against !== context.against) return false;
+  if (effect.against && ![context.against].flat().includes(effect.against)) return false;
   return true;
+}
+
+/**
+ * Only the modifiers that change the test itself (Boon, Bane or DR), for
+ * a roll's modifier list. Extra damage is dealt with apart (step 49e).
+ */
+export function testOnly(mods) {
+  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr);
 }
 
 /**
@@ -218,4 +228,16 @@ export function effectProblems(effect) {
     check("grant", GRANTS);
   }
   return problems;
+}
+
+/**
+ * The added amounts of one sheet number as DR modifiers for a roll's list,
+ * one per item, such as { item: "Fey-World Glimmer", dr: -2 } for the
+ * defence DR (GAPS 189). Sets and minimums are left out.
+ * @param {object} [bonus]  One entry of statBonuses.
+ */
+export function statDrMods(bonus) {
+  return (bonus?.sources ?? [])
+    .filter(source => source.op === "add" && source.value)
+    .map(source => ({ item: source.item, note: "", dr: source.value }));
 }

@@ -81,7 +81,8 @@ export async function rollPanicTest(actor) {
   const i18n = game.i18n;
   const result = await rollAbilityTest(actor, PANIC_ABILITY, {
     dr: PANIC_DR,
-    purpose: i18n.localize("VARBORG.Panic.Purpose")
+    purpose: i18n.localize("VARBORG.Panic.Purpose"),
+    kind: "panic"
   });
   if (!result) return;
 

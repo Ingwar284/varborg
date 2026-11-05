@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import {
   EFFECT_KINDS, BUILT_KINDS, AUTOMATION, STAT_TARGETS, ROLL_KINDS,
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
-  fitsRoll, rollEffects, effectProblems, withAbilityBonuses
+  fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -20,7 +20,7 @@ test("the lists hold every kind, and the built kinds are among them", () => {
   for (const kind of BUILT_KINDS) assert.ok(EFFECT_KINDS.includes(kind));
   assert.deepEqual(AUTOMATION, ["", "auto", "partial", "text", "ruling"]);
   for (const target of ["hpMax", "woundsMax", "strength", "soak", "rangedDefenceDr"]) assert.ok(STAT_TARGETS.includes(target));
-  assert.ok(ROLL_KINDS.includes("morale"));
+  assert.ok(ROLL_KINDS.includes("gloomTest"));
 });
 
 test("a blank effect has every field and no problems", () => {
@@ -118,4 +118,34 @@ test("abilities take their stat effects and stay within −3 … +6 (step 49b)",
   const result = withAbilityBonuses({ strength: 2, agility: 4, toughness: -1, presence: 0, sanity: -2 }, bonuses);
   assert.deepEqual(result, { strength: 3, agility: 6, toughness: -1, presence: 0, sanity: 2 });
   assert.deepEqual(withAbilityBonuses({ strength: 1 }, {}), { strength: 1 });
+});
+
+test("a roll can be several kinds at once, and resist several conditions (step 49c)", () => {
+  const sanity = roll({ roll: "test", ability: "sanity", grant: "boon" });
+  const panicOnly = roll({ roll: "panic", grant: "boon" });
+  const panicTest = { roll: ["test", "panic"], ability: "sanity" };
+  assert.equal(fitsRoll(sanity, panicTest), true);
+  assert.equal(fitsRoll(panicOnly, panicTest), true);
+  assert.equal(fitsRoll(panicOnly, { roll: "test", ability: "sanity" }), false);
+  const ironWill = roll({ roll: "gloomTest", against: "charmed", grant: "boon" });
+  assert.equal(fitsRoll(ironWill, { roll: ["gloomTest", "test"], against: ["deafened", "charmed"] }), true);
+  assert.equal(fitsRoll(ironWill, { roll: ["gloomTest", "test"], against: ["deafened"] }), false);
+});
+
+test("only Boon, Bane and DR change the test; damage alone does not (step 49c)", () => {
+  assert.deepEqual(testOnly([{ boon: true }, { damage: "d4" }, { dr: -2 }, { dr: 0 }]), [{ boon: true }, { dr: -2 }]);
+  assert.deepEqual(testOnly(undefined), []);
+});
+
+test("added sheet numbers become DR modifiers, one per item (GAPS 189)", () => {
+  const bonuses = statBonuses([
+    { ...stat("defenceDr", -2), item: "Fey-World Glimmer" },
+    { ...stat("defenceDr", -2), item: "Paper-Thin Grace" },
+    { ...stat("defenceDr", 8, "set"), item: "Odd" }
+  ]);
+  assert.deepEqual(statDrMods(bonuses.defenceDr), [
+    { item: "Fey-World Glimmer", note: "", dr: -2 },
+    { item: "Paper-Thin Grace", note: "", dr: -2 }
+  ]);
+  assert.deepEqual(statDrMods(undefined), []);
 });

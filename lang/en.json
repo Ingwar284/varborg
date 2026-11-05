@@ -2535,17 +2535,15 @@
       "ValueLabel": "Amount",
       "RollLabel": "Which roll",
       "Roll": {
-        "test": "Ability tests",
+        "test": "Ability tests (all of them, including Panic, wound, driving and contested tests)",
         "attack": "Attacks",
         "defence": "Defence",
         "spell": "Spellcasting",
         "power": "Powers",
-        "panic": "Panic tests",
-        "contest": "Contested tests",
-        "gloomTest": "Tests against gloom abilities",
-        "driving": "Driving tests",
-        "chance": "Chance die",
-        "morale": "Morale"
+        "panic": "Panic tests only",
+        "contest": "Contested tests only",
+        "gloomTest": "Tests against gloom abilities only",
+        "driving": "Driving tests only"
       },
       "AbilityLabel": "Ability",
       "AnyAbility": "Any ability",
@@ -2577,7 +2575,11 @@
       },
       "OnLimit": "Cumbersome limit {part}",
       "OnMovement": "Movement {part}",
-      "OnMinionLimit": "Minion limit: {parts}"
+      "OnMinionLimit": "Minion limit: {parts}",
+      "ItemWithNote": "{item} ({note})",
+      "ReminderNote": "{item}: {note}",
+      "ReminderPlain": "{item}: see its text.",
+      "StartingDr": "{items}: this defence starts at DR{dr}."
     }
   }
 }

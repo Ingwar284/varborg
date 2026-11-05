@@ -917,16 +917,29 @@ targeted token, sharing one damage roll (GAPS 141).
     *Test:* Mountain of Meat and Tough give +4 max HP and +1 max wounds,
     and removing them takes it back.
 
-49c. **Automatic roll modifiers.** One helper, `itemRollMods` in
-    `module/effects.mjs`, called from every roll; its entries join the
-    condition modifiers and show on the dialog and card. The defence roll
-    also uses the natural armour tier and the defence DR targets of step
-    49b (GAPS 188, 189).
+49c. ~~**Automatic roll modifiers.**~~ Done: `module/effects.mjs`
+    (`itemRollMods`, `itemReminderNotes`) adds a character's "Always" roll
+    modifiers to the condition modifiers of ability tests, attacks,
+    defences, spellcasting, powers, contested tests and tests against
+    gloom abilities, and their reminders to the dialogs; each shows as
+    "Fey-World Glimmer: −2 DR, added for you". Kinds of roll: "Ability
+    tests" covers every test made with the test dialog, Panic, wound,
+    driving and contested tests included (Panic and driving can also be
+    named alone). Attacks, defence, spellcasting and powers are only
+    themselves. A gloom ability's test is also an ability test or a
+    defence, and counts as resisting the conditions it gives (so "Boon to
+    resist Charmed" works there). The defence also uses the Defence DR
+    sheet number (the −2s add up), starts ranged defences at Afterimage's
+    DR10, and soaks with natural armour when it is stronger than worn
+    armour, in vehicle collisions too (`bestSoak`, `startingDefenceDr`,
+    `statDrMods`, with tests; GAPS 188, 189). Not yet: the chance die
+    (Boon on 2d6 is not ruled) and Morale (step 49d) are not offered.
     *Test:* with Iron will, a test to resist Charmed shows Boon and the
     feat's name.
 
 49d. **Optional ticks.** Dialogs list matching optional effects as unticked
-    boxes with the item's name.
+    boxes with the item's name. Morale gets Dragon's Shadow's 3d6 keeping
+    the two highest as an optional tick (GAPS 182).
     *Test:* with Acrobat, an Agility test shows "Acrobat: Boon" unticked;
     ticked, the card shows Boon.
 

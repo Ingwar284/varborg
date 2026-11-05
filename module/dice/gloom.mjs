@@ -31,6 +31,8 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { defenceModifiers, DEFENDERS } from "./defence.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
+import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { statDrMods } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -120,18 +122,29 @@ export async function rollGloomTest(actor, power) {
   // The Agility defence: armour's +2 DR, a raised shield, Encumbered and the
   // defender's conditions (not Prone). An own test: an ordinary test of
   // that ability (armour penalties, Encumbered, conditions).
+  // Item effects (PLAN step 49c): a gloom test is also an ability test (its
+  // own test) or a defence, and resists the conditions the ability gives.
+  const effectContext = {
+    roll: ["gloomTest", test.own ? "test" : "defence"],
+    ability: test.ability,
+    against: [system.conditions?.failure, system.conditions?.ruin].filter(Boolean)
+  };
   let automatic;
   let conditionMods;
   if (test.own) {
     const mods = actorTestModifiers(actor, test.ability);
     automatic = { armourDr: mods.armourDr, armourName: mods.armourName, cover: 0, encumberedBane: mods.encumberedBane };
-    conditionMods = testConditions(conditions, fatigue, test.ability);
+    conditionMods = [...testConditions(conditions, fatigue, test.ability), ...itemRollMods(actor, effectContext)];
   } else {
     automatic = { armourDr: gear.armourDr, armourName: gear.armourName, cover: gear.cover, shieldName: gear.shieldName, encumberedBane: gear.encumberedBane };
-    conditionMods = gloomDefenderConditions(conditions, fatigue);
+    conditionMods = [
+      ...gloomDefenderConditions(conditions, fatigue),
+      ...itemRollMods(actor, effectContext),
+      ...statDrMods(actor.system.statBonuses?.defenceDr)
+    ];
   }
-  // Armour soaks the damage either way (GAPS 123).
-  const soak = gear.soakDie ? { die: gear.soakDie, name: gear.armourName } : null;
+  // Armour soaks the damage either way (GAPS 123); natural armour too (GAPS 188).
+  const soak = gear.soakDie ? { die: gear.soakDie, name: gear.soakName } : null;
   const notes = [
     automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
@@ -148,7 +161,7 @@ export async function rollGloomTest(actor, power) {
       selected: dr === test.dr
     })),
     notes: [...notes, soak?.die ? i18n.format("VARBORG.Defence.SoakNote", { die: soak.die, name: soak.name }) : null].filter(Boolean),
-    reminders: reminderNotes(actor, test.own ? "test" : "defence"),
+    reminders: [...reminderNotes(actor, test.own ? "test" : "defence"), ...itemReminderNotes(actor, effectContext)],
     automaticHint: i18n.localize(test.own ? "VARBORG.Gloom.OwnHint" : "VARBORG.Gloom.DefenceHint"),
     fortuneFields: await fortuneFields(actor, "gloom")
   });

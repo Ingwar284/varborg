@@ -34,6 +34,7 @@ import { getPools, spendFromPool } from "../pools.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { itemRollMods, itemReminderNotes } from "../effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -215,7 +216,8 @@ async function rollPowerTest(actor, power) {
 
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = testConditions(conditions, fatigue, ability);
+  // Item effects on powers count like conditions (PLAN step 49c).
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "power", ability })];
   const fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
   const startDr = powerDr(power.system.cost);
@@ -232,7 +234,7 @@ async function rollPowerTest(actor, power) {
     armourNote: automatic.armourDr ? i18n.format("VARBORG.Test.ArmourDialogNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     encumberedNote: automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes: notes,
-    reminders: reminderNotes(actor, "test"),
+    reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "power", ability })],
     weapons: weapons.map(choice => ({
       id: choice.id,
       label: `${choice.name} (${choice.dice})${choice.equipped ? ` · ${i18n.localize("VARBORG.Item.Equipped")}` : ""}`

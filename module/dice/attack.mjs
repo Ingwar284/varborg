@@ -51,6 +51,7 @@ import { markFired } from "../ammunition.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
+import { itemRollMods, itemReminderNotes } from "../effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
 
@@ -298,14 +299,15 @@ export async function settleAttackCard(actor, data) {
 /**
  * The conditions on this attack: the attacker's own, and the target's Foe
  * lines when the target is a foe (rules 3.13). Injuries count by the
- * ability used (GAPS 88).
+ * ability used (GAPS 88). The attacker's item effects count with their own
+ * conditions (PLAN step 49c).
  * @returns {{own: object[], target: object[]}}
  */
 function attackConditions(actor, target, mode, ability) {
   const own = conditionsOf(actor);
   const against = target?.type === "foe" ? conditionsOf(target) : null;
   return {
-    own: attackerConditions(own.conditions, own.fatigue, ability),
+    own: [...attackerConditions(own.conditions, own.fatigue, ability), ...itemRollMods(actor, { roll: "attack", ability })],
     target: against ? attackTargetConditions(against.conditions, against.fatigue, mode) : []
   };
 }
@@ -357,7 +359,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     turnNote,
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
-    reminders: reminderNotes(actor, "attack"),
+    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0] })],
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")
   });
