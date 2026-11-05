@@ -843,14 +843,181 @@ and a day with no sun works like Looming dark (GAPS 167), which adds step
       spell) stays as text. Also the Charioteer's rig (a vehicle) and the
       Gravecaller's Thrall (a mook foe, GAPS 187).
 
-    **Step 48 is complete.** Next: the Milestone 8 review, then step 49.
+    **Step 48 is complete.** Next: the Milestone 8 review, then Milestone 9.
 
-49. **Automating feats.** After all content is in (designer's choice at
-    step 48a). Feats are text only so far. Automate the ones the system can
-    judge, in groups: numbers always on the sheet (such as Fey-World
-    Glimmer, Mountain of Meat, Plated Physiognomy); hooks into features
-    already built (Panic, the Chance Die, rest, Death's Door, damage);
-    buttons for rerolls and rolls; a reminder line for the rest. Ancestry
-    and class feats are ruled on together first, with one GAPS entry per
-    open question (Dragon's Shadow is GAPS 182).
-    *Test:* each automated feat changes the roll or sheet as its text says.
+## Milestone 9: The item effects system
+
+From here on the compendium's items start to do what their text says. Each
+item gets a list of effects (`system.effects`) and an automation status
+(`system.automation`: auto, partial, text or ruling). Effects are entered
+by hand per item, not read from the text by a script. Kinds of effect:
+
+- **stat:** adds to, sets or puts a minimum on a sheet number (max HP, max
+  wounds, carry limit, movement, minion limit, initiative, an ability, the
+  soak die, defence DR). *Mountain of Meat: max HP +4.*
+- **roll:** Boon, Bane, DR or extra damage on one kind of roll (test,
+  attack, defence, spell, power, Panic, contest, gloom test, driving, chance
+  die, Morale), with filters (ability, condition, weapon group, target).
+  Either automatic, or an optional tick in the dialog for situations only
+  the Dark Master can judge (designer's choice). *Iron will: Boon to resist
+  Charmed. Acrobat: optional Boon.*
+- **hook:** one of a fixed set of actions at a fixed event (rest, new day,
+  turn start, initiative, wound, Death's Door, Panic, natural 1 or Ruin,
+  kill, 0 HP).
+- **use:** what the Use button does (roll a die, heal, gain Ember, a reroll
+  button on a card).
+- **immune / resist:** a condition that cannot be given, or damage of a
+  type taken ×½ or ×2. Applied by the system (designer's choice).
+- **choice:** a choice made when the item is dropped (feat, spell, ability,
+  weapon group, element), stored on the item.
+- **reminder:** the item's name and text in the right dialog or card.
+
+Designer's choices for this plan: feats first, then classes, powers and
+spells, then foes, then relics and gear; area effects get one button per
+targeted token, sharing one damage roll (GAPS 141).
+
+49. ~~**Rulings first.**~~ Done: GAPS 182 and 188–191, and GAPS 141
+    (area effects) resolved. Armour from feats: only the strongest soak
+    counts, and natural armour has no penalties and never drops a tier.
+    Afterimage's DR10 is the starting DR for ranged defence, and −2 DR
+    feats add up. New frequencies: once per turn, per Long Rest, per
+    Downtime, and per visit (reset by the Dark Master). Dragon's Shadow:
+    Morale as 3d6 keeping the two highest, as an optional tick. Range
+    changes (GAPS 191) stay provisional: Long shot is added to weapon
+    ranges, and spell ranges get a reminder. Item-specific questions are
+    asked at the start of their own content step.
+
+49a. **Effect data and maths.** `module/data/effects.mjs` (the effects and
+    automation fields on feat, power, spell, relic, gear, weapon, armour,
+    class and ancestry items), `module/rules/item-effects.mjs`
+    (`collectEffects`, `statBonuses`, `rollEffects`, giving entries in the
+    same shape as condition modifiers) with `tests/item-effects.test.mjs`,
+    and an Effects tab on the item sheet to add, edit and remove effects.
+    *Test:* tests pass. Give a feat an effect on its sheet; it is kept.
+
+49b. **Numbers on the sheet.** Stat effects are added in the character's
+    derived data on top of the stored values and shown under them ("+4
+    Mountain of Meat"). Max HP stays stored, so `hpFixed` is unchanged.
+    Carrying, movement and the minion limit take a bonus.
+    *Test:* Mountain of Meat and Tough give +4 max HP and +1 max wounds,
+    and removing them takes it back.
+
+49c. **Automatic roll modifiers.** One helper, `itemRollMods` in
+    `module/effects.mjs`, called from every roll; its entries join the
+    condition modifiers and show on the dialog and card.
+    *Test:* with Iron will, a test to resist Charmed shows Boon and the
+    feat's name.
+
+49d. **Optional ticks.** Dialogs list matching optional effects as unticked
+    boxes with the item's name.
+    *Test:* with Acrobat, an Agility test shows "Acrobat: Boon" unticked;
+    ticked, the card shows Boon.
+
+49e. **Damage and weapon effects.** Extra damage, weapon-group filters, and
+    amounts that follow the character ("+1 per wound") on attack and power
+    damage.
+    *Test:* Battle Scars with two wounds adds +2 damage.
+
+49f. **Event hooks.** `runItemHooks` is called from rest, new day, turn
+    start, initiative, wounds, Death's Door, Panic, and the natural 1, Ruin
+    and kill points. Each hook runs one of a short, tested list of actions
+    (heal, roll twice and keep, gain Ember, add or prevent a condition,
+    Boon on the next roll, post a reminder).
+    *Test:* Regenerative Marrow heals at turn start; Saint's knucklebone
+    gives two Death's Door rolls.
+
+49g. **Uses and new frequencies.** Use effects give the Use button its
+    actions (roll a die, heal, gain Ember, a reroll button on the last card,
+    built like the Fortune buttons), and the frequencies ruled in step 49
+    are added.
+    *Test:* use Lucky Break and see its d10. A once-per-Long-Rest feat comes
+    back after a Long Rest.
+
+49h. **Choices.** Dropping an item with a choice opens a small dialog and
+    stores the choice; its effects use it.
+    *Test:* drop Weapon specialist, choose a group, and attacks with it get
+    the bonus.
+
+49i. **Report, tests and existing worlds.** `tools/automation-report.mjs`
+    (`npm run report:automation`) lists every item by status; the content
+    tests check that every effect is valid and every status is set; data
+    version 7 copies effects and status onto world items that came from the
+    compendiums.
+    *Test:* run the report; an old world's compendium feat gets its effects
+    after reloading.
+
+**Milestone 9 review:** a fight with five hand-made test feats, one of
+each kind.
+
+## Milestone 10: Feats
+
+Each step starts by listing its open questions, then enters the effects;
+every feat in the batch ends with a status.
+
+50. **Feats.**
+    - 50a. General feats (54) and the difficulty feats (Harkin's Reprieve,
+      Doomsworn, ruled first). The creation helper offers one difficulty
+      feat, and only one.
+    - 50b. Ancestry feats (64), with choices such as Ancient One and
+      Adopted.
+    - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.
+    - 50d. Class feats: Dancer, Druid, Fleshwright, Gravecaller, Hedge
+      Mage.
+    - 50e. Class feats: Paladin, Priest, Ranger, Rogue, Scholar.
+    - 50f. Class feats: Skullrider, Sorcerer, Sword Saint, Warrior, Witch
+      Hunter, Wizard.
+    - 50g. Companion and vehicle feats (about 30): effects on the owner's
+      minion or vehicle (Destrier, rig, Raider-Beast, Thralls).
+
+    *Test per step:* the report shows the batch done; spot-check three
+    feats in Foundry.
+
+**Milestone 10 review:** a character of each ancestry and three classes,
+one fight and one rest.
+
+## Milestone 11: Classes, powers and spells
+
+51. **Classes, powers and spells.**
+    - 51a. Class features (21) as effects on the class item (rage at
+      initiative, the Druid's aura, the Hedge Mage's surge on each cast,
+      the Priest's daily reroll and so on).
+    - 51b. Area targets (GAPS 141): power, spell and gloom cards get one
+      Inflict, Defend or Test button per targeted token, sharing one
+      damage roll.
+    - 51c. What outcomes do to targets: a condition with a timer (as gloom
+      abilities do), healing, a timed buff on an ally; summons as a
+      reminder.
+    - 51d–51e. Powers (147), in two batches.
+    - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
+
+**Milestone 11 review:** a Warrior, a Wizard and a Priest against three
+foes, with area spells.
+
+## Milestone 12: Foes
+
+52. **Foes.**
+    - 52a. Immunities and resistances, in `module/rules/resistance.mjs`
+      with tests: an immune foe cannot be given that condition (with a
+      warning), and Inflict damage applies ×½ or ×2 by damage type, saying
+      why on the card.
+    - 52b. Foe hooks: regeneration at turn start, auras as a turn-start
+      reminder, triggers at 0 HP or death, Morale changes, retaliation,
+      gloom pool hooks.
+    - 52c–52h. The 150 foes, about 25 per step in rules order: passives and
+      the remaining gloom abilities.
+
+**Milestone 12 review:** fight three foes with resistances and
+regeneration.
+
+## Milestone 13: Relics and gear
+
+53. **Relics and gear.**
+    - 53a. Relics (22): uses and hooks (Saint's knucklebone, Vex's loaded
+      die, Antler of the Glass Stag, Hearth-tallow). Last Rites and
+      drawbacks stay text.
+    - 53b. Gear and weapons: poisons (a Toughness button and a condition),
+      thrown area items and grenades (area targets of 51b), the
+      blunderbuss's damage by range, lockpicks with a die per result (GAPS
+      55).
+
+**Final review:** the automation report shows no item without a status.
