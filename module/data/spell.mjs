@@ -11,6 +11,7 @@
 import { MAX_POWER_ACTIONS } from "../rules/powers.mjs";
 import { SPELL_LISTS_OF_SPELLS, RITUAL_DRS } from "../rules/spells.mjs";
 import { CarriedData } from "./equipment.mjs";
+import { effectFields } from "./effects.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -59,7 +60,9 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
       // use outside combat (rules 3.10).
       sustaining: new BooleanField({ initial: false }),
       kept: new BooleanField({ initial: false }),
-      usedOutside: new BooleanField({ initial: false })
+      usedOutside: new BooleanField({ initial: false }),
+      // What it does beyond its test and damage (PLAN Milestone 9).
+      ...effectFields()
     };
   }
 

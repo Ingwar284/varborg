@@ -12,6 +12,7 @@ import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS } from "../rules
 import { POWER_RESOURCES, GLOOM_CONDITIONS, GLOOM_DEFENCE_DR } from "../rules/gloom.mjs";
 import { TIMER_KINDS } from "../rules/timers.mjs";
 import { endChoiceWith } from "../improving.mjs";
+import { effectFields } from "./effects.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -79,7 +80,9 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       kept: new BooleanField({ initial: false }),
       // Used its one free use outside combat (rules 3.10). Cleared after a
       // combat, a rest, or the Dark Master's reset button.
-      usedOutside: new BooleanField({ initial: false })
+      usedOutside: new BooleanField({ initial: false }),
+      // What it does beyond its test and damage (PLAN Milestone 9).
+      ...effectFields()
     };
   }
 

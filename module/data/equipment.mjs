@@ -16,6 +16,7 @@ import {
 import { isCumbersomeByDefault } from "../rules/carrying.mjs";
 import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rules/light.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
+import { effectFields } from "./effects.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -82,7 +83,9 @@ class EquipmentData extends CarriedData {
   static defineSchema() {
     return {
       ...super.defineSchema(),
-      equipped: new BooleanField({ initial: false })
+      equipped: new BooleanField({ initial: false }),
+      // What it does while equipped (PLAN Milestone 9).
+      ...effectFields()
     };
   }
 }
@@ -191,7 +194,8 @@ export class GearData extends CarriedData {
       // shines this far while the light timer runs (GAPS 154).
       lightRange: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_RANGE }),
       // Once per round, encounter or day, and whether it is used (GAPS 161).
-      ...frequencyFields()
+      ...frequencyFields(),
+      ...effectFields()
     };
   }
 

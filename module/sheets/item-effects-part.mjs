@@ -1,0 +1,92 @@
+/**
+ * The Effects section of item sheets (PLAN step 49a): the item's automation
+ * status and its list of effects, which can be added, changed and removed.
+ * Shared by every item sheet whose item has effects.
+ *
+ * Effect fields have no form name: each change saves the whole list at
+ * once, so changing one effect never resets the fields of another.
+ */
+
+import {
+  BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, blankEffect
+} from "../rules/item-effects.mjs";
+import { ABILITIES } from "../rules/abilities.mjs";
+import { CONDITIONS } from "../rules/conditions.mjs";
+
+export const EFFECTS_TEMPLATE = "systems/var-borg/templates/item/item-effects.hbs";
+
+/** { key: "VARBORG.<prefix>.<key>" } for a select. */
+function labels(keys, prefix, blankKey) {
+  return Object.fromEntries(keys.map(key => [key, key ? `VARBORG.${prefix}.${key}` : blankKey]));
+}
+
+const NUMBER_FIELDS = ["value", "dr"];
+
+/** The sheet's part of the context, or nothing for an item without effects. */
+export function effectsContext(document) {
+  const system = document.system;
+  if (!Array.isArray(system.effects)) return {};
+  return {
+    effectsPart: {
+      automation: system.automation,
+      automations: labels(AUTOMATION, "Effects.Automation", "VARBORG.Effects.Automation.none"),
+      targets: labels(STAT_TARGETS, "Effects.Target"),
+      ops: labels(STAT_OPS, "Effects.Op"),
+      rolls: labels(ROLL_KINDS, "Effects.Roll"),
+      abilities: labels(["", ...ABILITIES], "Ability", "VARBORG.Effects.AnyAbility"),
+      conditions: labels(["", ...CONDITIONS], "Condition", "VARBORG.Effects.AnyCondition"),
+      grants: labels(GRANTS, "Effects.Grant", "VARBORG.Effects.Grant.none"),
+      modes: labels(ROLL_MODES, "Effects.Mode"),
+      list: system.effects.map((effect, index) => ({
+        ...effect,
+        index,
+        // An effect of a kind not built yet (from a later step's content)
+        // still shows its own kind.
+        kinds: labels([...new Set([...BUILT_KINDS, effect.kind])], "Effects.Kind"),
+        isStat: effect.kind === "stat",
+        isRoll: effect.kind === "roll",
+        isReminder: effect.kind === "reminder"
+      }))
+    }
+  };
+}
+
+/** The effects as stored, safe to change. */
+function storedEffects(document) {
+  return foundry.utils.deepClone(document.toObject().system.effects ?? []);
+}
+
+/** The Add button: a new stat effect at the end of the list. */
+async function addEffect() {
+  const effects = storedEffects(this.document);
+  effects.push(blankEffect());
+  await this.document.update({ "system.effects": effects });
+}
+
+/** The remove button on an effect. */
+async function removeEffect(event, target) {
+  const index = Number(target.closest("[data-effect-index]")?.dataset.effectIndex);
+  const effects = storedEffects(this.document);
+  if (!effects[index]) return;
+  effects.splice(index, 1);
+  await this.document.update({ "system.effects": effects });
+}
+
+/** For a sheet's DEFAULT_OPTIONS.actions. */
+export const EFFECT_ACTIONS = { addEffect, removeEffect };
+
+/** Called from the sheet's _onRender: saves a changed effect field. */
+export function listenToEffects(sheet) {
+  for (const input of sheet.element.querySelectorAll("[data-effect-field]")) {
+    input.addEventListener("change", async event => {
+      // Not the sheet's own form submit: this field has no name.
+      event.stopPropagation();
+      const index = Number(input.closest("[data-effect-index]")?.dataset.effectIndex);
+      const field = input.dataset.effectField;
+      const effects = storedEffects(sheet.document);
+      if (!effects[index]) return;
+      effects[index][field] = NUMBER_FIELDS.includes(field) ? Math.trunc(Number(input.value) || 0) : input.value;
+      await sheet.document.update({ "system.effects": effects });
+    });
+  }
+}

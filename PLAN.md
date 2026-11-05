@@ -887,12 +887,18 @@ targeted token, sharing one damage roll (GAPS 141).
     ranges, and spell ranges get a reminder. Item-specific questions are
     asked at the start of their own content step.
 
-49a. **Effect data and maths.** `module/data/effects.mjs` (the effects and
-    automation fields on feat, power, spell, relic, gear, weapon, armour,
-    class and ancestry items), `module/rules/item-effects.mjs`
-    (`collectEffects`, `statBonuses`, `rollEffects`, giving entries in the
-    same shape as condition modifiers) with `tests/item-effects.test.mjs`,
-    and an Effects tab on the item sheet to add, edit and remove effects.
+49a. ~~**Effect data and maths.**~~ Done: `module/data/effects.mjs` (the
+    effects list and the Automated status on feats, powers, spells,
+    relics, weapons, armour, shields, gear, classes and ancestries; not on
+    containers, scrolls or backgrounds), `module/rules/item-effects.mjs`
+    (`collectEffects`, `statBonuses`, `withStat`, `rollEffects`,
+    `effectProblems`; roll entries have the same shape as condition
+    modifiers) with `tests/item-effects.test.mjs`, and an Effects section
+    at the bottom of those item sheets (`module/sheets/item-effects-part.mjs`,
+    `templates/item/item-effects.hbs`). The sheet offers the kinds built so
+    far: sheet number, roll modifier and reminder. Weapons, armour and
+    shields count only while equipped, and a destroyed relic or shield not
+    at all. Nothing reads the effects yet (from step 49b on).
     *Test:* tests pass. Give a feat an effect on its sheet; it is kept.
 
 49b. **Numbers on the sheet.** Stat effects are added in the character's

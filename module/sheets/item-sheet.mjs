@@ -18,6 +18,7 @@ import { castingDr } from "../rules/spells.mjs";
 import { ClassData } from "../data/origins.mjs";
 import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
+import { EFFECTS_TEMPLATE, EFFECT_ACTIONS, effectsContext, listenToEffects } from "./item-effects-part.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -29,17 +30,22 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     classes: ["var-borg", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true },
+    actions: EFFECT_ACTIONS
   };
 
   /** Each sheet below names its own middle part. */
   static detailsTemplate = "";
 
+  /** Containers and scrolls have no effects (PLAN step 49a). */
+  static hasEffects = true;
+
   static get PARTS() {
     return {
       header: { template: `${TEMPLATES}/item-header.hbs` },
       details: { template: this.detailsTemplate },
-      description: { template: `${TEMPLATES}/item-description.hbs` }
+      description: { template: `${TEMPLATES}/item-description.hbs` },
+      ...(this.hasEffects ? { effects: { template: EFFECTS_TEMPLATE } } : {})
     };
   }
 
@@ -52,7 +58,13 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.canEquip = "equipped" in this.document.system;
     // A foe's or minion's attack has no price, traits or expendable die, and is not carried.
     context.forFoe = ["foe", "minion"].includes(this.document.actor?.type);
-    return context;
+    return Object.assign(context, effectsContext(this.document));
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    listenToEffects(this);
   }
 }
 
@@ -113,6 +125,7 @@ export class GearSheet extends EquipmentSheet {
 
 export class ContainerSheet extends EquipmentSheet {
   static detailsTemplate = `${TEMPLATES}/container-details.hbs`;
+  static hasEffects = false;
 }
 
 /**
@@ -149,12 +162,14 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     classes: ["var-borg", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true },
+    actions: EFFECT_ACTIONS
   };
 
   static PARTS = {
     header: { template: `${TEMPLATES}/feat-header.hbs` },
-    description: { template: `${TEMPLATES}/item-description.hbs` }
+    description: { template: `${TEMPLATES}/item-description.hbs` },
+    effects: { template: EFFECTS_TEMPLATE }
   };
 
   /** @override */
@@ -168,7 +183,13 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     // gained through Improving; nor can difficulty feats (rules 4.6).
     context.canImprove = !["foe", "minion", "vehicle"].includes(this.document.actor?.type) && canBeImproving(this.document.system.source);
     context.frequencies = FREQUENCY_LABELS;
-    return context;
+    return Object.assign(context, effectsContext(this.document));
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    listenToEffects(this);
   }
 }
 
@@ -184,13 +205,15 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     classes: ["var-borg", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true },
+    actions: EFFECT_ACTIONS
   };
 
   static PARTS = {
     header: { template: `${TEMPLATES}/feat-header.hbs` },
     details: { template: `${TEMPLATES}/power-details.hbs` },
-    description: { template: `${TEMPLATES}/item-description.hbs` }
+    description: { template: `${TEMPLATES}/item-description.hbs` },
+    effects: { template: EFFECTS_TEMPLATE }
   };
 
   /** @override */
@@ -203,6 +226,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     Object.assign(context, belongingContext(system));
     context.canImprove = false;
     context.resources = PowerData.RESOURCES;
+    Object.assign(context, effectsContext(this.document));
     context.isGloom = system.resource === "gloom";
     if (context.isGloom) return this.#gloomContext(context, system);
     context.testAbilities = PowerData.TEST_ABILITIES;
@@ -218,6 +242,12 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
       placeholder: game.i18n.localize(`VARBORG.Power.Outcome.${key}`)
     }));
     return context;
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    listenToEffects(this);
   }
 
   /** The fields a gloom ability shows. */
@@ -251,13 +281,15 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     classes: ["var-borg", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true },
+    actions: EFFECT_ACTIONS
   };
 
   static PARTS = {
     header: { template: `${TEMPLATES}/origin-header.hbs` },
     details: { template: `${TEMPLATES}/spell-details.hbs` },
-    description: { template: `${TEMPLATES}/item-description.hbs` }
+    description: { template: `${TEMPLATES}/item-description.hbs` },
+    effects: { template: EFFECTS_TEMPLATE }
   };
 
   /** @override */
@@ -267,7 +299,14 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = this.document;
     context.system = system;
     context.hint = "VARBORG.Spell.SheetHint";
+    Object.assign(context, effectsContext(this.document));
     return spellContext(context, system, "VARBORG.Spell.DrHint");
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    listenToEffects(this);
   }
 }
 
@@ -296,6 +335,7 @@ function spellContext(context, system, drHintKey) {
  */
 export class ScrollSheet extends EquipmentSheet {
   static detailsTemplate = `${TEMPLATES}/spell-details.hbs`;
+  static hasEffects = false;
 
   /** @override */
   async _prepareContext(options) {
@@ -314,17 +354,22 @@ class OriginSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     classes: ["var-borg", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
-    form: { submitOnChange: true }
+    form: { submitOnChange: true },
+    actions: EFFECT_ACTIONS
   };
 
   /** Each sheet below names its own middle part, if it has one. */
   static detailsTemplate = "";
 
+  /** Backgrounds have no effects (PLAN step 49a). */
+  static hasEffects = true;
+
   static get PARTS() {
     return {
       header: { template: `${TEMPLATES}/origin-header.hbs` },
       ...(this.detailsTemplate ? { details: { template: this.detailsTemplate } } : {}),
-      description: { template: `${TEMPLATES}/item-description.hbs` }
+      description: { template: `${TEMPLATES}/item-description.hbs` },
+      ...(this.hasEffects ? { effects: { template: EFFECTS_TEMPLATE } } : {})
     };
   }
 
@@ -334,7 +379,13 @@ class OriginSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.item = this.document;
     context.system = this.document.system;
     context.hint = `VARBORG.Origin.Hint.${this.document.type}`;
-    return context;
+    return Object.assign(context, effectsContext(this.document));
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    listenToEffects(this);
   }
 }
 
@@ -356,4 +407,5 @@ export class AncestrySheet extends OriginSheet {}
 
 export class BackgroundSheet extends OriginSheet {
   static detailsTemplate = `${TEMPLATES}/background-details.hbs`;
+  static hasEffects = false;
 }

@@ -10,6 +10,7 @@
 import { ABILITIES } from "../rules/abilities.mjs";
 import { SPELL_LISTS, STARTING_DICE } from "../rules/origins.mjs";
 import { WEAPONRY_KEYS } from "../rules/creation.mjs";
+import { effectFields } from "./effects.mjs";
 
 const { ArrayField, NumberField, StringField } = foundry.data.fields;
 
@@ -44,7 +45,9 @@ export class ClassData extends foundry.abstract.TypeDataModel {
       startingDie: choice(STARTING_DICE),
       // Weapons the class starts with instead of rolling on the weaponry
       // table, such as the Witch Hunter's rapier and pistol (GAPS 183).
-      startingWeapons: new ArrayField(new StringField({ required: true, choices: WEAPONRY_KEYS }))
+      startingWeapons: new ArrayField(new StringField({ required: true, choices: WEAPONRY_KEYS })),
+      // What its class feature does (PLAN Milestone 9).
+      ...effectFields()
     };
   }
 
@@ -58,7 +61,8 @@ export class ClassData extends foundry.abstract.TypeDataModel {
 export class AncestryData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
-      description: new StringField({ required: true, initial: "" })
+      description: new StringField({ required: true, initial: "" }),
+      ...effectFields()
     };
   }
 }

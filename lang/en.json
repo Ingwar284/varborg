@@ -2483,6 +2483,93 @@
         "grapplingHook": "Grappling hook",
         "crowbar": "Crowbar"
       }
+    },
+    "Effects": {
+      "Title": "Effects",
+      "None": "No effects: the system does nothing with this item's text yet.",
+      "Add": "Add an effect",
+      "Remove": "Remove this effect",
+      "AutomationLabel": "Automated",
+      "AutomationHint": "How much of this item the system does by itself. Not reviewed: nobody has looked yet. Fully: everything its text says works. Partly: some of it, the rest is up to the table. Text only: nothing for the system to do. Waiting for a ruling: a question is open in GAPS.",
+      "Automation": {
+        "none": "Not reviewed",
+        "auto": "Fully",
+        "partial": "Partly",
+        "text": "Text only",
+        "ruling": "Waiting for a ruling"
+      },
+      "KindLabel": "Kind of effect",
+      "Kind": {
+        "stat": "Sheet number",
+        "roll": "Roll modifier",
+        "reminder": "Reminder",
+        "hook": "Event",
+        "use": "Use button",
+        "choice": "Choice",
+        "immune": "Immunity",
+        "resist": "Resistance"
+      },
+      "TargetLabel": "Which number",
+      "Target": {
+        "hpMax": "Max HP",
+        "woundsMax": "Max wounds",
+        "carryLimit": "Cumbersome limit",
+        "movement": "Movement",
+        "minionLimit": "Minion limit",
+        "initiative": "Initiative",
+        "strength": "Strength",
+        "agility": "Agility",
+        "toughness": "Toughness",
+        "presence": "Presence",
+        "sanity": "Sanity",
+        "soak": "Natural armour tier",
+        "defenceDr": "Defence DR",
+        "rangedDefenceDr": "Defence DR against ranged attacks (starting)"
+      },
+      "OpLabel": "How",
+      "Op": {
+        "add": "add",
+        "set": "becomes",
+        "min": "at least"
+      },
+      "ValueLabel": "Amount",
+      "RollLabel": "Which roll",
+      "Roll": {
+        "test": "Ability tests",
+        "attack": "Attacks",
+        "defence": "Defence",
+        "spell": "Spellcasting",
+        "power": "Powers",
+        "panic": "Panic tests",
+        "contest": "Contested tests",
+        "gloomTest": "Tests against gloom abilities",
+        "driving": "Driving tests",
+        "chance": "Chance die",
+        "morale": "Morale"
+      },
+      "AbilityLabel": "Ability",
+      "AnyAbility": "Any ability",
+      "AgainstLabel": "Resisting",
+      "AgainstHint": "Only on tests to resist this condition, such as Boon to resist being Charmed.",
+      "AnyCondition": "Not resisting anything",
+      "GrantLabel": "Boon or Bane",
+      "Grant": {
+        "none": "No Boon or Bane",
+        "boon": "Boon",
+        "bane": "Bane"
+      },
+      "DrLabel": "DR",
+      "DrHint": "Added to the DR: −2 makes the roll easier.",
+      "DamageLabel": "Damage",
+      "DamageHint": "Extra damage dice or a number, such as d4 or 2.",
+      "ModeLabel": "Applied",
+      "ModeHint": "Always: the system applies it by itself. Optional: the dialog shows an unticked box, for situations only the Dark Master can judge.",
+      "Mode": {
+        "auto": "Always",
+        "optional": "Optional tick"
+      },
+      "NoteLabel": "When",
+      "NotePlaceholder": "When it applies, in a few words"
     }
   }
 }

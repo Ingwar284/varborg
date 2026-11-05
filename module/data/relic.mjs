@@ -15,6 +15,7 @@
 
 import { CarriedData } from "./equipment.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
+import { effectFields } from "./effects.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -35,7 +36,8 @@ export default class RelicData extends CarriedData {
       saleValue: wholeNumber(),
       factionValue: wholeNumber(),
       faction: new StringField({ required: true, blank: true, initial: "" }),
-      ...frequencyFields()
+      ...frequencyFields(),
+      ...effectFields()
     };
   }
 

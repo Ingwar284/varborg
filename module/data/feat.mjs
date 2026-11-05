@@ -10,6 +10,7 @@
 import { FEAT_SOURCES } from "../rules/feats.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
 import { markImprovingFeat, endChoiceWith } from "../improving.mjs";
+import { effectFields } from "./effects.mjs";
 
 const { StringField, BooleanField } = foundry.data.fields;
 
@@ -24,7 +25,9 @@ export default class FeatData extends foundry.abstract.TypeDataModel {
       // Death's Door Sanity test (GAPS 16).
       improving: new BooleanField({ initial: false }),
       // Once per round, encounter or day, and whether it is used (GAPS 161).
-      ...frequencyFields()
+      ...frequencyFields(),
+      // What it does, and how far it is automated (PLAN Milestone 9).
+      ...effectFields()
     };
   }
 

@@ -1,0 +1,49 @@
+<section class="var-borg-item-effects">
+  {{#with effectsPart}}
+  <header class="effects-header">
+    <h3>{{localize "VARBORG.Effects.Title"}}</h3>
+    <label data-tooltip="{{localize 'VARBORG.Effects.AutomationHint'}}">
+      <span>{{localize "VARBORG.Effects.AutomationLabel"}}</span>
+      <select name="system.automation" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions automations selected=automation localize=true}}</select>
+    </label>
+    {{#if @root.editable}}
+    <button type="button" data-action="addEffect" data-tooltip="{{localize 'VARBORG.Effects.Add'}}"><i class="fa-solid fa-plus"></i></button>
+    {{/if}}
+  </header>
+  {{#unless list.length}}
+  <p class="hint">{{localize "VARBORG.Effects.None"}}</p>
+  {{/unless}}
+  {{#each list}}
+  <div class="effect-row" data-effect-index="{{index}}">
+    <select data-effect-field="kind" aria-label="{{localize 'VARBORG.Effects.KindLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions kinds selected=kind localize=true}}</select>
+    {{#if isStat}}
+    <select data-effect-field="target" aria-label="{{localize 'VARBORG.Effects.TargetLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../targets selected=target localize=true}}</select>
+    <select data-effect-field="op" aria-label="{{localize 'VARBORG.Effects.OpLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../ops selected=op localize=true}}</select>
+    <input type="number" step="1" data-effect-field="value" value="{{value}}" aria-label="{{localize 'VARBORG.Effects.ValueLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>
+    {{/if}}
+    {{#if isRoll}}
+    <select data-effect-field="roll" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rolls selected=roll localize=true}}</select>
+    <select data-effect-field="ability" aria-label="{{localize 'VARBORG.Effects.AbilityLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../abilities selected=ability localize=true}}</select>
+    <select data-effect-field="against" data-tooltip="{{localize 'VARBORG.Effects.AgainstHint'}}" aria-label="{{localize 'VARBORG.Effects.AgainstLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../conditions selected=against localize=true}}</select>
+    <select data-effect-field="grant" aria-label="{{localize 'VARBORG.Effects.GrantLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../grants selected=grant localize=true}}</select>
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.DrHint'}}">
+      <span>{{localize "VARBORG.Effects.DrLabel"}}</span>
+      <input type="number" step="1" data-effect-field="dr" value="{{dr}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.DamageHint'}}">
+      <span>{{localize "VARBORG.Effects.DamageLabel"}}</span>
+      <input type="text" data-effect-field="damage" value="{{damage}}" placeholder="d4" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.ModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../modes selected=mode localize=true}}</select>
+    {{/if}}
+    {{#if isReminder}}
+    <select data-effect-field="roll" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rolls selected=roll localize=true}}</select>
+    {{/if}}
+    <input class="effect-note" type="text" data-effect-field="note" value="{{note}}" placeholder="{{localize 'VARBORG.Effects.NotePlaceholder'}}" aria-label="{{localize 'VARBORG.Effects.NoteLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>
+    {{#if @root.editable}}
+    <button type="button" class="effect-remove" data-action="removeEffect" data-tooltip="{{localize 'VARBORG.Effects.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+    {{/if}}
+  </div>
+  {{/each}}
+  {{/with}}
+</section>
