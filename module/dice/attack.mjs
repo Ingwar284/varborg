@@ -51,7 +51,7 @@ import { markFired } from "../ammunition.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
 
@@ -80,7 +80,11 @@ export async function rollAttack(actor, item) {
   const target = [...game.user.targets][0]?.actor ?? null;
 
   const ruined = actor.system.attackRuin;
-  const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined });
+  // Item effects for the player to tick when they apply (PLAN step 49d),
+  // for the weapon's usual ability.
+  const optional = itemOptionalMods(actor, { roll: "attack", ability: attackAbilities(weapon, attackModes(weapon)[0])[0] });
+  const optionalEffects = await optionalEffectsField(optional);
+  const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
   if (!options) return;
   const { mode, ability } = options;
 
@@ -92,6 +96,7 @@ export async function rollAttack(actor, item) {
   const automatic = actorTestModifiers(actor, ability);
   const banes = attackBanes({ weapon, mode, attacksBefore, onOwnTurn: turn.onOwnTurn, beyondRange: options.beyondRange, ruined });
   const conditions = attackConditions(actor, target, mode, ability);
+  conditions.own.push(...tickedMods(optional, options.data));
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
   const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const baneCount = [options.bane, paid.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length
@@ -317,7 +322,7 @@ function attackConditions(actor, target, mode, ability) {
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
  *   dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
-async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined }) {
+async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "" }) {
   const i18n = game.i18n;
   const weapon = item.system;
   const modes = attackModes(weapon);
@@ -360,6 +365,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
     reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0] })],
+    optionalEffects,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")
   });

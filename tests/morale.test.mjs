@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { foeDamageTaken, canRollMorale, atOneThirdHp, moraleTriggers, moraleResult } from "../module/rules/morale.mjs";
+import { foeDamageTaken, canRollMorale, atOneThirdHp, moraleTriggers, moraleResult, moraleDice } from "../module/rules/morale.mjs";
 
 test("a foe's armour roll is subtracted from damage", () => {
   assert.deepEqual(foeDamageTaken(6, 2), { taken: 4, minimum: false });
@@ -136,4 +136,12 @@ test("Morale rolls must be real dice results", () => {
   assert.throws(() => moraleResult(13, 7), RangeError);
   assert.throws(() => moraleResult(9, 7), RangeError); // demoralised but no d6
   assert.throws(() => moraleResult(9, 7, 7), RangeError);
+});
+
+test("Boon or Bane on Morale rolls 3d6 and keeps two (GAPS 182)", () => {
+  assert.equal(moraleDice(0, 0), "2d6");
+  assert.equal(moraleDice(1, 0), "3d6kl2");
+  assert.equal(moraleDice(0, 2), "3d6kh2");
+  assert.equal(moraleDice(1, 1), "2d6");
+  assert.equal(moraleDice(), "2d6");
 });

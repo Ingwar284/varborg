@@ -1,0 +1,10 @@
+<fieldset class="var-borg-optional-effects">
+  <legend>{{localize "VARBORG.Effects.OptionalTitle"}}</legend>
+  <p class="hint">{{localize "VARBORG.Effects.OptionalHint"}}</p>
+  {{#each list}}
+  <div class="form-group">
+    <label for="var-borg-optional-{{@index}}">{{label}}</label>
+    <input id="var-borg-optional-{{@index}}" type="checkbox" name="optionalEffect{{@index}}">
+  </div>
+  {{/each}}
+</fieldset>

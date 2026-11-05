@@ -21,10 +21,14 @@
 
 import { hpAfterDamage } from "../rules/health.mjs";
 import {
-  MORALE_DICE, DEMORALISED_DIE, foeDamageTaken, canRollMorale, moraleTriggers, moraleResult
+  MORALE_DICE, DEMORALISED_DIE, foeDamageTaken, canRollMorale, moraleTriggers, moraleResult, moraleDice
 } from "../rules/morale.mjs";
+import { totalModifiers } from "../rules/conditions.mjs";
+import { conditionNotes } from "../conditions.mjs";
+import { itemRollMods, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
+const { DialogV2 } = foundry.applications.api;
 
 const SYSTEM = "var-borg";
 const DAMAGE_TEMPLATE = "systems/var-borg/templates/chat/foe-damage-card.hbs";
@@ -111,9 +115,29 @@ export async function rollMorale(foe) {
     return;
   }
   const morale = foe.system.morale;
-  const roll = new Roll(MORALE_DICE);
+  // Item effects on Morale (PLAN step 49d, GAPS 182): the foe's own, and
+  // the characters' (Dragon's Shadow), always or ticked in a small dialog.
+  const { auto, optional } = moraleEffects(foe);
+  let mods = auto;
+  if (optional.length) {
+    const data = await DialogV2.input({
+      window: { title: i18n.format("VARBORG.MoraleRoll.DialogTitle", { name: foe.name }) },
+      content: await optionalEffectsField(optional),
+      ok: { label: "VARBORG.MoraleRoll.Roll", icon: "fa-solid fa-dice" },
+      rejectClose: false
+    });
+    if (!data) return;
+    mods = [...auto, ...tickedMods(optional, data)];
+  }
+  const totals = totalModifiers(mods);
+  const dice = moraleDice(totals.boons, totals.banes);
+  const roll = new Roll(dice);
   await roll.evaluate();
   const rolls = [roll];
+  const notes = [
+    ...conditionNotes(mods),
+    dice !== MORALE_DICE ? i18n.localize(`VARBORG.MoraleRoll.Dice.${dice === "3d6kh2" ? "high" : "low"}`) : null
+  ].filter(Boolean);
 
   // Only a demoralised foe rolls the d6.
   let d6 = null;
@@ -127,7 +151,8 @@ export async function rollMorale(foe) {
 
   const content = await renderTemplate(MORALE_TEMPLATE, {
     title: i18n.format("VARBORG.MoraleRoll.CardTitle", { name: foe.name }),
-    dice: roll.dice[0].results.map(r => r.result),
+    dice: roll.dice[0].results.map(r => ({ value: r.result, dropped: !r.active })),
+    notes,
     total: roll.total,
     morale,
     demoralised: result.demoralised,
@@ -145,6 +170,27 @@ export async function rollMorale(foe) {
     rolls,
     sound: CONFIG.sounds.dice
   });
+}
+
+/**
+ * The Morale modifiers from items: the foe's own, and each character's on
+ * the players' side (in the combat, or every player character outside
+ * one), named with whose item it is.
+ * @returns {{auto: object[], optional: object[]}}
+ */
+function moraleEffects(foe) {
+  const context = { roll: "morale" };
+  const characters = game.combat
+    ? game.combat.combatants.map(c => c.actor).filter(actor => actor?.type === "character")
+    : game.actors.filter(actor => actor.type === "character" && actor.hasPlayerOwner);
+  const named = (actor, mods) => mods.map(mod => ({ ...mod, item: game.i18n.format("VARBORG.Effects.FromActor", { item: mod.item, name: actor.name }) }));
+  const auto = [...itemRollMods(foe, context)];
+  const optional = [...itemOptionalMods(foe, context)];
+  for (const actor of new Set(characters)) {
+    auto.push(...named(actor, itemRollMods(actor, context)));
+    optional.push(...named(actor, itemOptionalMods(actor, context)));
+  }
+  return { auto, optional };
 }
 
 /**

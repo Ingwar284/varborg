@@ -937,9 +937,19 @@ targeted token, sharing one damage roll (GAPS 141).
     *Test:* with Iron will, a test to resist Charmed shows Boon and the
     feat's name.
 
-49d. **Optional ticks.** Dialogs list matching optional effects as unticked
-    boxes with the item's name. Morale gets Dragon's Shadow's 3d6 keeping
-    the two highest as an optional tick (GAPS 182).
+49d. ~~**Optional ticks.**~~ Done: roll modifiers set to "Optional tick"
+    appear in a "Does it apply?" box in the dialogs of ability tests
+    (Panic, wound and driving tests included), attacks, defences, gloom
+    tests, powers and spells (`itemOptionalMods`, `optionalEffectsField`,
+    `tickedMods` in `module/effects.mjs`, `templates/dice/optional-effects.hbs`);
+    a ticked one counts and shows on the card like an automatic one. For an
+    attack the box is worked out for the weapon's usual ability. Morale
+    (`moraleDice`, tested): Boon is 3d6 keeping the two lowest (the foe
+    holds), Bane 3d6 keeping the two highest (it breaks), both or neither
+    2d6; effects come from the foe and from the characters in the combat
+    (every player character outside one), with a small dialog when any is
+    optional (GAPS 182). Not yet: contested tests offer no boxes (their
+    automatic effects work).
     *Test:* with Acrobat, an Agility test shows "Acrobat: Boon" unticked;
     ticked, the card shows Boon.
 

@@ -39,7 +39,7 @@ import { CARD } from "../rules/fortune.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
@@ -99,12 +99,13 @@ function checkRitualUse(ritual, turn) {
 /**
  * What armour, Encumbered, conditions and item effects on spellcasting
  * (PLAN step 49c) do to a casting test of this ability (Sanity, or
- * Toughness with life force).
+ * Toughness with life force). extra: item effects the player ticked
+ * (PLAN step 49d).
  */
-function abilityMods(actor, ability) {
+function abilityMods(actor, ability, extra = []) {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability })];
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability }), ...extra];
   return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods) };
 }
 
@@ -129,6 +130,8 @@ export async function castSpell(actor, spell) {
 
   const facts = castingFacts(actor, spell);
   const sanity = abilityMods(actor, SPELL_ABILITY);
+  // Item effects for the player to tick when they apply (PLAN step 49d).
+  const optional = itemOptionalMods(actor, { roll: "spell", ability: SPELL_ABILITY });
   const startDr = castingDr(spell.system);
   const spellListLabel = i18n.localize(`VARBORG.Class.SpellList.${spell.system.spellList}`);
   const classListLabel = facts.classList ? i18n.localize(`VARBORG.Class.SpellList.${facts.classList}`) : i18n.localize("VARBORG.Spell.NoClass");
@@ -173,6 +176,7 @@ export async function castSpell(actor, spell) {
     },
     conditionNotes: sanity.notes,
     reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "spell", ability: SPELL_ABILITY })],
+    optionalEffects: await optionalEffectsField(optional),
     fortuneFields: await fortuneFields(actor, "spell")
   });
   const options = await DialogV2.input({
@@ -192,7 +196,7 @@ export async function castSpell(actor, spell) {
   // Life force: Toughness instead of Sanity, and the DR drops by d4 per wound.
   const lifeWounds = scroll ? 0 : lifeForceWounds(options.lifeForce, wounds.value, wounds.max);
   const ability = castingAbility(lifeWounds);
-  const { automatic, fromConditions, notes } = ability === SPELL_ABILITY ? sanity : abilityMods(actor, ability);
+  const { automatic, fromConditions, notes } = abilityMods(actor, ability, tickedMods(optional, options));
   const lifeFormula = lifeForceFormula(lifeWounds);
   const lifeRoll = lifeFormula ? await new Roll(lifeFormula).evaluate() : null;
   const reduction = lifeRoll?.total ?? 0;

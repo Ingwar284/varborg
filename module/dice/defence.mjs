@@ -45,7 +45,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { AGONY_TYPE_OPTION } from "../agony.mjs";
 import { addTimedCondition } from "../timers.mjs";
-import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { withStat, statDrMods } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -107,8 +107,11 @@ export async function rollDefence(actor, attack) {
   const foe = attack.parent;
   const automatic = defenceModifiers(actor);
   const conditions = defenceConditions(actor, attack);
-  const options = await askDefenceOptions(actor, attack, automatic, conditions);
+  // Item effects for the player to tick when they apply (PLAN step 49d).
+  const optional = itemOptionalMods(actor, { roll: "defence" });
+  const options = await askDefenceOptions(actor, attack, automatic, conditions, await optionalEffectsField(optional));
   if (!options) return;
+  conditions.own.push(...tickedMods(optional, options.data));
 
   // Fortune can buy a Boon or Bane before rolling (rule 3.9).
   const paid = await payDialogFortune(actor, options.data);
@@ -388,7 +391,7 @@ function defenceConditions(actor, attack) {
  * The defence dialog. Returns the chosen options, or null if it was closed.
  * @returns {Promise<{dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
-async function askDefenceOptions(actor, attack, automatic, conditions) {
+async function askDefenceOptions(actor, attack, automatic, conditions, optionalEffects = "") {
   const i18n = game.i18n;
   const foe = attack.parent;
   const soak = automatic.soakDie;
@@ -416,6 +419,7 @@ async function askDefenceOptions(actor, attack, automatic, conditions) {
       ...conditionNotes(conditions.foe, foe?.name)
     ].filter(Boolean),
     reminders: [...reminderNotes(actor, "defence"), ...itemReminderNotes(actor, { roll: "defence" }), ...foeReminders(foe)],
+    optionalEffects,
     fortuneFields: await fortuneFields(actor, "defence")
   });
 

@@ -41,3 +41,43 @@ export function itemReminderNotes(actor, context) {
     ? i18n.format("VARBORG.Effects.ReminderNote", { item, note })
     : i18n.format("VARBORG.Effects.ReminderPlain", { item })));
 }
+
+const OPTIONAL_TEMPLATE = "systems/var-borg/templates/dice/optional-effects.hbs";
+
+/**
+ * The item modifiers a roll offers as unticked boxes, for situations only
+ * the Dark Master can judge (PLAN step 49d). Same shape as itemRollMods.
+ */
+export function itemOptionalMods(actor, context) {
+  return testOnly(itemRollEffects(actor, context).optional);
+}
+
+/**
+ * The boxes for a dialog, such as "Acrobat (on tests involving balance):
+ * Boon", or "" when there are none. Box i is named "optionalEffect<i>".
+ * @param {object[]} mods  From itemOptionalMods.
+ * @returns {Promise<string>}  HTML for the dialog's template ({{{optionalEffects}}}).
+ */
+export async function optionalEffectsField(mods) {
+  if (!mods?.length) return "";
+  const i18n = game.i18n;
+  const list = mods.map(mod => {
+    const parts = [];
+    if (mod.boon) parts.push(i18n.localize("VARBORG.Test.Boon"));
+    if (mod.bane) parts.push(i18n.localize("VARBORG.Test.Bane"));
+    if (mod.dr) parts.push(i18n.format("VARBORG.Condition.DR", { dr: mod.dr > 0 ? `+${mod.dr}` : `−${Math.abs(mod.dr)}` }));
+    const name = mod.note ? i18n.format("VARBORG.Effects.ItemWithNote", { item: mod.item, note: mod.note }) : mod.item;
+    return { label: i18n.format("VARBORG.Effects.OptionalLabel", { name, effect: parts.join(", ") }) };
+  });
+  return foundry.applications.handlebars.renderTemplate(OPTIONAL_TEMPLATE, { list });
+}
+
+/**
+ * The offered modifiers whose boxes were ticked in the dialog. They join
+ * the roll's modifier list like the automatic ones.
+ * @param {object[]} mods  The list given to optionalEffectsField.
+ * @param {object} data    The dialog's form data.
+ */
+export function tickedMods(mods, data) {
+  return (mods ?? []).filter((_, index) => Boolean(data?.[`optionalEffect${index}`]));
+}

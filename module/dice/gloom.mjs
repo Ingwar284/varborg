@@ -31,7 +31,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { defenceModifiers, DEFENDERS } from "./defence.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
-import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { statDrMods } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -143,6 +143,8 @@ export async function rollGloomTest(actor, power) {
       ...statDrMods(actor.system.statBonuses?.defenceDr)
     ];
   }
+  // Item effects for the player to tick when they apply (PLAN step 49d).
+  const optional = itemOptionalMods(actor, effectContext);
   // Armour soaks the damage either way (GAPS 123); natural armour too (GAPS 188).
   const soak = gear.soakDie ? { die: gear.soakDie, name: gear.soakName } : null;
   const notes = [
@@ -162,6 +164,7 @@ export async function rollGloomTest(actor, power) {
     })),
     notes: [...notes, soak?.die ? i18n.format("VARBORG.Defence.SoakNote", { die: soak.die, name: soak.name }) : null].filter(Boolean),
     reminders: [...reminderNotes(actor, test.own ? "test" : "defence"), ...itemReminderNotes(actor, effectContext)],
+    optionalEffects: await optionalEffectsField(optional),
     automaticHint: i18n.localize(test.own ? "VARBORG.Gloom.OwnHint" : "VARBORG.Gloom.DefenceHint"),
     fortuneFields: await fortuneFields(actor, "gloom")
   });
@@ -177,6 +180,9 @@ export async function rollGloomTest(actor, power) {
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;
 
+  const ticked = tickedMods(optional, options);
+  conditionMods.push(...ticked);
+  notes.push(...conditionNotes(ticked));
   const fromConditions = totalModifiers(conditionMods);
   const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;

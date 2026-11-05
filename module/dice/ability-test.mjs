@@ -26,7 +26,7 @@ import { CARD, softenTier } from "../rules/fortune.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
-import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -54,11 +54,15 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
   // Item effects count like conditions (PLAN step 49c).
   const effectContext = { roll: kind ? ["test", kind] : "test", ability };
   const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
-  const fromConditions = totalModifiers(conditionMods);
-  const notes = conditionNotes(conditionMods);
   const reminders = [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, effectContext)];
-  const options = await askTestOptions(actor, abilityLabel, automatic, notes, reminders, startDr, purpose, boon, bane);
+  // Item effects for the player to tick when they apply (PLAN step 49d).
+  const optional = itemOptionalMods(actor, effectContext);
+  const options = await askTestOptions(actor, abilityLabel, automatic, conditionNotes(conditionMods), reminders, startDr, purpose, boon, bane,
+    await optionalEffectsField(optional));
   if (!options) return null;
+  const allMods = [...conditionMods, ...tickedMods(optional, options.data)];
+  const fromConditions = totalModifiers(allMods);
+  const notes = conditionNotes(allMods);
   // A Boon or Bane bought with Fortune is paid before rolling (rule 3.9).
   const paid = await payDialogFortune(actor, options.data);
   if (!paid) return null;
@@ -185,10 +189,11 @@ export function actorTestModifiers(actor, ability) {
  * @param {string|null} purpose       What the test is for, if anything.
  * @param {boolean} boon              Start with Boon ticked.
  * @param {boolean} bane              Start with Bane ticked.
+ * @param {string} optionalEffects   The item effects' boxes (optionalEffectsField), or "".
  * @returns {Promise<{dr: number, boon: boolean, bane: boolean, aidSuccesses: number, aidFailures: number, data: object}|null>}
  *   data is the whole form, for the Fortune boxes.
  */
-async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null, boon = false, bane = false) {
+async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [], reminders = [], startDr = DR_DEFAULT, purpose = null, boon = false, bane = false, optionalEffects = "") {
   const content = await renderTemplate(DIALOG_TEMPLATE, {
     drs: DR_TABLE.map(dr => ({
       value: dr,
@@ -201,6 +206,7 @@ async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [
     encumberedNote: automatic.encumberedBane ? game.i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes,
     reminders,
+    optionalEffects,
     purpose,
     boon,
     bane,

@@ -100,3 +100,17 @@ export function moraleResult(roll, morale, d6) {
   if (!Number.isInteger(d6) || d6 < 1 || d6 > 6) throw new RangeError(`A d6 roll is 1 to 6, got ${d6}`);
   return { demoralised: true, reaction: d6 <= 3 ? "flees" : "surrenders" };
 }
+
+/**
+ * The Morale dice with Boon or Bane (GAPS 182). Morale is rolled for the
+ * foe, so Boon helps the foe hold: 3d6 keeping the two lowest. Bane makes
+ * it likelier to break: 3d6 keeping the two highest (Dragon's Shadow). Any
+ * Boon with any Bane, or neither, is the usual 2d6.
+ * @param {number} boons
+ * @param {number} banes
+ */
+export function moraleDice(boons = 0, banes = 0) {
+  if (boons > 0 && banes === 0) return "3d6kl2";
+  if (banes > 0 && boons === 0) return "3d6kh2";
+  return MORALE_DICE;
+}

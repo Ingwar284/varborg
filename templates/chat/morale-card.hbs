@@ -1,8 +1,9 @@
 <div class="var-borg-card test-card morale-card">
   <h3>{{title}}</h3>
   <div class="dice">
-    {{#each dice}}<span class="die">{{this}}</span>{{/each}}
+    {{#each dice}}<span class="die {{#if dropped}}dropped{{/if}}">{{value}}</span>{{/each}}
   </div>
+  {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
   <p class="total">
     <strong>{{total}}</strong> {{localize "VARBORG.MoraleRoll.Versus"}} <strong>{{localize "VARBORG.Foe.MoraleLabel"}} {{morale}}</strong>
   </p>

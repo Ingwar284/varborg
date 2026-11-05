@@ -34,7 +34,7 @@ import { getPools, spendFromPool } from "../pools.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -218,8 +218,10 @@ async function rollPowerTest(actor, power) {
   const { conditions, fatigue } = conditionsOf(actor);
   // Item effects on powers count like conditions (PLAN step 49c).
   const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "power", ability })];
-  const fromConditions = totalModifiers(conditionMods);
+  let fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
+  // Item effects for the player to tick when they apply (PLAN step 49d).
+  const optional = itemOptionalMods(actor, { roll: "power", ability });
   const startDr = powerDr(power.system.cost);
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
 
@@ -235,6 +237,7 @@ async function rollPowerTest(actor, power) {
     encumberedNote: automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes: notes,
     reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "power", ability })],
+    optionalEffects: await optionalEffectsField(optional),
     weapons: weapons.map(choice => ({
       id: choice.id,
       label: `${choice.name} (${choice.dice})${choice.equipped ? ` · ${i18n.localize("VARBORG.Item.Equipped")}` : ""}`
@@ -253,6 +256,9 @@ async function rollPowerTest(actor, power) {
     rejectClose: false
   });
   if (!options) return;
+  const ticked = tickedMods(optional, options);
+  fromConditions = totalModifiers([...conditionMods, ...ticked]);
+  notes.push(...conditionNotes(ticked));
 
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;

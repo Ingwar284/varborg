@@ -53,7 +53,7 @@ export const STAT_OPS = ["add", "set", "min"];
 /** The kinds of roll a roll or reminder effect can apply to. */
 export const ROLL_KINDS = [
   "test", "attack", "defence", "spell", "power", "panic", "contest",
-  "gloomTest", "driving"
+  "gloomTest", "driving", "morale"
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */

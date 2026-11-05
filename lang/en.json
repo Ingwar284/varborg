@@ -656,7 +656,13 @@
         "flees": "{name} flees.",
         "surrenders": "{name} surrenders."
       },
-      "ButtonFor": "Morale: {name}"
+      "ButtonFor": "Morale: {name}",
+      "DialogTitle": "Morale: {name}",
+      "Roll": "Roll Morale",
+      "Dice": {
+        "high": "3d6, the two highest kept: likelier to break.",
+        "low": "3d6, the two lowest kept: likelier to hold."
+      }
     },
     "Condition": {
       "Title": "Conditions",
@@ -2543,7 +2549,8 @@
         "panic": "Panic tests only",
         "contest": "Contested tests only",
         "gloomTest": "Tests against gloom abilities only",
-        "driving": "Driving tests only"
+        "driving": "Driving tests only",
+        "morale": "Morale of foes (Boon: 3d6 keep the two lowest, the foe holds; Bane: keep the two highest, it breaks)"
       },
       "AbilityLabel": "Ability",
       "AnyAbility": "Any ability",
@@ -2579,7 +2586,11 @@
       "ItemWithNote": "{item} ({note})",
       "ReminderNote": "{item}: {note}",
       "ReminderPlain": "{item}: see its text.",
-      "StartingDr": "{items}: this defence starts at DR{dr}."
+      "StartingDr": "{items}: this defence starts at DR{dr}.",
+      "OptionalTitle": "Does it apply?",
+      "OptionalHint": "These items only count in some situations. Tick the ones that apply to this roll (the Dark Master has the last word).",
+      "OptionalLabel": "{name}: {effect}",
+      "FromActor": "{item}, {name}"
     }
   }
 }
