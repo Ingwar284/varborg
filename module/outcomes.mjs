@@ -61,6 +61,8 @@ export function outcomeInputs(actor, power) {
     sustained: Boolean(power.system.sustained),
     source: `${actor.uuid}|${power.id}`,
     targets: [...game.user.targets].map(token => token.actor?.uuid).filter(Boolean),
+    allyTargets: [...game.user.targets].map(token => token.actor).filter(other => ["character", "minion"].includes(other?.type)).map(other => other.uuid),
+    foeTargets: [...game.user.targets].map(token => token.actor).filter(other => other?.type === "foe").map(other => other.uuid),
     user: actor.uuid,
     // The dance partner named this encounter (GAPS 222), and the options chosen in the dialog (GAPS 224).
     partner: partnerOf(actor)?.uuid ?? "",
@@ -96,7 +98,7 @@ export function partnerOf(actor) {
  * @param {string} tier  The card's result.
  * @returns {Promise<{lines: string[], rolls: Roll[]}>}  Lines for the card: what this result gives.
  */
-export async function settleOutcomes(data, tier) {
+export async function settleOutcomes(data, tier, { damage = 0 } = {}) {
   const inputs = data.inputs.outcomes;
   if (!inputs) return { lines: [], rolls: [] };
   const wanted = wantedOutcomes(inputs.entries, tier, inputs);
@@ -106,7 +108,8 @@ export async function settleOutcomes(data, tier) {
   const added = [];
   for (const want of add) {
     const entry = inputs.entries[want.index];
-    const op = { op: "give", actorUuid: want.actorUuid, entry, name: inputs.name, source: inputs.source, sustained: inputs.sustained && entry.who === "self", user: inputs.user };
+    // On the user of a Sustained power (GAPS 220), or "while sustained" on its targets (GAPS 233).
+    const op = { op: "give", actorUuid: want.actorUuid, entry, name: inputs.name, source: inputs.source, sustained: inputs.sustained && (entry.who === "self" || entry.whileSustained), user: inputs.user };
     if (entry.kind === "buff") {
       // Only this option's buff effects (Morphic Surge), and Morph replaces Morph (GAPS 226).
       op.effects = buffEffectsFor(inputs.buffEffects, entry.option);
@@ -114,7 +117,8 @@ export async function settleOutcomes(data, tier) {
       op.sustained = inputs.sustained;
     }
     // Healing and damage are rolled here, so the card shows the dice.
-    if (["heal", "damage"].includes(entry.kind) && entry.amount !== "full") {
+    if (entry.kind === "heal" && entry.amount === "damage") op.amount = damage ?? 0;
+    else if (["heal", "damage"].includes(entry.kind) && entry.amount !== "full") {
       const roll = await new Roll(String(entry.amount || "0")).evaluate();
       rolls.push(roll);
       op.amount = roll.total;
@@ -170,7 +174,8 @@ async function runOp(op) {
       if (!entry.condition) return null;
       const had = actor.statuses.has(entry.condition);
       // A Sustained power's condition on its user lasts as long as the power (GAPS 220).
-      const spec = op.sustained ? null : entry.duration;
+      // "While sustained" on targets keeps its own timer too, such as an escape roll (GAPS 233, 234).
+      const spec = op.sustained && !entry.whileSustained ? null : entry.duration;
       const line = await addTimedCondition(actor, entry.condition, spec);
       if (op.sustained && !had) await markSustained(actor, op.source, { condition: entry.condition });
       return { condition: entry.condition, had, line: noted(line, entry.note) };
@@ -336,6 +341,10 @@ function noted(line, note) {
 async function undoOutcome(done) {
   const actor = done ? await fromUuid(done.actorUuid) : null;
   if (!actor) return null;
+  if (done.clearMark) {
+    const marks = actor.getFlag(SYSTEM, "sustainedConditions") ?? [];
+    await actor.setFlag(SYSTEM, "sustainedConditions", marks.filter(mark => mark.source !== done.clearMark));
+  }
   if (done.kind === "condition" && done.condition && !done.had && actor.statuses.has(done.condition)) {
     await actor.toggleStatusEffect(done.condition, { active: false });
   }
@@ -388,6 +397,25 @@ export async function restoreLoweredArmour(combat) {
 }
 
 /**
+ * A character made a roll: their buffs marked "next roll only" whose
+ * effects work on that kind of roll are used up (GAPS 235; Overcharge and
+ * Perfect casting for spells, GAPS 231).
+ * @param {Actor} actor
+ * @param {string[]} kinds  The roll's kinds, such as ["attack"].
+ */
+export async function useUpNextRoll(actor, kinds) {
+  if (actor?.type !== "character" || !actor.isOwner) return;
+  const used = actor.items.filter(item => item.getFlag(SYSTEM, "buff")?.nextOnly
+    && (item.system.effects ?? []).some(effect => effect.kind === "roll" && kinds.includes(effect.roll)));
+  if (!used.length) return;
+  await actor.deleteEmbeddedDocuments("Item", used.map(item => item.id));
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Outcome.NextRollUsed", { name: actor.name, list: used.map(item => item.name).join(", ") }))}</p></div>`
+  });
+}
+
+/**
  * A foe's attack or gloom ability was defended against: its buffs that
  * last only until its next attack end (Needle-Spray, GAPS 223).
  * @param {Actor} foe
@@ -421,14 +449,13 @@ export async function endSustainedOutcomes(power) {
     const result = await runOp({ op: "give", actorUuid: user.uuid, entry: foundry.utils.deepClone(entry), name: power.name, source, user: user.uuid });
     if (result?.line) ended.push(result.line);
   }
-  const marks = user.getFlag(SYSTEM, "sustainedConditions") ?? [];
-  const mine = marks.filter(mark => mark.source === source);
-  if (mine.length && user.isOwner) {
+  // Its conditions on the user and, "while sustained", on its targets (GAPS 220, 233).
+  for (const actor of actorsWithBuffs()) {
+    const mine = (actor.getFlag(SYSTEM, "sustainedConditions") ?? []).filter(mark => mark.source === source);
     for (const mark of mine) {
-      if (user.statuses.has(mark.condition)) await user.toggleStatusEffect(mark.condition, { active: false });
-      ended.push(i18n.localize(`VARBORG.Condition.${mark.condition}`));
+      await doOp({ op: "undo", done: { actorUuid: actor.uuid, kind: "condition", condition: mark.condition, had: false, clearMark: source } });
+      ended.push(i18n.format("VARBORG.Outcome.ConditionOf", { name: actor.name, condition: i18n.localize(`VARBORG.Condition.${mark.condition}`) }));
     }
-    await user.setFlag(SYSTEM, "sustainedConditions", marks.filter(mark => mark.source !== source));
   }
   for (const actor of actorsWithBuffs()) {
     for (const item of actor.items.filter(other => other.getFlag(SYSTEM, "buff")?.source === source && other.getFlag(SYSTEM, "buff")?.sustained)) {

@@ -18,7 +18,7 @@
  */
 
 import { CONDITIONS } from "./conditions.mjs";
-import { TIMER_KINDS, isRoundsFormula } from "./timers.mjs";
+import { TIMER_KINDS, ESCAPE_KINDS, isRoundsFormula, isEscapeDr } from "./timers.mjs";
 
 /**
  * What an entry gives. Step 51d adds:
@@ -75,7 +75,9 @@ export function thrallDamage(count, { per = "", max = 0, skip = 0 } = {}) {
 }
 
 /** Who gets it: each targeted creature, the user, or the user's dance partner (GAPS 222). */
-export const OUTCOME_WHO = ["target", "self", "partner"];
+export const OUTCOME_WHO = ["target", "self", "partner",
+  // Only the targeted characters and minions, or only the targeted foes (The Rapture, step 51f).
+  "allies", "foes"];
 
 /** When: on the card's result, or when the Sustained power ends (Beast Unleashed's Fatigued). */
 export const OUTCOME_WHEN = ["result", "end"];
@@ -104,6 +106,8 @@ export function blankOutcome(kind = "condition") {
     soaked: false,
     nextOnly: false,
     test: false,
+    // A condition on targets that lasts while the spell is sustained (GAPS 233).
+    whileSustained: false,
     note: ""
   };
 }
@@ -134,13 +138,15 @@ export function outcomeProblems(entry) {
   if (["condition", "cure"].includes(entry?.kind) && !CONDITIONS.includes(entry.condition)) problems.push(`condition: ${entry.condition}`);
   if (["persistent", "damage", "thralls", "rigDamage", "ember"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
   // Healing can be "full" (Absolution, step 51e).
-  if (entry?.kind === "heal" && entry.amount !== "full" && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  // "damage": as much as the card's damage (The Rapture, step 51f).
+  if (entry?.kind === "heal" && !["full", "damage"].includes(entry.amount) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
   if (entry?.kind === "persistent" && !OUTCOME_PERSISTENT.includes(entry.damageType)) problems.push(`damageType: ${entry.damageType}`);
   if (entry?.when && !OUTCOME_WHEN.includes(entry.when)) problems.push(`when: ${entry.when}`);
   if (entry?.when === "end" && entry.who !== "self") problems.push("when the power ends: only the user");
   const duration = entry?.duration ?? {};
   if (duration.kind && !TIMER_KINDS.includes(duration.kind)) problems.push(`duration: ${duration.kind}`);
   if (duration.kind === "rounds" && !isRoundsFormula(duration.rounds)) problems.push(`rounds: ${duration.rounds}`);
+  if (ESCAPE_KINDS.includes(duration.kind) && !isEscapeDr(duration.rounds)) problems.push(`escape DR: ${duration.rounds}`);
   return problems;
 }
 
@@ -156,7 +162,7 @@ export function outcomeProblems(entry) {
  *   second only on a Triumph (GAPS 224).
  * @returns {{key: string, index: number, actorUuid: string}[]}  key: "index|uuid".
  */
-export function wantedOutcomes(entries, tier, { targets = [], user = "", partner = "", chosen = [] } = {}) {
+export function wantedOutcomes(entries, tier, { targets = [], user = "", partner = "", chosen = [], allyTargets = [], foeTargets = [] } = {}) {
   const wanted = [];
   const options = tier === "triumph" ? chosen : chosen.slice(0, 1);
   (entries ?? []).forEach((entry, index) => {
@@ -164,7 +170,9 @@ export function wantedOutcomes(entries, tier, { targets = [], user = "", partner
     if (entry.option && !options.includes(entry.option)) return;
     const actors = entry.who === "self" ? [user].filter(Boolean)
       : entry.who === "partner" ? [partner].filter(Boolean)
-        : [...new Set(targets ?? [])];
+        : entry.who === "allies" ? [...new Set(allyTargets ?? [])]
+          : entry.who === "foes" ? [...new Set(foeTargets ?? [])]
+            : [...new Set(targets ?? [])];
     for (const actorUuid of actors) wanted.push({ key: `${index}|${actorUuid}`, index, actorUuid });
   });
   return wanted;

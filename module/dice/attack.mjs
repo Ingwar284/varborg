@@ -34,6 +34,7 @@
  * Ruin, half damage on a Failure) and starts a Sustained power.
  */
 
+import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
@@ -117,6 +118,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const roll = await new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore }).evaluate();
   // Adrenaline Rush and Rattled count for this attack, then end (GAPS 80).
   await useUpNextTest(actor);
+  // "Next roll only" buffs are used up (GAPS 235).
+  await useUpNextRollBuffs(actor, ["attack"]);
 
   // Firing empties a weapon with Reload (GAPS 53). In combat, its
   // ammunition is rolled for when the combat ends (GAPS 39).
@@ -316,7 +319,7 @@ export async function settleAttackCard(actor, data) {
   // A Sustained power starts when it takes effect.
   const sustainNote = power ? await applySustain(actor, data, tier) : null;
   // What the result gives its targets and user, following Fortune (GAPS 219).
-  const given = power ? await settleOutcomes(data, tier) : { lines: [], rolls: [] };
+  const given = power ? await settleOutcomes(data, tier, { damage: damage && !damage.invalid ? damage.total : 0 }) : { lines: [], rolls: [] };
   rolls.push(...given.rolls);
 
   // Inflict damage on a foe. A Triumph's hit is soaked by the armour die

@@ -42,7 +42,8 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, runItemHooks } from "../effects.mjs";
 import { withExtraDamage, lifeForceDie, collectEffects, chosenSpellList } from "../rules/item-effects.mjs";
 import { areaTargets } from "../rules/powers.mjs";
-import { outcomeInputs } from "../outcomes.mjs";
+import { outcomeInputs, useUpNextRoll } from "../outcomes.mjs";
+import { outcomeOptions } from "../rules/outcomes.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
@@ -186,7 +187,10 @@ export async function castSpell(actor, spell) {
     conditionNotes: sanity.notes,
     reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "spell", ability: SPELL_ABILITY, damageType: spell.system.damageType ?? "" })],
     optionalEffects: await optionalEffectsField(optional),
-    fortuneFields: await fortuneFields(actor, "spell")
+    fortuneFields: await fortuneFields(actor, "spell"),
+    // Options to choose from (GAPS 224); a second one only counts on a Triumph.
+    outcomeOptions: outcomeOptions(spell.system.outcomeEffects ?? []),
+    secondOption: (spell.system.triumphPicks ?? 1) > 1
   });
   const options = await DialogV2.input({
     window: { title: i18n.format(scroll ? "VARBORG.Spell.ScrollDialogTitle" : "VARBORG.Spell.DialogTitle", { name: spell.name }) },
@@ -236,6 +240,8 @@ export async function castSpell(actor, spell) {
   const formula = `${diceFormula(diceRule)} + @ability`;
   const roll = await new Roll(formula, { ability: abilityScore }).evaluate();
   await useUpNextTest(actor);
+  // "Next roll only" buffs are used up (GAPS 235).
+  await useUpNextRoll(actor, ["spell"]);
   const pipNote = await spendPowerActions(turn, use);
 
   const damage = powerDamageDice(spell);
@@ -275,7 +281,10 @@ export async function castSpell(actor, spell) {
     upgradeSuccess: mods.some(mod => mod.upgradeSuccess),
     ignoresArmour: Boolean(spell.system.ignoresArmour),
     // What each result gives the targets and caster (step 51c).
-    outcomes: outcomeInputs(actor, spell),
+    outcomes: (() => {
+      const inputs = outcomeInputs(actor, spell);
+      return inputs ? { ...inputs, chosen: [options.option, options.option2].filter(Boolean) } : null;
+    })(),
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: spell.name,
@@ -316,9 +325,6 @@ export async function castSpell(actor, spell) {
     flags: fortuneFlags(data)
   });
 
-  // "Your next spell this turn" buffs are used up (Overcharge, Perfect casting, GAPS 231).
-  const used = actor.items.filter(item => item.getFlag("var-borg", "buff")?.nextOnly).map(item => item.id);
-  if (used.length) await actor.deleteEmbeddedDocuments("Item", used);
   // Each spell cast rolls for a Photonic Surge (Autodidactism, GAPS 208).
   await runItemHooks(actor, "cast");
   // Each wound spent tests Toughness, as a wound gained at 0 HP.

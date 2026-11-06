@@ -20,6 +20,57 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "fire"
+    "damageType": "fire",
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the flames burn for three rounds as difficult terrain; a creature that starts its turn inside takes d4"
+      },
+      {
+        "kind": "damage",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d6",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": true,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the bead bursts in your palm"
+      }
+    ],
+    "automation": "partial"
   }
 }

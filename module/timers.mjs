@@ -18,8 +18,7 @@
 
 import {
   TIMER_KINDS, isRoundsFormula, newTimer, timerAtEndOfTurn, timerAtStartOfTurn, timerEndsWithCombat,
-  timerEndsWithNewDay, longerTimer
-} from "./rules/timers.mjs";
+  timerEndsWithNewDay, longerTimer, ESCAPE_KINDS, isEscapeDr, breaksFree } from "./rules/timers.mjs";
 import { turnState } from "./combat.mjs";
 
 const SYSTEM = "var-borg";
@@ -42,6 +41,7 @@ export function timerText(timer) {
   const i18n = game.i18n;
   if (!timer) return "";
   if (timer.kind === "rounds") return i18n.format(timer.rounds === 1 ? "VARBORG.Timer.RoundLeft" : "VARBORG.Timer.RoundsLeft", { rounds: timer.rounds });
+  if (ESCAPE_KINDS.includes(timer.kind)) return i18n.format("VARBORG.Timer.EscapeText", { dr: timer.dr });
   return i18n.localize(`VARBORG.Timer.Kind.${timer.kind}`);
 }
 
@@ -52,6 +52,11 @@ export function timerText(timer) {
  */
 export async function rollTimer(actor, spec) {
   if (!spec || !TIMER_KINDS.includes(spec.kind)) return { timer: null, roll: null };
+  // An escape roll's DR (GAPS 234).
+  if (ESCAPE_KINDS.includes(spec.kind)) {
+    if (!isEscapeDr(spec.rounds)) return { timer: null, roll: null };
+    return { timer: newTimer(spec.kind, { dr: Number(spec.rounds), ownTurn: turnState(actor).onOwnTurn }), roll: null };
+  }
   let rounds = null;
   let roll = null;
   if (spec.kind === "rounds") {
@@ -118,16 +123,70 @@ function timedEffects(actor) {
   return [...(actor?.effects ?? []), ...(actor?.items ?? [])].filter(doc => doc.getFlag(SYSTEM, FLAG));
 }
 
-/** Start of the creature's turn: "until the start of its next turn" ends. */
+/** Start of the creature's turn: "until the start of its next turn" ends; escape rolls (GAPS 234). */
 export async function startOfTurnTimers(actor) {
   for (const effect of timedEffects(actor)) {
-    if (timerAtStartOfTurn(effect.getFlag(SYSTEM, FLAG)).ends) await endCondition(actor, effect);
+    const timer = effect.getFlag(SYSTEM, FLAG);
+    if (timer.kind === "escapeStart") await escapeRoll(actor, effect, timer);
+    else if (timerAtStartOfTurn(timer).ends) await endCondition(actor, effect);
   }
 }
 
-/** End of the creature's turn: rounds count down (GAPS 129). */
+/**
+ * An escape roll (GAPS 234): a foe or minion rolls a d20 and breaks free
+ * on the DR or higher; a character gets a card with a Strength test
+ * button at that DR. Not on the turn the condition was gained.
+ */
+async function escapeRoll(actor, effect, timer) {
+  if (timer.freshTurn) {
+    await effect.setFlag(SYSTEM, FLAG, { ...timer, freshTurn: false });
+    return;
+  }
+  const i18n = game.i18n;
+  const condition = [...effect.statuses].map(id => i18n.localize(`VARBORG.Condition.${id}`)).join(", ");
+  if (actor.type === "character") {
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(i18n.format("VARBORG.Timer.EscapeAsk", { name: actor.name, condition, dr: timer.dr }))}</p>`
+        + `<button type="button" data-action="escapeTest" data-actor-uuid="${actor.uuid}" data-effect-id="${effect.id}" data-dr="${timer.dr}">`
+        + `<i class="fa-solid fa-link-slash"></i> ${foundry.utils.escapeHTML(i18n.format("VARBORG.Timer.EscapeButton", { dr: timer.dr }))}</button></div>`
+    });
+    return;
+  }
+  const roll = await new Roll("1d20").evaluate();
+  const free = breaksFree(roll.total, timer.dr);
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(i18n.format(free ? "VARBORG.Timer.EscapeFree" : "VARBORG.Timer.EscapeHeld", { name: actor.name, condition, roll: roll.total, dr: timer.dr }))}</p></div>`,
+    rolls: [roll],
+    sound: CONFIG.sounds.dice
+  });
+  if (free) await effect.delete();
+}
+
+/** The Strength test button on a character's escape card (GAPS 234). */
+export function addEscapeListeners(message, html) {
+  const button = html.querySelector("button[data-action='escapeTest']");
+  if (!button) return;
+  button.addEventListener("click", async () => {
+    const actor = await fromUuid(button.dataset.actorUuid);
+    if (!actor?.isOwner) return;
+    button.disabled = true;
+    const { rollAbilityTest } = await import("./dice/ability-test.mjs");
+    const result = await rollAbilityTest(actor, "strength", { dr: Number(button.dataset.dr), purpose: game.i18n.localize("VARBORG.Timer.EscapePurpose") });
+    if (result && ["success", "triumph"].includes(result.tier)) await actor.effects.get(button.dataset.effectId)?.delete();
+    else if (!result) button.disabled = false;
+  });
+}
+
+/** End of the creature's turn: rounds count down (GAPS 129); escape rolls at the end (GAPS 234). */
 export async function endOfTurnTimers(actor) {
   for (const effect of timedEffects(actor)) {
+    if (effect.getFlag(SYSTEM, FLAG)?.kind === "escapeEnd") {
+      await escapeRoll(actor, effect, effect.getFlag(SYSTEM, FLAG));
+      continue;
+    }
+    if (ESCAPE_KINDS.includes(effect.getFlag(SYSTEM, FLAG)?.kind)) continue;
     const next = timerAtEndOfTurn(effect.getFlag(SYSTEM, FLAG));
     if (next.ends) await endCondition(actor, effect);
     else await effect.setFlag(SYSTEM, FLAG, next.timer);

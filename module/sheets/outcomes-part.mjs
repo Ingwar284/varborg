@@ -37,8 +37,9 @@ export function outcomesContext(document) {
         isDamage: entry.kind === "damage",
         isBuff: entry.kind === "buff",
         isWound: entry.kind === "wound",
+        canSustain: entry.kind === "condition" && entry.who !== "self",
         hasDuration: ["condition", "buff"].includes(entry.kind),
-        isRounds: entry.duration?.kind === "rounds"
+        isRounds: ["rounds", "escapeStart", "escapeEnd"].includes(entry.duration?.kind)
       }))
     }
   };

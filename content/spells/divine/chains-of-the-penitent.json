@@ -20,6 +20,81 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant"
+    "damageType": "radiant",
+    "outcomeEffects": [
+      {
+        "kind": "condition",
+        "who": "target",
+        "tiers": {
+          "triumph": false,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "restrained",
+        "duration": {
+          "kind": "escapeEnd",
+          "rounds": "12"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "each failed attempt deals d4 radiant damage"
+      },
+      {
+        "kind": "condition",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": false,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "restrained",
+        "duration": {
+          "kind": "escapeEnd",
+          "rounds": "14"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "each failed attempt deals d4 radiant damage"
+      },
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "restrained",
+        "duration": {
+          "kind": "rounds",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": ""
+      }
+    ],
+    "automation": "auto"
   }
 }

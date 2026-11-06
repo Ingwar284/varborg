@@ -20,6 +20,81 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "fire"
+    "damageType": "fire",
+    "outcomeEffects": [
+      {
+        "kind": "persistent",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": false,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d4",
+        "option": "",
+        "when": "result",
+        "damageType": "fire",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": ""
+      },
+      {
+        "kind": "damage",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d4",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": true,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the screams are yours"
+      },
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "deafened",
+        "duration": {
+          "kind": "rounds",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": ""
+      }
+    ],
+    "automation": "auto"
   }
 }

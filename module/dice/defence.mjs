@@ -25,6 +25,7 @@
  * module/rules/conditions.mjs; this file only asks, rolls and shows.
  */
 
+import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr, wornArmour, isEncumbered } from "../rules/test-modifiers.mjs";
 import { carrying } from "../rules/carrying.mjs";
@@ -131,6 +132,8 @@ export async function rollDefence(actor, attack) {
   const roll = await new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore }).evaluate();
   // Adrenaline Rush and Rattled count for this defence, then end (GAPS 80).
   await useUpNextTest(actor);
+  // "Next roll only" buffs are used up (GAPS 235).
+  await useUpNextRollBuffs(actor, ["defence"]);
   // A mark for the foe's next attack only is used up (Needle-Spray, GAPS 223).
   if (foe?.type === "foe") await useUpNextAttackMarks(foe);
 

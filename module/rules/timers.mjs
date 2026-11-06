@@ -26,7 +26,29 @@ import { countDown } from "./panic.mjs";
  * encounter    ends when combat ends;
  * nextDay      ends when the next day begins.
  */
-export const TIMER_KINDS = ["rounds", "startOfTurn", "encounter", "nextDay"];
+export const TIMER_KINDS = ["rounds", "startOfTurn", "encounter", "nextDay",
+  // Escape rolls (GAPS 234): at the start or the end of each of the
+  // creature's turns it tries to break free, d20 against `dr` (a
+  // character tests Strength at that DR instead).
+  "escapeStart", "escapeEnd"];
+
+/** The escape timers (GAPS 234). */
+export const ESCAPE_KINDS = ["escapeStart", "escapeEnd"];
+
+/** An escape DR: a whole number from 2 to 30, such as 12. */
+export function isEscapeDr(text) {
+  const dr = Number(String(text ?? "").trim());
+  return Number.isInteger(dr) && dr >= 2 && dr <= 30;
+}
+
+/**
+ * Does an escape roll break free? A foe rolls a d20 against the DR.
+ * @param {number} roll  The d20.
+ * @param {number} dr
+ */
+export function breaksFree(roll, dr) {
+  return roll >= dr;
+}
 
 /** How many rounds: a whole number such as 1, or dice such as d4 or 2d6. */
 export function isRoundsFormula(text) {
@@ -42,8 +64,12 @@ export function isRoundsFormula(text) {
  *   which does not count.
  * @returns {{kind: string, rounds: number|null, freshTurn: boolean}}
  */
-export function newTimer(kind, { rounds = null, ownTurn = false } = {}) {
+export function newTimer(kind, { rounds = null, ownTurn = false, dr = null } = {}) {
   if (!TIMER_KINDS.includes(kind)) throw new RangeError(`Unknown timer ${kind}`);
+  if (ESCAPE_KINDS.includes(kind)) {
+    if (!isEscapeDr(dr)) throw new RangeError(`An escape DR must be 2 to 30, got ${dr}`);
+    return { kind, rounds: null, dr: Number(dr), freshTurn: Boolean(ownTurn) };
+  }
   if (kind === "rounds" && (!Number.isInteger(rounds) || rounds < 1)) {
     throw new RangeError(`Rounds must be a whole number of 1 or more, got ${rounds}`);
   }
@@ -91,6 +117,7 @@ function reach(timer) {
   if (!timer) return Infinity;
   if (timer.kind === "nextDay") return 1e7;
   if (timer.kind === "encounter") return 1e6;
+  if (ESCAPE_KINDS.includes(timer.kind)) return 5e5;
   if (timer.kind === "rounds") return timer.rounds + (timer.freshTurn ? 0.5 : 0);
   return 0.25;
 }

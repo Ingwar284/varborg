@@ -15,6 +15,7 @@
  * All the maths lives in the rules files; this file only asks, rolls and shows.
  */
 
+import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import {
   DR_TABLE, DR_DEFAULT, MODE,
   diceMode, diceFormula, aidModifier, resolveTest
@@ -109,6 +110,8 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
     flags: fortune ? fortuneFlags(data) : {}
   });
   await useUpNextTest(actor);
+  // "Next roll only" buffs are used up (GAPS 235).
+  await useUpNextRollBuffs(actor, ["test"]);
   return result;
 }
 

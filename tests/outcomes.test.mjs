@@ -71,3 +71,11 @@ test("healing can be full; quarry, subject and Ember entries (step 51e)", () => 
   assert.deepEqual(outcomeProblems({ ...blankOutcome("quarry") }), []);
   assert.deepEqual(outcomeProblems({ ...blankOutcome("ember"), amount: "1" }), []);
 });
+
+test("allies and foes among the targets; healing as much as the damage (step 51f)", () => {
+  const heal = { ...blankOutcome("heal"), who: "allies", amount: "damage" };
+  const who = { targets: ["a", "f"], allyTargets: ["a"], foeTargets: ["f"], user: "me" };
+  assert.deepEqual(wantedOutcomes([heal], "success", who).map(w => w.actorUuid), ["a"]);
+  assert.deepEqual(wantedOutcomes([{ ...heal, who: "foes" }], "success", who).map(w => w.actorUuid), ["f"]);
+  assert.deepEqual(outcomeProblems(heal), []);
+});

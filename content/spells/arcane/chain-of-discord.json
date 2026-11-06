@@ -20,6 +20,57 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "lightning"
+    "damageType": "lightning",
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "it strikes d6 creatures, each within 30' of the last (target them); one already damaged this round takes +d6; on a Failure only the first"
+      },
+      {
+        "kind": "damage",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d6",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": true,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the last leap comes home"
+      }
+    ],
+    "automation": "partial"
   }
 }

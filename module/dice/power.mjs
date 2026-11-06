@@ -19,6 +19,7 @@
  * The maths lives in module/rules/powers.mjs.
  */
 
+import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import {
   powerDr, powerAbility, powerOutcome, powerUse, sustainCost, sustainAtEndOfTurn, startsSustaining,
   powerDamageFormula, BARE_WEAPONS
@@ -346,6 +347,8 @@ async function rollPowerTest(actor, power) {
   const formula = `${diceFormula(diceRule)} + @ability`;
   const roll = await new Roll(formula, { ability: abilityScore }).evaluate();
   await useUpNextTest(actor);
+  // "Next roll only" buffs are used up (GAPS 235).
+  await useUpNextRollBuffs(actor, ["power"]);
   const pipNote = await spendPowerActions(turn, use);
 
   const weapon = weapons.length ? (weapons.find(choice => choice.id === options.weapon) ?? weapons[0]) : null;

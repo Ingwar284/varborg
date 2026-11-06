@@ -1310,7 +1310,21 @@ one fight and one rest.
         take a die off damage of any type from each hit (Ward of the
         faithful, Guardian's Orbit); roll effects can be limited to one
         power by name (Blood nova's +d6 per wound). EFFECTS_CONTENT 21.
-    - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
+    - 51f. Spells (64), in two parts (rulings GAPS 233–235):
+      - ~~51f. Tools, then the Arcane and Divine spells.~~ Done: 32
+        spells have a status (9 auto, 19 partial, 4 text). New: options
+        in the spell dialog; healing "damage" (as much as the card's
+        damage: Hope's Prayer, The Rapture); entries for only the
+        targeted allies or only the targeted foes; "while sustained"
+        conditions on targets end with the spell and can still have a
+        timer; escape-roll timers (at the start or end of the creature's
+        turns: a foe rolls d20 against the DR, a character gets a Strength
+        test button; The King's Command's Sanity test is a note); "next
+        roll only" buffs on characters are used up by the first roll of
+        their kind. EFFECTS_CONTENT 22.
+      - 51f2. The Primal and Profane spells (32); the powers that need
+        escape rolls or next-roll buffs get them.
+    - 51g. Rituals (63), mostly text with a reminder.
 
 **Milestone 11 review:** a Warrior, a Wizard and a Priest against three
 foes, with area spells.

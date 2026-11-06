@@ -11,7 +11,7 @@ import {
 } from "../module/rules/timers.mjs";
 
 test("timer kinds: rounds, until the start of its next turn, until the end of the encounter, until the next day", () => {
-  assert.deepEqual(TIMER_KINDS, ["rounds", "startOfTurn", "encounter", "nextDay"]);
+  assert.deepEqual(TIMER_KINDS, ["rounds", "startOfTurn", "encounter", "nextDay", "escapeStart", "escapeEnd"]);
   assert.throws(() => newTimer("minutes"), RangeError);
   assert.throws(() => newTimer("rounds", { rounds: 0 }), RangeError);
   assert.throws(() => newTimer("rounds"), RangeError);
@@ -59,7 +59,7 @@ test("'until the end of the encounter' only ends with combat; every timer ends w
   assert.equal(timerAtEndOfTurn(timer).ends, false);
   assert.equal(timerAtStartOfTurn(timer).ends, false);
   for (const kind of TIMER_KINDS.filter(kind => kind !== "nextDay")) {
-    assert.equal(timerEndsWithCombat(newTimer(kind, { rounds: 2 })), true);
+    assert.equal(timerEndsWithCombat(newTimer(kind, { rounds: 2, dr: 12 })), true);
   }
   assert.equal(timerEndsWithCombat(null), false);
 });
@@ -86,4 +86,16 @@ test("gained again: the longer lasting one stays; no timer stays no timer (GAPS 
   assert.equal(longerTimer(start, one), one);
   assert.equal(longerTimer(four, encounter), encounter);
   assert.equal(longerTimer(null, encounter), null);
+});
+
+test("escape rolls: a DR from 2 to 30, broken free on the DR or higher (step 51f, GAPS 234)", async () => {
+  const { isEscapeDr, breaksFree } = await import("../module/rules/timers.mjs");
+  assert.deepEqual(newTimer("escapeEnd", { dr: 12 }), { kind: "escapeEnd", rounds: null, dr: 12, freshTurn: false });
+  assert.throws(() => newTimer("escapeStart", { dr: 40 }), RangeError);
+  assert.equal(isEscapeDr("14"), true);
+  assert.equal(isEscapeDr("d4"), false);
+  assert.equal(breaksFree(12, 12), true);
+  assert.equal(breaksFree(11, 12), false);
+  assert.equal(timerAtStartOfTurn(newTimer("escapeStart", { dr: 12 })).ends, false);
+  assert.equal(timerAtEndOfTurn(newTimer("escapeEnd", { dr: 12 })).ends, false);
 });

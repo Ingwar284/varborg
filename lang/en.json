@@ -1643,7 +1643,9 @@
         "rounds": "For a number of rounds",
         "startOfTurn": "Until the start of its next turn",
         "encounter": "Until the end of the encounter",
-        "nextDay": "Until the next day begins"
+        "nextDay": "Until the next day begins",
+        "escapeStart": "Escape roll at the start of its turns (DR)",
+        "escapeEnd": "Escape roll at the end of its turns (DR)"
       },
       "RoundLeft": "1 round left",
       "RoundsLeft": "{rounds} rounds left",
@@ -1664,7 +1666,13 @@
       "RolledFlavour": "How long {condition} lasts (rounds)",
       "FieldHint": "How long the condition lasts. “Until the end of its next turn” is 1 round.",
       "FailureLasts": "Failure condition lasts",
-      "RuinLasts": "Ruin condition lasts"
+      "RuinLasts": "Ruin condition lasts",
+      "EscapeText": "until it breaks free (d20 ≥ {dr})",
+      "EscapeAsk": "{name} tries to break free of {condition}: test Strength DR{dr}.",
+      "EscapeButton": "Strength test (DR{dr}) to break free",
+      "EscapeFree": "{name} rolls {roll} (DR{dr}) and breaks free: no longer {condition}.",
+      "EscapeHeld": "{name} rolls {roll} (DR{dr}) and stays {condition}.",
+      "EscapePurpose": "Breaking free"
     },
     "Shadowblight": {
       "Button": "Roll on the Shadowblight table",
@@ -3020,7 +3028,7 @@
       "WhoLabel": "To",
       "Kind": {
         "condition": "A condition",
-        "heal": "Healing",
+        "heal": "Healing (an amount, full, or damage: as much as the card's damage)",
         "buff": "A buff (the effects below)",
         "reminder": "A reminder (note only)",
         "persistent": "Persistent damage",
@@ -3040,7 +3048,9 @@
       "Who": {
         "target": "Each target",
         "self": "The user",
-        "partner": "The dance partner"
+        "partner": "The dance partner",
+        "allies": "Each targeted ally",
+        "foes": "Each targeted foe"
       },
       "DurationHint": "How long a condition or buff lasts. On the user of a Sustained power: until the power ends.",
       "HealLabel": "Amount",
@@ -3061,8 +3071,8 @@
       "WhenLabel": "When",
       "Soaked": "Armour soaks",
       "SoakedHint": "Tick when armour soaks this damage. Unticked: nothing reduces it.",
-      "NextOnly": "Next attack only",
-      "NextOnlyHint": "The buff ends after the creature's next attack has been defended against (Needle-Spray).",
+      "NextOnly": "Next roll only",
+      "NextOnlyHint": "On a foe: ends after its next attack has been defended against. On a character: ends after the first roll it helps.",
       "OptionPlaceholder": "Option",
       "OptionHint": "The option this belongs to, such as Allegro. Leave empty for always. The power dialog asks which option.",
       "TriumphPicks": "Options on a Triumph",
@@ -3097,7 +3107,11 @@
       "TestHint": "Ticked: the usual Toughness DR12 test follows, as for life force (Overcharge). Unticked: no test (Crimson bargain).",
       "Wound": "{name} gains a wound ({wounds}/{max}), with no Table of Agony.",
       "WoundTest": "{name} gains a wound ({wounds}/{max}) and tests Toughness.",
-      "WoundAtMax": "{name} is at maximum wounds: no wound is added."
+      "WoundAtMax": "{name} is at maximum wounds: no wound is added.",
+      "WhileSustained": "While sustained",
+      "WhileSustainedHint": "The condition lasts while the spell or power is sustained, and ends on every target when it ends.",
+      "ConditionOf": "{name} is no longer {condition}",
+      "NextRollUsed": "{name} used up {list}."
     }
   }
 }

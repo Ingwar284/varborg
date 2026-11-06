@@ -45,6 +45,8 @@ export function outcomeFields() {
       nextOnly: new BooleanField({ initial: false }),
       // A wound with the usual Toughness test (Overcharge, GAPS 232).
       test: new BooleanField({ initial: false }),
+      // On targets: lasts while the spell or power is sustained (GAPS 233).
+      whileSustained: new BooleanField({ initial: false }),
       note: new StringField({ required: true, blank: true, initial: "" })
     })),
     // Thralls the power destroys when used (GAPS 225): none, one, as many

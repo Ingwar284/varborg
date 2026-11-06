@@ -17,6 +17,7 @@
  * The maths lives in module/rules/gloom.mjs.
  */
 
+import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import { gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderConditions } from "../rules/gloom.mjs";
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
@@ -216,6 +217,8 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
   const formula = `${diceFormula(diceRule)} + @ability`;
   const roll = await new Roll(formula, { ability: abilityScore }).evaluate();
   await useUpNextTest(actor);
+  // "Next roll only" buffs are used up (GAPS 235).
+  await useUpNextRollBuffs(actor, ["gloomTest", test.own ? "test" : "defence"]);
   // A mark for the foe's next attack only is used up (GAPS 223).
   if (foe?.type === "foe") await useUpNextAttackMarks(foe);
 

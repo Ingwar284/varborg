@@ -62,5 +62,17 @@
     <input id="var-borg-spell-bane" type="checkbox" name="bane">
     <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
   </div>
+  {{#if outcomeOptions.length}}
+  <div class="form-group">
+    <label for="var-borg-spell-option">{{localize "VARBORG.Outcome.Option"}}</label>
+    <select id="var-borg-spell-option" name="option">{{#each outcomeOptions}}<option value="{{this}}">{{this}}</option>{{/each}}</select>
+  </div>
+  {{#if secondOption}}
+  <div class="form-group">
+    <label for="var-borg-spell-option2">{{localize "VARBORG.Outcome.SecondOption"}}</label>
+    <select id="var-borg-spell-option2" name="option2"><option value=""></option>{{#each outcomeOptions}}<option value="{{this}}">{{this}}</option>{{/each}}</select>
+  </div>
+  {{/if}}
+  {{/if}}
   {{{fortuneFields}}}
 </div>
