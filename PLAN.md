@@ -1149,8 +1149,14 @@ every feat in the batch ends with a status.
       Lance, Cutting remark), Titan's grip, a minion of a rolled tier
       (Chains of gratitude). Brinkwalker's Adrenaline feats are ticks
       and reminders until 51a tracks Adrenaline. EFFECTS_CONTENT 9.
-    - 50d. Class feats: Dancer, Druid, Fleshwright, Gravecaller, Hedge
-      Mage.
+    - ~~50d. Class feats: Dancer, Druid, Fleshwright, Gravecaller, Hedge
+      Mage.~~ Done: 40 feats have a status. New: a feat button that lowers
+      damage on defence and gloom cards (Thickened dermis, Magical
+      calluses; a hit still deals 1), immunity to a damage type (Internal
+      alchemy), natural armour only without worn armour (Barkskin).
+      Feats that lean on class features (dance partner, Primal Conduit
+      stances, thralls, Photonic Surge) are reminders until 51a.
+      EFFECTS_CONTENT 10.
     - 50e. Class feats: Paladin, Priest, Ranger, Rogue, Scholar.
     - 50f. Class feats: Skullrider, Sorcerer, Sword Saint, Warrior, Witch
       Hunter, Wizard.

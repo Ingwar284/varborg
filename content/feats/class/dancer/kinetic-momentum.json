@@ -9,6 +9,42 @@
     "belongsTo": "Dancer",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "attack",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "optional",
+        "grant": "",
+        "dr": 0,
+        "damage": "d4",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "you moved at least 20' this turn"
+      }
+    ],
+    "automation": "auto"
   }
 }

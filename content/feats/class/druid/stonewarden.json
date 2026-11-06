@@ -9,6 +9,42 @@
     "belongsTo": "Druid",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "reminder",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "power",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "stonewarden stance: allies attacked in your Primal Conduit aura defend with -2 DR, and your Primal Blast knocks its target Prone"
+      }
+    ],
+    "automation": "partial"
   }
 }

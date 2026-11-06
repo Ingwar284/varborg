@@ -11,7 +11,7 @@ import {
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
   unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
-  resistsFor, resistedDamage, isGiftUuid, minionTierFor
+  resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -479,4 +479,16 @@ test("Titan's grip, set damage and the rolled minion tier (step 50c)", () => {
   assert.equal(lance.setDamage, "d10");
   assert.deepEqual([1, 2, 3].map(minionTierFor), ["pitiful", "weak", "moderate"]);
   assert.equal(minionTierFor(undefined), "weak");
+});
+
+test("feats lowering damage keep a hit at 1; poison immunity; Barkskin's target (step 50d)", () => {
+  assert.equal(featLoweredDamage(5, [3]), 2);
+  assert.equal(featLoweredDamage(5, [6]), 1);
+  assert.equal(featLoweredDamage(0, [2]), 0);
+  assert.equal(resistedDamage(9, [{ resist: "immune" }]), 0);
+  const lower = { ...blankEffect("use"), action: "lowerDamage", roll: "defence", amount: "d4", item: "Dermis", itemId: "d" };
+  assert.equal(cardButtons([lower], "defence", { taken: 4 }).length, 1);
+  assert.equal(cardButtons([lower], "defence", { taken: 1 }).length, 0);
+  assert.equal(cardButtons([lower], "defence", { taken: 4, used: ["d"] }).length, 0);
+  assert.ok(STAT_TARGETS.includes("soakNoArmour"));
 });

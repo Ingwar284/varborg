@@ -9,6 +9,42 @@
     "belongsTo": "Druid",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "reminder",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "power",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "flamewalker stance: your Primal Conduit aura singes foes for d4 instead of 1, and your Primal Blast deals d4 persistent fire damage"
+      }
+    ],
+    "automation": "partial"
   }
 }

@@ -9,6 +9,42 @@
     "belongsTo": "Fleshwright",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "initiative",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "you always start at the top of initiative and cannot be surprised"
+      }
+    ],
+    "automation": "partial"
   }
 }

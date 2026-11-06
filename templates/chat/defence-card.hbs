@@ -33,6 +33,9 @@
     {{#if damage.soakDie}}
     <p class="damage-line">{{localize "VARBORG.Defence.Soak"}} ({{damage.soakDie}}): −{{damage.soak}}</p>
     {{/if}}
+    {{#if damage.featLowered}}
+    <p class="damage-line">{{localize "VARBORG.Effects.FeatLowered"}}: −{{damage.featLowered}}</p>
+    {{/if}}
     {{#if damage.lowered}}
     <p class="damage-line">{{localize "VARBORG.Fortune.Lowered"}}: −{{damage.lowered}}</p>
     {{/if}}

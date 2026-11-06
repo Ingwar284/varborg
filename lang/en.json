@@ -2585,7 +2585,8 @@
         "armourAgilityMax": "Most DR from armour on Agility tests",
         "heavyDefenceIgnored": "Heavy armour adds no defence DR (1 = yes)",
         "chanceSplit": "Chance Die without Neutral: Positive from",
-        "twoHandedVersatile": "Two-handed weapons are versatile (1 = yes)"
+        "twoHandedVersatile": "Two-handed weapons are versatile (1 = yes)",
+        "soakNoArmour": "Natural armour while wearing none (tier)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2711,7 +2712,8 @@
         "success": "Offer a Success on failed cards",
         "chanceDie": "Roll the Chance Die",
         "makeMinion": "Make a minion (Weak, or its tier rolled with the amount)",
-        "switchOn": "Switch on until the encounter ends"
+        "switchOn": "Switch on until the encounter ends",
+        "lowerDamage": "Offer −damage on defence cards"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2776,6 +2778,9 @@
       "RerollHint": "Which cards get the item’s Reroll button.",
       "RerollButton": "Reroll ({item})",
       "SuccessButton": "Success ({item})",
+      "LowerButton": "{item}: −{amount} damage",
+      "LowerLog": "{name} uses {item}: damage {value}",
+      "FeatLowered": "Lowered by feats (at least 1)",
       "SuccessLog": "{name} uses {item}: the test counts as a Success",
       "FailedAgain": "{item} fails again: {note}",
       "ChanceRolled": "{item}: the Chance Die is rolled ({note}).",
@@ -2796,7 +2801,9 @@
         "reduce": "Reduce the damage by",
         "halfLine": "{item}: {type} damage halved",
         "doubleLine": "{item}: {type} damage doubled",
-        "reduceLine": "{item}: {type} damage −{value}"
+        "reduceLine": "{item}: {type} damage −{value}",
+        "immune": "No damage at all",
+        "immuneLine": "{item}: immune to {type} damage"
       },
       "DamageTypeHint": "Only with damage of this type (Firebug: fire).",
       "AnyDamageType": "any damage",

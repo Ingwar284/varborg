@@ -48,6 +48,7 @@ import { addTimedCondition } from "../timers.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { withStat, statDrMods } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
+import { featLoweredDamage } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -231,7 +232,10 @@ export async function settleDefenceCard(actor, data) {
     const resist = await rollResists(actor, inputs.agonyType, state.resist);
     state.resist = resist.kept;
     rolls.push(...resist.rolls);
-    const { taken, resisted } = takenWithResists(before, usual, state.soak, state.resist);
+    const { taken: resistedTaken, resisted } = takenWithResists(before, usual, state.soak, state.resist);
+    // Feats that lower damage taken (step 50d), then Fortune.
+    const taken = featLoweredDamage(resistedTaken, state.featLowered);
+    const featLowered = resistedTaken - taken;
     const lowered = taken - lowerDamage(taken, state.lowered);
     damage = {
       formula: inputs.damageFormula,
@@ -241,6 +245,7 @@ export async function settleDefenceCard(actor, data) {
       resistLines: resistLines(state.resist),
       soakDie: inputs.soakDie,
       soak: state.soak,
+      featLowered,
       lowered,
       taken: taken - lowered,
       minimum: taken > 0 && taken > resisted - state.soak
@@ -332,7 +337,10 @@ export function defenceModifiers(actor) {
   const { state } = carrying(items, actor.system.abilities.toughness, actor.system.statBonuses);
   const carryingState = carryingWithConditions(actor.statuses, state);
   const nameOf = data => (data ? actor.items.get(data.id)?.name ?? null : null);
-  const natural = actor.system.statBonuses?.soak;
+  // Natural armour; Barkskin's only while no armour is worn (step 50d).
+  const bonuses = actor.system.statBonuses ?? {};
+  const bare = armour ? null : bonuses.soakNoArmour;
+  const natural = withStat(0, bare) > withStat(0, bonuses.soak) ? bare : bonuses.soak;
   const soak = bestSoak(armour, withStat(0, natural));
   return {
     armour,

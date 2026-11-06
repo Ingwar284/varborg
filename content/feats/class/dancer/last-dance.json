@@ -9,6 +9,42 @@
     "belongsTo": "Dancer",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "zeroHp",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "your dance partner may use its reaction to make a melee attack against a foe within reach"
+      }
+    ],
+    "automation": "partial"
   }
 }

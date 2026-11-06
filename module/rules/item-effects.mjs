@@ -60,11 +60,11 @@ export const VERSUS = ["", "chosenCategory", "chosenDamageType"];
 
 /**
  * What a resist effect does to damage of its type (step 50b3b): half it
- * (rounded down), double it, or reduce it by `amount` (Ancestral
- * Resonance: d6). The type is `damageType`, or the type picked by the
+ * (rounded down), double it, reduce it by `amount` (Ancestral
+ * Resonance: d6), or take none of it (Internal alchemy: poison, step 50d). The type is `damageType`, or the type picked by the
  * item's choice when `vs` is "chosenDamageType".
  */
-export const RESIST_MODES = ["half", "double", "reduce"];
+export const RESIST_MODES = ["half", "double", "reduce", "immune"];
 
 /**
  * The moments a hook effect can act at (step 49f):
@@ -124,6 +124,8 @@ export const HOOK_ACTIONS = [
  *   (Human Ingenuity, GAPS 198).
  * chanceDie: rolls the Chance Die (Pack Rat, step 50b2).
  * gainFortune: gains `amount` Fortune (the Clan Heirloom, step 50b4).
+ * lowerDamage: a button on defence and gloom cards with damage, taking
+ *   `amount` off it; a hit still deals at least 1 (step 50d).
  * makeMinion: makes a Weak minion for the character, named by the
  *   player, once (Beast-Tamer, GAPS 201). With `amount` (d3), its tier
  *   is rolled (Chains of gratitude, step 50c).
@@ -132,7 +134,21 @@ export const HOOK_ACTIONS = [
  * A reroll or success button can be limited to some cards with `requires`
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
-export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn"];
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage"];
+
+/** The card actions an item can offer (steps 49g, 50b2, 50d). */
+export const CARD_ACTIONS = ["reroll", "success", "lowerDamage"];
+
+/**
+ * Damage after feats lowered it by their rolls (Thickened dermis, Magical
+ * calluses, step 50d): a hit still deals at least 1.
+ * @param {number} taken     Damage after armour.
+ * @param {number[]} rolls   The rolls of each feat.
+ */
+export function featLoweredDamage(taken, rolls = []) {
+  if (!(taken > 0)) return 0;
+  return Math.max(1, taken - (rolls ?? []).reduce((sum, value) => sum + value, 0));
+}
 
 /**
  * A minion's tier from a roll (Chains of gratitude: d3, 1 Pitiful, 2 Weak,
@@ -210,6 +226,8 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * (Armoured Paragon 2, step 50b2).
  * heavyDefenceIgnored: set 1, heavy (t3) armour adds no DR to defence
  * (Armoured Paragon).
+ * soakNoArmour: natural armour's soak tier while no armour is worn
+ * (Barkskin t2, GAPS 188, step 50d).
  * twoHandedVersatile: set 1, two-handed weapons are versatile and can be
  * held in one hand (Titan's grip, step 50c).
  * chanceSplit: set, the Chance Die has no Neutral: below this Negative
@@ -219,7 +237,7 @@ export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
   ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie",
   "unarmedDie", "rangePercent", "reloadActions",
-  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile"
+  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile", "soakNoArmour"
 ];
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
@@ -566,7 +584,7 @@ export function effectProblems(effect) {
     check("action", HOOK_ACTIONS);
     check("mode", ROLL_MODES);
     check("requires", HOOK_REQUIRES);
-    if (["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
     if (effect.action === "rollTwice") check("keep", KEEPS);
     const events = ACTION_EVENTS[effect.action];
@@ -585,9 +603,9 @@ export function effectProblems(effect) {
   }
   if (effect.kind === "use") {
     check("action", USE_ACTIONS);
-    if (["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
-    if (["reroll", "success"].includes(effect.action)) {
+    if (CARD_ACTIONS.includes(effect.action)) {
       check("roll", ROLL_KINDS);
       if (effect.requires) check("requires", CARD_REQUIRES);
       if (effect.failAgain) check("failAgain", FAIL_AGAIN);
@@ -710,6 +728,7 @@ export function resistsFor(effects, damageType) {
  */
 export function resistedDamage(damage, resists, reductions = []) {
   let result = damage;
+  if ((resists ?? []).some(effect => effect.resist === "immune")) return 0;
   for (const effect of resists ?? []) if (effect.resist === "half") result = Math.floor(result / 2);
   for (const effect of resists ?? []) if (effect.resist === "double") result *= 2;
   result -= (reductions ?? []).reduce((sum, value) => sum + value, 0);
@@ -730,7 +749,8 @@ export function cardButtons(effects, rollKind, card = {}) {
   const failed = ["failure", "ruin"].includes(card.tier);
   const found = new Map();
   for (const effect of effects ?? []) {
-    if (effect.kind !== "use" || !["reroll", "success"].includes(effect.action) || effect.roll !== rollKind) continue;
+    if (effect.kind !== "use" || !CARD_ACTIONS.includes(effect.action) || effect.roll !== rollKind) continue;
+    if (effect.action === "lowerDamage" && !(card.taken > 1)) continue;
     if (effect.frequency && effect.used) continue;
     if ((card.used ?? []).includes(effect.itemId)) continue;
     if (effect.ability && effect.ability !== card.ability) continue;
@@ -740,7 +760,7 @@ export function cardButtons(effects, rollKind, card = {}) {
     if (effect.action === "success" && !failed) continue;
     const key = `${effect.itemId}:${effect.action}`;
     if (!found.has(key)) {
-      found.set(key, { item: effect.item, itemId: effect.itemId, action: effect.action, failAgain: effect.failAgain ?? "", note: effect.note ?? "" });
+      found.set(key, { item: effect.item, itemId: effect.itemId, action: effect.action, failAgain: effect.failAgain ?? "", note: effect.note ?? "", amount: effect.amount ?? "" });
     }
   }
   return [...found.values()];

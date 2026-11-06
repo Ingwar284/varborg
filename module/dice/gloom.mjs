@@ -34,6 +34,7 @@ import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { statDrMods } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
+import { featLoweredDamage } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -286,7 +287,10 @@ export async function settleGloomCard(actor, data) {
     const resist = await rollResists(actor, inputs.damageType ?? "", state.resist);
     state.resist = resist.kept;
     rolls.push(...resist.rolls);
-    const { taken, resisted } = takenWithResists(before, usual, state.soak, state.resist);
+    const { taken: resistedTaken, resisted } = takenWithResists(before, usual, state.soak, state.resist);
+    // Feats that lower damage taken (step 50d), then Fortune.
+    const taken = featLoweredDamage(resistedTaken, state.featLowered);
+    const featLowered = resistedTaken - taken;
     const lowered = taken - lowerDamage(taken, state.lowered);
     damage = {
       formula: part.text,
@@ -297,6 +301,7 @@ export async function settleGloomCard(actor, data) {
       resistLines: resistLines(state.resist),
       soakDie: inputs.soakDie,
       soak: state.soak,
+      featLowered,
       lowered,
       taken: taken - lowered,
       minimum: taken > 0 && taken > resisted - state.soak

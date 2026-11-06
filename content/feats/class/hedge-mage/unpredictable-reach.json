@@ -9,6 +9,42 @@
     "belongsTo": "Hedge Mage",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "newDay",
+        "action": "roll",
+        "amount": "d4",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "your spells' reach today: 1 touch, 2 30', 3 60', 4 120'"
+      }
+    ],
+    "automation": "auto"
   }
 }
