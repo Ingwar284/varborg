@@ -13,7 +13,7 @@
  */
 
 import {
-  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits
+  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits, changedSpeeds
 } from "./rules/item-effects.mjs";
 import { gainEmber } from "./pools.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
@@ -201,6 +201,71 @@ export async function countKill(actor) {
   await actor.setFlag("var-borg", "kills", { combat: game.combat.id, count: killsThisCombat(actor) + 1 });
 }
 
+/**
+ * The character's companions of a kind (step 50g): the minions they own,
+ * or the vehicles they are aboard (the rig they drive).
+ */
+function companionsOf(actor, kind) {
+  if (kind === "minion") return game.actors.filter(other => other.type === "minion" && other.system.owner === actor.id);
+  return game.actors.filter(other => other.type === "vehicle" && (other.system.occupants ?? []).some(occupant => occupant.uuid === actor.uuid));
+}
+
+/** Pick one companion: the only one, or the player's choice. */
+async function pickCompanion(actor, effect) {
+  const i18n = game.i18n;
+  const found = companionsOf(actor, effect.companion);
+  if (!found.length) {
+    ui.notifications.warn(i18n.format(`VARBORG.Effects.NoCompanion.${effect.companion}`, { item: effect.item, name: actor.name }));
+    return null;
+  }
+  if (found.length === 1) return found[0];
+  const data = await foundry.applications.api.DialogV2.input({
+    window: { title: effect.item },
+    content: `<div class="form-group"><label>${i18n.localize("VARBORG.Effects.WhichCompanion")}</label><select name="id">`
+      + found.map(other => `<option value="${other.id}">${foundry.utils.escapeHTML(other.name)}</option>`).join("") + "</select></div>",
+    rejectClose: false
+  });
+  return data ? game.actors.get(data.id) ?? null : null;
+}
+
+/**
+ * A feat that changes the character's minion or vehicle (step 50g):
+ * new armour and speeds once (Hawk-Iron Barding, Bolted Plate), or HP
+ * regained or lost (Grease Monkey, Bottled Breath).
+ */
+async function companionAction(actor, effect) {
+  const i18n = game.i18n;
+  const nothing = { lines: [], rolls: [], acted: false };
+  const companion = await pickCompanion(actor, effect);
+  if (!companion) return nothing;
+  if (!companion.isOwner) {
+    ui.notifications.warn(i18n.format("VARBORG.Effects.CompanionNotYours", { name: companion.name }));
+    return nothing;
+  }
+  if (effect.action === "upgradeCompanion") {
+    const mark = `${actor.id}.${effect.itemId}`;
+    if ((companion.getFlag("var-borg", "upgrades") ?? []).includes(mark)) {
+      ui.notifications.warn(i18n.format("VARBORG.Effects.AlreadyUpgraded", { item: effect.item, name: companion.name }));
+      return nothing;
+    }
+    const changes = { [`flags.var-borg.upgrades`]: [...(companion.getFlag("var-borg", "upgrades") ?? []), mark] };
+    if (effect.armour) changes["system.armour"] = effect.armour;
+    if (effect.value && companion.type === "vehicle") changes["system.speed"] = changedSpeeds(companion.system.speed, Number(effect.value));
+    await companion.update(changes);
+    const lines = [i18n.format("VARBORG.Effects.Upgraded", { item: effect.item, name: companion.name, armour: effect.armour || "—" })];
+    if (effect.value) lines.push(i18n.format(companion.type === "vehicle" ? "VARBORG.Effects.SpeedChanged" : "VARBORG.Effects.SpeedByHand", { feet: Math.abs(Number(effect.value)) }));
+    return { lines, rolls: [], acted: true };
+  }
+  const roll = await new Roll(effect.amount || "0").evaluate();
+  const from = companion.system.hp.value;
+  const to = effect.action === "healCompanion"
+    ? Math.min(companion.system.hp.max, from + roll.total)
+    : Math.max(0, from - roll.total);
+  await companion.update({ "system.hp.value": to });
+  const key = effect.action === "healCompanion" ? "VARBORG.Effects.CompanionHealed" : "VARBORG.Effects.CompanionHurt";
+  return { lines: [i18n.format(key, { item: effect.item, name: companion.name, amount: roll.total, from, to, note: effect.note || "" })], rolls: [roll], acted: true };
+}
+
 /** Mark an item's limited use spent (once per day and so on). */
 async function markUsed(actor, itemId) {
   const item = actor.items.get(itemId);
@@ -262,6 +327,7 @@ export async function doEffectAction(actor, effect) {
     };
   }
   if (effect.action === "makeMinion") return makeItemMinion(actor, effect);
+  if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) return companionAction(actor, effect);
   if (effect.action === "takeDamage") {
     // Damage nothing reduces (Blood price, step 50f). At Death's Door any damage kills.
     const roll = await new Roll(effect.amount || "0").evaluate();

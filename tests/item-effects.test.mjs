@@ -12,7 +12,7 @@ import {
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
   unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
   resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions,
-  betterMode, chosenWeaponTraits
+  betterMode, chosenWeaponTraits, changedSpeeds
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -513,4 +513,12 @@ test("Parry rerolls one step better; chosen weapon traits (step 50f)", () => {
   assert.deepEqual(chosenWeaponTraits([agile], "rapier"), { agile: true });
   assert.deepEqual(chosenWeaponTraits([agile], "pistol"), {});
   assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "takeDamage", amount: "d4" }), []);
+});
+
+test("companion upgrades: speeds lowered, never below 0; the fields are checked (step 50g)", () => {
+  assert.deepEqual(changedSpeeds({ safe: 20, normal: 40, fast: 5 }, -10), { safe: 10, normal: 30, fast: 0 });
+  const plate = { ...blankEffect("use"), action: "upgradeCompanion", companion: "vehicle", armour: "d4", value: -10 };
+  assert.deepEqual(effectProblems(plate), []);
+  assert.deepEqual(effectProblems({ ...plate, companion: "horse" }), ["companion: horse"]);
+  assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "healCompanion", companion: "vehicle", amount: "d8" }), []);
 });

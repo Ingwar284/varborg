@@ -6,7 +6,7 @@
 
 import {
   EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES
+  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES, COMPANIONS, COMPANION_ARMOUR
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -50,6 +50,9 @@ export function effectFields() {
       damageType: choice(["", ...DAMAGE_TYPES], ""),
       // resist (step 50b3b): half, double or reduce damage of a type.
       resist: choice(RESIST_MODES),
+      // Companion actions (step 50g): which companion, and the armour it gets.
+      companion: choice(COMPANIONS),
+      armour: choice(COMPANION_ARMOUR, ""),
       // gift (step 50b4): the UUID of a compendium item given with this one.
       gift: new StringField({ required: true, blank: true, initial: "" }),
       // The weapon's damage dice replaced, such as d10 (Couched Lance, step 50c).

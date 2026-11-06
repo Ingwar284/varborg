@@ -2594,7 +2594,8 @@
         "frightenedAttackIgnored": "Frightened gives no Bane on attacks (1 = yes)",
         "shieldRaiseFree": "Raising a shield is a free action (1 = yes)",
         "chosenAgile": "The chosen weapon is Agile (1 = yes)",
-        "chosenHeavy": "The chosen weapon is Heavy (1 = yes)"
+        "chosenHeavy": "The chosen weapon is Heavy (1 = yes)",
+        "vehicleCrashHalf": "The vehicle you drive takes half crash damage (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2722,7 +2723,10 @@
         "makeMinion": "Make a minion (Weak, or its tier rolled with the amount)",
         "switchOn": "Switch on until the encounter ends",
         "lowerDamage": "Offer −damage on defence cards",
-        "takeDamage": "Take damage that nothing reduces"
+        "takeDamage": "Take damage that nothing reduces",
+        "upgradeCompanion": "Change your minion or vehicle once",
+        "healCompanion": "Your minion or vehicle regains HP",
+        "hurtCompanion": "Your minion or vehicle loses HP"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2791,6 +2795,27 @@
       "LowerLog": "{name} uses {item}: damage {value}",
       "FeatLowered": "Lowered by feats (at least 1)",
       "ImmuneCondition": "{name} is immune to {condition}.",
+      "CompanionLabel": "Which companion",
+      "Companion": {
+        "minion": "A minion you own",
+        "vehicle": "A vehicle you are aboard"
+      },
+      "ArmourLabel": "Armour",
+      "SpeedChangeLabel": "Speed change",
+      "SpeedChangeHint": "Feet added to each speed of the vehicle, such as −10.",
+      "NoCompanion": {
+        "minion": "{item}: {name} owns no minion.",
+        "vehicle": "{item}: {name} is not aboard a vehicle. Board your rig first."
+      },
+      "WhichCompanion": "Which one?",
+      "CompanionNotYours": "You cannot change {name}. Ask the Dark Master.",
+      "AlreadyUpgraded": "{item} has already changed {name}.",
+      "Upgraded": "{item}: {name}’s armour is now {armour}.",
+      "SpeedChanged": "It moves {feet}' less per Move at every speed.",
+      "SpeedByHand": "It moves {feet}' less per Move: note it on its sheet.",
+      "CompanionHealed": "{item}: {name} regains {amount} HP ({from} → {to}).",
+      "CompanionHurt": "{item}: {name} takes {amount} damage that armour does not reduce ({from} → {to}). {note}",
+      "Ploughed": "{name}’s Ram-Plough: half",
       "TookDamage": "{item}: {name} takes {amount} damage (HP {from} → {to}).",
       "SuccessLog": "{name} uses {item}: the test counts as a Success",
       "FailedAgain": "{item} fails again: {note}",

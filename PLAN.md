@@ -1171,8 +1171,12 @@ every feat in the batch ends with a status.
       chosen weapon (Fencing-hall form, Bigger sword), damage that
       nothing reduces (Blood price), a feat reroll with Boon (Parry).
       EFFECTS_CONTENT 12.
-    - 50g. Companion and vehicle feats (about 30): effects on the owner's
-      minion or vehicle (Destrier, rig, Raider-Beast, Thralls).
+    - ~~50g. Companion and vehicle feats.~~ Done: the last 10 feats.
+      A feat's Use can change the character's own minion or the vehicle
+      they are aboard once (Hawk-Iron Barding, Bolted Plate: armour and
+      speed), heal it (Grease Monkey) or hurt it (Bottled Breath);
+      Ram-Plough halves the rig's own crash damage. Every feat now has
+      a status. EFFECTS_CONTENT 13.
 
     *Test per step:* the report shows the batch done; spot-check three
     feats in Foundry.

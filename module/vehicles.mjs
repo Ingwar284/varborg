@@ -286,10 +286,13 @@ async function postDrivingCard(vehicle, driver, occupants, { speed, feet, tier, 
         rolls.push(soakRoll);
         soak = soakRoll.total;
       }
-      const damage = collisionDamage(roll.total, { half, strapped: Boolean(strapped), soak });
+      // Ram-Plough: the driver's rig takes half (step 50g), like being strapped in.
+      const ploughed = isVehicle && driver?.system?.statBonuses?.vehicleCrashHalf?.set > 0;
+      const damage = collisionDamage(roll.total, { half, strapped: Boolean(strapped) || ploughed, soak });
       const thrown = outcome.thrown && !isVehicle && !strapped;
       const notes = [
         strapped ? i18n.localize("VARBORG.Vehicle.StrappedHalf") : "",
+        ploughed ? i18n.format("VARBORG.Effects.Ploughed", { name: esc(driver.name) }) : "",
         die ? i18n.format("VARBORG.Vehicle.SoakNote", { die, soak }) : "",
         damage.minimum ? i18n.localize("VARBORG.Defence.Minimum") : "",
         thrown ? i18n.format("VARBORG.Vehicle.Thrown", { feet: THROWN_FEET }) : ""

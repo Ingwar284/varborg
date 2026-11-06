@@ -134,6 +134,11 @@ export const HOOK_ACTIONS = [
  *   (Human Ingenuity, GAPS 198).
  * chanceDie: rolls the Chance Die (Pack Rat, step 50b2).
  * gainFortune: gains `amount` Fortune (the Clan Heirloom, step 50b4).
+ * upgradeCompanion: once, the character's minion or vehicle (`companion`)
+ *   gets `armour` and its speeds change by `value` feet (Hawk-Iron
+ *   Barding, Bolted Plate, step 50g).
+ * healCompanion, hurtCompanion: the minion or vehicle regains or takes
+ *   `amount` HP (Grease Monkey, Bottled Breath; armour does not reduce it).
  * takeDamage: the character takes `amount` damage that nothing reduces
  *   (Blood price, step 50f).
  * A reroll with `grant` "boon" rerolls with the dice one step better
@@ -148,7 +153,28 @@ export const HOOK_ACTIONS = [
  * A reroll or success button can be limited to some cards with `requires`
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
-export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage", "takeDamage"];
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage", "takeDamage",
+  "upgradeCompanion", "healCompanion", "hurtCompanion"];
+
+/**
+ * Which of the character's companions a companion action works on
+ * (step 50g): a minion they own, or a vehicle they are aboard.
+ */
+export const COMPANIONS = ["minion", "vehicle"];
+
+/** The armour dice a companion can be given ("" leaves it). */
+export const COMPANION_ARMOUR = ["", "d2", "d4", "d6", "d8"];
+
+/**
+ * A vehicle's speeds after an upgrade: each lowered by `change` feet
+ * (Bolted Plate: −10), never below 0.
+ * @param {{safe: number, normal: number, fast: number}} speed
+ */
+export function changedSpeeds(speed, change) {
+  const result = {};
+  for (const [key, feet] of Object.entries(speed ?? {})) result[key] = Math.max(0, (feet ?? 0) + (change ?? 0));
+  return result;
+}
 
 /**
  * The dice mode one step better, for a reroll "with Boon" (Parry, step
@@ -270,6 +296,8 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * frightenedAttackIgnored: set 1, Frightened gives no Bane on attacks
  * (Unbroken).
  * shieldRaiseFree: set 1, raising a shield is a free action (Shield expert).
+ * vehicleCrashHalf: set 1, the vehicle this character drives takes half
+ * the collision damage when it crashes (Ram-Plough, step 50g).
  * chosenAgile, chosenHeavy: set 1, the weapon picked by the item's choice
  * has the Agile or Heavy trait (Fencing-hall form, Bigger sword).
  * wornSoakTier: added to worn armour's tier when it soaks, up to t4
@@ -289,7 +317,7 @@ export const STAT_TARGETS = [
   "unarmedDie", "rangePercent", "reloadActions",
   "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile", "soakNoArmour",
   "wornSoakTier", "spellArmourMaxTier", "soakPerWound", "noDuressBane", "frightenedAttackIgnored",
-  "shieldRaiseFree", "chosenAgile", "chosenHeavy"
+  "shieldRaiseFree", "chosenAgile", "chosenHeavy", "vehicleCrashHalf"
 ];
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
@@ -389,7 +417,7 @@ export function blankEffect(kind = "stat") {
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", damageType: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
-    resist: "half", gift: "", setDamage: "",
+    resist: "half", gift: "", setDamage: "", companion: "minion", armour: "",
     note: ""
   };
 }
@@ -636,7 +664,9 @@ export function effectProblems(effect) {
     check("action", HOOK_ACTIONS);
     check("mode", ROLL_MODES);
     check("requires", HOOK_REQUIRES);
-    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage", "healCompanion", "hurtCompanion"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) check("companion", COMPANIONS);
+    if (effect.action === "upgradeCompanion") check("armour", COMPANION_ARMOUR);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
     if (effect.action === "rollTwice") check("keep", KEEPS);
     const events = ACTION_EVENTS[effect.action];
@@ -656,7 +686,9 @@ export function effectProblems(effect) {
   }
   if (effect.kind === "use") {
     check("action", USE_ACTIONS);
-    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage", "healCompanion", "hurtCompanion"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) check("companion", COMPANIONS);
+    if (effect.action === "upgradeCompanion") check("armour", COMPANION_ARMOUR);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
     if (CARD_ACTIONS.includes(effect.action)) {
       check("roll", ROLL_KINDS);

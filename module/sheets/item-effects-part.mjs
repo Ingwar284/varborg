@@ -9,7 +9,7 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES, COMPANIONS, COMPANION_ARMOUR, blankEffect
 } from "../rules/item-effects.mjs";
 import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -62,6 +62,8 @@ export function effectsContext(document) {
       damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
       resistTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.ChosenDamageType"),
       resistModes: labels(RESIST_MODES, "Effects.Resist"),
+      companions: labels(COMPANIONS, "Effects.Companion"),
+      companionArmour: Object.fromEntries(COMPANION_ARMOUR.map(die => [die, die || "—"])),
       // The Choose button needs a character to choose for.
       canChoose: Boolean(document.actor) && document.isOwner,
       list: system.effects.map((effect, index) => ({
@@ -80,7 +82,7 @@ export function effectsContext(document) {
         // Reroll and Success buttons on cards (steps 49g, 50b2).
         isReroll: ["reroll", "success"].includes(effect.action),
         isRerollOnly: effect.action === "reroll",
-        hasAmount: ["heal", "roll", "gainEmber", "gainFortune", "makeMinion"].includes(effect.action),
+        hasAmount: ["heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
         perWound: ["wound", "kill"].includes(effect.per),
@@ -88,6 +90,8 @@ export function effectsContext(document) {
         isResist: effect.kind === "resist",
         isGift: effect.kind === "gift",
         isImmune: effect.kind === "immune",
+        isCompanion: effect.kind === "use" && ["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action),
+        isUpgrade: effect.kind === "use" && effect.action === "upgradeCompanion",
         resistReduce: effect.kind === "resist" && effect.resist === "reduce"
       }))
     }
