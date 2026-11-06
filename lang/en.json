@@ -2617,7 +2617,8 @@
         "throwStrength": "Thrown attacks test Strength instead of Agility (1 = yes)",
         "pistolAgility": "The Flintlock pistol tests Agility instead of Presence (1 = yes)",
         "spellbookNoBane": "Spells ticked In spellbook have no off-list Bane (1 = yes)",
-        "armourIgnored": "Tiers of this foe's armour ignored when it is hit (4 = all)"
+        "armourIgnored": "Tiers of this foe's armour ignored when it is hit (4 = all)",
+        "spellFree": "Spells cost no ember (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2652,7 +2653,8 @@
         "none": "No Boon or Bane",
         "boon": "Boon",
         "bane": "Bane",
-        "noRuin": "a Ruin counts as a Failure"
+        "noRuin": "a Ruin counts as a Failure",
+        "upgradeSuccess": "a Success counts as a Triumph"
       },
       "DrLabel": "DR",
       "DrHint": "Added to the DR: −2 makes the roll easier.",
@@ -2911,7 +2913,8 @@
         "allies": "Also on the other player characters' cards",
         "notedKind": "Kinds written in this item's notes",
         "quarry": "Only against your quarry",
-        "subject": "Others' attacks against your subject"
+        "subject": "Others' attacks against your subject",
+        "anyDamage": "Damage of any type from each hit"
       },
       "Choice": {
         "KindLabel": "Choose",
@@ -3031,7 +3034,8 @@
         "surge": "A Photonic Surge",
         "quarry": "Becomes the quarry",
         "subject": "Becomes the subject",
-        "ember": "The Ember pool gains (amount)"
+        "ember": "The Ember pool gains (amount)",
+        "wound": "A wound"
       },
       "Who": {
         "target": "Each target",
@@ -3088,7 +3092,12 @@
       "Quarry": "{name} is {user}'s quarry until the encounter ends.",
       "Subject": "{name} is {user}'s subject until the encounter ends.",
       "QuarryLine": "Quarry: {name}",
-      "SubjectLine": "Subject: {name}"
+      "SubjectLine": "Subject: {name}",
+      "Test": "Toughness test",
+      "TestHint": "Ticked: the usual Toughness DR12 test follows, as for life force (Overcharge). Unticked: no test (Crimson bargain).",
+      "Wound": "{name} gains a wound ({wounds}/{max}), with no Table of Agony.",
+      "WoundTest": "{name} gains a wound ({wounds}/{max}) and tests Toughness.",
+      "WoundAtMax": "{name} is at maximum wounds: no wound is added."
     }
   }
 }

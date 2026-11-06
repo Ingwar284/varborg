@@ -43,6 +43,8 @@ export function outcomeFields() {
       damageType: new StringField({ required: true, blank: true, choices: ["", ...OUTCOME_PERSISTENT], initial: "" }),
       soaked: new BooleanField({ initial: false }),
       nextOnly: new BooleanField({ initial: false }),
+      // A wound with the usual Toughness test (Overcharge, GAPS 232).
+      test: new BooleanField({ initial: false }),
       note: new StringField({ required: true, blank: true, initial: "" })
     })),
     // Thralls the power destroys when used (GAPS 225): none, one, as many

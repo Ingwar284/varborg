@@ -39,7 +39,10 @@ import { TIMER_KINDS, isRoundsFormula } from "./timers.mjs";
 export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder", "persistent", "damage", "lowerArmour", "fatigue", "partner", "cure", "thralls", "rigDamage", "surge",
   // Step 51e: the targeted foe becomes the user's quarry or subject
   // (GAPS 230); the Ember pool gains `amount` (Unravel).
-  "quarry", "subject", "ember"];
+  "quarry", "subject", "ember",
+  // Step 51e2: the creature gains a wound, with the Toughness test when
+  // `test` is ticked (Overcharge) or without it (Crimson bargain, GAPS 232).
+  "wound"];
 
 /** Is it a Morph power ("Morph. One arm calcifies…")? Its buff replaces the last Morph's (GAPS 226). */
 export function isMorphPower(description) {
@@ -100,6 +103,7 @@ export function blankOutcome(kind = "condition") {
     damageType: "",
     soaked: false,
     nextOnly: false,
+    test: false,
     note: ""
   };
 }

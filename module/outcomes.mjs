@@ -303,6 +303,19 @@ async function runOp51d(actor, op) {
       await gainEmber(amount, actor, op.name);
       return { line: noted(i18n.format("VARBORG.Effects.HookEmber", { item: op.name, amount }), entry.note) };
     }
+    case "wound": {
+      // A wound: HP does not change; with the test it is like life force (GAPS 232).
+      const wounds = actor.system.wounds;
+      if (!wounds) return { line: "" };
+      if (wounds.value >= wounds.max) return { line: i18n.format("VARBORG.Outcome.WoundAtMax", { name: actor.name }) };
+      const before = wounds.value;
+      await actor.update({ "system.wounds.value": before + 1 });
+      if (entry.test) {
+        const { postLifeForceWoundCards } = await import("./agony.mjs");
+        await postLifeForceWoundCards(actor, before, 1);
+      }
+      return { wounded: true, line: noted(i18n.format(entry.test ? "VARBORG.Outcome.WoundTest" : "VARBORG.Outcome.Wound", { name: actor.name, wounds: before + 1, max: wounds.max }), entry.note) };
+    }
     case "partner": {
       const user = op.user ? await fromUuid(op.user) : null;
       if (!user || user === actor) return { line: "" };
@@ -346,6 +359,7 @@ async function undoOutcome(done) {
     const user = await fromUuid(done.markedBy);
     if (user?.isOwner && user.getFlag(SYSTEM, done.mark)?.uuid === actor.uuid) await user.unsetFlag(SYSTEM, done.mark);
   }
+  if (done.kind === "wound" && done.wounded) await actor.update({ "system.wounds.value": Math.max(0, actor.system.wounds.value - 1) });
   if (done.kind === "cure" && done.cured && !actor.statuses.has(done.cured)) await actor.toggleStatusEffect(done.cured, { active: true });
   if (done.kind === "fatigue" && done.fatigued) await actor.update({ "system.fatigue": Math.max(0, (actor.system.fatigue ?? 1) - 1) });
   if (done.kind === "partner" && done.partnerOf) {

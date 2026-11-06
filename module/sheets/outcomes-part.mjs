@@ -36,6 +36,7 @@ export function outcomesContext(document) {
         isPersistent: entry.kind === "persistent",
         isDamage: entry.kind === "damage",
         isBuff: entry.kind === "buff",
+        isWound: entry.kind === "wound",
         hasDuration: ["condition", "buff"].includes(entry.kind),
         isRounds: entry.duration?.kind === "rounds"
       }))

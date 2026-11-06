@@ -1300,9 +1300,16 @@ one fight and one rest.
         can ignore armour (Sacred flame, Assassinate); healing can be
         "full" (Absolution); "What it gives" can add to the Ember pool.
         Wounds move to 51e2 with the Sorcerer. EFFECTS_CONTENT 20.
-      - 51e2. Tools: "your next spell this turn" buffs, damage reduced by
-        a die from any source. Then Skullrider, Sorcerer, Sword Saint,
-        Warrior, Witch Hunter and Wizard (42 powers).
+      - ~~51e2. Tools, then Skullrider, Sorcerer, Sword Saint, Warrior,
+        Witch Hunter and Wizard.~~ Done: every power has a status (44
+        auto, 101 partial, 2 text). New: "What it gives" can add a wound,
+        with the Toughness test (Overcharge) or without (Crimson
+        bargain); buffs marked "next attack only" on a character are used
+        up by their next spell (Overcharge, Perfect casting: Boon, no
+        ember, a Ruin is a Failure, a Success is a Triumph); a resist can
+        take a die off damage of any type from each hit (Ward of the
+        faithful, Guardian's Orbit); roll effects can be limited to one
+        power by name (Blood nova's +d6 per wound). EFFECTS_CONTENT 21.
     - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
 
 **Milestone 11 review:** a Warrior, a Wizard and a Priest against three

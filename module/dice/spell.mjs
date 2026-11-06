@@ -131,7 +131,9 @@ export async function castSpell(actor, spell) {
   const scroll = spell.type === "scroll";
   const ritual = !scroll && Boolean(spell.system.ritual);
   const turn = turnState(actor);
-  const use = scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn);
+  // Perfect casting: the next spell costs no ember (GAPS 231).
+  const free = actor.system.statBonuses?.spellFree?.set > 0;
+  const use = scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn, { free });
   if (!use) return;
   const target = [...game.user.targets][0]?.actor ?? null;
 
@@ -268,6 +270,9 @@ export async function castSpell(actor, spell) {
     area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
       .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
     areaDamageType: spell.system.damageType ?? "",
+    // Field notes, Perfect casting: a Ruin is a Failure; Overcharge: a Success is a Triumph.
+    noRuin: mods.some(mod => mod.noRuin),
+    upgradeSuccess: mods.some(mod => mod.upgradeSuccess),
     ignoresArmour: Boolean(spell.system.ignoresArmour),
     // What each result gives the targets and caster (step 51c).
     outcomes: outcomeInputs(actor, spell),
@@ -311,6 +316,9 @@ export async function castSpell(actor, spell) {
     flags: fortuneFlags(data)
   });
 
+  // "Your next spell this turn" buffs are used up (Overcharge, Perfect casting, GAPS 231).
+  const used = actor.items.filter(item => item.getFlag("var-borg", "buff")?.nextOnly).map(item => item.id);
+  if (used.length) await actor.deleteEmbeddedDocuments("Item", used);
   // Each spell cast rolls for a Photonic Surge (Autodidactism, GAPS 208).
   await runItemHooks(actor, "cast");
   // Each wound spent tests Toughness, as a wound gained at 0 HP.

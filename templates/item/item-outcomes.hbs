@@ -37,6 +37,9 @@
     {{#if isDamage}}
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Outcome.SoakedHint'}}"><input type="checkbox" data-outcome-field="soaked" {{checked soaked}} {{#unless @root.editable}}disabled{{/unless}}> {{localize "VARBORG.Outcome.Soaked"}}</label>
     {{/if}}
+    {{#if isWound}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Outcome.TestHint'}}"><input type="checkbox" data-outcome-field="test" {{checked test}} {{#unless @root.editable}}disabled{{/unless}}> {{localize "VARBORG.Outcome.Test"}}</label>
+    {{/if}}
     {{#if isBuff}}
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Outcome.NextOnlyHint'}}"><input type="checkbox" data-outcome-field="nextOnly" {{checked nextOnly}} {{#unless @root.editable}}disabled{{/unless}}> {{localize "VARBORG.Outcome.NextOnly"}}</label>
     {{/if}}

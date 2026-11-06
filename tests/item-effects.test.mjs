@@ -679,3 +679,14 @@ test("ally reactions, quarry, subject and ignored armour (step 51e, GAPS 229, 23
   assert.equal(fitsRoll(subject, { roll: "attack", allySubject: true }), true);
   assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "intercept", roll: "defence", vs: "allies", amount: "half" }), []);
 });
+
+test("next-spell buffs and damage reduced from any hit (step 51e2, GAPS 231)", () => {
+  const over = roll({ roll: "spell", grant: "upgradeSuccess" });
+  assert.equal(withEffect(rollEffects([over], { roll: "spell" }).auto)[0].upgradeSuccess, true);
+  const ward = { ...blankEffect("resist"), resist: "reduce", amount: "d4", vs: "anyDamage" };
+  assert.deepEqual(effectProblems(ward), []);
+  assert.equal(resistsFor([ward], "").length, 1);
+  assert.equal(resistsFor([ward], "fire").length, 1);
+  assert.equal(resistsFor([ward], "fire", { persistent: true }).length, 0);
+  assert.deepEqual(effectProblems(stat("spellFree", 1, "set")), []);
+});

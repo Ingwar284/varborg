@@ -45,7 +45,7 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "up to three allies within 30'; they take d4 less damage from each hit"
+        "note": "up to three allies within 30'"
       }
     ],
     "buffEffects": [
@@ -85,8 +85,45 @@
         "power": "",
         "option": "",
         "note": ""
+      },
+      {
+        "kind": "resist",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "anyDamage",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "d4",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "reduce",
+        "gift": "",
+        "setDamage": "",
+        "companion": "minion",
+        "armour": "",
+        "power": "",
+        "option": "",
+        "note": ""
       }
     ],
-    "automation": "partial"
+    "automation": "auto"
   }
 }

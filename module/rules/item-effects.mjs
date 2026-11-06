@@ -81,7 +81,10 @@ export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "rand
 export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent", "allies", "notedKind",
   // Step 51e (GAPS 230): only against the owner's quarry; or, on a
   // Scholar's item, on the other characters' attacks against the Scholar's subject.
-  "quarry", "subject"];
+  "quarry", "subject",
+  // A resist on damage of any type from each hit, not persistent damage
+  // (Ward of the faithful, Guardian's Orbit: d4 less, step 51e2).
+  "anyDamage"];
 
 /**
  * The kinds of creature written in an item's text choice, such as "Wax Ox,
@@ -479,6 +482,8 @@ export const STAT_TARGETS = [
   // attacks with the Flintlock pistol use Agility (Steel and Shot, GAPS
   // 216); spells ticked In spellbook have no off-list Bane (Tome keeper).
   "throwStrength", "pistolAgility", "spellbookNoBane",
+  // The next spell costs no ember (Perfect casting, GAPS 231).
+  "spellFree",
   // On a foe (a power's mark, step 51e): tiers of its armour ignored when
   // it is hit (Read the beast 1, Point out the flaw 4: all of it).
   "armourIgnored"
@@ -612,7 +617,9 @@ export const ROLL_KINDS = [
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */
-export const GRANTS = ["", "boon", "bane", "noRuin"];
+export const GRANTS = ["", "boon", "bane", "noRuin",
+  // A Success counts as a Triumph (Overcharge, GAPS 231).
+  "upgradeSuccess"];
 
 /** auto: always applied. optional: an unticked box in the dialog (designer's choice, Milestone 9). */
 export const ROLL_MODES = ["auto", "optional"];
@@ -855,7 +862,7 @@ export function testOnly(mods) {
  * (attacks, powers, spells); elsewhere it is ignored.
  */
 export function withEffect(mods) {
-  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes || mod.setDamage || mod.noRuin);
+  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes || mod.setDamage || mod.noRuin || mod.upgradeSuccess);
 }
 
 /**
@@ -889,6 +896,7 @@ export function rollEffects(effects, context) {
     if (effect.requires === "triumph") mod.onTriumph = true;
     // A Ruin counts as a Failure (Field notes, step 51a3).
     if (effect.grant === "noRuin") mod.noRuin = true;
+    if (effect.grant === "upgradeSuccess") mod.upgradeSuccess = true;
     (effect.mode === "optional" ? result.optional : result.auto).push(mod);
   }
   return result;
@@ -935,7 +943,7 @@ export function effectProblems(effect) {
   if (effect.kind === "resist") {
     check("resist", RESIST_MODES);
     if (effect.damageType) check("damageType", DAMAGE_TYPES);
-    else if (!["chosenDamageType", "persistent"].includes(effect.vs)) problems.push("resist: no damage type");
+    else if (!["chosenDamageType", "persistent", "anyDamage"].includes(effect.vs)) problems.push("resist: no damage type");
     if (effect.resist === "reduce" && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
   }
   if (effect.kind === "choice") {
@@ -1060,6 +1068,7 @@ export function resistsFor(effects, damageType, { persistent = false } = {}) {
     if (effect.kind !== "resist") return false;
     // Persistent damage of any type (Chastisement, step 50e).
     if (effect.vs === "persistent") return persistent;
+    if (effect.vs === "anyDamage") return !persistent;
     if (!damageType) return false;
     return effect.damageType
       ? effect.damageType === damageType

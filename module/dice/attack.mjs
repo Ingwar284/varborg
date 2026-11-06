@@ -245,6 +245,8 @@ export async function settleAttackCard(actor, data) {
   let tier = fortuneTier(result.tier, state.softened);
   // Field notes: Study the specimen cannot Ruin against a noted kind (GAPS 214).
   if (inputs.noRuin && tier === "ruin") tier = "failure";
+  // Overcharge: a Success counts as a Triumph (GAPS 231).
+  if (inputs.upgradeSuccess && tier === "success") tier = "triumph";
   state.tier = tier;
   // A power uses its own outcomes (rules 3.10).
   const power = inputs.power ?? null;

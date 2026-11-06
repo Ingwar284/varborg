@@ -73,7 +73,7 @@ export async function usePower(actor, power) {
  * Can the power be used now? Warns and returns null if not.
  * @returns {{allowed: true, ember: number, actions: number}|null}
  */
-export function checkPowerUse(actor, power, turn) {
+export function checkPowerUse(actor, power, turn, { free = false } = {}) {
   const i18n = game.i18n;
   const use = powerUse({
     inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn,
@@ -85,6 +85,8 @@ export function checkPowerUse(actor, power, turn) {
     ui.notifications.warn(i18n.format(key, { name: power.name }));
     return null;
   }
+  // Perfect casting: this spell costs no ember (GAPS 231).
+  if (free) use.ember = 0;
   const left = getPools()[POOL.EMBER];
   if (use.ember && !canPay(left, use.ember)) {
     ui.notifications.warn(i18n.format("VARBORG.Power.NotEnoughEmber", { name: power.name, cost: use.ember, left }));
@@ -361,6 +363,7 @@ async function rollPowerTest(actor, power) {
     damageInvalid: damage.invalid,
     // A Ruin counts as a Failure (Field notes, GAPS 214).
     noRuin: [...conditionMods, ...ticked].some(mod => mod.noRuin),
+    upgradeSuccess: [...conditionMods, ...ticked].some(mod => mod.upgradeSuccess),
     weaponDamage: damage.text,
     ruinedBefore: actor.system.attackRuin,
     // Every targeted creature, for area powers and spells (GAPS 141).
