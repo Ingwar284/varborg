@@ -1085,9 +1085,27 @@ Each step starts by listing its open questions, then enters the effects;
 every feat in the batch ends with a status.
 
 50. **Feats.**
-    - 50a. General feats (54) and the difficulty feats (Harkin's Reprieve,
-      Doomsworn, ruled first). The creation helper offers one difficulty
-      feat, and only one.
+    - ~~50a. General feats (54)~~. Done: rulings GAPS 194–197. Roll and
+      reminder effects can be "only outside combat" (the 25 "non-combat
+      tests" feats are optional ticks hidden during combat), and stat
+      effects can multiply ("times", Carry-all). 47 general feats have
+      effects and a status; EFFECTS_CONTENT 2.
+    - 50a2. The rest of the general feats and the difficulty feats, which
+      need new code:
+      - Harkin's Reprieve: whatever would kill the character fades to
+        black instead, rolls the d6 wake-up table, HP to maximum and
+        wounds to maximum − 1 (GAPS 195).
+      - Doomsworn: one fewer max wound (minimum 1), d2 Fortune at the
+        start and when regained, Death's Door rolled twice keeping the
+        worse, and a "+1 Fortune" button for each living Doomsworn
+        character when a combat ends (GAPS 196).
+      - The creation helper offers one difficulty feat, and only one.
+      - Hard to Kill: an Agony result that kills puts the character at
+        Death's Door instead. Steady nerves: a once-per-day button on a
+        failed Panic card (Success, +1 Fatigued). Diehard: a reminder when
+        the character would die (GAPS 197).
+      - Brawler (unarmed d4), Long shot (ranges +½, GAPS 191) and Quick
+        reload (one fewer Interact action, minimum 1).
     - 50b. Ancestry feats (64), with choices such as Ancient One and
       Adopted.
     - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.

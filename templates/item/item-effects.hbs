@@ -37,6 +37,7 @@
       <input type="text" data-effect-field="damage" value="{{damage}}" placeholder="d4" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     <select data-effect-field="per" aria-label="{{localize 'VARBORG.Effects.PerLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../pers selected=per localize=true}}</select>
+    <select data-effect-field="requires" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rollRequireList selected=requires localize=true}}</select>
     <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.ModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../modes selected=mode localize=true}}</select>
     {{/if}}
     {{#if isHook}}
@@ -90,6 +91,7 @@
     {{/if}}
     {{#if isReminder}}
     <select data-effect-field="roll" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rolls selected=roll localize=true}}</select>
+    <select data-effect-field="requires" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rollRequireList selected=requires localize=true}}</select>
     {{/if}}
     <input class="effect-note" type="text" data-effect-field="note" value="{{note}}" placeholder="{{localize 'VARBORG.Effects.NotePlaceholder'}}" aria-label="{{localize 'VARBORG.Effects.NoteLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>
     {{#if @root.editable}}

@@ -9,7 +9,7 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, CHOICE_KINDS, CHOICE_FROM, VERSUS, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CHOICE_KINDS, CHOICE_FROM, VERSUS, blankEffect
 } from "../rules/item-effects.mjs";
 import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -51,6 +51,7 @@ export function effectsContext(document) {
       rerollRolls: labels(REROLL_CARDS, "Effects.RerollCard"),
       keeps: labels(KEEPS, "Effects.Keep"),
       requireList: labels(HOOK_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
+      rollRequireList: labels(ROLL_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       hookConditions: labels(CONDITIONS, "Condition"),
       choiceKinds: labels(CHOICE_KINDS, "Effects.Choice.Kind"),
       choiceFrom: labels(CHOICE_FROM, "Effects.Choice.From"),
@@ -125,6 +126,9 @@ export function listenToEffects(sheet) {
       const effect = effects[index];
       if (field === "kind" && effect.kind === "use" && !USE_ACTIONS.includes(effect.action)) effect.action = USE_ACTIONS[0];
       if (field === "kind" && effect.kind === "hook" && !HOOK_ACTIONS.includes(effect.action)) effect.action = HOOK_ACTIONS[0];
+      // Hooks and rolls have different "only while" lists (step 50a).
+      if (field === "kind" && effect.kind === "hook" && !HOOK_REQUIRES.includes(effect.requires)) effect.requires = "";
+      if (field === "kind" && ["roll", "reminder"].includes(effect.kind) && !ROLL_REQUIRES.includes(effect.requires)) effect.requires = "";
       // A different kind of choice forgets the old choice (step 49h).
       if (["choose", "from"].includes(field)) {
         effect.chosen = "";

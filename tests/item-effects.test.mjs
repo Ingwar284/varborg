@@ -289,3 +289,20 @@ test("feat and spell choices list what fits, by name (step 49h)", () => {
   assert.deepEqual(names({ choose: "spell", from: "any", value: 0 }), ["Inferno", "Spark"]);
   assert.deepEqual(effectProblems(choice({ choose: "pet" })), ["choose: pet"]);
 });
+
+test("an effect only outside combat fits a roll only while no combat runs (GAPS 194)", () => {
+  const acrobat = roll({ roll: "test", grant: "boon", mode: "optional", requires: "noCombat" });
+  assert.equal(fitsRoll(acrobat, { roll: "test", facts: { inCombat: false } }), true);
+  assert.equal(fitsRoll(acrobat, { roll: "test" }), true);
+  assert.equal(fitsRoll(acrobat, { roll: "test", facts: { inCombat: true } }), false);
+  assert.deepEqual(effectProblems(acrobat), []);
+  assert.deepEqual(effectProblems(roll({ requires: "halfHp" })), ["requires: halfHp"]);
+});
+
+test("times multiplies before adding, and a minimum still holds (Carry-all, step 50a)", () => {
+  const bonuses = statBonuses([stat("carryLimit", 2, "times"), stat("carryLimit", 2, "min")]);
+  assert.equal(withStat(3, bonuses.carryLimit), 6);
+  assert.equal(withStat(1, bonuses.carryLimit), 2);
+  assert.equal(withStat(3, statBonuses([stat("carryLimit", 2, "times"), stat("carryLimit", 1)]).carryLimit), 7);
+  assert.equal(withStat(3, statBonuses([stat("carryLimit", 1)]).carryLimit), 4);
+});

@@ -2544,7 +2544,8 @@
       "Op": {
         "add": "add",
         "set": "becomes",
-        "min": "at least"
+        "min": "at least",
+        "times": "times"
       },
       "ValueLabel": "Amount",
       "RollLabel": "Which roll",
@@ -2586,7 +2587,8 @@
       "Part": {
         "add": "{value} {item}",
         "set": "{item}: {value}",
-        "min": "{item}: at least {value}"
+        "min": "{item}: at least {value}",
+        "times": "×{value} {item}"
       },
       "OnLimit": "Cumbersome limit {part}",
       "OnMovement": "Movement {part}",
@@ -2654,7 +2656,8 @@
       "RequiresLabel": "Only while",
       "Requires": {
         "always": "always",
-        "halfHp": "at half HP or lower"
+        "halfHp": "at half HP or lower",
+        "noCombat": "outside combat"
       },
       "HookMode": {
         "auto": "Do it",

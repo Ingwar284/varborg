@@ -9,6 +9,36 @@
     "belongsTo": "",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "choice",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "feat",
+        "from": "otherAncestry",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": ""
+      }
+    ],
+    "automation": "auto"
   }
 }

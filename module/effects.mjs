@@ -27,7 +27,8 @@ const { DialogV2 } = foundry.applications.api;
 export function itemRollEffects(actor, context) {
   if (!actor?.items) return { auto: [], optional: [], reminders: [] };
   // The character's facts, for damage per wound (step 49e).
-  const facts = { wounds: actor.system.wounds?.value ?? 0 };
+  // Whether a combat is running, for "non-combat tests" (GAPS 194).
+  const facts = { wounds: actor.system.wounds?.value ?? 0, inCombat: Boolean(game.combat?.started) };
   return rollEffects(collectEffects(actor.items), { facts, ...context });
 }
 

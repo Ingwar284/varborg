@@ -9,6 +9,8 @@
     "belongsTo": "",
     "improving": false,
     "frequency": "visit",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

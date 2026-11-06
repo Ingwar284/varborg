@@ -96,6 +96,12 @@ export const KEEPS = ["better", "worse", "choose"];
 export const HOOK_REQUIRES = ["", "halfHp"];
 
 /**
+ * Only while…, for roll and reminder effects: blank for always, noCombat
+ * for while no combat is running ("Boon on non-combat tests", GAPS 194).
+ */
+export const ROLL_REQUIRES = ["", "noCombat"];
+
+/**
  * How far an item is automated. Blank means nobody has looked yet.
  * auto: all of it works by itself. partial: some of it, the rest is text.
  * text: nothing for the computer to do (story, or the Dark Master's call).
@@ -115,8 +121,11 @@ export const STAT_TARGETS = [
   ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr"
 ];
 
-/** add: + value. set: becomes value. min: never below value. */
-export const STAT_OPS = ["add", "set", "min"];
+/**
+ * add: + value. set: becomes value. min: never below value.
+ * times: multiplied by value (Carry-all: twice your Toughness, step 50a).
+ */
+export const STAT_OPS = ["add", "set", "min", "times"];
 
 /** The kinds of roll a roll or reminder effect can apply to. */
 export const ROLL_KINDS = [
@@ -231,17 +240,19 @@ export function effectKey(effect) {
 
 /**
  * What the stat effects do to each sheet number.
- * @returns {object} By target: { add, set, min, sources: [{item, op, value}] }.
+ * @returns {object} By target: { add, set, min, times, sources: [{item, op, value}] }.
  *   set is null when nothing sets the number; min is null when nothing
- *   puts a floor under it. Several sets: the highest counts.
+ *   puts a floor under it. Several sets: the highest counts. times is 1
+ *   when nothing multiplies it; several multiply together.
  */
 export function statBonuses(effects) {
   const bonuses = {};
   for (const effect of effects ?? []) {
     if (effect.kind !== "stat" || !STAT_TARGETS.includes(effect.target)) continue;
     const value = Number(effect.value) || 0;
-    const bonus = bonuses[effect.target] ??= { add: 0, set: null, min: null, sources: [] };
+    const bonus = bonuses[effect.target] ??= { add: 0, set: null, min: null, times: 1, sources: [] };
     if (effect.op === "set") bonus.set = bonus.set === null ? value : Math.max(bonus.set, value);
+    else if (effect.op === "times") bonus.times *= value;
     else if (effect.op === "min") bonus.min = bonus.min === null ? value : Math.max(bonus.min, value);
     else bonus.add += value;
     bonus.sources.push({ item: effect.item, op: effect.op ?? "add", value });
@@ -250,14 +261,15 @@ export function statBonuses(effects) {
 }
 
 /**
- * A sheet number after its stat effects: set first, then add, then the
- * minimum.
+ * A sheet number after its stat effects: set first, then times, then add,
+ * then the minimum.
  * @param {number} value  The number without effects.
  * @param {object} [bonus]  One entry of statBonuses.
  */
 export function withStat(value, bonus) {
   if (!bonus) return value;
   let result = bonus.set ?? value;
+  result *= bonus.times ?? 1;
   result += bonus.add;
   if (bonus.min !== null) result = Math.max(result, bonus.min);
   return result;
@@ -281,7 +293,8 @@ export function withAbilityBonuses(abilities, bonuses) {
  * @param {object} context  { roll, ability?, against?, weapon?, facts? }:
  *   the kind of roll, the ability tested, the condition the roll resists
  *   (for "Boon on tests to resist being Charmed"), the weapon's tags
- *   (weaponTags) and the character's facts ({ wounds }, for per wound).
+ *   (weaponTags) and the character's facts ({ wounds }, for per wound;
+ *   { inCombat }, for effects only outside combat).
  *   roll and against can be lists: a Panic test is both an ability test
  *   and a Panic test; a gloom ability can give several conditions. An
  *   effect with a weapon filter only fits a roll with that weapon tag.
@@ -294,6 +307,7 @@ export function fitsRoll(effect, context) {
     // The weapon picked by the item's choice (step 49h).
     if (!effect.choices?.weapon || effect.choices.weapon !== context.weaponId) return false;
   } else if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
+  if (effect.requires === "noCombat" && context.facts?.inCombat) return false;
   if (effect.vs === "chosenCategory" && (!effect.choices?.category || effect.choices.category !== context.targetCategory)) return false;
   return true;
 }
@@ -363,6 +377,7 @@ export function effectProblems(effect) {
     check("roll", ROLL_KINDS);
     if (effect.ability) check("ability", ABILITIES);
     if (effect.against) check("against", CONDITIONS);
+    check("requires", ROLL_REQUIRES);
   }
   if (effect.kind === "hook") {
     check("event", HOOK_EVENTS);

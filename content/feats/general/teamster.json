@@ -9,6 +9,36 @@
     "belongsTo": "",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "driving",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "boon",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": ""
+      }
+    ],
+    "automation": "auto"
   }
 }
