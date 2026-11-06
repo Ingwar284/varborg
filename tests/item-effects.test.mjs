@@ -9,7 +9,8 @@ import {
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
-  useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula
+  useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
+  unarmedDamage, longerRange, reloadActions, withWeaponStats
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -329,4 +330,40 @@ test("Doomsworn: one fewer max wound, but never below 1 (step 50a2)", () => {
   const doomsworn = statBonuses([stat("woundsMax", -1), stat("woundsMax", 1, "min")]);
   assert.equal(withStat(3, doomsworn.woundsMax), 2);
   assert.equal(withStat(1, doomsworn.woundsMax), 1);
+});
+
+test("Brawler: unarmed damage d4 instead of d2 (step 50a3)", () => {
+  assert.equal(unarmedDamage(undefined), "d2");
+  assert.equal(unarmedDamage(statBonuses([stat("unarmedDie", 4, "set")]).unarmedDie), "d4");
+});
+
+test("Long shot: ranges +½, rounded down to 5' (step 50a3, GAPS 191)", () => {
+  const bonus = statBonuses([stat("rangePercent", 50)]).rangePercent;
+  assert.equal(longerRange(120, bonus), 180);
+  assert.equal(longerRange(20, bonus), 30);
+  assert.equal(longerRange(25, bonus), 35);
+  assert.equal(longerRange(0, bonus), 0);
+  assert.equal(longerRange(40, undefined), 40);
+});
+
+test("Quick reload: one fewer Interact action, never below 1 (step 50a3)", () => {
+  const bonus = statBonuses([stat("reloadActions", -1)]).reloadActions;
+  assert.equal(reloadActions(2, bonus), 1);
+  assert.equal(reloadActions(1, bonus), 1);
+  assert.equal(reloadActions(0, bonus), 0);
+});
+
+test("withWeaponStats: a changed copy, the unarmed die only for Unarmed (step 50a3)", () => {
+  const bonuses = statBonuses([stat("unarmedDie", 4, "set"), stat("rangePercent", 50), stat("reloadActions", -1)]);
+  const pistol = { damage: "d4", ranged: 60, thrown: 0, reload: 2 };
+  assert.deepEqual(withWeaponStats(pistol, bonuses), { damage: "d4", ranged: 90, thrown: 0, reload: 1 });
+  assert.equal(pistol.ranged, 60);
+  assert.equal(withWeaponStats({ damage: "d2", ranged: 0, thrown: 0, reload: 0 }, bonuses, true).damage, "d4");
+  assert.deepEqual(withWeaponStats(pistol, {}), pistol);
+});
+
+test("Steady nerves only works on a failed Panic test (step 50a3)", () => {
+  const hook = event => ({ ...blankEffect("hook"), event, action: "steadyNerves" });
+  assert.deepEqual(effectProblems(hook("panicFailure")), []);
+  assert.deepEqual(effectProblems(hook("rest")), ["steadyNerves at rest"]);
 });

@@ -14,6 +14,7 @@ import {
 } from "../rules/expendable.mjs";
 import { markFired } from "../ammunition.mjs";
 import { turnState } from "../combat.mjs";
+import { effectiveWeapon } from "../effects.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -74,7 +75,8 @@ export async function fireWeapon(actor, item) {
 export async function reloadWeapon(actor, item) {
   if (!canReload(item.system)) return;
   const i18n = game.i18n;
-  const actions = item.system.reload;
+  // Quick reload: one fewer, never below 1 (step 50a3).
+  const actions = effectiveWeapon(item).reload;
   const turn = turnState(actor);
   if (turn.combatant && !turn.onOwnTurn) {
     ui.notifications.warn(i18n.localize("VARBORG.Reload.NotYourTurn"));

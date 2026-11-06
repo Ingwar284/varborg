@@ -84,10 +84,13 @@ export const HOOK_EVENTS = [
  *   HP and wounds at their maximum − 1, and the wake-up table is rolled.
  * deathsDoorInstead: Hard to Kill (agonyDeath only, GAPS 197). The
  *   character goes to Death's Door instead of dying.
+ * steadyNerves: Steady nerves (panicFailure only, GAPS 197). The failed
+ *   Panic card gets a button: the test counts as a Success and the
+ *   character gains 1 Fatigued, instead of rolling on the Panic table.
  */
 export const HOOK_ACTIONS = [
   "reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice",
-  "gainFortune", "reprieve", "deathsDoorInstead"
+  "gainFortune", "reprieve", "deathsDoorInstead", "steadyNerves"
 ];
 
 /**
@@ -108,6 +111,7 @@ export const ROLL_TWICE_EVENTS = ["initiative", "deathsDoor"];
 export const ACTION_EVENTS = {
   rollTwice: ROLL_TWICE_EVENTS,
   reprieve: ["death"],
+  steadyNerves: ["panicFailure"],
   deathsDoorInstead: ["agonyDeath"]
 };
 
@@ -139,11 +143,60 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * (Afterimage sets 10, GAPS 189).
  * fortuneDie: the die of starting Fortune and of Fortune regained after a
  * Long Rest, normally 3 (Doomsworn sets 2, step 50a2).
+ * unarmedDie: the die of unarmed damage, normally 2 (Brawler sets 4).
+ * rangePercent: added to the Ranged and Thrown distances of weapons, in
+ * per cent (Long shot +50, GAPS 191), rounded down to 5'.
+ * reloadActions: added to the Interact actions a Reload weapon needs, never
+ * below 1 (Quick reload −1).
  */
 export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
-  ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie"
+  ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie",
+  "unarmedDie", "rangePercent", "reloadActions"
 ];
+
+/** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
+export const UNARMED_DIE = 2;
+
+/** The unarmed damage die after effects, such as "d4" (Brawler). */
+export function unarmedDamage(bonus) {
+  return `d${Math.max(1, withStat(UNARMED_DIE, bonus))}`;
+}
+
+/**
+ * A weapon distance after rangePercent effects, rounded down to 5'
+ * (Long shot: 120' becomes 180'). 0 (no such distance) stays 0.
+ */
+export function longerRange(feet, bonus) {
+  if (!(feet > 0) || !bonus) return feet ?? 0;
+  const percent = withStat(0, bonus);
+  return Math.max(5, Math.floor((feet * (100 + percent)) / 100 / 5) * 5);
+}
+
+/** Interact actions to reload after effects, never below 1 (0: no Reload). */
+export function reloadActions(reload, bonus) {
+  if (!(reload > 0)) return 0;
+  return Math.max(1, withStat(reload, bonus));
+}
+
+/**
+ * A weapon's numbers after the wielder's stat effects (step 50a3): a copy
+ * with the unarmed die, the Ranged and Thrown distances and the Reload
+ * actions changed. The stored weapon is not changed.
+ * @param {object} weapon    A weapon's system data.
+ * @param {object} [bonuses] The wielder's statBonuses.
+ * @param {boolean} [unarmed] The weapon is the Unarmed weapon.
+ */
+export function withWeaponStats(weapon, bonuses = {}, unarmed = false) {
+  const result = { ...weapon };
+  if (unarmed && bonuses?.unarmedDie) result.damage = unarmedDamage(bonuses.unarmedDie);
+  if (bonuses?.rangePercent) {
+    result.ranged = longerRange(weapon.ranged, bonuses.rangePercent);
+    result.thrown = longerRange(weapon.thrown, bonuses.rangePercent);
+  }
+  if (bonuses?.reloadActions) result.reload = reloadActions(weapon.reload, bonuses.reloadActions);
+  return result;
+}
 
 /** The Fortune die without effects: "Everyone has d3 Fortune" (rules 3.9). */
 export const FORTUNE_DIE = 3;

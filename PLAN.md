@@ -1106,10 +1106,16 @@ every feat in the batch ends with a status.
         replaces one taken earlier.
       - Hard to Kill: Death's Door instead of an Agony death. Diehard: a
         reminder on the death card (GAPS 197). EFFECTS_CONTENT 3.
-    - 50a3. The last general feats: Steady nerves (a once-per-day button on
-      a failed Panic card: Success, +1 Fatigued, GAPS 197), Brawler
-      (unarmed d4), Long shot (ranges +½, GAPS 191) and Quick reload (one
-      fewer Interact action, minimum 1).
+    - ~~50a3. The last general feats.~~ Done:
+      - Steady nerves: a failed Panic test, while the feat is unspent,
+        posts a card with two buttons. One gives Success and +1 Fatigued
+        and spends the feat; the other rolls the Panic table (GAPS 197).
+      - Brawler: unarmed d4.
+      - Long shot: Ranged and Thrown distances +½, rounded down to 5'
+        (GAPS 191, provisional).
+      - Quick reload: one fewer Interact action, minimum 1.
+      - The weapon numbers after feats show on the sheet and count in
+        attacks, reloads and power damage. EFFECTS_CONTENT 4.
     - 50b. Ancestry feats (64), with choices such as Ancient One and
       Adopted.
     - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.

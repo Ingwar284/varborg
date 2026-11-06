@@ -34,8 +34,8 @@ import { getPools, spendFromPool } from "../pools.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
-import { withExtraDamage } from "../rules/item-effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
+import { withExtraDamage, unarmedDamage } from "../rules/item-effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -157,9 +157,11 @@ function damageWeapons(actor) {
   const carried = actor.itemTypes.weapon
     .toSorted((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.sort - b.sort)
     // A weapon such as the blunderbuss ("d10/d4") gives its within-range dice.
-    .map(item => ({ id: item.id, name: item.name, dice: damageFormula(item.system.damage, false), equipped: item.system.equipped }));
+    .map(item => ({ id: item.id, name: item.name, dice: damageFormula(effectiveWeapon(item).damage, false), equipped: item.system.equipped }));
   const bare = Object.entries(BARE_WEAPONS).map(([id, dice]) => ({
-    id, name: i18n.localize(`VARBORG.Power.Bare.${id}`), dice, equipped: false
+    // Brawler: unarmed d4 (step 50a3).
+    id, name: i18n.localize(`VARBORG.Power.Bare.${id}`), equipped: false,
+    dice: id === "unarmed" ? unarmedDamage(actor.system.statBonuses?.unarmedDie) : dice
   }));
   return [...carried, ...bare];
 }

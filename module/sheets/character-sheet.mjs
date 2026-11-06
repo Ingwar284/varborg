@@ -21,6 +21,7 @@ import { castingDr } from "../rules/spells.mjs";
 import { raiseShield, lowerShield } from "../dice/defence.mjs";
 import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
+import { effectiveWeapon } from "../effects.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
@@ -63,10 +64,12 @@ function itemSummary(item, stored) {
   const system = item.system;
   switch (item.type) {
     case "weapon": {
-      const traits = weaponTraits(system).map(({ key, value }) => (value === undefined
+      // After the owner's feats: Brawler, Long shot, Quick reload (step 50a3).
+      const weapon = effectiveWeapon(item);
+      const traits = weaponTraits(weapon).map(({ key, value }) => (value === undefined
         ? i18n.localize(`VARBORG.Trait.${key}`)
         : i18n.format(`VARBORG.Trait.${key}Value`, { value })));
-      return [system.damage, i18n.localize(`VARBORG.Weapon.Kind.${system.kind}`), traits.join(", ")]
+      return [weapon.damage, i18n.localize(`VARBORG.Weapon.Kind.${system.kind}`), traits.join(", ")]
         .filter(Boolean).join(" · ");
     }
     case "armour": {
@@ -306,7 +309,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canExpendable: canRollExpendable(item.system),
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
-          reloadTooltip: game.i18n.format("VARBORG.Reload.ReloadTooltip", { count: item.system.reload ?? 0 }),
+          reloadTooltip: game.i18n.format("VARBORG.Reload.ReloadTooltip", { count: item.type === "weapon" ? effectiveWeapon(item).reload ?? 0 : 0 }),
           overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
         }))
     }));

@@ -12,11 +12,16 @@
  * (the usual Agility defence).
  */
 
-import { collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll } from "./rules/item-effects.mjs";
+import {
+  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats
+} from "./rules/item-effects.mjs";
 import { gainEmber } from "./pools.mjs";
 import { isDead } from "./deaths-door.mjs";
 
 const { DialogV2 } = foundry.applications.api;
+
+/** The Unarmed weapon's id in the weapons compendium. */
+const UNARMED_ID = "vbWeap0010000000";
 
 /**
  * The item effects on one roll.
@@ -100,6 +105,29 @@ export function itemHooks(actor, event) {
   return hookEffects(collectEffects(actor.items), event, { hp: actor.system.hp?.value ?? 0, hpMax: actor.system.hp?.max ?? 0 });
 }
 
+/**
+ * Whether a weapon item is the Unarmed weapon (rules 4.1), by its
+ * compendium source or its name.
+ */
+export function isUnarmed(item) {
+  const source = item?._stats?.compendiumSource ?? item?.flags?.core?.sourceId ?? "";
+  if (source.endsWith(UNARMED_ID)) return true;
+  const name = item?.name?.trim().toLowerCase();
+  return name === "unarmed" || name === game.i18n.localize("VARBORG.Power.Bare.unarmed").toLowerCase();
+}
+
+/**
+ * A weapon's numbers after its owner's feats (step 50a3): Brawler's
+ * unarmed die, Long shot's ranges, Quick reload's actions.
+ * @param {Item} item  A weapon.
+ * @returns {object}  A copy of its system data, or the data itself.
+ */
+export function effectiveWeapon(item) {
+  const bonuses = item.actor?.type === "character" ? item.actor.system.statBonuses : null;
+  if (!bonuses) return item.system;
+  return withWeaponStats(item.system, bonuses, isUnarmed(item));
+}
+
 /** Mark an item's limited use spent (once per day and so on). */
 async function markUsed(actor, itemId) {
   const item = actor.items.get(itemId);
@@ -179,7 +207,8 @@ export async function doEffectAction(actor, effect) {
  */
 export async function runItemHooks(actor, event) {
   if (actor?.type !== "character" || isDead(actor)) return;
-  const hooks = itemHooks(actor, event).filter(hook => hook.action !== "rollTwice");
+  // Rolling twice is done by the roll; Steady nerves by the Panic card.
+  const hooks = itemHooks(actor, event).filter(hook => !["rollTwice", "steadyNerves"].includes(hook.action));
   if (!hooks.length) return;
   const i18n = game.i18n;
   const lines = [];

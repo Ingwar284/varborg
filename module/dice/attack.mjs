@@ -51,7 +51,7 @@ import { markFired } from "../ammunition.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
 import { weaponTags, withExtraDamage } from "../rules/item-effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
@@ -70,7 +70,8 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/attack-card.hbs";
  */
 export async function rollAttack(actor, item) {
   const i18n = game.i18n;
-  const weapon = item.system;
+  // After the owner's feats: Brawler, Long shot (step 50a3).
+  const weapon = effectiveWeapon(item);
   if (needsReload(weapon) && !canFire(weapon)) {
     ui.notifications.warn(i18n.format("VARBORG.Attack.Empty", { name: item.name }));
     return;
@@ -335,7 +336,8 @@ function attackConditions(actor, target, mode, ability, item) {
  */
 async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "" }) {
   const i18n = game.i18n;
-  const weapon = item.system;
+  // After the owner's feats: Brawler, Long shot (step 50a3).
+  const weapon = effectiveWeapon(item);
   const modes = attackModes(weapon);
   // Finesse gives the same choice whichever way you attack.
   const abilities = attackAbilities(weapon, modes[0]);

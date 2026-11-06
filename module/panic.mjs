@@ -31,7 +31,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { turnState } from "./combat.mjs";
 import { AGONY_RESULTS } from "./rules/agony.mjs";
 import { endsAfterHours, hoursLeft, hasEnded } from "./rules/calendar.mjs";
-import { runItemHooks } from "./effects.mjs";
+import { runItemHooks, itemHooks } from "./effects.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -90,6 +90,12 @@ export async function rollPanicTest(actor) {
   await runItemHooks(actor, ["failure", "ruin"].includes(result.tier) ? "panicFailure" : "panicSuccess");
 
   const dice = panicDice(result.tier);
+  // Steady nerves, while unspent: the player chooses first (GAPS 197).
+  const nerves = dice ? itemHooks(actor, "panicFailure").find(hook => hook.action === "steadyNerves") : null;
+  if (nerves) {
+    await postNervesChoice(actor, nerves, dice);
+    return;
+  }
   if (dice) {
     await rollPanicTable(actor, dice);
     return;
@@ -105,6 +111,85 @@ export async function rollPanicTest(actor) {
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<div class="var-borg-card">${lines.map(line => `<p>${line}</p>`).join("")}</div>`
+  });
+}
+
+/**
+ * A failed Panic test with Steady nerves unspent (step 50a3, GAPS 197): a
+ * card with two buttons instead of the table roll. "Steady nerves" makes
+ * the test a Success and gives 1 Fatigued; the other rolls the table.
+ * @param {Actor} actor
+ * @param {object} nerves  The Steady nerves hook (collectEffects).
+ * @param {string} dice    "1d10" or "2d10".
+ */
+async function postNervesChoice(actor, nerves, dice) {
+  const i18n = game.i18n;
+  const escape = foundry.utils.escapeHTML;
+  const item = escape(nerves.item);
+  const lines = [
+    i18n.format("VARBORG.Panic.Nerves.Failed", { name: actor.name }),
+    i18n.format("VARBORG.Panic.Nerves.Offer", { item })
+  ];
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    flavor: i18n.localize("VARBORG.Panic.Title"),
+    content: `<div class="var-borg-card panic-card"><h3>${escape(i18n.format("VARBORG.Panic.CardTitle", { name: actor.name }))}</h3>`
+      + lines.map(line => `<p>${escape(line)}</p>`).join("")
+      + `<button type="button" class="text-button" data-action="steadyNerves" data-actor-uuid="${actor.uuid}" data-item-id="${nerves.itemId}">`
+      + `<i class="fa-solid fa-hand-fist"></i> ${escape(i18n.format("VARBORG.Panic.Nerves.Use", { item }))}</button>`
+      + `<button type="button" class="text-button" data-action="panicTable" data-actor-uuid="${actor.uuid}" data-formula="${dice}">`
+      + `<i class="fa-solid fa-dice-d20"></i> ${escape(i18n.format("VARBORG.Panic.Nerves.Roll", { formula: dice }))}</button></div>`,
+    flags: { [SYSTEM]: { panicChoice: true } }
+  });
+}
+
+/** Watch the buttons on Steady nerves cards (step 50a3). */
+export function registerPanicButtons() {
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    if (!message.getFlag(SYSTEM, "panicChoice")) return;
+    const buttons = [...html.querySelectorAll("button[data-action='steadyNerves'], button[data-action='panicTable']")];
+    if (!buttons.length) return;
+    const actor = fromUuidSync(buttons[0].dataset.actorUuid);
+    if (!actor?.isOwner || message.getFlag(SYSTEM, "panicChosen")) {
+      for (const button of buttons) button.disabled = true;
+      return;
+    }
+    for (const button of buttons) {
+      button.addEventListener("click", async () => {
+        for (const other of buttons) other.disabled = true;
+        if (message.getFlag(SYSTEM, "panicChosen")) return;
+        if (message.canUserModify(game.user, "update")) await message.setFlag(SYSTEM, "panicChosen", true);
+        if (button.dataset.action === "panicTable") await rollPanicTable(actor, button.dataset.formula);
+        else await useSteadyNerves(actor, button.dataset.itemId);
+      });
+    }
+  });
+}
+
+/**
+ * Steady nerves: the failed Panic test counts as a Success, the character
+ * gains 1 Fatigued and the feat is spent for the day (GAPS 197).
+ */
+async function useSteadyNerves(actor, itemId) {
+  const i18n = game.i18n;
+  const item = actor.items.get(itemId);
+  if (!item || item.system.frequencyUsed) {
+    ui.notifications.warn(i18n.localize("VARBORG.Panic.Nerves.Spent"));
+    return;
+  }
+  await item.update({ "system.frequencyUsed": true });
+  const fatigue = (actor.system.fatigue ?? 0) + 1;
+  await actor.update({ "system.fatigue": fatigue });
+  const lines = [
+    i18n.format("VARBORG.Panic.Nerves.Held", { item: item.name, name: actor.name }),
+    i18n.format("VARBORG.Panic.Calm", { name: actor.name }),
+    i18n.format("VARBORG.Panic.Nerves.Fatigued", { level: fatigue }),
+    i18n.format("VARBORG.Effects.HookUsed", { item: item.name })
+  ];
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    flavor: i18n.localize("VARBORG.Panic.Title"),
+    content: `<div class="var-borg-card">${lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")}</div>`
   });
 }
 

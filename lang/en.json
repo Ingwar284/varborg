@@ -916,6 +916,15 @@
       "ByHand": "The system does not apply this. The Dark Master decides what happens to the character.",
       "Ends": "{name}: {result} ends.",
       "UsedUp": "{name}: {result} used up.",
+      "Nerves": {
+        "Failed": "{name} fails the Panic test.",
+        "Offer": "{item}: hold yourself together and treat the result as a Success, gaining one level of Fatigued, or roll on the Panic table.",
+        "Use": "{item}: Success, +1 Fatigued",
+        "Roll": "Roll on the Panic table ({formula})",
+        "Spent": "Steady nerves has already been used today.",
+        "Held": "{item}: {name} holds themselves together. The Panic test counts as a Success.",
+        "Fatigued": "The effort costs them: Fatigued, level {level}."
+      },
       "Remove": "Remove this Panic result",
       "Add": "Add a Panic result…",
       "AddHint": "Dark Master only. Gives the character a lasting Panic result, with its 1d10 duration rolled.",
@@ -2550,7 +2559,10 @@
         "soak": "Natural armour tier",
         "defenceDr": "Defence DR",
         "rangedDefenceDr": "Defence DR against ranged attacks (starting)",
-        "fortuneDie": "Fortune die (starting and regained)"
+        "fortuneDie": "Fortune die (starting and regained)",
+        "unarmedDie": "Unarmed damage die",
+        "rangePercent": "Weapon ranges, in per cent",
+        "reloadActions": "Actions to reload"
       },
       "OpLabel": "How",
       "Op": {
@@ -2660,7 +2672,8 @@
         "reroll": "Offer a reroll on cards",
         "gainFortune": "Gain Fortune",
         "reprieve": "Harkin's Reprieve: do not die",
-        "deathsDoorInstead": "Go to Death's Door instead"
+        "deathsDoorInstead": "Go to Death's Door instead",
+        "steadyNerves": "Steady nerves: a Success button on the failed Panic card"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
