@@ -1,0 +1,29 @@
+{
+  "_id": "vbWeapBladeArm00",
+  "name": "Blade-arm",
+  "type": "weapon",
+  "img": "icons/weapons/swords/sword-guard-serrated.webp",
+  "system": {
+    "description": "One arm calcified into a massive, serrated cleaver of black bone (the Fleshwright power Blade-Arm). It goes when you change your shape again.",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": true,
+    "damage": "d12",
+    "kind": "melee",
+    "damageType": "bleeding",
+    "agile": false,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 0,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false,
+    "attackAbility": ""
+  }
+}

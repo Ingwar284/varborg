@@ -41,6 +41,13 @@
     <input id="var-borg-power-bane" type="checkbox" name="bane">
     <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
   </div>
+  {{#if thrallAsk}}
+  <div class="form-group">
+    <label for="var-borg-power-thralls">{{localize "VARBORG.Outcome.ThrallsAsk"}}</label>
+    <input id="var-borg-power-thralls" type="number" name="thralls" value="0" min="0" max="{{thrallAsk.max}}" step="1">
+    <p class="hint">{{thrallAsk.hint}}</p>
+  </div>
+  {{/if}}
   {{#if outcomeOptions.length}}
   <div class="form-group">
     <label for="var-borg-power-option">{{localize "VARBORG.Outcome.Option"}}</label>

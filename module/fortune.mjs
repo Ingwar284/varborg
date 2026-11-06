@@ -33,6 +33,9 @@ const SUCCESS = "success";
 /** An item button that lowers damage taken (step 50d). */
 const LOWER = "lowerDamage";
 
+/** An item button that rerolls the damage taken and keeps the lower (Bend Fate, GAPS 227). */
+const BEND = "lowerReroll";
+
 /**
  * The item id and action of an item button, and the actor whose item it is
  * when that is another character ("item:actorId.itemId", Call upon the
@@ -41,7 +44,7 @@ const LOWER = "lowerDamage";
 function itemAction(action) {
   const [ref, kind] = action.slice(ITEM_PREFIX.length).split(":");
   const [ownerId, itemId] = ref.includes(".") ? ref.split(".") : [null, ref];
-  return { itemId, ownerId, kind: [SUCCESS, LOWER].includes(kind) ? kind : SPEND.REROLL };
+  return { itemId, ownerId, kind: [SUCCESS, LOWER, BEND].includes(kind) ? kind : SPEND.REROLL };
 }
 
 /**
@@ -142,14 +145,14 @@ export async function fortuneSection(data, shown) {
   const items = actor?.items
     ? [...cardButtons(collectEffects(actor.items), cardRoll(data), card), ...allyButtons(actor, cardRoll(data), card)]
     : [];
-  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${[SUCCESS, LOWER].includes(entry.action) ? `:${entry.action}` : ""}`;
+  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${[SUCCESS, LOWER, BEND].includes(entry.action) ? `:${entry.action}` : ""}`;
   data.offered.push(...items.map(keyOf));
   return renderTemplate(BUTTONS_TEMPLATE, {
     buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
       ? {
         action,
-        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE] }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
-        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
+        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL] }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
+        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
           { item: items.find(entry => action === keyOf(entry))?.item ?? "", amount: items.find(entry => action === keyOf(entry))?.amount ?? "" })
       }
       : {
@@ -163,7 +166,7 @@ export async function fortuneSection(data, shown) {
     log: data.state.log.map(entry => (entry.failedAgain
       ? i18n.format("VARBORG.Effects.FailedAgain", { item: entry.item, note: entry.note || i18n.localize("VARBORG.Effects.SeeText") })
       : entry.item
-      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
+      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
       : i18n.format("VARBORG.Fortune.Spent", {
         name: entry.name,
         use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
@@ -281,12 +284,18 @@ async function applyFortune({ messageId, action, spenderUuid }) {
       if (item.system.frequencyUsed) return { error: "VARBORG.Fortune.NotNow" };
       await item.update({ "system.frequencyUsed": true });
     }
+    // A reaction power pays its ember and the reaction (GAPS 227).
+    if (["power", "spell"].includes(item.type)) {
+      const { payReactionPower } = await import("./dice/power.mjs");
+      const error = await payReactionPower(item.actor, item);
+      if (error) return { error };
+    }
     entry.action = kind;
     entry.item = item.name;
     entry.itemId = item.id;
     const effect = collectEffects([item]).find(found => found.kind === "use" && found.action === kind && found.roll === cardRoll(data));
     failAgain = effect?.failAgain ? effect : null;
-    lowerEffect = kind === LOWER ? effect : null;
+    lowerEffect = [LOWER, BEND].includes(kind) ? effect : null;
     rerollEffect = kind === SPEND.REROLL ? effect : null;
   } else {
     if (!canSpend(spender.system.fortune)) return { error: "VARBORG.Fortune.None" };
@@ -319,6 +328,17 @@ async function applyFortune({ messageId, action, spenderUuid }) {
       extraRolls.push(roll);
       state.featLowered = [...(state.featLowered ?? []), roll.total];
       entry.value = `−${roll.total}`;
+      break;
+    }
+    case BEND: {
+      // The damage is rolled again and the lower counts (Bend Fate, GAPS 227).
+      const formula = data.inputs.damageFormula ?? state.damageFormula ?? null;
+      if (!formula || state.damage === null) break;
+      const roll = await new Roll(formula).evaluate();
+      extraRolls.push(roll);
+      entry.value = `${state.damage} / ${roll.total}`;
+      state.damage = Math.min(state.damage, roll.total);
+      state.noShared = true;
       break;
     }
     case SPEND.SOFTEN:

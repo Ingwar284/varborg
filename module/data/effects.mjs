@@ -75,6 +75,8 @@ export function effectFields() {
       chosenName: new StringField({ required: true, blank: true, initial: "" }),
       // Only with the power of this name (Field notes: Study the specimen, step 51a3).
       power: new StringField({ required: true, blank: true, initial: "" }),
+      // A power's buff effect for one option only (Morphic Surge, step 51d2).
+      option: new StringField({ required: true, blank: true, initial: "" }),
       // When it applies, in a few words ("on tests involving balance").
       note: new StringField({ required: true, blank: true, initial: "" })
     })),

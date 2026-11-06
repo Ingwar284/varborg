@@ -30,8 +30,43 @@ import { TIMER_KINDS, isRoundsFormula } from "./timers.mjs";
  * fatigue: one more level of Fatigued;
  * partner: the targeted ally becomes the user's dance partner (GAPS 222);
  * cure: the creature no longer has `condition` (The Banner Stands ends Frightened).
+ * Step 51d2:
+ * thralls: the user raises `amount` thralls (Call the Unburied, GAPS 225);
+ * rigDamage: the user's rig takes `amount` damage, soaked by its armour
+ *   only when `soaked` is ticked (GAPS 228);
+ * surge: a Photonic Surge is triggered (the table is drawn).
  */
-export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder", "persistent", "damage", "lowerArmour", "fatigue", "partner", "cure"];
+export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder", "persistent", "damage", "lowerArmour", "fatigue", "partner", "cure", "thralls", "rigDamage", "surge"];
+
+/** Is it a Morph power ("Morph. One arm calcifies…")? Its buff replaces the last Morph's (GAPS 226). */
+export function isMorphPower(description) {
+  return /^\s*Morph\b/.test(String(description ?? ""));
+}
+
+/**
+ * The buff effects for one entry: those of its option, and those of no
+ * option (Morphic Surge's three shapes, step 51d2).
+ * @param {object[]} effects  The power's buffEffects.
+ * @param {string} option     The entry's option, or "".
+ */
+export function buffEffectsFor(effects, option = "") {
+  return (effects ?? []).filter(effect => !effect.option || effect.option === option);
+}
+
+/** How thralls a power destroys add damage (GAPS 225). */
+export const THRALL_DESTROY = ["", "one", "ask", "all"];
+
+/**
+ * The extra damage from destroyed thralls (GAPS 225): `per` for each
+ * thrall beyond the first `skip`, at most `max` of them.
+ * Charnel Charge: d4 each, up to 3. Flesh Tide: d6 for each beyond the first, up to 3.
+ * @returns {string}  Such as "d4 + d4", or "".
+ */
+export function thrallDamage(count, { per = "", max = 0, skip = 0 } = {}) {
+  if (!per) return "";
+  const counted = Math.max(0, Math.min(max > 0 ? max : Infinity, (count ?? 0) - skip));
+  return Array(counted).fill(per).join(" + ");
+}
 
 /** Who gets it: each targeted creature, the user, or the user's dance partner (GAPS 222). */
 export const OUTCOME_WHO = ["target", "self", "partner"];
@@ -90,7 +125,7 @@ export function outcomeProblems(entry) {
   if (!OUTCOME_WHO.includes(entry?.who)) problems.push(`who: ${entry?.who}`);
   if (!OUTCOME_TIERS.some(tier => entry?.tiers?.[tier])) problems.push("no result ticked");
   if (["condition", "cure"].includes(entry?.kind) && !CONDITIONS.includes(entry.condition)) problems.push(`condition: ${entry.condition}`);
-  if (["heal", "persistent", "damage"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  if (["heal", "persistent", "damage", "thralls", "rigDamage"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
   if (entry?.kind === "persistent" && !OUTCOME_PERSISTENT.includes(entry.damageType)) problems.push(`damageType: ${entry.damageType}`);
   if (entry?.when && !OUTCOME_WHEN.includes(entry.when)) problems.push(`when: ${entry.when}`);
   if (entry?.when === "end" && entry.who !== "self") problems.push("when the power ends: only the user");

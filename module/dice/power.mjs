@@ -39,7 +39,8 @@ import { withExtraDamage, unarmedDamage, isRiskyPower } from "../rules/item-effe
 import { belongsTo } from "../rules/feats.mjs";
 import { areaTargets } from "../rules/powers.mjs";
 import { outcomeInputs } from "../outcomes.mjs";
-import { outcomeOptions } from "../rules/outcomes.mjs";
+import { outcomeOptions, thrallDamage } from "../rules/outcomes.mjs";
+import { ownedThralls, deleteThralls } from "../minions.mjs";
 
 /** The outcome inputs with the options chosen in the dialog (GAPS 224). */
 function withChosen(inputs, chosen) {
@@ -103,6 +104,28 @@ export async function payPowerEmber(actor, use, paid) {
   const refund = dialogCost(paid.boon, paid.bane);
   if (refund) await actor.update({ "system.fortune": (actor.system.fortune ?? 0) + refund });
   return false;
+}
+
+/**
+ * Pay for a reaction power used from a card button (Reactive Plating,
+ * Bend Fate, Not the face!, GAPS 227): in combat its ember from the pool
+ * and the user's reaction; outside combat its one free use (rules 3.10).
+ * @param {Actor} actor
+ * @param {Item} power
+ * @returns {Promise<string|null>}  An error key, or null when paid.
+ */
+export async function payReactionPower(actor, power) {
+  const turn = turnState(actor);
+  const use = powerUse({
+    inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn,
+    cost: power.system.cost, actions: power.system.actions, usedOutside: power.system.usedOutside, reaction: true
+  });
+  if (!use.allowed) return "VARBORG.Power.AlreadyUsed";
+  if (use.ember && !canPay(getPools()[POOL.EMBER], use.ember)) return "VARBORG.Power.NotEnoughEmberShort";
+  if (use.ember && !(await spendFromPool(POOL.EMBER, use.ember, actor))) return "VARBORG.Power.NotEnoughEmberShort";
+  if (turn.combatant) await turn.combatant.adjustPips("reactions", -1);
+  if (use.marksUsed) await power.update({ "system.usedOutside": true });
+  return null;
 }
 
 /**
@@ -266,6 +289,11 @@ async function rollPowerTest(actor, power) {
       selected: dr === startDr
     })),
     fortuneFields: await fortuneFields(actor, "power"),
+    // Thralls this power destroys (GAPS 225).
+    thrallAsk: power.system.thrallDestroy === "ask" ? {
+      max: ownedThralls(actor).length,
+      hint: i18n.format("VARBORG.Outcome.ThrallsAskHint", { have: ownedThralls(actor).length, per: power.system.thrallDamage || "—", max: power.system.thrallMax || "∞" })
+    } : null,
     // Options to choose from (GAPS 224); a second one only counts on a Triumph.
     outcomeOptions: outcomeOptions(power.system.outcomeEffects ?? []),
     secondOption: (power.system.triumphPicks ?? 1) > 1,
@@ -287,7 +315,20 @@ async function rollPowerTest(actor, power) {
 
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;
+  // Thralls the power needs must be there (GAPS 225).
+  const notesAfter = [];
+  const thralls = ownedThralls(actor);
+  const destroying = { "": 0, one: 1, all: thralls.length, ask: Math.min(thralls.length, Math.max(0, Math.trunc(Number(options.thralls) || 0))) }[power.system.thrallDestroy ?? ""] ?? 0;
+  if (["one", "all"].includes(power.system.thrallDestroy) && !thralls.length) {
+    ui.notifications.warn(i18n.format("VARBORG.Outcome.ThrallsNone", { name: actor.name, power: power.name }));
+    return;
+  }
   if (!(await payPowerEmber(actor, use, paid))) return;
+  if (destroying) {
+    await deleteThralls(thralls.slice(0, destroying));
+    notesAfter.push(i18n.format("VARBORG.Outcome.ThrallsDestroyed", { count: destroying, name: actor.name }));
+  }
+  const thrallExtra = thrallDamage(destroying, { per: power.system.thrallDamage, max: power.system.thrallMax, skip: power.system.thrallSkip });
   // Outside combat: this was the one free use (rules 3.10).
   if (use.marksUsed) await power.update({ "system.usedOutside": true });
   // A Risky power gives Adrenaline before the roll (GAPS 206).
@@ -307,6 +348,8 @@ async function rollPowerTest(actor, power) {
 
   const weapon = weapons.length ? (weapons.find(choice => choice.id === options.weapon) ?? weapons[0]) : null;
   const damage = powerDamageDice(power, weapon?.dice);
+  // Destroyed thralls add their damage (Charnel Charge, Flesh Tide).
+  if (thrallExtra && damage.formula) damage.formula = `${damage.formula} + ${thrallExtra}`;
   const foe = target?.type === "foe" ? target : null;
   const title = i18n.format("VARBORG.Power.CardTitle", { name: power.name });
   const inputs = {
@@ -344,6 +387,7 @@ async function rollPowerTest(actor, power) {
         ...notes,
         paid.note,
         weapon ? i18n.format("VARBORG.Power.WeaponNote", { name: weapon.name }) : null,
+        ...notesAfter,
         emberNote(use, Boolean(turn.combatant))
       ].filter(Boolean),
       thrownNote: null,

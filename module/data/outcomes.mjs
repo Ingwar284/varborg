@@ -4,7 +4,7 @@
  * The rules live in module/rules/outcomes.mjs.
  */
 
-import { OUTCOME_KINDS, OUTCOME_WHO, OUTCOME_WHEN, OUTCOME_PERSISTENT } from "../rules/outcomes.mjs";
+import { OUTCOME_KINDS, OUTCOME_WHO, OUTCOME_WHEN, OUTCOME_PERSISTENT, THRALL_DESTROY } from "../rules/outcomes.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 import { TIMER_KINDS } from "../rules/timers.mjs";
 import { effectFields } from "./effects.mjs";
@@ -45,6 +45,13 @@ export function outcomeFields() {
       nextOnly: new BooleanField({ initial: false }),
       note: new StringField({ required: true, blank: true, initial: "" })
     })),
+    // Thralls the power destroys when used (GAPS 225): none, one, as many
+    // as the player asks, or all; the damage each adds, at most how many,
+    // and how many first ones add nothing (Flesh Tide: "beyond the first").
+    thrallDestroy: new StringField({ required: true, blank: true, choices: THRALL_DESTROY, initial: "" }),
+    thrallDamage: new StringField({ required: true, blank: true, initial: "" }),
+    thrallMax: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
+    thrallSkip: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
     // How many options a Triumph lets the user choose (Daring Stunt: 2, GAPS 224).
     triumphPicks: new NumberField({ required: true, nullable: false, integer: true, min: 1, max: 2, initial: 1 }),
     buffEffects: effectFields().effects

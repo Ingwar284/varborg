@@ -271,7 +271,17 @@ export async function raiseThrall(owner, effect) {
       await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: scene.id, actorId: actor.id }]).catch(() => null);
     }
   }
-  return { lines: [i18n.format("VARBORG.Thrall.Raised", { item: effect.item, owner: owner.name })], rolls: [], acted: true };
+  return { lines: [i18n.format("VARBORG.Thrall.Raised", { item: effect.item, owner: owner.name })], rolls: [], acted: true, thrallId: actor.id };
+}
+
+/** Delete thralls and their tokens. */
+export async function deleteThralls(thralls) {
+  if (!thralls.length) return;
+  for (const scene of game.scenes) {
+    const ids = scene.tokens.filter(token => thralls.some(thrall => thrall.id === token.actorId)).map(token => token.id);
+    if (ids.length) await scene.deleteEmbeddedDocuments("Token", ids);
+  }
+  await Actor.deleteDocuments(thralls.map(thrall => thrall.id));
 }
 
 /**

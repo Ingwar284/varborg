@@ -1273,9 +1273,20 @@ one fight and one rest.
         against this creature" work for its defenders, and can last for
         its next attack only. The report counts these entries and a
         power's own damage. EFFECTS_CONTENT 18.
-      - 51d2. Tools: Morph buffs, raising and destroying thralls, damage
-        to the rig, reaction buttons on cards. Then Charioteer, Druid,
-        Fleshwright, Gravecaller and Hedge Mage (35 powers).
+      - ~~51d2. Tools, then Charioteer, Druid, Fleshwright, Gravecaller
+        and Hedge Mage.~~ Done: all 70 powers of 51d have a status. New:
+        a Morph's buff replaces the last Morph's and has a Revert (Use)
+        button; buff effects can belong to one option (Morphic Surge); a
+        buff's gifts go with it (the new Blade-arm weapon in
+        content/weapons/gifts); "What it gives" can raise thralls (Call
+        the Unburied), hurt the user's rig and trigger a Photonic Surge;
+        powers can destroy one, some (asked in the dialog) or all of the
+        user's thralls when used, each adding damage (Charnel Charge,
+        Flesh Tide; destroyed whatever the result); Reactive Plating and
+        Bend Fate are buttons on the character's defence and gloom cards,
+        paying their ember and reaction; Not the face! offers a "stay at
+        1 HP" button at 0 HP (the wound gained is taken back). Improvised
+        Cantrip's damage is d8 (its text). EFFECTS_CONTENT 19.
       51e is Paladin to Wizard (77).
     - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
 

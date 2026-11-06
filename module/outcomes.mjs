@@ -18,13 +18,19 @@
  * Sustained power end with it too (GAPS 220).
  */
 
-import { wantedOutcomes, outcomeDiff } from "./rules/outcomes.mjs";
+import { wantedOutcomes, outcomeDiff, buffEffectsFor, isMorphPower } from "./rules/outcomes.mjs";
 import { addTimedCondition, rollTimer } from "./timers.mjs";
 import { addPersistentDamage, persistentEffects } from "./persistent.mjs";
 import { stepDownArmourDie } from "./rules/attack.mjs";
 
 const SYSTEM = "var-borg";
 const QUERY = "var-borg.outcome";
+
+/** The Thrall stat block (content/foes), raised by Call the Unburied. */
+const THRALL_STAT_BLOCK = "Compendium.var-borg.foes.Actor.vbFoeThrall00000";
+
+/** The Photonic Surge table (content/tables). */
+const SURGE_TABLE = "Compendium.var-borg.tables.RollTable.vbTableSurge0000";
 
 /** Register the Dark Master's side and the end of Sustained powers. */
 export function registerOutcomes() {
@@ -50,6 +56,7 @@ export function outcomeInputs(actor, power) {
     entries: entries.map(entry => foundry.utils.deepClone(entry)),
     buffEffects: foundry.utils.deepClone(power.toObject().system.buffEffects ?? []),
     name: power.name,
+    morph: isMorphPower(power.system.description),
     // Effects from a Sustained power end with it (GAPS 220, 221).
     sustained: Boolean(power.system.sustained),
     source: `${actor.uuid}|${power.id}`,
@@ -95,7 +102,9 @@ export async function settleOutcomes(data, tier) {
     const entry = inputs.entries[want.index];
     const op = { op: "give", actorUuid: want.actorUuid, entry, name: inputs.name, source: inputs.source, sustained: inputs.sustained && entry.who === "self", user: inputs.user };
     if (entry.kind === "buff") {
-      op.effects = inputs.buffEffects;
+      // Only this option's buff effects (Morphic Surge), and Morph replaces Morph (GAPS 226).
+      op.effects = buffEffectsFor(inputs.buffEffects, entry.option);
+      op.morph = Boolean(inputs.morph);
       op.sustained = inputs.sustained;
     }
     // Healing and damage are rolled here, so the card shows the dice.
@@ -117,7 +126,14 @@ async function doOp(op) {
   const uuid = op.actorUuid ?? op.done?.actorUuid;
   const actor = uuid ? await fromUuid(uuid) : null;
   if (!actor) return null;
-  if (actor.isOwner) return runOp(op);
+  // Raising thralls makes actors, which players often may not (GAPS 225).
+  const needsGM = op.entry?.kind === "thralls" && !game.user.can("ACTOR_CREATE");
+  if (actor.isOwner && !needsGM) return runOp(op);
+  return askGM(op);
+}
+
+/** Send a change to the Dark Master's client. */
+async function askGM(op) {
   const gm = game.users.activeGM;
   if (!gm) {
     ui.notifications.warn(game.i18n.localize("VARBORG.Outcome.NoGM"));
@@ -162,13 +178,18 @@ async function runOp(op) {
       return { healed: to - from, line: noted(i18n.format("VARBORG.Outcome.Healed", { name: actor.name, amount: to - from, from, to }), entry.note) };
     }
     case "buff": {
+      // A new Morph undoes the last (GAPS 226).
+      if (op.morph) {
+        const old = actor.items.filter(item => item.getFlag(SYSTEM, "buff")?.morph).map(item => item.id);
+        if (old.length) await actor.deleteEmbeddedDocuments("Item", old);
+      }
       const { timer } = await rollTimer(actor, entry.duration);
       const [item] = await actor.createEmbeddedDocuments("Item", [{
         name: i18n.format("VARBORG.Outcome.BuffName", { power: op.name }),
         type: "feat",
         img: "icons/svg/aura.svg",
         system: { description: entry.note || "", source: "general", effects: op.effects ?? [], automation: "auto" },
-        flags: { [SYSTEM]: { buff: { source: op.source, sustained: Boolean(op.sustained), nextOnly: Boolean(entry.nextOnly) }, ...(timer ? { timer } : {}) } }
+        flags: { [SYSTEM]: { buff: { source: op.source, sustained: Boolean(op.sustained), nextOnly: Boolean(entry.nextOnly), morph: Boolean(op.morph) }, ...(timer ? { timer } : {}) } }
       }]);
       return { itemId: item?.id ?? null, line: noted(i18n.format("VARBORG.Outcome.Buffed", { name: actor.name, power: op.name }), entry.note) };
     }
@@ -229,6 +250,36 @@ async function runOp51d(actor, op) {
       const condition = i18n.localize(`VARBORG.Condition.${entry.condition}`);
       return { cured: entry.condition, line: noted(i18n.format("VARBORG.Outcome.Cured", { name: actor.name, condition }), entry.note) };
     }
+    case "thralls": {
+      // Raise thralls next to the user (GAPS 225), as Raise thrall does.
+      const { raiseThrall } = await import("./minions.mjs");
+      const ids = [];
+      const count = Math.max(0, Math.trunc(Number(entry.amount) || 0));
+      for (let i = 0; i < count; i++) {
+        const done = await raiseThrall(actor, { gift: THRALL_STAT_BLOCK, item: op.name, itemId: "" });
+        if (done.thrallId) ids.push(done.thrallId);
+      }
+      return { thrallIds: ids, line: noted(i18n.format("VARBORG.Outcome.ThrallsRaised", { name: actor.name, count: ids.length }), entry.note) };
+    }
+    case "rigDamage": {
+      // The rig the user is aboard (GAPS 228).
+      const rig = game.actors.find(other => other.type === "vehicle" && (other.system.occupants ?? []).some(occupant => occupant.uuid === actor.uuid));
+      if (!rig) return { line: i18n.format("VARBORG.Outcome.NoRig", { name: actor.name }) };
+      let amount = (await new Roll(String(entry.amount || "0")).evaluate()).total;
+      if (entry.soaked && rig.system.armour) amount = Math.max(1, amount - (await new Roll(rig.system.armour).evaluate()).total);
+      const from = rig.system.hp.value;
+      const to = Math.max(0, from - amount);
+      if (rig.isOwner) await rig.update({ "system.hp.value": to });
+      return { rigUuid: rig.uuid, rigDealt: from - to, line: noted(i18n.format("VARBORG.Outcome.RigHurt", { name: rig.name, amount, from, to }), entry.note) };
+    }
+    case "surge": {
+      // A Photonic Surge: the table, and items that act on a surge (Harmonious Light).
+      const table = await fromUuid(SURGE_TABLE).catch(() => null);
+      if (table) await table.draw({ displayChat: true });
+      const { runItemHooks } = await import("./effects.mjs");
+      if (actor.type === "character") await runItemHooks(actor, "surge");
+      return { line: noted(i18n.localize("VARBORG.Outcome.SurgeTriggered"), entry.note) };
+    }
     case "partner": {
       const user = op.user ? await fromUuid(op.user) : null;
       if (!user || user === actor) return { line: "" };
@@ -260,6 +311,14 @@ async function undoOutcome(done) {
   if (done.kind === "persistent" && done.effectId) await actor.effects.get(done.effectId)?.delete();
   if (done.kind === "damage" && done.dealt) await actor.update({ "system.hp.value": Math.min(actor.system.hp.max ?? Infinity, actor.system.hp.value + done.dealt) });
   if (done.kind === "lowerArmour" && done.armourFrom !== undefined) await actor.update({ "system.armour": done.armourFrom });
+  if (done.kind === "thralls" && done.thrallIds?.length) {
+    const { deleteThralls } = await import("./minions.mjs");
+    await deleteThralls(done.thrallIds.map(id => game.actors.get(id)).filter(Boolean));
+  }
+  if (done.kind === "rigDamage" && done.rigDealt) {
+    const rig = await fromUuid(done.rigUuid);
+    if (rig?.isOwner) await rig.update({ "system.hp.value": Math.min(rig.system.hp.max, rig.system.hp.value + done.rigDealt) });
+  }
   if (done.kind === "cure" && done.cured && !actor.statuses.has(done.cured)) await actor.toggleStatusEffect(done.cured, { active: true });
   if (done.kind === "fatigue" && done.fatigued) await actor.update({ "system.fatigue": Math.max(0, (actor.system.fatigue ?? 1) - 1) });
   if (done.kind === "partner" && done.partnerOf) {

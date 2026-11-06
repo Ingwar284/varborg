@@ -26,6 +26,12 @@ export function registerChoices() {
     if (userId !== game.user.id || item.actor?.type !== "character") return;
     giveGifts(item).then(() => askOpenChoices(item));
   });
+  // A buff's gifts go with it (a Morph's Blade-arm, step 51d2).
+  Hooks.on("deleteItem", (item, options, userId) => {
+    if (userId !== game.user.id || !item.getFlag(SYSTEM, "buff") || !item.actor) return;
+    const given = item.actor.items.filter(other => other.getFlag(SYSTEM, "grantedBy") === item.id).map(other => other.id);
+    if (given.length) item.actor.deleteEmbeddedDocuments("Item", given);
+  });
 }
 
 /**
@@ -45,6 +51,8 @@ async function giveGifts(item) {
     }
     const data = source.toObject();
     data._stats = { ...data._stats, compendiumSource: effect.gift };
+    // Remember the giver, so the gift goes when a buff that gave it ends (Blade-Arm, step 51d2).
+    data.flags = { ...data.flags, [SYSTEM]: { ...(data.flags?.[SYSTEM] ?? {}), grantedBy: item.id } };
     await actor.createEmbeddedDocuments("Item", [data]);
     names.push(source.name);
   }

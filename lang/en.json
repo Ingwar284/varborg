@@ -1503,7 +1503,8 @@
       },
       "ResourceLabel": "Resource",
       "ResourceHint": "Ember for a character's power, Gloom for a foe's gloom ability.",
-      "GloomOnCharacter": "{name} is a gloom ability. Gloom abilities belong to foes and are used from the foe sheet."
+      "GloomOnCharacter": "{name} is a gloom ability. Gloom abilities belong to foes and are used from the foe sheet.",
+      "NotEnoughEmberShort": "Not enough Ember in the pool for {name}."
     },
     "Spell": {
       "SheetHint": "A spell, cast with Sanity against DR 11 + its ember cost (rules 3.11).",
@@ -2771,7 +2772,10 @@
         "mount": "Mount up or dismount",
         "raiseThrall": "Raise a thrall",
         "thrallAttack": "Thrall attack (Sanity, DR12)",
-        "recordKind": "Record the targeted creature's kind"
+        "recordKind": "Record the targeted creature's kind",
+        "endBuff": "End this buff (Revert)",
+        "stayAtOne": "Offer to stay at 1 HP instead (Not the face!)",
+        "lowerReroll": "Card button: the attacker rerolls the damage, keep the lower"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2971,7 +2975,12 @@
       "PowerLabel": "Only power",
       "PowerHint": "Only with the power of this name, such as Study the specimen. Empty: any.",
       "MakesLabel": "Makes",
-      "MakesHint": "The UUID of the compendium actor this Use makes: a minion, a vehicle, or the Thrall stat block."
+      "MakesHint": "The UUID of the compendium actor this Use makes: a minion, a vehicle, or the Thrall stat block.",
+      "BendButton": "{item}: the damage is rerolled, keep the lower",
+      "BendLog": "{name} uses {item}: damage {value}, the lower counts.",
+      "StayOffer": "{item}: {name} may collapse dramatically and stay at 1 HP instead.",
+      "StayButton": "{item}: stay at 1 HP (ember and reaction)",
+      "Stayed": "{item}: {name} collapses dramatically but stays at 1 HP. As long as they do not act, they look dead."
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",
@@ -3008,7 +3017,10 @@
         "lowerArmour": "Armour one step down (encounter)",
         "fatigue": "One more level of Fatigued",
         "partner": "Becomes the dance partner",
-        "cure": "Ends a condition"
+        "cure": "Ends a condition",
+        "thralls": "Thralls raised (amount)",
+        "rigDamage": "Damage to the user's rig",
+        "surge": "A Photonic Surge"
       },
       "Who": {
         "target": "Each target",
@@ -3051,7 +3063,17 @@
       "Option": "Option",
       "SecondOption": "Second option (only on a Triumph)",
       "MarkUsed": "{buff} is used up by {name}'s attack.",
-      "Cured": "{name} is no longer {condition}."
+      "Cured": "{name} is no longer {condition}.",
+      "Reverted": "{item}: {name} returns to their own shape.",
+      "EffectOptionHint": "Only for the buff of this option, such as Hardened Keratin. Leave empty for every option.",
+      "ThrallsRaised": "{name} raises {count} thrall(s).",
+      "RigHurt": "{name} takes {amount} damage ({from} → {to}).",
+      "NoRig": "{name} has no rig aboard: apply the damage by hand.",
+      "SurgeTriggered": "A Photonic Surge is triggered.",
+      "ThrallsDestroyed": "{count} of {name}'s thralls are destroyed.",
+      "ThrallsAsk": "Thralls to destroy",
+      "ThrallsAskHint": "{have} thrall(s). Each adds {per} damage, up to {max}.",
+      "ThrallsNone": "{name} has no thralls for {power}."
     }
   }
 }

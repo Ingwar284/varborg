@@ -23,6 +23,31 @@
     },
     "sustaining": false,
     "kept": false,
-    "usedOutside": false
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "three or more thralls within 30' become a Colossus (6 HP each, up to 36, -d2 armour, 2d8 reach 10', Sweep ◈◈: 3d6 in a 10' cone); delete the thralls and make the Colossus by hand"
+      }
+    ],
+    "automation": "text"
   }
 }

@@ -316,6 +316,9 @@ export async function doEffectAction(actor, effect) {
       button: { item, amount: effect.amount || "1" }
     };
   }
+  if (effect.action === "stayAtOne") {
+    return { lines: [i18n.format("VARBORG.Effects.StayOffer", { item, name: actor.name })], rolls: [], acted: false, stayButton: { item, itemId: effect.itemId } };
+  }
   if (effect.mode === "optional" || effect.action === "reminder") {
     const key = effect.mode === "optional" ? "VARBORG.Effects.HookOptional" : "VARBORG.Effects.HookReminder";
     return { lines: [i18n.format(key, { item, note })], rolls: [], acted: false };
@@ -360,6 +363,12 @@ export async function doEffectAction(actor, effect) {
     const { rollThrallAttack } = await import("./dice/attack.mjs");
     await rollThrallAttack(actor, effect);
     return { lines: [i18n.format("VARBORG.Thrall.Attacks", { name: actor.name })], rolls: [], acted: true };
+  }
+  if (effect.action === "endBuff") {
+    // Revert: the buff item ends itself (GAPS 226).
+    const owned = actor.items.get(effect.itemId);
+    if (owned) await owned.delete();
+    return { lines: [i18n.format("VARBORG.Outcome.Reverted", { item, name: actor.name })], rolls: [], acted: true };
   }
   if (effect.action === "mount") {
     // In the saddle until switched off (GAPS 212).
@@ -453,11 +462,13 @@ export async function runItemHooks(actor, event) {
   const lines = [];
   const rolls = [];
   const buttons = [];
+  const stayButtons = [];
   for (const hook of hooks) {
     const done = await doEffectAction(actor, hook);
     lines.push(...done.lines);
     rolls.push(...done.rolls);
     if (done.button) buttons.push(done.button);
+    if (done.stayButton) stayButtons.push(done.stayButton);
     if (hook.frequency && done.acted) {
       await markUsed(actor, hook.itemId);
       lines.push(i18n.format("VARBORG.Effects.HookUsed", { item: hook.item }));
@@ -469,7 +480,9 @@ export async function runItemHooks(actor, event) {
     flavor: title,
     content: `<div class="var-borg-card"><h3>${foundry.utils.escapeHTML(title)}</h3>`
       + lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")
-      + buttons.map(button => fortuneButton(actor, button)).join("") + "</div>",
+      + buttons.map(button => fortuneButton(actor, button)).join("")
+      + stayButtons.map(button => `<button type="button" class="text-button" data-action="stayAtOne" data-actor-uuid="${actor.uuid}" data-item-id="${button.itemId}"><i class="fa-solid fa-masks-theater"></i> ${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.StayButton", { item: button.item }))}</button>`).join("")
+      + "</div>",
     rolls,
     sound: rolls.length ? CONFIG.sounds.dice : null
   });
@@ -486,6 +499,41 @@ function fortuneButton(actor, { item, amount }) {
 /** Watch the Fortune buttons on hook cards (step 50a2). */
 export function registerEffectButtons() {
   Hooks.on("renderChatMessageHTML", addFortuneButtonListeners);
+  Hooks.on("renderChatMessageHTML", addStayListeners);
+}
+
+/**
+ * Not the face! (GAPS 227): the character's player keeps them at 1 HP
+ * instead of 0, paying the power's ember and reaction; a wound gained at
+ * this 0 HP is taken back. Once per card.
+ */
+function addStayListeners(message, html) {
+  const button = html.querySelector("button[data-action='stayAtOne']");
+  if (!button) return;
+  if (message.getFlag("var-borg", "stayed")) {
+    button.disabled = true;
+    return;
+  }
+  button.addEventListener("click", async () => {
+    const actor = await fromUuid(button.dataset.actorUuid);
+    const power = actor?.items.get(button.dataset.itemId);
+    if (!actor?.isOwner || !power) return;
+    button.disabled = true;
+    const { payReactionPower } = await import("./dice/power.mjs");
+    const error = await payReactionPower(actor, power);
+    if (error) {
+      ui.notifications.warn(game.i18n.format(error, { name: power.name }));
+      button.disabled = false;
+      return;
+    }
+    if (message.canUserModify(game.user, "update")) await message.setFlag("var-borg", "stayed", true);
+    const wounds = actor.system.wounds?.value ?? 0;
+    await actor.update({ "system.hp.value": 1, "system.wounds.value": Math.max(0, wounds - 1) });
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.Stayed", { item: power.name, name: actor.name }))}</p></div>`
+    });
+  });
 }
 
 /** The Dark Master presses a Fortune button: the character gains it, once. */

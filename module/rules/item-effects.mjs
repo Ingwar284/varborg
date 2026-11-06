@@ -169,6 +169,9 @@ export const HOOK_ACTIONS = [
   // The item is switched on until the encounter ends, as its Use button
   // does (Barbaric Rage at initiative, step 51a).
   "switchOn",
+  // At 0 HP: a button that keeps the character at 1 HP instead, paying the
+  // power's ember and reaction (Not the face!, GAPS 227).
+  "stayAtOne",
   // Step 51a2: gain Adrenaline (GAPS 206); roll `amount` and trigger a
   // Photonic Surge on a 1 (GAPS 208); at "aura", an ally regains or a foe
   // takes `amount` (GAPS 207).
@@ -204,18 +207,20 @@ export const HOOK_ACTIONS = [
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
 export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage", "takeDamage",
-  "upgradeCompanion", "healCompanion", "hurtCompanion", "adrenaline",
+  "upgradeCompanion", "healCompanion", "hurtCompanion", "adrenaline", "lowerReroll",
   // Step 51a3: make the compendium minion or vehicle named by `gift`, once
   // (GAPS 211); switch "mounted" on or off (GAPS 212); raise a thrall from
   // `gift`, and the Gravecaller's Thrall attack (GAPS 213); write the
   // targeted foe's name into the item's text choice (GAPS 214).
-  "makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind"];
+  "makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind",
+  // A buff item ends itself (a Morph's Revert, GAPS 226).
+  "endBuff"];
 
 /**
  * Use actions that are done on their own: an item with one of these and
  * other Use effects asks which to do (step 51a3).
  */
-export const SEPARATE_USE_ACTIONS = ["makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind", "adrenaline"];
+export const SEPARATE_USE_ACTIONS = ["makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind", "adrenaline", "endBuff"];
 
 /**
  * The choices an item's Use button offers: each separate action on its
@@ -293,7 +298,9 @@ export function chosenWeaponTraits(effects, itemId) {
 }
 
 /** The card actions an item can offer (steps 49g, 50b2, 50d). */
-export const CARD_ACTIONS = ["reroll", "success", "lowerDamage"];
+export const CARD_ACTIONS = ["reroll", "success", "lowerDamage",
+  // The attacker rerolls the damage and the lower counts (Bend Fate, GAPS 227).
+  "lowerReroll"];
 
 /**
  * Damage after feats lowered it by their rolls (Thickened dermis, Magical
@@ -342,6 +349,7 @@ export const ACTION_EVENTS = {
   ruinAsFailure: ["panicFailure"],
   deathsDoorInstead: ["agonyDeath"],
   auraHeal: ["aura"],
+  stayAtOne: ["zeroHp"],
   auraHurt: ["aura"]
 };
 
@@ -590,7 +598,7 @@ export function blankEffect(kind = "stat") {
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", damageType: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
-    resist: "half", gift: "", setDamage: "", companion: "minion", armour: "", power: "",
+    resist: "half", gift: "", setDamage: "", companion: "minion", armour: "", power: "", option: "",
     note: ""
   };
 }
@@ -1048,6 +1056,7 @@ export function cardButtons(effects, rollKind, card = {}) {
   for (const effect of effects ?? []) {
     if (effect.kind !== "use" || !CARD_ACTIONS.includes(effect.action) || effect.roll !== rollKind) continue;
     if (effect.action === "lowerDamage" && !(card.taken > 1)) continue;
+    if (effect.action === "lowerReroll" && !(card.taken > 0)) continue;
     if (effect.frequency && effect.used) continue;
     if ((card.used ?? []).includes(effect.itemId)) continue;
     if (effect.ability && effect.ability !== card.ability) continue;
