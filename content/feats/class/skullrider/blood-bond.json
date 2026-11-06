@@ -9,6 +9,8 @@
     "belongsTo": "Skullrider",
     "improving": false,
     "frequency": "encounter",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

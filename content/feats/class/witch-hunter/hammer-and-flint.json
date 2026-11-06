@@ -9,6 +9,8 @@
     "belongsTo": "Witch Hunter",
     "improving": false,
     "frequency": "encounter",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

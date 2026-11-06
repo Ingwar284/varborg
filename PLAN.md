@@ -1163,8 +1163,14 @@ every feat in the batch ends with a status.
       plate), immunity to a condition (Incorruptible), half persistent
       damage (Chastisement). The Scholar's subject feats wait for 51a.
       EFFECTS_CONTENT 11.
-    - 50f. Class feats: Skullrider, Sorcerer, Sword Saint, Warrior, Witch
-      Hunter, Wizard.
+    - ~~50f. Class feats: Skullrider, Sorcerer, Sword Saint, Warrior, Witch
+      Hunter, Wizard.~~ Done: 47 feats have a status (A beast with no name
+      waits for 50g). New: natural armour by wounds (Scar tissue), no
+      duress Bane (Born to it), Frightened without attack Bane (Unbroken),
+      shields raised as a free action (Shield expert), traits for a
+      chosen weapon (Fencing-hall form, Bigger sword), damage that
+      nothing reduces (Blood price), a feat reroll with Boon (Parry).
+      EFFECTS_CONTENT 12.
     - 50g. Companion and vehicle feats (about 30): effects on the owner's
       minion or vehicle (Destrier, rig, Raider-Beast, Thralls).
 

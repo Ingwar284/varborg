@@ -9,6 +9,42 @@
     "belongsTo": "Warrior",
     "improving": false,
     "frequency": "round",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "use",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "defence",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "boon",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reroll",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "failed",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "↻ against a melee attack"
+      }
+    ],
+    "automation": "auto"
   }
 }

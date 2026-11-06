@@ -18,7 +18,8 @@
  */
 
 import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
-import { collectEffects, cardButtons } from "./rules/item-effects.mjs";
+import { collectEffects, cardButtons, betterMode } from "./rules/item-effects.mjs";
+import { diceFormula } from "./rules/test-roll.mjs";
 import { rollShadowblight } from "./shadowblight.mjs";
 import { hasFrequency } from "./rules/uses.mjs";
 
@@ -244,6 +245,7 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   const entry = { name: spender.name, action };
   let failAgain = null;
   let lowerEffect = null;
+  let rerollEffect = null;
   if (action.startsWith(ITEM_PREFIX)) {
     // An item's reroll or Success: its use is spent instead of Fortune
     // (steps 49g, 50b2).
@@ -260,6 +262,7 @@ async function applyFortune({ messageId, action, spenderUuid }) {
     const effect = collectEffects([item]).find(found => found.kind === "use" && found.action === kind && found.roll === cardRoll(data));
     failAgain = effect?.failAgain ? effect : null;
     lowerEffect = kind === LOWER ? effect : null;
+    rerollEffect = kind === SPEND.REROLL ? effect : null;
   } else {
     if (!canSpend(spender.system.fortune)) return { error: "VARBORG.Fortune.None" };
     await spender.update({ "system.fortune": spend(spender.system.fortune) });
@@ -268,6 +271,14 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   const state = data.state;
   switch (entry.action) {
     case SPEND.REROLL:
+      // A feat's reroll with Boon (Parry, step 50f): the dice one step better.
+      if (lowerEffect === null && rerollEffect?.grant === "boon") {
+        const key = "diceRule" in data.inputs ? "diceRule" : "mode";
+        const old = data.inputs[key];
+        const better = betterMode(old);
+        data.inputs.formula = data.inputs.formula.replace(diceFormula(old), diceFormula(better));
+        data.inputs[key] = better;
+      }
       // New dice; an earlier Triumph → Success or Human Ingenuity belonged
       // to the old roll.
       state.dice = null;

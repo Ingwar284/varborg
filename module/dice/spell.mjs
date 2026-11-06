@@ -210,7 +210,8 @@ export async function castSpell(actor, spell) {
   const modifierOptions = {
     outsideList: Boolean(options.outsideList),
     metalArmour: Boolean(options.metalArmour),
-    duress: Boolean(options.duress),
+    // Born to it: no Bane under duress (step 50f).
+    duress: Boolean(options.duress) && !(actor.system.statBonuses?.noDuressBane?.set > 0),
     castingTime,
     severalCasters: Boolean(options.severalCasters)
   };

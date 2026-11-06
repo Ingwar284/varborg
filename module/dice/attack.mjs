@@ -326,7 +326,9 @@ function attackConditions(actor, target, mode, ability, item) {
     weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: item.system.damageType ?? ""
   };
   return {
-    own: [...attackerConditions(own.conditions, own.fatigue, ability), ...itemRollMods(actor, effectContext)],
+    // Unbroken: Frightened gives no Bane on attacks (step 50f).
+    own: [...attackerConditions(actor.system.statBonuses?.frightenedAttackIgnored?.set > 0
+      ? new Set([...own.conditions].filter(id => id !== "frightened")) : own.conditions, own.fatigue, ability), ...itemRollMods(actor, effectContext)],
     target: against ? attackTargetConditions(against.conditions, against.fatigue, mode) : []
   };
 }

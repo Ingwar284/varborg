@@ -13,10 +13,10 @@
  */
 
 import {
-  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage
+  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits
 } from "./rules/item-effects.mjs";
 import { gainEmber } from "./pools.mjs";
-import { isDead } from "./deaths-door.mjs";
+import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
 import { makeItemMinion } from "./minions.mjs";
 
@@ -134,7 +134,9 @@ export function isUnarmed(item) {
 export function effectiveWeapon(item) {
   const bonuses = item.actor?.type === "character" ? item.actor.system.statBonuses : null;
   if (!bonuses) return item.system;
-  return withWeaponStats(item.system, bonuses, isUnarmed(item));
+  const weapon = withWeaponStats(item.system, bonuses, isUnarmed(item));
+  // Traits for the weapon the feat chose (step 50f).
+  return { ...weapon, ...chosenWeaponTraits(collectEffects(item.actor.items), item.id) };
 }
 
 /**
@@ -260,6 +262,14 @@ export async function doEffectAction(actor, effect) {
     };
   }
   if (effect.action === "makeMinion") return makeItemMinion(actor, effect);
+  if (effect.action === "takeDamage") {
+    // Damage nothing reduces (Blood price, step 50f). At Death's Door any damage kills.
+    const roll = await new Roll(effect.amount || "0").evaluate();
+    if (await killedByDamage(actor, roll.total)) return { lines: [], rolls: [roll], acted: true };
+    const from = actor.system.hp.value;
+    await actor.update({ "system.hp.value": Math.max(0, from - roll.total) });
+    return { lines: [i18n.format("VARBORG.Effects.TookDamage", { item, name: actor.name, amount: roll.total, from, to: actor.system.hp.value })], rolls: [roll], acted: true };
+  }
   if (effect.action === "switchOn") {
     // On for this combat, or "" outside combat (step 50c).
     const on = game.combat?.started ? game.combat.id : "";

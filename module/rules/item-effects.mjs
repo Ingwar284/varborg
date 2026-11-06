@@ -134,6 +134,10 @@ export const HOOK_ACTIONS = [
  *   (Human Ingenuity, GAPS 198).
  * chanceDie: rolls the Chance Die (Pack Rat, step 50b2).
  * gainFortune: gains `amount` Fortune (the Clan Heirloom, step 50b4).
+ * takeDamage: the character takes `amount` damage that nothing reduces
+ *   (Blood price, step 50f).
+ * A reroll with `grant` "boon" rerolls with the dice one step better
+ *   (Parry, step 50f).
  * lowerDamage: a button on defence and gloom cards with damage, taking
  *   `amount` off it; a hit still deals at least 1 (step 50d).
  * makeMinion: makes a Weak minion for the character, named by the
@@ -144,7 +148,31 @@ export const HOOK_ACTIONS = [
  * A reroll or success button can be limited to some cards with `requires`
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
-export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage"];
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage", "takeDamage"];
+
+/**
+ * The dice mode one step better, for a reroll "with Boon" (Parry, step
+ * 50f): Bane becomes normal, normal becomes Boon.
+ */
+export function betterMode(mode) {
+  return mode === "bane" ? "normal" : "boon";
+}
+
+/**
+ * The traits the items' "chosen weapon" stat effects give one weapon item
+ * (Fencing-hall form: Agile; Bigger sword: Heavy), step 50f.
+ * @param {object[]} effects  From collectEffects.
+ * @param {string} itemId     The weapon item.
+ */
+export function chosenWeaponTraits(effects, itemId) {
+  const traits = {};
+  for (const effect of effects ?? []) {
+    if (effect.kind !== "stat" || effect.choices?.weapon !== itemId || !(Number(effect.value) > 0)) continue;
+    if (effect.target === "chosenAgile") traits.agile = true;
+    if (effect.target === "chosenHeavy") traits.heavy = true;
+  }
+  return traits;
+}
 
 /** The card actions an item can offer (steps 49g, 50b2, 50d). */
 export const CARD_ACTIONS = ["reroll", "success", "lowerDamage"];
@@ -236,6 +264,14 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * (Armoured Paragon 2, step 50b2).
  * heavyDefenceIgnored: set 1, heavy (t3) armour adds no DR to defence
  * (Armoured Paragon).
+ * soakPerWound: set, natural armour of one tier per wound carried, up to
+ * this tier (Scar tissue 3: −d2, −d4, −d6, step 50f).
+ * noDuressBane: set 1, no Bane on spellcasting under duress (Born to it).
+ * frightenedAttackIgnored: set 1, Frightened gives no Bane on attacks
+ * (Unbroken).
+ * shieldRaiseFree: set 1, raising a shield is a free action (Shield expert).
+ * chosenAgile, chosenHeavy: set 1, the weapon picked by the item's choice
+ * has the Agile or Heavy trait (Fencing-hall form, Bigger sword).
  * wornSoakTier: added to worn armour's tier when it soaks, up to t4
  * (Armour of faith, GAPS 188, step 50e).
  * spellArmourMaxTier: set, metal armour up to this original tier gives no
@@ -252,7 +288,8 @@ export const STAT_TARGETS = [
   ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie",
   "unarmedDie", "rangePercent", "reloadActions",
   "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile", "soakNoArmour",
-  "wornSoakTier", "spellArmourMaxTier"
+  "wornSoakTier", "spellArmourMaxTier", "soakPerWound", "noDuressBane", "frightenedAttackIgnored",
+  "shieldRaiseFree", "chosenAgile", "chosenHeavy"
 ];
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
@@ -599,7 +636,7 @@ export function effectProblems(effect) {
     check("action", HOOK_ACTIONS);
     check("mode", ROLL_MODES);
     check("requires", HOOK_REQUIRES);
-    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
     if (effect.action === "rollTwice") check("keep", KEEPS);
     const events = ACTION_EVENTS[effect.action];
@@ -619,7 +656,7 @@ export function effectProblems(effect) {
   }
   if (effect.kind === "use") {
     check("action", USE_ACTIONS);
-    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
     if (CARD_ACTIONS.includes(effect.action)) {
       check("roll", ROLL_KINDS);

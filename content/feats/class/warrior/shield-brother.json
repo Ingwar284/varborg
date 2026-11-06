@@ -9,6 +9,8 @@
     "belongsTo": "Warrior",
     "improving": false,
     "frequency": "round",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

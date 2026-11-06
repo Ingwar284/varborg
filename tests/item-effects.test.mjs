@@ -11,7 +11,8 @@ import {
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
   unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
-  resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions
+  resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions,
+  betterMode, chosenWeaponTraits
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -502,4 +503,14 @@ test("Incorruptible keeps Charmed off; Chastisement halves only persistent damag
   assert.equal(resistsFor([chastisement], "fire", { persistent: true }).length, 1);
   assert.equal(resistsFor([chastisement], "", { persistent: true }).length, 1);
   assert.deepEqual(effectProblems(chastisement), []);
+});
+
+test("Parry rerolls one step better; chosen weapon traits (step 50f)", () => {
+  assert.equal(betterMode("bane"), "normal");
+  assert.equal(betterMode("normal"), "boon");
+  assert.equal(betterMode("boon"), "boon");
+  const agile = { ...blankEffect("stat"), target: "chosenAgile", op: "set", value: 1, choices: { weapon: "rapier" } };
+  assert.deepEqual(chosenWeaponTraits([agile], "rapier"), { agile: true });
+  assert.deepEqual(chosenWeaponTraits([agile], "pistol"), {});
+  assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "takeDamage", amount: "d4" }), []);
 });

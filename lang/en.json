@@ -2588,7 +2588,13 @@
         "twoHandedVersatile": "Two-handed weapons are versatile (1 = yes)",
         "soakNoArmour": "Natural armour while wearing none (tier)",
         "wornSoakTier": "Worn armour soaks as tiers higher (up to t4)",
-        "spellArmourMaxTier": "No spellcasting Bane in metal armour up to tier"
+        "spellArmourMaxTier": "No spellcasting Bane in metal armour up to tier",
+        "soakPerWound": "Natural armour of one tier per wound, up to tier",
+        "noDuressBane": "No spellcasting Bane under duress (1 = yes)",
+        "frightenedAttackIgnored": "Frightened gives no Bane on attacks (1 = yes)",
+        "shieldRaiseFree": "Raising a shield is a free action (1 = yes)",
+        "chosenAgile": "The chosen weapon is Agile (1 = yes)",
+        "chosenHeavy": "The chosen weapon is Heavy (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2715,7 +2721,8 @@
         "chanceDie": "Roll the Chance Die",
         "makeMinion": "Make a minion (Weak, or its tier rolled with the amount)",
         "switchOn": "Switch on until the encounter ends",
-        "lowerDamage": "Offer −damage on defence cards"
+        "lowerDamage": "Offer −damage on defence cards",
+        "takeDamage": "Take damage that nothing reduces"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2784,6 +2791,7 @@
       "LowerLog": "{name} uses {item}: damage {value}",
       "FeatLowered": "Lowered by feats (at least 1)",
       "ImmuneCondition": "{name} is immune to {condition}.",
+      "TookDamage": "{item}: {name} takes {amount} damage (HP {from} → {to}).",
       "SuccessLog": "{name} uses {item}: the test counts as a Success",
       "FailedAgain": "{item} fails again: {note}",
       "ChanceRolled": "{item}: the Chance Die is rolled ({note}).",

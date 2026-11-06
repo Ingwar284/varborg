@@ -340,7 +340,10 @@ export function defenceModifiers(actor) {
   // Natural armour; Barkskin's only while no armour is worn (step 50d).
   const bonuses = actor.system.statBonuses ?? {};
   const bare = armour ? null : bonuses.soakNoArmour;
-  const natural = withStat(0, bare) > withStat(0, bonuses.soak) ? bare : bonuses.soak;
+  let natural = withStat(0, bare) > withStat(0, bonuses.soak) ? bare : bonuses.soak;
+  // Scar tissue: one tier per wound, up to its tier (step 50f).
+  const scarTier = Math.min(actor.system.wounds?.value ?? 0, bonuses.soakPerWound?.set ?? 0);
+  if (scarTier > withStat(0, natural)) natural = { ...bonuses.soakPerWound, set: scarTier, add: 0, times: 1, min: null };
   // Armour of faith: worn armour soaks one tier higher, up to t4 (step 50e).
   const raise = withStat(0, bonuses.wornSoakTier);
   const soaking = armour && raise && armour.tier > 0 ? { ...armour, tier: Math.min(4, armour.tier + raise) } : armour;
@@ -467,6 +470,8 @@ export async function raiseShield(actor) {
   }
   const turn = turnState(actor);
   const cost = raiseShieldCost({ inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn });
+  // Shield expert: a free action (step 50f).
+  if (actor.system.statBonuses?.shieldRaiseFree?.set > 0) cost.actions = 0;
   if (!cost.allowed) {
     ui.notifications.warn(i18n.localize("VARBORG.Defence.RaiseNotYourTurn"));
     return;
