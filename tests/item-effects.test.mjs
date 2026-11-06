@@ -10,7 +10,7 @@ import {
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
-  unarmedDamage, longerRange, reloadActions, withWeaponStats
+  unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -366,4 +366,20 @@ test("Steady nerves only works on a failed Panic test (step 50a3)", () => {
   const hook = event => ({ ...blankEffect("hook"), event, action: "steadyNerves" });
   assert.deepEqual(effectProblems(hook("panicFailure")), []);
   assert.deepEqual(effectProblems(hook("rest")), ["steadyNerves at rest"]);
+});
+
+test("Hawkeye: damage dice showing 1 are rolled again (step 50b)", () => {
+  assert.equal(rerollingOnes("d8"), "1d8r1");
+  assert.equal(rerollingOnes("2d4 + 1"), "2d4r1 + 1");
+  assert.equal(rerollingOnes("1d8r1"), "1d8r1");
+  const [hawkeye] = rollEffects([{ ...blankEffect("roll"), roll: "attack", rerollOnes: true, item: "Hawkeye" }], { roll: "attack" }).auto;
+  assert.equal(withExtraDamage("d6", [hawkeye, { damage: "2" }]), "1d6r1 + 2");
+  assert.equal(withExtraDamage("d6", [{ damage: "2" }]), "d6 + 2");
+});
+
+test("Battle Scars: +1 per wound, up to +3 (step 50b)", () => {
+  const scars = { ...blankEffect("roll"), damage: "1", per: "wound", value: 3 };
+  assert.equal(effectDamage(scars, { wounds: 2 }), "2");
+  assert.equal(effectDamage(scars, { wounds: 5 }), "3");
+  assert.equal(effectDamage({ ...scars, value: 0 }, { wounds: 5 }), "5");
 });

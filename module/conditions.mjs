@@ -116,6 +116,7 @@ function itemNote(mod, name) {
   if (mod.bane) parts.push(i18n.localize("VARBORG.Test.Bane"));
   if (mod.dr) parts.push(i18n.format("VARBORG.Condition.DR", { dr: signed(mod.dr) }));
   if (mod.damage) parts.push(i18n.format("VARBORG.Effects.DamagePart", { damage: mod.damage }));
+  if (mod.rerollOnes) parts.push(i18n.localize("VARBORG.Effects.RerollOnesPart"));
   const condition = mod.note ? i18n.format("VARBORG.Effects.ItemWithNote", { item: mod.item, note: mod.note }) : mod.item;
   const effect = parts.join(", ");
   return name

@@ -2640,6 +2640,11 @@
         "chosen": "The chosen weapon"
       },
       "PerLabel": "How often",
+      "UpToLabel": "Up to",
+      "UpToHint": "The most wounds that count (Battle Scars: 3). 0 means no limit.",
+      "RerollOnesLabel": "Reroll 1s",
+      "RerollOnesPart": "damage dice showing 1 rolled again",
+      "RerollOnesHint": "Damage dice that show 1 are rolled again once (Hawkeye).",
       "Per": {
         "once": "once",
         "wound": "per wound"

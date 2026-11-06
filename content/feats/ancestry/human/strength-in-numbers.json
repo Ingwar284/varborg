@@ -9,6 +9,37 @@
     "belongsTo": "Human",
     "improving": false,
     "frequency": "round",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "attack",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "optional",
+        "grant": "",
+        "dr": 0,
+        "damage": "2",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": "once per round: an ally within 5' of you attacked this foe this round"
+      }
+    ],
+    "automation": "partial"
   }
 }

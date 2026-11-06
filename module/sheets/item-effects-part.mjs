@@ -75,6 +75,7 @@ export function effectsContext(document) {
         hasAmount: ["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
+        perWound: effect.per === "wound",
         isReminder: effect.kind === "reminder"
       }))
     }
@@ -121,7 +122,8 @@ export function listenToEffects(sheet) {
       const field = input.dataset.effectField;
       const effects = storedEffects(sheet.document);
       if (!effects[index]) return;
-      effects[index][field] = NUMBER_FIELDS.includes(field) ? Math.trunc(Number(input.value) || 0) : input.value;
+      effects[index][field] = input.type === "checkbox" ? input.checked
+        : NUMBER_FIELDS.includes(field) ? Math.trunc(Number(input.value) || 0) : input.value;
       // A new kind starts with an action it can have (step 49g).
       const effect = effects[index];
       if (field === "kind" && effect.kind === "use" && !USE_ACTIONS.includes(effect.action)) effect.action = USE_ACTIONS[0];

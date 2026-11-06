@@ -37,6 +37,16 @@
       <input type="text" data-effect-field="damage" value="{{damage}}" placeholder="d4" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     <select data-effect-field="per" aria-label="{{localize 'VARBORG.Effects.PerLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../pers selected=per localize=true}}</select>
+    {{#if perWound}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.UpToHint'}}">
+      <span>{{localize "VARBORG.Effects.UpToLabel"}}</span>
+      <input type="number" step="1" min="0" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.RerollOnesHint'}}">
+      <input type="checkbox" data-effect-field="rerollOnes" {{checked rerollOnes}} {{#unless @root.editable}}disabled{{/unless}}>
+      <span>{{localize "VARBORG.Effects.RerollOnesLabel"}}</span>
+    </label>
     <select data-effect-field="requires" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rollRequireList selected=requires localize=true}}</select>
     <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.ModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../modes selected=mode localize=true}}</select>
     {{/if}}

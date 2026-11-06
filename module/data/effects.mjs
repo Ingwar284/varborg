@@ -11,7 +11,7 @@ import {
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 
-const { ArrayField, SchemaField, StringField, NumberField } = foundry.data.fields;
+const { ArrayField, SchemaField, StringField, NumberField, BooleanField } = foundry.data.fields;
 
 function choice(choices, initial = choices[0]) {
   return new StringField({ required: true, blank: choices.includes(""), choices, initial });
@@ -45,6 +45,8 @@ export function effectFields() {
       damage: new StringField({ required: true, blank: true, initial: "" }),
       // Extra damage once, or once per wound (step 49e).
       per: choice(DAMAGE_PER, ""),
+      // Reroll damage dice that show 1 (Hawkeye, step 50b).
+      rerollOnes: new BooleanField({ required: true, initial: false }),
       // hook (step 49f): when, what, how much, which condition, which roll to keep, only while…
       event: choice(HOOK_EVENTS),
       action: choice(ALL_ACTIONS),

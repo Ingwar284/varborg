@@ -9,6 +9,8 @@
     "belongsTo": "Dragonkin",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

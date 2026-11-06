@@ -9,6 +9,37 @@
     "belongsTo": "Dragonkin",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "zeroHp",
+        "action": "roll",
+        "amount": "d6",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": "damage to everyone within 5' of you, splattered with your blood"
+      }
+    ],
+    "automation": "partial"
   }
 }

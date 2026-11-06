@@ -241,7 +241,7 @@ export function blankEffect(kind = "stat") {
   return {
     kind,
     target: STAT_TARGETS[0], op: "add", value: 0,
-    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", mode: "auto", grant: "", dr: 0, damage: "", per: "",
+    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "",
     note: ""
@@ -272,7 +272,9 @@ export function effectDamage(effect, facts = {}) {
   const part = String(effect.damage ?? "").trim();
   if (!isDamagePart(part)) return "";
   if (effect.per !== "wound") return part;
-  const count = Math.max(0, Math.trunc(facts.wounds ?? 0));
+  // value, when above 0, is the most wounds that count (Battle Scars: up to +3).
+  const wounds = Math.max(0, Math.trunc(facts.wounds ?? 0));
+  const count = Number(effect.value) > 0 ? Math.min(wounds, Number(effect.value)) : wounds;
   if (!count) return "";
   if (/^\d+$/.test(part)) return String(Number(part) * count);
   return Array(count).fill(part).join(" + ");
@@ -284,7 +286,16 @@ export function effectDamage(effect, facts = {}) {
  */
 export function withExtraDamage(formula, mods) {
   const extra = (mods ?? []).map(mod => mod.damage).filter(Boolean);
-  return [formula, ...extra].filter(Boolean).join(" + ");
+  const base = (mods ?? []).some(mod => mod.rerollOnes) ? rerollingOnes(formula) : formula;
+  return [base, ...extra].filter(Boolean).join(" + ");
+}
+
+/**
+ * A damage formula whose dice are rolled again once when they show 1
+ * (Hawkeye, step 50b): "d8" becomes "1d8r1". Only the weapon's own dice.
+ */
+export function rerollingOnes(formula) {
+  return String(formula ?? "").replace(/(^|[^\w])(\d*)d(\d+)(?![\dr])/g, (_, before, count, faces) => `${before}${count || 1}d${faces}r1`);
 }
 
 /**
@@ -414,7 +425,7 @@ export function testOnly(mods) {
  * (attacks, powers, spells); elsewhere it is ignored.
  */
 export function withEffect(mods) {
-  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage);
+  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes);
 }
 
 /**
@@ -442,6 +453,7 @@ export function rollEffects(effects, context) {
     if (Number(effect.dr)) mod.dr = Number(effect.dr);
     const damage = effectDamage(effect, context.facts);
     if (damage) mod.damage = damage;
+    if (effect.rerollOnes) mod.rerollOnes = true;
     (effect.mode === "optional" ? result.optional : result.auto).push(mod);
   }
   return result;

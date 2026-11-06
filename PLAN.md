@@ -1116,8 +1116,20 @@ every feat in the batch ends with a status.
       - Quick reload: one fewer Interact action, minimum 1.
       - The weapon numbers after feats show on the sheet and count in
         attacks, reloads and power damage. EFFECTS_CONTENT 4.
-    - 50b. Ancestry feats (64), with choices such as Ancient One and
-      Adopted.
+    - 50b. Ancestry feats (64), in four parts (rulings GAPS 198–201):
+      - ~~50b. The feats that fit the tools already built.~~ Done: 51
+        feats have a status. New: an effect can reroll damage 1s (Hawkeye),
+        and per-wound damage can have a limit (Battle Scars, up to +3).
+        EFFECTS_CONTENT 5.
+      - 50b2. Card buttons after a test (GAPS 198): Whim of the Fey,
+        Fortune's Favourite, Savage Strength, Human Ingenuity. Also
+        Dwarven Doughtiness (Ruin counts as Failure), Go Big or Go Home
+        (chance die 2–7 / 8+), Armoured Paragon (armour penalties) and
+        Pack Rat (a chance die Use).
+      - 50b3. Damage types (GAPS 199): Firebug, Ancestral Resonance,
+        Tempered by the Forge.
+      - 50b4. Gifts (GAPS 201): the Clan Heirloom relic and Beast-Tamer's
+        minion.
     - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.
     - 50d. Class feats: Dancer, Druid, Fleshwright, Gravecaller, Hedge
       Mage.
