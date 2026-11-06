@@ -78,6 +78,11 @@
           "rounds": "1"
         },
         "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
         "note": ""
       },
       {
@@ -95,8 +100,36 @@
           "rounds": "1"
         },
         "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
         "note": "you must attack the nearest creature each round, friend or foe"
+      },
+      {
+        "kind": "fatigue",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "end",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": ""
       }
-    ]
+    ],
+    "automation": "partial"
   }
 }

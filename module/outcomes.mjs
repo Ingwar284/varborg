@@ -20,6 +20,8 @@
 
 import { wantedOutcomes, outcomeDiff } from "./rules/outcomes.mjs";
 import { addTimedCondition, rollTimer } from "./timers.mjs";
+import { addPersistentDamage, persistentEffects } from "./persistent.mjs";
+import { stepDownArmourDie } from "./rules/attack.mjs";
 
 const SYSTEM = "var-borg";
 const QUERY = "var-borg.outcome";
@@ -52,8 +54,27 @@ export function outcomeInputs(actor, power) {
     sustained: Boolean(power.system.sustained),
     source: `${actor.uuid}|${power.id}`,
     targets: [...game.user.targets].map(token => token.actor?.uuid).filter(Boolean),
-    user: actor.uuid
+    user: actor.uuid,
+    // The dance partner named this encounter (GAPS 222), and the options chosen in the dialog (GAPS 224).
+    partner: partnerOf(actor)?.uuid ?? "",
+    chosen: []
   };
+}
+
+/** The current combat's id, or "" outside combat. */
+function combatKey() {
+  return game.combat?.started ? game.combat.id : "";
+}
+
+/**
+ * The user's dance partner, named with Dance Partner in this encounter
+ * (GAPS 222), or null.
+ * @param {Actor} actor
+ * @returns {{uuid: string, name: string}|null}
+ */
+export function partnerOf(actor) {
+  const partner = actor?.getFlag?.(SYSTEM, "partner");
+  return partner && partner.combat === combatKey() ? partner : null;
 }
 
 /**
@@ -72,13 +93,13 @@ export async function settleOutcomes(data, tier) {
   const added = [];
   for (const want of add) {
     const entry = inputs.entries[want.index];
-    const op = { op: "give", actorUuid: want.actorUuid, entry, name: inputs.name, source: inputs.source, sustained: inputs.sustained && entry.who === "self" };
+    const op = { op: "give", actorUuid: want.actorUuid, entry, name: inputs.name, source: inputs.source, sustained: inputs.sustained && entry.who === "self", user: inputs.user };
     if (entry.kind === "buff") {
       op.effects = inputs.buffEffects;
       op.sustained = inputs.sustained;
     }
-    // Healing is rolled here, so the card shows the dice.
-    if (entry.kind === "heal") {
+    // Healing and damage are rolled here, so the card shows the dice.
+    if (["heal", "damage"].includes(entry.kind)) {
       const roll = await new Roll(String(entry.amount || "0")).evaluate();
       rolls.push(roll);
       op.amount = roll.total;
@@ -120,6 +141,8 @@ async function runOp(op) {
   if (!actor) return null;
   const i18n = game.i18n;
   const entry = op.entry;
+  const extra = await runOp51d(actor, op);
+  if (extra) return extra;
   switch (entry.kind) {
     case "condition": {
       if (!entry.condition) return null;
@@ -145,12 +168,75 @@ async function runOp(op) {
         type: "feat",
         img: "icons/svg/aura.svg",
         system: { description: entry.note || "", source: "general", effects: op.effects ?? [], automation: "auto" },
-        flags: { [SYSTEM]: { buff: { source: op.source, sustained: Boolean(op.sustained) }, ...(timer ? { timer } : {}) } }
+        flags: { [SYSTEM]: { buff: { source: op.source, sustained: Boolean(op.sustained), nextOnly: Boolean(entry.nextOnly) }, ...(timer ? { timer } : {}) } }
       }]);
       return { itemId: item?.id ?? null, line: noted(i18n.format("VARBORG.Outcome.Buffed", { name: actor.name, power: op.name }), entry.note) };
     }
     default:
       return { line: noted(i18n.format("VARBORG.Outcome.Reminder", { name: actor.name }), entry.note) };
+  }
+}
+
+/**
+ * The kinds step 51d added: persistent damage, damage, armour lowered,
+ * Fatigued and the dance partner. null for the other kinds.
+ */
+async function runOp51d(actor, op) {
+  const i18n = game.i18n;
+  const entry = op.entry;
+  switch (entry.kind) {
+    case "persistent": {
+      const before = new Set(persistentEffects(actor).map(effect => effect.id));
+      if (!(await addPersistentDamage(actor, entry.damageType, entry.amount))) return { line: "" };
+      const added = persistentEffects(actor).find(effect => !before.has(effect.id));
+      const type = i18n.localize(`VARBORG.DamageType.${entry.damageType}`).toLowerCase();
+      return { effectId: added?.id ?? null, line: noted(i18n.format("VARBORG.Outcome.Persistent", { name: actor.name, amount: entry.amount, type }), entry.note) };
+    }
+    case "damage": {
+      const hp = actor.system.hp;
+      if (!hp) return { line: "" };
+      let amount = op.amount ?? 0;
+      // Armour soaks it only when the entry says so; a hit still deals 1.
+      if (entry.soaked && amount > 0) {
+        const die = actor.type === "foe" ? actor.system.armour : (await import("./dice/defence.mjs")).defenceModifiers(actor).soakDie;
+        if (die) amount = Math.max(1, amount - (await new Roll(die).evaluate()).total);
+      }
+      const { killedByDamage } = await import("./deaths-door.mjs");
+      if (actor.type === "character" && await killedByDamage(actor, amount)) return { line: "" };
+      const from = hp.value;
+      const to = Math.max(0, from - amount);
+      await actor.update({ "system.hp.value": to });
+      return { dealt: from - to, line: noted(i18n.format("VARBORG.Outcome.Damaged", { name: actor.name, amount, from, to }), entry.note) };
+    }
+    case "lowerArmour": {
+      if (actor.type !== "foe" || !actor.system.armour) return { line: "" };
+      const from = actor.system.armour;
+      const to = stepDownArmourDie(from);
+      if (!actor.getFlag(SYSTEM, "armourBefore")) await actor.setFlag(SYSTEM, "armourBefore", { combat: game.combat?.id ?? "", die: from });
+      await actor.update({ "system.armour": to });
+      const label = die => i18n.localize(`VARBORG.Foe.Armour.${die || "none"}`);
+      return { armourFrom: from, line: noted(i18n.format("VARBORG.Outcome.ArmourLowered", { name: actor.name, from: label(from), to: label(to) }), entry.note) };
+    }
+    case "fatigue": {
+      if (actor.system.fatigue === undefined) return { line: "" };
+      const level = (actor.system.fatigue ?? 0) + 1;
+      await actor.update({ "system.fatigue": level });
+      return { fatigued: true, line: noted(i18n.format("VARBORG.Outcome.Fatigued", { name: actor.name, level }), entry.note) };
+    }
+    case "cure": {
+      if (!entry.condition || !actor.statuses.has(entry.condition)) return { line: "" };
+      await actor.toggleStatusEffect(entry.condition, { active: false });
+      const condition = i18n.localize(`VARBORG.Condition.${entry.condition}`);
+      return { cured: entry.condition, line: noted(i18n.format("VARBORG.Outcome.Cured", { name: actor.name, condition }), entry.note) };
+    }
+    case "partner": {
+      const user = op.user ? await fromUuid(op.user) : null;
+      if (!user || user === actor) return { line: "" };
+      if (user.isOwner) await user.setFlag(SYSTEM, "partner", { uuid: actor.uuid, name: actor.name, combat: combatKey() });
+      return { partnerOf: user.uuid, line: noted(i18n.format("VARBORG.Outcome.Partner", { name: actor.name, user: user.name }), entry.note) };
+    }
+    default:
+      return null;
   }
 }
 
@@ -170,7 +256,46 @@ async function undoOutcome(done) {
     await actor.update({ "system.hp.value": Math.max(0, actor.system.hp.value - done.healed) });
   }
   if (done.kind === "buff" && done.itemId) await actor.items.get(done.itemId)?.delete();
+  // Step 51d.
+  if (done.kind === "persistent" && done.effectId) await actor.effects.get(done.effectId)?.delete();
+  if (done.kind === "damage" && done.dealt) await actor.update({ "system.hp.value": Math.min(actor.system.hp.max ?? Infinity, actor.system.hp.value + done.dealt) });
+  if (done.kind === "lowerArmour" && done.armourFrom !== undefined) await actor.update({ "system.armour": done.armourFrom });
+  if (done.kind === "cure" && done.cured && !actor.statuses.has(done.cured)) await actor.toggleStatusEffect(done.cured, { active: true });
+  if (done.kind === "fatigue" && done.fatigued) await actor.update({ "system.fatigue": Math.max(0, (actor.system.fatigue ?? 1) - 1) });
+  if (done.kind === "partner" && done.partnerOf) {
+    const user = await fromUuid(done.partnerOf);
+    if (user?.isOwner && user.getFlag(SYSTEM, "partner")?.uuid === actor.uuid) await user.unsetFlag(SYSTEM, "partner");
+  }
   return null;
+}
+
+/**
+ * When a combat ends, foes whose armour a power lowered for the
+ * encounter get it back (Shattering roast, step 51d). Dark Master only.
+ * @param {Combat} combat
+ */
+export async function restoreLoweredArmour(combat) {
+  if (!game.user.isGM) return;
+  for (const combatant of combat.combatants) {
+    const foe = combatant.actor;
+    const before = foe?.getFlag(SYSTEM, "armourBefore");
+    if (!before) continue;
+    await foe.update({ "system.armour": before.die });
+    await foe.unsetFlag(SYSTEM, "armourBefore");
+    const label = game.i18n.localize(`VARBORG.Foe.Armour.${before.die || "none"}`);
+    await ChatMessage.create({ content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Outcome.ArmourBack", { name: foe.name, die: label }))}</p></div>` });
+  }
+}
+
+/**
+ * A foe's attack or gloom ability was defended against: its buffs that
+ * last only until its next attack end (Needle-Spray, GAPS 223).
+ * @param {Actor} foe
+ */
+export async function useUpNextAttackMarks(foe) {
+  for (const item of foe?.items?.filter(other => other.getFlag(SYSTEM, "buff")?.nextOnly) ?? []) {
+    await doOp({ op: "undo", done: { actorUuid: foe.uuid, kind: "buff", itemId: item.id } });
+  }
 }
 
 /** Remember a condition a Sustained power gave its user, on the user. */
@@ -191,6 +316,11 @@ export async function endSustainedOutcomes(power) {
   const source = `${user.uuid}|${power.id}`;
   const i18n = game.i18n;
   const ended = [];
+  // What the power gives its user when it ends (Beast Unleashed: Fatigued).
+  for (const entry of (power.system.outcomeEffects ?? []).filter(other => other.when === "end")) {
+    const result = await runOp({ op: "give", actorUuid: user.uuid, entry: foundry.utils.deepClone(entry), name: power.name, source, user: user.uuid });
+    if (result?.line) ended.push(result.line);
+  }
   const marks = user.getFlag(SYSTEM, "sustainedConditions") ?? [];
   const mine = marks.filter(mark => mark.source === source);
   if (mine.length && user.isOwner) {

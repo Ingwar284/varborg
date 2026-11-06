@@ -20,11 +20,27 @@
 import { CONDITIONS } from "./conditions.mjs";
 import { TIMER_KINDS, isRoundsFormula } from "./timers.mjs";
 
-/** What an entry gives. */
-export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder"];
+/**
+ * What an entry gives. Step 51d adds:
+ * persistent: persistent damage of `damageType` (fire, bleeding, acid,
+ *   poison) and `amount`, such as d4 bleeding;
+ * damage: `amount` damage, soaked by armour only when `soaked` is ticked
+ *   (Wounds Are Weapons: "d6 damage that cannot be reduced");
+ * lowerArmour: a foe's armour die one step down until the encounter ends;
+ * fatigue: one more level of Fatigued;
+ * partner: the targeted ally becomes the user's dance partner (GAPS 222);
+ * cure: the creature no longer has `condition` (The Banner Stands ends Frightened).
+ */
+export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder", "persistent", "damage", "lowerArmour", "fatigue", "partner", "cure"];
 
-/** Who gets it: each targeted creature, or the user. */
-export const OUTCOME_WHO = ["target", "self"];
+/** Who gets it: each targeted creature, the user, or the user's dance partner (GAPS 222). */
+export const OUTCOME_WHO = ["target", "self", "partner"];
+
+/** When: on the card's result, or when the Sustained power ends (Beast Unleashed's Fatigued). */
+export const OUTCOME_WHEN = ["result", "end"];
+
+/** The types of persistent damage an entry can give (rules 3.13). */
+export const OUTCOME_PERSISTENT = ["fire", "bleeding", "acid", "poison"];
 
 /** The results an entry can work on. */
 export const OUTCOME_TIERS = ["triumph", "success", "failure", "ruin"];
@@ -38,8 +54,25 @@ export function blankOutcome(kind = "condition") {
     condition: kind === "condition" ? CONDITIONS[0] : "",
     duration: { kind: "", rounds: "1" },
     amount: "",
+    // Step 51d: the option it belongs to ("" for always, GAPS 224), when,
+    // the persistent damage type, whether armour soaks the damage, and a
+    // buff that lasts only until the creature's next attack (GAPS 223).
+    option: "",
+    when: "result",
+    damageType: "",
+    soaked: false,
+    nextOnly: false,
     note: ""
   };
+}
+
+/**
+ * The options a power's entries offer, in order of first use (GAPS 224).
+ * @param {object[]} entries
+ * @returns {string[]}
+ */
+export function outcomeOptions(entries) {
+  return [...new Set((entries ?? []).map(entry => entry.option ?? "").filter(Boolean))];
 }
 
 /** Heal amounts: a number such as 2, or dice such as d6 or 2d4+1. */
@@ -56,8 +89,11 @@ export function outcomeProblems(entry) {
   if (!OUTCOME_KINDS.includes(entry?.kind)) problems.push(`kind: ${entry?.kind}`);
   if (!OUTCOME_WHO.includes(entry?.who)) problems.push(`who: ${entry?.who}`);
   if (!OUTCOME_TIERS.some(tier => entry?.tiers?.[tier])) problems.push("no result ticked");
-  if (entry?.kind === "condition" && !CONDITIONS.includes(entry.condition)) problems.push(`condition: ${entry.condition}`);
-  if (entry?.kind === "heal" && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  if (["condition", "cure"].includes(entry?.kind) && !CONDITIONS.includes(entry.condition)) problems.push(`condition: ${entry.condition}`);
+  if (["heal", "persistent", "damage"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  if (entry?.kind === "persistent" && !OUTCOME_PERSISTENT.includes(entry.damageType)) problems.push(`damageType: ${entry.damageType}`);
+  if (entry?.when && !OUTCOME_WHEN.includes(entry.when)) problems.push(`when: ${entry.when}`);
+  if (entry?.when === "end" && entry.who !== "self") problems.push("when the power ends: only the user");
   const duration = entry?.duration ?? {};
   if (duration.kind && !TIMER_KINDS.includes(duration.kind)) problems.push(`duration: ${duration.kind}`);
   if (duration.kind === "rounds" && !isRoundsFormula(duration.rounds)) problems.push(`rounds: ${duration.rounds}`);
@@ -71,13 +107,20 @@ export function outcomeProblems(entry) {
  * @param {object} who
  * @param {string[]} who.targets  The targeted creatures' UUIDs.
  * @param {string} who.user       The user's UUID.
+ * @param {string} [who.partner]  The user's dance partner's UUID (GAPS 222).
+ * @param {string[]} [who.chosen] The chosen options: the first always, the
+ *   second only on a Triumph (GAPS 224).
  * @returns {{key: string, index: number, actorUuid: string}[]}  key: "index|uuid".
  */
-export function wantedOutcomes(entries, tier, { targets = [], user = "" } = {}) {
+export function wantedOutcomes(entries, tier, { targets = [], user = "", partner = "", chosen = [] } = {}) {
   const wanted = [];
+  const options = tier === "triumph" ? chosen : chosen.slice(0, 1);
   (entries ?? []).forEach((entry, index) => {
-    if (!entry?.tiers?.[tier]) return;
-    const actors = entry.who === "self" ? [user].filter(Boolean) : [...new Set(targets ?? [])];
+    if (!entry?.tiers?.[tier] || (entry.when ?? "result") !== "result") return;
+    if (entry.option && !options.includes(entry.option)) return;
+    const actors = entry.who === "self" ? [user].filter(Boolean)
+      : entry.who === "partner" ? [partner].filter(Boolean)
+        : [...new Set(targets ?? [])];
     for (const actorUuid of actors) wanted.push({ key: `${index}|${actorUuid}`, index, actorUuid });
   });
   return wanted;

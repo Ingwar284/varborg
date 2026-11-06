@@ -6,6 +6,12 @@
     <button type="button" data-action="addOutcome" data-tooltip="{{localize 'VARBORG.Outcome.Add'}}"><i class="fa-solid fa-plus"></i></button>
     {{/if}}
   </header>
+  {{#if hasOptions}}
+  <label class="effect-small" data-tooltip="{{localize 'VARBORG.Outcome.TriumphPicksHint'}}">
+    <span>{{localize "VARBORG.Outcome.TriumphPicks"}}</span>
+    <input type="number" name="system.triumphPicks" value="{{triumphPicks}}" min="1" max="2" step="1" {{#unless @root.editable}}disabled{{/unless}}>
+  </label>
+  {{/if}}
   {{#unless list.length}}
   <p class="hint">{{localize "VARBORG.Outcome.None"}}</p>
   {{/unless}}
@@ -25,6 +31,17 @@
     <input class="effect-small" type="text" data-outcome-field="duration.rounds" value="{{duration.rounds}}" placeholder="d4" aria-label="{{localize 'VARBORG.Timer.RoundsLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>
     {{/if}}
     {{/if}}
+    {{#if isPersistent}}
+    <select data-outcome-field="damageType" aria-label="{{localize 'VARBORG.Effects.DamageTypeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../persistentTypes selected=damageType localize=true}}</select>
+    {{/if}}
+    {{#if isDamage}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Outcome.SoakedHint'}}"><input type="checkbox" data-outcome-field="soaked" {{checked soaked}} {{#unless @root.editable}}disabled{{/unless}}> {{localize "VARBORG.Outcome.Soaked"}}</label>
+    {{/if}}
+    {{#if isBuff}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Outcome.NextOnlyHint'}}"><input type="checkbox" data-outcome-field="nextOnly" {{checked nextOnly}} {{#unless @root.editable}}disabled{{/unless}}> {{localize "VARBORG.Outcome.NextOnly"}}</label>
+    {{/if}}
+    <select data-outcome-field="when" aria-label="{{localize 'VARBORG.Outcome.WhenLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../whens selected=when localize=true}}</select>
+    <input class="effect-small" type="text" data-outcome-field="option" value="{{option}}" placeholder="{{localize 'VARBORG.Outcome.OptionPlaceholder'}}" data-tooltip="{{localize 'VARBORG.Outcome.OptionHint'}}" {{#unless @root.editable}}disabled{{/unless}}>
     {{#if isHeal}}
     <label class="effect-small">
       <span>{{localize "VARBORG.Outcome.HealLabel"}}</span>

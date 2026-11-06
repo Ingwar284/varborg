@@ -43,6 +43,7 @@
         "amount": "",
         "note": ""
       }
-    ]
+    ],
+    "automation": "auto"
   }
 }

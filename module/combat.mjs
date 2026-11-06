@@ -36,6 +36,7 @@ import { startMinionTurn, postMinionTurn, removeThralls } from "./minions.mjs";
 import { withStat } from "./rules/item-effects.mjs";
 import { runItemHooks, initiativeKeep, endAdrenaline } from "./effects.mjs";
 import { runAuras } from "./aura.mjs";
+import { restoreLoweredArmour } from "./outcomes.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -200,6 +201,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     switchOffItems(this);
     // Thralls collapse when the encounter ends (GAPS 213).
     if (this.started) removeThralls(this);
+    // Armour a power lowered "until the end of the encounter" comes back (step 51d).
+    restoreLoweredArmour(this);
     // Items that act when a fight ends (Doomsworn, step 50a2).
     if (this.started) {
       const actors = new Set(this.combatants.map(combatant => combatant.actor).filter(Boolean));

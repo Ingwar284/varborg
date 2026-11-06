@@ -42,3 +42,25 @@ test("Fortune changes the result: take back what no longer applies, give what no
   assert.deepEqual(diff.keep, [{ key: "0|a", done: 1 }]);
   assert.deepEqual(diff.remove, [{ key: "0|b", done: 2 }]);
 });
+
+test("options: only the chosen one, and the second only on a Triumph (step 51d, GAPS 224)", async () => {
+  const { outcomeOptions } = await import("../module/rules/outcomes.mjs");
+  const push = { ...blankOutcome("reminder"), option: "Push" };
+  const prone = { ...blankOutcome("condition"), condition: "prone", option: "Prone" };
+  const always = blankOutcome("reminder");
+  assert.deepEqual(outcomeOptions([push, prone, always, push]), ["Push", "Prone"]);
+  const who = { targets: ["g"], user: "me", chosen: ["Push", "Prone"] };
+  assert.deepEqual(wantedOutcomes([push, prone, always], "success", who).map(w => w.index), [0, 2]);
+  assert.deepEqual(wantedOutcomes([push, prone, always], "triumph", who).map(w => w.index), [0, 1, 2]);
+});
+
+test("partner entries go to the dance partner; end entries wait for the power to end (step 51d)", () => {
+  const heal = { ...blankOutcome("heal"), amount: "d8", who: "partner" };
+  const tired = { ...blankOutcome("fatigue"), who: "self", when: "end" };
+  assert.deepEqual(wantedOutcomes([heal, tired], "success", { user: "me", partner: "bo" }).map(w => w.key), ["0|bo"]);
+  assert.deepEqual(wantedOutcomes([heal], "success", { user: "me" }), []);
+  assert.deepEqual(outcomeProblems(tired), []);
+  assert.deepEqual(outcomeProblems({ ...tired, who: "target" }), ["when the power ends: only the user"]);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "bleeding" }), []);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "blunt" }), ["damageType: blunt"]);
+});

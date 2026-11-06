@@ -15,6 +15,7 @@ import { lightItem, canLightItem } from "../light.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
+import { partnerOf } from "../outcomes.mjs";
 import { castSpell } from "../dice/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
 import { castingDr } from "../rules/spells.mjs";
@@ -341,6 +342,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     context.choosingFeat = choosingFeat(actor);
 
     // Powers, with a line such as "🟒1 ◈◈ · DR12 · Class power".
+    // The dance partner named this encounter (GAPS 222).
+    const partner = partnerOf(actor);
+    context.dancePartner = partner ? game.i18n.format("VARBORG.Outcome.PartnerLine", { name: partner.name }) : null;
     context.powers = actor.itemTypes.power
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: powerSummary(item) }));

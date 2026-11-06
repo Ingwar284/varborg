@@ -1259,7 +1259,24 @@ one fight and one rest.
       power's conditions on its user and all its buffs end with it.
       Examples filled in: Song of respite, Savage Leap, Beast Unleashed.
       EFFECTS_CONTENT 17.
-    - 51d–51e. Powers (147), in two batches.
+    - 51d–51e. Powers (147), in two batches. 51d is Barbarian to Hedge
+      Mage (70), in two parts (rulings GAPS 222–228):
+      - ~~51d. Tools, then Barbarian, Bard, Brinkwalker, Cavalier and
+        Dancer.~~ Done: 34 powers have a status (Not the face! waits for
+        51d2's reaction buttons). New "What it gives" kinds: persistent
+        damage, damage (armour soaks only when ticked), armour one step
+        down until the encounter ends, a level of Fatigued, ending a
+        condition, the dance partner (shown on the Dancer's sheet). Entries
+        can belong to an option (asked in the power dialog; a second
+        option on a Triumph), be given when a Sustained power ends, or go
+        to the partner. Buffs on a foe with the new roll kind "Defending
+        against this creature" work for its defenders, and can last for
+        its next attack only. The report counts these entries and a
+        power's own damage. EFFECTS_CONTENT 18.
+      - 51d2. Tools: Morph buffs, raising and destroying thralls, damage
+        to the rig, reaction buttons on cards. Then Charioteer, Druid,
+        Fleshwright, Gravecaller and Hedge Mage (35 powers).
+      51e is Paladin to Wizard (77).
     - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
 
 **Milestone 11 review:** a Warrior, a Wizard and a Priest against three

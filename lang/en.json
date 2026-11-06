@@ -2636,7 +2636,8 @@
         "contest": "Contested tests only",
         "gloomTest": "Tests against gloom abilities only",
         "driving": "Driving tests only",
-        "morale": "Morale of foes (Boon: 3d6 keep the two lowest, the foe holds; Bane: keep the two highest, it breaks)"
+        "morale": "Morale of foes (Boon: 3d6 keep the two lowest, the foe holds; Bane: keep the two highest, it breaks)",
+        "defendAgainst": "Defending against this creature (on a foe: its defenders get it)"
       },
       "AbilityLabel": "Ability",
       "AnyAbility": "Any ability",
@@ -3001,14 +3002,21 @@
         "condition": "A condition",
         "heal": "Healing",
         "buff": "A buff (the effects below)",
-        "reminder": "A reminder (note only)"
+        "reminder": "A reminder (note only)",
+        "persistent": "Persistent damage",
+        "damage": "Damage",
+        "lowerArmour": "Armour one step down (encounter)",
+        "fatigue": "One more level of Fatigued",
+        "partner": "Becomes the dance partner",
+        "cure": "Ends a condition"
       },
       "Who": {
         "target": "Each target",
-        "self": "The user"
+        "self": "The user",
+        "partner": "The dance partner"
       },
       "DurationHint": "How long a condition or buff lasts. On the user of a Sustained power: until the power ends.",
-      "HealLabel": "HP",
+      "HealLabel": "Amount",
       "BuffEffects": "Buff effects",
       "BuffEffectsHint": "The effects a buff gives the creature while it lasts, as a temporary item named after the power.",
       "NoGM": "No Dark Master is connected to change a creature you do not own.",
@@ -3018,7 +3026,32 @@
       "Reminder": "{name}: see the text.",
       "BuffEnded": "{buff} ends for {name}.",
       "BuffOf": "the buff on {name}",
-      "SustainEnded": "{power} ends: {list} end."
+      "SustainEnded": "{power} ends: {list} end.",
+      "When": {
+        "result": "On the result",
+        "end": "When the power ends"
+      },
+      "WhenLabel": "When",
+      "Soaked": "Armour soaks",
+      "SoakedHint": "Tick when armour soaks this damage. Unticked: nothing reduces it.",
+      "NextOnly": "Next attack only",
+      "NextOnlyHint": "The buff ends after the creature's next attack has been defended against (Needle-Spray).",
+      "OptionPlaceholder": "Option",
+      "OptionHint": "The option this belongs to, such as Allegro. Leave empty for always. The power dialog asks which option.",
+      "TriumphPicks": "Options on a Triumph",
+      "TriumphPicksHint": "How many options a Triumph lets the user choose (Daring Stunt: 2).",
+      "Persistent": "{name} takes {amount} persistent {type} damage.",
+      "Damaged": "{name} takes {amount} damage ({from} → {to}).",
+      "ArmourLowered": "{name}'s armour drops from {from} to {to} until the encounter ends.",
+      "ArmourBack": "{name}'s armour is back to {die}.",
+      "Fatigued": "{name} gains a level of Fatigued ({level}).",
+      "Partner": "{name} is {user}'s dance partner until the encounter ends.",
+      "PartnerLine": "Dance partner: {name}",
+      "NoPartner": "{power}: no dance partner is named this encounter.",
+      "Option": "Option",
+      "SecondOption": "Second option (only on a Triumph)",
+      "MarkUsed": "{buff} is used up by {name}'s attack.",
+      "Cured": "{name} is no longer {condition}."
     }
   }
 }

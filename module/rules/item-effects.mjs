@@ -557,7 +557,10 @@ export const STAT_OPS = ["add", "set", "min", "times"];
 /** The kinds of roll a roll or reminder effect can apply to. */
 export const ROLL_KINDS = [
   "test", "attack", "defence", "spell", "power", "panic", "contest",
-  "gloomTest", "driving", "morale"
+  "gloomTest", "driving", "morale",
+  // On a foe: works for anyone defending against its attacks and gloom
+  // abilities (a mark from Wrench and Twist or Needle-Spray, GAPS 223).
+  "defendAgainst"
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */

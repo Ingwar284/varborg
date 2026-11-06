@@ -48,6 +48,7 @@ import { addTimedCondition } from "../timers.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
+import { useUpNextAttackMarks } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -130,6 +131,8 @@ export async function rollDefence(actor, attack) {
   const roll = await new Roll(`${diceFormula(diceRule)} + @ability`, { ability: abilityScore }).evaluate();
   // Adrenaline Rush and Rattled count for this defence, then end (GAPS 80).
   await useUpNextTest(actor);
+  // A mark for the foe's next attack only is used up (Needle-Spray, GAPS 223).
+  if (foe?.type === "foe") await useUpNextAttackMarks(foe);
 
   const abilityLabel = i18n.localize(`VARBORG.Ability.${DEFENCE_ABILITY}`);
   const title = i18n.format("VARBORG.Defence.CardTitle", { name: attack.name });
@@ -409,7 +412,11 @@ function defenceConditions(actor, attack) {
       ...itemRollMods(actor, { roll: "defence" }),
       ...statDrMods(actor.system.statBonuses?.defenceDr)
     ],
-    foe: theirs ? attackingFoeConditions(theirs.conditions, theirs.fatigue, kind) : []
+    foe: theirs ? [
+      ...attackingFoeConditions(theirs.conditions, theirs.fatigue, kind),
+      // Marks on the foe from powers (GAPS 223).
+      ...itemRollMods(foe, { roll: "defendAgainst" })
+    ] : []
   };
 }
 

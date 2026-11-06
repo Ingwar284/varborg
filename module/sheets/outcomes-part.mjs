@@ -4,7 +4,7 @@
  * save on change, like the effects part.
  */
 
-import { OUTCOME_KINDS, OUTCOME_WHO, OUTCOME_TIERS, blankOutcome } from "../rules/outcomes.mjs";
+import { OUTCOME_KINDS, OUTCOME_WHO, OUTCOME_TIERS, OUTCOME_WHEN, OUTCOME_PERSISTENT, blankOutcome, outcomeOptions } from "../rules/outcomes.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 import { TIMER_KINDS } from "../rules/timers.mjs";
 
@@ -22,12 +22,20 @@ export function outcomesContext(document) {
       whos: labels(OUTCOME_WHO, "Outcome.Who"),
       conditions: labels(CONDITIONS, "Condition"),
       durations: { "": "VARBORG.Timer.None", ...labels(TIMER_KINDS, "Timer.Kind") },
+      whens: labels(OUTCOME_WHEN, "Outcome.When"),
+      persistentTypes: labels(OUTCOME_PERSISTENT, "DamageType"),
+      // Options to choose from (GAPS 224): how many a Triumph picks.
+      hasOptions: outcomeOptions(list).length > 0,
+      triumphPicks: document.system.triumphPicks ?? 1,
       list: list.map((entry, index) => ({
         ...entry,
         index,
         tierList: OUTCOME_TIERS.map(key => ({ key, on: Boolean(entry.tiers?.[key]), label: `VARBORG.Tier.${key}` })),
-        isCondition: entry.kind === "condition",
-        isHeal: entry.kind === "heal",
+        isCondition: ["condition", "cure"].includes(entry.kind),
+        isHeal: ["heal", "persistent", "damage"].includes(entry.kind),
+        isPersistent: entry.kind === "persistent",
+        isDamage: entry.kind === "damage",
+        isBuff: entry.kind === "buff",
         hasDuration: ["condition", "buff"].includes(entry.kind),
         isRounds: entry.duration?.kind === "rounds"
       }))

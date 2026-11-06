@@ -158,6 +158,7 @@
 
   <section class="inventory-section powers">
     <h2>{{localize "VARBORG.Sheet.Powers"}}</h2>
+    {{#if dancePartner}}<p class="hint">{{dancePartner}}</p>{{/if}}
     <ul class="item-list">
       {{#each powers}}
       <li class="item-row feat-row power-row" data-item-id="{{item.id}}">

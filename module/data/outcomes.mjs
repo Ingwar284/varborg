@@ -4,12 +4,12 @@
  * The rules live in module/rules/outcomes.mjs.
  */
 
-import { OUTCOME_KINDS, OUTCOME_WHO } from "../rules/outcomes.mjs";
+import { OUTCOME_KINDS, OUTCOME_WHO, OUTCOME_WHEN, OUTCOME_PERSISTENT } from "../rules/outcomes.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 import { TIMER_KINDS } from "../rules/timers.mjs";
 import { effectFields } from "./effects.mjs";
 
-const { ArrayField, SchemaField, StringField, BooleanField } = foundry.data.fields;
+const { ArrayField, SchemaField, StringField, BooleanField, NumberField } = foundry.data.fields;
 
 /**
  * outcomeEffects: the entries (see rules/outcomes.mjs).
@@ -35,8 +35,18 @@ export function outcomeFields() {
       }),
       // HP regained, such as d6.
       amount: new StringField({ required: true, blank: true, initial: "" }),
+      // Step 51d: the option it belongs to (GAPS 224), when it is given,
+      // the persistent damage's type, whether armour soaks its damage,
+      // and a buff that lasts only until the creature's next attack (GAPS 223).
+      option: new StringField({ required: true, blank: true, initial: "" }),
+      when: new StringField({ required: true, choices: OUTCOME_WHEN, initial: OUTCOME_WHEN[0] }),
+      damageType: new StringField({ required: true, blank: true, choices: ["", ...OUTCOME_PERSISTENT], initial: "" }),
+      soaked: new BooleanField({ initial: false }),
+      nextOnly: new BooleanField({ initial: false }),
       note: new StringField({ required: true, blank: true, initial: "" })
     })),
+    // How many options a Triumph lets the user choose (Daring Stunt: 2, GAPS 224).
+    triumphPicks: new NumberField({ required: true, nullable: false, integer: true, min: 1, max: 2, initial: 1 }),
     buffEffects: effectFields().effects
   };
 }

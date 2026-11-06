@@ -34,6 +34,7 @@ import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { statDrMods } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
+import { useUpNextAttackMarks } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -163,6 +164,8 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
       ...statDrMods(actor.system.statBonuses?.defenceDr)
     ];
   }
+  // Marks on the foe from powers (GAPS 223).
+  if (foe?.type === "foe") conditionMods.push(...itemRollMods(foe, { roll: "defendAgainst" }));
   // Item effects for the player to tick when they apply (PLAN step 49d).
   const optional = itemOptionalMods(actor, effectContext);
   // Armour soaks the damage either way (GAPS 123); natural armour too (GAPS 188).
@@ -213,6 +216,8 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
   const formula = `${diceFormula(diceRule)} + @ability`;
   const roll = await new Roll(formula, { ability: abilityScore }).evaluate();
   await useUpNextTest(actor);
+  // A mark for the foe's next attack only is used up (GAPS 223).
+  if (foe?.type === "foe") await useUpNextAttackMarks(foe);
 
   const title = i18n.format("VARBORG.Gloom.TestTitle", { name: power.name });
   const formulas = {};

@@ -43,6 +43,7 @@
         "amount": "d8",
         "note": "allies within 30'"
       }
-    ]
+    ],
+    "automation": "auto"
   }
 }

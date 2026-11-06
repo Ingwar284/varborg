@@ -39,6 +39,12 @@ import { withExtraDamage, unarmedDamage, isRiskyPower } from "../rules/item-effe
 import { belongsTo } from "../rules/feats.mjs";
 import { areaTargets } from "../rules/powers.mjs";
 import { outcomeInputs } from "../outcomes.mjs";
+import { outcomeOptions } from "../rules/outcomes.mjs";
+
+/** The outcome inputs with the options chosen in the dialog (GAPS 224). */
+function withChosen(inputs, chosen) {
+  return inputs ? { ...inputs, chosen: chosen.filter(Boolean) } : null;
+}
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -260,6 +266,9 @@ async function rollPowerTest(actor, power) {
       selected: dr === startDr
     })),
     fortuneFields: await fortuneFields(actor, "power"),
+    // Options to choose from (GAPS 224); a second one only counts on a Triumph.
+    outcomeOptions: outcomeOptions(power.system.outcomeEffects ?? []),
+    secondOption: (power.system.triumphPicks ?? 1) > 1,
     // Autodidactism: a Magic-themed tick, ticked for the class's own powers (GAPS 208).
     magic: itemHooks(actor, "cast").length ? {
       checked: power.system.source === "class" && belongsTo(power.system.belongsTo, actor.itemTypes.class?.[0]?.name ?? "")
@@ -315,8 +324,8 @@ async function rollPowerTest(actor, power) {
     area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
       .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
     areaDamageType: power.system.damageType ?? "",
-    // What each result gives the targets and user (step 51c).
-    outcomes: outcomeInputs(actor, power),
+    // What each result gives the targets and user (step 51c), with the chosen options.
+    outcomes: withChosen(outcomeInputs(actor, power), [options.option, options.option2]),
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: power.name,

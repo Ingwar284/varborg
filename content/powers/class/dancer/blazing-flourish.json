@@ -24,6 +24,31 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "fire"
+    "damageType": "fire",
+    "outcomeEffects": [
+      {
+        "kind": "persistent",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d4",
+        "option": "",
+        "when": "result",
+        "damageType": "fire",
+        "soaked": false,
+        "nextOnly": false,
+        "note": ""
+      }
+    ],
+    "automation": "auto"
   }
 }
