@@ -50,7 +50,7 @@ export function timerText(timer) {
  * @param {{kind: string, rounds?: string}} spec  kind "" means no timer.
  * @returns {Promise<{timer: object|null, roll: Roll|null}>}
  */
-async function rollTimer(actor, spec) {
+export async function rollTimer(actor, spec) {
   if (!spec || !TIMER_KINDS.includes(spec.kind)) return { timer: null, roll: null };
   let rounds = null;
   let roll = null;
@@ -92,8 +92,16 @@ export async function addTimedCondition(actor, id, spec) {
   return parts.join(" ");
 }
 
-/** Remove a condition whose time is up, with a chat line. */
+/** Remove a condition or a buff whose time is up, with a chat line. */
 async function endCondition(actor, effect) {
+  if (effect.documentName === "Item") {
+    await effect.delete();
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Outcome.BuffEnded", { name: actor.name, buff: effect.name }))}</p></div>`
+    });
+    return;
+  }
   const names = [...effect.statuses].map(id => game.i18n.localize(`VARBORG.Condition.${id}`)).join(", ");
   await effect.delete();
   await ChatMessage.create({
@@ -102,9 +110,12 @@ async function endCondition(actor, effect) {
   });
 }
 
-/** Every timed condition the actor has. */
+/**
+ * Every timed condition the actor has, and its timed buffs (temporary
+ * items from powers and spells, step 51c): both have the timer flag.
+ */
 function timedEffects(actor) {
-  return (actor?.effects ?? []).filter(effect => effect.getFlag(SYSTEM, FLAG));
+  return [...(actor?.effects ?? []), ...(actor?.items ?? [])].filter(doc => doc.getFlag(SYSTEM, FLAG));
 }
 
 /** Start of the creature's turn: "until the start of its next turn" ends. */

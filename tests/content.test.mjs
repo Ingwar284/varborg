@@ -567,3 +567,14 @@ test("every content item's effects are understood and its automation status is v
     if (["auto", "partial"].includes(entry.status)) assert.ok(entry.effects > 0, `${entry.name} is marked ${entry.status} but has no effects`);
   }
 });
+
+test("what powers and spells give their targets has no problems (step 51c)", async () => {
+  const { outcomeProblems } = await import("../module/rules/outcomes.mjs");
+  const { effectProblems } = await import("../module/rules/item-effects.mjs");
+  const items = [...readAll(join(root, "content", "powers")), ...readAll(join(root, "content", "spells"))].map(({ data }) => data);
+  for (const item of items) {
+    for (const entry of item.system.outcomeEffects ?? []) assert.deepEqual(outcomeProblems(entry), [], item.name);
+    for (const effect of item.system.buffEffects ?? []) assert.deepEqual(effectProblems(effect), [], item.name);
+    if ((item.system.buffEffects ?? []).length) assert.ok(item.system.outcomeEffects.some(entry => entry.kind === "buff"), `${item.name}: buff effects but no buff`);
+  }
+});

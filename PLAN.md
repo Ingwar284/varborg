@@ -1249,9 +1249,16 @@ one fight and one rest.
       changes reach every button. A gloom ability with two or more
       targets rolls its damage once on its card; each Test uses it,
       unless Fortune rerolls or maximises that test's damage.
-    - 51c. What outcomes do to targets: a condition with a timer (as gloom
-      abilities do), healing, a timed buff on an ally; summons as a
-      reminder.
+    - ~~51c. What outcomes do to targets (GAPS 219–221).~~ Done: powers
+      and spells have a "What it gives" list. Each entry gives, on the
+      results it ticks, to each target or to the user: a condition with a
+      timer, healing, a buff (the power's buff effects as a temporary
+      item named after it, ending with its timer) or a reminder. It is
+      given when the card is posted and follows Fortune; the Dark
+      Master's client changes creatures the caster cannot. A Sustained
+      power's conditions on its user and all its buffs end with it.
+      Examples filled in: Song of respite, Savage Leap, Beast Unleashed.
+      EFFECTS_CONTENT 17.
     - 51d–51e. Powers (147), in two batches.
     - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
 

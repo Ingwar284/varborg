@@ -20,6 +20,7 @@ import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { EFFECTS_TEMPLATE, EFFECT_ACTIONS, effectsContext, listenToEffects } from "./item-effects-part.mjs";
+import { OUTCOMES_TEMPLATE, OUTCOME_ACTIONS, outcomesContext, listenToOutcomes } from "./outcomes-part.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -209,15 +210,28 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
-    actions: EFFECT_ACTIONS
+    actions: { ...EFFECT_ACTIONS, ...OUTCOME_ACTIONS }
   };
 
   static PARTS = {
     header: { template: `${TEMPLATES}/feat-header.hbs` },
     details: { template: `${TEMPLATES}/power-details.hbs` },
     description: { template: `${TEMPLATES}/item-description.hbs` },
+    outcomes: { template: OUTCOMES_TEMPLATE },
+    buff: { template: EFFECTS_TEMPLATE },
     effects: { template: EFFECTS_TEMPLATE }
   };
+
+  /**
+   * The buff part shows the buff's effects with the effects template
+   * (step 51c): it reads them as its effectsPart.
+   * @override
+   */
+  async _preparePartContext(partId, context, options) {
+    const part = await super._preparePartContext(partId, context, options);
+    if (partId === "buff") return { ...part, effectsPart: part.buffPart ?? null };
+    return part;
+  }
 
   /** @override */
   async _prepareContext(options) {
@@ -232,6 +246,12 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.canImprove = false;
     context.resources = PowerData.RESOURCES;
     Object.assign(context, effectsContext(this.document));
+    // What it gives its targets or user, and the buff (step 51c); not for gloom abilities.
+    if (system.resource !== "gloom") {
+      Object.assign(context, outcomesContext(this.document));
+      if ((system.outcomeEffects ?? []).some(entry => entry.kind === "buff")) Object.assign(context, effectsContext(this.document, "buffEffects"));
+    }
+
     context.isGloom = system.resource === "gloom";
     if (context.isGloom) return this.#gloomContext(context, system);
     context.testAbilities = PowerData.TEST_ABILITIES;
@@ -253,6 +273,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
     listenToEffects(this);
+    listenToOutcomes(this);
   }
 
   /** The fields a gloom ability shows. */
@@ -287,15 +308,28 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
-    actions: EFFECT_ACTIONS
+    actions: { ...EFFECT_ACTIONS, ...OUTCOME_ACTIONS }
   };
 
   static PARTS = {
     header: { template: `${TEMPLATES}/origin-header.hbs` },
     details: { template: `${TEMPLATES}/spell-details.hbs` },
     description: { template: `${TEMPLATES}/item-description.hbs` },
+    outcomes: { template: OUTCOMES_TEMPLATE },
+    buff: { template: EFFECTS_TEMPLATE },
     effects: { template: EFFECTS_TEMPLATE }
   };
+
+  /**
+   * The buff part shows the buff's effects with the effects template
+   * (step 51c): it reads them as its effectsPart.
+   * @override
+   */
+  async _preparePartContext(partId, context, options) {
+    const part = await super._preparePartContext(partId, context, options);
+    if (partId === "buff") return { ...part, effectsPart: part.buffPart ?? null };
+    return part;
+  }
 
   /** @override */
   async _prepareContext(options) {
@@ -307,6 +341,11 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.system = system;
     context.hint = "VARBORG.Spell.SheetHint";
     Object.assign(context, effectsContext(this.document));
+    // What it gives its targets or user, and the buff (step 51c); not for gloom abilities.
+    if (system.resource !== "gloom") {
+      Object.assign(context, outcomesContext(this.document));
+      if ((system.outcomeEffects ?? []).some(entry => entry.kind === "buff")) Object.assign(context, effectsContext(this.document, "buffEffects"));
+    }
     return spellContext(context, system, "VARBORG.Spell.DrHint");
   }
 
@@ -314,6 +353,7 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
     listenToEffects(this);
+    listenToOutcomes(this);
   }
 }
 

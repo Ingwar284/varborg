@@ -12,6 +12,7 @@ import { MAX_POWER_ACTIONS } from "../rules/powers.mjs";
 import { SPELL_LISTS_OF_SPELLS, RITUAL_DRS } from "../rules/spells.mjs";
 import { CarriedData } from "./equipment.mjs";
 import { effectFields } from "./effects.mjs";
+import { outcomeFields } from "./outcomes.mjs";
 import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
@@ -66,6 +67,8 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
       sustaining: new BooleanField({ initial: false }),
       kept: new BooleanField({ initial: false }),
       usedOutside: new BooleanField({ initial: false }),
+      // What each result gives its targets or caster (step 51c).
+      ...outcomeFields(),
       // What it does beyond its test and damage (PLAN Milestone 9).
       ...effectFields()
     };

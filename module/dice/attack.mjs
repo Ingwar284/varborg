@@ -55,6 +55,7 @@ import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField
 import { weaponTags, withExtraDamage, triumphDamage } from "../rules/item-effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
+import { settleOutcomes } from "../outcomes.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -312,6 +313,9 @@ export async function settleAttackCard(actor, data) {
 
   // A Sustained power starts when it takes effect.
   const sustainNote = power ? await applySustain(actor, data, tier) : null;
+  // What the result gives its targets and user, following Fortune (GAPS 219).
+  const given = power ? await settleOutcomes(data, tier) : { lines: [], rolls: [] };
+  rolls.push(...given.rolls);
 
   // Inflict damage on a foe. A Triumph's hit is soaked by the armour die
   // the foe had before the Triumph lowered it (GAPS 69).
@@ -360,6 +364,7 @@ export async function settleAttackCard(actor, data) {
     outcomeText: power ? powerOutcomeText(power, tier) : i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
     description: power?.description || null,
     sustainNote,
+    outcomeLines: given.lines,
     // A spell's Ruin: the Shadowblight table (rules 3.11, module/shadowblight.mjs).
     shadowblight: power?.kind === "spell" && tier === "ruin" ? { actorUuid: actor.uuid } : null,
     naturalNote: naturalNote(result),

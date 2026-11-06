@@ -38,6 +38,7 @@ import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField
 import { withExtraDamage, unarmedDamage, isRiskyPower } from "../rules/item-effects.mjs";
 import { belongsTo } from "../rules/feats.mjs";
 import { areaTargets } from "../rules/powers.mjs";
+import { outcomeInputs } from "../outcomes.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -314,6 +315,8 @@ async function rollPowerTest(actor, power) {
     area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
       .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
     areaDamageType: power.system.damageType ?? "",
+    // What each result gives the targets and user (step 51c).
+    outcomes: outcomeInputs(actor, power),
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: power.name,

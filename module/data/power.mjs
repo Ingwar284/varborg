@@ -13,6 +13,7 @@ import { POWER_RESOURCES, GLOOM_CONDITIONS, GLOOM_DEFENCE_DR } from "../rules/gl
 import { TIMER_KINDS } from "../rules/timers.mjs";
 import { endChoiceWith } from "../improving.mjs";
 import { effectFields } from "./effects.mjs";
+import { outcomeFields } from "./outcomes.mjs";
 import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
@@ -78,6 +79,8 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
         failure: text(),
         ruin: text()
       }),
+      // What each result gives its targets or user (step 51c).
+      ...outcomeFields(),
       // Being sustained right now, and whether it was started or sustained this turn.
       sustaining: new BooleanField({ initial: false }),
       kept: new BooleanField({ initial: false }),

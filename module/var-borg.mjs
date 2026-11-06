@@ -41,6 +41,7 @@ import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
 import { registerEffectsRefresh, refreshWorldEffects, RefreshEffectsApp } from "./refresh-effects.mjs";
 import { registerEffectButtons } from "./effects.mjs";
+import { registerOutcomes } from "./outcomes.mjs";
 import { registerPanicButtons } from "./panic.mjs";
 import { registerPanels } from "./panels.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
@@ -126,6 +127,8 @@ Hooks.once("init", () => {
   registerUses();
   registerChoices();
   registerEffectButtons();
+  // What powers and spells do to their targets (step 51c).
+  registerOutcomes();
   registerPanicButtons();
   // Minions: their owners' sheets follow them (step 42).
   registerMinions();

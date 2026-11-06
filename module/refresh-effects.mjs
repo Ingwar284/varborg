@@ -18,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "effectsContent";
 
 /** The effects content of this version of the system. */
-export const EFFECTS_CONTENT = 16;
+export const EFFECTS_CONTENT = 17;
 
 /** Register the world setting that remembers the effects content. */
 export function registerEffectsRefresh() {
@@ -69,6 +69,13 @@ function changesFor(item, source) {
   const changes = { ...(isBlank(item) ? copyFrom(source) : null) };
   const type = source?.system?.damageType;
   if (type && item.system?.damageType === "") changes["system.damageType"] = type;
+  // What a power or spell gives its targets, and its buff (step 51c), when it has none.
+  const outcomes = source?.system?.outcomeEffects ?? [];
+  if (outcomes.length && Array.isArray(item.system?.outcomeEffects) && !item.system.outcomeEffects.length) {
+    const stored = source.toObject().system;
+    changes["system.outcomeEffects"] = foundry.utils.deepClone(stored.outcomeEffects);
+    changes["system.buffEffects"] = foundry.utils.deepClone(stored.buffEffects ?? []);
+  }
   return Object.keys(changes).length ? changes : null;
 }
 

@@ -2989,6 +2989,36 @@
       "Hint": "An area: every targeted creature shares the one damage roll. Foes take it with Inflict damage (their armour soaks); characters and minions defend.",
       "DefendAs": "{name} defends ({damage} damage)",
       "SharedGloom": "Damage rolled once for every target: {rolls}."
+    },
+    "Outcome": {
+      "Title": "What it gives",
+      "TitleHint": "What each result gives the targeted creatures or the user, given by itself when the card is posted and changed if Fortune changes the result.",
+      "Add": "Add something it gives",
+      "None": "Nothing set: its text is on the card.",
+      "KindLabel": "Gives",
+      "WhoLabel": "To",
+      "Kind": {
+        "condition": "A condition",
+        "heal": "Healing",
+        "buff": "A buff (the effects below)",
+        "reminder": "A reminder (note only)"
+      },
+      "Who": {
+        "target": "Each target",
+        "self": "The user"
+      },
+      "DurationHint": "How long a condition or buff lasts. On the user of a Sustained power: until the power ends.",
+      "HealLabel": "HP",
+      "BuffEffects": "Buff effects",
+      "BuffEffectsHint": "The effects a buff gives the creature while it lasts, as a temporary item named after the power.",
+      "NoGM": "No Dark Master is connected to change a creature you do not own.",
+      "Healed": "{name} regains {amount} HP ({from} → {to}).",
+      "BuffName": "{power} (buff)",
+      "Buffed": "{name} gains {power}.",
+      "Reminder": "{name}: see the text.",
+      "BuffEnded": "{buff} ends for {name}.",
+      "BuffOf": "the buff on {name}",
+      "SustainEnded": "{power} ends: {list} end."
     }
   }
 }

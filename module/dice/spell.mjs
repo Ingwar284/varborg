@@ -42,6 +42,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, runItemHooks } from "../effects.mjs";
 import { withExtraDamage, lifeForceDie, collectEffects, chosenSpellList } from "../rules/item-effects.mjs";
 import { areaTargets } from "../rules/powers.mjs";
+import { outcomeInputs } from "../outcomes.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
@@ -267,6 +268,8 @@ export async function castSpell(actor, spell) {
     area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
       .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
     areaDamageType: spell.system.damageType ?? "",
+    // What each result gives the targets and caster (step 51c).
+    outcomes: outcomeInputs(actor, spell),
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: spell.name,

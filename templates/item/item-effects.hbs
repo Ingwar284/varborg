@@ -1,11 +1,17 @@
-<section class="var-borg-item-effects">
+<section class="var-borg-item-effects" data-effects-path="{{effectsPart.path}}">
   {{#with effectsPart}}
   <header class="effects-header">
+    {{#if isBuff}}
+    <h3 data-tooltip="{{localize 'VARBORG.Outcome.BuffEffectsHint'}}">{{localize "VARBORG.Outcome.BuffEffects"}}</h3>
+    {{else}}
     <h3>{{localize "VARBORG.Effects.Title"}}</h3>
+    {{/if}}
+    {{#unless isBuff}}
     <label data-tooltip="{{localize 'VARBORG.Effects.AutomationHint'}}">
       <span>{{localize "VARBORG.Effects.AutomationLabel"}}</span>
       <select name="system.automation" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions automations selected=automation localize=true}}</select>
     </label>
+    {{/unless}}
     {{#if @root.editable}}
     <button type="button" data-action="addEffect" data-tooltip="{{localize 'VARBORG.Effects.Add'}}"><i class="fa-solid fa-plus"></i></button>
     {{/if}}

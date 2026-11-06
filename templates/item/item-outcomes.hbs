@@ -1,0 +1,41 @@
+<section class="var-borg-item-effects var-borg-item-outcomes">
+  {{#with outcomesPart}}
+  <header class="effects-header">
+    <h3 data-tooltip="{{localize 'VARBORG.Outcome.TitleHint'}}">{{localize "VARBORG.Outcome.Title"}}</h3>
+    {{#if @root.editable}}
+    <button type="button" data-action="addOutcome" data-tooltip="{{localize 'VARBORG.Outcome.Add'}}"><i class="fa-solid fa-plus"></i></button>
+    {{/if}}
+  </header>
+  {{#unless list.length}}
+  <p class="hint">{{localize "VARBORG.Outcome.None"}}</p>
+  {{/unless}}
+  {{#each list}}
+  <div class="effect-row" data-outcome-index="{{index}}">
+    <select data-outcome-field="kind" aria-label="{{localize 'VARBORG.Outcome.KindLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../kinds selected=kind localize=true}}</select>
+    <select data-outcome-field="who" aria-label="{{localize 'VARBORG.Outcome.WhoLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../whos selected=who localize=true}}</select>
+    {{#each tierList}}
+    <label class="effect-small"><input type="checkbox" data-outcome-field="tiers.{{key}}" {{checked on}} {{#unless @root.editable}}disabled{{/unless}}> {{localize label}}</label>
+    {{/each}}
+    {{#if isCondition}}
+    <select data-outcome-field="condition" aria-label="{{localize 'VARBORG.Effects.ConditionLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../conditions selected=condition localize=true}}</select>
+    {{/if}}
+    {{#if hasDuration}}
+    <select data-outcome-field="duration.kind" data-tooltip="{{localize 'VARBORG.Outcome.DurationHint'}}" aria-label="{{localize 'VARBORG.Timer.KindLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../durations selected=duration.kind localize=true}}</select>
+    {{#if isRounds}}
+    <input class="effect-small" type="text" data-outcome-field="duration.rounds" value="{{duration.rounds}}" placeholder="d4" aria-label="{{localize 'VARBORG.Timer.RoundsLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>
+    {{/if}}
+    {{/if}}
+    {{#if isHeal}}
+    <label class="effect-small">
+      <span>{{localize "VARBORG.Outcome.HealLabel"}}</span>
+      <input type="text" data-outcome-field="amount" value="{{amount}}" placeholder="d6" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    <input class="effect-note" type="text" data-outcome-field="note" value="{{note}}" placeholder="{{localize 'VARBORG.Effects.NotePlaceholder'}}" {{#unless @root.editable}}disabled{{/unless}}>
+    {{#if @root.editable}}
+    <button type="button" class="effect-remove" data-action="removeOutcome" data-tooltip="{{localize 'VARBORG.Effects.Remove'}}"><i class="fa-solid fa-trash"></i></button>
+    {{/if}}
+  </div>
+  {{/each}}
+  {{/with}}
+</section>

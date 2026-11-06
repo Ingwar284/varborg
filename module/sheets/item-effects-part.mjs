@@ -28,12 +28,19 @@ const NUMBER_FIELDS = ["value", "dr"];
 /** The cards a reroll can be offered on (step 49g). */
 const REROLL_CARDS = ["test", "attack", "defence", "gloomTest", "power", "spell"];
 
-/** The sheet's part of the context, or nothing for an item without effects. */
-export function effectsContext(document) {
+/**
+ * The sheet's part of the context, or nothing for an item without effects.
+ * @param {Item} document
+ * @param {string} [path]  "effects", or "buffEffects" for the buff a power
+ *   or spell gives (step 51c), shown as its own part as `buffPart`.
+ */
+export function effectsContext(document, path = "effects") {
   const system = document.system;
-  if (!Array.isArray(system.effects)) return {};
+  if (!Array.isArray(system[path])) return {};
   return {
-    effectsPart: {
+    [path === "effects" ? "effectsPart" : "buffPart"]: {
+      path,
+      isBuff: path !== "effects",
       automation: system.automation,
       automations: labels(AUTOMATION, "Effects.Automation", "VARBORG.Effects.Automation.none"),
       targets: labels(STAT_TARGETS, "Effects.Target"),
@@ -69,7 +76,7 @@ export function effectsContext(document) {
       companionArmour: Object.fromEntries(COMPANION_ARMOUR.map(die => [die, die || "—"])),
       // The Choose button needs a character to choose for.
       canChoose: Boolean(document.actor) && document.isOwner,
-      list: system.effects.map((effect, index) => ({
+      list: system[path].map((effect, index) => ({
         ...effect,
         index,
         // An effect of a kind not built yet (from a later step's content)
@@ -106,24 +113,31 @@ export function effectsContext(document) {
 }
 
 /** The effects as stored, safe to change. */
-function storedEffects(document) {
-  return foundry.utils.deepClone(document.toObject().system.effects ?? []);
+function storedEffects(document, path = "effects") {
+  return foundry.utils.deepClone(document.toObject().system[path] ?? []);
+}
+
+/** Which list a button or field belongs to: the item's effects, or its buff's (step 51c). */
+function pathOf(element) {
+  return element?.closest("[data-effects-path]")?.dataset.effectsPath || "effects";
 }
 
 /** The Add button: a new stat effect at the end of the list. */
-async function addEffect() {
-  const effects = storedEffects(this.document);
+async function addEffect(event, target) {
+  const path = pathOf(target);
+  const effects = storedEffects(this.document, path);
   effects.push(blankEffect());
-  await this.document.update({ "system.effects": effects });
+  await this.document.update({ [`system.${path}`]: effects });
 }
 
 /** The remove button on an effect. */
 async function removeEffect(event, target) {
+  const path = pathOf(target);
   const index = Number(target.closest("[data-effect-index]")?.dataset.effectIndex);
-  const effects = storedEffects(this.document);
+  const effects = storedEffects(this.document, path);
   if (!effects[index]) return;
   effects.splice(index, 1);
-  await this.document.update({ "system.effects": effects });
+  await this.document.update({ [`system.${path}`]: effects });
 }
 
 /** The Choose button on a choice effect: ask again (step 49h). */
@@ -143,7 +157,8 @@ export function listenToEffects(sheet) {
       event.stopPropagation();
       const index = Number(input.closest("[data-effect-index]")?.dataset.effectIndex);
       const field = input.dataset.effectField;
-      const effects = storedEffects(sheet.document);
+      const path = pathOf(input);
+      const effects = storedEffects(sheet.document, path);
       if (!effects[index]) return;
       effects[index][field] = input.type === "checkbox" ? input.checked
         : NUMBER_FIELDS.includes(field) ? Math.trunc(Number(input.value) || 0) : input.value;
@@ -161,7 +176,7 @@ export function listenToEffects(sheet) {
         effect.chosen = "";
         effect.chosenName = "";
       }
-      await sheet.document.update({ "system.effects": effects });
+      await sheet.document.update({ [`system.${path}`]: effects });
     });
   }
 }
