@@ -9,6 +9,8 @@
     "belongsTo": "Rogue",
     "improving": false,
     "frequency": "turn",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

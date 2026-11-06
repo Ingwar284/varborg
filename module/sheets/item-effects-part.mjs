@@ -87,6 +87,7 @@ export function effectsContext(document) {
         isReminder: effect.kind === "reminder",
         isResist: effect.kind === "resist",
         isGift: effect.kind === "gift",
+        isImmune: effect.kind === "immune",
         resistReduce: effect.kind === "resist" && effect.resist === "reduce"
       }))
     }

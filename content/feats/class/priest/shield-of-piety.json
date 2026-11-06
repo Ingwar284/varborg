@@ -9,6 +9,8 @@
     "belongsTo": "Priest",
     "improving": false,
     "frequency": "day",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

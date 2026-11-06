@@ -9,6 +9,8 @@
     "belongsTo": "Scholar",
     "improving": false,
     "frequency": "downtime",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

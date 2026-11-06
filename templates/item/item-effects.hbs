@@ -89,6 +89,9 @@
     <button type="button" data-action="chooseEffect" data-tooltip="{{localize 'VARBORG.Effects.Choice.ChooseHint'}}"><i class="fa-solid fa-hand-pointer"></i> {{localize "VARBORG.Effects.Choice.Choose"}}</button>
     {{/if}}
     {{/if}}
+    {{#if isImmune}}
+    <select data-effect-field="condition" aria-label="{{localize 'VARBORG.Effects.ConditionLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../hookConditions selected=condition localize=true}}</select>
+    {{/if}}
     {{#if isGift}}
     <label class="effect-wide" data-tooltip="{{localize 'VARBORG.Effects.GiftHint'}}">
       <span>{{localize "VARBORG.Effects.GiftLabel"}}</span>

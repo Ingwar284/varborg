@@ -27,7 +27,17 @@ import { DAMAGE_TYPES } from "./equipment.mjs";
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist", "gift"];
 
 /** The kinds the system works out so far; the sheet only offers these. */
-export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "resist", "gift"];
+export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "resist", "gift", "immune"];
+
+/**
+ * The conditions the items' immune effects keep off (Incorruptible:
+ * Charmed, step 50e). Foes use the same in step 52a.
+ * @param {object[]} effects  From collectEffects.
+ * @returns {Set<string>}
+ */
+export function immuneConditions(effects) {
+  return new Set((effects ?? []).filter(effect => effect.kind === "immune" && effect.condition).map(effect => effect.condition));
+}
 
 /**
  * A gift effect (step 50b4): when the item lands on a character, the
@@ -56,7 +66,7 @@ export const CHOICE_FROM_ELEMENT = "element";
 export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random", CHOICE_FROM_ELEMENT];
 
 /** Only against foes of the item's chosen Bestiary category (Favoured prey). */
-export const VERSUS = ["", "chosenCategory", "chosenDamageType"];
+export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent"];
 
 /**
  * What a resist effect does to damage of its type (step 50b3b): half it
@@ -226,6 +236,10 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * (Armoured Paragon 2, step 50b2).
  * heavyDefenceIgnored: set 1, heavy (t3) armour adds no DR to defence
  * (Armoured Paragon).
+ * wornSoakTier: added to worn armour's tier when it soaks, up to t4
+ * (Armour of faith, GAPS 188, step 50e).
+ * spellArmourMaxTier: set, metal armour up to this original tier gives no
+ * Bane on spellcasting (Blessed plate 3, step 50e).
  * soakNoArmour: natural armour's soak tier while no armour is worn
  * (Barkskin t2, GAPS 188, step 50d).
  * twoHandedVersatile: set 1, two-handed weapons are versatile and can be
@@ -237,7 +251,8 @@ export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
   ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie",
   "unarmedDie", "rangePercent", "reloadActions",
-  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile", "soakNoArmour"
+  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile", "soakNoArmour",
+  "wornSoakTier", "spellArmourMaxTier"
 ];
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
@@ -591,10 +606,11 @@ export function effectProblems(effect) {
     if (events && !events.includes(effect.event)) problems.push(`${effect.action} at ${effect.event}`);
   }
   if (effect.kind === "gift" && !isGiftUuid(effect.gift)) problems.push(`gift: ${effect.gift}`);
+  if (effect.kind === "immune") check("condition", CONDITIONS);
   if (effect.kind === "resist") {
     check("resist", RESIST_MODES);
     if (effect.damageType) check("damageType", DAMAGE_TYPES);
-    else if (effect.vs !== "chosenDamageType") problems.push("resist: no damage type");
+    else if (!["chosenDamageType", "persistent"].includes(effect.vs)) problems.push("resist: no damage type");
     if (effect.resist === "reduce" && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
   }
   if (effect.kind === "choice") {
@@ -712,11 +728,16 @@ export function rerollItems(effects, rollKind) {
  * @param {object[]} effects     From collectEffects.
  * @param {string} damageType    The damage's type; blank: none work.
  */
-export function resistsFor(effects, damageType) {
-  if (!damageType) return [];
-  return (effects ?? []).filter(effect => effect.kind === "resist" && (effect.damageType
-    ? effect.damageType === damageType
-    : effect.vs === "chosenDamageType" && effect.choices?.damageType === damageType));
+export function resistsFor(effects, damageType, { persistent = false } = {}) {
+  return (effects ?? []).filter(effect => {
+    if (effect.kind !== "resist") return false;
+    // Persistent damage of any type (Chastisement, step 50e).
+    if (effect.vs === "persistent") return persistent;
+    if (!damageType) return false;
+    return effect.damageType
+      ? effect.damageType === damageType
+      : effect.vs === "chosenDamageType" && effect.choices?.damageType === damageType;
+  });
 }
 
 /**

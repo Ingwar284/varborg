@@ -147,9 +147,9 @@ export function effectiveWeapon(item) {
  * @param {object} [kept]     A stored { items, totals } from before.
  * @returns {Promise<{kept: object, rolls: Roll[]}>}
  */
-export async function rollResists(actor, damageType, kept = null) {
+export async function rollResists(actor, damageType, kept = null, { persistent = false } = {}) {
   if (kept) return { kept, rolls: [] };
-  const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType) : [];
+  const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType, { persistent }) : [];
   const rolls = [];
   const items = [];
   const totals = [];

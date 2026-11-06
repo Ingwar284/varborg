@@ -11,7 +11,7 @@ import {
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
   unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
-  resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage
+  resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -491,4 +491,15 @@ test("feats lowering damage keep a hit at 1; poison immunity; Barkskin's target 
   assert.equal(cardButtons([lower], "defence", { taken: 1 }).length, 0);
   assert.equal(cardButtons([lower], "defence", { taken: 4, used: ["d"] }).length, 0);
   assert.ok(STAT_TARGETS.includes("soakNoArmour"));
+});
+
+test("Incorruptible keeps Charmed off; Chastisement halves only persistent damage (step 50e)", () => {
+  const immune = { ...blankEffect("immune"), condition: "charmed" };
+  assert.deepEqual([...immuneConditions([immune])], ["charmed"]);
+  assert.deepEqual(effectProblems(immune), []);
+  const chastisement = { ...blankEffect("resist"), resist: "half", vs: "persistent" };
+  assert.equal(resistsFor([chastisement], "fire").length, 0);
+  assert.equal(resistsFor([chastisement], "fire", { persistent: true }).length, 1);
+  assert.equal(resistsFor([chastisement], "", { persistent: true }).length, 1);
+  assert.deepEqual(effectProblems(chastisement), []);
 });

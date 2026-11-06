@@ -167,7 +167,7 @@ async function tickOne(actor, type, formula, effect) {
   await damageRoll.evaluate();
   const rolls = [damageRoll];
   // Resists by damage type (step 50b3b): fire halved by Tempered by the Forge.
-  const resist = await rollResists(actor, type);
+  const resist = await rollResists(actor, type, null, { persistent: true });
   rolls.push(...resist.rolls);
   const resisted = resist.kept.items.length ? resistedDamage(damageRoll.total, resist.kept.items, resist.kept.totals) : damageRoll.total;
   const resistText = resistLines(resist.kept);

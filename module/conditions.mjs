@@ -23,6 +23,7 @@ import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
 import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
 import { conditionTimer, timerText, askConditionTimer } from "./timers.mjs";
 import { isStarving } from "./rules/days.mjs";
+import { collectEffects, immuneConditions } from "./rules/item-effects.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -60,9 +61,24 @@ export function registerConditions() {
   CONFIG.specialStatusEffects.BLIND = "blinded";
 
   Hooks.on("updateActor", syncFatigueIcon);
+  Hooks.on("preCreateActiveEffect", keepOffImmune);
   Hooks.on("createActiveEffect", onConditionAdded);
   Hooks.on("deleteActiveEffect", onConditionRemoved);
   foundry.applications.handlebars.loadTemplates(["systems/var-borg/templates/actor/conditions.hbs"]);
+}
+
+/**
+ * A condition an actor's items make it immune to is not added (Incorruptible:
+ * Charmed, step 50e). Hooked to preCreateActiveEffect.
+ */
+function keepOffImmune(effect) {
+  const actor = effect.parent;
+  if (!(actor instanceof Actor) || !actor.items) return true;
+  const immune = immuneConditions(collectEffects(actor.items));
+  const blocked = [...(effect.statuses ?? [])].find(status => immune.has(status));
+  if (!blocked) return true;
+  ui.notifications.info(game.i18n.format("VARBORG.Effects.ImmuneCondition", { name: actor.name, condition: statusName(blocked) }));
+  return false;
 }
 
 /** The conditions an actor has, and its fatigue level, for the rules. */

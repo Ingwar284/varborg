@@ -66,7 +66,8 @@ function castingFacts(actor, spell) {
   return {
     classList,
     outsideList: outsideSpellList(spell.system.spellList, classList),
-    metalArmour: metalArmourBane(armour),
+    // Blessed plate: no Bane in metal armour up to t3 (step 50e).
+    metalArmour: metalArmourBane(armour) && !(armour.originalTier <= (actor.system.statBonuses?.spellArmourMaxTier?.set ?? 0)),
     armourName: armour ? actor.items.get(armour.id)?.name ?? null : null
   };
 }

@@ -2586,7 +2586,9 @@
         "heavyDefenceIgnored": "Heavy armour adds no defence DR (1 = yes)",
         "chanceSplit": "Chance Die without Neutral: Positive from",
         "twoHandedVersatile": "Two-handed weapons are versatile (1 = yes)",
-        "soakNoArmour": "Natural armour while wearing none (tier)"
+        "soakNoArmour": "Natural armour while wearing none (tier)",
+        "wornSoakTier": "Worn armour soaks as tiers higher (up to t4)",
+        "spellArmourMaxTier": "No spellcasting Bane in metal armour up to tier"
       },
       "OpLabel": "How",
       "Op": {
@@ -2781,6 +2783,7 @@
       "LowerButton": "{item}: −{amount} damage",
       "LowerLog": "{name} uses {item}: damage {value}",
       "FeatLowered": "Lowered by feats (at least 1)",
+      "ImmuneCondition": "{name} is immune to {condition}.",
       "SuccessLog": "{name} uses {item}: the test counts as a Success",
       "FailedAgain": "{item} fails again: {note}",
       "ChanceRolled": "{item}: the Chance Die is rolled ({note}).",
@@ -2811,7 +2814,8 @@
       "Versus": {
         "any": "Any target",
         "chosenCategory": "Foes of the chosen category",
-        "chosenDamageType": "The chosen damage type"
+        "chosenDamageType": "The chosen damage type",
+        "persistent": "Persistent damage of any type"
       },
       "Choice": {
         "KindLabel": "Choose",

@@ -1157,7 +1157,12 @@ every feat in the batch ends with a status.
       Feats that lean on class features (dance partner, Primal Conduit
       stances, thralls, Photonic Surge) are reminders until 51a.
       EFFECTS_CONTENT 10.
-    - 50e. Class feats: Paladin, Priest, Ranger, Rogue, Scholar.
+    - ~~50e. Class feats: Paladin, Priest, Ranger, Rogue, Scholar.~~
+      Done: 40 feats have a status. New: worn armour soaking a tier
+      higher (Armour of faith), no spellcasting Bane up to t3 (Blessed
+      plate), immunity to a condition (Incorruptible), half persistent
+      damage (Chastisement). The Scholar's subject feats wait for 51a.
+      EFFECTS_CONTENT 11.
     - 50f. Class feats: Skullrider, Sorcerer, Sword Saint, Warrior, Witch
       Hunter, Wizard.
     - 50g. Companion and vehicle feats (about 30): effects on the owner's

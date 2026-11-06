@@ -341,7 +341,10 @@ export function defenceModifiers(actor) {
   const bonuses = actor.system.statBonuses ?? {};
   const bare = armour ? null : bonuses.soakNoArmour;
   const natural = withStat(0, bare) > withStat(0, bonuses.soak) ? bare : bonuses.soak;
-  const soak = bestSoak(armour, withStat(0, natural));
+  // Armour of faith: worn armour soaks one tier higher, up to t4 (step 50e).
+  const raise = withStat(0, bonuses.wornSoakTier);
+  const soaking = armour && raise && armour.tier > 0 ? { ...armour, tier: Math.min(4, armour.tier + raise) } : armour;
+  const soak = bestSoak(soaking, withStat(0, natural));
   return {
     armour,
     armourName: nameOf(armour),
