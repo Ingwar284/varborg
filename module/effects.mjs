@@ -13,11 +13,12 @@
  */
 
 import {
-  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats
+  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage
 } from "./rules/item-effects.mjs";
 import { gainEmber } from "./pools.mjs";
 import { isDead } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
+import { makeItemMinion } from "./minions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -130,6 +131,53 @@ export function effectiveWeapon(item) {
   return withWeaponStats(item.system, bonuses, isUnarmed(item));
 }
 
+/**
+ * Resist effects on damage a character takes (step 50b3b): Tempered by
+ * the Forge halves fire, Ancestral Resonance takes d6 off its element.
+ * The reductions are rolled once and kept in the card's state, so a
+ * Fortune press does not roll them again.
+ * @param {Actor} actor       Who takes the damage.
+ * @param {string} damageType
+ * @param {object} [kept]     A stored { items, totals } from before.
+ * @returns {Promise<{kept: object, rolls: Roll[]}>}
+ */
+export async function rollResists(actor, damageType, kept = null) {
+  if (kept) return { kept, rolls: [] };
+  const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType) : [];
+  const rolls = [];
+  const items = [];
+  const totals = [];
+  for (const effect of resists) {
+    let value = null;
+    if (effect.resist === "reduce") {
+      const roll = await new Roll(effect.amount || "0").evaluate();
+      rolls.push(roll);
+      value = roll.total;
+      totals.push(value);
+    }
+    items.push({ item: effect.item, resist: effect.resist, value });
+  }
+  return { kept: { items, totals, damageType }, rolls };
+}
+
+/** The card lines for kept resists: "Tempered by the Forge: fire damage halved". */
+export function resistLines(kept) {
+  const i18n = game.i18n;
+  const type = kept?.damageType ? i18n.localize(`VARBORG.DamageType.${kept.damageType}`) : "";
+  return (kept?.items ?? []).map(entry => i18n.format(`VARBORG.Effects.Resist.${entry.resist}Line`, { item: entry.item, type, value: entry.value ?? 0 }));
+}
+
+/**
+ * Damage taken after resists and soak, as the defence and gloom cards
+ * work it out: no resists, the usual; resisted to 0, nothing; otherwise
+ * soaked, at least 1.
+ */
+export function takenWithResists(before, usualTaken, soak, kept, minimum = 1) {
+  if (!kept?.items?.length) return { taken: usualTaken, resisted: before };
+  const resisted = resistedDamage(before, kept.items, kept.totals);
+  return { taken: resisted > 0 ? Math.max(minimum, resisted - soak) : 0, resisted };
+}
+
 /** Mark an item's limited use spent (once per day and so on). */
 async function markUsed(actor, itemId) {
   const item = actor.items.get(itemId);
@@ -190,6 +238,7 @@ export async function doEffectAction(actor, effect) {
       acted: true
     };
   }
+  if (effect.action === "makeMinion") return makeItemMinion(actor, effect);
   if (effect.action === "chanceDie") {
     // Pack Rat (step 50b2): the Chance Die posts its own card.
     await rollChanceDie(actor);

@@ -85,6 +85,23 @@
     <button type="button" data-action="chooseEffect" data-tooltip="{{localize 'VARBORG.Effects.Choice.ChooseHint'}}"><i class="fa-solid fa-hand-pointer"></i> {{localize "VARBORG.Effects.Choice.Choose"}}</button>
     {{/if}}
     {{/if}}
+    {{#if isGift}}
+    <label class="effect-wide" data-tooltip="{{localize 'VARBORG.Effects.GiftHint'}}">
+      <span>{{localize "VARBORG.Effects.GiftLabel"}}</span>
+      <input type="text" data-effect-field="gift" value="{{gift}}" placeholder="Compendium.var-borg.relics.Item.…" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    {{#if isResist}}
+    <select data-effect-field="resist" aria-label="{{localize 'VARBORG.Effects.ResistLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../resistModes selected=resist localize=true}}</select>
+    <select data-effect-field="damageType" data-tooltip="{{localize 'VARBORG.Effects.ResistTypeHint'}}" aria-label="{{localize 'VARBORG.Effects.DamageTypeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../resistTypes selected=damageType localize=true}}</select>
+    <select data-effect-field="vs" aria-label="{{localize 'VARBORG.Effects.VersusLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../versusList selected=vs localize=true}}</select>
+    {{#if resistReduce}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.AmountHint'}}">
+      <span>{{localize "VARBORG.Effects.AmountLabel"}}</span>
+      <input type="text" data-effect-field="amount" value="{{amount}}" placeholder="d6" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    {{/if}}
     {{#if isUse}}
     <select data-effect-field="action" data-tooltip="{{localize 'VARBORG.Effects.UseHint'}}" aria-label="{{localize 'VARBORG.Effects.ActionLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../useActions selected=action localize=true}}</select>
     {{#if hasAmount}}

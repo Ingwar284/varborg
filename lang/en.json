@@ -2157,6 +2157,15 @@
       }
     },
     "Minion": {
+      "Beast": "Fighting beast",
+      "BeastHide": "Tough hide",
+      "BeastAttack": "Bite, claws or tusks",
+      "NameTitle": "{item}: name your beast",
+      "NameLabel": "Name",
+      "Make": "Make the minion",
+      "Made": "{item}: {name} is now {owner}’s Weak minion. Pick its passive with the Dark Master and write it on its sheet.",
+      "AlreadyMade": "{item} has already given {minion}.",
+      "AskDm": "{item}: making a minion needs the right to create actors. Ask the Dark Master to press the Use button.",
       "Tier": {
         "pitiful": "Pitiful minion",
         "weak": "Weak minion",
@@ -2550,7 +2559,8 @@
         "use": "Use button",
         "choice": "Choice",
         "immune": "Immunity",
-        "resist": "Resistance"
+        "resist": "Resistance",
+        "gift": "Gift"
       },
       "TargetLabel": "Which number",
       "Target": {
@@ -2693,7 +2703,8 @@
         "steadyNerves": "Steady nerves: a Success button on the failed Panic card",
         "ruinAsFailure": "A Panic Ruin counts as a Failure",
         "success": "Offer a Success on failed cards",
-        "chanceDie": "Roll the Chance Die"
+        "chanceDie": "Roll the Chance Die",
+        "makeMinion": "Make a Weak minion"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2764,12 +2775,28 @@
       "RerollSpent": "{item} is already used.",
       "VersusLabel": "Against",
       "DamageTypeLabel": "Damage type",
+      "ResistLabel": "What it does",
+      "GiftLabel": "Gives",
+      "GiftHint": "The UUID of a compendium item given to the character with this one, once (the Clan Heirloom relic). Drag the item into a text box to see its UUID.",
+      "GiftMissing": "{item}: its gift is not in the compendiums.",
+      "GiftGiven": "{name} gains {gifts} with {item}.",
+      "ResistTypeHint": "The damage type it works on. Leave on “chosen” and pick “The chosen damage type” to use the item’s choice (Ancestral Resonance).",
+      "ChosenDamageType": "chosen",
+      "Resist": {
+        "half": "Half the damage",
+        "double": "Double the damage",
+        "reduce": "Reduce the damage by",
+        "halfLine": "{item}: {type} damage halved",
+        "doubleLine": "{item}: {type} damage doubled",
+        "reduceLine": "{item}: {type} damage −{value}"
+      },
       "DamageTypeHint": "Only with damage of this type (Firebug: fire).",
       "AnyDamageType": "any damage",
       "VersusHint": "Only against foes of the Bestiary category picked by this item's choice (Favoured prey).",
       "Versus": {
         "any": "Any target",
-        "chosenCategory": "Foes of the chosen category"
+        "chosenCategory": "Foes of the chosen category",
+        "chosenDamageType": "The chosen damage type"
       },
       "Choice": {
         "KindLabel": "Choose",
@@ -2787,7 +2814,8 @@
           "otherAncestry": "Another ancestry",
           "otherClass": "Another class",
           "known": "Spells you know (only noted)",
-          "random": "At random"
+          "random": "At random",
+          "element": "An element (fire, poison, acid, lightning, radiant)"
         },
         "MaxCost": "Max ember",
         "MaxCostHint": "For a spell: the highest ember cost it may have. 0 means any.",

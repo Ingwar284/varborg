@@ -33,6 +33,7 @@ import { defenceModifiers, DEFENDERS } from "./defence.mjs";
 import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { statDrMods } from "../rules/item-effects.mjs";
+import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -207,6 +208,8 @@ export async function rollGloomTest(actor, power) {
     own: test.own,
     formulas,
     soakDie: soak?.die ?? "",
+    // The ability's damage type, for resists (step 50b3b).
+    damageType: system.damageType ?? "",
     conditions: { ...system.conditions },
     durations: foundry.utils.deepClone(system.durations ?? {}),
     outcomes: { ...system.outcomes },
@@ -278,7 +281,12 @@ export async function settleGloomCard(actor, data) {
         state.soak = soakRoll.total;
       }
     }
-    const { before, taken } = gloomDamageTaken(state.damage, outcome.multiplier, state.soak);
+    const { before, taken: usual } = gloomDamageTaken(state.damage, outcome.multiplier, state.soak);
+    // Resists by damage type, before armour (step 50b3b).
+    const resist = await rollResists(actor, inputs.damageType ?? "", state.resist);
+    state.resist = resist.kept;
+    rolls.push(...resist.rolls);
+    const { taken, resisted } = takenWithResists(before, usual, state.soak, state.resist);
     const lowered = taken - lowerDamage(taken, state.lowered);
     damage = {
       formula: part.text,
@@ -286,11 +294,12 @@ export async function settleGloomCard(actor, data) {
       doubled: outcome.multiplier === 2,
       halved: outcome.multiplier === 0.5,
       before,
+      resistLines: resistLines(state.resist),
       soakDie: inputs.soakDie,
       soak: state.soak,
       lowered,
       taken: taken - lowered,
-      minimum: taken > before - state.soak
+      minimum: taken > 0 && taken > resisted - state.soak
     };
   }
 

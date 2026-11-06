@@ -1131,11 +1131,16 @@ every feat in the batch ends with a status.
         lightning and radiant are damage types; powers, spells and gloom
         abilities have a damage type (40 filled in); roll effects can need
         one; Firebug +2 with fire. EFFECTS_CONTENT 7.
-      - 50b3b. Damage the character takes by type: Tempered by the Forge
-        (half fire), Ancestral Resonance (chosen element −d6), on defence,
-        gloom ability and persistent damage.
-      - 50b4. Gifts (GAPS 201): the Clan Heirloom relic and Beast-Tamer's
-        minion.
+      - ~~50b3b. Damage the character takes by type.~~ Done: a resist
+        effect halves, doubles or reduces damage of a type (or the chosen
+        element) on defence, gloom ability and persistent damage cards,
+        before armour (GAPS 204, provisional). Tempered by the Forge and
+        Ancestral Resonance work.
+      - ~~50b4. Gifts (GAPS 201).~~ Done: a gift effect gives a compendium
+        item with the feat (the new Clan Heirloom relic: once a day +1
+        Fortune), and a Use action makes a named Weak minion once
+        (Beast-Tamer). All 64 ancestry feats have a status.
+        EFFECTS_CONTENT 8.
     - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.
     - 50d. Class feats: Dancer, Druid, Fleshwright, Gravecaller, Hedge
       Mage.

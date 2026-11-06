@@ -29,6 +29,7 @@
       {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
       {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{#if damage.halved}}{{damage.rolled}} × ½ = {{/if}}{{damage.before}}
     </p>
+    {{#each damage.resistLines}}<p class="damage-line">{{this}}</p>{{/each}}
     {{#if damage.soakDie}}
     <p class="damage-line">{{localize "VARBORG.Defence.Soak"}} ({{damage.soakDie}}): −{{damage.soak}}</p>
     {{/if}}

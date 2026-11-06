@@ -24,10 +24,19 @@ import { CONDITIONS } from "./conditions.mjs";
 import { DAMAGE_TYPES } from "./equipment.mjs";
 
 /** Every kind of effect, in the order the sheet offers them. */
-export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist"];
+export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist", "gift"];
 
 /** The kinds the system works out so far; the sheet only offers these. */
-export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice"];
+export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "resist", "gift"];
+
+/**
+ * A gift effect (step 50b4): when the item lands on a character, the
+ * compendium item named by `gift` (its UUID) is given too, once (the
+ * Clan Heirloom relic, GAPS 201).
+ */
+export function isGiftUuid(text) {
+  return /^Compendium\.[\w-]+\.[\w-]+\.Item\.\w{16}$/.test(String(text ?? ""));
+}
 
 /**
  * What a choice effect asks for when its item is dropped on a character
@@ -43,10 +52,19 @@ export const CHOICE_KINDS = ["weapon", "feat", "spell", "category", "damageType"
  * of another ancestry; a class feat of another class; a spell the
  * character already knows (only written down); a random spell.
  */
-export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random"];
+export const CHOICE_FROM_ELEMENT = "element";
+export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random", CHOICE_FROM_ELEMENT];
 
 /** Only against foes of the item's chosen Bestiary category (Favoured prey). */
-export const VERSUS = ["", "chosenCategory"];
+export const VERSUS = ["", "chosenCategory", "chosenDamageType"];
+
+/**
+ * What a resist effect does to damage of its type (step 50b3b): half it
+ * (rounded down), double it, or reduce it by `amount` (Ancestral
+ * Resonance: d6). The type is `damageType`, or the type picked by the
+ * item's choice when `vs` is "chosenDamageType".
+ */
+export const RESIST_MODES = ["half", "double", "reduce"];
 
 /**
  * The moments a hook effect can act at (step 49f):
@@ -105,10 +123,13 @@ export const HOOK_ACTIONS = [
  * success: a button on a failed card of that kind turns it into a Success
  *   (Human Ingenuity, GAPS 198).
  * chanceDie: rolls the Chance Die (Pack Rat, step 50b2).
+ * gainFortune: gains `amount` Fortune (the Clan Heirloom, step 50b4).
+ * makeMinion: makes a Weak minion for the character, named by the
+ *   player, once (Beast-Tamer, GAPS 201).
  * A reroll or success button can be limited to some cards with `requires`
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
-export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie"];
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion"];
 
 /**
  * When a card button is offered (GAPS 198): always, on a Ruin (Whim of the
@@ -275,6 +296,7 @@ export function blankEffect(kind = "stat") {
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", damageType: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
+    resist: "half", gift: "",
     note: ""
   };
 }
@@ -523,13 +545,20 @@ export function effectProblems(effect) {
     const events = ACTION_EVENTS[effect.action];
     if (events && !events.includes(effect.event)) problems.push(`${effect.action} at ${effect.event}`);
   }
+  if (effect.kind === "gift" && !isGiftUuid(effect.gift)) problems.push(`gift: ${effect.gift}`);
+  if (effect.kind === "resist") {
+    check("resist", RESIST_MODES);
+    if (effect.damageType) check("damageType", DAMAGE_TYPES);
+    else if (effect.vs !== "chosenDamageType") problems.push("resist: no damage type");
+    if (effect.resist === "reduce" && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+  }
   if (effect.kind === "choice") {
     check("choose", CHOICE_KINDS);
     check("from", CHOICE_FROM);
   }
   if (effect.kind === "use") {
     check("action", USE_ACTIONS);
-    if (["heal", "roll", "gainEmber"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
     if (["reroll", "success"].includes(effect.action)) {
       check("roll", ROLL_KINDS);
@@ -630,6 +659,33 @@ export function rerollItems(effects, rollKind) {
     if (!found.has(effect.itemId)) found.set(effect.itemId, { item: effect.item, itemId: effect.itemId });
   }
   return [...found.values()];
+}
+
+/**
+ * The resist effects that work on damage of one type (step 50b3b).
+ * @param {object[]} effects     From collectEffects.
+ * @param {string} damageType    The damage's type; blank: none work.
+ */
+export function resistsFor(effects, damageType) {
+  if (!damageType) return [];
+  return (effects ?? []).filter(effect => effect.kind === "resist" && (effect.damageType
+    ? effect.damageType === damageType
+    : effect.vs === "chosenDamageType" && effect.choices?.damageType === damageType));
+}
+
+/**
+ * Damage after resist effects: halves first (rounded down), then doubles,
+ * then the rolled reductions. Never below 0.
+ * @param {number} damage
+ * @param {object[]} resists      From resistsFor, or { resist } entries.
+ * @param {number[]} [reductions] The rolls of the "reduce" effects.
+ */
+export function resistedDamage(damage, resists, reductions = []) {
+  let result = damage;
+  for (const effect of resists ?? []) if (effect.resist === "half") result = Math.floor(result / 2);
+  for (const effect of resists ?? []) if (effect.resist === "double") result *= 2;
+  result -= (reductions ?? []).reduce((sum, value) => sum + value, 0);
+  return Math.max(0, result);
 }
 
 /**

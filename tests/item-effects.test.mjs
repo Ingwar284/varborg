@@ -10,7 +10,8 @@ import {
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
-  unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr
+  unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
+  resistsFor, resistedDamage, isGiftUuid
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -430,4 +431,27 @@ test("Firebug: +2 only with fire damage (step 50b3)", () => {
   assert.equal(rollEffects(firebug, { roll: "attack", damageType: "blunt" }).auto.length, 0);
   assert.equal(rollEffects(firebug, { roll: "attack" }).auto.length, 0);
   assert.deepEqual(effectProblems({ ...firebug[0], damageType: "frost" }), ["damageType: frost"]);
+});
+
+test("resists: Tempered by the Forge halves fire, Ancestral Resonance takes d6 off its element (step 50b3b)", () => {
+  const tempered = { ...blankEffect("resist"), resist: "half", damageType: "fire", item: "Tempered" };
+  const resonance = { ...blankEffect("resist"), resist: "reduce", amount: "d6", vs: "chosenDamageType", choices: { damageType: "acid" }, item: "Resonance" };
+  assert.deepEqual(resistsFor([tempered, resonance], "fire").map(effect => effect.item), ["Tempered"]);
+  assert.deepEqual(resistsFor([tempered, resonance], "acid").map(effect => effect.item), ["Resonance"]);
+  assert.deepEqual(resistsFor([tempered, resonance], ""), []);
+  assert.equal(resistedDamage(9, [tempered]), 4);
+  assert.equal(resistedDamage(5, [resonance], [3]), 2);
+  assert.equal(resistedDamage(2, [resonance], [6]), 0);
+  assert.equal(resistedDamage(9, [tempered, resonance], [3]), 1);
+  assert.deepEqual(effectProblems(tempered), []);
+  assert.deepEqual(effectProblems(resonance), []);
+  assert.deepEqual(effectProblems({ ...blankEffect("resist") }), ["resist: no damage type"]);
+});
+
+test("gifts name a compendium item; the new Use actions are known (step 50b4)", () => {
+  assert.equal(isGiftUuid("Compendium.var-borg.relics.Item.vbRelic023000000"), true);
+  assert.equal(isGiftUuid("Clan Heirloom"), false);
+  assert.deepEqual(effectProblems({ ...blankEffect("gift"), gift: "nope" }), ["gift: nope"]);
+  assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "gainFortune", amount: "1" }), []);
+  assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "makeMinion" }), []);
 });

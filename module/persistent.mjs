@@ -28,6 +28,8 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 import { agonyTypeForPersistent } from "./rules/agony.mjs";
 import { AGONY_TYPE_OPTION } from "./agony.mjs";
+import { rollResists, resistLines } from "./effects.mjs";
+import { resistedDamage } from "./rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -164,7 +166,12 @@ async function tickOne(actor, type, formula, effect) {
   const damageRoll = new Roll(formula);
   await damageRoll.evaluate();
   const rolls = [damageRoll];
-  const damage = damageRoll.total;
+  // Resists by damage type (step 50b3b): fire halved by Tempered by the Forge.
+  const resist = await rollResists(actor, type);
+  rolls.push(...resist.rolls);
+  const resisted = resist.kept.items.length ? resistedDamage(damageRoll.total, resist.kept.items, resist.kept.totals) : damageRoll.total;
+  const resistText = resistLines(resist.kept);
+  const damage = resisted;
   // At Death's Door any damage kills (module/deaths-door.mjs).
   if (await killedByDamage(actor, damage)) return;
   const from = actor.system.hp.value;
@@ -189,6 +196,7 @@ async function tickOne(actor, type, formula, effect) {
   const content = await renderTemplate(CARD_TEMPLATE, {
     title: effect.name,
     damage: i18n.format("VARBORG.Persistent.Damage", { formula, damage }),
+    resistLines: resistText,
     hp: i18n.format("VARBORG.Persistent.Hp", { from, to, max: actor.system.hp.max }),
     zeroHp: to === 0 && !isFoe ? i18n.localize("VARBORG.Defence.ZeroHp") : null,
     foeLine,

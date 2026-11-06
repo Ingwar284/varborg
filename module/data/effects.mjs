@@ -6,7 +6,7 @@
 
 import {
   EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS
+  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -48,6 +48,10 @@ export function effectFields() {
       per: choice(DAMAGE_PER, ""),
       // Only with damage of this type (Firebug, step 50b3).
       damageType: choice(["", ...DAMAGE_TYPES], ""),
+      // resist (step 50b3b): half, double or reduce damage of a type.
+      resist: choice(RESIST_MODES),
+      // gift (step 50b4): the UUID of a compendium item given with this one.
+      gift: new StringField({ required: true, blank: true, initial: "" }),
       // Reroll damage dice that show 1 (Hawkeye, step 50b).
       rerollOnes: new BooleanField({ required: true, initial: false }),
       // hook (step 49f): when, what, how much, which condition, which roll to keep, only while…

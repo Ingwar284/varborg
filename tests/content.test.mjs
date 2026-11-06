@@ -377,7 +377,8 @@ test("a ritual costs no actions and deals no damage dice; its cost keeps its tie
 });
 
 // 48h: relics (rules 4.2).
-const relics = readAll(join(root, "content", "relics")).map(({ data }) => data);
+// Relics given by feats (the Clan Heirloom, step 50b4) are not in the table.
+const relics = readAll(join(root, "content", "relics")).filter(({ file }) => !/[\\/]gifts[\\/]/.test(file)).map(({ data }) => data);
 
 test("all 22 relics of the table in 4.2 are there, each matching its row", () => {
   assert.equal(relics.length, 22);

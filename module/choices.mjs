@@ -14,7 +14,7 @@
 
 import { choiceCandidates } from "./rules/item-effects.mjs";
 import { FOE_CATEGORIES } from "./rules/foe.mjs";
-import { DAMAGE_TYPES } from "./rules/equipment.mjs";
+import { DAMAGE_TYPES, ELEMENTS } from "./rules/equipment.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -24,7 +24,34 @@ const SYSTEM = "var-borg";
 export function registerChoices() {
   Hooks.on("createItem", (item, options, userId) => {
     if (userId !== game.user.id || item.actor?.type !== "character") return;
-    askOpenChoices(item);
+    giveGifts(item).then(() => askOpenChoices(item));
+  });
+}
+
+/**
+ * The gifts of an item that just landed on a character (step 50b4): each
+ * compendium item it names is added, unless the character already has it.
+ */
+async function giveGifts(item) {
+  const actor = item.actor;
+  const names = [];
+  for (const effect of item.system.effects ?? []) {
+    if (effect.kind !== "gift" || !effect.gift) continue;
+    if (actor.items.some(other => other._stats?.compendiumSource === effect.gift)) continue;
+    const source = await fromUuid(effect.gift);
+    if (!source) {
+      ui.notifications.warn(game.i18n.format("VARBORG.Effects.GiftMissing", { item: item.name }));
+      continue;
+    }
+    const data = source.toObject();
+    data._stats = { ...data._stats, compendiumSource: effect.gift };
+    await actor.createEmbeddedDocuments("Item", [data]);
+    names.push(source.name);
+  }
+  if (!names.length) return;
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.GiftGiven", { name: actor.name, item: item.name, gifts: names.join(", ") }))}</p></div>`
   });
 }
 
@@ -59,7 +86,7 @@ async function choiceOptions(actor, effect) {
     case "category":
       return FOE_CATEGORIES.filter(Boolean).map(key => ({ value: key, label: i18n.localize(`VARBORG.Foe.Category.${key}`) }));
     case "damageType":
-      return DAMAGE_TYPES.map(key => ({ value: key, label: i18n.localize(`VARBORG.DamageType.${key}`) }));
+      return (effect.from === "element" ? ELEMENTS : DAMAGE_TYPES).map(key => ({ value: key, label: i18n.localize(`VARBORG.DamageType.${key}`) }));
     case "feat":
     case "spell": {
       if (effect.from === "known") return actor.itemTypes.spell.map(spell => ({ value: spell.id, label: spell.name }));

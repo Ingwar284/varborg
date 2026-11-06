@@ -14,7 +14,7 @@
  * The maths lives in module/rules/minions.mjs.
  */
 
-import { minionLimit, canTakeMinion, minionTurn, COMMAND_ACTIONS } from "./rules/minions.mjs";
+import { minionLimit, canTakeMinion, minionTurn, COMMAND_ACTIONS, MINION_TIER_STATS } from "./rules/minions.mjs";
 import { turnState } from "./combat.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 
@@ -79,6 +79,66 @@ export async function minionFell(minion) {
     speaker: ChatMessage.getSpeaker({ actor: minion }),
     content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Minion.Fell", { name: foundry.utils.escapeHTML(minion.name) })}</p></div>`
   });
+}
+
+/**
+ * Beast-Tamer's Use (step 50b4, GAPS 201): make a Weak minion for the
+ * character, named by the player, once per character and item. Making an
+ * actor needs the right to create actors, which players often lack: then
+ * the Dark Master presses the Use button.
+ * @param {Actor} owner   The character.
+ * @param {object} effect The Use effect (collectEffects).
+ * @returns {Promise<{lines: string[], rolls: Roll[], acted: boolean}>}
+ */
+export async function makeItemMinion(owner, effect) {
+  const i18n = game.i18n;
+  const nothing = { lines: [], rolls: [], acted: false };
+  const mark = `${owner.id}.${effect.itemId}`;
+  const made = game.actors.find(actor => actor.type === "minion" && actor.getFlag(SYSTEM, "fromItem") === mark);
+  if (made) {
+    ui.notifications.warn(i18n.format("VARBORG.Minion.AlreadyMade", { item: effect.item, minion: made.name }));
+    return nothing;
+  }
+  if (!game.user.can("ACTOR_CREATE")) {
+    ui.notifications.warn(i18n.format("VARBORG.Minion.AskDm", { item: effect.item }));
+    return nothing;
+  }
+  if (refuseOverLimit(owner.id, null, i18n.localize("VARBORG.Minion.Beast"))) return nothing;
+  const data = await foundry.applications.api.DialogV2.input({
+    window: { title: i18n.format("VARBORG.Minion.NameTitle", { item: effect.item }) },
+    content: `<div class="form-group"><label>${i18n.localize("VARBORG.Minion.NameLabel")}</label>`
+      + `<input type="text" name="name" value="${foundry.utils.escapeHTML(i18n.localize("VARBORG.Minion.Beast"))}" autofocus></div>`
+      + `<p class="hint">${foundry.utils.escapeHTML(effect.note || "")}</p>`,
+    ok: { label: "VARBORG.Minion.Make", icon: "fa-solid fa-paw" },
+    rejectClose: false
+  });
+  if (!data) return nothing;
+  const stats = MINION_TIER_STATS.weak;
+  const name = String(data.name || "").trim() || i18n.localize("VARBORG.Minion.Beast");
+  const minion = await Actor.create({
+    name,
+    type: "minion",
+    img: "icons/svg/pawprint.svg",
+    ownership: ownershipFromOwner(owner.id, { default: 0 }),
+    prototypeToken: { actorLink: true, disposition: 1, bar1: { attribute: "hp" } },
+    flags: { [SYSTEM]: { fromItem: mark } },
+    system: {
+      tier: "weak",
+      owner: owner.id,
+      hp: { value: stats.hp, max: stats.hp },
+      morale: stats.morale,
+      armour: stats.armour,
+      armourName: i18n.localize("VARBORG.Minion.BeastHide")
+    },
+    items: [{
+      name: i18n.localize("VARBORG.Minion.BeastAttack"),
+      type: "weapon",
+      img: "icons/svg/sword.svg",
+      system: { damage: stats.attack, kind: "melee", damageType: "bleeding", equipped: true }
+    }]
+  });
+  if (!minion) return nothing;
+  return { lines: [i18n.format("VARBORG.Minion.Made", { item: effect.item, name: minion.name, owner: owner.name })], rolls: [], acted: true };
 }
 
 /**

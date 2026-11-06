@@ -1,6 +1,7 @@
 <div class="var-borg-card persistent-card">
   <h3>{{title}}</h3>
   <p class="total">{{damage}}</p>
+  {{#each resistLines}}<p class="modifier">{{this}}</p>{{/each}}
   <p class="sum">{{hp}}</p>
   {{#if zeroHp}}<p class="modifier">{{zeroHp}}</p>{{/if}}
   {{#if foeLine}}<p class="modifier">{{foeLine}}</p>{{/if}}

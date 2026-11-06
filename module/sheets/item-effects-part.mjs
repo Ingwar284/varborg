@@ -9,7 +9,7 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES, blankEffect
 } from "../rules/item-effects.mjs";
 import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -60,6 +60,8 @@ export function effectsContext(document) {
       choiceFrom: labels(CHOICE_FROM, "Effects.Choice.From"),
       versusList: labels(VERSUS, "Effects.Versus", "VARBORG.Effects.Versus.any"),
       damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
+      resistTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.ChosenDamageType"),
+      resistModes: labels(RESIST_MODES, "Effects.Resist"),
       // The Choose button needs a character to choose for.
       canChoose: Boolean(document.actor) && document.isOwner,
       list: system.effects.map((effect, index) => ({
@@ -82,7 +84,10 @@ export function effectsContext(document) {
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
         perWound: effect.per === "wound",
-        isReminder: effect.kind === "reminder"
+        isReminder: effect.kind === "reminder",
+        isResist: effect.kind === "resist",
+        isGift: effect.kind === "gift",
+        resistReduce: effect.kind === "resist" && effect.resist === "reduce"
       }))
     }
   };
