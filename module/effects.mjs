@@ -119,6 +119,15 @@ export async function doEffectAction(actor, effect) {
   const i18n = game.i18n;
   const item = effect.item;
   const note = effect.note || i18n.localize("VARBORG.Effects.SeeText");
+  // "Remind only" Fortune: a button for the Dark Master (Doomsworn, GAPS 196).
+  if (effect.mode === "optional" && effect.action === "gainFortune") {
+    return {
+      lines: [i18n.format("VARBORG.Effects.HookOptional", { item, note })],
+      rolls: [],
+      acted: false,
+      button: { item, amount: effect.amount || "1" }
+    };
+  }
   if (effect.mode === "optional" || effect.action === "reminder") {
     const key = effect.mode === "optional" ? "VARBORG.Effects.HookOptional" : "VARBORG.Effects.HookReminder";
     return { lines: [i18n.format(key, { item, note })], rolls: [], acted: false };
@@ -140,6 +149,16 @@ export async function doEffectAction(actor, effect) {
       line = i18n.format("VARBORG.Effects.HookEmber", { item, amount: roll.total });
     }
     return { lines: [line], rolls: [roll], acted: true };
+  }
+  if (effect.action === "gainFortune") {
+    const roll = await new Roll(effect.amount || "1").evaluate();
+    const from = actor.system.fortune ?? 0;
+    await actor.update({ "system.fortune": from + roll.total });
+    return {
+      lines: [i18n.format("VARBORG.Effects.HookFortune", { item, name: actor.name, amount: roll.total, from, to: from + roll.total })],
+      rolls: roll.isDeterministic ? [] : [roll],
+      acted: true
+    };
   }
   if (effect.action === "addCondition" && effect.condition) {
     if (!actor.statuses.has(effect.condition)) await actor.toggleStatusEffect(effect.condition, { active: true });
@@ -165,10 +184,12 @@ export async function runItemHooks(actor, event) {
   const i18n = game.i18n;
   const lines = [];
   const rolls = [];
+  const buttons = [];
   for (const hook of hooks) {
     const done = await doEffectAction(actor, hook);
     lines.push(...done.lines);
     rolls.push(...done.rolls);
+    if (done.button) buttons.push(done.button);
     if (hook.frequency && done.acted) {
       await markUsed(actor, hook.itemId);
       lines.push(i18n.format("VARBORG.Effects.HookUsed", { item: hook.item }));
@@ -179,10 +200,99 @@ export async function runItemHooks(actor, event) {
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content: `<div class="var-borg-card"><h3>${foundry.utils.escapeHTML(title)}</h3>`
-      + lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("") + "</div>",
+      + lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")
+      + buttons.map(button => fortuneButton(actor, button)).join("") + "</div>",
     rolls,
     sound: rolls.length ? CONFIG.sounds.dice : null
   });
+}
+
+/** A Dark Master's "+1 Fortune (Doomsworn)" button on a hook card. */
+function fortuneButton(actor, { item, amount }) {
+  const label = game.i18n.format("VARBORG.Effects.FortuneButton", { amount, item });
+  return `<button type="button" class="text-button" data-action="effectFortune" data-actor-uuid="${actor.uuid}"`
+    + ` data-amount="${foundry.utils.escapeHTML(amount)}" data-item="${foundry.utils.escapeHTML(item)}">`
+    + `<i class="fa-solid fa-clover"></i> ${foundry.utils.escapeHTML(label)}</button>`;
+}
+
+/** Watch the Fortune buttons on hook cards (step 50a2). */
+export function registerEffectButtons() {
+  Hooks.on("renderChatMessageHTML", addFortuneButtonListeners);
+}
+
+/** The Dark Master presses a Fortune button: the character gains it, once. */
+function addFortuneButtonListeners(message, html) {
+  const button = html.querySelector("button[data-action='effectFortune']");
+  if (!button) return;
+  if (!game.user.isGM || message.getFlag("var-borg", "fortuneGiven")) {
+    button.disabled = true;
+    return;
+  }
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    const actor = await fromUuid(button.dataset.actorUuid);
+    if (!actor) return;
+    await message.setFlag("var-borg", "fortuneGiven", true);
+    const done = await doEffectAction(actor, { action: "gainFortune", amount: button.dataset.amount, item: button.dataset.item, mode: "auto" });
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="var-borg-card">${done.lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")}</div>`,
+      rolls: done.rolls
+    });
+  });
+}
+
+/**
+ * The character would die (step 50a2). Harkin's Reprieve stops it: the
+ * scene fades to black, HP goes to its maximum and wounds to their
+ * maximum − 1, the hours are rolled and the wake-up table drawn
+ * (GAPS 195). Otherwise "when you would die" reminders (Diehard) are
+ * given as lines for the death card.
+ * @param {Actor} actor
+ * @returns {Promise<{saved: boolean, lines: string[], rolls: Roll[]}>}
+ */
+export async function escapeDeath(actor) {
+  const i18n = game.i18n;
+  const hooks = itemHooks(actor, "death");
+  const reprieve = hooks.find(hook => hook.action === "reprieve" && hook.mode !== "optional");
+  if (!reprieve) {
+    const lines = [];
+    for (const hook of hooks) lines.push(...(await doEffectAction(actor, { ...hook, action: "reminder" })).lines);
+    return { saved: false, lines, rolls: [] };
+  }
+  for (const status of ["deathsDoor", "darkVessel"]) {
+    if (actor.statuses.has(status)) await actor.toggleStatusEffect(status, { active: false });
+  }
+  const wounds = Math.max(0, actor.system.wounds.max - 1);
+  await actor.update({ "system.hp.value": actor.system.hp.max, "system.wounds.value": wounds });
+  const hours = await new Roll(HARKIN_HOURS).evaluate();
+  const table = await fromUuid(HARKIN_TABLE).catch(() => null);
+  if (table) await table.draw({ displayChat: true });
+  return {
+    saved: true,
+    rolls: [hours],
+    lines: [
+      i18n.format("VARBORG.Effects.Reprieve", { item: reprieve.item, name: actor.name, hours: hours.total }),
+      i18n.format("VARBORG.Effects.ReprieveWake", { hp: actor.system.hp.value, wounds, max: actor.system.wounds.max }),
+      i18n.localize(table ? "VARBORG.Effects.ReprieveTable" : "VARBORG.Effects.ReprieveNoTable")
+    ]
+  };
+}
+
+/** Harkin's Reprieve: "You wake d6 hours later". */
+const HARKIN_HOURS = "1d6";
+
+/** The "Harkin's Reprieve: you wake…" table (content/tables). */
+const HARKIN_TABLE = "Compendium.var-borg.tables.RollTable.vbTableHarkin000";
+
+/**
+ * A Table of Agony result would kill the character (step 50a2): the item
+ * that sends them to Death's Door instead (Hard to Kill), or null.
+ * @param {Actor} actor
+ * @returns {object|null}  The hook effect.
+ */
+export function agonyDeathsDoorInstead(actor) {
+  return itemHooks(actor, "agonyDeath").find(hook => hook.action === "deathsDoorInstead" && hook.mode !== "optional") ?? null;
 }
 
 /**

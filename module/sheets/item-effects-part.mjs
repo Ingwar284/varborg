@@ -72,7 +72,7 @@ export function effectsContext(document) {
         choiceHasFrom: ["feat", "spell"].includes(effect.choose),
         choiceIsSpell: effect.choose === "spell",
         isReroll: effect.action === "reroll",
-        hasAmount: ["heal", "roll", "gainEmber"].includes(effect.action),
+        hasAmount: ["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
         isReminder: effect.kind === "reminder"

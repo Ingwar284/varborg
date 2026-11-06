@@ -1090,22 +1090,26 @@ every feat in the batch ends with a status.
       tests" feats are optional ticks hidden during combat), and stat
       effects can multiply ("times", Carry-all). 47 general feats have
       effects and a status; EFFECTS_CONTENT 2.
-    - 50a2. The rest of the general feats and the difficulty feats, which
-      need new code:
-      - Harkin's Reprieve: whatever would kill the character fades to
-        black instead, rolls the d6 wake-up table, HP to maximum and
-        wounds to maximum − 1 (GAPS 195).
-      - Doomsworn: one fewer max wound (minimum 1), d2 Fortune at the
-        start and when regained, Death's Door rolled twice keeping the
-        worse, and a "+1 Fortune" button for each living Doomsworn
-        character when a combat ends (GAPS 196).
-      - The creation helper offers one difficulty feat, and only one.
-      - Hard to Kill: an Agony result that kills puts the character at
-        Death's Door instead. Steady nerves: a once-per-day button on a
-        failed Panic card (Success, +1 Fatigued). Diehard: a reminder when
-        the character would die (GAPS 197).
-      - Brawler (unarmed d4), Long shot (ranges +½, GAPS 191) and Quick
-        reload (one fewer Interact action, minimum 1).
+    - ~~50a2. Difficulty feats and death.~~ Done: new event moments
+      "when you would die", "when an Agony result would kill you" and
+      "when a combat ends"; new actions Gain Fortune (as Remind only, a
+      Dark Master's button), Harkin's Reprieve and Go to Death's Door
+      instead; a Fortune die sheet number. Every death goes through one
+      place, which asks the items first.
+      - Harkin's Reprieve: the death fades to black, d6 hours, HP to
+        maximum, wounds to maximum − 1, the wake-up table drawn (GAPS 195).
+      - Doomsworn: −1 max wound (minimum 1), d2 Fortune (rolled again
+        when taken in the creation helper, and after a Long Rest), Death's
+        Door twice keeping the worse, and a "+1 Fortune" button when a
+        combat ends (GAPS 196).
+      - The creation helper has a 6th step: one difficulty feat, which
+        replaces one taken earlier.
+      - Hard to Kill: Death's Door instead of an Agony death. Diehard: a
+        reminder on the death card (GAPS 197). EFFECTS_CONTENT 3.
+    - 50a3. The last general feats: Steady nerves (a once-per-day button on
+      a failed Panic card: Success, +1 Fatigued, GAPS 197), Brawler
+      (unarmed d4), Long shot (ranges +½, GAPS 191) and Quick reload (one
+      fewer Interact action, minimum 1).
     - 50b. Ancestry feats (64), with choices such as Ancient One and
       Adopted.
     - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.

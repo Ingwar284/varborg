@@ -9,6 +9,36 @@
     "belongsTo": "",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "hook",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "death",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "note": "instead of dying, you may wake d4 hours later: lose a feat other than Diehard and reduce your highest ability by 1. Not from a second Dark Vessel before a Long Rest"
+      }
+    ],
+    "automation": "partial"
   }
 }

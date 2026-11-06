@@ -20,7 +20,7 @@
  */
 
 import {
-  REST, INTERRUPTION_ABILITY, INTERRUPTION_DR, INFECTION_DAMAGE, FORTUNE_REGAIN,
+  REST, INTERRUPTION_ABILITY, INTERRUPTION_DR, INFECTION_DAMAGE,
   isLongRest, daysPassed, noBenefitReasons, restOutcome, downtimeRemoves
 } from "./rules/rest.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
@@ -29,6 +29,7 @@ import { resetEmberAbilities } from "./dice/power.mjs";
 import { livingCharacters, startDays } from "./days.mjs";
 import { atDeathsDoor, killedByDamage } from "./deaths-door.mjs";
 import { runItemHooks } from "./effects.mjs";
+import { fortuneFormula } from "./rules/item-effects.mjs";
 import { resetAndAnnounce } from "./uses.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -179,7 +180,8 @@ async function restFor(actor, kind, ate, interruptionTier) {
       lines.push(i18n.format("VARBORG.Rest.Sanity", { amount: system.sanityLost }));
     }
     if (outcome.regainFortune) {
-      const roll = await new Roll(FORTUNE_REGAIN).evaluate();
+      // Doomsworn regains d2 instead of d3 (step 50a2).
+      const roll = await new Roll(fortuneFormula(system.statBonuses?.fortuneDie)).evaluate();
       rolls.push(roll);
       changes["system.fortune"] = system.fortune + roll.total;
       lines.push(i18n.format("VARBORG.Rest.Fortune", { amount: roll.total }));

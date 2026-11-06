@@ -10,7 +10,9 @@
  *    costing at most 3 ember.
  * 5. Starting equipment (2.6): the class die on armour and weaponry, then
  *    d6, d8 and d10 on the gear tables.
- * 6. Details: the name; the rest is in the sheet's Details section.
+ * 6. Difficulty feat (rules 4.6): optional, Harkin's Reprieve or
+ *    Doomsworn, and only one (step 50a2).
+ * 7. Details: the name; the rest is in the sheet's Details section.
  * Ancestries, backgrounds, classes, feats, powers and spells are offered
  * from the world's Items and from every Item compendium. Ancestry feats and
  * class powers are those that belong to the chosen ancestry or class, or
@@ -28,6 +30,7 @@ import { ABILITIES } from "./rules/abilities.mjs";
 import { addOrigin } from "./origins.mjs";
 import { belongsTo } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
+import { fortuneFormula, FORTUNE_DIE } from "./rules/item-effects.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2, DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -147,6 +150,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       applyAncestry: CreationHelper.#onApplyAncestry,
       applyBackground: CreationHelper.#onApplyBackground,
       applyClass: CreationHelper.#onApplyClass,
+      applyDifficulty: CreationHelper.#onApplyDifficulty,
       rollEquipment: CreationHelper.#onRollEquipment
     }
   };
@@ -160,7 +164,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     method: ABILITY_METHODS[0],
     array: ["", "", "", "", ""],
     assigned: {},
-    ancestry: "", ancestryFeat: "", background: "", cls: "", power: "", spell: ""
+    ancestry: "", ancestryFeat: "", background: "", cls: "", power: "", spell: "", difficulty: ""
   };
 
   /** @override */
@@ -227,6 +231,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       ancestries: choices(s => s.type === "ancestry", state.ancestry),
       ancestryFeats: choices(s => s.type === "feat" && s.source === "ancestry" && belongsTo(s.belongsTo, ancestryName), state.ancestryFeat),
       backgrounds: choices(s => s.type === "background", state.background),
+      difficultyFeats: choices(s => s.type === "feat" && s.source === "difficulty", state.difficulty),
       classes: choices(s => s.type === "class", state.cls),
       powers: choices(s => s.type === "power" && s.source === "class" && belongsTo(s.belongsTo, className), state.power),
       spells: choices(s => s.type === "spell" && learnable.has(spells.indexOf(s)), state.spell),
@@ -240,7 +245,8 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
         class: now("class"),
         ancestryFeat: actor.itemTypes.feat.filter(f => f.system.source === "ancestry" && !f.system.improving).map(f => f.name).join(", "),
         power: actor.itemTypes.power.filter(p => p.system.source === "class").map(p => p.name).join(", "),
-        spell: (actor.itemTypes.spell ?? []).map(s => s.name).join(", ")
+        spell: (actor.itemTypes.spell ?? []).map(s => s.name).join(", "),
+        difficulty: actor.itemTypes.feat.filter(f => f.system.source === "difficulty").map(f => f.name).join(", ")
       },
       hasClass: Boolean(actor.itemTypes.class?.[0]),
       startingDie: actor.itemTypes.class?.[0]?.system.startingDie ?? "",
@@ -254,7 +260,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
   static async #onChange(event, form, formData) {
     const data = foundry.utils.expandObject(formData.object);
     const state = this.state;
-    for (const key of ["method", "ancestry", "ancestryFeat", "background", "cls", "power", "spell"]) {
+    for (const key of ["method", "ancestry", "ancestryFeat", "background", "cls", "power", "spell", "difficulty"]) {
       if (key in data) state[key] = data[key] ?? "";
     }
     if (data.array) {
@@ -363,6 +369,33 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       if (removed.length) lines.push(i18n.format("VARBORG.Creation.Removed", { names: removed.join(", ") }));
       await postCard(actor, i18n.format("VARBORG.Creation.Ancestry.FeatTitle", { name: actor.name }), lines);
     }
+  }
+
+  /**
+   * The difficulty feat (rules 4.6, step 50a2): optional, and only one, so
+   * one taken earlier is replaced. A feat that changes the Fortune die
+   * (Doomsworn: d2) rolls the starting Fortune again with it.
+   */
+  static async #onApplyDifficulty() {
+    const i18n = game.i18n;
+    const actor = this.actor;
+    const feat = await itemData(this.state.difficulty);
+    if (!feat) {
+      ui.notifications.warn("VARBORG.Creation.PickFirst", { localize: true });
+      return;
+    }
+    const removed = await removeStarting(actor, "feat", "difficulty");
+    await actor.createEmbeddedDocuments("Item", [feat]);
+    const lines = [i18n.format("VARBORG.Creation.Difficulty.Taken", { name: actor.name, feat: feat.name })];
+    if (removed.length) lines.push(i18n.format("VARBORG.Creation.Removed", { names: removed.join(", ") }));
+    const rolls = [];
+    const formula = fortuneFormula(actor.system.statBonuses?.fortuneDie);
+    if (formula !== `1d${FORTUNE_DIE}`) {
+      const fortune = await rollInto(rolls, formula);
+      await actor.update({ "system.fortune": fortune });
+      lines.push(i18n.format("VARBORG.Creation.Difficulty.Fortune", { formula: formula.replace(/^1d/, "d"), fortune }));
+    }
+    await postCard(actor, i18n.format("VARBORG.Creation.Difficulty.CardTitle", { name: actor.name }), lines, rolls);
   }
 
   /** The background: wealth and keepsake (rules 2.4). */

@@ -9,7 +9,7 @@ import {
   blankEffect, isActive, collectEffects, effectKey, statBonuses, withStat,
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
-  useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates
+  useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -305,4 +305,28 @@ test("times multiplies before adding, and a minimum still holds (Carry-all, step
   assert.equal(withStat(1, bonuses.carryLimit), 2);
   assert.equal(withStat(3, statBonuses([stat("carryLimit", 2, "times"), stat("carryLimit", 1)]).carryLimit), 7);
   assert.equal(withStat(3, statBonuses([stat("carryLimit", 1)]).carryLimit), 4);
+});
+
+test("death actions only work at their own moment (step 50a2)", () => {
+  const hook = fields => ({ ...blankEffect("hook"), ...fields });
+  assert.deepEqual(effectProblems(hook({ event: "death", action: "reprieve" })), []);
+  assert.deepEqual(effectProblems(hook({ event: "turnStart", action: "reprieve" })), ["reprieve at turnStart"]);
+  assert.deepEqual(effectProblems(hook({ event: "agonyDeath", action: "deathsDoorInstead" })), []);
+  assert.deepEqual(effectProblems(hook({ event: "death", action: "deathsDoorInstead" })), ["deathsDoorInstead at death"]);
+  assert.deepEqual(effectProblems(hook({ event: "initiative", action: "rollTwice" })), []);
+  assert.deepEqual(effectProblems(hook({ event: "rest", action: "rollTwice" })), ["rollTwice at rest"]);
+  assert.deepEqual(effectProblems(hook({ event: "combatEnd", action: "gainFortune", amount: "1", mode: "optional" })), []);
+  assert.deepEqual(effectProblems(hook({ event: "combatEnd", action: "gainFortune", amount: "" })), ["amount: "]);
+});
+
+test("the Fortune die is d3, and Doomsworn makes it d2 (step 50a2)", () => {
+  assert.equal(fortuneFormula(), "1d3");
+  assert.equal(fortuneFormula(statBonuses([stat("fortuneDie", 2, "set")]).fortuneDie), "1d2");
+  assert.equal(fortuneFormula(statBonuses([stat("fortuneDie", -5)]).fortuneDie), "1d1");
+});
+
+test("Doomsworn: one fewer max wound, but never below 1 (step 50a2)", () => {
+  const doomsworn = statBonuses([stat("woundsMax", -1), stat("woundsMax", 1, "min")]);
+  assert.equal(withStat(3, doomsworn.woundsMax), 2);
+  assert.equal(withStat(1, doomsworn.woundsMax), 1);
 });

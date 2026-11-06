@@ -1040,6 +1040,8 @@
       "Lasting": "A lasting injury, shown in Conditions. The Dark Master removes it when it heals or ends.",
       "ReminderOnly": "The system cannot judge which tests this covers: the test dialog reminds you to tick Bane.",
       "Dies": "The character dies.",
+      "DeathsDoorInstead": "{item}: {name} does not die, but goes to Death's Door instead.",
+      "Spared": "{name} does not die (see the card above).",
       "ByHand": "The system does not apply this. The Dark Master decides what happens.",
       "Remove": "Remove this injury",
       "Result": {
@@ -1320,6 +1322,7 @@
       "SecondVessel": "A second Dark Vessel before a Long Rest. The body rises as a Shade, a foe under the Dark Master's control, and the player creates a new character.",
       "Dead": "{name} is dead. Marked defeated.",
       "DeadTitle": "{name} dies",
+      "SparedTitle": "{name} does not die",
       "Reason": {
         "killingBlow": "Damage taken at Death's Door: {name} dies in a most gruesome manner.",
         "agony": "The Table of Agony: {name} dies."
@@ -2357,7 +2360,8 @@
         "background": "3. Background (2.4)",
         "class": "4. Class (2.5)",
         "equipment": "5. Starting equipment (2.6)",
-        "details": "6. Details"
+        "difficulty": "6. Difficulty feat (optional)",
+        "details": "7. Details"
       },
       "Method": {
         "individual": "Roll individually",
@@ -2391,6 +2395,13 @@
       },
       "Background": {
         "Hint": "Its wealth is rolled and added to silver, and its keepsake is added to gear."
+      },
+      "Difficulty": {
+        "Feat": "Difficulty feat",
+        "Hint": "Optional, and only one: Harkin's Reprieve (you cannot die) or Doomsworn (a harder life). It comes on top of your starting feats, can never be gained later, lost or swapped, and does not raise the Death's Door Sanity DR. Choosing again here replaces the one you took.",
+        "CardTitle": "{name}'s difficulty feat",
+        "Taken": "{name} takes the difficulty feat {feat}.",
+        "Fortune": "Starting Fortune rolled again with {formula}: {fortune}."
       },
       "Class": {
         "Power": "Class power",
@@ -2538,7 +2549,8 @@
         "sanity": "Sanity",
         "soak": "Natural armour tier",
         "defenceDr": "Defence DR",
-        "rangedDefenceDr": "Defence DR against ranged attacks (starting)"
+        "rangedDefenceDr": "Defence DR against ranged attacks (starting)",
+        "fortuneDie": "Fortune die (starting and regained)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2632,7 +2644,10 @@
         "panicFailure": "When you fail a Panic test",
         "rest": "After any rest",
         "longRest": "After a Long Rest or Downtime",
-        "newDay": "At the start of each day"
+        "newDay": "At the start of each day",
+        "death": "When you would die",
+        "agonyDeath": "When a Table of Agony result would kill you",
+        "combatEnd": "When a combat you were in ends"
       },
       "ActionLabel": "Do",
       "Action": {
@@ -2642,7 +2657,10 @@
         "gainEmber": "Add to the Ember pool",
         "addCondition": "Gain a condition",
         "rollTwice": "Roll twice",
-        "reroll": "Offer a reroll on cards"
+        "reroll": "Offer a reroll on cards",
+        "gainFortune": "Gain Fortune",
+        "reprieve": "Harkin's Reprieve: do not die",
+        "deathsDoorInstead": "Go to Death's Door instead"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2663,7 +2681,7 @@
         "auto": "Do it",
         "optional": "Remind only"
       },
-      "HookModeHint": "Do it: the system does it by itself. Remind only: it posts a reminder with the item’s note, for the table to decide.",
+      "HookModeHint": "Do it: the system does it by itself. Remind only: it posts a reminder with the item’s note, for the table to decide. Gain Fortune as Remind only: a button for the Dark Master.",
       "HookTitle": "{name}: {item}",
       "HookReminder": "{item}: {note}",
       "HookOptional": "{item} may apply: {note}",
@@ -2672,6 +2690,12 @@
       "HookEmber": "{item}: the Ember pool gains {amount}.",
       "HookEmberNoCombat": "{item}: there is no Ember pool outside combat.",
       "HookCondition": "{item}: {name} is {condition}.",
+      "HookFortune": "{item}: {name} gains {amount} Fortune ({from} → {to}).",
+      "FortuneButton": "+{amount} Fortune ({item})",
+      "Reprieve": "{item}: {name} does not die. The scene fades to black, and they wake {hours} hours later. The rest of the party plays on without them until they return.",
+      "ReprieveWake": "They wake with {hp} HP and {wounds} of {max} wounds, and keep their gear unless the scenario says otherwise.",
+      "ReprieveTable": "Where they wake is rolled on the table above; the Dark Master may choose instead.",
+      "ReprieveNoTable": "The Dark Master chooses where they wake, or rolls on the Harkin's Reprieve table.",
       "HookUsed": "{item} is used until it comes back.",
       "RolledTwice": "Rolled twice: {first} and {second}, kept {kept} ({items}).",
       "ChooseTitle": "{name}: choose a roll",

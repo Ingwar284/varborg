@@ -40,6 +40,7 @@ import { registerDeathsDoor } from "./deaths-door.mjs";
 import { registerAmmunition } from "./ammunition.mjs";
 import { registerMigrations, migrateWorld } from "./migrate.mjs";
 import { registerEffectsRefresh, refreshWorldEffects, RefreshEffectsApp } from "./refresh-effects.mjs";
+import { registerEffectButtons } from "./effects.mjs";
 import { registerPanels } from "./panels.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
@@ -123,6 +124,7 @@ Hooks.once("init", () => {
   // The Use button on once-per-round, -encounter and -day items (step 36b).
   registerUses();
   registerChoices();
+  registerEffectButtons();
   // Minions: their owners' sheets follow them (step 42).
   registerMinions();
   // Vehicles: the buttons on driving cards (step 44).

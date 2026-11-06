@@ -36,7 +36,7 @@ import {
 import { countDown } from "./rules/panic.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
-import { rollTwiceFor } from "./effects.mjs";
+import { rollTwiceFor, escapeDeath } from "./effects.mjs";
 import { turnState } from "./combat.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -193,7 +193,9 @@ async function applyResult(actor, id) {
   const rolls = [];
 
   if (rules.dies) {
-    lines.push(...await kill(actor));
+    const death = await kill(actor);
+    lines.push(...death.lines);
+    rolls.push(...death.rolls);
     return { lines, rolls };
   }
   if (rules.test) {
@@ -319,7 +321,10 @@ async function darkPullTest(actor) {
     const vessel = becomeDarkVessel(actor.system.darkVessels);
     await actor.update({ "system.darkVessels": vessel.count });
     if (vessel.dies) {
-      lines.push(i18n.localize("VARBORG.DeathsDoor.SecondVessel"), ...await kill(actor));
+      const death = await kill(actor);
+      if (death.dead) lines.push(i18n.localize("VARBORG.DeathsDoor.SecondVessel"));
+      lines.push(...death.lines);
+      rolls.push(...death.rolls);
     } else {
       const hpRoll = new Roll(DARK_VESSEL_HP);
       await hpRoll.evaluate();
@@ -343,13 +348,17 @@ async function darkPullTest(actor) {
 
 /**
  * The character dies: marked defeated, like a fallen foe (GAPS 91).
- * @returns {Promise<string[]>}  Lines for the card.
+ * Item effects are asked first (step 50a2): Harkin's Reprieve stops it,
+ * and reminders such as Diehard's join the card.
+ * @returns {Promise<{dead: boolean, lines: string[], rolls: Roll[]}>}  Lines for the card.
  */
 async function kill(actor) {
+  const escape = await escapeDeath(actor);
+  if (escape.saved) return { dead: false, lines: escape.lines, rolls: escape.rolls };
   if (actor.statuses.has("darkVessel")) await actor.toggleStatusEffect("darkVessel", { active: false });
   await actor.setFlag(SYSTEM, "deathsDoor", { stage: "dead" });
   await markDefeated(actor);
-  return [game.i18n.format("VARBORG.DeathsDoor.Dead", { name: actor.name })];
+  return { dead: true, lines: [game.i18n.format("VARBORG.DeathsDoor.Dead", { name: actor.name }), ...escape.lines], rolls: [] };
 }
 
 /**
@@ -357,15 +366,17 @@ async function kill(actor) {
  * explodes" on the Table of Agony. Posts its own card.
  * @param {Actor} actor
  * @param {string} reason  A key under VARBORG.DeathsDoor.Reason.
+ * @returns {Promise<boolean>}  Whether the character died.
  */
 export async function killCharacter(actor, reason) {
   const i18n = game.i18n;
-  const lines = await kill(actor);
+  const death = await kill(actor);
   await postCard(actor, {
-    title: i18n.format("VARBORG.DeathsDoor.DeadTitle", { name: actor.name }),
+    title: i18n.format(death.dead ? "VARBORG.DeathsDoor.DeadTitle" : "VARBORG.DeathsDoor.SparedTitle", { name: actor.name }),
     text: i18n.format(`VARBORG.DeathsDoor.Reason.${reason}`, { name: actor.name }),
-    lines
-  });
+    lines: death.lines
+  }, death.rolls);
+  return death.dead;
 }
 
 /** Whether a character has died (module/days.mjs leaves the dead out of a new day). */

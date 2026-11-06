@@ -29,7 +29,7 @@ import {
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { addPersistentDamage } from "./persistent.mjs";
 import { enterDeathsDoor, killCharacter } from "./deaths-door.mjs";
-import { runItemHooks } from "./effects.mjs";
+import { runItemHooks, agonyDeathsDoorInstead } from "./effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -275,8 +275,13 @@ async function applyAgonyResult(actor, id) {
     lines.push(i18n.localize("VARBORG.Agony.ToDeathsDoor"));
   }
   if (rules.dies) {
-    await killCharacter(actor, "agony");
-    lines.push(i18n.localize("VARBORG.Agony.Dies"));
+    // Hard to Kill: Death's Door instead (step 50a2, GAPS 197).
+    const instead = agonyDeathsDoorInstead(actor);
+    if (instead) {
+      await actor.update({ "system.wounds.value": actor.system.wounds.max, "system.hp.value": 0 });
+      lines.push(i18n.format("VARBORG.Agony.DeathsDoorInstead", { item: instead.item, name: actor.name }));
+    } else if (await killCharacter(actor, "agony")) lines.push(i18n.localize("VARBORG.Agony.Dies"));
+    else lines.push(i18n.format("VARBORG.Agony.Spared", { name: actor.name }));
   }
   if (!Object.keys(rules).length) lines.push(i18n.localize("VARBORG.Agony.ByHand"));
   return lines;

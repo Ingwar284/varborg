@@ -57,10 +57,14 @@ export const VERSUS = ["", "chosenCategory"];
  * panicSuccess, panicFailure: after a Panic test.
  * rest: after any rest. longRest: after a Long Rest or Downtime.
  * newDay: at the start of each day.
+ * death: when the character would die, for any reason (step 50a2).
+ * agonyDeath: when a Table of Agony result would kill (Hard to Kill).
+ * combatEnd: when a combat the character was in ends (Doomsworn).
  */
 export const HOOK_EVENTS = [
   "turnStart", "initiative", "zeroHp", "wound", "deathsDoor",
-  "panicSuccess", "panicFailure", "rest", "longRest", "newDay"
+  "panicSuccess", "panicFailure", "rest", "longRest", "newDay",
+  "death", "agonyDeath", "combatEnd"
 ];
 
 /**
@@ -72,8 +76,19 @@ export const HOOK_EVENTS = [
  * addCondition: gives the character `condition`.
  * rollTwice: rolls twice and keeps the better, the worse, or lets the
  *   player choose (initiative and Death's Door only).
+ * gainFortune: the character gains `amount` Fortune, even above what
+ *   they began with. As "Remind only", a button for the Dark Master to
+ *   press instead (Doomsworn, GAPS 196).
+ * reprieve: Harkin's Reprieve (death only, GAPS 195). The character does
+ *   not die: the scene fades to black, they wake d6 hours later with full
+ *   HP and wounds at their maximum − 1, and the wake-up table is rolled.
+ * deathsDoorInstead: Hard to Kill (agonyDeath only, GAPS 197). The
+ *   character goes to Death's Door instead of dying.
  */
-export const HOOK_ACTIONS = ["reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice"];
+export const HOOK_ACTIONS = [
+  "reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice",
+  "gainFortune", "reprieve", "deathsDoorInstead"
+];
 
 /**
  * What a Use effect does when the item's Use button is pressed (step 49g):
@@ -88,6 +103,13 @@ export const ALL_ACTIONS = [...new Set([...HOOK_ACTIONS, ...USE_ACTIONS])];
 
 /** The events where rolling twice means something. */
 export const ROLL_TWICE_EVENTS = ["initiative", "deathsDoor"];
+
+/** Actions that only work at some events. */
+export const ACTION_EVENTS = {
+  rollTwice: ROLL_TWICE_EVENTS,
+  reprieve: ["death"],
+  deathsDoorInstead: ["agonyDeath"]
+};
 
 /** Which of two rolls to keep. On both tables higher is better. */
 export const KEEPS = ["better", "worse", "choose"];
@@ -115,11 +137,24 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * defenceDr: the DR to defend (Fey-World Glimmer −2, GAPS 189).
  * rangedDefenceDr: the starting DR to defend against ranged attacks
  * (Afterimage sets 10, GAPS 189).
+ * fortuneDie: the die of starting Fortune and of Fortune regained after a
+ * Long Rest, normally 3 (Doomsworn sets 2, step 50a2).
  */
 export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
-  ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr"
+  ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie"
 ];
+
+/** The Fortune die without effects: "Everyone has d3 Fortune" (rules 3.9). */
+export const FORTUNE_DIE = 3;
+
+/**
+ * The formula for starting or regained Fortune, such as "1d3".
+ * @param {object} [bonus]  The fortuneDie entry of statBonuses.
+ */
+export function fortuneFormula(bonus) {
+  return `1d${Math.max(1, withStat(FORTUNE_DIE, bonus))}`;
+}
 
 /**
  * add: + value. set: becomes value. min: never below value.
@@ -384,12 +419,11 @@ export function effectProblems(effect) {
     check("action", HOOK_ACTIONS);
     check("mode", ROLL_MODES);
     check("requires", HOOK_REQUIRES);
-    if (["heal", "roll", "gainEmber"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
-    if (effect.action === "rollTwice") {
-      check("keep", KEEPS);
-      if (!ROLL_TWICE_EVENTS.includes(effect.event)) problems.push(`rollTwice at ${effect.event}`);
-    }
+    if (effect.action === "rollTwice") check("keep", KEEPS);
+    const events = ACTION_EVENTS[effect.action];
+    if (events && !events.includes(effect.event)) problems.push(`${effect.action} at ${effect.event}`);
   }
   if (effect.kind === "choice") {
     check("choose", CHOICE_KINDS);

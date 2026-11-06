@@ -117,7 +117,22 @@
     {{/if}}
   </section>
 
-  {{!-- Step 6: Details --}}
+  {{!-- Step 6: Difficulty feat (rules 4.6), optional --}}
+  <section class="creation-step">
+    <h2>{{localize "VARBORG.Creation.Step.difficulty"}}</h2>
+    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{#if now.difficulty}}{{now.difficulty}}{{else}}{{localize "VARBORG.Creation.None"}}{{/if}}</p>
+    <div class="form-group">
+      <label>{{localize "VARBORG.Creation.Difficulty.Feat"}}</label>
+      <select name="difficulty">
+        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
+        {{#each difficultyFeats}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
+      </select>
+    </div>
+    <p class="hint">{{localize "VARBORG.Creation.Difficulty.Hint"}}</p>
+    <button type="button" class="text-button" data-action="applyDifficulty"><i class="fa-solid fa-check"></i> {{localize "VARBORG.Creation.Apply"}}</button>
+  </section>
+
+  {{!-- Step 7: Details --}}
   <section class="creation-step">
     <h2>{{localize "VARBORG.Creation.Step.details"}}</h2>
     <div class="form-group">

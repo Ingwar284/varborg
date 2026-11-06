@@ -174,6 +174,11 @@ export class VarBorgCombat extends foundry.documents.Combat {
     endCombatTimers(this.combatants.map(combatant => combatant.actor).filter(Boolean));
     // Once-per-round and once-per-encounter uses come back (GAPS 161).
     resetLimitedUses(this.combatants.map(combatant => combatant.actor), "combatEnd");
+    // Items that act when a fight ends (Doomsworn, step 50a2).
+    if (this.started) {
+      const actors = new Set(this.combatants.map(combatant => combatant.actor).filter(Boolean));
+      for (const actor of actors) runItemHooks(actor, "combatEnd");
+    }
   }
 }
 
