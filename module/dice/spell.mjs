@@ -103,10 +103,10 @@ function checkRitualUse(ritual, turn) {
  * Toughness with life force). extra: item effects the player ticked
  * (PLAN step 49d).
  */
-function abilityMods(actor, ability, extra = [], target = null) {
+function abilityMods(actor, ability, extra = [], target = null, damageType = "") {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability, targetCategory: target?.system?.category ?? "" }), ...extra];
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability, targetCategory: target?.system?.category ?? "", damageType }), ...extra];
   return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods), mods: conditionMods };
 }
 
@@ -130,9 +130,9 @@ export async function castSpell(actor, spell) {
   const target = [...game.user.targets][0]?.actor ?? null;
 
   const facts = castingFacts(actor, spell);
-  const sanity = abilityMods(actor, SPELL_ABILITY, [], target);
+  const sanity = abilityMods(actor, SPELL_ABILITY, [], target, spell.system.damageType ?? "");
   // Item effects for the player to tick when they apply (PLAN step 49d).
-  const optional = itemOptionalMods(actor, { roll: "spell", ability: SPELL_ABILITY, targetCategory: target?.system?.category ?? "" });
+  const optional = itemOptionalMods(actor, { roll: "spell", ability: SPELL_ABILITY, targetCategory: target?.system?.category ?? "", damageType: spell.system.damageType ?? "" });
   const startDr = castingDr(spell.system);
   const spellListLabel = i18n.localize(`VARBORG.Class.SpellList.${spell.system.spellList}`);
   const classListLabel = facts.classList ? i18n.localize(`VARBORG.Class.SpellList.${facts.classList}`) : i18n.localize("VARBORG.Spell.NoClass");
@@ -176,7 +176,7 @@ export async function castSpell(actor, spell) {
         : i18n.localize("VARBORG.Spell.LifeForceNone")
     },
     conditionNotes: sanity.notes,
-    reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "spell", ability: SPELL_ABILITY })],
+    reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "spell", ability: SPELL_ABILITY, damageType: spell.system.damageType ?? "" })],
     optionalEffects: await optionalEffectsField(optional),
     fortuneFields: await fortuneFields(actor, "spell")
   });
@@ -197,7 +197,7 @@ export async function castSpell(actor, spell) {
   // Life force: Toughness instead of Sanity, and the DR drops by d4 per wound.
   const lifeWounds = scroll ? 0 : lifeForceWounds(options.lifeForce, wounds.value, wounds.max);
   const ability = castingAbility(lifeWounds);
-  const { automatic, fromConditions, notes, mods } = abilityMods(actor, ability, tickedMods(optional, options), target);
+  const { automatic, fromConditions, notes, mods } = abilityMods(actor, ability, tickedMods(optional, options), target, spell.system.damageType ?? "");
   const lifeFormula = lifeForceFormula(lifeWounds);
   const lifeRoll = lifeFormula ? await new Roll(lifeFormula).evaluate() : null;
   const reduction = lifeRoll?.total ?? 0;

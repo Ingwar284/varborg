@@ -154,7 +154,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "damageType": "fire"
       }
     },
     {
@@ -198,7 +199,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "damageType": "fire"
       }
     },
     {

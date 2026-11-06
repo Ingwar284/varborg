@@ -18,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "effectsContent";
 
 /** The effects content of this version of the system. */
-export const EFFECTS_CONTENT = 6;
+export const EFFECTS_CONTENT = 7;
 
 /** Register the world setting that remembers the effects content. */
 export function registerEffectsRefresh() {
@@ -61,6 +61,18 @@ function copyFrom(source) {
 }
 
 /**
+ * The changes for one world item: its source's effects and status when
+ * it has none of its own, and its source's damage type when it has none
+ * (step 50b3). null when nothing changes.
+ */
+function changesFor(item, source) {
+  const changes = { ...(isBlank(item) ? copyFrom(source) : null) };
+  const type = source?.system?.damageType;
+  if (type && item.system?.damageType === "") changes["system.damageType"] = type;
+  return Object.keys(changes).length ? changes : null;
+}
+
+/**
  * Copy effects onto every blank world item that came from a compendium.
  * @returns {Promise<number>}  How many items were changed.
  */
@@ -72,8 +84,7 @@ export async function refreshEffectsFromCompendiums() {
   const updatesFor = async items => {
     const updates = [];
     for (const item of items) {
-      if (!isBlank(item)) continue;
-      const changes = copyFrom(await load(item._stats?.compendiumSource));
+      const changes = changesFor(item, await load(item._stats?.compendiumSource));
       if (changes) updates.push({ _id: item.id, ...changes });
     }
     return updates;
@@ -89,9 +100,9 @@ export async function refreshEffectsFromCompendiums() {
     const source = await load(actor._stats?.compendiumSource);
     if (source?.items) {
       for (const item of actor.items) {
-        if (!isBlank(item) || updates.some(update => update._id === item.id)) continue;
+        if (updates.some(update => update._id === item.id)) continue;
         const match = source.items.get(item.id) ?? source.items.find(other => other.name === item.name && other.type === item.type);
-        const changes = copyFrom(match);
+        const changes = changesFor(item, match);
         if (changes) updates.push({ _id: item.id, ...changes });
       }
     }

@@ -170,7 +170,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "damageType": "acid"
       }
     },
     {

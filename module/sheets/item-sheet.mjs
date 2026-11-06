@@ -219,6 +219,8 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    // Damage types, blank for none (step 50b3).
+    context.damageTypes = { "": "VARBORG.DamageType.none", ...WeaponData.DAMAGE_TYPES };
     const system = this.document.system;
     context.item = this.document;
     context.system = system;
@@ -295,6 +297,8 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    // Damage types, blank for none (step 50b3).
+    context.damageTypes = { "": "VARBORG.DamageType.none", ...WeaponData.DAMAGE_TYPES };
     const system = this.document.system;
     context.item = this.document;
     context.system = system;

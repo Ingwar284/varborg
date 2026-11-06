@@ -34,6 +34,10 @@
       <span>{{localize "VARBORG.Power.Damage"}}</span>
       <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d8">
     </label>
+    <label data-tooltip="{{localize 'VARBORG.Power.DamageTypeHint'}}">
+      <span>{{localize "VARBORG.Power.DamageType"}}</span>
+      <select name="system.damageType">{{selectOptions damageTypes selected=system.damageType localize=true}}</select>
+    </label>
     {{#unless isRitual}}
     <label data-tooltip="{{localize 'VARBORG.Power.SustainedHint'}}">
       <input type="checkbox" name="system.sustained" {{checked system.sustained}}>

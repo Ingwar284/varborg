@@ -423,3 +423,11 @@ test("new actions only at their events (step 50b2)", () => {
   assert.deepEqual(effectProblems({ ...blankEffect("hook"), event: "rest", action: "ruinAsFailure" }), ["ruinAsFailure at rest"]);
   assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "success", roll: "test", requires: "halfHp" }), ["requires: halfHp"]);
 });
+
+test("Firebug: +2 only with fire damage (step 50b3)", () => {
+  const firebug = [{ ...blankEffect("roll"), roll: "attack", damageType: "fire", damage: "2", item: "Firebug" }];
+  assert.equal(rollEffects(firebug, { roll: "attack", damageType: "fire" }).auto.length, 1);
+  assert.equal(rollEffects(firebug, { roll: "attack", damageType: "blunt" }).auto.length, 0);
+  assert.equal(rollEffects(firebug, { roll: "attack" }).auto.length, 0);
+  assert.deepEqual(effectProblems({ ...firebug[0], damageType: "frost" }), ["damageType: frost"]);
+});

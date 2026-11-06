@@ -13,6 +13,7 @@ import { POWER_RESOURCES, GLOOM_CONDITIONS, GLOOM_DEFENCE_DR } from "../rules/gl
 import { TIMER_KINDS } from "../rules/timers.mjs";
 import { endChoiceWith } from "../improving.mjs";
 import { effectFields } from "./effects.mjs";
+import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -48,6 +49,8 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       // Its own damage dice, such as "d6". Empty when it deals none.
       // For a gloom ability with its own test: the Failure damage.
       damage: text(),
+      // Its damage type, such as "fire" (step 50b3, GAPS 203). Blank: none.
+      damageType: new StringField({ required: true, blank: true, choices: ["", ...DAMAGE_TYPES], initial: "" }),
       // Gloom ability with its own test: the DR ("tests Presence DR12"),
       // the Ruin damage, and the condition each result gives.
       dr: new NumberField({ required: true, nullable: false, integer: true, min: 1, initial: GLOOM_DEFENCE_DR }),

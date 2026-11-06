@@ -27,6 +27,10 @@
       <span>{{localize (ifThen ownTest "VARBORG.Gloom.FailureDamage" "VARBORG.Power.Damage")}}</span>
       <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d6">
     </label>
+    <label data-tooltip="{{localize 'VARBORG.Power.DamageTypeHint'}}">
+      <span>{{localize "VARBORG.Power.DamageType"}}</span>
+      <select name="system.damageType">{{selectOptions damageTypes selected=system.damageType localize=true}}</select>
+    </label>
     {{#if ownTest}}
     <label data-tooltip="{{localize 'VARBORG.Gloom.RuinDamageHint'}}">
       <span>{{localize "VARBORG.Gloom.RuinDamage"}}</span>
@@ -73,6 +77,10 @@
     <label data-tooltip="{{localize 'VARBORG.Power.DamageHint'}}">
       <span>{{localize "VARBORG.Power.Damage"}}</span>
       <input type="text" name="system.damage" value="{{system.damage}}" placeholder="d6">
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Power.DamageTypeHint'}}">
+      <span>{{localize "VARBORG.Power.DamageType"}}</span>
+      <select name="system.damageType">{{selectOptions damageTypes selected=system.damageType localize=true}}</select>
     </label>
     <label data-tooltip="{{localize 'VARBORG.Power.AddsWeaponHint'}}">
       <input type="checkbox" name="system.addsWeaponDamage" {{checked system.addsWeaponDamage}}>

@@ -14,6 +14,7 @@ import {
 import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
+import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 
 export const EFFECTS_TEMPLATE = "systems/var-borg/templates/item/item-effects.hbs";
 
@@ -58,6 +59,7 @@ export function effectsContext(document) {
       choiceKinds: labels(CHOICE_KINDS, "Effects.Choice.Kind"),
       choiceFrom: labels(CHOICE_FROM, "Effects.Choice.From"),
       versusList: labels(VERSUS, "Effects.Versus", "VARBORG.Effects.Versus.any"),
+      damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
       // The Choose button needs a character to choose for.
       canChoose: Boolean(document.actor) && document.isOwner,
       list: system.effects.map((effect, index) => ({

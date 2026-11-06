@@ -87,7 +87,7 @@ export async function rollAttack(actor, item) {
   const usualMode = attackModes(weapon)[0];
   const optional = itemOptionalMods(actor, {
     roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode),
-    weaponId: item.id, targetCategory: target?.system?.category ?? ""
+    weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: weapon.damageType ?? ""
   });
   const optionalEffects = await optionalEffectsField(optional);
   const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
@@ -321,7 +321,7 @@ function attackConditions(actor, target, mode, ability, item) {
   // The weapon's tags and item (the chosen weapon) and the target's category (step 49h).
   const effectContext = {
     roll: "attack", ability, weapon: weaponTags(item.system, mode),
-    weaponId: item.id, targetCategory: target?.system?.category ?? ""
+    weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: item.system.damageType ?? ""
   };
   return {
     own: [...attackerConditions(own.conditions, own.fatigue, ability), ...itemRollMods(actor, effectContext)],
@@ -377,7 +377,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     turnNote,
     ruinNote: ruined ? i18n.localize("VARBORG.Attack.RuinNote") : null,
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
-    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]), weaponId: item.id })],
+    reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]), weaponId: item.id, damageType: weapon.damageType ?? "" })],
     optionalEffects,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")

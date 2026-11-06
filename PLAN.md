@@ -1127,8 +1127,13 @@ every feat in the batch ends with a status.
         Ingenuity (Success, once a day) are buttons on test cards, each
         once per card. Dwarven Doughtiness, Go Big or Go Home, Armoured
         Paragon and Pack Rat work. EFFECTS_CONTENT 6.
-      - 50b3. Damage types (GAPS 199): Firebug, Ancestral Resonance,
-        Tempered by the Forge.
+      - ~~50b3. Damage types (GAPS 199, 202, 203).~~ Done: poison, acid,
+        lightning and radiant are damage types; powers, spells and gloom
+        abilities have a damage type (40 filled in); roll effects can need
+        one; Firebug +2 with fire. EFFECTS_CONTENT 7.
+      - 50b3b. Damage the character takes by type: Tempered by the Forge
+        (half fire), Ancestral Resonance (chosen element −d6), on defence,
+        gloom ability and persistent damage.
       - 50b4. Gifts (GAPS 201): the Clan Heirloom relic and Beast-Tamer's
         minion.
     - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.

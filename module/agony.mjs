@@ -185,8 +185,10 @@ async function woundTest(actor, agonyType) {
  * suggestion is selected) and rolls d10.
  * @returns {Promise<boolean>}  Whether it was rolled.
  */
-async function askAndRollAgony(actor, suggested) {
+async function askAndRollAgony(actor, type) {
   const i18n = game.i18n;
+  // Poison, acid, lightning and radiant have no column (GAPS 202): no suggestion.
+  const suggested = AGONY_TYPES.includes(type) ? type : null;
   const options = AGONY_TYPES.map(id => {
     const label = i18n.localize(`VARBORG.DamageType.${id}`);
     const selected = id === suggested ? " selected" : "";

@@ -46,8 +46,9 @@ test("a Failure or Ruin on the wound test rolls on the table", () => {
   assert.equal(rollsOnAgony("triumph"), false);
 });
 
-test("the columns are the weapons' damage types", () => {
-  assert.deepEqual(AGONY_TYPES, DAMAGE_TYPES);
+test("the columns are the first five damage types; the elements of GAPS 202 have none", () => {
+  assert.deepEqual(AGONY_TYPES, DAMAGE_TYPES.slice(0, 5));
+  for (const type of ["poison", "acid", "lightning", "radiant"]) assert.ok(DAMAGE_TYPES.includes(type) && !AGONY_TYPES.includes(type));
 });
 
 test("severity bands: 1 flesh, 2-5 minor, 6-7 major, 8-9 lethal, 10 fatal", () => {

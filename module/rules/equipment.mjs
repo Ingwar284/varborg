@@ -10,7 +10,10 @@
 export const WEAPON_KINDS = ["melee", "shoot", "throw"];
 
 /** The five damage types of the Table of Agony (rules 3.5, GAPS 15). */
-export const DAMAGE_TYPES = ["blunt", "bleeding", "shot", "fire", "gore"];
+export const DAMAGE_TYPES = ["blunt", "bleeding", "shot", "fire", "gore", "poison", "acid", "lightning", "radiant"];
+
+/** The elements a feature can name (Ancestral Resonance, GAPS 202). */
+export const ELEMENTS = ["fire", "poison", "acid", "lightning", "radiant"];
 
 /** Dice an item can name as its expendable die. "" means none. */
 export const EXPENDABLE_DICE = ["", "d2", "d4", "d6", "d8", "d10", "d12", "d20"];

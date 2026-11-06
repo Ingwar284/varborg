@@ -221,7 +221,7 @@ async function rollPowerTest(actor, power) {
   const { conditions, fatigue } = conditionsOf(actor);
   // Item effects on powers count like conditions (PLAN step 49c).
   // The target's category, for effects against a chosen category (step 49h).
-  const effectContext = { roll: "power", ability, targetCategory: target?.system?.category ?? "" };
+  const effectContext = { roll: "power", ability, targetCategory: target?.system?.category ?? "", damageType: power.system.damageType ?? "" };
   const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
   let fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
@@ -241,7 +241,7 @@ async function rollPowerTest(actor, power) {
     armourNote: automatic.armourDr ? i18n.format("VARBORG.Test.ArmourDialogNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     encumberedNote: automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     conditionNotes: notes,
-    reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, { roll: "power", ability })],
+    reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, effectContext)],
     optionalEffects: await optionalEffectsField(optional),
     weapons: weapons.map(choice => ({
       id: choice.id,

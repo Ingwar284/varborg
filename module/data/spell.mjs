@@ -12,6 +12,7 @@ import { MAX_POWER_ACTIONS } from "../rules/powers.mjs";
 import { SPELL_LISTS_OF_SPELLS, RITUAL_DRS } from "../rules/spells.mjs";
 import { CarriedData } from "./equipment.mjs";
 import { effectFields } from "./effects.mjs";
+import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -31,6 +32,8 @@ function spellFields() {
     actions: new NumberField({ required: true, nullable: false, integer: true, min: 0, max: MAX_POWER_ACTIONS, initial: 2 }),
     // Its damage dice, such as "d8". Empty when it deals none.
     damage: text(),
+    // Its damage type, such as "fire" (step 50b3, GAPS 203). Blank: none.
+    damageType: new StringField({ required: true, blank: true, choices: ["", ...DAMAGE_TYPES], initial: "" }),
     sustained: new BooleanField({ initial: false }),
     // What each result does, when the spell says. Empty uses the usual text.
     outcomes: new SchemaField({

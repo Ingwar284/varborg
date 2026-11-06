@@ -10,6 +10,7 @@ import {
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
+import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 
 const { ArrayField, SchemaField, StringField, NumberField, BooleanField } = foundry.data.fields;
 
@@ -45,6 +46,8 @@ export function effectFields() {
       damage: new StringField({ required: true, blank: true, initial: "" }),
       // Extra damage once, or once per wound (step 49e).
       per: choice(DAMAGE_PER, ""),
+      // Only with damage of this type (Firebug, step 50b3).
+      damageType: choice(["", ...DAMAGE_TYPES], ""),
       // Reroll damage dice that show 1 (Hawkeye, step 50b).
       rerollOnes: new BooleanField({ required: true, initial: false }),
       // hook (step 49f): when, what, how much, which condition, which roll to keep, only while…

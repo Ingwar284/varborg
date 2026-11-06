@@ -126,7 +126,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "damageType": "acid"
       }
     },
     {
@@ -170,7 +171,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "damageType": "fire"
       }
     },
     {

@@ -21,6 +21,7 @@
 
 import { ABILITIES, clampAbility } from "./abilities.mjs";
 import { CONDITIONS } from "./conditions.mjs";
+import { DAMAGE_TYPES } from "./equipment.mjs";
 
 /** Every kind of effect, in the order the sheet offers them. */
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist"];
@@ -271,7 +272,7 @@ export function blankEffect(kind = "stat") {
   return {
     kind,
     target: STAT_TARGETS[0], op: "add", value: 0,
-    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
+    roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", damageType: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
     note: ""
@@ -437,6 +438,8 @@ export function fitsRoll(effect, context) {
     if (!effect.choices?.weapon || effect.choices.weapon !== context.weaponId) return false;
   } else if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
   if (effect.requires === "noCombat" && context.facts?.inCombat) return false;
+  // Only with damage of this type, such as fire (Firebug, step 50b3).
+  if (effect.damageType && effect.damageType !== context.damageType) return false;
   if (effect.vs === "chosenCategory" && (!effect.choices?.category || effect.choices.category !== context.targetCategory)) return false;
   return true;
 }
@@ -541,6 +544,7 @@ export function effectProblems(effect) {
     check("weapon", WEAPON_TAGS);
     check("vs", VERSUS);
     check("per", DAMAGE_PER);
+    if (effect.damageType) check("damageType", DAMAGE_TYPES);
     if (effect.damage && !isDamagePart(effect.damage)) problems.push(`damage: ${effect.damage}`);
   }
   return problems;
