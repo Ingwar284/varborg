@@ -11,7 +11,7 @@ import {
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
   unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
-  resistsFor, resistedDamage, isGiftUuid
+  resistsFor, resistedDamage, isGiftUuid, minionTierFor
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -187,7 +187,7 @@ test("a weapon filter fits only attacks with that weapon tag (step 49e)", () => 
 });
 
 test("effect problems check the weapon, per and damage fields (step 49e)", () => {
-  assert.deepEqual(effectProblems(roll({ weapon: "spoon", per: "kill", damage: "d4+1" })), ["weapon: spoon", "per: kill", "damage: d4+1"]);
+  assert.deepEqual(effectProblems(roll({ weapon: "spoon", per: "turn", damage: "d4+1" })), ["weapon: spoon", "per: turn", "damage: d4+1"]);
 });
 
 const hook = (fields) => ({ ...blankEffect("hook"), ...fields });
@@ -454,4 +454,29 @@ test("gifts name a compendium item; the new Use actions are known (step 50b4)", 
   assert.deepEqual(effectProblems({ ...blankEffect("gift"), gift: "nope" }), ["gift: nope"]);
   assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "gainFortune", amount: "1" }), []);
   assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "makeMinion" }), []);
+});
+
+test("Bloodlust: +2 per kill this combat, up to +6 (step 50c, GAPS 205)", () => {
+  const bloodlust = { ...blankEffect("roll"), roll: "attack", damage: "2", per: "kill", value: 3 };
+  assert.equal(effectDamage(bloodlust, { kills: 0 }), "");
+  assert.equal(effectDamage(bloodlust, { kills: 2 }), "4");
+  assert.equal(effectDamage(bloodlust, { kills: 5 }), "6");
+});
+
+test("switched-on effects work only while on, in the same combat (step 50c)", () => {
+  const drunk = { ...blankEffect("roll"), roll: "test", ability: "strength", grant: "boon", requires: "itemOn" };
+  assert.equal(fitsRoll(drunk, { roll: "test", ability: "strength", facts: { combatId: "c1" } }), false);
+  assert.equal(fitsRoll({ ...drunk, on: "c1" }, { roll: "test", ability: "strength", facts: { combatId: "c1" } }), true);
+  assert.equal(fitsRoll({ ...drunk, on: "c1" }, { roll: "test", ability: "strength", facts: { combatId: "c2" } }), false);
+  assert.equal(fitsRoll({ ...drunk, on: "" }, { roll: "test", ability: "strength", facts: { combatId: "" } }), true);
+});
+
+test("Titan's grip, set damage and the rolled minion tier (step 50c)", () => {
+  const grip = statBonuses([stat("twoHandedVersatile", 1, "set")]);
+  assert.deepEqual(withWeaponStats({ twoHanded: true, versatile: false }, grip), { twoHanded: false, versatile: true });
+  assert.deepEqual(withWeaponStats({ twoHanded: false, versatile: false }, grip), { twoHanded: false, versatile: false });
+  const [lance] = rollEffects([{ ...blankEffect("roll"), roll: "attack", setDamage: "d10" }], { roll: "attack" }).auto;
+  assert.equal(lance.setDamage, "d10");
+  assert.deepEqual([1, 2, 3].map(minionTierFor), ["pitiful", "weak", "moderate"]);
+  assert.equal(minionTierFor(undefined), "weak");
 });

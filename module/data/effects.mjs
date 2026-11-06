@@ -52,6 +52,8 @@ export function effectFields() {
       resist: choice(RESIST_MODES),
       // gift (step 50b4): the UUID of a compendium item given with this one.
       gift: new StringField({ required: true, blank: true, initial: "" }),
+      // The weapon's damage dice replaced, such as d10 (Couched Lance, step 50c).
+      setDamage: new StringField({ required: true, blank: true, initial: "" }),
       // Reroll damage dice that show 1 (Hawkeye, step 50b).
       rerollOnes: new BooleanField({ required: true, initial: false }),
       // hook (step 49f): when, what, how much, which condition, which roll to keep, only while…

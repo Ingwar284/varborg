@@ -9,6 +9,8 @@
     "belongsTo": "Bard",
     "improving": false,
     "frequency": "longRest",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
   }
 }

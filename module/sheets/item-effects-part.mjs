@@ -80,10 +80,10 @@ export function effectsContext(document) {
         // Reroll and Success buttons on cards (steps 49g, 50b2).
         isReroll: ["reroll", "success"].includes(effect.action),
         isRerollOnly: effect.action === "reroll",
-        hasAmount: ["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action),
+        hasAmount: ["heal", "roll", "gainEmber", "gainFortune", "makeMinion"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
-        perWound: effect.per === "wound",
+        perWound: ["wound", "kill"].includes(effect.per),
         isReminder: effect.kind === "reminder",
         isResist: effect.kind === "resist",
         isGift: effect.kind === "gift",

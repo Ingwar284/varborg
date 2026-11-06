@@ -9,6 +9,42 @@
     "belongsTo": "Brinkwalker",
     "improving": false,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "reminder",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "attack",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "note": "a Triumph while you have Adrenaline: ↻ grin at another foe within 30' that can see you. A Pitiful or Weak foe tests Morale; any other is Frightened of you until the end of its next turn"
+      }
+    ],
+    "automation": "partial"
   }
 }

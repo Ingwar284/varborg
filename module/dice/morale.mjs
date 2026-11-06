@@ -26,6 +26,7 @@ import {
 import { totalModifiers } from "../rules/conditions.mjs";
 import { conditionNotes } from "../conditions.mjs";
 import { itemRollMods, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { countKill } from "../effects.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 const { DialogV2 } = foundry.applications.api;
@@ -44,6 +45,7 @@ const NO_COMBAT = "none";
  * @param {number} damage    The attack's damage (already doubled on a Triumph).
  * @param {string} armour    The armour die that soaks this hit ("" for none).
  * @param {string} attack    The attack's name, for the card.
+ * @returns {Promise<boolean>} Whether the hit brought the foe to 0 HP.
  */
 export async function inflictDamage(foe, damage, armour, attack) {
   const i18n = game.i18n;
@@ -63,6 +65,7 @@ export async function inflictDamage(foe, damage, armour, attack) {
   const max = foe.system.hp.max;
   const fallen = to === 0;
   if (fallen) await markDefeated(foe);
+  const killed = fallen && from > 0;
 
   // Who may roll Morale now: the last enemy, or everyone left when this
   // kill brings the group to half (GAPS 70, 72). The last enemy is offered
@@ -102,6 +105,7 @@ export async function inflictDamage(foe, damage, armour, attack) {
     rolls,
     sound: rolls.length ? CONFIG.sounds.dice : null
   });
+  return killed;
 }
 
 /**
@@ -257,7 +261,10 @@ export function addMoraleCardListeners(message, html) {
       // The armour as it was before a Triumph lowered it (GAPS 69).
       const armour = stored ? inflict.dataset.armour : foe.system.armour;
       await message.setFlag(SYSTEM, "damageInflicted", true);
-      await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack);
+      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack);
+      // A kill counts for the card's character (Bloodlust, GAPS 205).
+      const attackerUuid = message.getFlag(SYSTEM, "fortune")?.actorUuid;
+      if (killed && attackerUuid) await countKill(await fromUuid(attackerUuid));
     });
   }
 

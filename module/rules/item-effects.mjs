@@ -125,11 +125,22 @@ export const HOOK_ACTIONS = [
  * chanceDie: rolls the Chance Die (Pack Rat, step 50b2).
  * gainFortune: gains `amount` Fortune (the Clan Heirloom, step 50b4).
  * makeMinion: makes a Weak minion for the character, named by the
- *   player, once (Beast-Tamer, GAPS 201).
+ *   player, once (Beast-Tamer, GAPS 201). With `amount` (d3), its tier
+ *   is rolled (Chains of gratitude, step 50c).
+ * switchOn: the item is on until the encounter ends; its "only while
+ *   switched on" effects work (A good time, step 50c).
  * A reroll or success button can be limited to some cards with `requires`
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
-export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion"];
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn"];
+
+/**
+ * A minion's tier from a roll (Chains of gratitude: d3, 1 Pitiful, 2 Weak,
+ * 3 Moderate). Without a roll: Weak.
+ */
+export function minionTierFor(roll) {
+  return ["pitiful", "weak", "moderate"][Math.min(3, Math.max(1, roll ?? 2)) - 1];
+}
 
 /**
  * When a card button is offered (GAPS 198): always, on a Ruin (Whim of the
@@ -168,9 +179,11 @@ export const HOOK_REQUIRES = ["", "halfHp"];
 
 /**
  * Only while…, for roll and reminder effects: blank for always, noCombat
- * for while no combat is running ("Boon on non-combat tests", GAPS 194).
+ * for while no combat is running ("Boon on non-combat tests", GAPS 194),
+ * itemOn while the item is switched on with its Use button until the
+ * encounter ends (A good time, step 50c).
  */
-export const ROLL_REQUIRES = ["", "noCombat"];
+export const ROLL_REQUIRES = ["", "noCombat", "itemOn"];
 
 /**
  * How far an item is automated. Blank means nobody has looked yet.
@@ -197,6 +210,8 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * (Armoured Paragon 2, step 50b2).
  * heavyDefenceIgnored: set 1, heavy (t3) armour adds no DR to defence
  * (Armoured Paragon).
+ * twoHandedVersatile: set 1, two-handed weapons are versatile and can be
+ * held in one hand (Titan's grip, step 50c).
  * chanceSplit: set, the Chance Die has no Neutral: below this Negative
  * ("worst possible outcome"), this or more Positive (Go Big or Go Home 8).
  */
@@ -204,7 +219,7 @@ export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
   ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie",
   "unarmedDie", "rangePercent", "reloadActions",
-  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit"
+  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile"
 ];
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
@@ -247,6 +262,10 @@ export function withWeaponStats(weapon, bonuses = {}, unarmed = false) {
     result.thrown = longerRange(weapon.thrown, bonuses.rangePercent);
   }
   if (bonuses?.reloadActions) result.reload = reloadActions(weapon.reload, bonuses.reloadActions);
+  if (bonuses?.twoHandedVersatile?.set > 0 && weapon.twoHanded) {
+    result.twoHanded = false;
+    result.versatile = true;
+  }
   return result;
 }
 
@@ -285,8 +304,12 @@ export const ROLL_MODES = ["auto", "optional"];
  */
 export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "twoHanded", "versatile", "agile", "chosen"];
 
-/** Extra damage once, or once per wound the character has (Battle Scars, step 49e). */
-export const DAMAGE_PER = ["", "wound"];
+/**
+ * Extra damage once, once per wound the character has (Battle Scars, step
+ * 49e), or once per foe the character killed in this combat (Bloodlust,
+ * step 50c). `value` above 0 is the most that count.
+ */
+export const DAMAGE_PER = ["", "wound", "kill"];
 
 /** A blank effect, as the sheet's Add button makes it. */
 export function blankEffect(kind = "stat") {
@@ -296,7 +319,7 @@ export function blankEffect(kind = "stat") {
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", damageType: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
-    resist: "half", gift: "",
+    resist: "half", gift: "", setDamage: "",
     note: ""
   };
 }
@@ -324,9 +347,9 @@ export function weaponTags(weapon, mode) {
 export function effectDamage(effect, facts = {}) {
   const part = String(effect.damage ?? "").trim();
   if (!isDamagePart(part)) return "";
-  if (effect.per !== "wound") return part;
-  // value, when above 0, is the most wounds that count (Battle Scars: up to +3).
-  const wounds = Math.max(0, Math.trunc(facts.wounds ?? 0));
+  if (!["wound", "kill"].includes(effect.per)) return part;
+  // value, when above 0, is the most that count (Battle Scars: up to +3).
+  const wounds = Math.max(0, Math.trunc((effect.per === "kill" ? facts.kills : facts.wounds) ?? 0));
   const count = Number(effect.value) > 0 ? Math.min(wounds, Number(effect.value)) : wounds;
   if (!count) return "";
   if (/^\d+$/.test(part)) return String(Number(part) * count);
@@ -377,6 +400,8 @@ export function collectEffects(items) {
       found.push({
         ...effect, item: item.name, itemId: item.id ?? "", index,
         frequency: item.system?.frequency ?? "", used: Boolean(item.system?.frequencyUsed),
+        // Switched on, for this combat (or "" outside combat) (step 50c).
+        on: item.flags?.["var-borg"]?.on,
         // What the item's choice effects hold, for "the chosen weapon" and so on (step 49h).
         choices: choicesOf(item.system?.effects)
       });
@@ -460,6 +485,7 @@ export function fitsRoll(effect, context) {
     if (!effect.choices?.weapon || effect.choices.weapon !== context.weaponId) return false;
   } else if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
   if (effect.requires === "noCombat" && context.facts?.inCombat) return false;
+  if (effect.requires === "itemOn" && (effect.on === undefined || effect.on === null || effect.on !== (context.facts?.combatId ?? ""))) return false;
   // Only with damage of this type, such as fire (Firebug, step 50b3).
   if (effect.damageType && effect.damageType !== context.damageType) return false;
   if (effect.vs === "chosenCategory" && (!effect.choices?.category || effect.choices.category !== context.targetCategory)) return false;
@@ -480,7 +506,7 @@ export function testOnly(mods) {
  * (attacks, powers, spells); elsewhere it is ignored.
  */
 export function withEffect(mods) {
-  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes);
+  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes || mod.setDamage);
 }
 
 /**
@@ -509,6 +535,7 @@ export function rollEffects(effects, context) {
     const damage = effectDamage(effect, context.facts);
     if (damage) mod.damage = damage;
     if (effect.rerollOnes) mod.rerollOnes = true;
+    if (effect.setDamage) mod.setDamage = effect.setDamage;
     (effect.mode === "optional" ? result.optional : result.auto).push(mod);
   }
   return result;
@@ -575,6 +602,7 @@ export function effectProblems(effect) {
     check("per", DAMAGE_PER);
     if (effect.damageType) check("damageType", DAMAGE_TYPES);
     if (effect.damage && !isDamagePart(effect.damage)) problems.push(`damage: ${effect.damage}`);
+    if (effect.setDamage && !isDamagePart(effect.setDamage)) problems.push(`setDamage: ${effect.setDamage}`);
   }
   return problems;
 }

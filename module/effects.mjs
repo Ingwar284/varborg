@@ -35,7 +35,12 @@ export function itemRollEffects(actor, context) {
   if (!actor?.items) return { auto: [], optional: [], reminders: [] };
   // The character's facts, for damage per wound (step 49e).
   // Whether a combat is running, for "non-combat tests" (GAPS 194).
-  const facts = { wounds: actor.system.wounds?.value ?? 0, inCombat: Boolean(game.combat?.started) };
+  const facts = {
+    wounds: actor.system.wounds?.value ?? 0,
+    inCombat: Boolean(game.combat?.started),
+    combatId: game.combat?.started ? game.combat.id : "",
+    kills: killsThisCombat(actor)
+  };
   return rollEffects(collectEffects(actor.items), { facts, ...context });
 }
 
@@ -82,6 +87,7 @@ export async function optionalEffectsField(mods) {
     if (mod.dr) parts.push(i18n.format("VARBORG.Condition.DR", { dr: mod.dr > 0 ? `+${mod.dr}` : `−${Math.abs(mod.dr)}` }));
     if (mod.damage) parts.push(i18n.format("VARBORG.Effects.DamagePart", { damage: mod.damage }));
     if (mod.rerollOnes) parts.push(i18n.localize("VARBORG.Effects.RerollOnesPart"));
+    if (mod.setDamage) parts.push(i18n.format("VARBORG.Effects.SetDamagePart", { damage: mod.setDamage }));
     const name = mod.note ? i18n.format("VARBORG.Effects.ItemWithNote", { item: mod.item, note: mod.note }) : mod.item;
     return { label: i18n.format("VARBORG.Effects.OptionalLabel", { name, effect: parts.join(", ") }) };
   });
@@ -178,6 +184,21 @@ export function takenWithResists(before, usualTaken, soak, kept, minimum = 1) {
   return { taken: resisted > 0 ? Math.max(minimum, resisted - soak) : 0, resisted };
 }
 
+/**
+ * Foes the character killed in the running combat (Bloodlust, GAPS 205),
+ * kept in its flags as { combat, count }.
+ */
+export function killsThisCombat(actor) {
+  const kills = actor?.getFlag?.("var-borg", "kills");
+  return kills && game.combat?.started && kills.combat === game.combat.id ? kills.count : 0;
+}
+
+/** Count a kill made with the character's Inflict damage button, in combat. */
+export async function countKill(actor) {
+  if (actor?.type !== "character" || !game.combat?.started) return;
+  await actor.setFlag("var-borg", "kills", { combat: game.combat.id, count: killsThisCombat(actor) + 1 });
+}
+
 /** Mark an item's limited use spent (once per day and so on). */
 async function markUsed(actor, itemId) {
   const item = actor.items.get(itemId);
@@ -239,6 +260,12 @@ export async function doEffectAction(actor, effect) {
     };
   }
   if (effect.action === "makeMinion") return makeItemMinion(actor, effect);
+  if (effect.action === "switchOn") {
+    // On for this combat, or "" outside combat (step 50c).
+    const on = game.combat?.started ? game.combat.id : "";
+    await actor.items.get(effect.itemId)?.setFlag("var-borg", "on", on);
+    return { lines: [i18n.format("VARBORG.Effects.SwitchedOn", { item, note })], rolls: [], acted: true };
+  }
   if (effect.action === "chanceDie") {
     // Pack Rat (step 50b2): the Chance Die posts its own card.
     await rollChanceDie(actor);

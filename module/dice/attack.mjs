@@ -147,7 +147,9 @@ export async function rollAttack(actor, item) {
   ].filter(Boolean);
 
   // Everything the card needs that Fortune cannot change.
-  const formula = damageFormula(weapon.damage, options.beyondRange);
+  // An item effect can replace the weapon's dice (Couched Lance, step 50c).
+  const setDamage = conditions.own.findLast(mod => mod.setDamage)?.setDamage;
+  const formula = setDamage || damageFormula(weapon.damage, options.beyondRange);
   const foe = target?.type === "foe" ? target : null;
   const inputs = {
     formula: `${diceFormula(diceRule)} + @ability`,

@@ -44,6 +44,10 @@
       <input type="number" step="1" min="0" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     {{/if}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.SetDamageHint'}}">
+      <span>{{localize "VARBORG.Effects.SetDamageLabel"}}</span>
+      <input type="text" data-effect-field="setDamage" value="{{setDamage}}" placeholder="d10" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.RerollOnesHint'}}">
       <input type="checkbox" data-effect-field="rerollOnes" {{checked rerollOnes}} {{#unless @root.editable}}disabled{{/unless}}>
       <span>{{localize "VARBORG.Effects.RerollOnesLabel"}}</span>

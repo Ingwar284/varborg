@@ -2158,12 +2158,12 @@
     },
     "Minion": {
       "Beast": "Fighting beast",
-      "BeastHide": "Tough hide",
-      "BeastAttack": "Bite, claws or tusks",
+      "BeastHide": "Armour",
+      "BeastAttack": "Attack",
       "NameTitle": "{item}: name your beast",
       "NameLabel": "Name",
       "Make": "Make the minion",
-      "Made": "{item}: {name} is now {owner}’s Weak minion. Pick its passive with the Dark Master and write it on its sheet.",
+      "Made": "{item}: {name} is now {owner}’s {tier}. Pick its abilities with the Dark Master and write them on its sheet.",
       "AlreadyMade": "{item} has already given {minion}.",
       "AskDm": "{item}: making a minion needs the right to create actors. Ask the Dark Master to press the Use button.",
       "Tier": {
@@ -2584,7 +2584,8 @@
         "reloadActions": "Actions to reload",
         "armourAgilityMax": "Most DR from armour on Agility tests",
         "heavyDefenceIgnored": "Heavy armour adds no defence DR (1 = yes)",
-        "chanceSplit": "Chance Die without Neutral: Positive from"
+        "chanceSplit": "Chance Die without Neutral: Positive from",
+        "twoHandedVersatile": "Two-handed weapons are versatile (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2665,11 +2666,16 @@
       "UpToLabel": "Up to",
       "UpToHint": "The most wounds that count (Battle Scars: 3). 0 means no limit.",
       "RerollOnesLabel": "Reroll 1s",
+      "SetDamageLabel": "Damage becomes",
+      "SetDamageHint": "Replaces the weapon’s damage dice, such as d10 (Couched Lance). Empty: the weapon’s own.",
+      "SetDamagePart": "damage {damage}",
+      "SwitchedOn": "{item} is on until the encounter ends ({note}).",
       "RerollOnesPart": "damage dice showing 1 rolled again",
       "RerollOnesHint": "Damage dice that show 1 are rolled again once (Hawkeye).",
       "Per": {
         "once": "once",
-        "wound": "per wound"
+        "wound": "per wound",
+        "kill": "per foe you killed this combat"
       },
       "DamagePart": "+{damage} damage",
       "EventLabel": "When",
@@ -2704,7 +2710,8 @@
         "ruinAsFailure": "A Panic Ruin counts as a Failure",
         "success": "Offer a Success on failed cards",
         "chanceDie": "Roll the Chance Die",
-        "makeMinion": "Make a Weak minion"
+        "makeMinion": "Make a minion (Weak, or its tier rolled with the amount)",
+        "switchOn": "Switch on until the encounter ends"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2720,6 +2727,7 @@
         "always": "always",
         "halfHp": "at half HP or lower",
         "noCombat": "outside combat",
+        "itemOn": "while switched on",
         "ruin": "on a Ruin",
         "natural1": "on a natural 1",
         "failed": "on a Failure or Ruin"

@@ -15,6 +15,7 @@
  */
 
 import { minionLimit, canTakeMinion, minionTurn, COMMAND_ACTIONS, MINION_TIER_STATS } from "./rules/minions.mjs";
+import { minionTierFor } from "./rules/item-effects.mjs";
 import { turnState } from "./combat.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 
@@ -113,7 +114,15 @@ export async function makeItemMinion(owner, effect) {
     rejectClose: false
   });
   if (!data) return nothing;
-  const stats = MINION_TIER_STATS.weak;
+  // Chains of gratitude rolls its tier (step 50c).
+  let tier = "weak";
+  const tierRolls = [];
+  if (effect.amount) {
+    const roll = await new Roll(effect.amount).evaluate();
+    tierRolls.push(roll);
+    tier = minionTierFor(roll.total);
+  }
+  const stats = MINION_TIER_STATS[tier];
   const name = String(data.name || "").trim() || i18n.localize("VARBORG.Minion.Beast");
   const minion = await Actor.create({
     name,
@@ -123,7 +132,7 @@ export async function makeItemMinion(owner, effect) {
     prototypeToken: { actorLink: true, disposition: 1, bar1: { attribute: "hp" } },
     flags: { [SYSTEM]: { fromItem: mark } },
     system: {
-      tier: "weak",
+      tier,
       owner: owner.id,
       hp: { value: stats.hp, max: stats.hp },
       morale: stats.morale,
@@ -138,7 +147,8 @@ export async function makeItemMinion(owner, effect) {
     }]
   });
   if (!minion) return nothing;
-  return { lines: [i18n.format("VARBORG.Minion.Made", { item: effect.item, name: minion.name, owner: owner.name })], rolls: [], acted: true };
+  const tierName = i18n.localize(`VARBORG.Minion.Tier.${tier}`);
+  return { lines: [i18n.format("VARBORG.Minion.Made", { item: effect.item, name: minion.name, owner: owner.name, tier: tierName })], rolls: tierRolls, acted: true };
 }
 
 /**

@@ -1141,7 +1141,14 @@ every feat in the batch ends with a status.
         Fortune), and a Use action makes a named Weak minion once
         (Beast-Tamer). All 64 ancestry feats have a status.
         EFFECTS_CONTENT 8.
-    - 50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier, Charioteer.
+    - ~~50c. Class feats: Barbarian, Bard, Brinkwalker, Cavalier,
+      Charioteer.~~ Done: 32 feats have a status (the rig and destrier
+      feats wait for 50g). New: feats switched on until the encounter
+      ends (A good time), kills counted by Inflict damage (Bloodlust,
+      GAPS 205), an effect that replaces the weapon's dice (Couched
+      Lance, Cutting remark), Titan's grip, a minion of a rolled tier
+      (Chains of gratitude). Brinkwalker's Adrenaline feats are ticks
+      and reminders until 51a tracks Adrenaline. EFFECTS_CONTENT 9.
     - 50d. Class feats: Dancer, Druid, Fleshwright, Gravecaller, Hedge
       Mage.
     - 50e. Class feats: Paladin, Priest, Ranger, Rogue, Scholar.
