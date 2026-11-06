@@ -1329,7 +1329,12 @@ one fight and one rest.
         attack. Rounds can be dice with a bonus ("d4 + 2"). Escape tests
         for characters are always Strength: where a spell says Sanity or
         Toughness, a note says so. EFFECTS_CONTENT 23.
-    - 51g. Rituals (63), mostly text with a reminder.
+    - ~~51g. Rituals (63).~~ Done: every ritual has a status. 60 are
+      text (their card shows their text and result). The Zealot's
+      Unbreaking Will gives Boon on Panic tests until the next day begins
+      (and Frightened immunity is a note); Purge the Blight ends Infected
+      (+d6 HP on a Triumph); Martyr's Restoration ends Doomed or Infected
+      (an option). EFFECTS_CONTENT 24.
 
 **Milestone 11 review:** a Warrior, a Wizard and a Priest against three
 foes, with area spells.

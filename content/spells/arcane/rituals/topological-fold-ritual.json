@@ -22,6 +22,7 @@
     },
     "sustaining": false,
     "kept": false,
-    "usedOutside": false
+    "usedOutside": false,
+    "automation": "text"
   }
 }
