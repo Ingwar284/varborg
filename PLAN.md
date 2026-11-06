@@ -1241,9 +1241,14 @@ one fight and one rest.
         notes (Boon against listed kinds' gloom abilities, no Study Ruin);
         a new Spirit-linked sword weapon given with the feature (Presence);
         the Flintlock pistol with Agility; an In spellbook box on spells.
-    - 51b. Area targets (GAPS 141): power, spell and gloom cards get one
-      Inflict, Defend or Test button per targeted token, sharing one
-      damage roll.
+    - ~~51b. Area targets (GAPS 141, 218).~~ Done: a power or spell used
+      with two or more creatures targeted gets one Inflict button per foe
+      (each used once, armour soaks) and one Defend button per character
+      or minion other than the user (an Agility defence against the
+      card's damage); all share the card's one damage roll, and Fortune
+      changes reach every button. A gloom ability with two or more
+      targets rolls its damage once on its card; each Test uses it,
+      unless Fortune rerolls or maximises that test's damage.
     - 51c. What outcomes do to targets: a condition with a timer (as gloom
       abilities do), healing, a timed buff on an ally; summons as a
       reminder.

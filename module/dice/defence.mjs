@@ -143,12 +143,14 @@ export async function rollDefence(actor, attack) {
   ].filter(Boolean);
 
   // Everything the card needs that Fortune cannot change.
-  const formula = damageFormula(attack.system.damage);
+  // An area power's shared damage is a set number (GAPS 218).
+  const fixed = Number.isFinite(attack.system.fixedDamage);
+  const formula = fixed ? String(attack.system.fixedDamage) : damageFormula(attack.system.damage);
   const inputs = {
     formula: `${diceFormula(diceRule)} + @ability`,
     rollData: { ability: abilityScore },
     diceRule, abilityScore, dr, uncoveredDr,
-    damageFormula: isDamageFormula(formula) ? formula : null,
+    damageFormula: fixed || isDamageFormula(formula) ? formula : null,
     attackDamage: attack.system.damage,
     // The armour and shield as they were before this attack.
     armour: automatic.armour ? { id: automatic.armour.id, tier: automatic.armour.tier, originalTier: automatic.armour.originalTier } : null,
@@ -442,7 +444,7 @@ async function askDefenceOptions(actor, attack, automatic, conditions, optionalE
       ...conditionNotes(conditions.own),
       ...conditionNotes(conditions.foe, foe?.name)
     ].filter(Boolean),
-    reminders: [...reminderNotes(actor, "defence"), ...itemReminderNotes(actor, { roll: "defence" }), ...foeReminders(foe)],
+    reminders: [...reminderNotes(actor, "defence"), ...itemReminderNotes(actor, { roll: "defence" }), ...(foe?.type === "foe" ? foeReminders(foe) : [])],
     optionalEffects,
     fortuneFields: await fortuneFields(actor, "defence")
   });
@@ -522,6 +524,29 @@ export function addDefenceCardListeners(message, html) {
         return;
       }
       await rollDefence(actor, attack);
+    });
+  }
+
+  // An ally caught in an area power or spell defends (GAPS 218).
+  for (const button of html.querySelectorAll("button[data-action='areaDefend']")) {
+    button.addEventListener("click", async () => {
+      const actor = await fromUuid(button.dataset.actorUuid);
+      if (!actor || !DEFENDERS.includes(actor.type)) {
+        ui.notifications.warn(game.i18n.localize("VARBORG.Defence.NoCharacter"));
+        return;
+      }
+      if (!actor.isOwner) {
+        ui.notifications.warn(game.i18n.format("VARBORG.Defence.NotYours", { name: actor.name }));
+        return;
+      }
+      const caster = button.dataset.casterUuid ? await fromUuid(button.dataset.casterUuid) : null;
+      const damage = Number(button.dataset.damage) || 0;
+      // The power as an attack with a set damage, from its user.
+      await rollDefence(actor, {
+        name: button.dataset.name,
+        parent: caster,
+        system: { kind: "", damage: String(damage), fixedDamage: damage, damageType: button.dataset.damageType || "" }
+      });
     });
   }
 

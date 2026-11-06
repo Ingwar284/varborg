@@ -37,6 +37,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon, itemHooks, runItemHooks } from "../effects.mjs";
 import { withExtraDamage, unarmedDamage, isRiskyPower } from "../rules/item-effects.mjs";
 import { belongsTo } from "../rules/feats.mjs";
+import { areaTargets } from "../rules/powers.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -309,6 +310,10 @@ async function rollPowerTest(actor, power) {
     noRuin: [...conditionMods, ...ticked].some(mod => mod.noRuin),
     weaponDamage: damage.text,
     ruinedBefore: actor.system.attackRuin,
+    // Every targeted creature, for area powers and spells (GAPS 141).
+    area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
+      .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
+    areaDamageType: power.system.damageType ?? "",
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: power.name,

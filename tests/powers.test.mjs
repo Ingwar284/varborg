@@ -114,3 +114,20 @@ test("without a weapon: unarmed d2 or an improvised weapon d4 (rules 4.1)", () =
   assert.equal(BARE_WEAPONS.improvised, "d4");
   assert.equal(powerDamageFormula({ weapon: BARE_WEAPONS.unarmed, power: "d6" }), "d2 + d6");
 });
+
+test("area powers and spells: two or more targets get a button each (step 51b, GAPS 141, 218)", async () => {
+  const { areaTargets } = await import("../module/rules/powers.mjs");
+  const me = { uuid: "me", name: "Ada", type: "character" };
+  const ghoul = { uuid: "g1", name: "Ghoul", type: "foe", armour: "d2" };
+  const ox = { uuid: "g2", name: "Wax Ox", type: "foe" };
+  const ally = { uuid: "a1", name: "Bo", type: "character" };
+  const cart = { uuid: "v1", name: "Cart", type: "vehicle" };
+  assert.equal(areaTargets([ghoul], "me"), null);
+  assert.equal(areaTargets([], "me"), null);
+  assert.equal(areaTargets([me, ghoul], "me"), null);
+  assert.equal(areaTargets([ghoul, cart], "me"), null);
+  assert.deepEqual(areaTargets([me, ghoul, ox, ally], "me"), {
+    foes: [{ uuid: "g1", name: "Ghoul", armour: "d2" }, { uuid: "g2", name: "Wax Ox", armour: "" }],
+    defenders: [{ uuid: "a1", name: "Bo" }]
+  });
+});

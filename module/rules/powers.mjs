@@ -25,6 +25,23 @@
 
 import { ABILITIES } from "./abilities.mjs";
 
+/**
+ * The tokens an area power or spell reaches (GAPS 141, 218): with two or
+ * more targeted creatures, each foe gets an Inflict button and each
+ * character or minion other than the user a Defend button, all with the
+ * card's one damage roll. One target or none: null (the card works as
+ * before).
+ * @param {{uuid: string, name: string, type: string, armour?: string}[]} targets
+ * @param {string} userUuid  The one using the power.
+ * @returns {{foes: object[], defenders: object[]}|null}
+ */
+export function areaTargets(targets, userUuid) {
+  const list = (targets ?? []).filter(target => target && target.uuid !== userUuid);
+  const foes = list.filter(target => target.type === "foe").map(({ uuid, name, armour }) => ({ uuid, name, armour: armour ?? "" }));
+  const defenders = list.filter(target => ["character", "minion"].includes(target.type)).map(({ uuid, name }) => ({ uuid, name }));
+  return foes.length + defenders.length >= 2 ? { foes, defenders } : null;
+}
+
 /** DR 11 + the listed ember cost. */
 export const POWER_BASE_DR = 11;
 

@@ -5,7 +5,7 @@
   <p class="hint">{{hint}}</p>
   <div class="card-buttons">
     {{#each targets}}
-    <button type="button" data-action="gloomTest" data-power-uuid="{{@root.powerUuid}}" data-actor-uuid="{{uuid}}">
+    <button type="button" data-action="gloomTest" data-power-uuid="{{@root.powerUuid}}" data-actor-uuid="{{uuid}}" data-shared="{{@root.shared}}">
       <i class="fa-solid fa-moon"></i> {{label}}
     </button>
     {{else}}
@@ -14,5 +14,6 @@
     </button>
     {{/each}}
   </div>
+  {{#if sharedNote}}<p class="modifier">{{sharedNote}}</p>{{/if}}
   {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
 </div>

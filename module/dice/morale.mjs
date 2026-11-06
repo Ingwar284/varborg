@@ -242,9 +242,11 @@ export async function markDefeated(foe) {
  * damage card. Hooked to renderChatMessageHTML.
  */
 export function addMoraleCardListeners(message, html) {
-  const inflict = html.querySelector("button[data-action='inflictDamage']");
-  if (inflict) {
-    if (message.getFlag(SYSTEM, "damageInflicted")) inflict.disabled = true;
+  // An area card has one Inflict button per foe, each used once (GAPS 141).
+  for (const inflict of html.querySelectorAll("button[data-action='inflictDamage']")) {
+    const key = inflict.dataset.key ?? "";
+    const done = key ? (message.getFlag(SYSTEM, "inflictedKeys") ?? []).includes(key) : message.getFlag(SYSTEM, "damageInflicted");
+    if (done) inflict.disabled = true;
     else inflict.addEventListener("click", async () => {
       // The foe targeted when the attack was rolled, or else the one targeted now.
       const stored = inflict.dataset.foeUuid ? await fromUuid(inflict.dataset.foeUuid) : null;
@@ -260,7 +262,8 @@ export function addMoraleCardListeners(message, html) {
       inflict.disabled = true;
       // The armour as it was before a Triumph lowered it (GAPS 69).
       const armour = stored ? inflict.dataset.armour : foe.system.armour;
-      await message.setFlag(SYSTEM, "damageInflicted", true);
+      if (key) await message.setFlag(SYSTEM, "inflictedKeys", [...(message.getFlag(SYSTEM, "inflictedKeys") ?? []), key]);
+      else await message.setFlag(SYSTEM, "damageInflicted", true);
       const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack);
       // A kill counts for the card's character (Bloodlust, GAPS 205).
       const attackerUuid = message.getFlag(SYSTEM, "fortune")?.actorUuid;

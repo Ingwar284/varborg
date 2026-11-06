@@ -328,9 +328,12 @@ async function applyFortune({ messageId, action, spenderUuid }) {
     case SPEND.MAX_DAMAGE:
       state.maximized = true;
       state.damage = null;
+      // Not the damage shared by an area gloom ability any more (GAPS 141).
+      state.noShared = true;
       break;
     case SPEND.REROLL_DAMAGE:
       state.damage = null;
+      state.noShared = true;
       break;
     case SPEND.LOWER_DAMAGE: {
       const roll = await new Roll(LOWER_DAMAGE_FORMULA).evaluate();

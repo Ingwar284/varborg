@@ -38,6 +38,21 @@
       {{#if damage.maximized}}<span class="modifier">{{localize "VARBORG.Fortune.Maximum"}}</span>{{/if}}
     </p>
     {{/if}}
+    {{#if area}}
+    <p class="hint">{{localize "VARBORG.Area.Hint"}}</p>
+    {{#each area.foes}}
+    <button type="button" data-action="inflictDamage" data-key="{{key}}" data-damage="{{damage}}" data-foe-uuid="{{foeUuid}}"
+            data-armour="{{armour}}" data-attack="{{attack}}">
+      <i class="fa-solid fa-droplet"></i> {{label}}
+    </button>
+    {{/each}}
+    {{#each area.defenders}}
+    <button type="button" data-action="areaDefend" data-actor-uuid="{{uuid}}" data-damage="{{damage}}" data-name="{{name}}"
+            data-caster-uuid="{{casterUuid}}" data-damage-type="{{damageType}}">
+      <i class="fa-solid fa-shield-halved"></i> {{label}}
+    </button>
+    {{/each}}
+    {{/if}}
     {{#if inflict}}
     <button type="button" data-action="inflictDamage" data-damage="{{inflict.damage}}" data-foe-uuid="{{inflict.foeUuid}}"
             data-armour="{{inflict.armour}}" data-attack="{{inflict.attack}}">

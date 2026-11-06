@@ -316,7 +316,28 @@ export async function settleAttackCard(actor, data) {
   // Inflict damage on a foe. A Triumph's hit is soaked by the armour die
   // the foe had before the Triumph lowered it (GAPS 69).
   let inflict = null;
-  if (damage && !damage.invalid && inputs.inflicts) {
+  // An area power or spell: one button per target, one damage (GAPS 141, 218).
+  let area = null;
+  if (damage && !damage.invalid && inputs.area) {
+    area = {
+      foes: inputs.area.foes.map(target => ({
+        key: target.uuid,
+        damage: damage.total,
+        foeUuid: target.uuid,
+        armour: target.armour,
+        attack: inputs.attackName,
+        label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
+      })),
+      defenders: inputs.area.defenders.map(target => ({
+        uuid: target.uuid,
+        damage: damage.total,
+        name: inputs.attackName,
+        casterUuid: actor.uuid,
+        damageType: inputs.areaDamageType ?? "",
+        label: i18n.format("VARBORG.Area.DefendAs", { name: target.name, damage: damage.total })
+      }))
+    };
+  } else if (damage && !damage.invalid && inputs.inflicts) {
     inflict = {
       damage: damage.total,
       foeUuid: inputs.foe?.uuid ?? "",
@@ -344,6 +365,7 @@ export async function settleAttackCard(actor, data) {
     naturalNote: naturalNote(result),
     damage,
     inflict,
+    area,
     armour,
     ruinNote: nowRuined && !inputs.ruinedBefore ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
     // Powers are not weapon attacks: no maximum damage (GAPS 119).

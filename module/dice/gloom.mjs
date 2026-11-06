@@ -91,7 +91,23 @@ export async function useGloomAbility(foe, power) {
   // Characters and their minions take the test (GAPS 169).
   const targets = [...game.user.targets].map(token => token.actor).filter(actor => DEFENDERS.includes(actor?.type));
   const test = gloomTest(system);
+  // Two or more targets share one damage roll for each damage formula (GAPS 141).
+  const shared = {};
+  const sharedRolls = [];
+  if (targets.length >= 2) {
+    for (const key of ["damage", "ruinDamage"]) {
+      const text = String(system[key] ?? "").trim();
+      if (!isDamageFormula(text) || text in shared) continue;
+      const roll = await new Roll(text).evaluate();
+      sharedRolls.push(roll);
+      shared[text] = roll.total;
+    }
+  }
   const content = await renderTemplate(USE_CARD_TEMPLATE, {
+    shared: Object.keys(shared).length ? JSON.stringify(shared) : "",
+    sharedNote: Object.keys(shared).length
+      ? i18n.format("VARBORG.Area.SharedGloom", { rolls: Object.entries(shared).map(([text, total]) => `${text} = ${total}`).join(", ") })
+      : null,
     title: i18n.format("VARBORG.Gloom.CardTitle", { name: foe.name, ability: power.name }),
     cost: gloomCostLabel(system),
     test: testLabel(test),
@@ -105,7 +121,7 @@ export async function useGloomAbility(foe, power) {
       pipNote
     ].filter(Boolean)
   });
-  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: foe }), content });
+  await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: foe }), content, rolls: sharedRolls, sound: sharedRolls.length ? CONFIG.sounds.dice : null });
 }
 
 /**
@@ -113,7 +129,7 @@ export async function useGloomAbility(foe, power) {
  * @param {Actor} actor  The character.
  * @param {Item} power   The foe's gloom ability.
  */
-export async function rollGloomTest(actor, power) {
+export async function rollGloomTest(actor, power, { shared = null } = {}) {
   const i18n = game.i18n;
   const foe = power.parent;
   const system = power.system;
@@ -210,6 +226,8 @@ export async function rollGloomTest(actor, power) {
     diceRule, abilityScore, dr,
     own: test.own,
     formulas,
+    // The damage rolled once for all targets (GAPS 141).
+    shared,
     soakDie: soak?.die ?? "",
     // The ability's damage type, for resists (step 50b3b).
     damageType: system.damageType ?? "",
@@ -271,9 +289,14 @@ export async function settleGloomCard(actor, data) {
   if (part && !part.valid) damage = { invalid: true, formula: part.text };
   else if (part) {
     if (state.damage === null || state.damageFormula !== part.text) {
-      const damageRoll = await new Roll(part.text).evaluate();
-      rolls.push(damageRoll);
-      state.damage = damageRoll.total;
+      // The shared roll, unless Fortune asked for a new one.
+      const sharedTotal = state.noShared ? undefined : inputs.shared?.[part.text];
+      if (sharedTotal !== undefined) state.damage = sharedTotal;
+      else {
+        const damageRoll = await new Roll(part.text).evaluate();
+        rolls.push(damageRoll);
+        state.damage = damageRoll.total;
+      }
       state.damageFormula = part.text;
     }
     if (state.soak === null) {
@@ -369,7 +392,13 @@ export function addGloomCardListeners(message, html) {
         ui.notifications.warn(game.i18n.format("VARBORG.Defence.NotYours", { name: actor.name }));
         return;
       }
-      await rollGloomTest(actor, power);
+      let shared = null;
+      try {
+        shared = button.dataset.shared ? JSON.parse(button.dataset.shared) : null;
+      } catch {
+        shared = null;
+      }
+      await rollGloomTest(actor, power, { shared });
     });
   }
 }

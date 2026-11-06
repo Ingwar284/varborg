@@ -2984,6 +2984,11 @@
       "Attacks": "{name} makes a thrall's attack.",
       "Raised": "{item}: {owner} raises a thrall. It is a mook: 1 HP, it fails every test, and it collapses when the encounter ends (or after 10 minutes outside combat).",
       "Collapse": "The encounter is over: {count} thrall(s) collapse."
+    },
+    "Area": {
+      "Hint": "An area: every targeted creature shares the one damage roll. Foes take it with Inflict damage (their armour soaks); characters and minions defend.",
+      "DefendAs": "{name} defends ({damage} damage)",
+      "SharedGloom": "Damage rolled once for every target: {rolls}."
     }
   }
 }
