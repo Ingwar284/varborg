@@ -306,7 +306,7 @@ export async function settleDefenceCard(actor, data) {
     takeLabel: damage && !damage.invalid ? i18n.format("VARBORG.Defence.TakeDamage", { damage: damage.taken }) : null,
     takeDamage: damage && !damage.invalid ? damage.taken : 0,
     takeCondition: "",
-    fortune: await fortuneSection(data, { tier, damage: Boolean(damage && !damage.invalid), taken: damage?.taken ?? 0 })
+    fortune: await fortuneSection(data, { tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), taken: damage?.taken ?? 0 })
   });
   return { content, rolls };
 }
@@ -330,7 +330,8 @@ export function defenceModifiers(actor) {
   return {
     armour,
     armourName: nameOf(armour),
-    armourDr: armourDefenceDr(armour),
+    // Armoured Paragon ignores the defence penalty of heavy (t3) armour (step 50b2).
+    armourDr: actor.system.statBonuses?.heavyDefenceIgnored?.set > 0 && armour?.originalTier === 3 ? 0 : armourDefenceDr(armour),
     soakDie: soak.die,
     soakName: soak.natural ? natural.sources.map(source => source.item).join(", ") : nameOf(armour),
     shield,

@@ -6,7 +6,7 @@
 
 import {
   EFFECT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CHOICE_KINDS, CHOICE_FROM, VERSUS
+  HOOK_EVENTS, ALL_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS
 } from "../rules/item-effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
@@ -53,7 +53,9 @@ export function effectFields() {
       amount: new StringField({ required: true, blank: true, initial: "" }),
       condition: choice(["", ...CONDITIONS], ""),
       keep: choice(KEEPS),
-      requires: choice([...new Set([...HOOK_REQUIRES, ...ROLL_REQUIRES])], ""),
+      requires: choice([...new Set([...HOOK_REQUIRES, ...ROLL_REQUIRES, ...CARD_REQUIRES])], ""),
+      // A reroll that fails again: a note, or the note and Shadowblight (step 50b2).
+      failAgain: choice(FAIL_AGAIN, ""),
       // choice (step 49h): what is chosen, from where, and what was chosen (an id or key, and its name).
       choose: choice(CHOICE_KINDS),
       from: choice(CHOICE_FROM),

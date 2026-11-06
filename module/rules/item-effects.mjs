@@ -87,10 +87,13 @@ export const HOOK_EVENTS = [
  * steadyNerves: Steady nerves (panicFailure only, GAPS 197). The failed
  *   Panic card gets a button: the test counts as a Success and the
  *   character gains 1 Fatigued, instead of rolling on the Panic table.
+ * ruinAsFailure: Dwarven Doughtiness (panicFailure only, step 50b2). A
+ *   Ruin on a Panic test counts as a Failure: the table is rolled with
+ *   1d10, not 2d10.
  */
 export const HOOK_ACTIONS = [
   "reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice",
-  "gainFortune", "reprieve", "deathsDoorInstead", "steadyNerves"
+  "gainFortune", "reprieve", "deathsDoorInstead", "steadyNerves", "ruinAsFailure"
 ];
 
 /**
@@ -98,8 +101,27 @@ export const HOOK_ACTIONS = [
  * roll, heal, gainEmber and addCondition as for hooks. reroll: the item
  * offers a reroll button on its owner's test cards (like Fortune's) while
  * its use is not spent; `roll` names which cards.
+ * success: a button on a failed card of that kind turns it into a Success
+ *   (Human Ingenuity, GAPS 198).
+ * chanceDie: rolls the Chance Die (Pack Rat, step 50b2).
+ * A reroll or success button can be limited to some cards with `requires`
+ * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
-export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll"];
+export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie"];
+
+/**
+ * When a card button is offered (GAPS 198): always, on a Ruin (Whim of the
+ * Fey), on a natural 1 (Fortune's Favourite), or on a Failure or Ruin
+ * (Savage Strength, Human Ingenuity).
+ */
+export const CARD_REQUIRES = ["", "ruin", "natural1", "failed"];
+
+/**
+ * What happens when an item's reroll fails again (Failure or Ruin): its
+ * note is added to the card (Savage Strength: unwanted attention), or the
+ * note and a roll on the Shadowblight table (Whim of the Fey).
+ */
+export const FAIL_AGAIN = ["", "note", "shadowblight"];
 
 /** Every action a hook or Use effect can have. */
 export const ALL_ACTIONS = [...new Set([...HOOK_ACTIONS, ...USE_ACTIONS])];
@@ -112,6 +134,7 @@ export const ACTION_EVENTS = {
   rollTwice: ROLL_TWICE_EVENTS,
   reprieve: ["death"],
   steadyNerves: ["panicFailure"],
+  ruinAsFailure: ["panicFailure"],
   deathsDoorInstead: ["agonyDeath"]
 };
 
@@ -148,11 +171,18 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * per cent (Long shot +50, GAPS 191), rounded down to 5'.
  * reloadActions: added to the Interact actions a Reload weapon needs, never
  * below 1 (Quick reload −1).
+ * armourAgilityMax: set, the most DR worn armour adds to Agility tests
+ * (Armoured Paragon 2, step 50b2).
+ * heavyDefenceIgnored: set 1, heavy (t3) armour adds no DR to defence
+ * (Armoured Paragon).
+ * chanceSplit: set, the Chance Die has no Neutral: below this Negative
+ * ("worst possible outcome"), this or more Positive (Go Big or Go Home 8).
  */
 export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
   ...ABILITIES, "soak", "defenceDr", "rangedDefenceDr", "fortuneDie",
-  "unarmedDie", "rangePercent", "reloadActions"
+  "unarmedDie", "rangePercent", "reloadActions",
+  "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit"
 ];
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
@@ -243,7 +273,7 @@ export function blankEffect(kind = "stat") {
     target: STAT_TARGETS[0], op: "add", value: 0,
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
-    event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "",
+    event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
     note: ""
   };
 }
@@ -498,7 +528,12 @@ export function effectProblems(effect) {
     check("action", USE_ACTIONS);
     if (["heal", "roll", "gainEmber"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
-    if (effect.action === "reroll") check("roll", ROLL_KINDS);
+    if (["reroll", "success"].includes(effect.action)) {
+      check("roll", ROLL_KINDS);
+      if (effect.requires) check("requires", CARD_REQUIRES);
+      if (effect.failAgain) check("failAgain", FAIL_AGAIN);
+      if (effect.ability) check("ability", ABILITIES);
+    }
   }
   if (effect.kind === "roll") {
     check("mode", ROLL_MODES);
@@ -591,6 +626,59 @@ export function rerollItems(effects, rollKind) {
     if (!found.has(effect.itemId)) found.set(effect.itemId, { item: effect.item, itemId: effect.itemId });
   }
   return [...found.values()];
+}
+
+/**
+ * The feat buttons a card offers (step 50b2, GAPS 198): items with a
+ * reroll or success Use effect for this kind of roll, whose use is not
+ * spent, that fit the card and were not used on it yet. A success button
+ * needs a Failure or Ruin.
+ * @param {object[]} effects  From collectEffects.
+ * @param {string} rollKind   The card's roll kind ("test", "attack", …).
+ * @param {object} [card]     { tier, natural, ability, used: itemIds used on this card }.
+ * @returns {{item: string, itemId: string, action: string, failAgain: string, note: string}[]}
+ */
+export function cardButtons(effects, rollKind, card = {}) {
+  const failed = ["failure", "ruin"].includes(card.tier);
+  const found = new Map();
+  for (const effect of effects ?? []) {
+    if (effect.kind !== "use" || !["reroll", "success"].includes(effect.action) || effect.roll !== rollKind) continue;
+    if (effect.frequency && effect.used) continue;
+    if ((card.used ?? []).includes(effect.itemId)) continue;
+    if (effect.ability && effect.ability !== card.ability) continue;
+    if (effect.requires === "ruin" && card.tier !== "ruin") continue;
+    if (effect.requires === "natural1" && card.natural !== 1) continue;
+    if (effect.requires === "failed" && !failed) continue;
+    if (effect.action === "success" && !failed) continue;
+    const key = `${effect.itemId}:${effect.action}`;
+    if (!found.has(key)) {
+      found.set(key, { item: effect.item, itemId: effect.itemId, action: effect.action, failAgain: effect.failAgain ?? "", note: effect.note ?? "" });
+    }
+  }
+  return [...found.values()];
+}
+
+/**
+ * The Chance Die's outcome with Go Big or Go Home (step 50b2): no
+ * Neutral, Positive from `split` up. Without a split, the usual one.
+ * @param {number} total
+ * @param {object} [bonus]  The chanceSplit entry of statBonuses.
+ * @param {Function} usual  The usual outcome (chanceOutcome).
+ */
+export function chanceWithSplit(total, bonus, usual) {
+  const split = bonus?.set;
+  if (!(split > 0)) return usual(total);
+  return total >= split ? "positive" : "negative";
+}
+
+/**
+ * The DR worn armour adds to an Agility test after Armoured Paragon.
+ * @param {number} dr       The armour's usual Agility DR.
+ * @param {object} [bonus]  The armourAgilityMax entry of statBonuses.
+ */
+export function cappedArmourDr(dr, bonus) {
+  const cap = bonus?.set;
+  return cap === null || cap === undefined ? dr : Math.min(dr, cap);
 }
 
 /**

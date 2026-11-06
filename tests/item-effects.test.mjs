@@ -10,7 +10,7 @@ import {
   fitsRoll, rollEffects, effectProblems, withAbilityBonuses, testOnly, statDrMods,
   isDamagePart, effectDamage, withExtraDamage, withEffect, weaponTags, hookEffects, rollTwiceKeep, keptRoll,
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
-  unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes
+  unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -382,4 +382,44 @@ test("Battle Scars: +1 per wound, up to +3 (step 50b)", () => {
   assert.equal(effectDamage(scars, { wounds: 2 }), "2");
   assert.equal(effectDamage(scars, { wounds: 5 }), "3");
   assert.equal(effectDamage({ ...scars, value: 0 }, { wounds: 5 }), "5");
+});
+
+test("card buttons appear only when they fit, once per card (step 50b2, GAPS 198)", () => {
+  const use = (item, fields) => ({ ...blankEffect("use"), item, itemId: item, ...fields });
+  const effects = [
+    use("Whim", { action: "reroll", roll: "test", requires: "ruin", failAgain: "shadowblight" }),
+    use("Favourite", { action: "reroll", roll: "test", requires: "natural1" }),
+    use("Savage", { action: "reroll", roll: "test", ability: "strength", requires: "failed" }),
+    use("Ingenuity", { action: "success", roll: "test", requires: "failed", frequency: "day", used: false })
+  ];
+  const names = card => cardButtons(effects, "test", card).map(button => button.item);
+  assert.deepEqual(names({ tier: "success" }), []);
+  assert.deepEqual(names({ tier: "ruin", natural: 1, ability: "agility" }), ["Whim", "Favourite", "Ingenuity"]);
+  assert.deepEqual(names({ tier: "failure", ability: "strength" }), ["Savage", "Ingenuity"]);
+  assert.deepEqual(names({ tier: "ruin", used: ["Whim"] }), ["Ingenuity"]);
+  assert.deepEqual(cardButtons(effects, "attack", { tier: "ruin" }), []);
+  assert.equal(cardButtons(effects, "test", { tier: "ruin" })[0].failAgain, "shadowblight");
+  const spent = [{ ...effects[3], used: true }];
+  assert.deepEqual(cardButtons(spent, "test", { tier: "failure" }), []);
+});
+
+test("Go Big or Go Home: no Neutral on the Chance Die (step 50b2)", () => {
+  const usual = total => (total >= 10 ? "positive" : total >= 6 ? "neutral" : "negative");
+  const split = statBonuses([stat("chanceSplit", 8, "set")]).chanceSplit;
+  assert.equal(chanceWithSplit(7, split, usual), "negative");
+  assert.equal(chanceWithSplit(8, split, usual), "positive");
+  assert.equal(chanceWithSplit(7, undefined, usual), "neutral");
+});
+
+test("Armoured Paragon: at most +2 DR from armour on Agility tests (step 50b2)", () => {
+  const cap = statBonuses([stat("armourAgilityMax", 2, "set")]).armourAgilityMax;
+  assert.equal(cappedArmourDr(6, cap), 2);
+  assert.equal(cappedArmourDr(0, cap), 0);
+  assert.equal(cappedArmourDr(4, undefined), 4);
+});
+
+test("new actions only at their events (step 50b2)", () => {
+  assert.deepEqual(effectProblems({ ...blankEffect("hook"), event: "panicFailure", action: "ruinAsFailure" }), []);
+  assert.deepEqual(effectProblems({ ...blankEffect("hook"), event: "rest", action: "ruinAsFailure" }), ["ruinAsFailure at rest"]);
+  assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "success", roll: "test", requires: "halfHp" }), ["requires: halfHp"]);
 });

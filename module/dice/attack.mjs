@@ -302,7 +302,7 @@ export async function settleAttackCard(actor, data) {
     ruinNote: nowRuined && !inputs.ruinedBefore ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
     // Powers are not weapon attacks: no maximum damage (GAPS 119).
     fortune: await fortuneSection(data, {
-      tier, damage: Boolean(damage && !damage.invalid), maximized: state.maximized, attack: !power
+      tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), maximized: state.maximized, attack: !power
     })
   });
   return { content, rolls };

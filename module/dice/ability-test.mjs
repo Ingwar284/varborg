@@ -27,6 +27,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { cappedArmourDr } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -80,6 +81,8 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
     formula: `${diceFormula(mode)} + @ability + @aid`,
     rollData: { ability: abilityScore, aid },
     mode, abilityScore, aid, dr,
+    // The ability, for feats that work on one (Savage Strength, step 50b2).
+    ability,
     context: {
       title,
       purpose,
@@ -135,7 +138,9 @@ async function renderTestCard(data, withFortune) {
   const rules = resolveTest({
     dice: state.dice.map(die => die.value), mode: inputs.mode, ability: inputs.abilityScore, dr: inputs.dr, aid: inputs.aid
   });
-  const result = { ...rules, tier: fortuneTier(rules.tier, state.softened) };
+  // Human Ingenuity turns a failed test into a Success (GAPS 198).
+  const softened = fortuneTier(rules.tier, state.softened);
+  const result = { ...rules, tier: state.succeeded && ["failure", "ruin"].includes(softened) ? "success" : softened };
   state.tier = result.tier;
   const content = await renderTemplate(CARD_TEMPLATE, {
     ...inputs.context,
@@ -146,7 +151,7 @@ async function renderTestCard(data, withFortune) {
     tier: result.tier,
     tierLabel: game.i18n.localize(`VARBORG.Tier.${result.tier}`),
     naturalNote: naturalNote(rules),
-    fortune: withFortune ? await fortuneSection(data, { tier: result.tier }) : null
+    fortune: withFortune ? await fortuneSection(data, { tier: result.tier, natural: rules.natural }) : null
   });
   return { content, result };
 }
@@ -174,6 +179,8 @@ export function actorTestModifiers(actor, ability) {
   const { state } = carrying(items, actor.system.abilities.toughness, actor.system.statBonuses);
   const carryingState = carryingWithConditions(actor.statuses, state);
   const modifiers = testModifiers({ ability, armour, carryingState });
+  // Armoured Paragon: at most +2 DR from armour on Agility tests (step 50b2).
+  modifiers.armourDr = cappedArmourDr(modifiers.armourDr, actor.system.statBonuses?.armourAgilityMax);
   return { ...modifiers, armourName: armour ? actor.items.get(armour.id)?.name ?? null : null };
 }
 

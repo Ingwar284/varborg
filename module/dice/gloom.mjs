@@ -327,7 +327,7 @@ export async function settleGloomCard(actor, data) {
     takeLabel,
     takeDamage: dealt,
     takeCondition: condition,
-    fortune: await fortuneSection(data, { tier, damage: Boolean(damage && !damage.invalid), taken: dealt })
+    fortune: await fortuneSection(data, { tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), taken: dealt })
   });
   return { content, rolls };
 }

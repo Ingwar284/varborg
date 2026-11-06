@@ -9,7 +9,7 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CHOICE_KINDS, CHOICE_FROM, VERSUS, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, blankEffect
 } from "../rules/item-effects.mjs";
 import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -52,6 +52,8 @@ export function effectsContext(document) {
       keeps: labels(KEEPS, "Effects.Keep"),
       requireList: labels(HOOK_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       rollRequireList: labels(ROLL_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
+      cardRequireList: labels(CARD_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
+      failAgainList: labels(FAIL_AGAIN, "Effects.FailAgain", "VARBORG.Effects.FailAgain.none"),
       hookConditions: labels(CONDITIONS, "Condition"),
       choiceKinds: labels(CHOICE_KINDS, "Effects.Choice.Kind"),
       choiceFrom: labels(CHOICE_FROM, "Effects.Choice.From"),
@@ -71,7 +73,9 @@ export function effectsContext(document) {
         isChoice: effect.kind === "choice",
         choiceHasFrom: ["feat", "spell"].includes(effect.choose),
         choiceIsSpell: effect.choose === "spell",
-        isReroll: effect.action === "reroll",
+        // Reroll and Success buttons on cards (steps 49g, 50b2).
+        isReroll: ["reroll", "success"].includes(effect.action),
+        isRerollOnly: effect.action === "reroll",
         hasAmount: ["heal", "roll", "gainEmber", "gainFortune"].includes(effect.action),
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
@@ -131,6 +135,7 @@ export function listenToEffects(sheet) {
       // Hooks and rolls have different "only while" lists (step 50a).
       if (field === "kind" && effect.kind === "hook" && !HOOK_REQUIRES.includes(effect.requires)) effect.requires = "";
       if (field === "kind" && ["roll", "reminder"].includes(effect.kind) && !ROLL_REQUIRES.includes(effect.requires)) effect.requires = "";
+      if (field === "kind" && effect.kind === "use" && !CARD_REQUIRES.includes(effect.requires)) effect.requires = "";
       // A different kind of choice forgets the old choice (step 49h).
       if (["choose", "from"].includes(field)) {
         effect.chosen = "";

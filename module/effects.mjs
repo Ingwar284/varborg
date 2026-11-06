@@ -17,6 +17,7 @@ import {
 } from "./rules/item-effects.mjs";
 import { gainEmber } from "./pools.mjs";
 import { isDead } from "./deaths-door.mjs";
+import { rollChanceDie } from "./dice/chance-die.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -189,6 +190,11 @@ export async function doEffectAction(actor, effect) {
       acted: true
     };
   }
+  if (effect.action === "chanceDie") {
+    // Pack Rat (step 50b2): the Chance Die posts its own card.
+    await rollChanceDie(actor);
+    return { lines: [i18n.format("VARBORG.Effects.ChanceRolled", { item, note })], rolls: [], acted: true };
+  }
   if (effect.action === "addCondition" && effect.condition) {
     if (!actor.statuses.has(effect.condition)) await actor.toggleStatusEffect(effect.condition, { active: true });
     const condition = i18n.localize(`VARBORG.Condition.${effect.condition}`);
@@ -208,8 +214,9 @@ export async function doEffectAction(actor, effect) {
  */
 export async function runItemHooks(actor, event) {
   if (actor?.type !== "character" || isDead(actor)) return;
-  // Rolling twice is done by the roll; Steady nerves by the Panic card.
-  const hooks = itemHooks(actor, event).filter(hook => !["rollTwice", "steadyNerves"].includes(hook.action));
+  // Rolling twice is done by the roll; Steady nerves and Dwarven
+  // Doughtiness by the Panic test.
+  const hooks = itemHooks(actor, event).filter(hook => !["rollTwice", "steadyNerves", "ruinAsFailure"].includes(hook.action));
   if (!hooks.length) return;
   const i18n = game.i18n;
   const lines = [];

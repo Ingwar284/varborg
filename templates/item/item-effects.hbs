@@ -97,6 +97,11 @@
     {{/if}}
     {{#if isReroll}}
     <select data-effect-field="roll" data-tooltip="{{localize 'VARBORG.Effects.RerollHint'}}" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rerollRolls selected=roll localize=true}}</select>
+    <select data-effect-field="requires" data-tooltip="{{localize 'VARBORG.Effects.CardWhenHint'}}" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../cardRequireList selected=requires localize=true}}</select>
+    <select data-effect-field="ability" aria-label="{{localize 'VARBORG.Effects.AbilityLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../abilities selected=ability localize=true}}</select>
+    {{#if isRerollOnly}}
+    <select data-effect-field="failAgain" data-tooltip="{{localize 'VARBORG.Effects.FailAgainHint'}}" aria-label="{{localize 'VARBORG.Effects.FailAgainLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../failAgainList selected=failAgain localize=true}}</select>
+    {{/if}}
     {{/if}}
     {{/if}}
     {{#if isReminder}}

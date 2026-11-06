@@ -18,11 +18,22 @@
  */
 
 import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
-import { collectEffects, rerollItems } from "./rules/item-effects.mjs";
+import { collectEffects, cardButtons } from "./rules/item-effects.mjs";
+import { rollShadowblight } from "./shadowblight.mjs";
 import { hasFrequency } from "./rules/uses.mjs";
 
-/** An item's reroll button on a card: its action is "item:<item id>" (step 49g). */
+/**
+ * An item's button on a card: "item:<item id>" rerolls (step 49g),
+ * "item:<item id>:success" makes a failed test a Success (step 50b2).
+ */
 const ITEM_PREFIX = "item:";
+const SUCCESS = "success";
+
+/** The item id and action of an item button. */
+function itemAction(action) {
+  const [itemId, kind] = action.slice(ITEM_PREFIX.length).split(":");
+  return { itemId, kind: kind === SUCCESS ? SUCCESS : SPEND.REROLL };
+}
 
 /** The kind of roll a card shows, for item rerolls (step 49g). */
 function cardRoll(data) {
@@ -101,17 +112,23 @@ export function fortuneFlags(data) {
 export async function fortuneSection(data, shown) {
   const i18n = game.i18n;
   data.offered = availableSpends({ card: data.card, ...shown });
-  // Items of the card's character that offer a reroll, while their use is
-  // not spent, wherever Fortune could reroll (step 49g).
+  // Items of the card's character that offer a reroll or a Success, while
+  // their use is not spent, wherever Fortune could reroll (steps 49g, 50b2).
+  // Each item once per card.
   const actor = data.offered.includes(SPEND.REROLL) ? await fromUuid(data.actorUuid) : null;
-  const items = actor?.items ? rerollItems(collectEffects(actor.items), cardRoll(data)) : [];
-  data.offered.push(...items.map(entry => `${ITEM_PREFIX}${entry.itemId}`));
+  const used = data.state.log.map(entry => entry.itemId).filter(Boolean);
+  const items = actor?.items
+    ? cardButtons(collectEffects(actor.items), cardRoll(data), { tier: shown.tier, natural: shown.natural, ability: data.inputs?.ability, used })
+    : [];
+  const keyOf = entry => `${ITEM_PREFIX}${entry.itemId}${entry.action === SUCCESS ? `:${SUCCESS}` : ""}`;
+  data.offered.push(...items.map(keyOf));
   return renderTemplate(BUTTONS_TEMPLATE, {
     buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
       ? {
         action,
-        icon: ICONS[SPEND.REROLL],
-        label: i18n.format("VARBORG.Effects.RerollButton", { item: items.find(entry => action === `${ITEM_PREFIX}${entry.itemId}`)?.item ?? "" })
+        icon: itemAction(action).kind === SUCCESS ? "fa-solid fa-screwdriver-wrench" : ICONS[SPEND.REROLL],
+        label: i18n.format(itemAction(action).kind === SUCCESS ? "VARBORG.Effects.SuccessButton" : "VARBORG.Effects.RerollButton",
+          { item: items.find(entry => action === keyOf(entry))?.item ?? "" })
       }
       : {
         action,
@@ -121,8 +138,10 @@ export async function fortuneSection(data, shown) {
           cost: FORTUNE_COST
         })
       })),
-    log: data.state.log.map(entry => (entry.item
-      ? i18n.format("VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item })
+    log: data.state.log.map(entry => (entry.failedAgain
+      ? i18n.format("VARBORG.Effects.FailedAgain", { item: entry.item, note: entry.note || i18n.localize("VARBORG.Effects.SeeText") })
+      : entry.item
+      ? i18n.format(entry.action === SUCCESS ? "VARBORG.Effects.SuccessLog" : "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item })
       : i18n.format("VARBORG.Fortune.Spent", {
         name: entry.name,
         use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
@@ -220,16 +239,22 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   const spender = await fromUuid(spenderUuid);
   if (!actor || !spender) return { error: "VARBORG.Fortune.Gone" };
   const entry = { name: spender.name, action };
+  let failAgain = null;
   if (action.startsWith(ITEM_PREFIX)) {
-    // An item's reroll: its use is spent instead of Fortune (step 49g).
-    const item = actor.items.get(action.slice(ITEM_PREFIX.length));
+    // An item's reroll or Success: its use is spent instead of Fortune
+    // (steps 49g, 50b2).
+    const { itemId, kind } = itemAction(action);
+    const item = actor.items.get(itemId);
     if (!item) return { error: "VARBORG.Fortune.Gone" };
     if (hasFrequency(item.system)) {
       if (item.system.frequencyUsed) return { error: "VARBORG.Fortune.NotNow" };
       await item.update({ "system.frequencyUsed": true });
     }
-    entry.action = SPEND.REROLL;
+    entry.action = kind;
     entry.item = item.name;
+    entry.itemId = item.id;
+    const effect = collectEffects([item]).find(found => found.kind === "use" && found.action === kind && found.roll === cardRoll(data));
+    failAgain = effect?.failAgain ? effect : null;
   } else {
     if (!canSpend(spender.system.fortune)) return { error: "VARBORG.Fortune.None" };
     await spender.update({ "system.fortune": spend(spender.system.fortune) });
@@ -238,9 +263,14 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   const state = data.state;
   switch (entry.action) {
     case SPEND.REROLL:
-      // New dice; an earlier Triumph → Success belonged to the old roll.
+      // New dice; an earlier Triumph → Success or Human Ingenuity belonged
+      // to the old roll.
       state.dice = null;
       state.softened = false;
+      state.succeeded = false;
+      break;
+    case SUCCESS:
+      state.succeeded = true;
       break;
     case SPEND.SOFTEN:
       entry.tier = state.tier;
@@ -263,7 +293,14 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   }
   state.log.push(entry);
 
-  const { content, rolls } = await settlers[data.card](actor, data, message);
+  let { content, rolls } = await settlers[data.card](actor, data, message);
+  // An item's reroll that fails again (GAPS 198): its note on the card, and
+  // for Whim of the Fey the Shadowblight table.
+  if (failAgain && entry.action === SPEND.REROLL && ["failure", "ruin"].includes(state.tier)) {
+    state.log.push({ name: spender.name, item: entry.item, failedAgain: true, note: failAgain.note });
+    ({ content } = await settlers[data.card](actor, data, message));
+    if (failAgain.failAgain === "shadowblight") await rollShadowblight(actor);
+  }
   await message.update({
     content,
     rolls: [...message.rolls, ...rolls, ...extraRolls].map(roll => roll.toJSON()),

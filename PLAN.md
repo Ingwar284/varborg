@@ -1121,11 +1121,12 @@ every feat in the batch ends with a status.
         feats have a status. New: an effect can reroll damage 1s (Hawkeye),
         and per-wound damage can have a limit (Battle Scars, up to +3).
         EFFECTS_CONTENT 5.
-      - 50b2. Card buttons after a test (GAPS 198): Whim of the Fey,
-        Fortune's Favourite, Savage Strength, Human Ingenuity. Also
-        Dwarven Doughtiness (Ruin counts as Failure), Go Big or Go Home
-        (chance die 2–7 / 8+), Armoured Paragon (armour penalties) and
-        Pack Rat (a chance die Use).
+      - ~~50b2. Card buttons after a test.~~ Done: Whim of the Fey (on a
+        Ruin; failing again rolls Shadowblight), Fortune's Favourite (on a
+        natural 1), Savage Strength (failed Strength test) and Human
+        Ingenuity (Success, once a day) are buttons on test cards, each
+        once per card. Dwarven Doughtiness, Go Big or Go Home, Armoured
+        Paragon and Pack Rat work. EFFECTS_CONTENT 6.
       - 50b3. Damage types (GAPS 199): Firebug, Ancestral Resonance,
         Tempered by the Forge.
       - 50b4. Gifts (GAPS 201): the Clan Heirloom relic and Beast-Tamer's

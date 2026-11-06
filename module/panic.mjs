@@ -89,7 +89,15 @@ export async function rollPanicTest(actor) {
   // Item effects after a Panic test (step 49f).
   await runItemHooks(actor, ["failure", "ruin"].includes(result.tier) ? "panicFailure" : "panicSuccess");
 
-  const dice = panicDice(result.tier);
+  // Dwarven Doughtiness: a Ruin counts as a Failure (step 50b2).
+  const doughty = result.tier === "ruin" ? itemHooks(actor, "panicFailure").find(hook => hook.action === "ruinAsFailure") : null;
+  if (doughty) {
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Panic.RuinAsFailure", { item: doughty.item, name: actor.name }))}</p></div>`
+    });
+  }
+  const dice = panicDice(doughty ? "failure" : result.tier);
   // Steady nerves, while unspent: the player chooses first (GAPS 197).
   const nerves = dice ? itemHooks(actor, "panicFailure").find(hook => hook.action === "steadyNerves") : null;
   if (nerves) {

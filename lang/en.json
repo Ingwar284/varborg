@@ -278,7 +278,8 @@
       "CardTitle": "Chance Die",
       "negative": "Negative",
       "neutral": "Neutral",
-      "positive": "Positive"
+      "positive": "Positive",
+      "SplitNote": "{item}: no Neutral result. {split} or more is the best possible outcome, less the worst."
     },
     "Expendable": {
       "none": "None",
@@ -916,6 +917,7 @@
       "ByHand": "The system does not apply this. The Dark Master decides what happens to the character.",
       "Ends": "{name}: {result} ends.",
       "UsedUp": "{name}: {result} used up.",
+      "RuinAsFailure": "{item}: {name}’s Ruin counts as a Failure, so the Panic table is rolled with 1d10.",
       "Nerves": {
         "Failed": "{name} fails the Panic test.",
         "Offer": "{item}: hold yourself together and treat the result as a Success, gaining one level of Fatigued, or roll on the Panic table.",
@@ -2562,7 +2564,10 @@
         "fortuneDie": "Fortune die (starting and regained)",
         "unarmedDie": "Unarmed damage die",
         "rangePercent": "Weapon ranges, in per cent",
-        "reloadActions": "Actions to reload"
+        "reloadActions": "Actions to reload",
+        "armourAgilityMax": "Most DR from armour on Agility tests",
+        "heavyDefenceIgnored": "Heavy armour adds no defence DR (1 = yes)",
+        "chanceSplit": "Chance Die without Neutral: Positive from"
       },
       "OpLabel": "How",
       "Op": {
@@ -2678,7 +2683,10 @@
         "gainFortune": "Gain Fortune",
         "reprieve": "Harkin's Reprieve: do not die",
         "deathsDoorInstead": "Go to Death's Door instead",
-        "steadyNerves": "Steady nerves: a Success button on the failed Panic card"
+        "steadyNerves": "Steady nerves: a Success button on the failed Panic card",
+        "ruinAsFailure": "A Panic Ruin counts as a Failure",
+        "success": "Offer a Success on failed cards",
+        "chanceDie": "Roll the Chance Die"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2693,7 +2701,18 @@
       "Requires": {
         "always": "always",
         "halfHp": "at half HP or lower",
-        "noCombat": "outside combat"
+        "noCombat": "outside combat",
+        "ruin": "on a Ruin",
+        "natural1": "on a natural 1",
+        "failed": "on a Failure or Ruin"
+      },
+      "CardWhenHint": "Which cards show the button. An ability limits it to tests of that ability.",
+      "FailAgainLabel": "If it fails again",
+      "FailAgainHint": "When the reroll is a Failure or Ruin again: nothing, the note on the card, or the note and a roll on the Shadowblight table (Whim of the Fey).",
+      "FailAgain": {
+        "none": "nothing more",
+        "note": "add the note",
+        "shadowblight": "the note and Shadowblight"
       },
       "HookMode": {
         "auto": "Do it",
@@ -2730,6 +2749,10 @@
       "UseHint": "What pressing the item’s Use button does, after posting its text. A reroll is not done from the button: the item offers a Reroll button on its owner’s cards while its use is not spent.",
       "RerollHint": "Which cards get the item’s Reroll button.",
       "RerollButton": "Reroll ({item})",
+      "SuccessButton": "Success ({item})",
+      "SuccessLog": "{name} uses {item}: the test counts as a Success",
+      "FailedAgain": "{item} fails again: {note}",
+      "ChanceRolled": "{item}: the Chance Die is rolled ({note}).",
       "RerollLog": "{name} uses {item}: reroll",
       "RerollSpent": "{item} is already used.",
       "VersusLabel": "Against",
