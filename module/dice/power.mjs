@@ -256,7 +256,7 @@ async function rollPowerTest(actor, power) {
   const effectContext = {
     roll: "power", ability, targetCategory: target?.system?.category ?? "", damageType: power.system.damageType ?? "",
     // For effects on one power against a noted kind (Field notes, GAPS 214).
-    powerName: power.name, targetName: target?.name ?? ""
+    powerName: power.name, targetName: target?.name ?? "", targetUuid: target?.uuid ?? ""
   };
   const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
   let fromConditions = totalModifiers(conditionMods);
@@ -367,6 +367,7 @@ async function rollPowerTest(actor, power) {
     area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
       .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
     areaDamageType: power.system.damageType ?? "",
+    ignoresArmour: Boolean(power.system.ignoresArmour),
     // What each result gives the targets and user (step 51c), with the chosen options.
     outcomes: withChosen(outcomeInputs(actor, power), [options.option, options.option2]),
     inflicts: target?.type !== "character",

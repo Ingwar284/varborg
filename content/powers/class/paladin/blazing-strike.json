@@ -24,6 +24,7 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant"
+    "damageType": "radiant",
+    "automation": "auto"
   }
 }

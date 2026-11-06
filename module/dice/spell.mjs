@@ -112,7 +112,7 @@ function checkRitualUse(ritual, turn) {
 function abilityMods(actor, ability, extra = [], target = null, damageType = "") {
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
-  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability, targetCategory: target?.system?.category ?? "", damageType }), ...extra];
+  const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, { roll: "spell", ability, targetCategory: target?.system?.category ?? "", damageType, targetUuid: target?.uuid ?? "" }), ...extra];
   return { automatic, fromConditions: totalModifiers(conditionMods), notes: conditionNotes(conditionMods), mods: conditionMods };
 }
 
@@ -138,7 +138,7 @@ export async function castSpell(actor, spell) {
   const facts = castingFacts(actor, spell);
   const sanity = abilityMods(actor, SPELL_ABILITY, [], target, spell.system.damageType ?? "");
   // Item effects for the player to tick when they apply (PLAN step 49d).
-  const optional = itemOptionalMods(actor, { roll: "spell", ability: SPELL_ABILITY, targetCategory: target?.system?.category ?? "", damageType: spell.system.damageType ?? "" });
+  const optional = itemOptionalMods(actor, { roll: "spell", ability: SPELL_ABILITY, targetCategory: target?.system?.category ?? "", damageType: spell.system.damageType ?? "", targetUuid: target?.uuid ?? "" });
   const startDr = castingDr(spell.system);
   const spellListLabel = i18n.localize(`VARBORG.Class.SpellList.${spell.system.spellList}`);
   const classListLabel = facts.classList ? i18n.localize(`VARBORG.Class.SpellList.${facts.classList}`) : i18n.localize("VARBORG.Spell.NoClass");
@@ -268,6 +268,7 @@ export async function castSpell(actor, spell) {
     area: areaTargets([...game.user.targets].map(token => token.actor).filter(Boolean)
       .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid),
     areaDamageType: spell.system.damageType ?? "",
+    ignoresArmour: Boolean(spell.system.ignoresArmour),
     // What each result gives the targets and caster (step 51c).
     outcomes: outcomeInputs(actor, spell),
     inflicts: target?.type !== "character",

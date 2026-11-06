@@ -52,6 +52,8 @@ export function outcomeFields() {
     thrallDamage: new StringField({ required: true, blank: true, initial: "" }),
     thrallMax: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
     thrallSkip: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
+    // Its damage ignores armour (Sacred flame, step 51e).
+    ignoresArmour: new BooleanField({ initial: false }),
     // How many options a Triumph lets the user choose (Daring Stunt: 2, GAPS 224).
     triumphPicks: new NumberField({ required: true, nullable: false, integer: true, min: 1, max: 2, initial: 1 }),
     buffEffects: effectFields().effects

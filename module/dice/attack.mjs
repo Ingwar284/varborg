@@ -89,7 +89,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const optional = itemOptionalMods(actor, {
     roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode),
     weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: weapon.damageType ?? "",
-    targetStatuses: [...(target?.statuses ?? [])]
+    targetStatuses: [...(target?.statuses ?? [])], targetUuid: target?.uuid ?? ""
   });
   const optionalEffects = await optionalEffectsField(optional);
   const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
@@ -328,7 +328,7 @@ export async function settleAttackCard(actor, data) {
         key: target.uuid,
         damage: damage.total,
         foeUuid: target.uuid,
-        armour: target.armour,
+        armour: inputs.ignoresArmour ? "" : target.armour,
         attack: inputs.attackName,
         label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
       })),
@@ -345,7 +345,8 @@ export async function settleAttackCard(actor, data) {
     inflict = {
       damage: damage.total,
       foeUuid: inputs.foe?.uuid ?? "",
-      armour: from ?? "",
+      // Damage that ignores armour (Sacred flame, step 51e).
+      armour: inputs.ignoresArmour ? "" : from ?? "",
       attack: inputs.attackName,
       label: inputs.foe
         ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: inputs.foe.name })
@@ -395,8 +396,8 @@ function attackConditions(actor, target, mode, ability, item) {
   const effectContext = {
     roll: "attack", ability, weapon: weaponTags(item.system, mode),
     weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: item.system.damageType ?? "",
-    // The target's conditions (Hit 'em where it hurts, step 51a).
-    targetStatuses: [...(target?.statuses ?? [])]
+    // The target's conditions (Hit 'em where it hurts, step 51a), and who it is (step 51e).
+    targetStatuses: [...(target?.statuses ?? [])], targetUuid: target?.uuid ?? ""
   };
   return {
     // Unbroken: Frightened gives no Bane on attacks (step 50f).

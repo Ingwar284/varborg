@@ -322,6 +322,8 @@ export async function settleGloomCard(actor, data) {
     const taken = featLoweredDamage(resistedTaken, state.featLowered);
     const featLowered = resistedTaken - taken;
     const lowered = taken - lowerDamage(taken, state.lowered);
+    // For a protector taking it instead (GAPS 229).
+    state.lastBefore = before;
     damage = {
       formula: part.text,
       rolled: state.damage,
@@ -333,7 +335,8 @@ export async function settleGloomCard(actor, data) {
       soak: state.soak,
       featLowered,
       lowered,
-      taken: taken - lowered,
+      taken: state.intercepted ? 0 : taken - lowered,
+      intercepted: state.intercepted ?? null,
       minimum: taken > 0 && taken > resisted - state.soak
     };
   }

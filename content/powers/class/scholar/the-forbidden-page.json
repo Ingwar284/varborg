@@ -23,6 +23,53 @@
     },
     "sustaining": false,
     "kept": false,
-    "usedOutside": false
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "condition",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "stupefied",
+        "duration": {
+          "kind": "rounds",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "every creature within 30' that can hear you, allies included"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "the words keep reading you: roll on the Shadowblight table"
+      }
+    ],
+    "automation": "partial"
   }
 }

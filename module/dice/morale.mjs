@@ -19,6 +19,8 @@
  * shows.
  */
 
+import { armourAfterIgnored, statBonuses, collectEffects } from "../rules/item-effects.mjs";
+import { stepDownArmourDie } from "../rules/attack.mjs";
 import { hpAfterDamage } from "../rules/health.mjs";
 import {
   MORALE_DICE, DEMORALISED_DIE, foeDamageTaken, canRollMorale, moraleTriggers, moraleResult, moraleDice
@@ -51,6 +53,8 @@ export async function inflictDamage(foe, damage, armour, attack) {
   const i18n = game.i18n;
   const rolls = [];
   let soak = 0;
+  // Marks that ignore some or all of its armour (Read the beast, Point out the flaw, step 51e).
+  armour = armourAfterIgnored(armour, statBonuses(collectEffects(foe.items)).armourIgnored, stepDownArmourDie);
   if (armour) {
     const soakRoll = new Roll(armour);
     await soakRoll.evaluate();

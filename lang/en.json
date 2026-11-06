@@ -2616,7 +2616,8 @@
         "fastDifficultDr": "Driving DR under difficult circumstances at fast speed",
         "throwStrength": "Thrown attacks test Strength instead of Agility (1 = yes)",
         "pistolAgility": "The Flintlock pistol tests Agility instead of Presence (1 = yes)",
-        "spellbookNoBane": "Spells ticked In spellbook have no off-list Bane (1 = yes)"
+        "spellbookNoBane": "Spells ticked In spellbook have no off-list Bane (1 = yes)",
+        "armourIgnored": "Tiers of this foe's armour ignored when it is hit (4 = all)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2638,7 +2639,8 @@
         "gloomTest": "Tests against gloom abilities only",
         "driving": "Driving tests only",
         "morale": "Morale of foes (Boon: 3d6 keep the two lowest, the foe holds; Bane: keep the two highest, it breaks)",
-        "defendAgainst": "Defending against this creature (on a foe: its defenders get it)"
+        "defendAgainst": "Defending against this creature (on a foe: its defenders get it)",
+        "attackAgainst": "Attacking this creature (on a foe: its attackers get it)"
       },
       "AbilityLabel": "Ability",
       "AnyAbility": "Any ability",
@@ -2775,7 +2777,8 @@
         "recordKind": "Record the targeted creature's kind",
         "endBuff": "End this buff (Revert)",
         "stayAtOne": "Offer to stay at 1 HP instead (Not the face!)",
-        "lowerReroll": "Card button: the attacker rerolls the damage, keep the lower"
+        "lowerReroll": "Card button: the attacker rerolls the damage, keep the lower",
+        "intercept": "Card button on allies' cards: take their damage instead (amount: half for half)"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2906,7 +2909,9 @@
         "chosenDamageType": "The chosen damage type",
         "persistent": "Persistent damage of any type",
         "allies": "Also on the other player characters' cards",
-        "notedKind": "Kinds written in this item's notes"
+        "notedKind": "Kinds written in this item's notes",
+        "quarry": "Only against your quarry",
+        "subject": "Others' attacks against your subject"
       },
       "Choice": {
         "KindLabel": "Choose",
@@ -2980,7 +2985,10 @@
       "BendLog": "{name} uses {item}: damage {value}, the lower counts.",
       "StayOffer": "{item}: {name} may collapse dramatically and stay at 1 HP instead.",
       "StayButton": "{item}: stay at 1 HP (ember and reaction)",
-      "Stayed": "{item}: {name} collapses dramatically but stays at 1 HP. As long as they do not act, they look dead."
+      "Stayed": "{item}: {name} collapses dramatically but stays at 1 HP. As long as they do not act, they look dead.",
+      "InterceptButton": "{item}: take the damage instead",
+      "InterceptLog": "{name} uses {item} and takes {value} damage instead.",
+      "Intercepted": "{name} takes it instead: {taken} damage after their armour. This character takes none."
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",
@@ -3020,7 +3028,10 @@
         "cure": "Ends a condition",
         "thralls": "Thralls raised (amount)",
         "rigDamage": "Damage to the user's rig",
-        "surge": "A Photonic Surge"
+        "surge": "A Photonic Surge",
+        "quarry": "Becomes the quarry",
+        "subject": "Becomes the subject",
+        "ember": "The Ember pool gains (amount)"
       },
       "Who": {
         "target": "Each target",
@@ -3073,7 +3084,11 @@
       "ThrallsDestroyed": "{count} of {name}'s thralls are destroyed.",
       "ThrallsAsk": "Thralls to destroy",
       "ThrallsAskHint": "{have} thrall(s). Each adds {per} damage, up to {max}.",
-      "ThrallsNone": "{name} has no thralls for {power}."
+      "ThrallsNone": "{name} has no thralls for {power}.",
+      "Quarry": "{name} is {user}'s quarry until the encounter ends.",
+      "Subject": "{name} is {user}'s subject until the encounter ends.",
+      "QuarryLine": "Quarry: {name}",
+      "SubjectLine": "Subject: {name}"
     }
   }
 }

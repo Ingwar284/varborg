@@ -78,7 +78,10 @@ export const CHOICE_FROM_ELEMENT = "element";
 export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random", CHOICE_FROM_ELEMENT];
 
 /** Only against foes of the item's chosen Bestiary category (Favoured prey). */
-export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent", "allies", "notedKind"];
+export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent", "allies", "notedKind",
+  // Step 51e (GAPS 230): only against the owner's quarry; or, on a
+  // Scholar's item, on the other characters' attacks against the Scholar's subject.
+  "quarry", "subject"];
 
 /**
  * The kinds of creature written in an item's text choice, such as "Wax Ox,
@@ -207,7 +210,7 @@ export const HOOK_ACTIONS = [
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
 export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage", "takeDamage",
-  "upgradeCompanion", "healCompanion", "hurtCompanion", "adrenaline", "lowerReroll",
+  "upgradeCompanion", "healCompanion", "hurtCompanion", "adrenaline", "lowerReroll", "intercept",
   // Step 51a3: make the compendium minion or vehicle named by `gift`, once
   // (GAPS 211); switch "mounted" on or off (GAPS 212); raise a thrall from
   // `gift`, and the Gravecaller's Thrall attack (GAPS 213); write the
@@ -300,7 +303,24 @@ export function chosenWeaponTraits(effects, itemId) {
 /** The card actions an item can offer (steps 49g, 50b2, 50d). */
 export const CARD_ACTIONS = ["reroll", "success", "lowerDamage",
   // The attacker rerolls the damage and the lower counts (Bend Fate, GAPS 227).
-  "lowerReroll"];
+  "lowerReroll",
+  // Another character takes the damage instead, all of it or (amount
+  // "half") half, through their own armour (Guardian, Faithful
+  // intercession, GAPS 229).
+  "intercept"];
+
+/**
+ * The damage a protector takes for an ally (GAPS 229): all of it, or half
+ * rounded down; armour then soaks it, and a hit still deals at least 1.
+ * @param {number} before  The damage before the ally's armour.
+ * @param {string} amount  "half", or anything else for all of it.
+ * @param {number} soak    The protector's soak roll.
+ */
+export function interceptedDamage(before, amount, soak = 0) {
+  const share = amount === "half" ? Math.floor((before ?? 0) / 2) : (before ?? 0);
+  if (share <= 0) return 0;
+  return Math.max(1, share - (soak ?? 0));
+}
 
 /**
  * Damage after feats lowered it by their rolls (Thickened dermis, Magical
@@ -458,8 +478,25 @@ export const STAT_TARGETS = [
   // Step 51a3: thrown attacks with Strength (War-Gallop, mounted); shoot
   // attacks with the Flintlock pistol use Agility (Steel and Shot, GAPS
   // 216); spells ticked In spellbook have no off-list Bane (Tome keeper).
-  "throwStrength", "pistolAgility", "spellbookNoBane"
+  "throwStrength", "pistolAgility", "spellbookNoBane",
+  // On a foe (a power's mark, step 51e): tiers of its armour ignored when
+  // it is hit (Read the beast 1, Point out the flaw 4: all of it).
+  "armourIgnored"
 ];
+
+/**
+ * A foe's armour die after "armourIgnored" marks (step 51e): stepped
+ * down one die per tier ignored, to none.
+ * @param {string} die      Such as "d6".
+ * @param {object} [bonus]  The armourIgnored entry of statBonuses.
+ * @param {Function} stepDown  One step down (stepDownArmourDie).
+ */
+export function armourAfterIgnored(die, bonus, stepDown) {
+  let result = die ?? "";
+  const tiers = Math.max(0, withStat(0, bonus));
+  for (let i = 0; i < tiers && result; i++) result = stepDown(result);
+  return result;
+}
 
 /** The life force die without effects: "reduce the DR by d4" (rules 3.11). */
 export const LIFE_FORCE_FACES = 4;
@@ -568,7 +605,10 @@ export const ROLL_KINDS = [
   "gloomTest", "driving", "morale",
   // On a foe: works for anyone defending against its attacks and gloom
   // abilities (a mark from Wrench and Twist or Needle-Spray, GAPS 223).
-  "defendAgainst"
+  "defendAgainst",
+  // On a foe: works for anyone attacking it, with weapons, powers or
+  // spells (Final citation: Boon, step 51e).
+  "attackAgainst"
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */
@@ -792,6 +832,9 @@ export function fitsRoll(effect, context) {
   if (effect.power && effect.power.trim().toLowerCase() !== String(context.powerName ?? "").trim().toLowerCase()) return false;
   // Only against a kind written in the item's text choice (Field notes, GAPS 214).
   if (effect.vs === "notedKind" && !notedKinds(effect.choices?.text).includes(String(context.targetName ?? "").trim().toLowerCase())) return false;
+  // The quarry and the subject (GAPS 230).
+  if (effect.vs === "quarry" && !(context.targetUuid && context.targetUuid === context.facts?.quarry)) return false;
+  if (effect.vs === "subject" && !context.allySubject) return false;
   // Only with damage of this type, such as fire (Firebug, step 50b3).
   if (effect.damageType && effect.damageType !== context.damageType) return false;
   if (effect.vs === "chosenCategory" && (!effect.choices?.category || effect.choices.category !== context.targetCategory)) return false;
@@ -1057,6 +1100,7 @@ export function cardButtons(effects, rollKind, card = {}) {
     if (effect.kind !== "use" || !CARD_ACTIONS.includes(effect.action) || effect.roll !== rollKind) continue;
     if (effect.action === "lowerDamage" && !(card.taken > 1)) continue;
     if (effect.action === "lowerReroll" && !(card.taken > 0)) continue;
+    if (effect.action === "intercept" && !(card.taken > 0)) continue;
     if (effect.frequency && effect.used) continue;
     if ((card.used ?? []).includes(effect.itemId)) continue;
     if (effect.ability && effect.ability !== card.ability) continue;

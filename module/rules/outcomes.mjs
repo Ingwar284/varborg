@@ -36,7 +36,10 @@ import { TIMER_KINDS, isRoundsFormula } from "./timers.mjs";
  *   only when `soaked` is ticked (GAPS 228);
  * surge: a Photonic Surge is triggered (the table is drawn).
  */
-export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder", "persistent", "damage", "lowerArmour", "fatigue", "partner", "cure", "thralls", "rigDamage", "surge"];
+export const OUTCOME_KINDS = ["condition", "heal", "buff", "reminder", "persistent", "damage", "lowerArmour", "fatigue", "partner", "cure", "thralls", "rigDamage", "surge",
+  // Step 51e: the targeted foe becomes the user's quarry or subject
+  // (GAPS 230); the Ember pool gains `amount` (Unravel).
+  "quarry", "subject", "ember"];
 
 /** Is it a Morph power ("Morph. One arm calcifies…")? Its buff replaces the last Morph's (GAPS 226). */
 export function isMorphPower(description) {
@@ -125,7 +128,9 @@ export function outcomeProblems(entry) {
   if (!OUTCOME_WHO.includes(entry?.who)) problems.push(`who: ${entry?.who}`);
   if (!OUTCOME_TIERS.some(tier => entry?.tiers?.[tier])) problems.push("no result ticked");
   if (["condition", "cure"].includes(entry?.kind) && !CONDITIONS.includes(entry.condition)) problems.push(`condition: ${entry.condition}`);
-  if (["heal", "persistent", "damage", "thralls", "rigDamage"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  if (["persistent", "damage", "thralls", "rigDamage", "ember"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  // Healing can be "full" (Absolution, step 51e).
+  if (entry?.kind === "heal" && entry.amount !== "full" && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
   if (entry?.kind === "persistent" && !OUTCOME_PERSISTENT.includes(entry.damageType)) problems.push(`damageType: ${entry.damageType}`);
   if (entry?.when && !OUTCOME_WHEN.includes(entry.when)) problems.push(`when: ${entry.when}`);
   if (entry?.when === "end" && entry.who !== "self") problems.push("when the power ends: only the user");

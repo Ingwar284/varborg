@@ -24,6 +24,53 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant"
+    "damageType": "radiant",
+    "outcomeEffects": [
+      {
+        "kind": "heal",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d6",
+        "option": "Heal",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "and end one condition on them by hand"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "Harm",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "a foe within 30': Inflict the damage; double damage to fiends"
+      }
+    ],
+    "automation": "partial"
   }
 }

@@ -39,6 +39,9 @@
     {{#if damage.lowered}}
     <p class="damage-line">{{localize "VARBORG.Fortune.Lowered"}}: −{{damage.lowered}}</p>
     {{/if}}
+    {{#if damage.intercepted}}
+    <p class="damage-line">{{damage.intercepted}}</p>
+    {{/if}}
     <p class="damage-line">
       {{localize "VARBORG.Defence.Taken"}}: <strong class="damage-total">{{damage.taken}}</strong>
       {{#if damage.minimum}}<span class="modifier">{{localize "VARBORG.Defence.Minimum"}}</span>{{/if}}

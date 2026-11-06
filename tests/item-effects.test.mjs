@@ -660,3 +660,22 @@ test("Field notes: kinds written down, Boon and no Ruin against them (step 51a3,
   assert.equal(withEffect(rollEffects([study], { roll: "power", powerName: "Study the specimen", targetName: "Wax Ox" }).auto)[0].noRuin, true);
   assert.deepEqual(effectProblems(study), []);
 });
+
+test("ally reactions, quarry, subject and ignored armour (step 51e, GAPS 229, 230)", async () => {
+  const { interceptedDamage, armourAfterIgnored } = await import("../module/rules/item-effects.mjs");
+  const { stepDownArmourDie } = await import("../module/rules/attack.mjs");
+  assert.equal(interceptedDamage(9, "", 3), 6);
+  assert.equal(interceptedDamage(9, "half", 3), 1);
+  assert.equal(interceptedDamage(9, "half", 0), 4);
+  assert.equal(interceptedDamage(0, ""), 0);
+  assert.equal(armourAfterIgnored("d6", { add: 1, set: null, min: null, times: 1 }, stepDownArmourDie), "d4");
+  assert.equal(armourAfterIgnored("d6", { add: 4, set: null, min: null, times: 1 }, stepDownArmourDie), "");
+  assert.equal(armourAfterIgnored("d6", undefined, stepDownArmourDie), "d6");
+  const quarry = roll({ roll: "attack", damage: "d4", vs: "quarry" });
+  assert.equal(fitsRoll(quarry, { roll: "attack", targetUuid: "g1", facts: { quarry: "g1" } }), true);
+  assert.equal(fitsRoll(quarry, { roll: "attack", targetUuid: "g2", facts: { quarry: "g1" } }), false);
+  const subject = roll({ roll: "attack", damage: "d6", vs: "subject", mode: "optional" });
+  assert.equal(fitsRoll(subject, { roll: "attack" }), false);
+  assert.equal(fitsRoll(subject, { roll: "attack", allySubject: true }), true);
+  assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "intercept", roll: "defence", vs: "allies", amount: "half" }), []);
+});

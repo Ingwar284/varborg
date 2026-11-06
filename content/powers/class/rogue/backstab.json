@@ -23,6 +23,31 @@
     },
     "sustaining": false,
     "kept": false,
-    "usedOutside": false
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "attack with Boon; if the target is surprised, Restrained, Blinded or next to an ally of yours and you succeed, it is a Triumph"
+      }
+    ],
+    "automation": "partial"
   }
 }

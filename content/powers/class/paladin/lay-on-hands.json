@@ -24,6 +24,53 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant"
+    "damageType": "radiant",
+    "outcomeEffects": [
+      {
+        "kind": "heal",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d8",
+        "option": "Heal",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "a living creature"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "Harm",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "against an undead, duskborn or fiend: Inflict the damage"
+      }
+    ],
+    "automation": "partial"
   }
 }

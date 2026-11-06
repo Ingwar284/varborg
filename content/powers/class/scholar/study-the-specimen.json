@@ -23,6 +23,114 @@
     },
     "sustaining": false,
     "kept": false,
-    "usedOutside": false
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "subject",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "you learn one fact of your choice: its strongest gloom ability, a weakness, or what it wants"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": false,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "you learn a second fact"
+      },
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "stupefied",
+        "duration": {
+          "kind": "rounds",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "this enigma confounds you"
+      }
+    ],
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "attack",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "subject",
+        "damageType": "",
+        "mode": "optional",
+        "grant": "",
+        "dr": 0,
+        "damage": "d6",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "companion": "minion",
+        "armour": "",
+        "power": "",
+        "option": "",
+        "note": "once per round: the Scholar told you where to strike"
+      }
+    ],
+    "automation": "partial"
   }
 }

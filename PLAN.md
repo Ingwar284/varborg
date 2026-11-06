@@ -1287,7 +1287,22 @@ one fight and one rest.
         paying their ember and reaction; Not the face! offers a "stay at
         1 HP" button at 0 HP (the wound gained is taken back). Improvised
         Cantrip's damage is d8 (its text). EFFECTS_CONTENT 19.
-      51e is Paladin to Wizard (77).
+      51e is Paladin to Wizard (77), in two parts (rulings GAPS 229–232):
+      - ~~51e. Tools, then Paladin, Priest, Ranger, Rogue and Scholar.~~
+        Done: 35 powers have a status. New: Guardian and Faithful
+        intercession are buttons on other characters' defence and gloom
+        cards (the protector takes the damage, or half, through their own
+        armour); the quarry and the subject are recorded like the dance
+        partner and shown on the sheet (Mark quarry's +d4 on the Ranger's
+        attacks; Study the specimen's +d6 tick on allies' attacks); marks
+        on a foe can help its attackers (Final citation: Boon) or ignore
+        tiers of its armour (Read the beast, Point out the flaw); powers
+        can ignore armour (Sacred flame, Assassinate); healing can be
+        "full" (Absolution); "What it gives" can add to the Ember pool.
+        Wounds move to 51e2 with the Sorcerer. EFFECTS_CONTENT 20.
+      - 51e2. Tools: "your next spell this turn" buffs, damage reduced by
+        a die from any source. Then Skullrider, Sorcerer, Sword Saint,
+        Warrior, Witch Hunter and Wizard (42 powers).
     - 51f. Spells (64). 51g. Rituals (63), mostly text with a reminder.
 
 **Milestone 11 review:** a Warrior, a Wizard and a Priest against three

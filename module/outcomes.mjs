@@ -79,6 +79,12 @@ function combatKey() {
  * @param {Actor} actor
  * @returns {{uuid: string, name: string}|null}
  */
+export function markOf(actor, kind) {
+  const mark = actor?.getFlag?.(SYSTEM, kind);
+  return mark && mark.combat === combatKey() ? mark : null;
+}
+
+/** The dance partner (GAPS 222). */
 export function partnerOf(actor) {
   const partner = actor?.getFlag?.(SYSTEM, "partner");
   return partner && partner.combat === combatKey() ? partner : null;
@@ -108,7 +114,7 @@ export async function settleOutcomes(data, tier) {
       op.sustained = inputs.sustained;
     }
     // Healing and damage are rolled here, so the card shows the dice.
-    if (["heal", "damage"].includes(entry.kind)) {
+    if (["heal", "damage"].includes(entry.kind) && entry.amount !== "full") {
       const roll = await new Roll(String(entry.amount || "0")).evaluate();
       rolls.push(roll);
       op.amount = roll.total;
@@ -173,7 +179,8 @@ async function runOp(op) {
       const hp = actor.system.hp;
       if (!hp) return null;
       const from = hp.value;
-      const to = Math.min(hp.max ?? Infinity, from + (op.amount ?? 0));
+      // "full": back to maximum HP (Absolution).
+      const to = entry.amount === "full" ? (hp.max ?? from) : Math.min(hp.max ?? Infinity, from + (op.amount ?? 0));
       if (to !== from) await actor.update({ "system.hp.value": to });
       return { healed: to - from, line: noted(i18n.format("VARBORG.Outcome.Healed", { name: actor.name, amount: to - from, from, to }), entry.note) };
     }
@@ -280,6 +287,22 @@ async function runOp51d(actor, op) {
       if (actor.type === "character") await runItemHooks(actor, "surge");
       return { line: noted(i18n.localize("VARBORG.Outcome.SurgeTriggered"), entry.note) };
     }
+    case "quarry":
+    case "subject": {
+      // The targeted foe becomes the user's quarry or subject this encounter (GAPS 230).
+      const user = op.user ? await fromUuid(op.user) : null;
+      if (!user || user === actor) return { line: "" };
+      if (user.isOwner) await user.setFlag(SYSTEM, entry.kind, { uuid: actor.uuid, name: actor.name, combat: combatKey() });
+      return { markedBy: user.uuid, mark: entry.kind, line: noted(i18n.format(`VARBORG.Outcome.${entry.kind === "quarry" ? "Quarry" : "Subject"}`, { name: actor.name, user: user.name }), entry.note) };
+    }
+    case "ember": {
+      // The Ember pool gains it, in combat only (Unravel).
+      const { gainEmber } = await import("./pools.mjs");
+      if (!game.combat?.started) return { line: i18n.format("VARBORG.Effects.HookEmberNoCombat", { item: op.name }) };
+      const amount = (await new Roll(String(entry.amount || "0")).evaluate()).total;
+      await gainEmber(amount, actor, op.name);
+      return { line: noted(i18n.format("VARBORG.Effects.HookEmber", { item: op.name, amount }), entry.note) };
+    }
     case "partner": {
       const user = op.user ? await fromUuid(op.user) : null;
       if (!user || user === actor) return { line: "" };
@@ -318,6 +341,10 @@ async function undoOutcome(done) {
   if (done.kind === "rigDamage" && done.rigDealt) {
     const rig = await fromUuid(done.rigUuid);
     if (rig?.isOwner) await rig.update({ "system.hp.value": Math.min(rig.system.hp.max, rig.system.hp.value + done.rigDealt) });
+  }
+  if (["quarry", "subject"].includes(done.kind) && done.markedBy) {
+    const user = await fromUuid(done.markedBy);
+    if (user?.isOwner && user.getFlag(SYSTEM, done.mark)?.uuid === actor.uuid) await user.unsetFlag(SYSTEM, done.mark);
   }
   if (done.kind === "cure" && done.cured && !actor.statuses.has(done.cured)) await actor.toggleStatusEffect(done.cured, { active: true });
   if (done.kind === "fatigue" && done.fatigued) await actor.update({ "system.fatigue": Math.max(0, (actor.system.fatigue ?? 1) - 1) });

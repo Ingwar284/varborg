@@ -23,6 +23,53 @@
     },
     "sustaining": false,
     "kept": false,
-    "usedOutside": false
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "condition",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "quickened",
+        "duration": {
+          "kind": "rounds",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "up to three allies; the extra action only to Strike your subject or move toward it"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "you cannot use reactions until your next turn"
+      }
+    ],
+    "automation": "partial"
   }
 }

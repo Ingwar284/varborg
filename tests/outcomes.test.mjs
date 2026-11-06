@@ -64,3 +64,10 @@ test("partner entries go to the dance partner; end entries wait for the power to
   assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "bleeding" }), []);
   assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "blunt" }), ["damageType: blunt"]);
 });
+
+test("healing can be full; quarry, subject and Ember entries (step 51e)", () => {
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("heal"), amount: "full" }), []);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("damage"), amount: "full" }), ["amount: full"]);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("quarry") }), []);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("ember"), amount: "1" }), []);
+});

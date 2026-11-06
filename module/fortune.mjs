@@ -18,7 +18,7 @@
  */
 
 import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
-import { collectEffects, cardButtons, betterMode, ALLIES } from "./rules/item-effects.mjs";
+import { collectEffects, cardButtons, betterMode, ALLIES, interceptedDamage } from "./rules/item-effects.mjs";
 import { diceFormula } from "./rules/test-roll.mjs";
 import { rollShadowblight } from "./shadowblight.mjs";
 import { hasFrequency } from "./rules/uses.mjs";
@@ -36,6 +36,9 @@ const LOWER = "lowerDamage";
 /** An item button that rerolls the damage taken and keeps the lower (Bend Fate, GAPS 227). */
 const BEND = "lowerReroll";
 
+/** An ally's button: they take the damage instead (GAPS 229). */
+const INTERCEPT = "intercept";
+
 /**
  * The item id and action of an item button, and the actor whose item it is
  * when that is another character ("item:actorId.itemId", Call upon the
@@ -44,7 +47,7 @@ const BEND = "lowerReroll";
 function itemAction(action) {
   const [ref, kind] = action.slice(ITEM_PREFIX.length).split(":");
   const [ownerId, itemId] = ref.includes(".") ? ref.split(".") : [null, ref];
-  return { itemId, ownerId, kind: [SUCCESS, LOWER, BEND].includes(kind) ? kind : SPEND.REROLL };
+  return { itemId, ownerId, kind: [SUCCESS, LOWER, BEND, INTERCEPT].includes(kind) ? kind : SPEND.REROLL };
 }
 
 /**
@@ -143,16 +146,17 @@ export async function fortuneSection(data, shown) {
   const used = data.state.log.map(entry => entry.itemId).filter(Boolean);
   const card = { tier: shown.tier, natural: shown.natural, ability: data.inputs?.ability, used, taken: shown.taken };
   const items = actor?.items
-    ? [...cardButtons(collectEffects(actor.items), cardRoll(data), card), ...allyButtons(actor, cardRoll(data), card)]
+    // Taking an ally's damage is only for others' cards (GAPS 229).
+    ? [...cardButtons(collectEffects(actor.items).filter(effect => effect.action !== "intercept"), cardRoll(data), card), ...allyButtons(actor, cardRoll(data), card)]
     : [];
-  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${[SUCCESS, LOWER, BEND].includes(entry.action) ? `:${entry.action}` : ""}`;
+  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${[SUCCESS, LOWER, BEND, INTERCEPT].includes(entry.action) ? `:${entry.action}` : ""}`;
   data.offered.push(...items.map(keyOf));
   return renderTemplate(BUTTONS_TEMPLATE, {
     buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
       ? {
         action,
-        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL] }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
-        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
+        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL], [INTERCEPT]: "fa-solid fa-shield-heart" }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
+        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton", [INTERCEPT]: "VARBORG.Effects.InterceptButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
           { item: items.find(entry => action === keyOf(entry))?.item ?? "", amount: items.find(entry => action === keyOf(entry))?.amount ?? "" })
       }
       : {
@@ -166,7 +170,7 @@ export async function fortuneSection(data, shown) {
     log: data.state.log.map(entry => (entry.failedAgain
       ? i18n.format("VARBORG.Effects.FailedAgain", { item: entry.item, note: entry.note || i18n.localize("VARBORG.Effects.SeeText") })
       : entry.item
-      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
+      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog", [INTERCEPT]: "VARBORG.Effects.InterceptLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
       : i18n.format("VARBORG.Fortune.Spent", {
         name: entry.name,
         use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
@@ -295,7 +299,8 @@ async function applyFortune({ messageId, action, spenderUuid }) {
     entry.itemId = item.id;
     const effect = collectEffects([item]).find(found => found.kind === "use" && found.action === kind && found.roll === cardRoll(data));
     failAgain = effect?.failAgain ? effect : null;
-    lowerEffect = [LOWER, BEND].includes(kind) ? effect : null;
+    lowerEffect = [LOWER, BEND, INTERCEPT].includes(kind) ? effect : null;
+    if (kind === INTERCEPT) entry.protectorUuid = item.actor?.uuid ?? null;
     rerollEffect = kind === SPEND.REROLL ? effect : null;
   } else {
     if (!canSpend(spender.system.fortune)) return { error: "VARBORG.Fortune.None" };
@@ -328,6 +333,23 @@ async function applyFortune({ messageId, action, spenderUuid }) {
       extraRolls.push(roll);
       state.featLowered = [...(state.featLowered ?? []), roll.total];
       entry.value = `−${roll.total}`;
+      break;
+    }
+    case INTERCEPT: {
+      // The protector takes it instead, through their own armour (GAPS 229).
+      const protector = entry.protectorUuid ? await fromUuid(entry.protectorUuid) : null;
+      if (!protector || !(state.lastBefore > 0)) break;
+      const { defenceModifiers } = await import("./dice/defence.mjs");
+      const die = defenceModifiers(protector).soakDie;
+      const soakRoll = die ? await new Roll(die).evaluate() : null;
+      if (soakRoll) extraRolls.push(soakRoll);
+      const taken = interceptedDamage(state.lastBefore, lowerEffect?.amount, soakRoll?.total ?? 0);
+      const { killedByDamage } = await import("./deaths-door.mjs");
+      if (!(await killedByDamage(protector, taken))) {
+        await protector.update({ "system.hp.value": Math.max(0, protector.system.hp.value - taken) });
+      }
+      entry.value = taken;
+      state.intercepted = game.i18n.format("VARBORG.Effects.Intercepted", { name: protector.name, taken });
       break;
     }
     case BEND: {

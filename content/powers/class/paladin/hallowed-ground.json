@@ -24,6 +24,31 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant"
+    "damageType": "radiant",
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "undead, fiends and duskborn take d6 radiant damage when they enter the area or start their turn in it: Inflict it then"
+      }
+    ],
+    "automation": "partial"
   }
 }

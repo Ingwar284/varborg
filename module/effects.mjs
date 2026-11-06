@@ -34,6 +34,31 @@ const UNARMED_ID = "vbWeap0010000000";
  */
 export function itemRollEffects(actor, context) {
   if (!actor?.items) return { auto: [], optional: [], reminders: [] };
+  const own = ownRollEffects(actor, context);
+  // Against a target (step 51e): its marks for attackers, and other
+  // characters' subject bonuses (GAPS 230).
+  const target = context.targetUuid ? fromUuidSync(context.targetUuid) : null;
+  const rolls = [context.roll].flat();
+  if (!target?.items || !rolls.some(roll => ["attack", "power", "spell"].includes(roll))) return own;
+  const marks = rollEffects(collectEffects(target.items).filter(effect => effect.roll === "attackAgainst"), { ...context, roll: "attackAgainst" });
+  const subjectOf = game.actors.filter(other => other.type === "character" && other.id !== actor.id && subjectOfActor(other)?.uuid === target.uuid);
+  const allies = subjectOf.map(other => rollEffects(collectEffects(other.items).filter(effect => effect.vs === "subject"), { ...context, allySubject: true }));
+  for (const extra of [marks, ...allies]) {
+    own.auto.push(...extra.auto);
+    own.optional.push(...extra.optional);
+    own.reminders.push(...extra.reminders);
+  }
+  return own;
+}
+
+/** A character's subject this encounter (GAPS 230), or null. */
+function subjectOfActor(actor) {
+  const subject = actor?.getFlag?.("var-borg", "subject");
+  return subject && subject.combat === (game.combat?.started ? game.combat.id : "") ? subject : null;
+}
+
+/** The roll effects of the character's own items. */
+function ownRollEffects(actor, context) {
   // The character's facts, for damage per wound (step 49e).
   // Whether a combat is running, for "non-combat tests" (GAPS 194).
   const facts = {
@@ -44,7 +69,12 @@ export function itemRollEffects(actor, context) {
     // The worn armour's original tier, for "only in light armour" (Grace in Motion, step 51a).
     armourTier: wornArmourTier(actor),
     // Whether the character has Adrenaline (GAPS 206).
-    adrenaline: hasAdrenaline(collectEffects(actor.items), game.combat?.started ? game.combat.id : "")
+    adrenaline: hasAdrenaline(collectEffects(actor.items), game.combat?.started ? game.combat.id : ""),
+    // The quarry named this encounter (GAPS 230).
+    quarry: (() => {
+      const quarry = actor.getFlag?.("var-borg", "quarry");
+      return quarry && quarry.combat === (game.combat?.started ? game.combat.id : "") ? quarry.uuid : "";
+    })()
   };
   return rollEffects(collectEffects(actor.items), { facts, ...context });
 }

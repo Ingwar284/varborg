@@ -24,6 +24,32 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant"
+    "damageType": "radiant",
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "note": "an undead, duskborn or fiend of Weak tier or lower is destroyed outright"
+      }
+    ],
+    "ignoresArmour": true,
+    "automation": "partial"
   }
 }
