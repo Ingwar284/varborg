@@ -1,0 +1,52 @@
+{
+  "_id": "vbFeature0600000",
+  "name": "Grace in Motion",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "If you move at least 20' during your turn, you defend with -2 DR until the start of your next turn and cannot be targeted by Opportune Attacks. This effect does not apply if you wear armour heavier than t1.",
+    "source": "feature",
+    "belongsTo": "Dancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "defence",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "optional",
+        "grant": "",
+        "dr": -2,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "lightArmour",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "companion": "minion",
+        "armour": "",
+        "note": "you moved at least 20' on your last turn; you also cannot be targeted by Opportune Attacks"
+      }
+    ],
+    "automation": "partial"
+  }
+}

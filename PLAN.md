@@ -1171,6 +1171,11 @@ every feat in the batch ends with a status.
       chosen weapon (Fencing-hall form, Bigger sword), damage that
       nothing reduces (Blood price), a feat reroll with Boon (Parry).
       EFFECTS_CONTENT 12.
+    - Fix before the Milestone 10 review: each class feature is a feat
+      (source "class feature", never gained through Improving) in the
+      Feats compendium, and the creation helper gives a class its feature
+      and its class power, both set by the class (rules 2.5), with no
+      choice.
     - ~~50g. Companion and vehicle feats.~~ Done: the last 10 feats.
       A feat's Use can change the character's own minion or the vehicle
       they are aboard once (Hawk-Iron Barding, Bolted Plate: armour and
@@ -1187,9 +1192,55 @@ one fight and one rest.
 ## Milestone 11: Classes, powers and spells
 
 51. **Classes, powers and spells.**
-    - 51a. Class features (21) as effects on the class item (rage at
-      initiative, the Druid's aura, the Hedge Mage's surge on each cast,
-      the Priest's daily reroll and so on).
+    - 51a. Class features (21) as effects on their class feature feats,
+      in three parts:
+      - ~~51a. The features that fit the tools.~~ Done: 10 features have a
+        status. New: a hook can switch an item on when initiative is
+        rolled, and stat effects can work only while it is on (Barbaric
+        Rage: Boon on Strength tests, +2 melee damage, natural t2; items
+        switch off when the combat ends); extra damage only on a Triumph,
+        after doubling (Holy smite, provisional); shoot attacks with
+        Agility (Wilderness hunter); extra damage against a Blinded,
+        Restrained or Slowed target, else a tick (Hit 'em where it
+        hurts); no armour DR up to t3 (Armour mastery); a d6 life force
+        die and a 3d6 roll on the death card (Blood of power); DR12 for
+        difficult driving at fast speed (No Number); a −2 DR defence tick
+        in t1 armour or none (Grace in Motion). Bard of Renown and
+        Malleable Body are text. EFFECTS_CONTENT 14.
+      - ~~51a2. Adrenaline, Primal Conduit, Autodidactism, Call upon the
+        divine.~~ Done (GAPS 206–209):
+        - Adrenaline: a Gain Adrenaline button, and gained by itself when
+          using a power whose text starts with "Risky". It lasts until the
+          start of the character's next turn and ends with the combat (in
+          combat only). Laugh in Its Face, Press the Advantage and Scramble
+          only show while it lasts; the prop d6 is a reminder.
+        - Primal Conduit: at the start of each combatant's turn, an ally
+          within 5' of the Druid's token regains 1 HP, a foe takes 1 hit
+          (through Inflict damage). The stance feats stay reminders.
+        - Autodidactism: a spell list choice (other lists cast at Bane), a
+          d6 after every spell, scroll and ritual, and after a power with
+          the Magic-themed tick (ticked for the class's own powers); a 1
+          draws the Photonic Surge table. Harmonious Light heals d4 on a
+          surge; Surge Surfer reminds.
+        - Call upon the divine: a once-a-day reroll button on the failed
+          tests, attacks, defences, gloom tests and spells of the Priest
+          and every other player character, pressed by the Priest's player.
+        EFFECTS_CONTENT 15.
+      - ~~51a3. Sworn to the Saddle, War-Gallop, No Number's rig, Dirge of
+        the Unburied, Field notes, Spirit-Linked Steel, Steel and Shot,
+        Tome keeper.~~ Done: every class feature has a status. New: an
+        item with several Use actions asks which to do; weapons have an
+        "Attacks with" ability (the new Spirit-linked sword in
+        content/weapons/gifts); spells have an In spellbook box; roll
+        effects can be limited to one power by name, and can turn a Ruin
+        into a Failure. EFFECTS_CONTENT 16. Rulings GAPS 211–217: Use buttons that make the
+        Destrier, Raider-Beast and rig; a Mount up / Dismount switch for
+        the saddle benefits (+2 after riding 20' as a tick); Raise thrall
+        and Thrall attack (Sanity DR12, d4, counts for multiple attacks;
+        removed when the combat ends); a Record button and list for Field
+        notes (Boon against listed kinds' gloom abilities, no Study Ruin);
+        a new Spirit-linked sword weapon given with the feature (Presence);
+        the Flintlock pistol with Agility; an In spellbook box on spells.
     - 51b. Area targets (GAPS 141): power, spell and gloom cards get one
       Inflict, Defend or Test button per targeted token, sharing one
       damage roll.

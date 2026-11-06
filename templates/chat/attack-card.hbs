@@ -34,7 +34,7 @@
     {{else}}
     <p class="damage-line">
       {{localize "VARBORG.Attack.Damage"}} ({{damage.formula}}):
-      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{#if damage.halved}}{{damage.rolled}} ÷ 2 = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
+      {{#if damage.doubled}}{{damage.rolled}} × 2 = {{/if}}{{#if damage.halved}}{{damage.rolled}} ÷ 2 = {{/if}}{{#if damage.extra}}{{damage.extra.before}} + {{damage.extra.value}} ({{damage.extra.formula}}, {{localize "VARBORG.Attack.OnTriumph"}}) = {{/if}}<strong class="damage-total">{{damage.total}}</strong>
       {{#if damage.maximized}}<span class="modifier">{{localize "VARBORG.Fortune.Maximum"}}</span>{{/if}}
     </p>
     {{/if}}

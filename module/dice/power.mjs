@@ -34,8 +34,9 @@ import { getPools, spendFromPool } from "../pools.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
-import { withExtraDamage, unarmedDamage } from "../rules/item-effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon, itemHooks, runItemHooks } from "../effects.mjs";
+import { withExtraDamage, unarmedDamage, isRiskyPower } from "../rules/item-effects.mjs";
+import { belongsTo } from "../rules/feats.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
@@ -221,7 +222,11 @@ async function rollPowerTest(actor, power) {
   const { conditions, fatigue } = conditionsOf(actor);
   // Item effects on powers count like conditions (PLAN step 49c).
   // The target's category, for effects against a chosen category (step 49h).
-  const effectContext = { roll: "power", ability, targetCategory: target?.system?.category ?? "", damageType: power.system.damageType ?? "" };
+  const effectContext = {
+    roll: "power", ability, targetCategory: target?.system?.category ?? "", damageType: power.system.damageType ?? "",
+    // For effects on one power against a noted kind (Field notes, GAPS 214).
+    powerName: power.name, targetName: target?.name ?? ""
+  };
   const conditionMods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
   let fromConditions = totalModifiers(conditionMods);
   const notes = conditionNotes(conditionMods);
@@ -252,7 +257,11 @@ async function rollPowerTest(actor, power) {
       label: i18n.format("VARBORG.Test.DROption", { dr, name: i18n.localize(`VARBORG.DR.${dr}`) }),
       selected: dr === startDr
     })),
-    fortuneFields: await fortuneFields(actor, "power")
+    fortuneFields: await fortuneFields(actor, "power"),
+    // Autodidactism: a Magic-themed tick, ticked for the class's own powers (GAPS 208).
+    magic: itemHooks(actor, "cast").length ? {
+      checked: power.system.source === "class" && belongsTo(power.system.belongsTo, actor.itemTypes.class?.[0]?.name ?? "")
+    } : null
   });
   const options = await DialogV2.input({
     window: { title: i18n.format("VARBORG.Power.DialogTitle", { name: power.name }) },
@@ -270,6 +279,8 @@ async function rollPowerTest(actor, power) {
   if (!(await payPowerEmber(actor, use, paid))) return;
   // Outside combat: this was the one free use (rules 3.10).
   if (use.marksUsed) await power.update({ "system.usedOutside": true });
+  // A Risky power gives Adrenaline before the roll (GAPS 206).
+  if (isRiskyPower(power.system.description)) await runItemHooks(actor, "risky");
 
   const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
@@ -294,6 +305,8 @@ async function rollPowerTest(actor, power) {
     // Extra damage from item effects on powers (step 49e).
     damageFormula: damage.formula ? withExtraDamage(damage.formula, [...conditionMods, ...ticked]) : damage.formula,
     damageInvalid: damage.invalid,
+    // A Ruin counts as a Failure (Field notes, GAPS 214).
+    noRuin: [...conditionMods, ...ticked].some(mod => mod.noRuin),
     weaponDamage: damage.text,
     ruinedBefore: actor.system.attackRuin,
     inflicts: target?.type !== "character",
@@ -331,6 +344,8 @@ async function rollPowerTest(actor, power) {
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
+  // A magic-themed power rolls for a Photonic Surge (Autodidactism, GAPS 208).
+  if (options.magic) await runItemHooks(actor, "cast");
 }
 
 /**

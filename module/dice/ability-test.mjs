@@ -27,7 +27,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
-import { cappedArmourDr } from "../rules/item-effects.mjs";
+import { cappedArmourDr, masteredArmourDr } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -181,6 +181,8 @@ export function actorTestModifiers(actor, ability) {
   const modifiers = testModifiers({ ability, armour, carryingState });
   // Armoured Paragon: at most +2 DR from armour on Agility tests (step 50b2).
   modifiers.armourDr = cappedArmourDr(modifiers.armourDr, actor.system.statBonuses?.armourAgilityMax);
+  // Armour mastery: no Agility penalty from armour up to t3 (step 51a).
+  modifiers.armourDr = masteredArmourDr(modifiers.armourDr, armour?.originalTier ?? 0, actor.system.statBonuses?.armourPenaltyMaxTier);
   return { ...modifiers, armourName: armour ? actor.items.get(armour.id)?.name ?? null : null };
 }
 

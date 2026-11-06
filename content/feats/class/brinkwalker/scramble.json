@@ -37,11 +37,13 @@
         "amount": "",
         "condition": "",
         "keep": "better",
-        "requires": "",
+        "requires": "adrenaline",
         "failAgain": "",
         "resist": "half",
         "gift": "",
         "setDamage": "",
+        "companion": "minion",
+        "armour": "",
         "note": "↻ while you have Adrenaline, against a melee attack: then move up to 10'"
       }
     ],

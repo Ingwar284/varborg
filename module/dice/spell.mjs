@@ -39,8 +39,8 @@ import { CARD } from "../rules/fortune.mjs";
 import { turnState } from "../combat.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
-import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
-import { withExtraDamage } from "../rules/item-effects.mjs";
+import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, runItemHooks } from "../effects.mjs";
+import { withExtraDamage, lifeForceDie, collectEffects, chosenSpellList } from "../rules/item-effects.mjs";
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { postLifeForceWoundCards } from "../agony.mjs";
 import { settleAttackCard } from "./attack.mjs";
@@ -65,7 +65,10 @@ function castingFacts(actor, spell) {
   const armour = wornArmour(items);
   return {
     classList,
-    outsideList: outsideSpellList(spell.system.spellList, classList),
+    // The Hedge Mage's chosen list (Autodidactism, step 51a2).
+    // Tome keeper: a spell in the spellbook is never off-list (GAPS 217).
+    outsideList: spell.system.inSpellbook && actor.system.statBonuses?.spellbookNoBane?.set > 0
+      ? false : outsideSpellList(spell.system.spellList, classList, chosenSpellList(collectEffects(actor.items))),
     // Blessed plate: no Bane in metal armour up to t3 (step 50e).
     metalArmour: metalArmourBane(armour) && !(armour.originalTier <= (actor.system.statBonuses?.spellArmourMaxTier?.set ?? 0)),
     armourName: armour ? actor.items.get(armour.id)?.name ?? null : null
@@ -173,7 +176,7 @@ export async function castSpell(actor, spell) {
     lifeForce: scroll ? null : {
       left: woundsLeft,
       hint: woundsLeft
-        ? i18n.format("VARBORG.Spell.LifeForceHint", { left: woundsLeft })
+        ? i18n.format("VARBORG.Spell.LifeForceHint", { left: woundsLeft, die: lifeForceDie(actor.system.statBonuses?.lifeForceDie) })
         : i18n.localize("VARBORG.Spell.LifeForceNone")
     },
     conditionNotes: sanity.notes,
@@ -199,7 +202,8 @@ export async function castSpell(actor, spell) {
   const lifeWounds = scroll ? 0 : lifeForceWounds(options.lifeForce, wounds.value, wounds.max);
   const ability = castingAbility(lifeWounds);
   const { automatic, fromConditions, notes, mods } = abilityMods(actor, ability, tickedMods(optional, options), target, spell.system.damageType ?? "");
-  const lifeFormula = lifeForceFormula(lifeWounds);
+  // Blood of power: d6 per wound instead of d4 (step 51a).
+  const lifeFormula = lifeForceFormula(lifeWounds, lifeForceDie(actor.system.statBonuses?.lifeForceDie));
   const lifeRoll = lifeFormula ? await new Roll(lifeFormula).evaluate() : null;
   const reduction = lifeRoll?.total ?? 0;
   const woundsBefore = wounds.value;
@@ -298,6 +302,8 @@ export async function castSpell(actor, spell) {
     flags: fortuneFlags(data)
   });
 
+  // Each spell cast rolls for a Photonic Surge (Autodidactism, GAPS 208).
+  await runItemHooks(actor, "cast");
   // Each wound spent tests Toughness, as a wound gained at 0 HP.
   if (lifeWounds) await postLifeForceWoundCards(actor, woundsBefore, lifeWounds);
   // Reading a scroll always destroys it, even if the spell fails.

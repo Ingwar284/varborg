@@ -13,12 +13,13 @@
  */
 
 import {
-  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits, changedSpeeds
+  collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits, changedSpeeds,
+  hasAdrenaline, SURGE_ON, withNotedKind
 } from "./rules/item-effects.mjs";
 import { gainEmber } from "./pools.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
-import { makeItemMinion } from "./minions.mjs";
+import { makeItemMinion, makeCompanion, raiseThrall, ownedThralls } from "./minions.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -39,9 +40,19 @@ export function itemRollEffects(actor, context) {
     wounds: actor.system.wounds?.value ?? 0,
     inCombat: Boolean(game.combat?.started),
     combatId: game.combat?.started ? game.combat.id : "",
-    kills: killsThisCombat(actor)
+    kills: killsThisCombat(actor),
+    // The worn armour's original tier, for "only in light armour" (Grace in Motion, step 51a).
+    armourTier: wornArmourTier(actor),
+    // Whether the character has Adrenaline (GAPS 206).
+    adrenaline: hasAdrenaline(collectEffects(actor.items), game.combat?.started ? game.combat.id : "")
   };
   return rollEffects(collectEffects(actor.items), { facts, ...context });
+}
+
+/** The original tier of the armour a character wears, or 0. */
+function wornArmourTier(actor) {
+  const worn = actor.items.filter(item => item.type === "armour" && item.system.equipped);
+  return Math.max(0, ...worn.map(item => item.system.originalTier ?? item.system.tier ?? 0));
 }
 
 /**
@@ -88,6 +99,7 @@ export async function optionalEffectsField(mods) {
     if (mod.damage) parts.push(i18n.format("VARBORG.Effects.DamagePart", { damage: mod.damage }));
     if (mod.rerollOnes) parts.push(i18n.localize("VARBORG.Effects.RerollOnesPart"));
     if (mod.setDamage) parts.push(i18n.format("VARBORG.Effects.SetDamagePart", { damage: mod.setDamage }));
+    if (mod.noRuin) parts.push(i18n.localize("VARBORG.Effects.NoRuinPart"));
     const name = mod.note ? i18n.format("VARBORG.Effects.ItemWithNote", { item: mod.item, note: mod.note }) : mod.item;
     return { label: i18n.format("VARBORG.Effects.OptionalLabel", { name, effect: parts.join(", ") }) };
   });
@@ -125,6 +137,15 @@ export function isUnarmed(item) {
   return name === "unarmed" || name === game.i18n.localize("VARBORG.Power.Bare.unarmed").toLowerCase();
 }
 
+/** The Flintlock pistol's id in the weapons compendium (Steel and Shot, GAPS 216). */
+const PISTOL_ID = "vbExamplePistol0";
+
+/** Whether a weapon item is the Flintlock pistol, by its compendium source or its name. */
+export function isFlintlockPistol(item) {
+  const source = item?._stats?.compendiumSource ?? item?.flags?.core?.sourceId ?? "";
+  return source.endsWith(PISTOL_ID) || item?.name?.trim().toLowerCase() === "flintlock pistol";
+}
+
 /**
  * A weapon's numbers after its owner's feats (step 50a3): Brawler's
  * unarmed die, Long shot's ranges, Quick reload's actions.
@@ -134,7 +155,8 @@ export function isUnarmed(item) {
 export function effectiveWeapon(item) {
   const bonuses = item.actor?.type === "character" ? item.actor.system.statBonuses : null;
   if (!bonuses) return item.system;
-  const weapon = withWeaponStats(item.system, bonuses, isUnarmed(item));
+  // The Flintlock pistol, for Steel and Shot (GAPS 216).
+  const weapon = withWeaponStats(item.system, bonuses, isUnarmed(item), { pistol: isFlintlockPistol(item) });
   // Traits for the weapon the feat chose (step 50f).
   return { ...weapon, ...chosenWeaponTraits(collectEffects(item.actor.items), item.id) };
 }
@@ -327,6 +349,41 @@ export async function doEffectAction(actor, effect) {
     };
   }
   if (effect.action === "makeMinion") return makeItemMinion(actor, effect);
+  // Step 51a3: the Destrier, Raider-Beast or rig (GAPS 211), and thralls (GAPS 213).
+  if (effect.action === "makeCompanion") return makeCompanion(actor, effect);
+  if (effect.action === "raiseThrall") return raiseThrall(actor, effect);
+  if (effect.action === "thrallAttack") {
+    if (!ownedThralls(actor).length) {
+      ui.notifications.warn(i18n.format("VARBORG.Thrall.None", { name: actor.name }));
+      return { lines: [], rolls: [], acted: false };
+    }
+    const { rollThrallAttack } = await import("./dice/attack.mjs");
+    await rollThrallAttack(actor, effect);
+    return { lines: [i18n.format("VARBORG.Thrall.Attacks", { name: actor.name })], rolls: [], acted: true };
+  }
+  if (effect.action === "mount") {
+    // In the saddle until switched off (GAPS 212).
+    const mounted = !effect.mounted;
+    await actor.items.get(effect.itemId)?.setFlag("var-borg", "mounted", mounted);
+    return { lines: [i18n.format(mounted ? "VARBORG.Effects.MountedLine" : "VARBORG.Effects.DismountedLine", { item, name: actor.name })], rolls: [], acted: true };
+  }
+  if (effect.action === "recordKind") {
+    // Field notes: the targeted creature's kind joins the list (GAPS 214).
+    const target = [...game.user.targets][0]?.actor ?? null;
+    if (!target) {
+      ui.notifications.warn(i18n.localize("VARBORG.Effects.RecordNoTarget"));
+      return { lines: [], rolls: [], acted: false };
+    }
+    const owned = actor.items.get(effect.itemId);
+    const effects = foundry.utils.deepClone(owned.toObject().system.effects);
+    const index = effects.findIndex(entry => entry.kind === "choice" && entry.choose === "text");
+    if (index < 0) return { lines: [], rolls: [], acted: false };
+    const list = withNotedKind(effects[index].chosen, target.name);
+    effects[index].chosen = list;
+    effects[index].chosenName = list;
+    await owned.update({ "system.effects": effects });
+    return { lines: [i18n.format("VARBORG.Effects.Recorded", { item, kind: target.name, list })], rolls: [], acted: true };
+  }
   if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) return companionAction(actor, effect);
   if (effect.action === "takeDamage") {
     // Damage nothing reduces (Blood price, step 50f). At Death's Door any damage kills.
@@ -337,10 +394,32 @@ export async function doEffectAction(actor, effect) {
     return { lines: [i18n.format("VARBORG.Effects.TookDamage", { item, name: actor.name, amount: roll.total, from, to: actor.system.hp.value })], rolls: [roll], acted: true };
   }
   if (effect.action === "switchOn") {
-    // On for this combat, or "" outside combat (step 50c).
-    const on = game.combat?.started ? game.combat.id : "";
+    // On for this combat, or "" outside combat (step 50c). Switched on
+    // when initiative is rolled, before the combat begins, it is on for
+    // that combat (Barbaric Rage, step 51a).
+    const combat = game.combat;
+    const on = combat && (combat.started || combat.getCombatantsByActor(actor).length) ? combat.id : "";
     await actor.items.get(effect.itemId)?.setFlag("var-borg", "on", on);
     return { lines: [i18n.format("VARBORG.Effects.SwitchedOn", { item, note })], rolls: [], acted: true };
+  }
+  if (effect.action === "adrenaline") {
+    // Adrenaline lasts until the start of the next turn, in combat only (GAPS 206).
+    const combat = game.combat;
+    if (!combat?.started || !combat.getCombatantsByActor(actor).length) {
+      return { lines: [i18n.format("VARBORG.Effects.AdrenalineNoCombat", { item, name: actor.name })], rolls: [], acted: false };
+    }
+    await actor.items.get(effect.itemId)?.setFlag("var-borg", "on", combat.id);
+    return { lines: [i18n.format("VARBORG.Effects.AdrenalineGained", { item, name: actor.name, note: effect.note || "" })], rolls: [], acted: true };
+  }
+  if (effect.action === "photonicSurge") {
+    // Autodidactism: a d6 on each spell and magic-themed power; a 1 is a Photonic Surge (GAPS 208).
+    const roll = await new Roll(effect.amount || "1d6").evaluate();
+    if (roll.total !== SURGE_ON) return { lines: [i18n.format("VARBORG.Effects.NoSurge", { item, total: roll.total })], rolls: [roll], acted: true };
+    const table = await fromUuid(SURGE_TABLE).catch(() => null);
+    if (table) await table.draw({ displayChat: true });
+    // Items that act when a surge occurs (Harmonious Light, Surge Surfer).
+    await runItemHooks(actor, "surge");
+    return { lines: [i18n.format(table ? "VARBORG.Effects.Surge" : "VARBORG.Effects.SurgeNoTable", { item, total: roll.total })], rolls: [roll], acted: true };
   }
   if (effect.action === "chanceDie") {
     // Pack Rat (step 50b2): the Chance Die posts its own card.
@@ -446,8 +525,14 @@ export async function escapeDeath(actor) {
   const reprieve = hooks.find(hook => hook.action === "reprieve" && hook.mode !== "optional");
   if (!reprieve) {
     const lines = [];
-    for (const hook of hooks) lines.push(...(await doEffectAction(actor, { ...hook, action: "reminder" })).lines);
-    return { saved: false, lines, rolls: [] };
+    const rolls = [];
+    for (const hook of hooks) {
+      // A roll is rolled (Blood of power: 3d6 within 20', step 51a); the rest are reminders.
+      const done = await doEffectAction(actor, hook.action === "roll" ? hook : { ...hook, action: "reminder" });
+      lines.push(...done.lines);
+      rolls.push(...done.rolls);
+    }
+    return { saved: false, lines, rolls };
   }
   for (const status of ["deathsDoor", "darkVessel"]) {
     if (actor.statuses.has(status)) await actor.toggleStatusEffect(status, { active: false });
@@ -466,6 +551,31 @@ export async function escapeDeath(actor) {
       i18n.localize(table ? "VARBORG.Effects.ReprieveTable" : "VARBORG.Effects.ReprieveNoTable")
     ]
   };
+}
+
+/** The Photonic Surge table (content/tables). */
+const SURGE_TABLE = "Compendium.var-borg.tables.RollTable.vbTableSurge0000";
+
+/**
+ * Adrenaline ends at the start of the character's turn (GAPS 206); it also
+ * ends with the encounter, like any switched-on item. Posts a line.
+ * @param {Actor} actor
+ */
+export async function endAdrenaline(actor) {
+  if (!actor?.items) return;
+  const ended = [];
+  for (const item of actor.items) {
+    const on = item.getFlag("var-borg", "on");
+    if (on === undefined || on === null) continue;
+    if (!(item.system.effects ?? []).some(effect => effect.action === "adrenaline")) continue;
+    await item.unsetFlag("var-borg", "on");
+    ended.push(item.name);
+  }
+  if (!ended.length) return;
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.AdrenalineEnds", { name: actor.name }))}</p></div>`
+  });
 }
 
 /** Harkin's Reprieve: "You wake d6 hours later". */

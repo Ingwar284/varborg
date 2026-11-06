@@ -5,6 +5,12 @@
       <span>{{localize "VARBORG.Spell.SpellList"}}</span>
       <select name="system.spellList">{{selectOptions spellLists selected=system.spellList localize=true}}</select>
     </label>
+    {{#if showSpellbook}}
+    <label data-tooltip="{{localize 'VARBORG.Spell.InSpellbookHint'}}">
+      <input type="checkbox" name="system.inSpellbook" {{checked system.inSpellbook}}>
+      <span>{{localize "VARBORG.Spell.InSpellbook"}}</span>
+    </label>
+    {{/if}}
     {{#unless scrollHint}}
     <label data-tooltip="{{localize 'VARBORG.Spell.RitualHint'}}">
       <input type="checkbox" name="system.ritual" {{checked system.ritual}}>

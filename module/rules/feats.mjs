@@ -12,13 +12,13 @@
  * "difficulty" is Harkin's Reprieve or Doomsworn (rules 4.6, Difficulty
  * feats).
  */
-export const FEAT_SOURCES = ["general", "ancestry", "class", "passive", "difficulty"];
+export const FEAT_SOURCES = ["general", "ancestry", "class", "passive", "difficulty", "feature"];
 
 /**
  * Feats that are never gained through Improving: foe passives, and the
  * difficulty feats ("It cannot be gained through 2.8 Improving", rules 4.6).
  */
-export const NEVER_IMPROVING_SOURCES = ["passive", "difficulty"];
+export const NEVER_IMPROVING_SOURCES = ["passive", "difficulty", "feature"];
 
 /** Can a feat of this source be gained through Improving (rules 2.8, 4.6)? */
 export function canBeImproving(source) {
@@ -26,7 +26,31 @@ export function canBeImproving(source) {
 }
 
 /** The sources that belong to one ancestry or class (GAPS 180). */
-export const BELONGING_SOURCES = ["ancestry", "class"];
+export const BELONGING_SOURCES = ["ancestry", "class", "feature"];
+
+/**
+ * The class feature and class power a class begins with (rules 2.5),
+ * read from its description: "Class feature: Barbaric Rage" and
+ * "Class power: Colossal smash 🟒1 ◈◈". Each is "" when not found.
+ * @param {string} description  The class's description.
+ * @returns {{feature: string, power: string}}
+ */
+export function classStarting(description) {
+  const text = String(description ?? "");
+  return {
+    feature: /Class feature: (.+)/.exec(text)?.[1].trim() ?? "",
+    power: /Class power: (.+?) 🟒/.exec(text)?.[1].trim() ?? ""
+  };
+}
+
+/**
+ * The text of a class's feature in its description: the lines after
+ * "Class feature: …" up to the class power.
+ */
+export function classFeatureText(description) {
+  const match = /Class feature: .+\n([\s\S]*?)\n\nClass power:/.exec(String(description ?? ""));
+  return match ? match[1].trim() : "";
+}
 
 /**
  * Does a feat or power belong to the ancestry or class named `name`?

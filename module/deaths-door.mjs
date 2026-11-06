@@ -358,7 +358,7 @@ async function kill(actor) {
   if (actor.statuses.has("darkVessel")) await actor.toggleStatusEffect("darkVessel", { active: false });
   await actor.setFlag(SYSTEM, "deathsDoor", { stage: "dead" });
   await markDefeated(actor);
-  return { dead: true, lines: [game.i18n.format("VARBORG.DeathsDoor.Dead", { name: actor.name }), ...escape.lines], rolls: [] };
+  return { dead: true, lines: [game.i18n.format("VARBORG.DeathsDoor.Dead", { name: actor.name }), ...escape.lines], rolls: escape.rolls };
 }
 
 /**

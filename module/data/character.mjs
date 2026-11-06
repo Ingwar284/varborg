@@ -38,6 +38,15 @@ function wholeNumber({ min = 0, max, initial = 0 } = {}) {
   return new NumberField({ required: true, nullable: false, integer: true, min, max, initial });
 }
 
+/** The current combat's id, or "" (also while the world is still loading). */
+function currentCombatId() {
+  try {
+    return globalThis.game?.combat?.id ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export default class CharacterData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const abilities = {};
@@ -98,7 +107,8 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     this.rolledAbilities = { ...this._source.abilities };
     // Sheet numbers from item effects (PLAN step 49b), such as Mountain of
     // Meat's +4 max HP. Max HP and max wounds are stored without them.
-    this.statBonuses = statBonuses(collectEffects(this.parent.items));
+    // "Only while switched on" stats count for the current combat (Barbaric Rage, step 51a).
+    this.statBonuses = statBonuses(collectEffects(this.parent.items), { combatId: currentCombatId() });
     const inUse = currentAbilities(this.rolledAbilities, this.keyAbility, this.sanityLost);
     Object.assign(this.abilities, withAbilityBonuses(inUse, this.statBonuses));
     this.hp.max = this.#withBonus("hpMax", this._source.hp.max);

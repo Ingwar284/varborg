@@ -52,7 +52,7 @@ import { useUpNextTest } from "../panic.mjs";
 import { attackerConditions, attackTargetConditions, totalModifiers } from "../rules/conditions.mjs";
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
-import { weaponTags, withExtraDamage } from "../rules/item-effects.mjs";
+import { weaponTags, withExtraDamage, triumphDamage } from "../rules/item-effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
 
@@ -68,7 +68,7 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/attack-card.hbs";
  * @param {Actor} actor  The character attacking.
  * @param {Item} item    The weapon.
  */
-export async function rollAttack(actor, item) {
+export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const i18n = game.i18n;
   // After the owner's feats: Brawler, Long shot (step 50a3).
   const weapon = effectiveWeapon(item);
@@ -87,7 +87,8 @@ export async function rollAttack(actor, item) {
   const usualMode = attackModes(weapon)[0];
   const optional = itemOptionalMods(actor, {
     roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode),
-    weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: weapon.damageType ?? ""
+    weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: weapon.damageType ?? "",
+    targetStatuses: [...(target?.statuses ?? [])]
   });
   const optionalEffects = await optionalEffectsField(optional);
   const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
@@ -123,7 +124,11 @@ export async function rollAttack(actor, item) {
 
   // Action and reaction pips, and the count for the multiple-attack Bane.
   let pipNote = null;
-  if (turn.combatant) {
+  // A thrall's attack: the thrall's own actions pay, but it counts toward
+  // the Gravecaller's multiple-attack Bane (GAPS 213).
+  if (turn.combatant && !spendPips) {
+    if (countsAsTurnAttack(turn.onOwnTurn)) await turn.combatant.recordAttack();
+  } else if (turn.combatant) {
     const kind = turn.onOwnTurn ? "actions" : "reactions";
     const left = kind === "actions" ? turn.combatant.actionsLeft : turn.combatant.reactionsLeft;
     if (left < 1) ui.notifications.warn(i18n.localize(turn.onOwnTurn ? "VARBORG.Attack.NoActions" : "VARBORG.Attack.NoReaction"));
@@ -157,6 +162,8 @@ export async function rollAttack(actor, item) {
     diceRule, abilityScore, dr,
     // Extra damage from item effects (step 49e), such as "d8 + 2".
     damageFormula: isDamageFormula(formula) ? withExtraDamage(formula, conditions.own) : null,
+    // Extra damage only on a Triumph, added after doubling (Holy smite, step 51a).
+    triumphDamage: triumphDamage(conditions.own),
     weaponDamage: weapon.damage,
     ruinedBefore: ruined,
     // Characters defend instead, so only a foe or no target gets Inflict damage.
@@ -191,6 +198,30 @@ export async function rollAttack(actor, item) {
 }
 
 /**
+ * The Gravecaller's Thrall attack (GAPS 213): their thrall's weapon (d4),
+ * made with Sanity at DR12, through the usual attack dialog and card. It
+ * spends none of the Gravecaller's actions but counts toward their
+ * multiple-attack Bane.
+ * @param {Actor} actor  The Gravecaller.
+ */
+export async function rollThrallAttack(actor) {
+  const { ownedThralls } = await import("../minions.mjs");
+  const thrall = ownedThralls(actor)[0];
+  const weapon = thrall?.items.find(item => item.type === "weapon") ?? null;
+  const system = weapon ? weapon.toObject().system : { kind: "melee", damage: "d4", damageType: "bleeding" };
+  const item = {
+    id: weapon?.id ?? "thrallAttack",
+    name: `${thrall?.name ?? game.i18n.localize("VARBORG.Thrall.Name")}: ${weapon?.name ?? game.i18n.localize("VARBORG.Thrall.Attack")}`,
+    type: "weapon",
+    actor,
+    _stats: {},
+    system: { ...system, kind: "melee", thrown: 0, reload: 0, attackAbility: "sanity" },
+    update: async () => null
+  };
+  return rollAttack(actor, item, { spendPips: false });
+}
+
+/**
  * Work the attack card out from its stored inputs, dice and damage: roll
  * what is missing (new dice after a Fortune reroll, damage on a new hit),
  * then make the character's Ruin and the foe's armour match the result,
@@ -210,7 +241,9 @@ export async function settleAttackCard(actor, data) {
     state.dice = diceOf(roll);
   }
   const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr });
-  const tier = fortuneTier(result.tier, state.softened);
+  let tier = fortuneTier(result.tier, state.softened);
+  // Field notes: Study the specimen cannot Ruin against a noted kind (GAPS 214).
+  if (inputs.noRuin && tier === "ruin") tier = "failure";
   state.tier = tier;
   // A power uses its own outcomes (rules 3.10).
   const power = inputs.power ?? null;
@@ -226,6 +259,7 @@ export async function settleAttackCard(actor, data) {
       const damageRoll = await new Roll(inputs.damageFormula).evaluate({ maximize: state.maximized });
       rolls.push(damageRoll);
       state.damage = damageRoll.total;
+      state.triumphExtra = null;
     }
     damage = {
       formula: inputs.damageFormula,
@@ -235,6 +269,16 @@ export async function settleAttackCard(actor, data) {
       halved: outcome.multiplier === 0.5,
       maximized: state.maximized
     };
+    // Holy smite: an extra die on a Triumph, after doubling (step 51a).
+    if (!power && tier === "triumph" && inputs.triumphDamage) {
+      if (state.triumphExtra === null || state.triumphExtra === undefined) {
+        const extraRoll = await new Roll(inputs.triumphDamage).evaluate({ maximize: state.maximized });
+        rolls.push(extraRoll);
+        state.triumphExtra = extraRoll.total;
+      }
+      damage.extra = { formula: inputs.triumphDamage, value: state.triumphExtra, before: damage.total };
+      damage.total += state.triumphExtra;
+    }
   }
 
   // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
@@ -323,7 +367,9 @@ function attackConditions(actor, target, mode, ability, item) {
   // The weapon's tags and item (the chosen weapon) and the target's category (step 49h).
   const effectContext = {
     roll: "attack", ability, weapon: weaponTags(item.system, mode),
-    weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: item.system.damageType ?? ""
+    weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: item.system.damageType ?? "",
+    // The target's conditions (Hit 'em where it hurts, step 51a).
+    targetStatuses: [...(target?.statuses ?? [])]
   };
   return {
     // Unbroken: Frightened gives no Bane on attacks (step 50f).

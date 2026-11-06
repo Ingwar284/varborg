@@ -116,7 +116,10 @@
       "ThrownFeet": "Thrown (feet)",
       "RangedFeet": "Ranged (feet)",
       "ReloadActions": "Reload (actions)",
-      "ZeroHint": "Leave a number at 0 if the weapon does not have that trait."
+      "ZeroHint": "Leave a number at 0 if the weapon does not have that trait.",
+      "AttackAbility": "Attacks with",
+      "AttackAbilityHint": "The ability every attack with this weapon tests, instead of the usual one (the Spirit-linked sword: Presence).",
+      "AttackAbilityUsual": "As usual"
     },
     "DamageType": {
       "blunt": "Blunt force",
@@ -367,7 +370,8 @@
         "ancestry": "Ancestry feat",
         "class": "Class feat",
         "passive": "Foe passive",
-        "difficulty": "Difficulty feat"
+        "difficulty": "Difficulty feat",
+        "feature": "Class feature"
       },
       "Improving": "Gained through Improving",
       "ImprovingHint": "Tick this if the feat was chosen when Improving. Only these feats raise the DR of the Death’s Door Sanity test.",
@@ -571,6 +575,7 @@
         "ruin": "Your weapon jams or your grip falters: Bane on attacks until you spend an action to recover."
       },
       "Damage": "Damage",
+      "OnTriumph": "on a Triumph",
       "BadDamage": "Damage “{formula}” is not a dice formula. Roll it by hand.",
       "ArmourLowered": "{name}’s armour: {from} → {to}.",
       "NoArmourToLower": "{name} has no armour to lower.",
@@ -808,7 +813,8 @@
       "BackNow": "{name} can use these again: {items}.",
       "ResetVisit": "Reset visit uses",
       "ResetVisitTooltip": "The party reaches a new settlement: every “once per visit” use (such as Haggler) comes back.",
-      "NoVisitUses": "No once-per-visit uses were spent."
+      "NoVisitUses": "No once-per-visit uses were spent.",
+      "Which": "What do you want to do?"
     },
     "Light": {
       "Label": "Light",
@@ -1451,6 +1457,8 @@
       "DamageType": "Damage type",
       "DamageTypeHint": "Fire, poison, acid, lightning or radiant when the text names it. Feats such as Firebug, Tempered by the Forge and Ancestral Resonance use it. None for plain damage.",
       "DamageHint": "The power's own damage dice, such as d6. Leave empty if it deals none.",
+      "Magic": "Magic-themed",
+      "MagicHint": "Autodidactism: tick if this power is magic-themed. A d6 is rolled after it: on a 1, a Photonic Surge.",
       "SustainedLabel": "Sustained",
       "SustainedHint": "Lasts while its user spends the Sustain action (◈) on each of their turns.",
       "ReactionLabel": "Reaction (↻)",
@@ -1564,10 +1572,12 @@
       "ScrollNoEmber": "Read from a scroll: no Ember spent.",
       "ScrollSustainNote": "A Sustained spell from a scroll: the scroll is gone, so keep track of sustaining it yourself (◈ each turn).",
       "LifeForce": "Spend life force (wounds)",
-      "LifeForceHint": "Test Toughness instead of Sanity, and lower the DR by d4 for each wound (never below DR6). Each wound tests Toughness as a wound at 0 HP, but HP does not change. You can spend up to {left}.",
+      "LifeForceHint": "Test Toughness instead of Sanity, and lower the DR by {die} for each wound (never below DR6). Each wound tests Toughness as a wound at 0 HP, but HP does not change. You can spend up to {left}.",
       "LifeForceNone": "You are at your maximum wounds, so you cannot spend life force.",
       "LifeForceNote": "Life force: {count} wound(s), Toughness instead of Sanity, DR −{reduction} ({formula}: {dice}).",
-      "LifeForceAtMax": "{name} is now at maximum wounds: the next 0 HP is Death's Door."
+      "LifeForceAtMax": "{name} is now at maximum wounds: the next 0 HP is Death's Door.",
+      "InSpellbook": "In spellbook",
+      "InSpellbookHint": "Tome keeper: a spell written in your spellbook is never cast with the off-list Bane. Untick it if the book is lost."
     },
     "Gloom": {
       "Abilities": "Gloom abilities",
@@ -2434,7 +2444,10 @@
         "Power": "Class power",
         "Spell": "Spell",
         "SpellHint": "Learn one spell from the {list} list, costing at most {cost} 🟒. Further spells are learned from spell tomes.",
-        "Hint": "You begin with the class feature (in the class's description) and its class power, and nothing more. Listed: the powers of the chosen class, and class powers whose class is not recorded yet.",
+        "Hint": "You begin with your class feature and class power, and nothing more (rules 2.5); both are set by the class and added with it. The class's other feats and powers are earned through Improving.",
+        "ComesWith": "Comes with the class feature {feature} and the class power {power}.",
+        "FeatureTaken": "{name} gains the class feature {feature}.",
+        "NotFound": "{name} is not in the compendiums: add it by hand.",
         "CardTitle": "{name}'s class power and spell",
         "PowerTaken": "{name} takes the class power {power}.",
         "SpellLearned": "{name} learns the spell {spell}."
@@ -2595,7 +2608,14 @@
         "shieldRaiseFree": "Raising a shield is a free action (1 = yes)",
         "chosenAgile": "The chosen weapon is Agile (1 = yes)",
         "chosenHeavy": "The chosen weapon is Heavy (1 = yes)",
-        "vehicleCrashHalf": "The vehicle you drive takes half crash damage (1 = yes)"
+        "vehicleCrashHalf": "The vehicle you drive takes half crash damage (1 = yes)",
+        "shootAgility": "Shoot attacks test Agility instead of Presence (1 = yes)",
+        "armourPenaltyMaxTier": "No Agility or defence DR from armour up to tier",
+        "lifeForceDie": "Life force die (normally d4)",
+        "fastDifficultDr": "Driving DR under difficult circumstances at fast speed",
+        "throwStrength": "Thrown attacks test Strength instead of Agility (1 = yes)",
+        "pistolAgility": "The Flintlock pistol tests Agility instead of Presence (1 = yes)",
+        "spellbookNoBane": "Spells ticked In spellbook have no off-list Bane (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2627,7 +2647,8 @@
       "Grant": {
         "none": "No Boon or Bane",
         "boon": "Boon",
-        "bane": "Bane"
+        "bane": "Bane",
+        "noRuin": "a Ruin counts as a Failure"
       },
       "DrLabel": "DR",
       "DrHint": "Added to the DR: −2 makes the roll easier.",
@@ -2679,6 +2700,16 @@
       "SetDamageLabel": "Damage becomes",
       "SetDamageHint": "Replaces the weapon’s damage dice, such as d10 (Couched Lance). Empty: the weapon’s own.",
       "SetDamagePart": "damage {damage}",
+      "AllyButtonNotYours": "Only {name}'s player can use this.",
+      "AuraFeetLabel": "Feet",
+      "AuraFeetHint": "How far the aura reaches from your token. 5 reaches the squares next to you.",
+      "AdrenalineGained": "{item}: {name} has Adrenaline until the start of their next turn. {note}",
+      "AdrenalineNoCombat": "{item}: Adrenaline only counts in combat, so nothing is tracked.",
+      "AdrenalineEnds": "{name}'s Adrenaline ends.",
+      "NoSurge": "{item}: the d6 shows {total}, no Photonic Surge.",
+      "Surge": "{item}: the d6 shows {total}, a Photonic Surge! The table is drawn.",
+      "SurgeNoTable": "{item}: the d6 shows {total}, a Photonic Surge! The Photonic Surge table is not in the compendiums: roll it by hand.",
+      "AuraHeal": "{item}: {name} regains {amount} HP ({from} → {to}).",
       "SwitchedOn": "{item} is on until the encounter ends ({note}).",
       "RerollOnesPart": "damage dice showing 1 rolled again",
       "RerollOnesHint": "Damage dice that show 1 are rolled again once (Hawkeye).",
@@ -2702,7 +2733,11 @@
         "newDay": "At the start of each day",
         "death": "When you would die",
         "agonyDeath": "When a Table of Agony result would kill you",
-        "combatEnd": "When a combat you were in ends"
+        "combatEnd": "When a combat you were in ends",
+        "risky": "When you use a power marked Risky",
+        "cast": "When you cast a spell or use a magic-themed power",
+        "surge": "When a Photonic Surge occurs",
+        "aura": "When another creature starts its turn within the amount in feet (combat)"
       },
       "ActionLabel": "Do",
       "Action": {
@@ -2722,11 +2757,20 @@
         "chanceDie": "Roll the Chance Die",
         "makeMinion": "Make a minion (Weak, or its tier rolled with the amount)",
         "switchOn": "Switch on until the encounter ends",
+        "adrenaline": "Gain Adrenaline (until the start of your next turn)",
+        "photonicSurge": "Roll the amount: a Photonic Surge on a 1",
+        "auraHeal": "Aura: an ally regains the amount",
+        "auraHurt": "Aura: a foe takes the amount",
         "lowerDamage": "Offer −damage on defence cards",
         "takeDamage": "Take damage that nothing reduces",
         "upgradeCompanion": "Change your minion or vehicle once",
         "healCompanion": "Your minion or vehicle regains HP",
-        "hurtCompanion": "Your minion or vehicle loses HP"
+        "hurtCompanion": "Your minion or vehicle loses HP",
+        "makeCompanion": "Make your companion (once)",
+        "mount": "Mount up or dismount",
+        "raiseThrall": "Raise a thrall",
+        "thrallAttack": "Thrall attack (Sanity, DR12)",
+        "recordKind": "Record the targeted creature's kind"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2745,7 +2789,13 @@
         "itemOn": "while switched on",
         "ruin": "on a Ruin",
         "natural1": "on a natural 1",
-        "failed": "on a Failure or Ruin"
+        "failed": "on a Failure or Ruin",
+        "triumph": "extra damage only on a Triumph",
+        "targetHindered": "target Blinded, Restrained or Slowed",
+        "targetNotHindered": "target not Blinded, Restrained or Slowed",
+        "lightArmour": "in t1 armour or none",
+        "adrenaline": "while you have Adrenaline",
+        "mounted": "while mounted"
       },
       "CardWhenHint": "Which cards show the button. An ability limits it to tests of that ability.",
       "FailAgainLabel": "If it fails again",
@@ -2846,9 +2896,12 @@
       "VersusHint": "Only against foes of the Bestiary category picked by this item's choice (Favoured prey).",
       "Versus": {
         "any": "Any target",
+        "own": "Only on your own cards",
         "chosenCategory": "Foes of the chosen category",
         "chosenDamageType": "The chosen damage type",
-        "persistent": "Persistent damage of any type"
+        "persistent": "Persistent damage of any type",
+        "allies": "Also on the other player characters' cards",
+        "notedKind": "Kinds written in this item's notes"
       },
       "Choice": {
         "KindLabel": "Choose",
@@ -2858,7 +2911,8 @@
           "spell": "A spell (added to you)",
           "category": "A Bestiary category",
           "damageType": "A damage type",
-          "text": "Something written down"
+          "text": "Something written down",
+          "spellList": "A spell list"
         },
         "FromLabel": "From",
         "From": {
@@ -2883,7 +2937,8 @@
           "spell": "Choose a spell.",
           "category": "Choose a Bestiary category.",
           "damageType": "Choose a damage type.",
-          "text": "Write down your choice."
+          "text": "Write down your choice.",
+          "spellList": "Choose a spell list. Spells from other lists are cast with Bane."
         },
         "None": {
           "weapon": "{name} has no weapon to choose for {item}. Add one, then press Choose in the item's Effects.",
@@ -2891,6 +2946,7 @@
           "spell": "No spell fits {item}'s choice.",
           "category": "No category to choose.",
           "damageType": "No damage type to choose.",
+          "spellList": "No spell list to choose.",
           "text": "Nothing to choose."
         },
         "Made": "{name} chooses {chosen} for {item}.",
@@ -2903,7 +2959,31 @@
       "RefreshTitle": "Copy compendium effects",
       "RefreshExplanation": "Every item in this world that came from a VÅR BORG compendium, and has no effects or automation status of its own, gets the compendium entry’s effects and status. Items you have given effects by hand are left alone. A choice copied this way is not made yet: press Choose on the item.",
       "RefreshButton": "Copy now",
-      "RefreshDone": "Compendium effects copied onto {count} items."
+      "RefreshDone": "Compendium effects copied onto {count} items.",
+      "MountUp": "Mount up",
+      "Dismount": "Dismount",
+      "MountedLine": "{item}: {name} is in the saddle until they dismount.",
+      "DismountedLine": "{item}: {name} dismounts.",
+      "RecordNoTarget": "Target the creature to record first.",
+      "Recorded": "{item}: {kind} is recorded. Notes: {list}.",
+      "NoRuinPart": "a Ruin counts as a Failure",
+      "PowerLabel": "Only power",
+      "PowerHint": "Only with the power of this name, such as Study the specimen. Empty: any.",
+      "MakesLabel": "Makes",
+      "MakesHint": "The UUID of the compendium actor this Use makes: a minion, a vehicle, or the Thrall stat block."
+    },
+    "Companion": {
+      "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",
+      "MadeMinion": "{item}: {name} is made as {owner}'s minion. Drag it onto the scene.",
+      "MadeVehicle": "{item}: {name} is made, with {owner} aboard as its driver. Drag it onto the scene."
+    },
+    "Thrall": {
+      "Name": "Thrall",
+      "Attack": "Grasping hands and teeth",
+      "None": "{name} has no thrall to attack with.",
+      "Attacks": "{name} makes a thrall's attack.",
+      "Raised": "{item}: {owner} raises a thrall. It is a mook: 1 HP, it fails every test, and it collapses when the encounter ends (or after 10 minutes outside combat).",
+      "Collapse": "The encounter is over: {count} thrall(s) collapse."
     }
   }
 }

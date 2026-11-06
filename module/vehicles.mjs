@@ -31,7 +31,7 @@ import {
   CARGO_TYPES, cargoLoad, allowedSpeeds, drivingBane
 } from "./rules/vehicles.mjs";
 import { bestSoak } from "./rules/defence.mjs";
-import { withStat } from "./rules/item-effects.mjs";
+import { withStat, drivingDrWith } from "./rules/item-effects.mjs";
 import { wornArmour } from "./rules/test-modifiers.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
@@ -176,11 +176,13 @@ export async function driveVehicle(vehicle) {
     return;
   }
 
-  const choice = await askDriving(vehicle, speeds, load);
+  // No Number: difficult circumstances at fast speed at DR12 (step 51a).
+  const fastDifficult = driver.system.statBonuses?.fastDifficultDr;
+  const choice = await askDriving(vehicle, speeds, load, fastDifficult);
   if (!choice) return;
   const { speed, manoeuvre } = choice;
   const feet = vehicle.system.speed[speed];
-  const dr = drivingDr(manoeuvre, speed);
+  const dr = drivingDrWith(drivingDr(manoeuvre, speed), manoeuvre, speed, fastDifficult);
   const how = i18n.format("VARBORG.Vehicle.How", {
     vehicle: vehicle.name, speed: speedLabel(speed).toLowerCase(),
     manoeuvre: i18n.localize(`VARBORG.Vehicle.Manoeuvre.${manoeuvre}`).toLowerCase(), feet
@@ -210,7 +212,7 @@ export async function driveVehicle(vehicle) {
 }
 
 /** The Drive dialog: speed (only those the load allows) and manoeuvre, with the table. */
-async function askDriving(vehicle, allowed, load) {
+async function askDriving(vehicle, allowed, load, fastDifficult = null) {
   const i18n = game.i18n;
   const option = (value, label, selected) => `<option value="${value}"${selected ? " selected" : ""}>${label}</option>`;
   const start = allowed.includes("normal") ? "normal" : allowed[0];
@@ -219,7 +221,7 @@ async function askDriving(vehicle, allowed, load) {
   const manoeuvres = MANOEUVRES.map(m => option(m, i18n.localize(`VARBORG.Vehicle.Manoeuvre.${m}`), m === "driving")).join("");
   const rows = MANOEUVRES.map(m => `<tr><th>${i18n.localize(`VARBORG.Vehicle.Manoeuvre.${m}`)}</th>`
     + SPEEDS.map(speed => {
-      const dr = drivingDr(m, speed);
+      const dr = drivingDrWith(drivingDr(m, speed), m, speed, fastDifficult);
       return `<td>${dr === null ? i18n.localize("VARBORG.Vehicle.NA") : `DR${dr}`}</td>`;
     }).join("") + "</tr>").join("");
   const content = `<div class="var-borg-test-dialog vehicle-dialog">

@@ -12,7 +12,9 @@ import {
   useEffects, rerollItems, ALL_ACTIONS, choicesOf, choiceCandidates, fortuneFormula,
   unarmedDamage, longerRange, reloadActions, withWeaponStats, rerollingOnes, cardButtons, chanceWithSplit, cappedArmourDr,
   resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions,
-  betterMode, chosenWeaponTraits, changedSpeeds
+  betterMode, chosenWeaponTraits, changedSpeeds, isOn, lifeForceDie, masteredArmourDr, drivingDrWith, triumphDamage,
+  hasAdrenaline, isRiskyPower, auraReaches, chosenSpellList,
+  notedKinds, withNotedKind, isActorUuid, useChoices
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -521,4 +523,140 @@ test("companion upgrades: speeds lowered, never below 0; the fields are checked 
   assert.deepEqual(effectProblems(plate), []);
   assert.deepEqual(effectProblems({ ...plate, companion: "horse" }), ["companion: horse"]);
   assert.deepEqual(effectProblems({ ...blankEffect("use"), action: "healCompanion", companion: "vehicle", amount: "d8" }), []);
+});
+
+test("Barbaric Rage: stats only while switched on for this combat; a hook can switch on at initiative (step 51a)", () => {
+  const rage = { ...stat("soak", 2, "set"), requires: "itemOn" };
+  assert.equal(statBonuses([{ ...rage, on: "c1" }], { combatId: "c1" }).soak.set, 2);
+  assert.equal(statBonuses([{ ...rage, on: "c1" }], { combatId: "c2" }).soak, undefined);
+  assert.equal(statBonuses([rage], { combatId: "c1" }).soak, undefined);
+  assert.equal(isOn({ on: "" }, ""), true);
+  assert.equal(isOn({}, ""), false);
+  assert.deepEqual(effectProblems(rage), []);
+  assert.deepEqual(effectProblems({ ...rage, requires: "noCombat" }), ["requires: noCombat"]);
+  assert.deepEqual(effectProblems({ ...blankEffect("hook"), event: "initiative", action: "switchOn" }), []);
+});
+
+test("Holy smite: extra damage only on a Triumph, kept out of the usual damage (step 51a)", () => {
+  const smite = roll({ roll: "attack", damage: "d6", requires: "triumph" });
+  const mods = rollEffects([smite, roll({ roll: "attack", damage: "2" })], { roll: "attack" }).auto;
+  assert.equal(withExtraDamage("d8", mods), "d8 + 2");
+  assert.equal(triumphDamage(mods), "d6");
+  assert.equal(triumphDamage([]), "");
+});
+
+test("Hit 'em where it hurts: automatic against a hindered target, otherwise a tick (step 51a)", () => {
+  const auto = roll({ roll: "attack", damage: "d6", requires: "targetHindered" });
+  const tick = roll({ roll: "attack", damage: "d6", requires: "targetNotHindered", mode: "optional" });
+  const slowed = rollEffects([auto, tick], { roll: "attack", targetStatuses: ["slowed"] });
+  assert.equal(slowed.auto.length, 1);
+  assert.equal(slowed.optional.length, 0);
+  const plain = rollEffects([auto, tick], { roll: "attack", targetStatuses: ["prone"] });
+  assert.equal(plain.auto.length, 0);
+  assert.equal(plain.optional.length, 1);
+});
+
+test("Grace in Motion: only in t1 armour or none (step 51a)", () => {
+  const grace = roll({ roll: "defence", dr: -2, mode: "optional", requires: "lightArmour" });
+  assert.equal(fitsRoll(grace, { roll: "defence", facts: { armourTier: 0 } }), true);
+  assert.equal(fitsRoll(grace, { roll: "defence", facts: { armourTier: 1 } }), true);
+  assert.equal(fitsRoll(grace, { roll: "defence", facts: { armourTier: 2 } }), false);
+});
+
+test("Wilderness hunter shoots with Agility; Armour mastery; Blood of power; No Number (step 51a)", () => {
+  const bonuses = statBonuses([stat("shootAgility", 1, "set"), stat("armourPenaltyMaxTier", 3, "set"), stat("lifeForceDie", 6, "set"), stat("fastDifficultDr", 12, "set")]);
+  assert.equal(withWeaponStats({ kind: "shoot" }, bonuses).shootAbility, "agility");
+  assert.equal(withWeaponStats({ kind: "shoot" }, {}).shootAbility, undefined);
+  assert.equal(masteredArmourDr(4, 3, bonuses.armourPenaltyMaxTier), 0);
+  assert.equal(masteredArmourDr(4, 4, bonuses.armourPenaltyMaxTier), 4);
+  assert.equal(masteredArmourDr(2, 2, undefined), 2);
+  assert.equal(lifeForceDie(bonuses.lifeForceDie), "d6");
+  assert.equal(lifeForceDie(undefined), "d4");
+  assert.equal(drivingDrWith(14, "difficult", "fast", bonuses.fastDifficultDr), 12);
+  assert.equal(drivingDrWith(12, "difficult", "normal", bonuses.fastDifficultDr), 12);
+  assert.equal(drivingDrWith(14, "difficult", "fast", undefined), 14);
+});
+
+test("Adrenaline: on for this combat only; Risky powers; feats that need it (step 51a2, GAPS 206)", () => {
+  const gain = { ...blankEffect("use"), action: "adrenaline" };
+  assert.equal(hasAdrenaline([{ ...gain, on: "c1" }], "c1"), true);
+  assert.equal(hasAdrenaline([{ ...gain, on: "c1" }], "c2"), false);
+  assert.equal(hasAdrenaline([{ ...gain, on: "" }], ""), false);
+  assert.equal(hasAdrenaline([gain], "c1"), false);
+  assert.deepEqual(effectProblems({ ...blankEffect("hook"), event: "risky", action: "adrenaline" }), []);
+  assert.equal(isRiskyPower("Risky. You hurl yourself into the fray."), true);
+  assert.equal(isRiskyPower("A careful plan. Not risky at all."), false);
+  const scramble = roll({ roll: "defence", dr: -2, mode: "optional", requires: "adrenaline" });
+  assert.equal(fitsRoll(scramble, { roll: "defence", facts: { adrenaline: true } }), true);
+  assert.equal(fitsRoll(scramble, { roll: "defence", facts: {} }), false);
+});
+
+test("Primal Conduit: a 5' aura reaches the next square, bigger tokens reach further (step 51a2, GAPS 207)", () => {
+  assert.equal(auraReaches({ centreDistance: 5, radius: 5 }), true);
+  assert.equal(auraReaches({ centreDistance: 10, radius: 5 }), false);
+  assert.equal(auraReaches({ centreDistance: 7.5, sizeB: 2, radius: 5 }), true);
+  assert.equal(auraReaches({ centreDistance: 12.5, sizeB: 2, radius: 5 }), false);
+  const heal = { ...blankEffect("hook"), event: "aura", action: "auraHeal", amount: "1", value: 5 };
+  assert.deepEqual(effectProblems(heal), []);
+  assert.deepEqual(effectProblems({ ...heal, value: 0 }), ["aura radius: 0"]);
+  assert.deepEqual(effectProblems({ ...heal, event: "turnStart" }), ["auraHeal at turnStart"]);
+});
+
+test("Autodidactism: the chosen spell list; a surge hook (step 51a2, GAPS 208)", () => {
+  const list = { ...blankEffect("choice"), choose: "spellList", chosen: "primal" };
+  assert.equal(chosenSpellList(collectEffects([{ id: "a", name: "Autodidactism", system: { effects: [list] } }])), "primal");
+  assert.equal(chosenSpellList([]), "");
+  assert.deepEqual(effectProblems(list), []);
+  assert.deepEqual(effectProblems({ ...blankEffect("hook"), event: "cast", action: "photonicSurge", amount: "1d6" }), []);
+});
+
+test("Call upon the divine: an allies reroll on failed cards only (step 51a2, GAPS 209)", () => {
+  const divine = { ...blankEffect("use"), action: "reroll", roll: "test", requires: "failed", vs: "allies", item: "Call upon the divine", itemId: "p1", frequency: "day", used: false };
+  assert.equal(cardButtons([divine], "test", { tier: "failure" }).length, 1);
+  assert.equal(cardButtons([divine], "test", { tier: "success" }).length, 0);
+  assert.equal(cardButtons([{ ...divine, used: true }], "test", { tier: "ruin" }).length, 0);
+  assert.deepEqual(effectProblems(divine), []);
+});
+
+test("in the saddle: stats and rolls only while mounted (step 51a3, GAPS 212)", () => {
+  const armour = { ...stat("armourPenaltyMaxTier", 3, "set"), requires: "mounted" };
+  assert.equal(statBonuses([{ ...armour, mounted: true }]).armourPenaltyMaxTier.set, 3);
+  assert.equal(statBonuses([{ ...armour, mounted: false }]).armourPenaltyMaxTier, undefined);
+  const gallop = roll({ roll: "attack", weapon: "throw", damage: "2", mode: "optional", requires: "mounted" });
+  assert.equal(fitsRoll({ ...gallop, mounted: true }, { roll: "attack", weapon: ["throw"] }), true);
+  assert.equal(fitsRoll(gallop, { roll: "attack", weapon: ["throw"] }), false);
+  assert.deepEqual(effectProblems(armour), []);
+  const bonuses = statBonuses([{ ...stat("throwStrength", 1, "set"), requires: "mounted", mounted: true }, stat("pistolAgility", 1, "set")]);
+  assert.equal(withWeaponStats({ kind: "melee", thrown: 20 }, bonuses).throwAbility, "strength");
+  assert.equal(withWeaponStats({ kind: "shoot" }, bonuses, false, { pistol: true }).shootAbility, "agility");
+  assert.equal(withWeaponStats({ kind: "shoot" }, bonuses).shootAbility, undefined);
+});
+
+test("companions and thralls are made from compendium actors (step 51a3, GAPS 211, 213)", () => {
+  assert.equal(isActorUuid("Compendium.var-borg.minions.Actor.vbMn055000000000"), true);
+  assert.equal(isActorUuid("Compendium.var-borg.weapons.Item.vbWeapSpirit0000"), false);
+  const make = { ...blankEffect("use"), action: "makeCompanion", gift: "Compendium.var-borg.minions.Actor.vbMn055000000000" };
+  assert.deepEqual(effectProblems(make), []);
+  assert.deepEqual(effectProblems({ ...make, gift: "" }), ["actor: "]);
+  const mount = { ...blankEffect("use"), action: "mount" };
+  const blood = [{ ...blankEffect("use"), action: "takeDamage", amount: "d4" }, { ...blankEffect("use"), action: "gainEmber", amount: "2" }];
+  assert.deepEqual(useChoices([make, mount]).map(list => list.map(effect => effect.action)), [["makeCompanion"], ["mount"]]);
+  assert.equal(useChoices(blood).length, 1);
+  assert.equal(useChoices(blood)[0].length, 2);
+  assert.equal(useChoices([mount, ...blood]).length, 2);
+});
+
+test("Field notes: kinds written down, Boon and no Ruin against them (step 51a3, GAPS 214)", () => {
+  assert.deepEqual(notedKinds(" Wax Ox, gloamlice ,"), ["wax ox", "gloamlice"]);
+  assert.equal(withNotedKind("Wax Ox", "Gloamlice"), "Wax Ox, Gloamlice");
+  assert.equal(withNotedKind("Wax Ox", "wax ox"), "Wax Ox");
+  assert.equal(withNotedKind("", "Wax Ox"), "Wax Ox");
+  const boon = roll({ roll: "gloomTest", grant: "boon", vs: "notedKind", choices: { text: "Wax Ox, Gloamlice" } });
+  assert.equal(fitsRoll(boon, { roll: "gloomTest", targetName: "Wax Ox" }), true);
+  assert.equal(fitsRoll(boon, { roll: "gloomTest", targetName: "Ghoul" }), false);
+  const study = roll({ roll: "power", grant: "noRuin", vs: "notedKind", power: "Study the specimen", choices: { text: "Wax Ox" } });
+  assert.equal(fitsRoll(study, { roll: "power", powerName: "Study the specimen", targetName: "wax ox" }), true);
+  assert.equal(fitsRoll(study, { roll: "power", powerName: "Fireball", targetName: "Wax Ox" }), false);
+  assert.equal(withEffect(rollEffects([study], { roll: "power", powerName: "Study the specimen", targetName: "Wax Ox" }).auto)[0].noRuin, true);
+  assert.deepEqual(effectProblems(study), []);
 });

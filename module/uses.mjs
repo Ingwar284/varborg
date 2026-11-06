@@ -18,6 +18,7 @@
 import { canUseOnce, hasFrequency, itemsToReset } from "./rules/uses.mjs";
 import { collectEffects, useEffects } from "./rules/item-effects.mjs";
 import { doEffectAction } from "./effects.mjs";
+import { useChoices } from "./rules/item-effects.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -77,6 +78,30 @@ function cardText(text) {
 }
 
 /**
+ * The Use effects to do now: all of them, or, when the item has actions
+ * that are done on their own (making a companion, mounting, raising a
+ * thrall…), the ones the player picks. Null when the dialog is closed.
+ * @param {Item} item
+ * @returns {Promise<object[]|null>}
+ */
+async function pickUseEffects(item) {
+  const choices = useChoices(itemUseEffects(item));
+  if (choices.length < 2) return choices[0] ?? [];
+  const i18n = game.i18n;
+  const label = effect => {
+    if (effect.action === "mount") return i18n.localize(effect.mounted ? "VARBORG.Effects.Dismount" : "VARBORG.Effects.MountUp");
+    return i18n.localize(`VARBORG.Effects.Action.${effect.action}`);
+  };
+  const picked = await foundry.applications.api.DialogV2.wait({
+    window: { title: item.name },
+    content: `<p>${foundry.utils.escapeHTML(i18n.localize("VARBORG.Uses.Which"))}</p>`,
+    buttons: choices.map((list, index) => ({ action: String(index), label: list.map(label).join(" + "), default: index === 0 })),
+    rejectClose: false
+  });
+  return picked === null || picked === undefined ? null : choices[Number(picked)] ?? null;
+}
+
+/**
  * The Use button: mark the item used and post its card.
  * @param {Actor} actor
  * @param {Item} item
@@ -88,12 +113,15 @@ export async function useLimitedItem(actor, item) {
     ui.notifications.warn(i18n.format("VARBORG.Uses.AlreadyUsed", { item: item.name, frequency: frequencyLabel(item).toLowerCase() }));
     return;
   }
+  // Several Use actions that are done on their own: ask which (step 51a3).
+  const effects = await pickUseEffects(item);
+  if (!effects) return;
   const limited = hasFrequency(item.system);
   if (limited) await item.update({ "system.frequencyUsed": true });
   // The item's Use effects: roll, heal, Ember, a condition (step 49g).
   const lines = [];
   const rolls = [];
-  for (const effect of itemUseEffects(item)) {
+  for (const effect of effects) {
     const done = await doEffectAction(actor, effect);
     lines.push(...done.lines);
     rolls.push(...done.rolls);

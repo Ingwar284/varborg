@@ -125,3 +125,13 @@ test("Recover spends one action on your own turn (GAPS 63)", () => {
   assert.deepEqual(recoverCost({ inCombat: true, onOwnTurn: false }), { allowed: false, actions: 0 });
   assert.deepEqual(recoverCost({ inCombat: false }), { allowed: true, actions: 0 });
 });
+
+test("a feature can make shoot attacks test another ability (Wilderness hunter, step 51a)", () => {
+  assert.deepEqual(attackAbilities({ kind: "shoot", shootAbility: "agility" }, "shoot"), ["agility"]);
+  assert.deepEqual(attackAbilities({ kind: "melee", shootAbility: "agility" }, "melee"), ["strength"]);
+});
+
+test("a weapon's own ability, and thrown attacks with Strength (step 51a3)", () => {
+  assert.deepEqual(attackAbilities({ kind: "melee", attackAbility: "presence", finesse: true }, "melee"), ["presence"]);
+  assert.deepEqual(attackAbilities({ kind: "melee", thrown: 20, throwAbility: "strength" }, "throw"), ["strength"]);
+});

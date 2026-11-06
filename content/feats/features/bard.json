@@ -1,0 +1,16 @@
+{
+  "_id": "vbFeature0200000",
+  "name": "Bard of Renown",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Wherever you go, your reputation precedes you. When meeting creatures whose reaction is uncertain, the Dark Master rolls for their reaction twice instead of once. You decide which outcome to take.",
+    "source": "feature",
+    "belongsTo": "Bard",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

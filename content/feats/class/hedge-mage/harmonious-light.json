@@ -12,11 +12,11 @@
     "frequencyUsed": false,
     "effects": [
       {
-        "kind": "reminder",
+        "kind": "hook",
         "target": "hpMax",
         "op": "add",
         "value": 0,
-        "roll": "spell",
+        "roll": "test",
         "ability": "",
         "against": "",
         "weapon": "",
@@ -32,9 +32,9 @@
         "from": "any",
         "chosen": "",
         "chosenName": "",
-        "event": "turnStart",
-        "action": "reminder",
-        "amount": "",
+        "event": "surge",
+        "action": "heal",
+        "amount": "d4",
         "condition": "",
         "keep": "better",
         "requires": "",
@@ -42,7 +42,9 @@
         "resist": "half",
         "gift": "",
         "setDamage": "",
-        "note": "when a Photonic Surge occurs, you and all allies within 10' heal d4 HP"
+        "companion": "minion",
+        "armour": "",
+        "note": "all allies within 10' heal d4 HP too"
       }
     ],
     "automation": "partial"

@@ -82,6 +82,10 @@
       <span>{{localize "VARBORG.Item.Expendable"}}</span>
       <select name="system.expendable">{{selectOptions expendableDice selected=system.expendable localize=true}}</select>
     </label>
+    <label data-tooltip="{{localize 'VARBORG.Weapon.AttackAbilityHint'}}">
+      <span>{{localize "VARBORG.Weapon.AttackAbility"}}</span>
+      <select name="system.attackAbility">{{selectOptions attackAbilities selected=system.attackAbility localize=true}}</select>
+    </label>
   </div>
   <p class="hint">{{localize "VARBORG.Weapon.ZeroHint"}}</p>
 

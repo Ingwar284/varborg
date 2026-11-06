@@ -12,11 +12,11 @@
     "frequencyUsed": false,
     "effects": [
       {
-        "kind": "reminder",
+        "kind": "hook",
         "target": "hpMax",
         "op": "add",
         "value": 0,
-        "roll": "spell",
+        "roll": "test",
         "ability": "",
         "against": "",
         "weapon": "",
@@ -32,7 +32,7 @@
         "from": "any",
         "chosen": "",
         "chosenName": "",
-        "event": "turnStart",
+        "event": "surge",
         "action": "reminder",
         "amount": "",
         "condition": "",
@@ -42,7 +42,9 @@
         "resist": "half",
         "gift": "",
         "setDamage": "",
-        "note": "once per day, when a Photonic Surge occurs, roll the d100 twice and choose"
+        "companion": "minion",
+        "armour": "",
+        "note": "once per day, roll the d100 twice and choose which result applies"
       }
     ],
     "automation": "partial"

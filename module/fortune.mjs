@@ -18,7 +18,7 @@
  */
 
 import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
-import { collectEffects, cardButtons, betterMode } from "./rules/item-effects.mjs";
+import { collectEffects, cardButtons, betterMode, ALLIES } from "./rules/item-effects.mjs";
 import { diceFormula } from "./rules/test-roll.mjs";
 import { rollShadowblight } from "./shadowblight.mjs";
 import { hasFrequency } from "./rules/uses.mjs";
@@ -33,10 +33,27 @@ const SUCCESS = "success";
 /** An item button that lowers damage taken (step 50d). */
 const LOWER = "lowerDamage";
 
-/** The item id and action of an item button. */
+/**
+ * The item id and action of an item button, and the actor whose item it is
+ * when that is another character ("item:actorId.itemId", Call upon the
+ * divine, step 51a2).
+ */
 function itemAction(action) {
-  const [itemId, kind] = action.slice(ITEM_PREFIX.length).split(":");
-  return { itemId, kind: [SUCCESS, LOWER].includes(kind) ? kind : SPEND.REROLL };
+  const [ref, kind] = action.slice(ITEM_PREFIX.length).split(":");
+  const [ownerId, itemId] = ref.includes(".") ? ref.split(".") : [null, ref];
+  return { itemId, ownerId, kind: [SUCCESS, LOWER].includes(kind) ? kind : SPEND.REROLL };
+}
+
+/**
+ * The item buttons other player characters offer on this character's card
+ * (Call upon the divine: "your own or that of an ally", GAPS 209).
+ */
+function allyButtons(actor, rollKind, card) {
+  if (actor?.type !== "character") return [];
+  return game.actors
+    .filter(other => other.type === "character" && other.id !== actor.id && other.hasPlayerOwner)
+    .flatMap(other => cardButtons(collectEffects(other.items).filter(effect => effect.vs === ALLIES), rollKind, card)
+      .map(entry => ({ ...entry, ownerId: other.id, item: `${entry.item} (${other.name})` })));
 }
 
 /** The kind of roll a card shows, for item rerolls (step 49g). */
@@ -121,10 +138,11 @@ export async function fortuneSection(data, shown) {
   // Each item once per card.
   const actor = data.offered.includes(SPEND.REROLL) ? await fromUuid(data.actorUuid) : null;
   const used = data.state.log.map(entry => entry.itemId).filter(Boolean);
+  const card = { tier: shown.tier, natural: shown.natural, ability: data.inputs?.ability, used, taken: shown.taken };
   const items = actor?.items
-    ? cardButtons(collectEffects(actor.items), cardRoll(data), { tier: shown.tier, natural: shown.natural, ability: data.inputs?.ability, used, taken: shown.taken })
+    ? [...cardButtons(collectEffects(actor.items), cardRoll(data), card), ...allyButtons(actor, cardRoll(data), card)]
     : [];
-  const keyOf = entry => `${ITEM_PREFIX}${entry.itemId}${[SUCCESS, LOWER].includes(entry.action) ? `:${entry.action}` : ""}`;
+  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${[SUCCESS, LOWER].includes(entry.action) ? `:${entry.action}` : ""}`;
   data.offered.push(...items.map(keyOf));
   return renderTemplate(BUTTONS_TEMPLATE, {
     buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
@@ -191,7 +209,14 @@ async function spendOnCard(message, action) {
   // An item's reroll is paid with that item's use, by its own character (step 49g).
   const byItem = action.startsWith(ITEM_PREFIX);
   // A minion has no Fortune: on its card your own character pays (GAPS 105, 169).
-  const spender = byItem ? actor : actor.isOwner && actor.type === "character" ? actor : game.user.character;
+  // Another character's item is paid by that character, whose player presses it (GAPS 209).
+  const ownerId = byItem ? itemAction(action).ownerId : null;
+  const itemOwner = ownerId ? game.actors.get(ownerId) : actor;
+  if (ownerId && !itemOwner?.isOwner) {
+    ui.notifications.warn(i18n.format("VARBORG.Effects.AllyButtonNotYours", { name: itemOwner?.name ?? "?" }));
+    return false;
+  }
+  const spender = byItem ? itemOwner : actor.isOwner && actor.type === "character" ? actor : game.user.character;
   if (spender?.type !== "character") {
     ui.notifications.warn(i18n.localize("VARBORG.Fortune.NoCharacter"));
     return false;
@@ -249,8 +274,8 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   if (action.startsWith(ITEM_PREFIX)) {
     // An item's reroll or Success: its use is spent instead of Fortune
     // (steps 49g, 50b2).
-    const { itemId, kind } = itemAction(action);
-    const item = actor.items.get(itemId);
+    const { itemId, ownerId, kind } = itemAction(action);
+    const item = (ownerId ? game.actors.get(ownerId) : actor)?.items.get(itemId);
     if (!item) return { error: "VARBORG.Fortune.Gone" };
     if (hasFrequency(item.system)) {
       if (item.system.frequencyUsed) return { error: "VARBORG.Fortune.NotNow" };

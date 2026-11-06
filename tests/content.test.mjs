@@ -160,6 +160,21 @@ test("every class has its additional feats (8, the Charioteer 9) and 7 powers", 
   assert.equal(classPowers.length, 147);
 });
 
+const classFeatures = readAll(join(root, "content", "feats", "features")).map(({ data }) => data);
+
+test("every class has its class feature as a feat, word for word, never gained by Improving (rules 2.5)", () => {
+  assert.equal(classFeatures.length, classes.length);
+  for (const c of classes) {
+    const name = /Class feature: (.+)/.exec(c.system.description)[1].trim();
+    const feat = classFeatures.find(f => f.name === name && f.system.belongsTo === c.name);
+    assert.ok(feat, `${c.name}: no class feature feat ${name}`);
+    assert.equal(feat.system.source, "feature", name);
+    assert.equal(feat.system.improving, false, name);
+    for (const line of feat.system.description.split("\n")) assert.ok(inRules(line), `feature ${name}: "${line.slice(0, 40)}…"`);
+    assert.equal(feat.system.frequency, frequencyFromText(feat.system.description), name);
+  }
+});
+
 test("each class's class power is one of its powers, costing 🟒1", () => {
   for (const c of classes) {
     const name = /Class power: (.+?) 🟒/.exec(c.system.description)[1];
@@ -233,7 +248,8 @@ test("a feat that says 'once per round/encounter/day' starts with that frequency
 });
 
 // 48f: weapons, armour, shields and gear (rules 4.1).
-const weapons = readAll(join(root, "content", "weapons")).map(({ data }) => data);
+// Weapons given by features (the Spirit-linked sword, step 51a3) are not in 4.1.
+const weapons = readAll(join(root, "content", "weapons")).filter(({ file }) => !/[\\/]gifts[\\/]/.test(file)).map(({ data }) => data);
 const armourItems = readAll(join(root, "content", "armour")).map(({ data }) => data);
 const gearItems = readAll(join(root, "content", "gear")).map(({ data }) => data);
 /** The lines of rules 4.1, trimmed. */

@@ -17,6 +17,7 @@ import { isCumbersomeByDefault } from "../rules/carrying.mjs";
 import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rules/light.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
 import { effectFields } from "./effects.mjs";
+import { ABILITIES } from "../rules/abilities.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -113,7 +114,10 @@ export class WeaponData extends EquipmentData {
       loaded: new BooleanField({ initial: true }),
       expendable: choice(EXPENDABLE_DICE, ""),
       // Out of ammunition: the expendable die rolled a 1 (GAPS 52).
-      usedUp: new BooleanField({ initial: false })
+      usedUp: new BooleanField({ initial: false }),
+      // The ability every attack with it tests, instead of the usual one
+      // (the Spirit-linked sword: Presence, GAPS 215). Blank: as usual.
+      attackAbility: new StringField({ required: true, blank: true, choices: ["", ...ABILITIES], initial: "" })
     };
   }
 

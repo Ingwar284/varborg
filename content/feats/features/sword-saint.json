@@ -1,0 +1,53 @@
+{
+  "_id": "vbFeature1800000",
+  "name": "Spirit-Linked Steel",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "You own a named flying sword (d6, 30' reach). Your spirit and that of your sword are joined. You use Presence instead of Strength for attack rolls with this sword. If the blade is ever broken or lost, you are Doomed until it is recovered or reforged.",
+    "source": "feature",
+    "belongsTo": "Sword Saint",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "gift",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "Compendium.var-borg.weapons.Item.vbWeapSpirit0000",
+        "setDamage": "",
+        "companion": "minion",
+        "armour": "",
+        "power": "",
+        "note": ""
+      }
+    ],
+    "automation": "partial"
+  }
+}

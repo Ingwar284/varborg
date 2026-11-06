@@ -32,9 +32,10 @@ import { startOfTurnTimers, endOfTurnTimers, endCombatTimers } from "./timers.mj
 import { resetLimitedUses } from "./uses.mjs";
 import { currentWeather } from "./weather.mjs";
 import { conditionsForTurn, turnConditionFor } from "./rules/weather-effects.mjs";
-import { startMinionTurn, postMinionTurn } from "./minions.mjs";
+import { startMinionTurn, postMinionTurn, removeThralls } from "./minions.mjs";
 import { withStat } from "./rules/item-effects.mjs";
-import { runItemHooks, initiativeKeep } from "./effects.mjs";
+import { runItemHooks, initiativeKeep, endAdrenaline } from "./effects.mjs";
+import { runAuras } from "./aura.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -114,7 +115,27 @@ export class VarBorgCombat extends foundry.documents.Combat {
     // Once-per-turn uses come back (step 49g), then item effects at the
     // start of the turn, such as Regenerative Marrow (step 49f).
     if (actor) await resetLimitedUses([actor], "turnStart");
+    // Adrenaline lasts until the start of the next turn (GAPS 206).
+    if (actor) await endAdrenaline(actor);
     if (actor) await runItemHooks(actor, "turnStart");
+    // Auras of other creatures that reach this one (Primal Conduit, GAPS 207).
+    await runAuras(this, combatant);
+  }
+
+  /**
+   * Roll initiative, then the item effects that act when it is rolled
+   * (Barbaric Rage switches on, step 51a). Run on the client that rolled.
+   */
+  async rollInitiative(ids, options = {}) {
+    const result = await super.rollInitiative(ids, options);
+    const done = new Set();
+    for (const id of typeof ids === "string" ? [ids] : ids) {
+      const actor = this.combatants.get(id)?.actor;
+      if (!actor?.isOwner || done.has(actor)) continue;
+      done.add(actor);
+      await runItemHooks(actor, "initiative");
+    }
+    return result;
   }
 
   /**
@@ -174,6 +195,11 @@ export class VarBorgCombat extends foundry.documents.Combat {
     endCombatTimers(this.combatants.map(combatant => combatant.actor).filter(Boolean));
     // Once-per-round and once-per-encounter uses come back (GAPS 161).
     resetLimitedUses(this.combatants.map(combatant => combatant.actor), "combatEnd");
+    // Items switched on for this encounter switch off (A good time,
+    // Barbaric Rage, step 51a).
+    switchOffItems(this);
+    // Thralls collapse when the encounter ends (GAPS 213).
+    if (this.started) removeThralls(this);
     // Items that act when a fight ends (Doomsworn, step 50a2).
     if (this.started) {
       const actors = new Set(this.combatants.map(combatant => combatant.actor).filter(Boolean));
@@ -250,6 +276,16 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
     if (allowed === false) return false;
     if (Number.isNumeric(this.initiative)) {
       this.updateSource({ [`flags.${SYSTEM}.tiebreak`]: Math.random() });
+    }
+  }
+}
+
+/** Switch off the items that were switched on for a combat that ended. */
+async function switchOffItems(combat) {
+  const actors = new Set(combat.combatants.map(combatant => combatant.actor).filter(Boolean));
+  for (const actor of actors) {
+    for (const item of actor.items) {
+      if (item.getFlag(SYSTEM, "on") === combat.id) await item.unsetFlag(SYSTEM, "on");
     }
   }
 }

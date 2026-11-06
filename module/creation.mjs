@@ -6,7 +6,8 @@
  * 1. Abilities (2.2): roll individually, roll together, or from zero to hero.
  * 2. Ancestry (2.3) and the one ancestry feat you begin with.
  * 3. Background (2.4): wealth and keepsake, as when it is dropped.
- * 4. Class (2.5): the class, its class power, and one spell from its list
+ * 4. Class (2.5): the class with its class feature and class power (both
+ *    set by the class, no choice), and one spell from its list
  *    costing at most 3 ember.
  * 5. Starting equipment (2.6): the class die on armour and weaponry, then
  *    d6, d8 and d10 on the gear tables.
@@ -28,7 +29,7 @@ import {
 } from "./rules/creation.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
 import { addOrigin } from "./origins.mjs";
-import { belongsTo } from "./rules/feats.mjs";
+import { belongsTo, classStarting } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
 import { fortuneFormula, FORTUNE_DIE } from "./rules/item-effects.mjs";
 
@@ -164,7 +165,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     method: ABILITY_METHODS[0],
     array: ["", "", "", "", ""],
     assigned: {},
-    ancestry: "", ancestryFeat: "", background: "", cls: "", power: "", spell: "", difficulty: ""
+    ancestry: "", ancestryFeat: "", background: "", cls: "", spell: "", difficulty: ""
   };
 
   /** @override */
@@ -233,7 +234,8 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       backgrounds: choices(s => s.type === "background", state.background),
       difficultyFeats: choices(s => s.type === "feat" && s.source === "difficulty", state.difficulty),
       classes: choices(s => s.type === "class", state.cls),
-      powers: choices(s => s.type === "power" && s.source === "class" && belongsTo(s.belongsTo, className), state.power),
+      // The class's own feature and power (rules 2.5), named by the class.
+      classStarting: await this.#classStartingNames(pickedClass?.uuid ?? actor.itemTypes.class?.[0]?.uuid),
       spells: choices(s => s.type === "spell" && learnable.has(spells.indexOf(s)), state.spell),
       hasSpellList: classList !== "none",
       spellHint: i18n.format("VARBORG.Creation.Class.SpellHint", {
@@ -245,6 +247,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
         class: now("class"),
         ancestryFeat: actor.itemTypes.feat.filter(f => f.system.source === "ancestry" && !f.system.improving).map(f => f.name).join(", "),
         power: actor.itemTypes.power.filter(p => p.system.source === "class").map(p => p.name).join(", "),
+        feature: actor.itemTypes.feat.filter(f => f.system.source === "feature").map(f => f.name).join(", "),
         spell: (actor.itemTypes.spell ?? []).map(s => s.name).join(", "),
         difficulty: actor.itemTypes.feat.filter(f => f.system.source === "difficulty").map(f => f.name).join(", ")
       },
@@ -260,7 +263,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
   static async #onChange(event, form, formData) {
     const data = foundry.utils.expandObject(formData.object);
     const state = this.state;
-    for (const key of ["method", "ancestry", "ancestryFeat", "background", "cls", "power", "spell", "difficulty"]) {
+    for (const key of ["method", "ancestry", "ancestryFeat", "background", "cls", "spell", "difficulty"]) {
       if (key in data) state[key] = data[key] ?? "";
     }
     if (data.array) {
@@ -278,7 +281,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     }
     // A new class may have another spell list: drop a spell it cannot learn.
     // A new ancestry or class has other feats, powers or spells: drop picks that may not fit.
-    if (event?.target?.name === "cls") state.spell = state.power = "";
+    if (event?.target?.name === "cls") state.spell = "";
     if (event?.target?.name === "ancestry") state.ancestryFeat = "";
     if (typeof data.name === "string" && data.name.trim() && data.name !== this.actor.name) {
       await this.actor.update({ name: data.name.trim() });
@@ -408,23 +411,48 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     await addOrigin(this.actor, background);
   }
 
-  /** The class, its class power and one spell (rules 2.1, Step 4). */
+  /**
+   * The names of a class's feature and power (rules 2.5), for the step's
+   * line, or null without a class.
+   */
+  async #classStartingNames(uuid) {
+    const cls = uuid ? await fromUuid(uuid) : null;
+    if (!cls) return null;
+    const names = classStarting(cls.system.description);
+    return names.feature || names.power ? names : null;
+  }
+
+  /**
+   * The class (rules 2.1, Step 4): it comes with its class feature and its
+   * class power, both set by the class (rules 2.5), replacing those of an
+   * earlier class. Then one spell from its list.
+   */
   static async #onApplyClass() {
     const i18n = game.i18n;
     const actor = this.actor;
     const cls = await itemData(this.state.cls);
-    const power = await itemData(this.state.power);
     const spell = await itemData(this.state.spell);
-    if (!cls && !power && !spell) {
+    if (!cls && !spell) {
       ui.notifications.warn("VARBORG.Creation.PickFirst", { localize: true });
       return;
     }
-    if (cls) await addOrigin(actor, cls);
     const lines = [];
-    if (power) {
-      const removed = await removeStarting(actor, "power", "class");
-      await actor.createEmbeddedDocuments("Item", [power]);
-      lines.push(i18n.format("VARBORG.Creation.Class.PowerTaken", { name: actor.name, power: power.name }));
+    if (cls) {
+      await addOrigin(actor, cls);
+      const names = classStarting(cls.system.description);
+      const sources = await gatherSources();
+      const find = (type, source, name) => sources.find(s => s.type === type && s.source === source && s.name === name && belongsTo(s.belongsTo, cls.name));
+      const removed = [...await removeStarting(actor, "feat", "feature"), ...await removeStarting(actor, "power", "class")];
+      for (const [type, source, name, key] of [["feat", "feature", names.feature, "FeatureTaken"], ["power", "class", names.power, "PowerTaken"]]) {
+        const found = name ? find(type, source, name) : null;
+        const data = found ? await itemData(found.uuid) : null;
+        if (!data) {
+          lines.push(i18n.format("VARBORG.Creation.Class.NotFound", { name: name || "?" }));
+          continue;
+        }
+        await actor.createEmbeddedDocuments("Item", [data]);
+        lines.push(i18n.format(`VARBORG.Creation.Class.${key}`, { name: actor.name, power: data.name, feature: data.name }));
+      }
       if (removed.length) lines.push(i18n.format("VARBORG.Creation.Removed", { names: removed.join(", ") }));
     }
     if (spell) {

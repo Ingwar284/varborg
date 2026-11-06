@@ -37,11 +37,13 @@
         "amount": "",
         "condition": "",
         "keep": "better",
-        "requires": "",
+        "requires": "adrenaline",
         "failAgain": "",
         "resist": "half",
         "gift": "",
         "setDamage": "",
+        "companion": "minion",
+        "armour": "",
         "note": "a Triumph while you have Adrenaline: ↻ grin at another foe within 30' that can see you. A Pitiful or Weak foe tests Morale; any other is Frightened of you until the end of its next turn"
       }
     ],

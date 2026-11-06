@@ -60,8 +60,12 @@ export function attackModes(weapon) {
  * @returns {string[]}  The default first.
  */
 export function attackAbilities(weapon, mode) {
-  const usual = ATTACK_ABILITY[mode];
-  if (!usual) throw new RangeError(`Unknown attack mode ${mode}`);
+  if (!ATTACK_ABILITY[mode]) throw new RangeError(`Unknown attack mode ${mode}`);
+  // The weapon's own ability (the Spirit-linked sword, GAPS 215).
+  if (weapon.attackAbility) return [weapon.attackAbility];
+  // A feature can make shoot or thrown attacks test another ability
+  // (Wilderness hunter, step 51a; Steel and Shot, War-Gallop, step 51a3).
+  const usual = (mode === "shoot" && weapon.shootAbility) || (mode === "throw" && weapon.throwAbility) || ATTACK_ABILITY[mode];
   if (!weapon.finesse || !FINESSE_ABILITIES.includes(usual)) return [usual];
   return [usual, ...FINESSE_ABILITIES.filter(a => a !== usual)];
 }

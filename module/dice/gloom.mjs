@@ -129,7 +129,9 @@ export async function rollGloomTest(actor, power) {
   const effectContext = {
     roll: ["gloomTest", test.own ? "test" : "defence"],
     ability: test.ability,
-    against: [system.conditions?.failure, system.conditions?.ruin].filter(Boolean)
+    against: [system.conditions?.failure, system.conditions?.ruin].filter(Boolean),
+    // The foe's kind, for Field notes (GAPS 214).
+    targetName: foe?.name ?? ""
   };
   let automatic;
   let conditionMods;

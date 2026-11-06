@@ -61,14 +61,16 @@ export function spellDr(cost) {
 /**
  * Is the spell outside the caster's spell list (Bane)?
  * A class without a spell list ("none", or no class) casts every spell
- * outside its list. The Hedge Mage's "Choose" list is not stored, so the
- * system cannot tell: null, and the player decides (GAPS 133).
+ * outside its list. The Hedge Mage's "Choose" list is the one chosen with
+ * Autodidactism (step 51a2); before it is chosen the system cannot tell:
+ * null, and the player decides (GAPS 133).
  * @param {string} spellList  The spell's list, such as "arcane".
  * @param {string|null} classList  The class's list, or null without a class.
+ * @param {string} [chosenList]     The list chosen with Autodidactism, or "".
  * @returns {boolean|null}
  */
-export function outsideSpellList(spellList, classList) {
-  if (classList === "choose") return null;
+export function outsideSpellList(spellList, classList, chosenList = "") {
+  if (classList === "choose") return chosenList ? spellList !== chosenList : null;
   if (!classList || classList === "none") return true;
   return spellList !== classList;
 }
@@ -145,9 +147,12 @@ export function castingAbility(lifeWounds) {
   return lifeWounds > 0 ? LIFE_FORCE_ABILITY : SPELL_ABILITY;
 }
 
-/** The dice to roll for the DR reduction, such as "2d4"; null for none. */
-export function lifeForceFormula(lifeWounds) {
-  return lifeWounds > 0 ? `${lifeWounds}${LIFE_FORCE_DIE}` : null;
+/**
+ * The dice to roll for the DR reduction, such as "2d4"; null for none.
+ * Blood of power rolls d6 instead (step 51a).
+ */
+export function lifeForceFormula(lifeWounds, die = LIFE_FORCE_DIE) {
+  return lifeWounds > 0 ? `${lifeWounds}${die}` : null;
 }
 
 /**

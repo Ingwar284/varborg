@@ -12,7 +12,7 @@
  * The maths lives in module/rules/item-effects.mjs.
  */
 
-import { choiceCandidates } from "./rules/item-effects.mjs";
+import { choiceCandidates, CHOOSABLE_SPELL_LISTS } from "./rules/item-effects.mjs";
 import { FOE_CATEGORIES } from "./rules/foe.mjs";
 import { DAMAGE_TYPES, ELEMENTS } from "./rules/equipment.mjs";
 
@@ -87,6 +87,9 @@ async function choiceOptions(actor, effect) {
       return FOE_CATEGORIES.filter(Boolean).map(key => ({ value: key, label: i18n.localize(`VARBORG.Foe.Category.${key}`) }));
     case "damageType":
       return (effect.from === "element" ? ELEMENTS : DAMAGE_TYPES).map(key => ({ value: key, label: i18n.localize(`VARBORG.DamageType.${key}`) }));
+    case "spellList":
+      // Autodidactism (step 51a2).
+      return CHOOSABLE_SPELL_LISTS.map(key => ({ value: key, label: i18n.localize(`VARBORG.Class.SpellList.${key}`) }));
     case "feat":
     case "spell": {
       if (effect.from === "known") return actor.itemTypes.spell.map(spell => ({ value: spell.id, label: spell.name }));

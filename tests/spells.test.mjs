@@ -141,3 +141,9 @@ test("a ritual's casting time gives no Boon or −2 DR; the other modifiers stil
   assert.deepEqual(ritualModifiers({ castingTime: "minute" }), { boons: 0, banes: 0, dr: 0 });
   assert.deepEqual(ritualModifiers({ outsideList: true, metalArmour: true, severalCasters: true }), { boons: 1, banes: 2, dr: 0 });
 });
+
+test("a Hedge Mage's chosen list decides the Bane once chosen (Autodidactism, step 51a2)", () => {
+  assert.equal(outsideSpellList("primal", "choose", "primal"), false);
+  assert.equal(outsideSpellList("arcane", "choose", "primal"), true);
+  assert.equal(outsideSpellList("arcane", "choose", ""), null);
+});

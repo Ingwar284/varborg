@@ -1,0 +1,52 @@
+{
+  "_id": "vbFeature1100000",
+  "name": "Holy smite",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your weapon burns with light. Whenever you score a Triumph on an attack, you deal an additional d6 radiant damage.",
+    "source": "feature",
+    "belongsTo": "Paladin",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [
+      {
+        "kind": "roll",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "attack",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "d6",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "",
+        "condition": "",
+        "keep": "better",
+        "requires": "triumph",
+        "failAgain": "",
+        "resist": "half",
+        "gift": "",
+        "setDamage": "",
+        "companion": "minion",
+        "armour": "",
+        "note": "radiant"
+      }
+    ],
+    "automation": "auto"
+  }
+}

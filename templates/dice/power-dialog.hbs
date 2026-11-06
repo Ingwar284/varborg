@@ -24,6 +24,13 @@
   {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
   {{{optionalEffects}}}
+  {{#if magic}}
+  <div class="form-group">
+    <label for="var-borg-power-magic">{{localize "VARBORG.Power.Magic"}}</label>
+    <input id="var-borg-power-magic" type="checkbox" name="magic" {{#if magic.checked}}checked{{/if}}>
+    <p class="hint">{{localize "VARBORG.Power.MagicHint"}}</p>
+  </div>
+  {{/if}}
   <div class="form-group">
     <label for="var-borg-power-boon">{{localize "VARBORG.Test.Boon"}}</label>
     <input id="var-borg-power-boon" type="checkbox" name="boon">

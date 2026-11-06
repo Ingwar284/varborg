@@ -84,7 +84,9 @@ export default class MinionData extends foundry.abstract.TypeDataModel {
   async _preCreate(data, options, user) {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
-    if (this.owner && refuseOverLimit(this.owner, null, this.parent.name)) return false;
+    // Thralls do not count toward the minion limit (GAPS 213).
+    const thrall = Boolean(this.parent.flags?.["var-borg"]?.thrall);
+    if (this.owner && !thrall && refuseOverLimit(this.owner, null, this.parent.name)) return false;
     const capped = capHp(this.hp.value, this.hp.max);
     if (capped !== this.hp.value) this.parent.updateSource({ "system.hp.value": capped });
     this.parent.updateSource(missingTokenDefaults("minion", data));
@@ -101,7 +103,7 @@ export default class MinionData extends foundry.abstract.TypeDataModel {
     if (allowed === false) return false;
     const owner = changes.system?.owner;
     if (owner && owner !== this._source.owner) {
-      if (refuseOverLimit(owner, this.parent.id, this.parent.name)) return false;
+      if (!this.parent.getFlag("var-borg", "thrall") && refuseOverLimit(owner, this.parent.id, this.parent.name)) return false;
       if (game.user.isGM) changes.ownership = ownershipFromOwner(owner, changes.ownership ?? this.parent.ownership);
     }
     const hp = changes.system?.hp;

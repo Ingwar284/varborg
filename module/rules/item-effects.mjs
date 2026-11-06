@@ -55,7 +55,19 @@ export function isGiftUuid(text) {
  * Magically Attuned), a Bestiary category (Favoured prey), a damage type,
  * or a word written down (a god).
  */
-export const CHOICE_KINDS = ["weapon", "feat", "spell", "category", "damageType", "text"];
+export const CHOICE_KINDS = ["weapon", "feat", "spell", "category", "damageType", "text", "spellList"];
+
+/** The spell lists a spellList choice offers (Autodidactism, step 51a2; rules 3.11). */
+export const CHOOSABLE_SPELL_LISTS = ["arcane", "divine", "primal", "profane", "bloodline"];
+
+/**
+ * The spell list a character chose with a spellList choice (Autodidactism),
+ * or "" for none.
+ * @param {object[]} effects  From collectEffects.
+ */
+export function chosenSpellList(effects) {
+  return (effects ?? []).find(effect => effect.choices?.spellList)?.choices.spellList ?? "";
+}
 
 /**
  * Where a feat or spell choice comes from: any; an ancestry feat or power
@@ -66,7 +78,33 @@ export const CHOICE_FROM_ELEMENT = "element";
 export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random", CHOICE_FROM_ELEMENT];
 
 /** Only against foes of the item's chosen Bestiary category (Favoured prey). */
-export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent"];
+export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent", "allies", "notedKind"];
+
+/**
+ * The kinds of creature written in an item's text choice, such as "Wax Ox,
+ * Gloamlice" (Field notes, GAPS 214): lower case, trimmed.
+ */
+export function notedKinds(text) {
+  return String(text ?? "").split(",").map(name => name.trim().toLowerCase()).filter(Boolean);
+}
+
+/** The text choice with one more kind added, unless it is there already. */
+export function withNotedKind(text, name) {
+  const kind = String(name ?? "").trim();
+  if (!kind || notedKinds(text).includes(kind.toLowerCase())) return String(text ?? "");
+  return [String(text ?? "").trim(), kind].filter(Boolean).join(", ");
+}
+
+/** Is an Actor UUID from a compendium (a companion or thrall to make, step 51a3)? */
+export function isActorUuid(text) {
+  return /^Compendium\.[\w-]+\.[\w-]+\.Actor\.\w{16}$/.test(String(text ?? ""));
+}
+
+/**
+ * A use effect with vs "allies" also offers its card button on the cards
+ * of the other player characters (Call upon the divine, GAPS 209).
+ */
+export const ALLIES = "allies";
 
 /**
  * What a resist effect does to damage of its type (step 50b3b): half it
@@ -93,7 +131,12 @@ export const RESIST_MODES = ["half", "double", "reduce", "immune"];
 export const HOOK_EVENTS = [
   "turnStart", "initiative", "zeroHp", "wound", "deathsDoor",
   "panicSuccess", "panicFailure", "rest", "longRest", "newDay",
-  "death", "agonyDeath", "combatEnd"
+  "death", "agonyDeath", "combatEnd",
+  // Step 51a2: a power marked Risky is used (Adrenaline); a spell is cast
+  // or a magic-themed power used (Autodidactism); a Photonic Surge is
+  // triggered (Harmonious Light); another creature starts its turn within
+  // `value` feet, in combat (Primal Conduit).
+  "risky", "cast", "surge", "aura"
 ];
 
 /**
@@ -122,7 +165,14 @@ export const HOOK_EVENTS = [
  */
 export const HOOK_ACTIONS = [
   "reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice",
-  "gainFortune", "reprieve", "deathsDoorInstead", "steadyNerves", "ruinAsFailure"
+  "gainFortune", "reprieve", "deathsDoorInstead", "steadyNerves", "ruinAsFailure",
+  // The item is switched on until the encounter ends, as its Use button
+  // does (Barbaric Rage at initiative, step 51a).
+  "switchOn",
+  // Step 51a2: gain Adrenaline (GAPS 206); roll `amount` and trigger a
+  // Photonic Surge on a 1 (GAPS 208); at "aura", an ally regains or a foe
+  // takes `amount` (GAPS 207).
+  "adrenaline", "photonicSurge", "auraHeal", "auraHurt"
 ];
 
 /**
@@ -154,7 +204,49 @@ export const HOOK_ACTIONS = [
  * (CARD_REQUIRES) and `ability`, and is offered once per card.
  */
 export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll", "success", "chanceDie", "gainFortune", "makeMinion", "switchOn", "lowerDamage", "takeDamage",
-  "upgradeCompanion", "healCompanion", "hurtCompanion"];
+  "upgradeCompanion", "healCompanion", "hurtCompanion", "adrenaline",
+  // Step 51a3: make the compendium minion or vehicle named by `gift`, once
+  // (GAPS 211); switch "mounted" on or off (GAPS 212); raise a thrall from
+  // `gift`, and the Gravecaller's Thrall attack (GAPS 213); write the
+  // targeted foe's name into the item's text choice (GAPS 214).
+  "makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind"];
+
+/**
+ * Use actions that are done on their own: an item with one of these and
+ * other Use effects asks which to do (step 51a3).
+ */
+export const SEPARATE_USE_ACTIONS = ["makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind", "adrenaline"];
+
+/**
+ * The choices an item's Use button offers: each separate action on its
+ * own, and the other effects together. One choice: no question.
+ * @param {object[]} effects  The item's Use effects (useEffects).
+ * @returns {object[][]}  Lists of effects, one list per choice.
+ */
+export function useChoices(effects) {
+  const separate = (effects ?? []).filter(effect => SEPARATE_USE_ACTIONS.includes(effect.action)).map(effect => [effect]);
+  const together = (effects ?? []).filter(effect => !SEPARATE_USE_ACTIONS.includes(effect.action));
+  return together.length ? [...separate, together] : separate;
+}
+
+/**
+ * Does the character have Adrenaline (GAPS 206)? An item with an adrenaline
+ * effect is switched on for this combat.
+ * @param {object[]} effects  From collectEffects.
+ * @param {string} combatId   The running combat, or "".
+ */
+export function hasAdrenaline(effects, combatId) {
+  if (!combatId) return false;
+  return (effects ?? []).some(effect => ["use", "hook"].includes(effect.kind) && effect.action === "adrenaline" && isOn(effect, combatId));
+}
+
+/** Is a power Risky (Brinkwalker powers start their text with "Risky.")? */
+export function isRiskyPower(description) {
+  return /^\s*Risky\b/.test(String(description ?? ""));
+}
+
+/** A Photonic Surge is triggered on this roll of the d6 (Autodidactism). */
+export const SURGE_ON = 1;
 
 /**
  * Which of the character's companions a companion action works on
@@ -248,7 +340,9 @@ export const ACTION_EVENTS = {
   reprieve: ["death"],
   steadyNerves: ["panicFailure"],
   ruinAsFailure: ["panicFailure"],
-  deathsDoorInstead: ["agonyDeath"]
+  deathsDoorInstead: ["agonyDeath"],
+  auraHeal: ["aura"],
+  auraHurt: ["aura"]
 };
 
 /** Which of two rolls to keep. On both tables higher is better. */
@@ -262,8 +356,33 @@ export const HOOK_REQUIRES = ["", "halfHp"];
  * for while no combat is running ("Boon on non-combat tests", GAPS 194),
  * itemOn while the item is switched on with its Use button until the
  * encounter ends (A good time, step 50c).
+ * Step 51a: triumph, the extra damage only on an attack's Triumph (Holy
+ * smite); targetHindered and targetNotHindered, while the targeted token
+ * is, or is not, Blinded, Restrained or Slowed (Hit 'em where it hurts);
+ * lightArmour, while the worn armour is t1 or none (Grace in Motion).
  */
-export const ROLL_REQUIRES = ["", "noCombat", "itemOn"];
+export const ROLL_REQUIRES = ["", "noCombat", "itemOn", "triumph", "targetHindered", "targetNotHindered", "lightArmour", "adrenaline", "mounted"];
+
+/** The conditions that make a target "hindered" (Hit 'em where it hurts). */
+export const HINDERED = ["blinded", "restrained", "slowed"];
+
+/** Only while…, for stat effects: always, or while the item is switched on (Barbaric Rage). */
+export const STAT_REQUIRES = ["", "itemOn", "mounted"];
+
+/** Is the item switched to "mounted" (GAPS 212)? */
+export function isMounted(effect) {
+  return effect.mounted === true;
+}
+
+/**
+ * Is the item switched on for this combat (step 50c)? Its flag holds the
+ * combat's id; "" (switched on outside combat) counts only outside combat.
+ * @param {object} effect    From collectEffects.
+ * @param {string} combatId  The running combat's id, or "".
+ */
+export function isOn(effect, combatId) {
+  return effect.on !== undefined && effect.on !== null && effect.on === (combatId ?? "");
+}
 
 /**
  * How far an item is automated. Blank means nobody has looked yet.
@@ -310,6 +429,15 @@ export const AUTOMATION = ["", "auto", "partial", "text", "ruling"];
  * held in one hand (Titan's grip, step 50c).
  * chanceSplit: set, the Chance Die has no Neutral: below this Negative
  * ("worst possible outcome"), this or more Positive (Go Big or Go Home 8).
+ * Step 51a, class features:
+ * shootAgility: set 1, shoot attacks test Agility instead of Presence
+ * (Wilderness hunter).
+ * armourPenaltyMaxTier: set, worn armour of this original tier or lower
+ * adds no DR to Agility tests or defence (Armour mastery 3).
+ * lifeForceDie: the die each life force wound lowers the casting DR by,
+ * normally 4 (Blood of power sets 6).
+ * fastDifficultDr: set, the DR of driving under difficult circumstances at
+ * fast speed (No Number 12).
  */
 export const STAT_TARGETS = [
   "hpMax", "woundsMax", "carryLimit", "movement", "minionLimit", "initiative",
@@ -317,8 +445,44 @@ export const STAT_TARGETS = [
   "unarmedDie", "rangePercent", "reloadActions",
   "armourAgilityMax", "heavyDefenceIgnored", "chanceSplit", "twoHandedVersatile", "soakNoArmour",
   "wornSoakTier", "spellArmourMaxTier", "soakPerWound", "noDuressBane", "frightenedAttackIgnored",
-  "shieldRaiseFree", "chosenAgile", "chosenHeavy", "vehicleCrashHalf"
+  "shieldRaiseFree", "chosenAgile", "chosenHeavy", "vehicleCrashHalf",
+  "shootAgility", "armourPenaltyMaxTier", "lifeForceDie", "fastDifficultDr",
+  // Step 51a3: thrown attacks with Strength (War-Gallop, mounted); shoot
+  // attacks with the Flintlock pistol use Agility (Steel and Shot, GAPS
+  // 216); spells ticked In spellbook have no off-list Bane (Tome keeper).
+  "throwStrength", "pistolAgility", "spellbookNoBane"
 ];
+
+/** The life force die without effects: "reduce the DR by d4" (rules 3.11). */
+export const LIFE_FORCE_FACES = 4;
+
+/** The life force die after effects, such as "d6" (Blood of power, step 51a). */
+export function lifeForceDie(bonus) {
+  return `d${Math.max(1, withStat(LIFE_FORCE_FACES, bonus))}`;
+}
+
+/**
+ * The armour DR on an Agility test or a defence after Armour mastery
+ * (step 51a): none when the armour's original tier is at most the
+ * feature's tier.
+ * @param {number} dr            The armour's usual DR.
+ * @param {number} originalTier  The worn armour's original tier (0: none).
+ * @param {object} [bonus]       The armourPenaltyMaxTier entry of statBonuses.
+ */
+export function masteredArmourDr(dr, originalTier, bonus) {
+  const max = bonus?.set;
+  return max > 0 && originalTier > 0 && originalTier <= max ? 0 : dr;
+}
+
+/**
+ * The DR of a driving test after No Number (step 51a): difficult
+ * circumstances at fast speed use the feature's DR.
+ * @param {number|null} dr  The table's DR.
+ * @param {object} [bonus]  The fastDifficultDr entry of statBonuses.
+ */
+export function drivingDrWith(dr, manoeuvre, speed, bonus) {
+  return manoeuvre === "difficult" && speed === "fast" && bonus?.set > 0 ? bonus.set : dr;
+}
 
 /** Unarmed damage without effects: "Unarmed d2" (rules 4.1). */
 export const UNARMED_DIE = 2;
@@ -352,9 +516,15 @@ export function reloadActions(reload, bonus) {
  * @param {object} [bonuses] The wielder's statBonuses.
  * @param {boolean} [unarmed] The weapon is the Unarmed weapon.
  */
-export function withWeaponStats(weapon, bonuses = {}, unarmed = false) {
+export function withWeaponStats(weapon, bonuses = {}, unarmed = false, { pistol = false } = {}) {
   const result = { ...weapon };
   if (unarmed && bonuses?.unarmedDie) result.damage = unarmedDamage(bonuses.unarmedDie);
+  // Shoot attacks test Agility (Wilderness hunter, step 51a).
+  if (bonuses?.shootAgility?.set > 0) result.shootAbility = "agility";
+  // The Flintlock pistol with Agility (Steel and Shot, step 51a3).
+  if (pistol && bonuses?.pistolAgility?.set > 0) result.shootAbility = "agility";
+  // Thrown attacks with Strength in the saddle (War-Gallop, step 51a3).
+  if (bonuses?.throwStrength?.set > 0) result.throwAbility = "strength";
   if (bonuses?.rangePercent) {
     result.ranged = longerRange(weapon.ranged, bonuses.rangePercent);
     result.thrown = longerRange(weapon.thrown, bonuses.rangePercent);
@@ -391,7 +561,7 @@ export const ROLL_KINDS = [
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */
-export const GRANTS = ["", "boon", "bane"];
+export const GRANTS = ["", "boon", "bane", "noRuin"];
 
 /** auto: always applied. optional: an unticked box in the dialog (designer's choice, Milestone 9). */
 export const ROLL_MODES = ["auto", "optional"];
@@ -417,7 +587,7 @@ export function blankEffect(kind = "stat") {
     roll: ROLL_KINDS[0], ability: "", against: "", weapon: "", vs: "", damageType: "", mode: "auto", grant: "", dr: 0, damage: "", per: "", rerollOnes: false,
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
-    resist: "half", gift: "", setDamage: "", companion: "minion", armour: "",
+    resist: "half", gift: "", setDamage: "", companion: "minion", armour: "", power: "",
     note: ""
   };
 }
@@ -459,9 +629,17 @@ export function effectDamage(effect, facts = {}) {
  * as "d8 + 2". Modifiers without damage are skipped.
  */
 export function withExtraDamage(formula, mods) {
-  const extra = (mods ?? []).map(mod => mod.damage).filter(Boolean);
+  const extra = (mods ?? []).filter(mod => !mod.onTriumph).map(mod => mod.damage).filter(Boolean);
   const base = (mods ?? []).some(mod => mod.rerollOnes) ? rerollingOnes(formula) : formula;
   return [base, ...extra].filter(Boolean).join(" + ");
+}
+
+/**
+ * The extra damage dealt only on a Triumph (Holy smite, step 51a), such as
+ * "d6", or "" for none. It is added after the Triumph doubles the damage.
+ */
+export function triumphDamage(mods) {
+  return (mods ?? []).filter(mod => mod.onTriumph && mod.damage).map(mod => mod.damage).join(" + ");
 }
 
 /**
@@ -500,6 +678,8 @@ export function collectEffects(items) {
         frequency: item.system?.frequency ?? "", used: Boolean(item.system?.frequencyUsed),
         // Switched on, for this combat (or "" outside combat) (step 50c).
         on: item.flags?.["var-borg"]?.on,
+        // Mounted, until switched off (GAPS 212).
+        mounted: item.flags?.["var-borg"]?.mounted === true,
         // What the item's choice effects hold, for "the chosen weapon" and so on (step 49h).
         choices: choicesOf(item.system?.effects)
       });
@@ -515,15 +695,20 @@ export function effectKey(effect) {
 
 /**
  * What the stat effects do to each sheet number.
+ * @param {object[]} effects  From collectEffects.
+ * @param {object} [facts]    { combatId }: the running combat, for "only while switched on".
  * @returns {object} By target: { add, set, min, times, sources: [{item, op, value}] }.
  *   set is null when nothing sets the number; min is null when nothing
  *   puts a floor under it. Several sets: the highest counts. times is 1
  *   when nothing multiplies it; several multiply together.
  */
-export function statBonuses(effects) {
+export function statBonuses(effects, facts = {}) {
   const bonuses = {};
   for (const effect of effects ?? []) {
     if (effect.kind !== "stat" || !STAT_TARGETS.includes(effect.target)) continue;
+    // Only while switched on (Barbaric Rage, step 51a).
+    if (effect.requires === "itemOn" && !isOn(effect, facts.combatId)) continue;
+    if (effect.requires === "mounted" && !isMounted(effect)) continue;
     const value = Number(effect.value) || 0;
     const bonus = bonuses[effect.target] ??= { add: 0, set: null, min: null, times: 1, sources: [] };
     if (effect.op === "set") bonus.set = bonus.set === null ? value : Math.max(bonus.set, value);
@@ -583,7 +768,19 @@ export function fitsRoll(effect, context) {
     if (!effect.choices?.weapon || effect.choices.weapon !== context.weaponId) return false;
   } else if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
   if (effect.requires === "noCombat" && context.facts?.inCombat) return false;
-  if (effect.requires === "itemOn" && (effect.on === undefined || effect.on === null || effect.on !== (context.facts?.combatId ?? ""))) return false;
+  if (effect.requires === "itemOn" && !isOn(effect, context.facts?.combatId)) return false;
+  // Step 51a: the target's conditions (Hit 'em where it hurts) and light armour (Grace in Motion).
+  const hindered = HINDERED.some(id => (context.targetStatuses ?? []).includes(id));
+  if (effect.requires === "targetHindered" && !hindered) return false;
+  if (effect.requires === "targetNotHindered" && hindered) return false;
+  if (effect.requires === "lightArmour" && (context.facts?.armourTier ?? 0) > 1) return false;
+  // Only while the character has Adrenaline (GAPS 206).
+  if (effect.requires === "adrenaline" && !context.facts?.adrenaline) return false;
+  if (effect.requires === "mounted" && !isMounted(effect)) return false;
+  // Only with the power of this name (Field notes: Study the specimen, step 51a3).
+  if (effect.power && effect.power.trim().toLowerCase() !== String(context.powerName ?? "").trim().toLowerCase()) return false;
+  // Only against a kind written in the item's text choice (Field notes, GAPS 214).
+  if (effect.vs === "notedKind" && !notedKinds(effect.choices?.text).includes(String(context.targetName ?? "").trim().toLowerCase())) return false;
   // Only with damage of this type, such as fire (Firebug, step 50b3).
   if (effect.damageType && effect.damageType !== context.damageType) return false;
   if (effect.vs === "chosenCategory" && (!effect.choices?.category || effect.choices.category !== context.targetCategory)) return false;
@@ -604,7 +801,7 @@ export function testOnly(mods) {
  * (attacks, powers, spells); elsewhere it is ignored.
  */
 export function withEffect(mods) {
-  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes || mod.setDamage);
+  return (mods ?? []).filter(mod => mod.boon || mod.bane || mod.dr || mod.damage || mod.rerollOnes || mod.setDamage || mod.noRuin);
 }
 
 /**
@@ -634,6 +831,10 @@ export function rollEffects(effects, context) {
     if (damage) mod.damage = damage;
     if (effect.rerollOnes) mod.rerollOnes = true;
     if (effect.setDamage) mod.setDamage = effect.setDamage;
+    // Extra damage only on a Triumph (Holy smite, step 51a).
+    if (effect.requires === "triumph") mod.onTriumph = true;
+    // A Ruin counts as a Failure (Field notes, step 51a3).
+    if (effect.grant === "noRuin") mod.noRuin = true;
     (effect.mode === "optional" ? result.optional : result.auto).push(mod);
   }
   return result;
@@ -652,6 +853,7 @@ export function effectProblems(effect) {
   if (effect.kind === "stat") {
     check("target", STAT_TARGETS);
     check("op", STAT_OPS);
+    if (effect.requires) check("requires", STAT_REQUIRES);
   }
   if (effect.kind === "roll" || effect.kind === "reminder") {
     check("roll", ROLL_KINDS);
@@ -664,7 +866,8 @@ export function effectProblems(effect) {
     check("action", HOOK_ACTIONS);
     check("mode", ROLL_MODES);
     check("requires", HOOK_REQUIRES);
-    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage", "healCompanion", "hurtCompanion"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (effect.event === "aura" && !(Number(effect.value) > 0)) problems.push(`aura radius: ${effect.value}`);
     if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) check("companion", COMPANIONS);
     if (effect.action === "upgradeCompanion") check("armour", COMPANION_ARMOUR);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
@@ -673,6 +876,7 @@ export function effectProblems(effect) {
     if (events && !events.includes(effect.event)) problems.push(`${effect.action} at ${effect.event}`);
   }
   if (effect.kind === "gift" && !isGiftUuid(effect.gift)) problems.push(`gift: ${effect.gift}`);
+  if (effect.kind === "use" && ["makeCompanion", "raiseThrall"].includes(effect.action) && !isActorUuid(effect.gift)) problems.push(`actor: ${effect.gift}`);
   if (effect.kind === "immune") check("condition", CONDITIONS);
   if (effect.kind === "resist") {
     check("resist", RESIST_MODES);
@@ -917,4 +1121,21 @@ export function choiceCandidates(entries, choice, owner = {}) {
     return entry.type === "feat" && ["ancestry", "class", "general"].includes(system.source);
   };
   return (entries ?? []).filter(fits).toSorted((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Does an aura reach a creature (Primal Conduit, GAPS 207)? The distance
+ * is measured between the tokens' centres; bigger tokens reach further,
+ * by half a square for each square beyond the first, on each side.
+ * Tokens in neighbouring squares are 5' apart, so a 5' aura reaches them.
+ * @param {object} facts
+ * @param {number} facts.centreDistance  Between the centres, in feet.
+ * @param {number} facts.sizeA           The first token's size, in squares.
+ * @param {number} facts.sizeB           The second's.
+ * @param {number} facts.gridDistance    One square, in feet (5).
+ * @param {number} facts.radius          The aura's radius, in feet.
+ */
+export function auraReaches({ centreDistance, sizeA = 1, sizeB = 1, gridDistance = 5, radius }) {
+  const bulk = ((Math.max(1, sizeA) - 1) + (Math.max(1, sizeB) - 1)) * gridDistance / 2;
+  return centreDistance - bulk <= radius + 0.01;
 }

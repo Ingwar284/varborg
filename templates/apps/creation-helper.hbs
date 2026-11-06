@@ -76,7 +76,7 @@
   {{!-- Step 4: Class (rules 2.5) --}}
   <section class="creation-step">
     <h2>{{localize "VARBORG.Creation.Step.class"}}</h2>
-    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{#if now.class}}{{now.class}}{{else}}{{localize "VARBORG.Creation.None"}}{{/if}}{{#if now.power}} · {{now.power}}{{/if}}{{#if now.spell}} · {{now.spell}}{{/if}}</p>
+    <p class="creation-now">{{localize "VARBORG.Creation.Now"}} {{#if now.class}}{{now.class}}{{else}}{{localize "VARBORG.Creation.None"}}{{/if}}{{#if now.feature}} · {{now.feature}}{{/if}}{{#if now.power}} · {{now.power}}{{/if}}{{#if now.spell}} · {{now.spell}}{{/if}}</p>
     <div class="form-group">
       <label>{{localize "TYPES.Item.class"}}</label>
       <select name="cls">
@@ -84,13 +84,9 @@
         {{#each classes}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
       </select>
     </div>
-    <div class="form-group">
-      <label>{{localize "VARBORG.Creation.Class.Power"}}</label>
-      <select name="power">
-        <option value="">{{localize "VARBORG.Creation.Choose"}}</option>
-        {{#each powers}}<option value="{{uuid}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}
-      </select>
-    </div>
+    {{#if classStarting}}
+    <p class="creation-now">{{localize "VARBORG.Creation.Class.ComesWith" feature=classStarting.feature power=classStarting.power}}</p>
+    {{/if}}
     {{#if hasSpellList}}
     <div class="form-group">
       <label>{{localize "VARBORG.Creation.Class.Spell"}}</label>

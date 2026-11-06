@@ -46,7 +46,7 @@ import { useUpNextTest } from "../panic.mjs";
 import { AGONY_TYPE_OPTION } from "../agony.mjs";
 import { addTimedCondition } from "../timers.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
-import { withStat, statDrMods } from "../rules/item-effects.mjs";
+import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 
@@ -352,7 +352,9 @@ export function defenceModifiers(actor) {
     armour,
     armourName: nameOf(armour),
     // Armoured Paragon ignores the defence penalty of heavy (t3) armour (step 50b2).
-    armourDr: actor.system.statBonuses?.heavyDefenceIgnored?.set > 0 && armour?.originalTier === 3 ? 0 : armourDefenceDr(armour),
+    // Armour mastery: no defence penalty from armour up to t3 (step 51a).
+    armourDr: actor.system.statBonuses?.heavyDefenceIgnored?.set > 0 && armour?.originalTier === 3
+      ? 0 : masteredArmourDr(armourDefenceDr(armour), armour?.originalTier ?? 0, bonuses.armourPenaltyMaxTier),
     soakDie: soak.die,
     soakName: soak.natural ? natural.sources.map(source => source.item).join(", ") : nameOf(armour),
     shield,

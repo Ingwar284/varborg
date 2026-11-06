@@ -36,7 +36,8 @@ export function ownedMinions(character, { except = null } = {}) {
  * @returns {{count: number, limit: number, over: boolean}}
  */
 export function minionCount(character) {
-  const count = ownedMinions(character).length;
+  // Thralls do not count (GAPS 213).
+  const count = ownedMinions(character).filter(minion => !isThrall(minion)).length;
   const limit = minionLimit(character.system.abilities.presence, character.system.statBonuses?.minionLimit);
   return { count, limit, over: count > limit };
 }
@@ -48,7 +49,7 @@ export function minionCount(character) {
 export function refuseOverLimit(ownerId, minionId, name) {
   const owner = game.actors?.get(ownerId);
   if (!owner || owner.type !== "character") return false;
-  const count = ownedMinions(owner, { except: minionId }).length;
+  const count = ownedMinions(owner, { except: minionId }).filter(minion => !isThrall(minion)).length;
   if (canTakeMinion(count, owner.system.abilities.presence, owner.system.statBonuses?.minionLimit)) return false;
   ui.notifications.warn(game.i18n.format("VARBORG.Minion.OverLimit", {
     name, owner: owner.name, limit: minionLimit(owner.system.abilities.presence, owner.system.statBonuses?.minionLimit)
@@ -149,6 +150,148 @@ export async function makeItemMinion(owner, effect) {
   if (!minion) return nothing;
   const tierName = i18n.localize(`VARBORG.Minion.Tier.${tier}`);
   return { lines: [i18n.format("VARBORG.Minion.Made", { item: effect.item, name: minion.name, owner: owner.name, tier: tierName })], rolls: tierRolls, acted: true };
+}
+
+/** Is this minion one of the Gravecaller's thralls (GAPS 213)? */
+export function isThrall(actor) {
+  return Boolean(actor?.getFlag?.(SYSTEM, "thrall"));
+}
+
+/** The character's living thralls. */
+export function ownedThralls(character) {
+  return ownedMinions(character).filter(minion => isThrall(minion) && (minion.system.hp?.value ?? 0) > 0);
+}
+
+/**
+ * Make the companion a feature gives (GAPS 211): the Destrier or
+ * Raider-Beast from the compendium as the character's own minion, or The
+ * rig as a vehicle with the character aboard as its driver. Once per
+ * character and item; when the last one died (0 HP) or is gone, only the
+ * Dark Master can make a new one.
+ * @param {Actor} owner   The character.
+ * @param {object} effect The Use effect: its gift is the compendium actor.
+ */
+export async function makeCompanion(owner, effect) {
+  const i18n = game.i18n;
+  const nothing = { lines: [], rolls: [], acted: false };
+  const mark = `${owner.id}.${effect.itemId}`;
+  const made = game.actors.filter(actor => actor.getFlag(SYSTEM, "fromItem") === mark);
+  const alive = made.find(actor => (actor.system.hp?.value ?? 0) > 0);
+  if (alive) {
+    ui.notifications.warn(i18n.format("VARBORG.Minion.AlreadyMade", { item: effect.item, minion: alive.name }));
+    return nothing;
+  }
+  if (made.length && !game.user.isGM) {
+    ui.notifications.warn(i18n.format("VARBORG.Companion.AskDmAgain", { item: effect.item }));
+    return nothing;
+  }
+  if (!game.user.can("ACTOR_CREATE")) {
+    ui.notifications.warn(i18n.format("VARBORG.Minion.AskDm", { item: effect.item }));
+    return nothing;
+  }
+  const source = await fromUuid(effect.gift);
+  if (!source) {
+    ui.notifications.warn(i18n.format("VARBORG.Effects.GiftMissing", { item: effect.item }));
+    return nothing;
+  }
+  const data = source.toObject();
+  delete data._id;
+  data.flags = { ...data.flags, [SYSTEM]: { ...(data.flags?.[SYSTEM] ?? {}), fromItem: mark } };
+  data._stats = { ...data._stats, compendiumSource: effect.gift };
+  if (data.type === "minion") {
+    if (refuseOverLimit(owner.id, null, data.name)) return nothing;
+    data.system.owner = owner.id;
+    data.ownership = ownershipFromOwner(owner.id, { default: 0 });
+  } else {
+    data.ownership = ownershipFromOwner(owner.id, { default: 0 });
+  }
+  const actor = await Actor.create(data);
+  if (!actor) return nothing;
+  if (actor.type === "vehicle") {
+    const { boardVehicle } = await import("./vehicles.mjs");
+    await boardVehicle(actor, owner);
+  }
+  return {
+    lines: [i18n.format(actor.type === "vehicle" ? "VARBORG.Companion.MadeVehicle" : "VARBORG.Companion.MadeMinion", { item: effect.item, name: actor.name, owner: owner.name })],
+    rolls: [],
+    acted: true
+  };
+}
+
+/**
+ * Raise a thrall (GAPS 213): the Thrall stat block (a foe mook in the
+ * compendium) becomes a 1 HP minion of the Gravecaller that does not count
+ * toward the limit, with a token next to theirs on the scene, and joins the
+ * running combat. Thralls are removed when the combat ends (removeThralls).
+ * @param {Actor} owner   The Gravecaller.
+ * @param {object} effect The Use effect: its gift is the Thrall stat block.
+ */
+export async function raiseThrall(owner, effect) {
+  const i18n = game.i18n;
+  const nothing = { lines: [], rolls: [], acted: false };
+  if (!game.user.can("ACTOR_CREATE") || !game.user.can("TOKEN_CREATE")) {
+    ui.notifications.warn(i18n.format("VARBORG.Minion.AskDm", { item: effect.item }));
+    return nothing;
+  }
+  const source = await fromUuid(effect.gift);
+  if (!source) {
+    ui.notifications.warn(i18n.format("VARBORG.Effects.GiftMissing", { item: effect.item }));
+    return nothing;
+  }
+  const stat = source.toObject();
+  const actor = await Actor.create({
+    name: stat.name,
+    type: "minion",
+    img: stat.img,
+    ownership: ownershipFromOwner(owner.id, { default: 0 }),
+    prototypeToken: { actorLink: true, disposition: 1, bar1: { attribute: "hp" } },
+    flags: { [SYSTEM]: { thrall: true, fromItem: `${owner.id}.${effect.itemId}` } },
+    _stats: { compendiumSource: effect.gift },
+    system: {
+      tier: stat.system.tier,
+      description: stat.system.description,
+      owner: owner.id,
+      hp: { value: 1, max: 1 },
+      morale: null,
+      armour: stat.system.armour ?? "",
+      armourName: stat.system.armourName ?? ""
+    },
+    items: (stat.items ?? []).map(item => ({ ...item, _id: undefined }))
+  });
+  if (!actor) return nothing;
+  // A token next to the Gravecaller's, and into the running combat.
+  const ownerToken = owner.getActiveTokens(true, true)[0] ?? null;
+  const scene = ownerToken?.parent ?? null;
+  if (scene) {
+    const size = scene.grid.size;
+    const tokenData = await actor.getTokenDocument({ x: ownerToken.x + size, y: ownerToken.y });
+    const [token] = await scene.createEmbeddedDocuments("Token", [tokenData.toObject()]);
+    const combat = game.combat;
+    if (token && combat?.getCombatantsByActor(owner).length) {
+      await combat.createEmbeddedDocuments("Combatant", [{ tokenId: token.id, sceneId: scene.id, actorId: actor.id }]).catch(() => null);
+    }
+  }
+  return { lines: [i18n.format("VARBORG.Thrall.Raised", { item: effect.item, owner: owner.name })], rolls: [], acted: true };
+}
+
+/**
+ * When a combat ends its thralls collapse (GAPS 213): the thralls of the
+ * characters in it are deleted with their tokens. Dark Master only.
+ * @param {Combat} combat
+ */
+export async function removeThralls(combat) {
+  if (!game.user.isGM) return;
+  const owners = new Set(combat.combatants.map(combatant => combatant.actor?.id).filter(Boolean));
+  const thralls = game.actors.filter(actor => actor.type === "minion" && isThrall(actor) && owners.has(actor.system.owner));
+  if (!thralls.length) return;
+  for (const scene of game.scenes) {
+    const ids = scene.tokens.filter(token => thralls.some(thrall => thrall.id === token.actorId)).map(token => token.id);
+    if (ids.length) await scene.deleteEmbeddedDocuments("Token", ids);
+  }
+  await Actor.deleteDocuments(thralls.map(thrall => thrall.id));
+  await ChatMessage.create({
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Thrall.Collapse", { count: thralls.length }))}</p></div>`
+  });
 }
 
 /**

@@ -9,7 +9,7 @@
 
 import {
   BUILT_KINDS, AUTOMATION, STAT_TARGETS, STAT_OPS, ROLL_KINDS, GRANTS, ROLL_MODES, WEAPON_TAGS, DAMAGE_PER,
-  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES, COMPANIONS, COMPANION_ARMOUR, blankEffect
+  HOOK_EVENTS, HOOK_ACTIONS, USE_ACTIONS, KEEPS, HOOK_REQUIRES, ROLL_REQUIRES, STAT_REQUIRES, CARD_REQUIRES, FAIL_AGAIN, CHOICE_KINDS, CHOICE_FROM, VERSUS, RESIST_MODES, COMPANIONS, COMPANION_ARMOUR, blankEffect
 } from "../rules/item-effects.mjs";
 import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -53,12 +53,15 @@ export function effectsContext(document) {
       keeps: labels(KEEPS, "Effects.Keep"),
       requireList: labels(HOOK_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       rollRequireList: labels(ROLL_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
+      statRequireList: labels(STAT_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       cardRequireList: labels(CARD_REQUIRES, "Effects.Requires", "VARBORG.Effects.Requires.always"),
       failAgainList: labels(FAIL_AGAIN, "Effects.FailAgain", "VARBORG.Effects.FailAgain.none"),
       hookConditions: labels(CONDITIONS, "Condition"),
       choiceKinds: labels(CHOICE_KINDS, "Effects.Choice.Kind"),
       choiceFrom: labels(CHOICE_FROM, "Effects.Choice.From"),
       versusList: labels(VERSUS, "Effects.Versus", "VARBORG.Effects.Versus.any"),
+      // Whose cards a reroll button is on: the owner's, or every player character's (step 51a2).
+      cardOwnerList: labels(["", "allies"], "Effects.Versus", "VARBORG.Effects.Versus.own"),
       damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
       resistTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.ChosenDamageType"),
       resistModes: labels(RESIST_MODES, "Effects.Resist"),
@@ -82,7 +85,9 @@ export function effectsContext(document) {
         // Reroll and Success buttons on cards (steps 49g, 50b2).
         isReroll: ["reroll", "success"].includes(effect.action),
         isRerollOnly: effect.action === "reroll",
-        hasAmount: ["heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion"].includes(effect.action),
+        hasAmount: ["heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action),
+        // An aura's radius in feet (Primal Conduit, step 51a2).
+        isAura: effect.kind === "hook" && effect.event === "aura",
         hasCondition: effect.action === "addCondition",
         hasKeep: effect.action === "rollTwice",
         perWound: ["wound", "kill"].includes(effect.per),
@@ -92,6 +97,8 @@ export function effectsContext(document) {
         isImmune: effect.kind === "immune",
         isCompanion: effect.kind === "use" && ["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action),
         isUpgrade: effect.kind === "use" && effect.action === "upgradeCompanion",
+        // The compendium actor a Use makes (GAPS 211, 213).
+        makesActor: effect.kind === "use" && ["makeCompanion", "raiseThrall"].includes(effect.action),
         resistReduce: effect.kind === "resist" && effect.resist === "reduce"
       }))
     }
@@ -148,6 +155,7 @@ export function listenToEffects(sheet) {
       if (field === "kind" && effect.kind === "hook" && !HOOK_REQUIRES.includes(effect.requires)) effect.requires = "";
       if (field === "kind" && ["roll", "reminder"].includes(effect.kind) && !ROLL_REQUIRES.includes(effect.requires)) effect.requires = "";
       if (field === "kind" && effect.kind === "use" && !CARD_REQUIRES.includes(effect.requires)) effect.requires = "";
+      if (field === "kind" && effect.kind === "stat" && !STAT_REQUIRES.includes(effect.requires)) effect.requires = "";
       // A different kind of choice forgets the old choice (step 49h).
       if (["choose", "from"].includes(field)) {
         effect.chosen = "";

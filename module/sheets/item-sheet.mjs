@@ -18,6 +18,7 @@ import { castingDr } from "../rules/spells.mjs";
 import { ClassData } from "../data/origins.mjs";
 import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
+import { ABILITIES } from "../rules/abilities.mjs";
 import { EFFECTS_TEMPLATE, EFFECT_ACTIONS, effectsContext, listenToEffects } from "./item-effects-part.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -79,6 +80,8 @@ export class WeaponSheet extends EquipmentSheet {
     context.foeKinds = { melee: "VARBORG.Foe.Melee", shoot: "VARBORG.Foe.Ranged" };
     context.damageTypes = WeaponData.DAMAGE_TYPES;
     context.expendableDice = WeaponData.EXPENDABLE_DICE;
+    // The ability its attacks test instead of the usual one (GAPS 215).
+    context.attackAbilities = { "": "VARBORG.Weapon.AttackAbilityUsual", ...Object.fromEntries(ABILITIES.map(key => [key, `VARBORG.Ability.${key}`])) };
     return context;
   }
 }
@@ -322,6 +325,8 @@ function spellContext(context, system, drHintKey) {
   context.spellLists = SpellData.SPELL_LISTS;
   // A ritual: its own DR and casting time, no ember cost (rules 7, GAPS 186).
   context.isRitual = Boolean(system.ritual);
+  // Tome keeper: the In spellbook box, on a character who has it (GAPS 217).
+  context.showSpellbook = drHintKey === "VARBORG.Spell.DrHint" && (context.document?.actor ?? context.item?.actor)?.system?.statBonuses?.spellbookNoBane?.set > 0;
   context.ritualDrs = SpellData.RITUAL_DRS;
   context.drHint = game.i18n.format(context.isRitual ? "VARBORG.Spell.RitualSheetDrHint" : drHintKey, { dr: castingDr(system) });
   context.outcomes = ["triumph", "success", "failure", "ruin"].map(key => ({

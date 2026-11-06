@@ -57,6 +57,8 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
       // heading), with no ember and no actions; its casting time is text,
       // such as "10 minutes" (GAPS 186).
       ritual: new BooleanField({ initial: false }),
+      // Written in the caster's spellbook: no off-list Bane with Tome keeper (GAPS 217).
+      inSpellbook: new BooleanField({ initial: false }),
       ritualDr: new NumberField({ required: true, nullable: false, integer: true, choices: RITUAL_DRS, initial: RITUAL_DRS[0] }),
       castingTime: new StringField({ required: true, initial: "" }),
       // As for powers: being sustained now, kept this turn, and the one free

@@ -1,0 +1,16 @@
+{
+  "_id": "vbFeature0800000",
+  "name": "Malleable Body",
+  "type": "feat",
+  "img": "icons/sundries/books/book-worn-brown.webp",
+  "system": {
+    "description": "Your body is malleable and your bones are like heavy rubber. You can shift your general appearance at a moment's notice, you take no damage from falls, and you can squeeze through gaps the size of a human head.",
+    "source": "feature",
+    "belongsTo": "Fleshwright",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}
