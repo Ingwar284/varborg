@@ -18,8 +18,8 @@ test("timer kinds: rounds, until the start of its next turn, until the end of th
 });
 
 test("rounds can be a number or dice", () => {
-  for (const ok of ["1", "3", "d4", "2d6", " d10 "]) assert.ok(isRoundsFormula(ok), ok);
-  for (const bad of ["", "0", "d0", "d", "1 hour", "-1", "1.5", "d4+1"]) assert.ok(!isRoundsFormula(bad), bad);
+  for (const ok of ["1", "3", "d4", "2d6", " d10 ", "d4+1", "d4 + 2"]) assert.ok(isRoundsFormula(ok), ok);
+  for (const bad of ["", "0", "d0", "d", "1 hour", "-1", "1.5", "d4+", "1+1"]) assert.ok(!isRoundsFormula(bad), bad);
 });
 
 test("'until the end of its next turn' (1 round) gained on someone else's turn ends at the end of its next turn", () => {

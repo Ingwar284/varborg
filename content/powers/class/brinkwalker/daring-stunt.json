@@ -45,6 +45,8 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
         "note": "push it 10' away from you"
       },
       {
@@ -67,6 +69,8 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
         "note": ""
       },
       {
@@ -80,8 +84,8 @@
         },
         "condition": "restrained",
         "duration": {
-          "kind": "rounds",
-          "rounds": "1"
+          "kind": "escapeStart",
+          "rounds": "12"
         },
         "amount": "",
         "option": "Seize",
@@ -89,7 +93,9 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "ends early if you move away; at the start of its turn the Dark Master rolls a d20 and it breaks free on 12+"
+        "test": false,
+        "whileSustained": false,
+        "note": "until the end of your next turn, or earlier if you move away from it"
       },
       {
         "kind": "condition",
@@ -111,6 +117,8 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
         "note": "the stunt backfires"
       }
     ],

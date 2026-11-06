@@ -46,6 +46,7 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
+        "whileSustained": false,
         "note": ""
       },
       {
@@ -59,8 +60,8 @@
         },
         "condition": "restrained",
         "duration": {
-          "kind": "",
-          "rounds": "1"
+          "kind": "escapeStart",
+          "rounds": "14"
         },
         "amount": "",
         "option": "",
@@ -69,7 +70,8 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
-        "note": "by your chain while sustained; each time you ride it is dragged and takes d4; at the start of its turn the Dark Master rolls a d20 and it breaks free on 14+ (a character tests Strength DR14)"
+        "whileSustained": true,
+        "note": "by your chain; each time you ride it is dragged and takes d4; a character tests Strength DR14"
       },
       {
         "kind": "reminder",
@@ -92,6 +94,7 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
+        "whileSustained": false,
         "note": "the chain slips free"
       },
       {
@@ -115,6 +118,7 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
+        "whileSustained": false,
         "note": "the chain wraps your own arm: you are pulled from the saddle"
       }
     ],

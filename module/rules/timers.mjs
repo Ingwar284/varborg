@@ -52,7 +52,8 @@ export function breaksFree(roll, dr) {
 
 /** How many rounds: a whole number such as 1, or dice such as d4 or 2d6. */
 export function isRoundsFormula(text) {
-  return /^\s*(?:[1-9]\d*|(?:[1-9]\d*)?d[1-9]\d*)\s*$/i.test(String(text ?? ""));
+  // Dice may have a bonus: "d4 + 2" (Umbral Possession, step 51f2).
+  return /^\s*(?:[1-9]\d*|(?:[1-9]\d*)?d[1-9]\d*(?:\s*\+\s*\d+)?)\s*$/i.test(String(text ?? ""));
 }
 
 /**

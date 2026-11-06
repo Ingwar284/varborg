@@ -46,6 +46,7 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
+        "whileSustained": false,
         "note": "allies within 30' that can hear you"
       },
       {
@@ -59,7 +60,7 @@
         },
         "condition": "",
         "duration": {
-          "kind": "startOfTurn",
+          "kind": "encounter",
           "rounds": "1"
         },
         "amount": "",
@@ -67,8 +68,9 @@
         "when": "result",
         "damageType": "",
         "soaked": false,
-        "nextOnly": false,
+        "nextOnly": true,
         "test": false,
+        "whileSustained": false,
         "note": "Boon on their next attack"
       }
     ],

@@ -1322,8 +1322,13 @@ one fight and one rest.
         test button; The King's Command's Sanity test is a note); "next
         roll only" buffs on characters are used up by the first roll of
         their kind. EFFECTS_CONTENT 22.
-      - 51f2. The Primal and Profane spells (32); the powers that need
-        escape rolls or next-roll buffs get them.
+      - ~~51f2. The Primal and Profane spells; escape rolls and next-roll
+        buffs on powers.~~ Done: all 64 spells have a status. Daring
+        Stunt's Seize and Cold Iron Pin escape on d20 12+, Drag Behind on
+        14+ (while sustained); Battle cry's Boon is used by the next
+        attack. Rounds can be dice with a bonus ("d4 + 2"). Escape tests
+        for characters are always Strength: where a spell says Sanity or
+        Toughness, a note says so. EFFECTS_CONTENT 23.
     - 51g. Rituals (63), mostly text with a reminder.
 
 **Milestone 11 review:** a Warrior, a Wizard and a Priest against three

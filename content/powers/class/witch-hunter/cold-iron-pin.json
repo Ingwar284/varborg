@@ -36,8 +36,8 @@
         },
         "condition": "restrained",
         "duration": {
-          "kind": "rounds",
-          "rounds": "1"
+          "kind": "escapeStart",
+          "rounds": "12"
         },
         "amount": "",
         "option": "",
@@ -46,7 +46,8 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
-        "note": "or until you let go of the hilt; at the start of its turn the Dark Master rolls a d20 and it breaks free on 12+; you cannot attack with your rapier meanwhile"
+        "whileSustained": false,
+        "note": "or until you let go of the hilt; you cannot attack with your rapier meanwhile"
       },
       {
         "kind": "reminder",
@@ -69,6 +70,7 @@
         "soaked": false,
         "nextOnly": false,
         "test": false,
+        "whileSustained": false,
         "note": "the blade sticks fast: spend an action (◈) to wrench it free"
       }
     ],
