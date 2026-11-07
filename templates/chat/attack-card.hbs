@@ -43,7 +43,7 @@
     <p class="hint">{{localize "VARBORG.Area.Hint"}}</p>
     {{#each area.foes}}
     <button type="button" data-action="inflictDamage" data-key="{{key}}" data-damage="{{damage}}" data-foe-uuid="{{foeUuid}}"
-            data-armour="{{armour}}" data-attack="{{attack}}" data-damage-type="{{damageType}}">
+            data-armour="{{armour}}" data-attack="{{attack}}" data-damage-type="{{damageType}}" data-weapon-tags="{{weaponTags}}">
       <i class="fa-solid fa-droplet"></i> {{label}}
     </button>
     {{/each}}

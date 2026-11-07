@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -82,7 +83,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -110,7 +112,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -154,7 +157,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "auto"
       }
     },
     {
@@ -199,7 +203,58 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "damageType": "fire"
+        "damageType": "fire",
+        "automation": "auto",
+        "outcomeEffects": [
+          {
+            "kind": "persistent",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": true,
+              "ruin": false
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d4",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          },
+          {
+            "kind": "persistent",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d6",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -243,7 +298,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "text"
       }
     },
     {
@@ -288,7 +344,58 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "damageType": "fire"
+        "damageType": "fire",
+        "automation": "auto",
+        "outcomeEffects": [
+          {
+            "kind": "persistent",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": true,
+              "ruin": false
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d4",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          },
+          {
+            "kind": "persistent",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d6",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -302,7 +409,90 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "auto",
+        "effects": [
+          {
+            "kind": "resist",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "fire",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "immune",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          },
+          {
+            "kind": "immune",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "frightened",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -316,7 +506,50 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "auto",
+        "effects": [
+          {
+            "kind": "hook",
+            "target": "hpMax",
+            "op": "add",
+            "value": 10,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "aura",
+            "action": "reminder",
+            "amount": "d4",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": "They take d4 fire damage."
+          }
+        ]
       }
     },
     {
@@ -330,7 +563,50 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "partial",
+        "effects": [
+          {
+            "kind": "hook",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "halfHp",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": "At half HP or lower he is Quickened."
+          }
+        ]
       }
     }
   ]

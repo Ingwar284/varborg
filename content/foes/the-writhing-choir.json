@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -82,7 +83,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -106,11 +108,12 @@
         "price": 0,
         "damage": "2d10",
         "kind": "shoot",
-        "damageType": "fire",
+        "damageType": "acid",
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -154,7 +157,100 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "auto",
+        "outcomeEffects": [
+          {
+            "kind": "buff",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": true,
+              "ruin": false
+            },
+            "condition": "",
+            "duration": {
+              "kind": "rounds",
+              "rounds": "1"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "Bane on Sanity tests until the end of its next turn."
+          },
+          {
+            "kind": "buff",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "",
+            "duration": {
+              "kind": "rounds",
+              "rounds": "d4"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "Bane on Sanity tests for d4 rounds."
+          }
+        ],
+        "buffEffects": [
+          {
+            "kind": "roll",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "sanity",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "bane",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -198,7 +294,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "text"
       }
     },
     {
@@ -242,7 +339,140 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "partial",
+        "outcomeEffects": [
+          {
+            "kind": "buff",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": true,
+              "ruin": false
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "Bane on Strength and Agility tests until the next Long Rest (remove it then)."
+          },
+          {
+            "kind": "buff",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "Bane on Strength and Agility tests until healed by a miracle."
+          }
+        ],
+        "buffEffects": [
+          {
+            "kind": "roll",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "strength",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "bane",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          },
+          {
+            "kind": "roll",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "agility",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "bane",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -286,7 +516,34 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "auto",
+        "outcomeEffects": [
+          {
+            "kind": "condition",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "deafened",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -300,7 +557,50 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "partial",
+        "effects": [
+          {
+            "kind": "immune",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "prone",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -314,7 +614,50 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "auto",
+        "effects": [
+          {
+            "kind": "hook",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "roundStart",
+            "action": "heal",
+            "amount": "d6",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -328,7 +671,90 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "partial",
+        "effects": [
+          {
+            "kind": "immune",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "blinded",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          },
+          {
+            "kind": "immune",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "silenced",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -342,7 +768,8 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "text"
       }
     }
   ]

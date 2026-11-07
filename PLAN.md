@@ -1400,6 +1400,15 @@ foes, with area spells.
       Mob Courage, Regeneration, Master Mechanism and Cold Heart work. The
       Last Hour's Ruin is Frightened for d4 rounds, as its text says, and
       Stupefied for 1. EFFECTS_CONTENT 26.
+    - ~~52e. Foes 51–75 (GAPS 248).~~ Done: Heretic Priest to Pit Warden.
+      New: spell damage is marked on the Inflict button, so a resist can
+      be limited to spells (Aether Ward: d4 less). Adhesive Hide and Ember
+      Robes use the 52b tools; Morale auras (Desecrated Symbol,
+      Commander's Presence); regrowth at turn or round start; Iron-Bane;
+      Brittle doubles blunt weapons. Snare of Seasons' Ruin is Restrained
+      with no timer and Slowed for 1 round, as its text says; The Unmaking
+      and The Great Silence add Deafened on a Ruin. Acid vomit and Acid
+      seed volley deal acid. EFFECTS_CONTENT 27.
 
 **Milestone 12 review:** fight three foes with resistances and
 regeneration.

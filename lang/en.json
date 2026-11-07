@@ -2718,7 +2718,8 @@
         "agile": "Agile weapons",
         "chosen": "The chosen weapon",
         "ranged": "Shooting or thrown weapons",
-        "weapon": "Any weapon (not powers or spells)"
+        "weapon": "Any weapon (not powers or spells)",
+        "spell": "Spells (damage taken)"
       },
       "PerLabel": "How often",
       "UpToLabel": "Up to",

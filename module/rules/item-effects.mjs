@@ -655,12 +655,14 @@ export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "
   // Step 52c (GAPS 237): shooting or thrown (Living Cover, Charnel Flesh:
   // "non-magical ranged attacks"); any weapon attack, not a power or spell
   // (the Grave Skeleton's "crushing weapons").
-  "ranged", "weapon"];
+  "ranged", "weapon",
+  // Step 52e: damage from a spell, for resists (Aether Ward: d4 less).
+  "spell"];
 
 /** Does an effect's weapon filter fit these weapon tags? No tags: not a weapon attack. */
 function fitsWeaponTag(filter, tags) {
   if (!filter) return true;
-  if (filter === "weapon") return (tags ?? []).length > 0;
+  if (filter === "weapon") return (tags ?? []).length > 0 && !(tags ?? []).includes("spell");
   return (tags ?? []).includes(filter);
 }
 

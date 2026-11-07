@@ -102,3 +102,13 @@ test("extra damage adds its roll after halving and doubling (Sap-Soaked, GAPS 24
   // Halved first, then the extra: 7 → 3 + 2 = 5.
   assert.deepEqual(foeDamageAfterResists(7, 0, [{ resist: "half" }, { resist: "extra" }], [-2]), { resisted: 5, taken: 5, minimum: false });
 });
+
+test("resists against spells: Aether Ward takes d4 off spell damage only (step 52e)", () => {
+  const effects = collectEffects([{ name: "Aether Ward", id: "w", system: { effects: [{ kind: "resist", resist: "reduce", amount: "d4", weapon: "spell" }] } }]);
+  assert.equal(resistsFor(effects, "fire", { weaponTags: ["spell"] }).length, 1);
+  assert.equal(resistsFor(effects, "bleeding", { weaponTags: ["melee"] }).length, 0);
+  assert.equal(resistsFor(effects, "fire").length, 0);
+  // "Any weapon" does not count a spell.
+  const brittle = collectEffects([{ name: "Brittle", id: "b", system: { effects: [{ kind: "resist", resist: "double", weapon: "weapon" }] } }]);
+  assert.equal(resistsFor(brittle, "blunt", { weaponTags: ["spell"] }).length, 0);
+});
