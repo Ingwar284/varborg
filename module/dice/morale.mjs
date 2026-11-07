@@ -74,10 +74,11 @@ export async function inflictDamage(foe, damage, armour, attack, damageType = ""
   rolls.push(...resist.rolls);
   const { taken, minimum } = foeDamageAfterResists(damage, soak, resist.kept.items, resist.kept.totals);
   const from = foe.system.hp.value;
-  const to = hpAfterDamage(from, taken);
   // The damage types it took since its last turn (Regeneration, GAPS 238).
   const damagedBy = withDamagedBy(foe.getFlag(SYSTEM, DAMAGED_BY_FLAG), damageType, taken);
-  await foe.update({ "system.hp.value": to, [`flags.${SYSTEM}.${DAMAGED_BY_FLAG}`]: damagedBy });
+  await foe.update({ "system.hp.value": hpAfterDamage(from, taken), [`flags.${SYSTEM}.${DAMAGED_BY_FLAG}`]: damagedBy });
+  // As saved: a foe that stays at 1 HP the first time (Abandon Shell, step 52f) has not fallen.
+  const to = foe.system.hp.value;
 
   const max = foe.system.hp.max;
   const fallen = to === 0;

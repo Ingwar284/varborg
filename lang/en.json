@@ -2767,7 +2767,8 @@
         "surge": "When a Photonic Surge occurs",
         "aura": "When another creature starts its turn within the amount in feet (combat). A foe's aura posts a reminder for the players' side.",
         "roundStart": "At the start of each round (combat)",
-        "hitMelee": "When a creature hits it with a melee attack (foes)"
+        "hitMelee": "When a creature hits it with a melee attack (foes)",
+        "attackHits": "When its weapon attack hits (foes; the creature presses Take)"
       },
       "ActionLabel": "Do",
       "Action": {
@@ -2806,7 +2807,10 @@
         "lowerReroll": "Card button: the attacker rerolls the damage, keep the lower",
         "intercept": "Card button on allies' cards: take their damage instead (amount: half for half)",
         "gainGloom": "Add to the Gloom pool",
-        "testButton": "The attacker tests (button)"
+        "testButton": "The attacker tests (button)",
+        "targetCondition": "The creature it hit gains a condition",
+        "targetPersistent": "The creature it hit takes persistent damage",
+        "dropToOne": "The first time: stay at 1 HP instead"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -3041,7 +3045,10 @@
       "TestNotYours": "Only the owner of the creature that hit can make this test.",
       "AuraReminder": "{item} ({owner}): {name} starts their turn within {feet}'.",
       "ResistWeaponHint": "Only from weapon attacks of this kind, not powers or spells (Charnel Flesh: shooting or thrown weapons; the Grave Skeleton: any weapon, with Blunt force).",
-      "ResistModeHint": "On a foe, an optional tick is asked when Inflict damage is pressed (Iron-Averse: an iron or steel weapon?)."
+      "ResistModeHint": "On a foe, an optional tick is asked when Inflict damage is pressed (Iron-Averse: an iron or steel weapon?).",
+      "DroppedToOne": "{item}: {name} would drop to 0 HP, but stays at 1 HP instead (this happens only once).",
+      "ArmourLost": "{name} loses its armour.",
+      "LoseArmourLabel": "Loses its armour"
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",

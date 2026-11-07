@@ -99,3 +99,14 @@ test("the new damage types exist (GAPS 237)", async () => {
   const { DAMAGE_TYPES } = await import("../module/rules/equipment.mjs");
   for (const type of ["cold", "necrotic", "sonic"]) assert.ok(DAMAGE_TYPES.includes(type));
 });
+
+test("the content checks know 'when its attack hits' and 'stay at 1 HP' (step 52f)", async () => {
+  const { effectProblems, blankEffect } = await import("../module/rules/item-effects.mjs");
+  const base = blankEffect("hook");
+  assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetPersistent", amount: "d2", damageType: "bleeding" }), []);
+  assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetPersistent", amount: "d2", damageType: "cold" }), ["persistent type: cold"]);
+  assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetCondition", condition: "restrained" }), []);
+  assert.deepEqual(effectProblems({ ...base, event: "turnStart", action: "targetCondition", condition: "restrained" }), ["targetCondition at turnStart"]);
+  assert.deepEqual(effectProblems({ ...base, event: "zeroHp", action: "dropToOne", loseArmour: true }), []);
+  assert.deepEqual(effectProblems({ ...base, event: "turnStart", action: "dropToOne" }), ["dropToOne at turnStart"]);
+});

@@ -72,6 +72,7 @@ export function effectsContext(document, path = "effects") {
       damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
       resistTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.ChosenDamageType"),
       resistModes: labels(RESIST_MODES, "Effects.Resist"),
+      persistentTypes: labels(["fire", "bleeding", "acid", "poison"], "DamageType"),
       // Whose Morale a Morale effect changes (step 52b).
       moraleWho: { "": "VARBORG.Effects.MoraleWho.own", allies: "VARBORG.Effects.MoraleWho.allies" },
       companions: labels(COMPANIONS, "Effects.Companion"),
@@ -94,10 +95,13 @@ export function effectsContext(document, path = "effects") {
         // Reroll and Success buttons on cards (steps 49g, 50b2).
         isReroll: ["reroll", "success"].includes(effect.action),
         isRerollOnly: effect.action === "reroll",
-        hasAmount: ["reminder", "gainGloom", "heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action),
+        hasAmount: ["reminder", "gainGloom", "targetPersistent", "heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action),
         // An aura's radius in feet (Primal Conduit, step 51a2).
         isAura: effect.kind === "hook" && effect.event === "aura",
-        hasCondition: effect.action === "addCondition",
+        hasCondition: ["addCondition", "targetCondition"].includes(effect.action),
+        // Step 52f: persistent damage on the creature hit; Abandon Shell's armour.
+        isTargetPersistent: effect.kind === "hook" && effect.action === "targetPersistent",
+        isDropToOne: effect.kind === "hook" && effect.action === "dropToOne",
         // Step 52b (foes): Morale effects, the attacker's test, Regeneration's exception.
         isMorale: effect.kind === "stat" && effect.target === "morale",
         isTestButton: effect.kind === "hook" && effect.action === "testButton",

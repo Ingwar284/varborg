@@ -1409,6 +1409,15 @@ foes, with area spells.
       with no timer and Slowed for 1 round, as its text says; The Unmaking
       and The Great Silence add Deafened on a Ruin. Acid vomit and Acid
       seed volley deal acid. EFFECTS_CONTENT 27.
+    - ~~52f. Foes 76–100 (GAPS 249–251).~~ Done: Gutter Cutpurse to
+      Cairn-Crab. New: "when its weapon attack hits", run when the
+      creature presses Take (the defence card now knows its foe): the
+      creature gains a condition or persistent damage, or a reminder is
+      posted (Burrow, Latch, Hardening Sap, Loose Threads; and Tangle and
+      Death Grip from 52d). "The first time it would drop to 0 HP, stay at
+      1 HP" (Abandon Shell, losing its armour), done before HP is saved, so
+      the damage card shows the HP kept. Black Salt Haemorrhage's Ruin
+      gives d4 persistent bleeding. EFFECTS_CONTENT 28.
 
 **Milestone 12 review:** fight three foes with resistances and
 regeneration.

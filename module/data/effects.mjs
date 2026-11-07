@@ -83,6 +83,8 @@ export function effectFields() {
       radius: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
       allyCount: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
       unlessDamaged: new StringField({ required: true, blank: true, initial: "" }),
+      // Step 52f: Abandon Shell loses its armour when it stays at 1 HP.
+      loseArmour: new BooleanField({ required: true, initial: false }),
       // When it applies, in a few words ("on tests involving balance").
       note: new StringField({ required: true, blank: true, initial: "" })
     })),

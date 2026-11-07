@@ -95,6 +95,15 @@
       <input type="number" step="5" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     {{/if}}
+    {{#if isTargetPersistent}}
+    <select data-effect-field="damageType" aria-label="{{localize 'VARBORG.Effects.DamageTypeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../persistentTypes selected=damageType localize=true}}</select>
+    {{/if}}
+    {{#if isDropToOne}}
+    <label class="effect-small">
+      <input type="checkbox" data-effect-field="loseArmour" {{checked loseArmour}} {{#unless @root.editable}}disabled{{/unless}}>
+      <span>{{localize "VARBORG.Effects.LoseArmourLabel"}}</span>
+    </label>
+    {{/if}}
     {{#if isTestButton}}
     <select data-effect-field="ability" aria-label="{{localize 'VARBORG.Effects.AbilityLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../abilities selected=ability localize=true}}</select>
     <label class="effect-small">

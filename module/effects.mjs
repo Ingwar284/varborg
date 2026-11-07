@@ -382,6 +382,24 @@ export async function doEffectAction(actor, effect, context = {}) {
     await adjustPoolBy("gloom", roll.total);
     return { lines: [i18n.format("VARBORG.Effects.HookGloom", { item, amount: roll.total })], rolls: roll.isDeterministic ? [] : [roll], acted: true };
   }
+  if (["targetCondition", "targetPersistent"].includes(effect.action)) {
+    // The creature its attack hit (step 52f, GAPS 249): Burrow, Latch.
+    const target = context.target ?? null;
+    if (!target) return { lines: [i18n.format("VARBORG.Effects.HookReminder", { item, note })], rolls: [], acted: false };
+    if (effect.action === "targetCondition") {
+      const { addTimedCondition } = await import("./timers.mjs");
+      const line = await addTimedCondition(target, effect.condition, null);
+      return { lines: [line, ...(effect.note ? [effect.note] : [])].filter(Boolean), rolls: [], acted: true };
+    }
+    const { addPersistentDamage } = await import("./persistent.mjs");
+    await addPersistentDamage(target, effect.damageType, effect.amount);
+    const type = i18n.localize(`VARBORG.DamageType.${effect.damageType}`).toLowerCase();
+    return { lines: [i18n.format("VARBORG.Outcome.Persistent", { name: target.name, amount: effect.amount, type }), ...(effect.note ? [effect.note] : [])], rolls: [], acted: true };
+  }
+  if (effect.action === "dropToOne") {
+    // Done by the foe's data before the update (step 52f); here only a line.
+    return { lines: [], rolls: [], acted: false };
+  }
   if (effect.action === "testButton") {
     // Adhesive Hide (GAPS 240): the creature that hit tests; the result is the note.
     const attacker = context.attacker ?? null;

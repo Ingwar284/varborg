@@ -13,6 +13,12 @@ import {
 } from "../rules/foe.mjs";
 import { capHp } from "../rules/health.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
+import { collectEffects } from "../rules/item-effects.mjs";
+
+/** Passes "stayed at 1 HP instead" from _preUpdate to _onUpdate (step 52f). */
+const STAYED_OPTION = "varBorgFoeStayed";
+/** The item flag that marks a "first time it would drop to 0 HP" passive as used. */
+const STAYED_FLAG = "droppedToOne";
 
 /** Passes "dropped to 0 HP" from _preUpdate to _onUpdate (step 52b). */
 const FELL_OPTION = "varBorgFoeFell";
@@ -96,7 +102,20 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
     const mook = changes.system.mook ?? this.mook;
     const max = foeMaxHp(hp.max ?? this._source.hp.max, mook);
     hp.value = capHp(hp.value ?? this._source.hp.value, max);
-    if (hp.value === 0 && this.hp.value > 0) options[FELL_OPTION] = true;
+    if (hp.value === 0 && this.hp.value > 0) {
+      // The first time it would drop to 0 HP, it stays at 1 HP (Abandon
+      // Shell: step 52f, GAPS 250), and may lose its armour.
+      const stay = collectEffects(this.parent?.items ?? [])
+        .find(effect => effect.kind === "hook" && effect.event === "zeroHp" && effect.action === "dropToOne"
+          && !this.parent.items.get(effect.itemId)?.getFlag("var-borg", STAYED_FLAG));
+      if (stay) {
+        hp.value = 1;
+        if (stay.loseArmour) changes.system.armour = "";
+        options[STAYED_OPTION] = { itemId: stay.itemId, item: stay.item, note: stay.note, loseArmour: Boolean(stay.loseArmour) };
+        return;
+      }
+      options[FELL_OPTION] = true;
+    }
   }
 
   /**
@@ -105,7 +124,23 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
    */
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
-    if (!options[FELL_OPTION] || userId !== game.user.id) return;
+    if (userId !== game.user.id) return;
+    const stayed = options[STAYED_OPTION];
+    if (stayed) {
+      this.parent.items.get(stayed.itemId)?.setFlag("var-borg", STAYED_FLAG, true);
+      const i18n = game.i18n;
+      const lines = [
+        i18n.format("VARBORG.Effects.DroppedToOne", { item: stayed.item, name: this.parent.name }),
+        stayed.loseArmour ? i18n.format("VARBORG.Effects.ArmourLost", { name: this.parent.name }) : null,
+        stayed.note || null
+      ].filter(Boolean);
+      ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor: this.parent }),
+        content: `<div class="var-borg-card">${lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")}</div>`
+      });
+      return;
+    }
+    if (!options[FELL_OPTION]) return;
     import("../effects.mjs").then(({ runItemHooks }) => runItemHooks(this.parent, "zeroHp"));
   }
 }

@@ -150,7 +150,11 @@ export const HOOK_EVENTS = [
   // Step 52b, for foes' passives: the start of each round (Cold Heart,
   // Master Mechanism); a creature hits it with a melee attack (Adhesive
   // Hide). "turnStart", "zeroHp" and "aura" work for foes too.
-  "roundStart", "hitMelee"
+  "roundStart", "hitMelee",
+  // Step 52f (GAPS 249, 250): its weapon attack hit a creature, when that
+  // creature presses Take (Burrow, Latch); it would drop to 0 HP (Abandon
+  // Shell: stays at 1 HP the first time).
+  "attackHits"
 ];
 
 /**
@@ -196,7 +200,12 @@ export const HOOK_ACTIONS = [
   // takes `amount` (GAPS 207).
   "adrenaline", "photonicSurge", "auraHeal", "auraHurt",
   // Step 52b (foes): Cold Heart; Adhesive Hide.
-  "gainGloom", "testButton"
+  "gainGloom", "testButton",
+  // Step 52f (foes, attackHits): the creature it hit gains `condition`
+  // or `amount` persistent damage of `damageType` (Burrow: d2 bleeding).
+  // At zeroHp: the first time, stay at 1 HP instead (Abandon Shell), and
+  // lose the armour when `loseArmour` is ticked.
+  "targetCondition", "targetPersistent", "dropToOne"
 ];
 
 /**
@@ -389,6 +398,9 @@ export const ACTION_EVENTS = {
   auraHeal: ["aura"],
   stayAtOne: ["zeroHp"],
   testButton: ["hitMelee"],
+  targetCondition: ["attackHits"],
+  targetPersistent: ["attackHits"],
+  dropToOne: ["zeroHp"],
   auraHurt: ["aura"]
 };
 
@@ -682,7 +694,7 @@ export function blankEffect(kind = "stat") {
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
     resist: "half", gift: "", setDamage: "", companion: "minion", armour: "", power: "", option: "",
-    radius: 0, allyCount: 0, unlessDamaged: "",
+    radius: 0, allyCount: 0, unlessDamaged: "", loseArmour: false,
     note: ""
   };
 }
@@ -976,6 +988,11 @@ export function effectProblems(effect) {
     if (effect.event === "aura" && !(Number(effect.value) > 0)) problems.push(`aura radius: ${effect.value}`);
     if (["gainGloom"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "reminder" && effect.amount && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (effect.action === "targetCondition") check("condition", CONDITIONS);
+    if (effect.action === "targetPersistent") {
+      if (!["fire", "bleeding", "acid", "poison"].includes(effect.damageType)) problems.push(`persistent type: ${effect.damageType}`);
+      if (!isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    }
     if (effect.action === "testButton") {
       check("ability", ABILITIES);
       if (!(Number(effect.dr) > 0)) problems.push(`dr: ${effect.dr}`);

@@ -48,7 +48,7 @@ import { AGONY_TYPE_OPTION } from "../agony.mjs";
 import { addTimedCondition } from "../timers.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mjs";
-import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
+import { rollResists, resistLines, takenWithResists, runItemHooks } from "../effects.mjs";
 import { useUpNextAttackMarks, giveGloomOutcomes } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 
@@ -158,6 +158,8 @@ export async function rollDefence(actor, attack) {
     diceRule, abilityScore, dr, uncoveredDr,
     damageFormula: fixed || isDamageFormula(formula) ? formula : null,
     attackDamage: attack.system.damage,
+    // The attacking foe, for its "when its attack hits" passives (step 52f).
+    foeUuid: foe?.type === "foe" ? foe.uuid : "",
     // The armour and shield as they were before this attack.
     armour: automatic.armour ? { id: automatic.armour.id, tier: automatic.armour.tier, originalTier: automatic.armour.originalTier } : null,
     soakDie: automatic.soakDie,
@@ -607,6 +609,12 @@ export function addDefenceCardListeners(message, html) {
     // At 0 HP the character data adds the wound (module/agony.mjs).
     await actor.update({ "system.hp.value": to }, { [AGONY_TYPE_OPTION]: take.dataset.agonyType || null });
     await message.setFlag(SYSTEM, "damageTaken", true);
+    // The foe's "when its attack hits" passives (Burrow, Latch: step 52f, GAPS 249).
+    const foeUuid = message.getFlag(SYSTEM, "fortune")?.inputs?.foeUuid;
+    if (foeUuid) {
+      const attacker = await fromUuid(foeUuid);
+      if (attacker) await runItemHooks(attacker, "attackHits", { target: actor });
+    }
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
       content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Defence.Took", { name: actor.name, damage, from, to })}</p>`

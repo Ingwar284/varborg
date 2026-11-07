@@ -70,7 +70,50 @@
         "improving": false,
         "frequency": "",
         "frequencyUsed": false,
-        "automation": "text"
+        "automation": "partial",
+        "effects": [
+          {
+            "kind": "hook",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "attackHits",
+            "action": "targetCondition",
+            "amount": "",
+            "condition": "restrained",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "loseArmour": false,
+            "note": "Until it spends an action to tear free (Strength DR10). Failure: it stays Restrained. Ruin: d4 damage, and it stays Restrained."
+          }
+        ]
       }
     }
   ]
