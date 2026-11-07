@@ -28,7 +28,8 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 import { agonyTypeForPersistent } from "./rules/agony.mjs";
 import { AGONY_TYPE_OPTION } from "./agony.mjs";
-import { rollResists, resistLines } from "./effects.mjs";
+import { rollResists, resistLines, DAMAGED_BY_FLAG } from "./effects.mjs";
+import { withDamagedBy } from "./rules/foe-hooks.mjs";
 import { resistedDamage } from "./rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -177,7 +178,10 @@ async function tickOne(actor, type, formula, effect) {
   const from = actor.system.hp.value;
   const to = hpAfterDamage(from, damage);
   // At 0 HP a character gains a wound; fire and bleeding suggest their column of the Table of Agony.
-  await actor.update({ "system.hp.value": to }, { [AGONY_TYPE_OPTION]: agonyTypeForPersistent(type) });
+  // A foe remembers the damage types it took since its last turn (Regeneration, GAPS 238).
+  const changes = { "system.hp.value": to };
+  if (actor.type === "foe") changes[`flags.var-borg.${DAMAGED_BY_FLAG}`] = withDamagedBy(actor.getFlag("var-borg", DAMAGED_BY_FLAG), type, from - to);
+  await actor.update(changes, { [AGONY_TYPE_OPTION]: agonyTypeForPersistent(type) });
 
   let foeLine = null;
   let ends = false;

@@ -23,7 +23,7 @@ function labels(keys, prefix, blankKey) {
   return Object.fromEntries(keys.map(key => [key, key ? `VARBORG.${prefix}.${key}` : blankKey]));
 }
 
-const NUMBER_FIELDS = ["value", "dr"];
+const NUMBER_FIELDS = ["value", "dr", "radius", "allyCount"];
 
 /** The cards a reroll can be offered on (step 49g). */
 const REROLL_CARDS = ["test", "attack", "defence", "gloomTest", "power", "spell"];
@@ -72,6 +72,8 @@ export function effectsContext(document, path = "effects") {
       damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
       resistTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.ChosenDamageType"),
       resistModes: labels(RESIST_MODES, "Effects.Resist"),
+      // Whose Morale a Morale effect changes (step 52b).
+      moraleWho: { "": "VARBORG.Effects.MoraleWho.own", allies: "VARBORG.Effects.MoraleWho.allies" },
       companions: labels(COMPANIONS, "Effects.Companion"),
       companionArmour: Object.fromEntries(COMPANION_ARMOUR.map(die => [die, die || "—"])),
       // The Choose button needs a character to choose for.
@@ -92,10 +94,14 @@ export function effectsContext(document, path = "effects") {
         // Reroll and Success buttons on cards (steps 49g, 50b2).
         isReroll: ["reroll", "success"].includes(effect.action),
         isRerollOnly: effect.action === "reroll",
-        hasAmount: ["heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action),
+        hasAmount: ["reminder", "gainGloom", "heal", "roll", "gainEmber", "gainFortune", "makeMinion", "takeDamage", "lowerDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action),
         // An aura's radius in feet (Primal Conduit, step 51a2).
         isAura: effect.kind === "hook" && effect.event === "aura",
         hasCondition: effect.action === "addCondition",
+        // Step 52b (foes): Morale effects, the attacker's test, Regeneration's exception.
+        isMorale: effect.kind === "stat" && effect.target === "morale",
+        isTestButton: effect.kind === "hook" && effect.action === "testButton",
+        hasUnlessDamaged: effect.kind === "hook" && ["turnStart", "roundStart"].includes(effect.event),
         hasKeep: effect.action === "rollTwice",
         perWound: ["wound", "kill"].includes(effect.per),
         isReminder: effect.kind === "reminder",

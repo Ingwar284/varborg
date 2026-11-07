@@ -1355,11 +1355,39 @@ foes, with area spells.
       Not yet: cold, necrotic and sonic damage, "crushing" and
       "non-magical" (GAPS 237, asked at 52c); Primal Conduit's 1 damage
       has no type.
-    - 52b. Foe hooks: regeneration at turn start, auras as a turn-start
-      reminder, triggers at 0 HP or death, Morale changes, retaliation,
-      gloom pool hooks.
-    - 52c–52h. The 150 foes, about 25 per step in rules order: passives and
-      the remaining gloom abilities.
+    - ~~52b. Foe hooks.~~ Done (rulings GAPS 238–242):
+      `module/rules/foe-hooks.mjs` with `tests/foe-hooks.test.mjs`. Foes'
+      passives now run Events (`runItemHooks`). New events: start of each
+      round, and "a creature hits it with a melee attack". New actions:
+      add to the Gloom pool (Cold Heart, after the round's fill), and a
+      test button for the attacker (Adhesive Hide). A reminder with an
+      amount rolls it too. Regeneration: "Unless it took: fire, acid",
+      with the damage types a foe took since its last turn remembered by
+      Inflict damage and persistent damage. At 0 HP the foe's 0 HP events
+      run (reminder and roll). A foe's aura posts a reminder when a player
+      character or minion starts its turn within it. Morale: a Morale
+      sheet number on a foe's passive, for itself (with an ally count) or
+      its allies within a distance, measured between tokens and shown on
+      the Morale card. Play-test foes: Test: Cinder Troll and Test: Scrap
+      Peasant in `content/examples/actors/` (not packed).
+    - ~~52c. Tools for the foes (GAPS 237, 243, 244).~~ Done: cold, necrotic
+      and sonic damage; resists limited to weapon attacks ("Shooting or
+      thrown weapons", "Any weapon"), passed by the Inflict damage button;
+      roll effects for "Casting a spell at this creature"; gloom abilities
+      have "What it gives", shown on the card and given when Take is
+      pressed (persistent damage, buffs with a timer, Ember lost with
+      "-1", through the new `loseEmber`). Test parts on Test: Furnace Hulk
+      (Rubbery Hide, Warded Plates, Scorching Breath).
+    - 52c2–52h. The 150 foes, about 25 per step, in the order they first
+      appear in the rules document: passives and the remaining gloom
+      abilities, every foe item with a status. 52c2 is the first 25:
+      Directorate Surveyor, Godstone Sentinel, Brass Revenant, Cinder
+      Mote, Spill Ogre, Blood Vulture, Gasbloat Drake, Soot Drake, Sunscale
+      Wyrm, Tenebrous Dragon, The Starless Wyrm, Ceiling Spider,
+      Lamp-Snuffer Goblin, Dockside Brawler, Horse, Veilrender,
+      Resurrection Man, Mardilar, Hedge Hexer, Charnelkin Warren-Mother,
+      Charnelkin, Gear-Hound, Guildforge Journeyman, Sundrinker Bloom,
+      Debt-Collector.
 
 **Milestone 12 review:** fight three foes with resistances and
 regeneration.

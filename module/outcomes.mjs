@@ -131,6 +131,58 @@ export async function settleOutcomes(data, tier, { damage = 0 } = {}) {
   return { lines, rolls };
 }
 
+/**
+ * A gloom ability's "What it gives" for the character who took its result
+ * (step 52c): entries for that result, for the target or the targeted
+ * allies, given once when Take is pressed (the card is then settled, so
+ * nothing is taken back). Entries on the foe itself are left out: each
+ * character's test would give them again.
+ * @param {Actor} actor    The character who took the result.
+ * @param {object} gives   From outcomeInputs for the gloom ability.
+ * @param {string} tier    The character's result.
+ * @returns {Promise<{lines: string[], rolls: Roll[]}>}
+ */
+export async function giveGloomOutcomes(actor, gives, tier) {
+  if (!gives?.entries?.length || !actor) return { lines: [], rolls: [] };
+  const entries = gives.entries.map(entry => (entry.who === "self" ? { ...entry, tiers: {} } : entry));
+  const wanted = wantedOutcomes(entries, tier, { targets: [actor.uuid], allyTargets: [actor.uuid] });
+  const lines = [];
+  const rolls = [];
+  for (const want of wanted) {
+    const entry = entries[want.index];
+    const op = { op: "give", actorUuid: actor.uuid, entry, name: gives.name, source: gives.source, sustained: false, user: gives.user };
+    if (entry.kind === "buff") op.effects = buffEffectsFor(gives.buffEffects, entry.option);
+    if (["heal", "damage"].includes(entry.kind) && !["full", "damage"].includes(entry.amount)) {
+      const roll = await new Roll(String(entry.amount || "0")).evaluate();
+      rolls.push(roll);
+      op.amount = roll.total;
+    }
+    const result = await doOp(op);
+    if (result?.line) lines.push(result.line);
+  }
+  return { lines, rolls };
+}
+
+/**
+ * What a gloom ability's Take button will also give for a result, in a
+ * few words each, for the card (step 52c).
+ * @param {object} gives  From outcomeInputs.
+ * @param {string} tier
+ * @returns {string[]}
+ */
+export function gloomGivesText(gives, tier) {
+  const i18n = game.i18n;
+  if (!gives?.entries?.length) return [];
+  const entries = gives.entries.map(entry => (entry.who === "self" ? { ...entry, tiers: {} } : entry));
+  return wantedOutcomes(entries, tier, { targets: ["x"], allyTargets: ["x"] }).map(want => {
+    const entry = entries[want.index];
+    if (entry.note) return entry.note;
+    if (entry.kind === "persistent") return i18n.format("VARBORG.Gloom.GivesPersistent", { amount: entry.amount, type: i18n.localize(`VARBORG.DamageType.${entry.damageType}`).toLowerCase() });
+    if (entry.kind === "condition" && entry.condition) return i18n.localize(`VARBORG.Condition.${entry.condition}`);
+    return i18n.localize(`VARBORG.Outcome.Kind.${entry.kind}`);
+  });
+}
+
 /** Do one change here when this user may, otherwise on the Dark Master's client. */
 async function doOp(op) {
   const uuid = op.actorUuid ?? op.done?.actorUuid;
@@ -303,10 +355,17 @@ async function runOp51d(actor, op) {
       return { markedBy: user.uuid, mark: entry.kind, line: noted(i18n.format(`VARBORG.Outcome.${entry.kind === "quarry" ? "Quarry" : "Subject"}`, { name: actor.name, user: user.name }), entry.note) };
     }
     case "ember": {
-      // The Ember pool gains it, in combat only (Unravel).
-      const { gainEmber } = await import("./pools.mjs");
+      // The Ember pool gains it, in combat only (Unravel); a negative amount
+      // is lost from it (Purge Pulse: "-1", step 52c).
+      const { gainEmber, loseEmber } = await import("./pools.mjs");
       if (!game.combat?.started) return { line: i18n.format("VARBORG.Effects.HookEmberNoCombat", { item: op.name }) };
-      const amount = (await new Roll(String(entry.amount || "0")).evaluate()).total;
+      const text = String(entry.amount || "0").trim();
+      const losing = text.startsWith("-");
+      const amount = (await new Roll(losing ? text.slice(1) : text).evaluate()).total;
+      if (losing) {
+        await loseEmber(amount, actor, op.name);
+        return { line: noted(i18n.format("VARBORG.Outcome.EmberLost", { item: op.name, amount }), entry.note) };
+      }
       await gainEmber(amount, actor, op.name);
       return { line: noted(i18n.format("VARBORG.Effects.HookEmber", { item: op.name, amount }), entry.note) };
     }

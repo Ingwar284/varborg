@@ -34,7 +34,7 @@ import { currentWeather } from "./weather.mjs";
 import { conditionsForTurn, turnConditionFor } from "./rules/weather-effects.mjs";
 import { startMinionTurn, postMinionTurn, removeThralls } from "./minions.mjs";
 import { withStat } from "./rules/item-effects.mjs";
-import { runItemHooks, initiativeKeep, endAdrenaline } from "./effects.mjs";
+import { runItemHooks, initiativeKeep, endAdrenaline, DAMAGED_BY_FLAG } from "./effects.mjs";
 import { runAuras } from "./aura.mjs";
 import { restoreLoweredArmour } from "./outcomes.mjs";
 
@@ -119,6 +119,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     // Adrenaline lasts until the start of the next turn (GAPS 206).
     if (actor) await endAdrenaline(actor);
     if (actor) await runItemHooks(actor, "turnStart");
+    // A foe's "since its last turn" starts again (Regeneration, GAPS 238).
+    if (actor?.type === "foe" && actor.getFlag(SYSTEM, DAMAGED_BY_FLAG)?.length) await actor.unsetFlag(SYSTEM, DAMAGED_BY_FLAG);
     // Auras of other creatures that reach this one (Primal Conduit, GAPS 207).
     await runAuras(this, combatant);
   }
@@ -148,6 +150,12 @@ export class VarBorgCombat extends foundry.documents.Combat {
     await fillPools(context.round);
     // Once-per-round uses come back (GAPS 161).
     await resetLimitedUses(this.combatants.map(combatant => combatant.actor), "roundStart");
+    // Foes' passives at the start of each round, after the pools fill
+    // (Cold Heart, Master Mechanism: step 52b, GAPS 238).
+    if (game.user.isActiveGM) {
+      const foes = new Set(this.combatants.map(combatant => combatant.actor).filter(actor => actor?.type === "foe"));
+      for (const foe of foes) await runItemHooks(foe, "roundStart");
+    }
   }
 
   /** End of each round: whatever is left in both pools is lost (rules 3.10). */

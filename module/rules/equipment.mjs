@@ -10,7 +10,9 @@
 export const WEAPON_KINDS = ["melee", "shoot", "throw"];
 
 /** The five damage types of the Table of Agony (rules 3.5, GAPS 15). */
-export const DAMAGE_TYPES = ["blunt", "bleeding", "shot", "fire", "gore", "poison", "acid", "lightning", "radiant"];
+export const DAMAGE_TYPES = ["blunt", "bleeding", "shot", "fire", "gore", "poison", "acid", "lightning", "radiant",
+  // Step 52c (GAPS 237): named by foes' immunities and vulnerabilities.
+  "cold", "necrotic", "sonic"];
 
 /** The elements a feature can name (Ancestral Resonance, GAPS 202). */
 export const ELEMENTS = ["fire", "poison", "acid", "lightning", "radiant"];

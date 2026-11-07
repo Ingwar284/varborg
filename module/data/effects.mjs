@@ -77,6 +77,12 @@ export function effectFields() {
       power: new StringField({ required: true, blank: true, initial: "" }),
       // A power's buff effect for one option only (Morphic Surge, step 51d2).
       option: new StringField({ required: true, blank: true, initial: "" }),
+      // Step 52b (foes): a Morale effect's radius in feet and the number of
+      // allies it needs within it (Mob Courage: 3 within 10'); a hook held
+      // back by damage of these types since its last turn ("fire, acid").
+      radius: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
+      allyCount: new NumberField({ required: true, nullable: false, integer: true, min: 0, initial: 0 }),
+      unlessDamaged: new StringField({ required: true, blank: true, initial: "" }),
       // When it applies, in a few words ("on tests involving balance").
       note: new StringField({ required: true, blank: true, initial: "" })
     })),

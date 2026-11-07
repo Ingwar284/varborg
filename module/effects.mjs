@@ -16,7 +16,7 @@ import {
   collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits, changedSpeeds,
   hasAdrenaline, SURGE_ON, withNotedKind
 } from "./rules/item-effects.mjs";
-import { gainEmber } from "./pools.mjs";
+import { gainEmber, adjustPoolBy, runningCombat } from "./pools.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
 import { makeItemMinion, makeCompanion, raiseThrall, ownedThralls } from "./minions.mjs";
@@ -40,10 +40,15 @@ export function itemRollEffects(actor, context) {
   const target = context.targetUuid ? fromUuidSync(context.targetUuid) : null;
   const rolls = [context.roll].flat();
   if (!target?.items || !rolls.some(roll => ["attack", "power", "spell"].includes(roll))) return own;
-  const marks = rollEffects(collectEffects(target.items).filter(effect => effect.roll === "attackAgainst"), { ...context, roll: "attackAgainst" });
+  const targetEffects = collectEffects(target.items);
+  const marks = rollEffects(targetEffects.filter(effect => effect.roll === "attackAgainst"), { ...context, roll: "attackAgainst" });
+  // Spells cast at it (Godstone Plating: +2 DR, step 52c).
+  const spellMarks = rolls.includes("spell")
+    ? rollEffects(targetEffects.filter(effect => effect.roll === "spellAgainst"), { ...context, roll: "spellAgainst" })
+    : { auto: [], optional: [], reminders: [] };
   const subjectOf = game.actors.filter(other => other.type === "character" && other.id !== actor.id && subjectOfActor(other)?.uuid === target.uuid);
   const allies = subjectOf.map(other => rollEffects(collectEffects(other.items).filter(effect => effect.vs === "subject"), { ...context, allySubject: true }));
-  for (const extra of [marks, ...allies]) {
+  for (const extra of [marks, spellMarks, ...allies]) {
     own.auto.push(...extra.auto);
     own.optional.push(...extra.optional);
     own.reminders.push(...extra.reminders);
@@ -153,8 +158,15 @@ export function tickedMods(mods, data) {
  */
 export function itemHooks(actor, event) {
   if (!actor?.items) return [];
-  return hookEffects(collectEffects(actor.items), event, { hp: actor.system.hp?.value ?? 0, hpMax: actor.system.hp?.max ?? 0 });
+  return hookEffects(collectEffects(actor.items), event, {
+    hp: actor.system.hp?.value ?? 0, hpMax: actor.system.hp?.max ?? 0,
+    // Damage types a foe took since its last turn (Regeneration, GAPS 238).
+    damagedBy: actor.getFlag?.("var-borg", DAMAGED_BY_FLAG) ?? []
+  });
 }
+
+/** The foe's flag that lists the damage types it took since its last turn (GAPS 238). */
+export const DAMAGED_BY_FLAG = "damagedBy";
 
 /**
  * Whether a weapon item is the Unarmed weapon (rules 4.1), by its
@@ -201,9 +213,10 @@ export function effectiveWeapon(item) {
  * @param {object} [kept]     A stored { items, totals } from before.
  * @returns {Promise<{kept: object, rolls: Roll[]}>}
  */
-export async function rollResists(actor, damageType, kept = null, { persistent = false } = {}) {
+export async function rollResists(actor, damageType, kept = null, { persistent = false, weaponTags = null } = {}) {
   if (kept) return { kept, rolls: [] };
-  const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType, { persistent }) : [];
+  // weaponTags: the weapon attack's tags, for resists by weapon (step 52c); null for no weapon.
+  const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType, { persistent, weaponTags }) : [];
   const rolls = [];
   const items = [];
   const totals = [];
@@ -333,7 +346,7 @@ async function markUsed(actor, itemId) {
  * @returns {Promise<{lines: string[], rolls: Roll[], acted: boolean}>}
  *   acted: false for reminders and when nothing could be done.
  */
-export async function doEffectAction(actor, effect) {
+export async function doEffectAction(actor, effect, context = {}) {
   const i18n = game.i18n;
   const item = effect.item;
   const note = effect.note || i18n.localize("VARBORG.Effects.SeeText");
@@ -351,7 +364,30 @@ export async function doEffectAction(actor, effect) {
   }
   if (effect.mode === "optional" || effect.action === "reminder") {
     const key = effect.mode === "optional" ? "VARBORG.Effects.HookOptional" : "VARBORG.Effects.HookReminder";
+    // A reminder with an amount rolls it too (Dust, Pressurised: GAPS 241).
+    if (effect.action === "reminder" && effect.amount) {
+      const roll = await new Roll(effect.amount).evaluate();
+      return { lines: [i18n.format(key, { item, note }), i18n.format("VARBORG.Effects.HookRolled", { amount: effect.amount, total: roll.total })], rolls: [roll], acted: false };
+    }
     return { lines: [i18n.format(key, { item, note })], rolls: [], acted: false };
+  }
+  if (effect.action === "gainGloom") {
+    // Cold Heart (step 52b): in a running combat only, like Ember.
+    if (!runningCombat()) return { lines: [i18n.format("VARBORG.Effects.HookGloomNoCombat", { item })], rolls: [], acted: false };
+    const roll = await new Roll(effect.amount || "1").evaluate();
+    await adjustPoolBy("gloom", roll.total);
+    return { lines: [i18n.format("VARBORG.Effects.HookGloom", { item, amount: roll.total })], rolls: roll.isDeterministic ? [] : [roll], acted: true };
+  }
+  if (effect.action === "testButton") {
+    // Adhesive Hide (GAPS 240): the creature that hit tests; the result is the note.
+    const attacker = context.attacker ?? null;
+    if (!attacker || !effect.ability) return { lines: [i18n.format("VARBORG.Effects.HookReminder", { item, note })], rolls: [], acted: false };
+    const ability = i18n.localize(`VARBORG.Ability.${effect.ability}`);
+    return {
+      lines: [i18n.format("VARBORG.Effects.TestAsk", { item, name: attacker.name, ability, dr: effect.dr }), ...(effect.note ? [effect.note] : [])],
+      rolls: [], acted: false,
+      testButton: { uuid: attacker.uuid, ability: effect.ability, dr: effect.dr, item, label: i18n.format("VARBORG.Effects.TestButton", { name: attacker.name, ability, dr: effect.dr }) }
+    };
   }
   if (["heal", "roll", "gainEmber"].includes(effect.action)) {
     if (effect.action === "gainEmber" && !game.combat?.started) {
@@ -482,8 +518,13 @@ export async function doEffectAction(actor, effect) {
  * @param {Actor} actor
  * @param {string} event  One of HOOK_EVENTS.
  */
-export async function runItemHooks(actor, event) {
-  if (actor?.type !== "character" || isDead(actor)) return;
+export async function runItemHooks(actor, event, context = {}) {
+  // Characters, and foes' passives (step 52b). A foe at 0 HP only acts at that moment.
+  if (actor?.type === "character") {
+    if (isDead(actor)) return;
+  } else if (actor?.type === "foe") {
+    if (!(actor.system.hp?.value > 0) && event !== "zeroHp") return;
+  } else return;
   // Rolling twice is done by the roll; Steady nerves and Dwarven
   // Doughtiness by the Panic test.
   const hooks = itemHooks(actor, event).filter(hook => !["rollTwice", "steadyNerves", "ruinAsFailure"].includes(hook.action));
@@ -493,8 +534,10 @@ export async function runItemHooks(actor, event) {
   const rolls = [];
   const buttons = [];
   const stayButtons = [];
+  const testButtons = [];
   for (const hook of hooks) {
-    const done = await doEffectAction(actor, hook);
+    const done = await doEffectAction(actor, hook, context);
+    if (done.testButton) testButtons.push(done.testButton);
     lines.push(...done.lines);
     rolls.push(...done.rolls);
     if (done.button) buttons.push(done.button);
@@ -511,6 +554,7 @@ export async function runItemHooks(actor, event) {
     content: `<div class="var-borg-card"><h3>${foundry.utils.escapeHTML(title)}</h3>`
       + lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")
       + buttons.map(button => fortuneButton(actor, button)).join("")
+      + testButtons.map(button => `<button type="button" data-action="effectTest" data-actor-uuid="${button.uuid}" data-ability="${button.ability}" data-dr="${Number(button.dr) || 0}" data-item="${foundry.utils.escapeHTML(button.item)}"><i class="fa-solid fa-dice-d20"></i> ${foundry.utils.escapeHTML(button.label)}</button>`).join("")
       + stayButtons.map(button => `<button type="button" class="text-button" data-action="stayAtOne" data-actor-uuid="${actor.uuid}" data-item-id="${button.itemId}"><i class="fa-solid fa-masks-theater"></i> ${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.StayButton", { item: button.item }))}</button>`).join("")
       + "</div>",
     rolls,
@@ -530,6 +574,26 @@ function fortuneButton(actor, { item, amount }) {
 export function registerEffectButtons() {
   Hooks.on("renderChatMessageHTML", addFortuneButtonListeners);
   Hooks.on("renderChatMessageHTML", addStayListeners);
+  Hooks.on("renderChatMessageHTML", addTestListeners);
+}
+
+/**
+ * The test button on a foe's hook card (Adhesive Hide, GAPS 240): the
+ * creature that hit makes the test, through the usual test dialog. Its
+ * owner presses it; the card's text says what each result does.
+ */
+function addTestListeners(message, html) {
+  for (const button of html.querySelectorAll("button[data-action='effectTest']")) {
+    button.addEventListener("click", async () => {
+      const actor = await fromUuid(button.dataset.actorUuid);
+      if (!actor?.isOwner) {
+        ui.notifications.warn(game.i18n.localize("VARBORG.Effects.TestNotYours"));
+        return;
+      }
+      const { rollAbilityTest } = await import("./dice/ability-test.mjs");
+      await rollAbilityTest(actor, button.dataset.ability, { dr: Number(button.dataset.dr), purpose: button.dataset.item });
+    });
+  }
 }
 
 /**

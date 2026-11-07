@@ -17,7 +17,7 @@
   "system": {
     "tier": "moderate",
     "category": "construct",
-    "description": "Play-test foe (immunities and resistances). No armour, so the numbers on the damage card are easy to follow.",
+    "description": "Play-test foe (immunities, resistances, attacks against it, gloom gives: steps 52a and 52c). No armour, so the numbers on the damage card are easy to follow.",
     "hp": {
       "value": 40,
       "max": 40
@@ -39,7 +39,11 @@
         "source": "passive",
         "improving": false,
         "effects": [
-          { "kind": "resist", "resist": "half", "damageType": "fire" }
+          {
+            "kind": "resist",
+            "resist": "half",
+            "damageType": "fire"
+          }
         ],
         "automation": "auto"
       }
@@ -54,7 +58,11 @@
         "source": "passive",
         "improving": false,
         "effects": [
-          { "kind": "resist", "resist": "double", "damageType": "bleeding" }
+          {
+            "kind": "resist",
+            "resist": "double",
+            "damageType": "bleeding"
+          }
         ],
         "automation": "auto"
       }
@@ -69,10 +77,220 @@
         "source": "passive",
         "improving": false,
         "effects": [
-          { "kind": "resist", "resist": "immune", "damageType": "poison" },
-          { "kind": "immune", "condition": "frightened" },
-          { "kind": "immune", "condition": "fatigued" }
+          {
+            "kind": "resist",
+            "resist": "immune",
+            "damageType": "poison"
+          },
+          {
+            "kind": "immune",
+            "condition": "frightened"
+          },
+          {
+            "kind": "immune",
+            "condition": "fatigued"
+          }
         ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestHulkRubber",
+      "name": "Test: Rubbery Hide",
+      "type": "feat",
+      "img": "icons/svg/shield.svg",
+      "system": {
+        "description": "Takes half damage from non-magical ranged attacks (shooting and thrown weapons).",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "mode": "auto",
+            "requires": "",
+            "kind": "resist",
+            "resist": "half",
+            "weapon": "ranged"
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestHulkWarded",
+      "name": "Test: Warded Plates",
+      "type": "feat",
+      "img": "icons/svg/mage-shield.svg",
+      "system": {
+        "description": "Spells cast at it are made at +2 DR. Ranged attacks against it are made at +2 DR, and with Bane while it stands in dim light or darkness.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "mode": "auto",
+            "requires": "",
+            "kind": "roll",
+            "roll": "spellAgainst",
+            "dr": 2,
+            "grant": "",
+            "weapon": "",
+            "vs": "",
+            "per": "",
+            "note": ""
+          },
+          {
+            "mode": "auto",
+            "requires": "",
+            "kind": "roll",
+            "roll": "attackAgainst",
+            "weapon": "ranged",
+            "dr": 2,
+            "grant": "",
+            "vs": "",
+            "per": "",
+            "note": ""
+          },
+          {
+            "mode": "optional",
+            "requires": "",
+            "kind": "roll",
+            "roll": "attackAgainst",
+            "weapon": "ranged",
+            "grant": "bane",
+            "note": "while it stands in dim light or darkness",
+            "vs": "",
+            "per": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestHulkBreath",
+      "name": "Test: Scorching Breath",
+      "type": "power",
+      "img": "icons/svg/fire.svg",
+      "system": {
+        "description": "One creature within 15' tests Agility DR12: Failure d6 fire damage and d4 persistent fire damage. Ruin 2d6 fire damage, bane on all tests until the end of its next turn, and the party's ember pool loses 1 charge.",
+        "source": "class",
+        "belongsTo": "",
+        "resource": "gloom",
+        "ability": "agility",
+        "dr": 12,
+        "cost": 3,
+        "actions": 2,
+        "damage": "d6",
+        "ruinDamage": "2d6",
+        "damageType": "fire",
+        "conditions": {
+          "failure": "",
+          "ruin": ""
+        },
+        "durations": {
+          "failure": {
+            "kind": "",
+            "rounds": "1"
+          },
+          "ruin": {
+            "kind": "",
+            "rounds": "1"
+          }
+        },
+        "addsWeaponDamage": false,
+        "sustained": false,
+        "reaction": false,
+        "outcomes": {
+          "triumph": "",
+          "success": "",
+          "failure": "d6 fire damage and d4 persistent fire damage.",
+          "ruin": "2d6 fire damage, bane on all tests until the end of your next turn, and the party's ember pool loses 1 charge."
+        },
+        "outcomeEffects": [
+          {
+            "who": "target",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d4",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "",
+            "kind": "persistent",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": true,
+              "ruin": false
+            }
+          },
+          {
+            "who": "target",
+            "condition": "",
+            "duration": {
+              "kind": "rounds",
+              "rounds": "1"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "Bane on all tests until the end of your next turn.",
+            "kind": "buff",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            }
+          },
+          {
+            "who": "target",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "-1",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": "",
+            "kind": "ember",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            }
+          }
+        ],
+        "buffEffects": [
+          {
+            "kind": "roll",
+            "roll": "test",
+            "grant": "bane",
+            "mode": "auto",
+            "requires": "",
+            "note": ""
+          }
+        ],
+        "sustaining": false,
+        "kept": false,
+        "usedOutside": false,
         "automation": "auto"
       }
     }

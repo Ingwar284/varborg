@@ -171,6 +171,10 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     weaponDamage: weapon.damage,
     // The weapon's damage type, for the foe's resistances (step 52a).
     damageType: weapon.damageType ?? "",
+    // A melee hit, for the foe's retaliation passives (step 52b).
+    melee: mode === "melee",
+    // The weapon's tags, for the foe's resists by weapon (step 52c).
+    weaponTags: weaponTags(weapon, mode),
     ruinedBefore: ruined,
     // Characters defend instead, so only a foe or no target gets Inflict damage.
     inflicts: target?.type !== "character",
@@ -360,6 +364,8 @@ export async function settleAttackCard(actor, data) {
       // For the foe's immunities and resistances (step 52a): the weapon's,
       // power's or spell's damage type.
       damageType: inputs.damageType ?? inputs.areaDamageType ?? "",
+      melee: Boolean(inputs.melee),
+      weaponTags: (inputs.weaponTags ?? []).join(","),
       label: inputs.foe
         ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: inputs.foe.name })
         : i18n.format("VARBORG.FoeDamage.Inflict", { damage: damage.total })

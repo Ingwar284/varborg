@@ -4,7 +4,9 @@
     "actors/ash-choked-bellman.json",
     "actors/small-vicious-dog.json",
     "actors/steam-wagon.json",
-    "actors/test-furnace-hulk.json"
+    "actors/test-furnace-hulk.json",
+    "actors/test-cinder-troll.json",
+    "actors/test-scrap-peasant.json"
   ],
   "Item": [
     "../weapons/dagger.json",

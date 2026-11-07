@@ -5,6 +5,11 @@
  * player character or minion) regains HP (auraHeal), a foe takes damage
  * (auraHurt, soaked by its armour like any hit, at least 1).
  *
+ * A foe's aura (step 52b, GAPS 241) is a reminder: when a player
+ * character or minion starts its turn close enough, a card names them
+ * with the passive's note, and rolls its amount if it has one (Ember
+ * Robes: d4 fire damage). The Dark Master applies the rest.
+ *
  * The distance rule lives in module/rules/item-effects.mjs (auraReaches).
  * Run by the Dark Master's client, from the combat's turn start.
  */
@@ -46,8 +51,12 @@ export async function runAuras(combat, combatant) {
   if (!isAlly && !isFoe) return;
   for (const source of combat.combatants) {
     const owner = source.actor;
-    if (!owner || source === combatant || owner === target || owner.type !== "character" || isDead(owner)) continue;
-    const hooks = itemHooks(owner, "aura").filter(hook => (isAlly ? hook.action === "auraHeal" : hook.action === "auraHurt"));
+    if (!owner || source === combatant || owner === target) continue;
+    if (owner.type === "character" ? isDead(owner) : !(owner.type === "foe" && owner.system.hp.value > 0)) continue;
+    const hooks = owner.type === "foe"
+      // A foe's aura reaches the players' side (step 52b).
+      ? (isAlly ? itemHooks(owner, "aura").filter(hook => ["reminder", "roll"].includes(hook.action)) : [])
+      : itemHooks(owner, "aura").filter(hook => (isAlly ? hook.action === "auraHeal" : hook.action === "auraHurt"));
     if (!hooks.length) continue;
     const feet = tokenFeet(source, combatant);
     if (!feet) continue;
@@ -61,6 +70,22 @@ export async function runAuras(combat, combatant) {
 /** One aura acting on one creature, with a chat line. */
 async function auraAction(owner, target, hook) {
   const i18n = game.i18n;
+  if (["reminder", "roll"].includes(hook.action)) {
+    // A foe's aura: a reminder naming who is in it, with its roll (step 52b).
+    const roll = hook.amount ? await new Roll(hook.amount).evaluate() : null;
+    const lines = [
+      i18n.format("VARBORG.Effects.AuraReminder", { item: hook.item, owner: owner.name, name: target.name, feet: hook.value }),
+      hook.note,
+      roll ? i18n.format("VARBORG.Effects.HookRolled", { amount: hook.amount, total: roll.total }) : null
+    ].filter(Boolean);
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: owner }),
+      content: `<div class="var-borg-card">${lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")}</div>`,
+      rolls: roll ? [roll] : [],
+      sound: roll ? CONFIG.sounds.dice : null
+    });
+    return;
+  }
   const roll = await new Roll(hook.amount || "1").evaluate();
   if (hook.action === "auraHurt") {
     // The foe's damage card says the rest.

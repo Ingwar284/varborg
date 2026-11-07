@@ -35,7 +35,7 @@ import { actorTestModifiers, signed, modeLabel, naturalNote, diceOf, fortuneTier
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { statDrMods } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
-import { useUpNextAttackMarks } from "../outcomes.mjs";
+import { useUpNextAttackMarks, outcomeInputs, gloomGivesText } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -242,6 +242,9 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
     conditions: { ...system.conditions },
     durations: foundry.utils.deepClone(system.durations ?? {}),
     outcomes: { ...system.outcomes },
+    // "What it gives", given when Take is pressed (step 52c): persistent
+    // damage, a buff with a timer, Ember lost.
+    gives: foe ? outcomeInputs(foe, power) : null,
     context: {
       title,
       against: i18n.format("VARBORG.Defence.Against", { name: foe?.name ?? "", attack: power.name }),
@@ -359,6 +362,9 @@ export async function settleGloomCard(actor, data) {
   if (dealt && condition) takeLabel = i18n.format("VARBORG.Gloom.TakeBoth", { damage: dealt, condition: conditionName });
   else if (dealt) takeLabel = i18n.format("VARBORG.Defence.TakeDamage", { damage: dealt });
   else if (condition) takeLabel = i18n.format("VARBORG.Gloom.Become", { condition: conditionName });
+  // What Take also gives for this result (step 52c).
+  const gives = gloomGivesText(inputs.gives, tier);
+  if (gives.length && !takeLabel) takeLabel = i18n.localize("VARBORG.Gloom.TakeResult");
 
   const kind = inputs.own ? "own" : "defence";
   const content = await renderTemplate(CARD_TEMPLATE, {
@@ -377,6 +383,8 @@ export async function settleGloomCard(actor, data) {
     takeLabel,
     takeDamage: dealt,
     takeCondition: condition,
+    takeTier: gives.length ? tier : "",
+    givesNote: gives.length ? i18n.format("VARBORG.Gloom.GivesNote", { list: gives.join("; ") }) : null,
     fortune: await fortuneSection(data, { tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), taken: dealt })
   });
   return { content, rolls };

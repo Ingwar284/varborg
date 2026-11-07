@@ -22,6 +22,7 @@
 import { ABILITIES, clampAbility } from "./abilities.mjs";
 import { CONDITIONS } from "./conditions.mjs";
 import { DAMAGE_TYPES } from "./equipment.mjs";
+import { heldBackByDamage, parseDamageTypes } from "./foe-hooks.mjs";
 
 /** Every kind of effect, in the order the sheet offers them. */
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist", "gift"];
@@ -142,7 +143,11 @@ export const HOOK_EVENTS = [
   // or a magic-themed power used (Autodidactism); a Photonic Surge is
   // triggered (Harmonious Light); another creature starts its turn within
   // `value` feet, in combat (Primal Conduit).
-  "risky", "cast", "surge", "aura"
+  "risky", "cast", "surge", "aura",
+  // Step 52b, for foes' passives: the start of each round (Cold Heart,
+  // Master Mechanism); a creature hits it with a melee attack (Adhesive
+  // Hide). "turnStart", "zeroHp" and "aura" work for foes too.
+  "roundStart", "hitMelee"
 ];
 
 /**
@@ -168,6 +173,11 @@ export const HOOK_EVENTS = [
  * ruinAsFailure: Dwarven Doughtiness (panicFailure only, step 50b2). A
  *   Ruin on a Panic test counts as a Failure: the table is rolled with
  *   1d10, not 2d10.
+ * gainGloom: adds `amount` to the Gloom pool, in combat only (Cold Heart,
+ *   step 52b).
+ * testButton: a card naming the creature that hit, with a button for it
+ *   to test `ability` at `dr` (hitMelee only: Adhesive Hide, GAPS 240).
+ * A reminder with an amount rolls it on the card too (GAPS 241).
  */
 export const HOOK_ACTIONS = [
   "reminder", "heal", "roll", "gainEmber", "addCondition", "rollTwice",
@@ -181,7 +191,9 @@ export const HOOK_ACTIONS = [
   // Step 51a2: gain Adrenaline (GAPS 206); roll `amount` and trigger a
   // Photonic Surge on a 1 (GAPS 208); at "aura", an ally regains or a foe
   // takes `amount` (GAPS 207).
-  "adrenaline", "photonicSurge", "auraHeal", "auraHurt"
+  "adrenaline", "photonicSurge", "auraHeal", "auraHurt",
+  // Step 52b (foes): Cold Heart; Adhesive Hide.
+  "gainGloom", "testButton"
 ];
 
 /**
@@ -373,6 +385,7 @@ export const ACTION_EVENTS = {
   deathsDoorInstead: ["agonyDeath"],
   auraHeal: ["aura"],
   stayAtOne: ["zeroHp"],
+  testButton: ["hitMelee"],
   auraHurt: ["aura"]
 };
 
@@ -486,7 +499,11 @@ export const STAT_TARGETS = [
   "spellFree",
   // On a foe (a power's mark, step 51e): tiers of its armour ignored when
   // it is hit (Read the beast 1, Point out the flaw 4: all of it).
-  "armourIgnored"
+  "armourIgnored",
+  // A foe's Morale (step 52b, GAPS 239): its own (Mob Courage, with an
+  // ally count and radius), or its allies' within a radius (Desecrated
+  // Symbol, vs "allies"). Used only by the Morale roll.
+  "morale"
 ];
 
 /**
@@ -613,7 +630,10 @@ export const ROLL_KINDS = [
   "defendAgainst",
   // On a foe: works for anyone attacking it, with weapons, powers or
   // spells (Final citation: Boon, step 51e).
-  "attackAgainst"
+  "attackAgainst",
+  // On a foe: works for anyone casting a spell at it (Godstone Plating:
+  // +2 DR, step 52c).
+  "spellAgainst"
 ];
 
 /** What a roll effect gives: nothing (only a DR or damage), Boon or Bane. */
@@ -628,7 +648,18 @@ export const ROLL_MODES = ["auto", "optional"];
  * Only with this kind of weapon (step 49e): the way it attacks (melee,
  * shoot, throw) or one of its traits. Blank means any, or no weapon.
  */
-export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "twoHanded", "versatile", "agile", "chosen"];
+export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "twoHanded", "versatile", "agile", "chosen",
+  // Step 52c (GAPS 237): shooting or thrown (Living Cover, Charnel Flesh:
+  // "non-magical ranged attacks"); any weapon attack, not a power or spell
+  // (the Grave Skeleton's "crushing weapons").
+  "ranged", "weapon"];
+
+/** Does an effect's weapon filter fit these weapon tags? No tags: not a weapon attack. */
+function fitsWeaponTag(filter, tags) {
+  if (!filter) return true;
+  if (filter === "weapon") return (tags ?? []).length > 0;
+  return (tags ?? []).includes(filter);
+}
 
 /**
  * Extra damage once, once per wound the character has (Battle Scars, step
@@ -646,6 +677,7 @@ export function blankEffect(kind = "stat") {
     choose: CHOICE_KINDS[0], from: "any", chosen: "", chosenName: "",
     event: HOOK_EVENTS[0], action: HOOK_ACTIONS[0], amount: "", condition: "", keep: "better", requires: "", failAgain: "",
     resist: "half", gift: "", setDamage: "", companion: "minion", armour: "", power: "", option: "",
+    radius: 0, allyCount: 0, unlessDamaged: "",
     note: ""
   };
 }
@@ -662,7 +694,8 @@ export function isDamagePart(text) {
  * @param {string} mode    "melee", "shoot" or "throw".
  */
 export function weaponTags(weapon, mode) {
-  return [mode, ...WEAPON_TAGS.filter(tag => tag && tag !== mode && weapon?.[tag] === true)];
+  const ranged = ["shoot", "throw"].includes(mode) ? ["ranged"] : [];
+  return [mode, ...ranged, ...WEAPON_TAGS.filter(tag => tag && tag !== mode && weapon?.[tag] === true)];
 }
 
 /**
@@ -824,7 +857,7 @@ export function fitsRoll(effect, context) {
   if (effect.weapon === "chosen") {
     // The weapon picked by the item's choice (step 49h).
     if (!effect.choices?.weapon || effect.choices.weapon !== context.weaponId) return false;
-  } else if (effect.weapon && !(context.weapon ?? []).includes(effect.weapon)) return false;
+  } else if (!fitsWeaponTag(effect.weapon, context.weapon)) return false;
   if (effect.requires === "noCombat" && context.facts?.inCombat) return false;
   if (effect.requires === "itemOn" && !isOn(effect, context.facts?.combatId)) return false;
   // Step 51a: the target's conditions (Hit 'em where it hurts) and light armour (Grace in Motion).
@@ -916,6 +949,11 @@ export function effectProblems(effect) {
     check("target", STAT_TARGETS);
     check("op", STAT_OPS);
     if (effect.requires) check("requires", STAT_REQUIRES);
+    if (effect.target === "morale") {
+      if (!["", "allies"].includes(effect.vs ?? "")) problems.push(`vs: ${effect.vs}`);
+      if (!["add", "set"].includes(effect.op)) problems.push(`morale op: ${effect.op}`);
+      if ((effect.vs === "allies" || Number(effect.allyCount) > 0) && !(Number(effect.radius) > 0)) problems.push(`morale radius: ${effect.radius}`);
+    }
   }
   if (effect.kind === "roll" || effect.kind === "reminder") {
     check("roll", ROLL_KINDS);
@@ -930,6 +968,13 @@ export function effectProblems(effect) {
     check("requires", HOOK_REQUIRES);
     if (["heal", "roll", "gainEmber", "gainFortune", "lowerDamage", "takeDamage", "healCompanion", "hurtCompanion", "photonicSurge", "auraHeal", "auraHurt"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.event === "aura" && !(Number(effect.value) > 0)) problems.push(`aura radius: ${effect.value}`);
+    if (["gainGloom"].includes(effect.action) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (effect.action === "reminder" && effect.amount && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (effect.action === "testButton") {
+      check("ability", ABILITIES);
+      if (!(Number(effect.dr) > 0)) problems.push(`dr: ${effect.dr}`);
+    }
+    for (const word of parseDamageTypes(effect.unlessDamaged).unknown) problems.push(`unless damaged by: ${word}`);
     if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) check("companion", COMPANIONS);
     if (effect.action === "upgradeCompanion") check("armour", COMPANION_ARMOUR);
     if (effect.action === "addCondition") check("condition", CONDITIONS);
@@ -943,7 +988,8 @@ export function effectProblems(effect) {
   if (effect.kind === "resist") {
     check("resist", RESIST_MODES);
     if (effect.damageType) check("damageType", DAMAGE_TYPES);
-    else if (!["chosenDamageType", "persistent", "anyDamage"].includes(effect.vs)) problems.push("resist: no damage type");
+    else if (!["chosenDamageType", "persistent", "anyDamage"].includes(effect.vs) && !effect.weapon) problems.push("resist: no damage type");
+    if (effect.weapon) check("weapon", WEAPON_TAGS);
     if (effect.resist === "reduce" && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
   }
   if (effect.kind === "choice") {
@@ -1000,6 +1046,8 @@ export function hookEffects(effects, event, facts = {}) {
     if (effect.kind !== "hook" || effect.event !== event) return false;
     if (effect.frequency && effect.used) return false;
     if (effect.requires === "halfHp" && !(facts.hpMax > 0 && facts.hp <= facts.hpMax / 2)) return false;
+    // Not if it took damage of a named type since its last turn (Regeneration, GAPS 238).
+    if (heldBackByDamage(effect, facts.damagedBy)) return false;
     return true;
   });
 }
@@ -1063,9 +1111,16 @@ export function rerollItems(effects, rollKind) {
  * @param {object[]} effects     From collectEffects.
  * @param {string} damageType    The damage's type; blank: none work.
  */
-export function resistsFor(effects, damageType, { persistent = false } = {}) {
+export function resistsFor(effects, damageType, { persistent = false, weaponTags = null } = {}) {
   return (effects ?? []).filter(effect => {
     if (effect.kind !== "resist") return false;
+    // Only from weapon attacks of a kind (step 52c, GAPS 237): Charnel Flesh
+    // halves shooting and thrown weapons of any type; the Grave Skeleton
+    // doubles blunt weapons.
+    if (effect.weapon) {
+      if (persistent || !fitsWeaponTag(effect.weapon, weaponTags)) return false;
+      return !effect.damageType || effect.damageType === damageType;
+    }
     // Persistent damage of any type (Chastisement, step 50e).
     if (effect.vs === "persistent") return persistent;
     if (effect.vs === "anyDamage") return !persistent;

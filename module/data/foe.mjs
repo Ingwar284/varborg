@@ -14,6 +14,9 @@ import {
 import { capHp } from "../rules/health.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
 
+/** Passes "dropped to 0 HP" from _preUpdate to _onUpdate (step 52b). */
+const FELL_OPTION = "varBorgFoeFell";
+
 const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
 
 /** A whole number that can never go below `min`. */
@@ -93,5 +96,16 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
     const mook = changes.system.mook ?? this.mook;
     const max = foeMaxHp(hp.max ?? this._source.hp.max, mook);
     hp.value = capHp(hp.value ?? this._source.hp.value, max);
+    if (hp.value === 0 && this.hp.value > 0) options[FELL_OPTION] = true;
+  }
+
+  /**
+   * At 0 HP, the foe's passives that act then (Dust, Pressurised: step
+   * 52b, GAPS 241), on the client that made the change.
+   */
+  _onUpdate(changed, options, userId) {
+    super._onUpdate(changed, options, userId);
+    if (!options[FELL_OPTION] || userId !== game.user.id) return;
+    import("../effects.mjs").then(({ runItemHooks }) => runItemHooks(this.parent, "zeroHp"));
   }
 }

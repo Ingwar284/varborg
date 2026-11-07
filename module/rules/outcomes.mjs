@@ -136,7 +136,9 @@ export function outcomeProblems(entry) {
   if (!OUTCOME_WHO.includes(entry?.who)) problems.push(`who: ${entry?.who}`);
   if (!OUTCOME_TIERS.some(tier => entry?.tiers?.[tier])) problems.push("no result ticked");
   if (["condition", "cure"].includes(entry?.kind) && !CONDITIONS.includes(entry.condition)) problems.push(`condition: ${entry.condition}`);
-  if (["persistent", "damage", "thralls", "rigDamage", "ember"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  if (["persistent", "damage", "thralls", "rigDamage"].includes(entry?.kind) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);
+  // Ember: gained, or lost with a minus sign (Purge Pulse: "-1", step 52c).
+  if (entry?.kind === "ember" && !isHealFormula(String(entry.amount ?? "").trim().replace(/^-/, ""))) problems.push(`amount: ${entry.amount}`);
   // Healing can be "full" (Absolution, step 51e).
   // "damage": as much as the card's damage (The Rapture, step 51f).
   if (entry?.kind === "heal" && !["full", "damage"].includes(entry.amount) && !isHealFormula(entry.amount)) problems.push(`amount: ${entry.amount}`);

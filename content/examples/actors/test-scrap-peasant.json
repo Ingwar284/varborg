@@ -1,0 +1,91 @@
+{
+  "_id": "vbTestScrapPeas1",
+  "name": "Test: Scrap Peasant",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "weak",
+    "category": "humanoid",
+    "description": "Play-test foe (foe Morale, step 52b). Morale 4, or 6 with two allies close by.",
+    "hp": {
+      "value": 8,
+      "max": 8
+    },
+    "morale": 4,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbTestPeasClub01",
+      "name": "Club",
+      "type": "weapon",
+      "img": "icons/svg/hammer.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 5,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d4",
+        "kind": "melee",
+        "damageType": "blunt",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbTestPeasMobCo1",
+      "name": "Test: Mob Courage",
+      "type": "feat",
+      "img": "icons/svg/combat.svg",
+      "system": {
+        "description": "While two or more allies are within 10', its Morale is 6.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "stat",
+            "target": "morale",
+            "op": "set",
+            "value": 6,
+            "vs": "",
+            "radius": 10,
+            "allyCount": 2,
+            "mode": "auto",
+            "requires": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    }
+  ],
+  "flags": {
+    "var-borg": {
+      "notPacked": true
+    }
+  }
+}

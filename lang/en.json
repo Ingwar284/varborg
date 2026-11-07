@@ -131,7 +131,10 @@
       "acid": "Acid",
       "lightning": "Lightning",
       "radiant": "Radiant",
-      "none": "None"
+      "none": "None",
+      "cold": "Cold",
+      "necrotic": "Necrotic",
+      "sonic": "Sonic"
     },
     "Trait": {
       "agile": "Agile",
@@ -473,7 +476,8 @@
       "GMOnly": "Only the Dark Master can do that with the {pool} pool.",
       "NoGM": "The Dark Master must be connected to spend from the {pool} pool.",
       "Bad": "That is not a valid change to the {pool} pool.",
-      "Gained": "{name} adds {symbol}{amount} to the {pool} pool with {source} ({left} now)."
+      "Gained": "{name} adds {symbol}{amount} to the {pool} pool with {source} ({left} now).",
+      "Lost": "{source}: the {pool} pool loses {symbol}{amount} ({left} now)."
     },
     "Day": {
       "Label": "Day {day}",
@@ -673,7 +677,9 @@
       "Dice": {
         "high": "3d6, the two highest kept: likelier to break.",
         "low": "3d6, the two lowest kept: likelier to hold."
-      }
+      },
+      "SetBy": "{item}: Morale {value}",
+      "AddBy": "{item}: Morale {value}"
     },
     "Condition": {
       "Title": "Conditions",
@@ -1635,7 +1641,10 @@
       "ConditionNote": "Gives {condition}: {time}.",
       "TakeBoth": "Take {damage} damage and become {condition}",
       "Become": "Become {condition}",
-      "Became": "{name} is now {condition}."
+      "Became": "{name} is now {condition}.",
+      "GivesNote": "Take also gives: {list}.",
+      "GivesPersistent": "{amount} persistent {type} damage",
+      "TakeResult": "Take the result"
     },
     "Timer": {
       "None": "No timer (until removed)",
@@ -2626,7 +2635,8 @@
         "pistolAgility": "The Flintlock pistol tests Agility instead of Presence (1 = yes)",
         "spellbookNoBane": "Spells ticked In spellbook have no off-list Bane (1 = yes)",
         "armourIgnored": "Tiers of this foe's armour ignored when it is hit (4 = all)",
-        "spellFree": "Spells cost no ember (1 = yes)"
+        "spellFree": "Spells cost no ember (1 = yes)",
+        "morale": "Morale (foes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -2649,7 +2659,8 @@
         "driving": "Driving tests only",
         "morale": "Morale of foes (Boon: 3d6 keep the two lowest, the foe holds; Bane: keep the two highest, it breaks)",
         "defendAgainst": "Defending against this creature (on a foe: its defenders get it)",
-        "attackAgainst": "Attacking this creature (on a foe: its attackers get it)"
+        "attackAgainst": "Attacking this creature (on a foe: its attackers get it)",
+        "spellAgainst": "Casting a spell at this creature (on a foe: its casters get it)"
       },
       "AbilityLabel": "Ability",
       "AnyAbility": "Any ability",
@@ -2705,7 +2716,9 @@
         "twoHanded": "Two-handed weapons",
         "versatile": "Versatile weapons",
         "agile": "Agile weapons",
-        "chosen": "The chosen weapon"
+        "chosen": "The chosen weapon",
+        "ranged": "Shooting or thrown weapons",
+        "weapon": "Any weapon (not powers or spells)"
       },
       "PerLabel": "How often",
       "UpToLabel": "Up to",
@@ -2751,7 +2764,9 @@
         "risky": "When you use a power marked Risky",
         "cast": "When you cast a spell or use a magic-themed power",
         "surge": "When a Photonic Surge occurs",
-        "aura": "When another creature starts its turn within the amount in feet (combat)"
+        "aura": "When another creature starts its turn within the amount in feet (combat). A foe's aura posts a reminder for the players' side.",
+        "roundStart": "At the start of each round (combat)",
+        "hitMelee": "When a creature hits it with a melee attack (foes)"
       },
       "ActionLabel": "Do",
       "Action": {
@@ -2788,7 +2803,9 @@
         "endBuff": "End this buff (Revert)",
         "stayAtOne": "Offer to stay at 1 HP instead (Not the face!)",
         "lowerReroll": "Card button: the attacker rerolls the damage, keep the lower",
-        "intercept": "Card button on allies' cards: take their damage instead (amount: half for half)"
+        "intercept": "Card button on allies' cards: take their damage instead (amount: half for half)",
+        "gainGloom": "Add to the Gloom pool",
+        "testButton": "The attacker tests (button)"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2999,7 +3016,27 @@
       "Stayed": "{item}: {name} collapses dramatically but stays at 1 HP. As long as they do not act, they look dead.",
       "InterceptButton": "{item}: take the damage instead",
       "InterceptLog": "{name} uses {item} and takes {value} damage instead.",
-      "Intercepted": "{name} takes it instead: {taken} damage after their armour. This character takes none."
+      "Intercepted": "{name} takes it instead: {taken} damage after their armour. This character takes none.",
+      "UnlessDamagedLabel": "Unless it took",
+      "UnlessDamagedHint": "Not if it took damage of these types since its last turn, such as \"fire, acid\" (Regeneration). Types: blunt, bleeding, shot, fire, gore, poison, acid, lightning, radiant.",
+      "RadiusLabel": "Within (feet)",
+      "RadiusHint": "How far from this foe's token. For its own Morale: where its allies must stand. For its allies: who it reaches.",
+      "AllyCountLabel": "Allies needed",
+      "AllyCountHint": "Its own Morale only: how many other standing foes must be within the distance (Mob Courage: 3). 0: always.",
+      "MoraleWhoLabel": "Whose Morale",
+      "MoraleWho": {
+        "own": "Its own",
+        "allies": "Its allies'"
+      },
+      "TestDrLabel": "DR",
+      "HookRolled": "{amount}: {total}",
+      "HookGloom": "{item}: the Gloom pool gains {amount}.",
+      "HookGloomNoCombat": "{item}: there is no Gloom pool outside combat.",
+      "TestAsk": "{item}: {name} tests {ability} DR{dr}.",
+      "TestButton": "{name}: test {ability} DR{dr}",
+      "TestNotYours": "Only the owner of the creature that hit can make this test.",
+      "AuraReminder": "{item} ({owner}): {name} starts their turn within {feet}'.",
+      "ResistWeaponHint": "Only from weapon attacks of this kind, not powers or spells (Charnel Flesh: shooting or thrown weapons; the Grave Skeleton: any weapon, with Blunt force)."
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",
@@ -3042,7 +3079,7 @@
         "surge": "A Photonic Surge",
         "quarry": "Becomes the quarry",
         "subject": "Becomes the subject",
-        "ember": "The Ember pool gains (amount)",
+        "ember": "The Ember pool gains (amount; −1 loses 1)",
         "wound": "A wound"
       },
       "Who": {
@@ -3111,7 +3148,8 @@
       "WhileSustained": "While sustained",
       "WhileSustainedHint": "The condition lasts while the spell or power is sustained, and ends on every target when it ends.",
       "ConditionOf": "{name} is no longer {condition}",
-      "NextRollUsed": "{name} used up {list}."
+      "NextRollUsed": "{name} used up {list}.",
+      "EmberLost": "{item}: the Ember pool loses {amount}."
     }
   }
 }

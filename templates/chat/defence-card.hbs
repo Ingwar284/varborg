@@ -50,8 +50,9 @@
   </div>
   {{/if}}
   {{#if conditionNote}}<p class="modifier">{{conditionNote}}</p>{{/if}}
+  {{#if givesNote}}<p class="modifier">{{givesNote}}</p>{{/if}}
   {{#if takeLabel}}
-  <button type="button" data-action="takeDamage" data-actor-uuid="{{actorUuid}}" data-damage="{{takeDamage}}" data-condition="{{takeCondition}}" data-timer-kind="{{takeTimer.kind}}" data-timer-rounds="{{takeTimer.rounds}}" data-agony-type="{{agonyType}}">
+  <button type="button" data-action="takeDamage" data-actor-uuid="{{actorUuid}}" data-damage="{{takeDamage}}" data-condition="{{takeCondition}}" data-timer-kind="{{takeTimer.kind}}" data-timer-rounds="{{takeTimer.rounds}}" data-agony-type="{{agonyType}}" data-tier="{{takeTier}}">
     <i class="fa-solid fa-heart-crack"></i> {{takeLabel}}
   </button>
   {{/if}}

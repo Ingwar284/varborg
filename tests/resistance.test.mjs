@@ -77,3 +77,21 @@ test("a creature immune to Fatigued cannot gain levels, but can lose them", () =
   assert.equal(fatigueBlocked(new Set(), 0, 1), false);
   assert.equal(fatigueBlocked(undefined, 0, 1), false);
 });
+
+test("resists by weapon: Charnel Flesh halves shooting and thrown weapons only (GAPS 237)", async () => {
+  const { weaponTags } = await import("../module/rules/item-effects.mjs");
+  const effects = collectEffects([{ name: "Charnel Flesh", id: "c", system: { effects: [{ kind: "resist", resist: "half", weapon: "ranged" }] } }]);
+  assert.equal(resistsFor(effects, "shot", { weaponTags: weaponTags({}, "shoot") }).length, 1);
+  assert.equal(resistsFor(effects, "bleeding", { weaponTags: weaponTags({}, "throw") }).length, 1);
+  assert.equal(resistsFor(effects, "bleeding", { weaponTags: weaponTags({}, "melee") }).length, 0);
+  // A power or spell is not a weapon attack, and persistent damage never counts.
+  assert.equal(resistsFor(effects, "fire").length, 0);
+  assert.equal(resistsFor(effects, "fire", { persistent: true, weaponTags: ["shoot", "ranged"] }).length, 0);
+});
+
+test("resists by weapon: the Grave Skeleton doubles blunt weapons, not blunt spells", () => {
+  const effects = collectEffects([{ name: "Brittle", id: "g", system: { effects: [{ kind: "resist", resist: "double", weapon: "weapon", damageType: "blunt" }] } }]);
+  assert.equal(resistsFor(effects, "blunt", { weaponTags: ["melee"] }).length, 1);
+  assert.equal(resistsFor(effects, "bleeding", { weaponTags: ["melee"] }).length, 0);
+  assert.equal(resistsFor(effects, "blunt").length, 0);
+});

@@ -49,7 +49,7 @@ import { addTimedCondition } from "../timers.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
-import { useUpNextAttackMarks } from "../outcomes.mjs";
+import { useUpNextAttackMarks, giveGloomOutcomes } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -581,12 +581,20 @@ export function addDefenceCardListeners(message, html) {
     // A gloom ability's condition, with its timer (module/timers.mjs).
     const timer = take.dataset.timerKind ? { kind: take.dataset.timerKind, rounds: take.dataset.timerRounds } : null;
     const conditionLine = condition ? await addTimedCondition(actor, condition, timer) : null;
+    // A gloom ability's "What it gives" for this result (step 52c).
+    const gives = take.dataset.tier
+      ? await giveGloomOutcomes(actor, message.getFlag(SYSTEM, "fortune")?.inputs?.gives, take.dataset.tier)
+      : { lines: [], rolls: [] };
+    const givenHtml = gives.lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("");
     if (!damage) {
       await message.setFlag(SYSTEM, "damageTaken", true);
-      await ChatMessage.create({
-        speaker: ChatMessage.getSpeaker({ actor }),
-        content: `<div class="var-borg-card"><p>${conditionLine}</p></div>`
-      });
+      if (conditionLine || givenHtml) {
+        await ChatMessage.create({
+          speaker: ChatMessage.getSpeaker({ actor }),
+          content: `<div class="var-borg-card">${conditionLine ? `<p>${conditionLine}</p>` : ""}${givenHtml}</div>`,
+          rolls: gives.rolls
+        });
+      }
       return;
     }
     // At Death's Door any damage kills (module/deaths-door.mjs).
@@ -603,8 +611,10 @@ export function addDefenceCardListeners(message, html) {
       speaker: ChatMessage.getSpeaker({ actor }),
       content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Defence.Took", { name: actor.name, damage, from, to })}</p>`
         + (conditionLine ? `<p>${conditionLine}</p>` : "")
+        + givenHtml
         + (to === 0 ? `<p class="modifier">${game.i18n.localize("VARBORG.Defence.ZeroHp")}</p>` : "")
-        + "</div>"
+        + "</div>",
+      rolls: gives.rolls
     });
   });
 }

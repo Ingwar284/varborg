@@ -246,11 +246,10 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.canImprove = false;
     context.resources = PowerData.RESOURCES;
     Object.assign(context, effectsContext(this.document));
-    // What it gives its targets or user, and the buff (step 51c); not for gloom abilities.
-    if (system.resource !== "gloom") {
-      Object.assign(context, outcomesContext(this.document));
-      if ((system.outcomeEffects ?? []).some(entry => entry.kind === "buff")) Object.assign(context, effectsContext(this.document, "buffEffects"));
-    }
+    // What it gives its targets or user, and the buff (step 51c). A gloom
+    // ability's is given when the character presses Take (step 52c).
+    Object.assign(context, outcomesContext(this.document));
+    if ((system.outcomeEffects ?? []).some(entry => entry.kind === "buff")) Object.assign(context, effectsContext(this.document, "buffEffects"));
 
     context.isGloom = system.resource === "gloom";
     if (context.isGloom) return this.#gloomContext(context, system);
@@ -341,11 +340,10 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.system = system;
     context.hint = "VARBORG.Spell.SheetHint";
     Object.assign(context, effectsContext(this.document));
-    // What it gives its targets or user, and the buff (step 51c); not for gloom abilities.
-    if (system.resource !== "gloom") {
-      Object.assign(context, outcomesContext(this.document));
-      if ((system.outcomeEffects ?? []).some(entry => entry.kind === "buff")) Object.assign(context, effectsContext(this.document, "buffEffects"));
-    }
+    // What it gives its targets or user, and the buff (step 51c). A gloom
+    // ability's is given when the character presses Take (step 52c).
+    Object.assign(context, outcomesContext(this.document));
+    if ((system.outcomeEffects ?? []).some(entry => entry.kind === "buff")) Object.assign(context, effectsContext(this.document, "buffEffects"));
     return spellContext(context, system, "VARBORG.Spell.DrHint");
   }
 

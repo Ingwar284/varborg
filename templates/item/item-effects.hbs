@@ -27,6 +27,17 @@
     <select data-effect-field="op" aria-label="{{localize 'VARBORG.Effects.OpLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../ops selected=op localize=true}}</select>
     <input type="number" step="1" data-effect-field="value" value="{{value}}" aria-label="{{localize 'VARBORG.Effects.ValueLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>
     <select data-effect-field="requires" aria-label="{{localize 'VARBORG.Effects.RequiresLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../statRequireList selected=requires localize=true}}</select>
+    {{#if isMorale}}
+    <select data-effect-field="vs" aria-label="{{localize 'VARBORG.Effects.MoraleWhoLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../moraleWho selected=vs localize=true}}</select>
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.RadiusHint'}}">
+      <span>{{localize "VARBORG.Effects.RadiusLabel"}}</span>
+      <input type="number" step="5" min="0" data-effect-field="radius" value="{{radius}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.AllyCountHint'}}">
+      <span>{{localize "VARBORG.Effects.AllyCountLabel"}}</span>
+      <input type="number" step="1" min="0" data-effect-field="allyCount" value="{{allyCount}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
     {{/if}}
     {{#if isRoll}}
     <select data-effect-field="roll" aria-label="{{localize 'VARBORG.Effects.RollLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../rolls selected=roll localize=true}}</select>
@@ -84,6 +95,19 @@
       <input type="number" step="5" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     {{/if}}
+    {{#if isTestButton}}
+    <select data-effect-field="ability" aria-label="{{localize 'VARBORG.Effects.AbilityLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../abilities selected=ability localize=true}}</select>
+    <label class="effect-small">
+      <span>{{localize "VARBORG.Effects.TestDrLabel"}}</span>
+      <input type="number" step="1" min="0" data-effect-field="dr" value="{{dr}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
+    {{#if hasUnlessDamaged}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.UnlessDamagedHint'}}">
+      <span>{{localize "VARBORG.Effects.UnlessDamagedLabel"}}</span>
+      <input type="text" data-effect-field="unlessDamaged" value="{{unlessDamaged}}" placeholder="fire, acid" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
     {{#if hasKeep}}
     <select data-effect-field="keep" aria-label="{{localize 'VARBORG.Effects.KeepLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../keeps selected=keep localize=true}}</select>
     {{/if}}
@@ -125,6 +149,7 @@
     <select data-effect-field="resist" aria-label="{{localize 'VARBORG.Effects.ResistLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../resistModes selected=resist localize=true}}</select>
     <select data-effect-field="damageType" data-tooltip="{{localize 'VARBORG.Effects.ResistTypeHint'}}" aria-label="{{localize 'VARBORG.Effects.DamageTypeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../resistTypes selected=damageType localize=true}}</select>
     <select data-effect-field="vs" aria-label="{{localize 'VARBORG.Effects.VersusLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../versusList selected=vs localize=true}}</select>
+    <select data-effect-field="weapon" data-tooltip="{{localize 'VARBORG.Effects.ResistWeaponHint'}}" aria-label="{{localize 'VARBORG.Effects.WeaponLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../weapons selected=weapon localize=true}}</select>
     {{#if resistReduce}}
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.AmountHint'}}">
       <span>{{localize "VARBORG.Effects.AmountLabel"}}</span>

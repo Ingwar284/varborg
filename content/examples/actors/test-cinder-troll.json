@@ -1,0 +1,206 @@
+{
+  "_id": "vbTestCindTroll1",
+  "name": "Test: Cinder Troll",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "monstrosity",
+    "description": "Play-test foe (foe hooks, step 52b). One passive of each new kind.",
+    "hp": {
+      "value": 30,
+      "max": 30
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbTestTrollClaw1",
+      "name": "Claws",
+      "type": "weapon",
+      "img": "icons/svg/claw.svg",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "agile": false,
+        "finesse": false,
+        "heavy": false,
+        "twoHanded": false,
+        "versatile": false,
+        "reach": 5,
+        "thrown": 0,
+        "ranged": 0,
+        "reload": 0,
+        "expendable": "",
+        "price": 0,
+        "damage": "d6",
+        "kind": "melee",
+        "damageType": "gore",
+        "cumbersome": false,
+        "storedIn": "",
+        "loaded": true,
+        "usedUp": false
+      }
+    },
+    {
+      "_id": "vbTestTrollRegro",
+      "name": "Test: Regrowth",
+      "type": "feat",
+      "img": "icons/svg/regen.svg",
+      "system": {
+        "description": "Regains d6 HP at the start of each of its turns unless it took fire or acid damage since its last turn.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "hook",
+            "event": "turnStart",
+            "action": "heal",
+            "amount": "d6",
+            "unlessDamaged": "fire, acid",
+            "mode": "auto",
+            "requires": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestTrollColdH",
+      "name": "Test: Cold Heart",
+      "type": "feat",
+      "img": "icons/svg/frozen.svg",
+      "system": {
+        "description": "While it is at half HP or lower, the gloom pool gains an extra charge at the start of each round.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "hook",
+            "event": "roundStart",
+            "action": "gainGloom",
+            "amount": "1",
+            "requires": "halfHp",
+            "mode": "auto"
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestTrollTarSk",
+      "name": "Test: Tar Skin",
+      "type": "feat",
+      "img": "icons/svg/net.svg",
+      "system": {
+        "description": "A creature that hits it with a melee attack tests Strength DR10. Failure: Restrained until it spends an action to pull free. Ruin: the weapon is stuck fast.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "hook",
+            "event": "hitMelee",
+            "action": "testButton",
+            "ability": "strength",
+            "dr": 10,
+            "note": "Failure: Restrained until it spends an action to pull free. Ruin: the weapon is stuck fast.",
+            "mode": "auto",
+            "requires": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestTrollSmoul",
+      "name": "Test: Smoulder",
+      "type": "feat",
+      "img": "icons/svg/fire.svg",
+      "system": {
+        "description": "Creatures that start their turn within 10' take d4 fire damage.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "hook",
+            "event": "aura",
+            "action": "reminder",
+            "value": 10,
+            "amount": "d4",
+            "note": "They take d4 fire damage.",
+            "mode": "auto",
+            "requires": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestTrollBurst",
+      "name": "Test: Bursting Gut",
+      "type": "feat",
+      "img": "icons/svg/explosion.svg",
+      "system": {
+        "description": "When it drops to 0 HP, it bursts: every creature within 5' takes d6 fire damage.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "hook",
+            "event": "zeroHp",
+            "action": "reminder",
+            "amount": "d6",
+            "note": "Every creature within 5' takes d6 fire damage.",
+            "mode": "auto",
+            "requires": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestTrollRoar1",
+      "name": "Test: Rallying Roar",
+      "type": "feat",
+      "img": "icons/svg/sound.svg",
+      "system": {
+        "description": "Allies within 30' of it add +2 to their Morale.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          {
+            "kind": "stat",
+            "target": "morale",
+            "op": "add",
+            "value": 2,
+            "vs": "allies",
+            "radius": 30,
+            "mode": "auto",
+            "requires": ""
+          }
+        ],
+        "automation": "auto"
+      }
+    }
+  ],
+  "flags": {
+    "var-borg": {
+      "notPacked": true
+    }
+  }
+}

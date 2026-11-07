@@ -19,7 +19,7 @@
  * shows.
  */
 
-import { armourAfterIgnored, statBonuses, collectEffects } from "../rules/item-effects.mjs";
+import { armourAfterIgnored, statBonuses, collectEffects, auraReaches } from "../rules/item-effects.mjs";
 import { stepDownArmourDie } from "../rules/attack.mjs";
 import { hpAfterDamage } from "../rules/health.mjs";
 import {
@@ -27,9 +27,11 @@ import {
 } from "../rules/morale.mjs";
 import { totalModifiers } from "../rules/conditions.mjs";
 import { conditionNotes } from "../conditions.mjs";
-import { itemRollMods, itemOptionalMods, optionalEffectsField, tickedMods, rollResists, resistLines } from "../effects.mjs";
-import { countKill } from "../effects.mjs";
+import {
+  itemRollMods, itemOptionalMods, optionalEffectsField, tickedMods, rollResists, resistLines, countKill, runItemHooks, DAMAGED_BY_FLAG
+} from "../effects.mjs";
 import { foeDamageAfterResists } from "../rules/resistance.mjs";
+import { withDamagedBy, isMoraleEffect, moraleEffectCounts, moraleAfterEffects } from "../rules/foe-hooks.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 const { DialogV2 } = foundry.applications.api;
@@ -50,9 +52,11 @@ const NO_COMBAT = "none";
  * @param {string} attack    The attack's name, for the card.
  * @param {string} [damageType]  The hit's damage type, for the foe's
  *   immunities and resistances (step 52a): "" for none.
+ * @param {string[]|null} [weaponTags]  A weapon attack's tags ("shoot",
+ *   "ranged"…), for resists by weapon (step 52c); null for powers and spells.
  * @returns {Promise<boolean>} Whether the hit brought the foe to 0 HP.
  */
-export async function inflictDamage(foe, damage, armour, attack, damageType = "") {
+export async function inflictDamage(foe, damage, armour, attack, damageType = "", weaponTags = null) {
   const i18n = game.i18n;
   const rolls = [];
   let soak = 0;
@@ -66,12 +70,14 @@ export async function inflictDamage(foe, damage, armour, attack, damageType = ""
   }
   // Immunities and resistances by damage type, before armour (step 52a,
   // GAPS 236): Stone Skin halves fire, Iron Regulation is immune to poison.
-  const resist = await rollResists(foe, damageType);
+  const resist = await rollResists(foe, damageType, null, { weaponTags });
   rolls.push(...resist.rolls);
   const { taken, minimum } = foeDamageAfterResists(damage, soak, resist.kept.items, resist.kept.totals);
   const from = foe.system.hp.value;
   const to = hpAfterDamage(from, taken);
-  await foe.update({ "system.hp.value": to });
+  // The damage types it took since its last turn (Regeneration, GAPS 238).
+  const damagedBy = withDamagedBy(foe.getFlag(SYSTEM, DAMAGED_BY_FLAG), damageType, taken);
+  await foe.update({ "system.hp.value": to, [`flags.${SYSTEM}.${DAMAGED_BY_FLAG}`]: damagedBy });
 
   const max = foe.system.hp.max;
   const fallen = to === 0;
@@ -131,7 +137,10 @@ export async function rollMorale(foe) {
     ui.notifications.warn(i18n.format("VARBORG.MoraleRoll.Never", { name: foe.name }));
     return;
   }
-  const morale = foe.system.morale;
+  // Morale effects from its own passives and nearby allies' (Mob Courage,
+  // Desecrated Symbol: step 52b, GAPS 239).
+  const changed = moraleChanges(foe);
+  const morale = moraleAfterEffects(foe.system.morale, changed);
   // Item effects on Morale (PLAN step 49d, GAPS 182): the foe's own, and
   // the characters' (Dragon's Shadow), always or ticked in a small dialog.
   const { auto, optional } = moraleEffects(foe);
@@ -152,6 +161,8 @@ export async function rollMorale(foe) {
   await roll.evaluate();
   const rolls = [roll];
   const notes = [
+    ...changed.map(effect => i18n.format(effect.op === "set" ? "VARBORG.MoraleRoll.SetBy" : "VARBORG.MoraleRoll.AddBy",
+      { item: effect.source, value: effect.op === "set" ? effect.value : `${effect.value >= 0 ? "+" : "−"}${Math.abs(effect.value)}` })),
     ...conditionNotes(mods),
     dice !== MORALE_DICE ? i18n.localize(`VARBORG.MoraleRoll.Dice.${dice === "3d6kh2" ? "high" : "low"}`) : null
   ].filter(Boolean);
@@ -208,6 +219,52 @@ function moraleEffects(foe) {
     optional.push(...named(actor, itemOptionalMods(actor, context)));
   }
   return { auto, optional };
+}
+
+/** A foe's token on the scene being viewed, or null. */
+function sceneToken(actor) {
+  const token = actor.token?.object ?? actor.getActiveTokens?.()[0] ?? null;
+  return token?.scene === canvas?.scene ? token : null;
+}
+
+/** The distance facts between two tokens, for auraReaches. */
+function tokenGap(one, two, radius) {
+  return auraReaches({
+    centreDistance: canvas.grid.measurePath([one.center, two.center]).distance,
+    sizeA: Math.max(one.document.width, one.document.height),
+    sizeB: Math.max(two.document.width, two.document.height),
+    gridDistance: canvas.grid.distance,
+    radius
+  });
+}
+
+/**
+ * The Morale effects that count for this foe's roll (GAPS 239): its own
+ * (with enough standing allies within the radius), and other standing
+ * foes' "allies" effects that reach it. Distances are measured between
+ * tokens on the scene being viewed; with no token, only its own effects
+ * without an ally count count.
+ * @returns {Array<{op: string, value: number, source: string}>}
+ */
+function moraleChanges(foe) {
+  const own = sceneToken(foe);
+  const others = own
+    ? canvas.tokens.placeables.filter(token => token !== own && token.actor?.type === "foe"
+      && token.actor.system.hp.value > 0 && !token.actor.statuses?.has(CONFIG.specialStatusEffects.DEFEATED))
+    : [];
+  const found = [];
+  for (const effect of collectEffects(foe.items).filter(isMoraleEffect)) {
+    const alliesNear = own && effect.radius > 0 ? others.filter(token => tokenGap(own, token, effect.radius)).length : 0;
+    if (moraleEffectCounts(effect, { own: true, alliesNear })) found.push({ op: effect.op, value: effect.value, source: effect.item });
+  }
+  for (const token of others) {
+    for (const effect of collectEffects(token.actor.items).filter(isMoraleEffect)) {
+      if (moraleEffectCounts(effect, { own: false, inRange: tokenGap(own, token, effect.radius) })) {
+        found.push({ op: effect.op, value: effect.value, source: game.i18n.format("VARBORG.Effects.FromActor", { item: effect.item, name: token.actor.name }) });
+      }
+    }
+  }
+  return found;
 }
 
 /**
@@ -277,10 +334,14 @@ export function addMoraleCardListeners(message, html) {
       const armour = stored ? inflict.dataset.armour : foe.system.armour;
       if (key) await message.setFlag(SYSTEM, "inflictedKeys", [...(message.getFlag(SYSTEM, "inflictedKeys") ?? []), key]);
       else await message.setFlag(SYSTEM, "damageInflicted", true);
-      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack, inflict.dataset.damageType ?? "");
+      const tags = inflict.dataset.weaponTags ? inflict.dataset.weaponTags.split(",") : null;
+      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack, inflict.dataset.damageType ?? "", tags);
       // A kill counts for the card's character (Bloodlust, GAPS 205).
       const attackerUuid = message.getFlag(SYSTEM, "fortune")?.actorUuid;
-      if (killed && attackerUuid) await countKill(await fromUuid(attackerUuid));
+      const attacker = attackerUuid ? await fromUuid(attackerUuid) : null;
+      if (killed && attacker) await countKill(attacker);
+      // A melee hit: the foe's retaliation passives (Adhesive Hide, GAPS 240).
+      if (inflict.dataset.melee === "true") await runItemHooks(foe, "hitMelee", { attacker });
     });
   }
 

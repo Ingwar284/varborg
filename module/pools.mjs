@@ -130,6 +130,18 @@ export async function gainEmber(amount, actor, source = "") {
   return sendChange({ pool: POOL.EMBER, kind: "gain", amount, actorUuid: actor?.uuid ?? null, source });
 }
 
+/**
+ * The Ember pool loses charges to a foe's ability (Purge Pulse: "the
+ * party's ember pool loses 1 charge", step 52c). Anyone may, in combat; it
+ * never goes below 0. The chat line names the ability.
+ * @param {number} amount  Charges lost, 1 or more.
+ * @param {Actor} actor    Who it happened to.
+ * @param {string} [source]  The ability's name.
+ */
+export async function loseEmber(amount, actor, source = "") {
+  return sendChange({ pool: POOL.EMBER, kind: "lose", amount, actorUuid: actor?.uuid ?? null, source });
+}
+
 /** Run the change here (Dark Master) or ask the Dark Master to run it. */
 async function sendChange(request) {
   let result;
@@ -193,6 +205,20 @@ async function applyChange({ pool, kind, amount, actorUuid, source = "" }, user)
     return { ok: true, left: pools[pool] };
   }
 
+  if (kind === "lose") {
+    if (pool !== POOL.EMBER || amount < 1) return { error: "VARBORG.Pools.Bad" };
+    pools[pool] = adjustPool(left, -amount);
+    await game.settings.set(SYSTEM, SETTING, pools);
+    const actor = actorUuid ? fromUuidSync(actorUuid) : null;
+    const text = game.i18n.format("VARBORG.Pools.Lost", {
+      symbol: poolSymbol(pool), amount: left - pools[pool], pool: poolLabel(pool), left: pools[pool], source: foundry.utils.escapeHTML(String(source ?? ""))
+    });
+    await ChatMessage.create({
+      speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },
+      content: `<div class="var-borg-card pool-card ${pool}"><p>${text}</p></div>`
+    });
+    return { ok: true, left: pools[pool] };
+  }
   if (kind !== "spend" || amount < 1) return { error: "VARBORG.Pools.Bad" };
   if (!maySpend(pool, user.isGM)) return { error: "VARBORG.Pools.GMOnly" };
   if (!canPay(left, amount)) return { error: "VARBORG.Pools.NotEnough" };
