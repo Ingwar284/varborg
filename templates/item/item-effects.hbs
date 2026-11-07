@@ -149,6 +149,7 @@
     <select data-effect-field="resist" aria-label="{{localize 'VARBORG.Effects.ResistLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../resistModes selected=resist localize=true}}</select>
     <select data-effect-field="damageType" data-tooltip="{{localize 'VARBORG.Effects.ResistTypeHint'}}" aria-label="{{localize 'VARBORG.Effects.DamageTypeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../resistTypes selected=damageType localize=true}}</select>
     <select data-effect-field="vs" aria-label="{{localize 'VARBORG.Effects.VersusLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../versusList selected=vs localize=true}}</select>
+    <select data-effect-field="mode" data-tooltip="{{localize 'VARBORG.Effects.ResistModeHint'}}" aria-label="{{localize 'VARBORG.Effects.ModeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../modes selected=mode localize=true}}</select>
     <select data-effect-field="weapon" data-tooltip="{{localize 'VARBORG.Effects.ResistWeaponHint'}}" aria-label="{{localize 'VARBORG.Effects.WeaponLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../weapons selected=weapon localize=true}}</select>
     {{#if resistReduce}}
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.AmountHint'}}">

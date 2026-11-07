@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -82,7 +83,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -126,7 +128,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "auto"
       }
     },
     {
@@ -170,7 +173,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "auto"
       }
     },
     {
@@ -184,7 +188,90 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "auto",
+        "effects": [
+          {
+            "kind": "roll",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "attackAgainst",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "optional",
+            "grant": "boon",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": "while it stands in bright light"
+          },
+          {
+            "kind": "roll",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "attackAgainst",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "optional",
+            "grant": "bane",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": "while it stands in darkness"
+          }
+        ]
       }
     },
     {
@@ -198,7 +285,50 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "auto",
+        "effects": [
+          {
+            "kind": "hook",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "zeroHp",
+            "action": "reminder",
+            "amount": "",
+            "condition": "",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "note": "A Stray Shadow mook crawls out of the body and acts on the next turn."
+          }
+        ]
       }
     },
     {
@@ -212,7 +342,8 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "text"
       }
     }
   ]

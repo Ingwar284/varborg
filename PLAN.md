@@ -1391,6 +1391,15 @@ foes, with area spells.
       Resurrection Man, Mardilar, Hedge Hexer, Charnelkin Warren-Mother,
       Charnelkin, Gear-Hound, Guildforge Journeyman, Sundrinker Bloom,
       Debt-Collector.
+    - ~~52d. Foes 26–50 (GAPS 246, 247).~~ Done: The Calibrator to Barbed
+      Creeper. New: a resist mode that adds damage ("extra": Sap-Soaked,
+      Iron-Averse); resists set to "Optional tick" are asked on the Inflict
+      damage card (Iron-Averse: an iron or steel weapon?); a gloom
+      ability's own conditions count for the report. Duskborn's Boon and
+      Bane, the Corpse Stealer's DR10/DR14, Shoulder to Shoulder are ticks;
+      Mob Courage, Regeneration, Master Mechanism and Cold Heart work. The
+      Last Hour's Ruin is Frightened for d4 rounds, as its text says, and
+      Stupefied for 1. EFFECTS_CONTENT 26.
 
 **Milestone 12 review:** fight three foes with resistances and
 regeneration.

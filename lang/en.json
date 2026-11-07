@@ -2924,7 +2924,10 @@
         "doubleLine": "{item}: {type} damage doubled",
         "reduceLine": "{item}: {type} damage −{value}",
         "immune": "No damage at all",
-        "immuneLine": "{item}: immune to {type} damage"
+        "immuneLine": "{item}: immune to {type} damage",
+        "extra": "Add to the damage",
+        "extraLine": "{item}: {type} damage +{value}",
+        "Ask": "{item}: does it apply to this hit? ({note})"
       },
       "DamageTypeHint": "Only with damage of this type (Firebug: fire).",
       "AnyDamageType": "any damage",
@@ -3036,7 +3039,8 @@
       "TestButton": "{name}: test {ability} DR{dr}",
       "TestNotYours": "Only the owner of the creature that hit can make this test.",
       "AuraReminder": "{item} ({owner}): {name} starts their turn within {feet}'.",
-      "ResistWeaponHint": "Only from weapon attacks of this kind, not powers or spells (Charnel Flesh: shooting or thrown weapons; the Grave Skeleton: any weapon, with Blunt force)."
+      "ResistWeaponHint": "Only from weapon attacks of this kind, not powers or spells (Charnel Flesh: shooting or thrown weapons; the Grave Skeleton: any weapon, with Blunt force).",
+      "ResistModeHint": "On a foe, an optional tick is asked when Inflict damage is pressed (Iron-Averse: an iron or steel weapon?)."
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",

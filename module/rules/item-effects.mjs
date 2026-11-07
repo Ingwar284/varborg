@@ -119,7 +119,10 @@ export const ALLIES = "allies";
  * Resonance: d6), or take none of it (Internal alchemy: poison, step 50d). The type is `damageType`, or the type picked by the
  * item's choice when `vs` is "chosenDamageType".
  */
-export const RESIST_MODES = ["half", "double", "reduce", "immune"];
+export const RESIST_MODES = ["half", "double", "reduce", "immune",
+  // Step 52d (GAPS 246): an amount added to damage of the type (Sap-Soaked:
+  // an additional d6 from fire), rolled like "reduce".
+  "extra"];
 
 /**
  * The moments a hook effect can act at (step 49f):
@@ -991,7 +994,7 @@ export function effectProblems(effect) {
     if (effect.damageType) check("damageType", DAMAGE_TYPES);
     else if (!["chosenDamageType", "persistent", "anyDamage"].includes(effect.vs) && !effect.weapon) problems.push("resist: no damage type");
     if (effect.weapon) check("weapon", WEAPON_TAGS);
-    if (effect.resist === "reduce" && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
+    if (["reduce", "extra"].includes(effect.resist) && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
   }
   if (effect.kind === "choice") {
     check("choose", CHOICE_KINDS);
@@ -1134,7 +1137,8 @@ export function resistsFor(effects, damageType, { persistent = false, weaponTags
 
 /**
  * Damage after resist effects: halves first (rounded down), then doubles,
- * then the rolled reductions. Never below 0.
+ * then the rolled reductions. Never below 0. An "extra" amount (step 52d)
+ * is passed as a negative reduction, so it adds.
  * @param {number} damage
  * @param {object[]} resists      From resistsFor, or { resist } entries.
  * @param {number[]} [reductions] The rolls of the "reduce" effects.

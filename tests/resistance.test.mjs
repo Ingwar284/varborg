@@ -95,3 +95,10 @@ test("resists by weapon: the Grave Skeleton doubles blunt weapons, not blunt spe
   assert.equal(resistsFor(effects, "bleeding", { weaponTags: ["melee"] }).length, 0);
   assert.equal(resistsFor(effects, "blunt").length, 0);
 });
+
+test("extra damage adds its roll after halving and doubling (Sap-Soaked, GAPS 246)", () => {
+  // 6 fire + d6 (rolled 4), armour soaks 2: 8.
+  assert.deepEqual(foeDamageAfterResists(6, 2, [{ resist: "extra" }], [-4]), { resisted: 10, taken: 8, minimum: false });
+  // Halved first, then the extra: 7 → 3 + 2 = 5.
+  assert.deepEqual(foeDamageAfterResists(7, 0, [{ resist: "half" }, { resist: "extra" }], [-2]), { resisted: 5, taken: 5, minimum: false });
+});

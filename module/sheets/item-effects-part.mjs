@@ -112,7 +112,7 @@ export function effectsContext(document, path = "effects") {
         isUpgrade: effect.kind === "use" && effect.action === "upgradeCompanion",
         // The compendium actor a Use makes (GAPS 211, 213).
         makesActor: effect.kind === "use" && ["makeCompanion", "raiseThrall"].includes(effect.action),
-        resistReduce: effect.kind === "resist" && effect.resist === "reduce"
+        resistReduce: effect.kind === "resist" && ["reduce", "extra"].includes(effect.resist)
       }))
     }
   };

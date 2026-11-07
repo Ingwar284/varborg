@@ -25,12 +25,14 @@ export function automationEntries(files) {
     // weapon's does (a foe's attack, step 52c2).
     const outcomes = item.system?.outcomeEffects ?? [];
     const ownDamage = ["power", "spell", "weapon"].includes(item.type) && String(item.system?.damage ?? "").trim() ? 1 : 0;
+    // A gloom ability's own conditions, which its card gives (Hawk's Cry: Frightened, step 52d).
+    const ownConditions = Object.values(item.system?.conditions ?? {}).filter(Boolean).length;
     entries.push({
       folder,
       name: owner ? `${owner}: ${item.name}` : item.name,
       type: item.type,
       status: item.system?.automation ?? "",
-      effects: effects.length + outcomes.length + ownDamage,
+      effects: effects.length + outcomes.length + ownDamage + ownConditions,
       rawEffects: effects
     });
   };

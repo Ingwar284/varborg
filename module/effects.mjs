@@ -213,7 +213,7 @@ export function effectiveWeapon(item) {
  * @param {object} [kept]     A stored { items, totals } from before.
  * @returns {Promise<{kept: object, rolls: Roll[]}>}
  */
-export async function rollResists(actor, damageType, kept = null, { persistent = false, weaponTags = null } = {}) {
+export async function rollResists(actor, damageType, kept = null, { persistent = false, weaponTags = null, confirmOptional = null } = {}) {
   if (kept) return { kept, rolls: [] };
   // weaponTags: the weapon attack's tags, for resists by weapon (step 52c); null for no weapon.
   const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType, { persistent, weaponTags }) : [];
@@ -221,12 +221,16 @@ export async function rollResists(actor, damageType, kept = null, { persistent =
   const items = [];
   const totals = [];
   for (const effect of resists) {
+    // An optional resist counts only when someone says it applies (Iron-Averse:
+    // "iron or steel?", GAPS 247); without a question it never counts.
+    if (effect.mode === "optional" && !(confirmOptional && await confirmOptional(effect))) continue;
     let value = null;
-    if (effect.resist === "reduce") {
+    if (["reduce", "extra"].includes(effect.resist)) {
       const roll = await new Roll(effect.amount || "0").evaluate();
       rolls.push(roll);
       value = roll.total;
-      totals.push(value);
+      // Extra damage adds (step 52d): a negative reduction.
+      totals.push(effect.resist === "extra" ? -value : value);
     }
     items.push({ item: effect.item, resist: effect.resist, value });
   }

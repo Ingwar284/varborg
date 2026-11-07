@@ -70,7 +70,7 @@ export async function inflictDamage(foe, damage, armour, attack, damageType = ""
   }
   // Immunities and resistances by damage type, before armour (step 52a,
   // GAPS 236): Stone Skin halves fire, Iron Regulation is immune to poison.
-  const resist = await rollResists(foe, damageType, null, { weaponTags });
+  const resist = await rollResists(foe, damageType, null, { weaponTags, confirmOptional: askOptionalResist });
   rolls.push(...resist.rolls);
   const { taken, minimum } = foeDamageAfterResists(damage, soak, resist.kept.items, resist.kept.totals);
   const from = foe.system.hp.value;
@@ -125,6 +125,19 @@ export async function inflictDamage(foe, damage, armour, attack, damageType = ""
     sound: rolls.length ? CONFIG.sounds.dice : null
   });
   return killed;
+}
+
+/**
+ * Ask the Dark Master whether an optional resist applies to this hit
+ * (Iron-Averse: "an iron or steel weapon?", GAPS 247).
+ * @returns {Promise<boolean>}
+ */
+async function askOptionalResist(effect) {
+  return DialogV2.confirm({
+    window: { title: effect.item },
+    content: `<p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.Resist.Ask", { item: effect.item, note: effect.note || game.i18n.localize("VARBORG.Effects.SeeText") }))}</p>`,
+    rejectClose: false
+  }).then(Boolean);
 }
 
 /**
