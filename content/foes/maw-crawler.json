@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -99,7 +100,58 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "damageType": "fire"
+        "damageType": "fire",
+        "automation": "auto",
+        "outcomeEffects": [
+          {
+            "kind": "persistent",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": true,
+              "ruin": false
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d4",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          },
+          {
+            "kind": "persistent",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "d6",
+            "option": "",
+            "when": "result",
+            "damageType": "fire",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -113,7 +165,8 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "text"
       }
     }
   ]

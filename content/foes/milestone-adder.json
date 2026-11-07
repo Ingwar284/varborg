@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -68,7 +69,8 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "text"
       }
     }
   ]

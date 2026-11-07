@@ -156,9 +156,11 @@ export function tickedMods(mods, data) {
  * @param {Actor} actor
  * @param {string} event  One of HOOK_EVENTS.
  */
-export function itemHooks(actor, event) {
+export function itemHooks(actor, event, context = {}) {
   if (!actor?.items) return [];
   return hookEffects(collectEffects(actor.items), event, {
+    // The defence result, for "a creature that Ruins its defence" (step 52g).
+    tier: context.tier ?? "",
     hp: actor.system.hp?.value ?? 0, hpMax: actor.system.hp?.max ?? 0,
     // Damage types a foe took since its last turn (Regeneration, GAPS 238).
     damagedBy: actor.getFlag?.("var-borg", DAMAGED_BY_FLAG) ?? []
@@ -388,7 +390,9 @@ export async function doEffectAction(actor, effect, context = {}) {
     if (!target) return { lines: [i18n.format("VARBORG.Effects.HookReminder", { item, note })], rolls: [], acted: false };
     if (effect.action === "targetCondition") {
       const { addTimedCondition } = await import("./timers.mjs");
-      const line = await addTimedCondition(target, effect.condition, null);
+      // A timer in rounds when the effect has one (Hollow Shriek: 1, until the end of its next turn).
+      const timer = Number(effect.value) > 0 ? { kind: "rounds", rounds: String(effect.value) } : null;
+      const line = await addTimedCondition(target, effect.condition, timer);
       return { lines: [line, ...(effect.note ? [effect.note] : [])].filter(Boolean), rolls: [], acted: true };
     }
     const { addPersistentDamage } = await import("./persistent.mjs");
@@ -549,7 +553,7 @@ export async function runItemHooks(actor, event, context = {}) {
   } else return;
   // Rolling twice is done by the roll; Steady nerves and Dwarven
   // Doughtiness by the Panic test.
-  const hooks = itemHooks(actor, event).filter(hook => !["rollTwice", "steadyNerves", "ruinAsFailure"].includes(hook.action));
+  const hooks = itemHooks(actor, event, context).filter(hook => !["rollTwice", "steadyNerves", "ruinAsFailure"].includes(hook.action));
   if (!hooks.length) return;
   const i18n = game.i18n;
   const lines = [];

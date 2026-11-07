@@ -110,3 +110,10 @@ test("the content checks know 'when its attack hits' and 'stay at 1 HP' (step 52
   assert.deepEqual(effectProblems({ ...base, event: "zeroHp", action: "dropToOne", loseArmour: true }), []);
   assert.deepEqual(effectProblems({ ...base, event: "turnStart", action: "dropToOne" }), ["dropToOne at turnStart"]);
 });
+
+test("'only if its defence was a Ruin' hooks wait for a Ruin (Plague-Carrier, step 52g)", () => {
+  const effects = collectEffects([{ name: "Plague-Carrier", id: "p", system: { effects: [{ kind: "hook", event: "attackHits", action: "targetCondition", condition: "infected", requires: "defenceRuin" }] } }]);
+  assert.equal(hookEffects(effects, "attackHits", { tier: "ruin" }).length, 1);
+  assert.equal(hookEffects(effects, "attackHits", { tier: "failure" }).length, 0);
+  assert.equal(hookEffects(effects, "attackHits").length, 0);
+});

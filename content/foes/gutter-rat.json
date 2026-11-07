@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -68,7 +69,51 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "auto",
+        "effects": [
+          {
+            "kind": "hook",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "attackHits",
+            "action": "targetCondition",
+            "amount": "",
+            "condition": "infected",
+            "keep": "better",
+            "requires": "defenceRuin",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "loseArmour": false,
+            "note": ""
+          }
+        ]
       }
     }
   ]

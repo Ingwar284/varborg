@@ -101,6 +101,7 @@ export function effectsContext(document, path = "effects") {
         hasCondition: ["addCondition", "targetCondition"].includes(effect.action),
         // Step 52f: persistent damage on the creature hit; Abandon Shell's armour.
         isTargetPersistent: effect.kind === "hook" && effect.action === "targetPersistent",
+        isTargetCondition: effect.kind === "hook" && effect.action === "targetCondition",
         isDropToOne: effect.kind === "hook" && effect.action === "dropToOne",
         // Step 52b (foes): Morale effects, the attacker's test, Regeneration's exception.
         isMorale: effect.kind === "stat" && effect.target === "morale",

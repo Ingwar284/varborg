@@ -408,7 +408,10 @@ export const ACTION_EVENTS = {
 export const KEEPS = ["better", "worse", "choose"];
 
 /** Only while…: blank for always, halfHp for at half HP or lower (Regenerative Marrow). */
-export const HOOK_REQUIRES = ["", "halfHp"];
+export const HOOK_REQUIRES = ["", "halfHp",
+  // When its attack hits: only if the creature's defence was a Ruin
+  // (Plague-Carrier, Eye-Taker, Oil-Slick: step 52g).
+  "defenceRuin"];
 
 /**
  * Only while…, for roll and reminder effects: blank for always, noCombat
@@ -1069,6 +1072,7 @@ export function hookEffects(effects, event, facts = {}) {
     if (effect.kind !== "hook" || effect.event !== event) return false;
     if (effect.frequency && effect.used) return false;
     if (effect.requires === "halfHp" && !(facts.hpMax > 0 && facts.hp <= facts.hpMax / 2)) return false;
+    if (effect.requires === "defenceRuin" && facts.tier !== "ruin") return false;
     // Not if it took damage of a named type since its last turn (Regeneration, GAPS 238).
     if (heldBackByDamage(effect, facts.damagedBy)) return false;
     return true;

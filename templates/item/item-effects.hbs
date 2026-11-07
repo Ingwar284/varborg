@@ -95,6 +95,12 @@
       <input type="number" step="5" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     {{/if}}
+    {{#if isTargetCondition}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.TargetRoundsHint'}}">
+      <span>{{localize "VARBORG.Effects.TargetRoundsLabel"}}</span>
+      <input type="number" step="1" min="0" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
     {{#if isTargetPersistent}}
     <select data-effect-field="damageType" aria-label="{{localize 'VARBORG.Effects.DamageTypeLabel'}}" {{#unless @root.editable}}disabled{{/unless}}>{{selectOptions ../persistentTypes selected=damageType localize=true}}</select>
     {{/if}}

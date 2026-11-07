@@ -18,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "effectsContent";
 
 /** The effects content of this version of the system. */
-export const EFFECTS_CONTENT = 28;
+export const EFFECTS_CONTENT = 29;
 
 /** Register the world setting that remembers the effects content. */
 export function registerEffectsRefresh() {

@@ -2835,7 +2835,8 @@
         "targetNotHindered": "target not Blinded, Restrained or Slowed",
         "lightArmour": "in t1 armour or none",
         "adrenaline": "while you have Adrenaline",
-        "mounted": "while mounted"
+        "mounted": "while mounted",
+        "defenceRuin": "Only if its defence was a Ruin"
       },
       "CardWhenHint": "Which cards show the button. An ability limits it to tests of that ability.",
       "FailAgainLabel": "If it fails again",
@@ -3048,7 +3049,9 @@
       "ResistModeHint": "On a foe, an optional tick is asked when Inflict damage is pressed (Iron-Averse: an iron or steel weapon?).",
       "DroppedToOne": "{item}: {name} would drop to 0 HP, but stays at 1 HP instead (this happens only once).",
       "ArmourLost": "{name} loses its armour.",
-      "LoseArmourLabel": "Loses its armour"
+      "LoseArmourLabel": "Loses its armour",
+      "TargetRoundsLabel": "Rounds",
+      "TargetRoundsHint": "How long the condition lasts: 1 is until the end of the creature's next turn. 0: no timer."
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",

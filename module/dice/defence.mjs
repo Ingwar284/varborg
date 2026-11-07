@@ -331,6 +331,8 @@ export async function settleDefenceCard(actor, data) {
     takeLabel: damage && !damage.invalid ? i18n.format("VARBORG.Defence.TakeDamage", { damage: damage.taken }) : null,
     takeDamage: damage && !damage.invalid ? damage.taken : 0,
     takeCondition: "",
+    // The defence result, for "a creature that Ruins its defence" (step 52g).
+    takeTier: tier,
     fortune: await fortuneSection(data, { tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), taken: damage?.taken ?? 0 })
   });
   return { content, rolls };
@@ -613,7 +615,7 @@ export function addDefenceCardListeners(message, html) {
     const foeUuid = message.getFlag(SYSTEM, "fortune")?.inputs?.foeUuid;
     if (foeUuid) {
       const attacker = await fromUuid(foeUuid);
-      if (attacker) await runItemHooks(attacker, "attackHits", { target: actor });
+      if (attacker) await runItemHooks(attacker, "attackHits", { target: actor, tier: take.dataset.tier || "" });
     }
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),

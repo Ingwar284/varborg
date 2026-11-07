@@ -1418,6 +1418,15 @@ foes, with area spells.
       1 HP" (Abandon Shell, losing its armour), done before HP is saved, so
       the damage card shows the HP kept. Black Salt Haemorrhage's Ruin
       gives d4 persistent bleeding. EFFECTS_CONTENT 28.
+    - ~~52g. Foes 101–125.~~ Done: Spine-Whistler to Tusked Boar. New: a
+      "when its attack hits" passive can need a defence Ruin (Plague-
+      Carrier, Eye-Taker, Oil-Slick: the defence card's Take passes its
+      result), and the condition it gives can last a number of rounds
+      (Hollow Shriek: Deafened for 1). Hollow Bones doubles blunt weapons;
+      Venom gives d2 persistent poison; Dreaming Skin's Toughness button;
+      Ferocity stays at 1 HP (falling at the end of its next turn is a
+      note). Grey Wolf's Hamstring Ruin is Prone with no timer and Slowed
+      for 1 round, as its text says. EFFECTS_CONTENT 29.
 
 **Milestone 12 review:** fight three foes with resistances and
 regeneration.
