@@ -31,19 +31,51 @@
       <textarea name="system.details.history" rows="8">{{system.details.history}}</textarea>
     </label>
     <label>
-      <span>{{localize "VARBORG.Sheet.Personality"}}</span>
+      <span class="detail-heading">
+        <span>{{localize "VARBORG.Sheet.Personality"}}</span>
+        {{#if editable}}
+        <button type="button" class="icon-button" data-action="rollDetail" data-field="personality"
+                data-tooltip="{{localize 'VARBORG.Personality.RollTooltip'}}" aria-label="{{localize 'VARBORG.Personality.RollTooltip'}}">
+          <i class="fa-solid fa-dice"></i>
+        </button>
+        {{/if}}
+      </span>
       <textarea name="system.details.personality" rows="2">{{system.details.personality}}</textarea>
     </label>
     <label>
-      <span>{{localize "VARBORG.Sheet.PhysicalMark"}}</span>
+      <span class="detail-heading">
+        <span>{{localize "VARBORG.Sheet.PhysicalMark"}}</span>
+        {{#if editable}}
+        <button type="button" class="icon-button" data-action="rollDetail" data-field="physicalMark"
+                data-tooltip="{{localize 'VARBORG.Personality.RollTooltip'}}" aria-label="{{localize 'VARBORG.Personality.RollTooltip'}}">
+          <i class="fa-solid fa-dice"></i>
+        </button>
+        {{/if}}
+      </span>
       <textarea name="system.details.physicalMark" rows="2">{{system.details.physicalMark}}</textarea>
     </label>
     <label>
-      <span>{{localize "VARBORG.Sheet.Idiosyncrasy"}}</span>
+      <span class="detail-heading">
+        <span>{{localize "VARBORG.Sheet.Idiosyncrasy"}}</span>
+        {{#if editable}}
+        <button type="button" class="icon-button" data-action="rollDetail" data-field="idiosyncrasy"
+                data-tooltip="{{localize 'VARBORG.Personality.RollTooltip'}}" aria-label="{{localize 'VARBORG.Personality.RollTooltip'}}">
+          <i class="fa-solid fa-dice"></i>
+        </button>
+        {{/if}}
+      </span>
       <textarea name="system.details.idiosyncrasy" rows="2">{{system.details.idiosyncrasy}}</textarea>
     </label>
     <label>
-      <span>{{localize "VARBORG.Sheet.CallToAdventure"}}</span>
+      <span class="detail-heading">
+        <span>{{localize "VARBORG.Sheet.CallToAdventure"}}</span>
+        {{#if editable}}
+        <button type="button" class="icon-button" data-action="rollDetail" data-field="callToAdventure"
+                data-tooltip="{{localize 'VARBORG.Personality.RollTooltip'}}" aria-label="{{localize 'VARBORG.Personality.RollTooltip'}}">
+          <i class="fa-solid fa-dice"></i>
+        </button>
+        {{/if}}
+      </span>
       <textarea name="system.details.callToAdventure" rows="2">{{system.details.callToAdventure}}</textarea>
     </label>
     <label data-tooltip="{{localize 'VARBORG.Panic.PhobiasHint'}}">

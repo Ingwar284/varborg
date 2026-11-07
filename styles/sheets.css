@@ -222,6 +222,14 @@
   resize: vertical;
 }
 
+/* A Details field's name with its dice button (rules 2.7 tables). */
+.var-borg-sheet .details .detail-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 .var-borg-sheet .ability-in-use {
   font-size: 0.8rem;
   opacity: 0.8;

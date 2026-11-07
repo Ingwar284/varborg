@@ -1,0 +1,1311 @@
+{
+  "_id": "vbTablePersona00",
+  "name": "Personality traits",
+  "img": "icons/svg/d20-black.svg",
+  "description": "<p>Rules 2.7 Personality: roll 2× d100 for your strongest personality traits. Invent your own or roll on the table.</p>",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTablePeR001000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Abrasive, harsh and blunt</p>",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR002000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Adventurous, eager to explore and discover</p>",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR003000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Affectionate, shows love and care easily</p>",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR004000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Aggressive, quick to anger and confront</p>",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR005000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Aloof, emotionally distant and detached</p>",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR006000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Ambitious, strives for greatness</p>",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR007000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Arrogant, inflated self-worth and image</p>",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR008000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Belligerent, frequently argumentative</p>",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR009000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Bitter, resentful and begrudging</p>",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR010000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Bossy, controlling of others</p>",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR011000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Brave, faces danger without hesitation</p>",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR012000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Calm, maintains composure</p>",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR013000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Callous, insensitive to others’ feelings</p>",
+      "weight": 1,
+      "range": [
+        13,
+        13
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR014000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Careless, ignores details and risks</p>",
+      "weight": 1,
+      "range": [
+        14,
+        14
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR015000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Charitable, freely gives to those in need</p>",
+      "weight": 1,
+      "range": [
+        15,
+        15
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR016000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Cheerful, brings joy to others</p>",
+      "weight": 1,
+      "range": [
+        16,
+        16
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR017000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Clumsy, awkward and accident-prone</p>",
+      "weight": 1,
+      "range": [
+        17,
+        17
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR018000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Cocky, overconfident and smug</p>",
+      "weight": 1,
+      "range": [
+        18,
+        18
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR019000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Compassionate, deeply empathetic</p>",
+      "weight": 1,
+      "range": [
+        19,
+        19
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR020000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Compulsive, acts without thinking</p>",
+      "weight": 1,
+      "range": [
+        20,
+        20
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR021000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Confident, believes in their own abilities</p>",
+      "weight": 1,
+      "range": [
+        21,
+        21
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR022000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Cowardly, avoids confrontation</p>",
+      "weight": 1,
+      "range": [
+        22,
+        22
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR023000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Creative, full of ideas</p>",
+      "weight": 1,
+      "range": [
+        23,
+        23
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR024000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Critical, always finds faults in others</p>",
+      "weight": 1,
+      "range": [
+        24,
+        24
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR025000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Curious, seeks knowledge</p>",
+      "weight": 1,
+      "range": [
+        25,
+        25
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR026000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Cynical, distrustful of motive and intent</p>",
+      "weight": 1,
+      "range": [
+        26,
+        26
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR027000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Daring, willing to take bold risks</p>",
+      "weight": 1,
+      "range": [
+        27,
+        27
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR028000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Deceitful, lies for gain</p>",
+      "weight": 1,
+      "range": [
+        28,
+        28
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR029000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Dedicated, committed to goals</p>",
+      "weight": 1,
+      "range": [
+        29,
+        29
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR030000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Defiant, resists authority and orders</p>",
+      "weight": 1,
+      "range": [
+        30,
+        30
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR031000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Dependable, always reliable in a pinch</p>",
+      "weight": 1,
+      "range": [
+        31,
+        31
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR032000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Destructive, causes unnecessary harm</p>",
+      "weight": 1,
+      "range": [
+        32,
+        32
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR033000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Determined, triumphs through perseverance</p>",
+      "weight": 1,
+      "range": [
+        33,
+        33
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR034000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Diplomatic, resolves conflicts peacefully</p>",
+      "weight": 1,
+      "range": [
+        34,
+        34
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR035000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Dishonest, bends or breaks the truth</p>",
+      "weight": 1,
+      "range": [
+        35,
+        35
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR036000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Disloyal, betrays trust</p>",
+      "weight": 1,
+      "range": [
+        36,
+        36
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR037000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Distracted, lacks focus</p>",
+      "weight": 1,
+      "range": [
+        37,
+        37
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR038000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Easygoing, rarely stressed or worried</p>",
+      "weight": 1,
+      "range": [
+        38,
+        38
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR039000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Egotistical, obsessed with own importance</p>",
+      "weight": 1,
+      "range": [
+        39,
+        39
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR040000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Encouraging, lifts others’ spirits</p>",
+      "weight": 1,
+      "range": [
+        40,
+        40
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR041000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Envious, desires others' possessions</p>",
+      "weight": 1,
+      "range": [
+        41,
+        41
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR042000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Erratic, unpredictable and inconsistent</p>",
+      "weight": 1,
+      "range": [
+        42,
+        42
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR043000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Faithful, loyal and devoted</p>",
+      "weight": 1,
+      "range": [
+        43,
+        43
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR044000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Fanatical, blindly devoted to a cause</p>",
+      "weight": 1,
+      "range": [
+        44,
+        44
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR045000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Forgiving, lets go of grudges easily</p>",
+      "weight": 1,
+      "range": [
+        45,
+        45
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR046000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Foolhardy, recklessly bold without thought of consequences</p>",
+      "weight": 1,
+      "range": [
+        46,
+        46
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR047000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Forgetful, forgets important details</p>",
+      "weight": 1,
+      "range": [
+        47,
+        47
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR048000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Frivolous, treats serious things lightly</p>",
+      "weight": 1,
+      "range": [
+        48,
+        48
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR049000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Generous, shares without reserve</p>",
+      "weight": 1,
+      "range": [
+        49,
+        49
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR050000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Gentle, acts with care and kindness</p>",
+      "weight": 1,
+      "range": [
+        50,
+        50
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR051000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Greedy, always wants more than they need</p>",
+      "weight": 1,
+      "range": [
+        51,
+        51
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR052000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Gullible, easily fooled</p>",
+      "weight": 1,
+      "range": [
+        52,
+        52
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR053000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Honest, values truth</p>",
+      "weight": 1,
+      "range": [
+        53,
+        53
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR054000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Hostile, quick to anger and hard to appease</p>",
+      "weight": 1,
+      "range": [
+        54,
+        54
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR055000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Humorous, finds and shares laughter</p>",
+      "weight": 1,
+      "range": [
+        55,
+        55
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR056000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Idealistic, strives for the best in all</p>",
+      "weight": 1,
+      "range": [
+        56,
+        56
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR057000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Imaginative, always sees possibilities</p>",
+      "weight": 1,
+      "range": [
+        57,
+        57
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR058000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Impatient, struggles to wait or endure delays</p>",
+      "weight": 1,
+      "range": [
+        58,
+        58
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR059000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Impulsive, acts on whims without thinking</p>",
+      "weight": 1,
+      "range": [
+        59,
+        59
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR060000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Insightful, deeply understanding</p>",
+      "weight": 1,
+      "range": [
+        60,
+        60
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR061000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Insecure, doubts own worth and abilities</p>",
+      "weight": 1,
+      "range": [
+        61,
+        61
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR062000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Intolerant, unaccepting of differences</p>",
+      "weight": 1,
+      "range": [
+        62,
+        62
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR063000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Intuitive, trusts gut feelings and instincts</p>",
+      "weight": 1,
+      "range": [
+        63,
+        63
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR064000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Jealous, possessive of others</p>",
+      "weight": 1,
+      "range": [
+        64,
+        64
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR065000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Joyful, finds happiness everywhere</p>",
+      "weight": 1,
+      "range": [
+        65,
+        65
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR066000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Kind-hearted, seeks to do good</p>",
+      "weight": 1,
+      "range": [
+        66,
+        66
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR067000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Lazy, avoids work</p>",
+      "weight": 1,
+      "range": [
+        67,
+        67
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR068000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Loyal, true to allies</p>",
+      "weight": 1,
+      "range": [
+        68,
+        68
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR069000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Melodramatic, overreacts often</p>",
+      "weight": 1,
+      "range": [
+        69,
+        69
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR070000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Meticulous, pays attention to details</p>",
+      "weight": 1,
+      "range": [
+        70,
+        70
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR071000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Moody, emotionally unpredictable</p>",
+      "weight": 1,
+      "range": [
+        71,
+        71
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR072000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Narcissistic, obsessed with their own image</p>",
+      "weight": 1,
+      "range": [
+        72,
+        72
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR073000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Optimistic, sees the bright side</p>",
+      "weight": 1,
+      "range": [
+        73,
+        73
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR074000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Organised, keeps things in order</p>",
+      "weight": 1,
+      "range": [
+        74,
+        74
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR075000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Overbearing, dominates decisions</p>",
+      "weight": 1,
+      "range": [
+        75,
+        75
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR076000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Paranoid, suspects hidden threats</p>",
+      "weight": 1,
+      "range": [
+        76,
+        76
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR077000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Passionate, fully committed</p>",
+      "weight": 1,
+      "range": [
+        77,
+        77
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR078000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Patient, endures difficulties</p>",
+      "weight": 1,
+      "range": [
+        78,
+        78
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR079000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Perceptive, notices small details</p>",
+      "weight": 1,
+      "range": [
+        79,
+        79
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR080000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Persistent, refuses to give up</p>",
+      "weight": 1,
+      "range": [
+        80,
+        80
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR081000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Pessimistic, expects the worst</p>",
+      "weight": 1,
+      "range": [
+        81,
+        81
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR082000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Practical, solves problems sensibly</p>",
+      "weight": 1,
+      "range": [
+        82,
+        82
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR083000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Protective, defends and cares for others</p>",
+      "weight": 1,
+      "range": [
+        83,
+        83
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR084000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Reckless, takes unnecessary risks</p>",
+      "weight": 1,
+      "range": [
+        84,
+        84
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR085000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Resourceful, uses what’s available</p>",
+      "weight": 1,
+      "range": [
+        85,
+        85
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR086000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Respectful, values boundaries</p>",
+      "weight": 1,
+      "range": [
+        86,
+        86
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR087000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Rude, lacks politeness</p>",
+      "weight": 1,
+      "range": [
+        87,
+        87
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR088000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Selfish, prioritises own needs over others</p>",
+      "weight": 1,
+      "range": [
+        88,
+        88
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR089000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Selfless, puts others’ needs before own</p>",
+      "weight": 1,
+      "range": [
+        89,
+        89
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR090000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Spiteful, seeks to harm or annoy others</p>",
+      "weight": 1,
+      "range": [
+        90,
+        90
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR091000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Stubborn, resists change</p>",
+      "weight": 1,
+      "range": [
+        91,
+        91
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR092000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Sympathetic, cares about suffering</p>",
+      "weight": 1,
+      "range": [
+        92,
+        92
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR093000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Tactful, speaks carefully</p>",
+      "weight": 1,
+      "range": [
+        93,
+        93
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR094000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Tenacious, holds to goals firmly</p>",
+      "weight": 1,
+      "range": [
+        94,
+        94
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR095000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Thoughtful, considers others' needs</p>",
+      "weight": 1,
+      "range": [
+        95,
+        95
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR096000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Unforgiving, holds onto grudges</p>",
+      "weight": 1,
+      "range": [
+        96,
+        96
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR097000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Vain, obsessed with their appearance</p>",
+      "weight": 1,
+      "range": [
+        97,
+        97
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR098000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Vindictive, desires revenge</p>",
+      "weight": 1,
+      "range": [
+        98,
+        98
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR099000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Warm, comforting and kind</p>",
+      "weight": 1,
+      "range": [
+        99,
+        99
+      ],
+      "drawn": false
+    },
+    {
+      "_id": "vbTablePeR100000",
+      "type": "text",
+      "name": "",
+      "img": "icons/svg/d20-black.svg",
+      "description": "<p>Wise, offers sound advice</p>",
+      "weight": 1,
+      "range": [
+        100,
+        100
+      ],
+      "drawn": false
+    }
+  ]
+}

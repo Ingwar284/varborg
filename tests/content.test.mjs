@@ -500,9 +500,13 @@ function rollSpan(formula) {
   return [count + add, count * faces + add];
 }
 
-test("the ten roll tables are there", () => {
+/** The four rules 2.7 tables (step 54b), written in the rules as numbered lists. */
+const PERSONALITY_TABLES = ["Personality traits", "Physical mark", "Idiosyncrasy", "Call to adventure"];
+
+test("the fourteen roll tables are there", () => {
   assert.deepEqual(rollTables.map(t => t.name).sort(), [
-    "Backgrounds", "Harkin's Reprieve: you wake…", "Photonic Surge", "Relic", "Relics 13–22", "Relics 1–12",
+    "Backgrounds", "Call to adventure", "Harkin's Reprieve: you wake…", "Idiosyncrasy", "Personality traits",
+    "Photonic Surge", "Physical mark", "Relic", "Relics 13–22", "Relics 1–12",
     "Searching the fallen", "Spoils", "Trinkets", "Valuables"
   ]);
 });
@@ -541,8 +545,16 @@ test("the relic tables give the odds of rules 4.2: d2, then d12 or d10 + 12", ()
 
 test("the text results are word for word in the rules", () => {
   const plain = html => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim();
-  for (const t of rollTables.filter(t => !["Photonic Surge", "Searching the fallen", "Valuables"].includes(t.name))) {
+  for (const t of rollTables.filter(t => !["Photonic Surge", "Searching the fallen", "Valuables", ...PERSONALITY_TABLES].includes(t.name))) {
     for (const r of t.results.filter(r => r.type === "text")) assert.ok(rules.includes(`| ${plain(r.description)} |`), `${t.name}: ${plain(r.description)}`);
+  }
+  // Rules 2.7 numbers its d100 lists: "17.  Clumsy, awkward and accident-prone".
+  const ruleLines = new Set(rules.split(/\r?\n/).map(line => line.trim()));
+  for (const t of rollTables.filter(t => PERSONALITY_TABLES.includes(t.name))) {
+    assert.equal(t.formula, "1d100", t.name);
+    for (const r of t.results) {
+      assert.ok(ruleLines.has(`${r.range[0]}.  ${plain(r.description)}`), `${t.name} ${r.range[0]}: ${plain(r.description)}`);
+    }
   }
   // The rules run each surge's name into its effect ("Gravity FluxGravity reverses…").
   for (const r of rollTables.find(t => t.name === "Photonic Surge").results) {

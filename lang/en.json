@@ -342,6 +342,10 @@
       "Explanation": "Ammunition was used in this combat. Roll its expendable die: on a 1 you have run out of ammunition.",
       "Button": "{name}: roll expendable {die}"
     },
+    "Personality": {
+      "RollTooltip": "Roll on the table (rules 2.7). Replaces what is written here.",
+      "TableMissing": "The personality table was not found in the Roll Tables compendium."
+    },
     "Settings": {
       "CreationHelper": {
         "Name": "Creation Helper",

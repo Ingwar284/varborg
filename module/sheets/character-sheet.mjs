@@ -38,6 +38,7 @@ import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs
 import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs";
 import { openCreationHelper } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
+import { rollDetail } from "../personality.mjs";
 
 /**
  * The item effects on one sheet number, as text parts such as
@@ -215,6 +216,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       improve: CharacterSheet.#onImprove,
       skipFeat: CharacterSheet.#onSkipFeat,
       openCreation: CharacterSheet.#onOpenCreation,
+      rollDetail: CharacterSheet.#onRollDetail,
       showConditions: CharacterSheet.#onShowConditions,
       toggleDescription: CharacterSheet.#onToggleDescription
     }
@@ -650,6 +652,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Creation helper button: the steps of rules 2.1 in one window. */
   static #onOpenCreation(event, button) {
     openCreationHelper(this.document);
+  }
+
+  /** A dice button in Details: roll that field on its rules 2.7 table. */
+  static async #onRollDetail(event, button) {
+    await rollDetail(this.document, button.dataset.field);
   }
 
   /**
