@@ -161,6 +161,8 @@ export function itemHooks(actor, event, context = {}) {
   return hookEffects(collectEffects(actor.items), event, {
     // The defence result, for "a creature that Ruins its defence" (step 52g).
     tier: context.tier ?? "",
+    // The weapon that hit, for "damaged by its Needle teeth" (step 52h).
+    weaponName: context.weaponName ?? "",
     hp: actor.system.hp?.value ?? 0, hpMax: actor.system.hp?.max ?? 0,
     // Damage types a foe took since its last turn (Regeneration, GAPS 238).
     damagedBy: actor.getFlag?.("var-borg", DAMAGED_BY_FLAG) ?? []

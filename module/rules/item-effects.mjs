@@ -411,7 +411,9 @@ export const KEEPS = ["better", "worse", "choose"];
 export const HOOK_REQUIRES = ["", "halfHp",
   // When its attack hits: only if the creature's defence was a Ruin
   // (Plague-Carrier, Eye-Taker, Oil-Slick: step 52g).
-  "defenceRuin"];
+  "defenceRuin",
+  // Stay at 1 HP: not when the hit was an attack's Triumph (Undying, step 52h).
+  "notTriumph"];
 
 /**
  * Only while…, for roll and reminder effects: blank for always, noCombat
@@ -672,12 +674,16 @@ export const WEAPON_TAGS = ["", "melee", "shoot", "throw", "heavy", "finesse", "
   // (the Grave Skeleton's "crushing weapons").
   "ranged", "weapon",
   // Step 52e: damage from a spell, for resists (Aether Ward: d4 less).
-  "spell"];
+  "spell",
+  // Step 52h: one of an area's Inflict buttons, or any hit that is not
+  // (Flock: half from single-target attacks, double from areas).
+  "area", "single"];
 
 /** Does an effect's weapon filter fit these weapon tags? No tags: not a weapon attack. */
 function fitsWeaponTag(filter, tags) {
   if (!filter) return true;
-  if (filter === "weapon") return (tags ?? []).length > 0 && !(tags ?? []).includes("spell");
+  if (filter === "weapon") return (tags ?? []).some(tag => ["melee", "shoot", "throw"].includes(tag));
+  if (filter === "single") return !(tags ?? []).includes("area");
   return (tags ?? []).includes(filter);
 }
 
@@ -1073,6 +1079,8 @@ export function hookEffects(effects, event, facts = {}) {
     if (effect.frequency && effect.used) return false;
     if (effect.requires === "halfHp" && !(facts.hpMax > 0 && facts.hp <= facts.hpMax / 2)) return false;
     if (effect.requires === "defenceRuin" && facts.tier !== "ruin") return false;
+    // Only that weapon (Needle Teeth, step 52h): its name in the effect's "power" box.
+    if (effect.event === "attackHits" && effect.power && effect.power !== facts.weaponName) return false;
     // Not if it took damage of a named type since its last turn (Regeneration, GAPS 238).
     if (heldBackByDamage(effect, facts.damagedBy)) return false;
     return true;

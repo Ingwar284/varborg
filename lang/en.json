@@ -2719,7 +2719,9 @@
         "chosen": "The chosen weapon",
         "ranged": "Shooting or thrown weapons",
         "weapon": "Any weapon (not powers or spells)",
-        "spell": "Spells (damage taken)"
+        "spell": "Spells (damage taken)",
+        "area": "Area attacks (damage taken)",
+        "single": "Single-target attacks (damage taken)"
       },
       "PerLabel": "How often",
       "UpToLabel": "Up to",
@@ -2836,7 +2838,8 @@
         "lightArmour": "in t1 armour or none",
         "adrenaline": "while you have Adrenaline",
         "mounted": "while mounted",
-        "defenceRuin": "Only if its defence was a Ruin"
+        "defenceRuin": "Only if its defence was a Ruin",
+        "notTriumph": "Not from an attack's Triumph"
       },
       "CardWhenHint": "Which cards show the button. An ability limits it to tests of that ability.",
       "FailAgainLabel": "If it fails again",
@@ -3051,7 +3054,9 @@
       "ArmourLost": "{name} loses its armour.",
       "LoseArmourLabel": "Loses its armour",
       "TargetRoundsLabel": "Rounds",
-      "TargetRoundsHint": "How long the condition lasts: 1 is until the end of the creature's next turn. 0: no timer."
+      "TargetRoundsHint": "How long the condition lasts: 1 is until the end of the creature's next turn. 0: no timer.",
+      "HitWeaponLabel": "Only this attack",
+      "HitWeaponHint": "The name of one of its attacks, such as Needle teeth. Empty: any of its attacks."
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",

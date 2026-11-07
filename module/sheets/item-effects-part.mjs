@@ -106,7 +106,9 @@ export function effectsContext(document, path = "effects") {
         // Step 52b (foes): Morale effects, the attacker's test, Regeneration's exception.
         isMorale: effect.kind === "stat" && effect.target === "morale",
         isTestButton: effect.kind === "hook" && effect.action === "testButton",
-        hasUnlessDamaged: effect.kind === "hook" && ["turnStart", "roundStart"].includes(effect.event),
+        hasUnlessDamaged: effect.kind === "hook" && (["turnStart", "roundStart"].includes(effect.event) || effect.action === "dropToOne"),
+        // Only one of its attacks (Needle Teeth, step 52h).
+        isAttackHits: effect.kind === "hook" && effect.event === "attackHits",
         hasKeep: effect.action === "rollTwice",
         perWound: ["wound", "kill"].includes(effect.per),
         isReminder: effect.kind === "reminder",

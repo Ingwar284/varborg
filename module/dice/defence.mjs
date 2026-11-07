@@ -158,8 +158,10 @@ export async function rollDefence(actor, attack) {
     diceRule, abilityScore, dr, uncoveredDr,
     damageFormula: fixed || isDamageFormula(formula) ? formula : null,
     attackDamage: attack.system.damage,
-    // The attacking foe, for its "when its attack hits" passives (step 52f).
+    // The attacking foe, for its "when its attack hits" passives (step 52f),
+    // and the attack's name (Needle Teeth: only that weapon, step 52h).
     foeUuid: foe?.type === "foe" ? foe.uuid : "",
+    attackName: attack.name,
     // The armour and shield as they were before this attack.
     armour: automatic.armour ? { id: automatic.armour.id, tier: automatic.armour.tier, originalTier: automatic.armour.originalTier } : null,
     soakDie: automatic.soakDie,
@@ -615,7 +617,8 @@ export function addDefenceCardListeners(message, html) {
     const foeUuid = message.getFlag(SYSTEM, "fortune")?.inputs?.foeUuid;
     if (foeUuid) {
       const attacker = await fromUuid(foeUuid);
-      if (attacker) await runItemHooks(attacker, "attackHits", { target: actor, tier: take.dataset.tier || "" });
+      const attackName = message.getFlag(SYSTEM, "fortune")?.inputs?.attackName ?? "";
+      if (attacker) await runItemHooks(attacker, "attackHits", { target: actor, tier: take.dataset.tier || "", weaponName: attackName });
     }
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),

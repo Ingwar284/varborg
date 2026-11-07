@@ -344,7 +344,7 @@ export async function settleAttackCard(actor, data) {
         // For the foe's immunities and resistances (step 52a).
         damageType: inputs.areaDamageType ?? "",
         // A spell's damage, for resists against spells (Aether Ward, step 52e).
-        weaponTags: inputs.power?.kind === "spell" ? "spell" : "",
+        weaponTags: inputs.power?.kind === "spell" ? "spell,area" : "area",
         label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
       })),
       defenders: inputs.area.defenders.map(target => ({
@@ -367,6 +367,8 @@ export async function settleAttackCard(actor, data) {
       // power's or spell's damage type.
       damageType: inputs.damageType ?? inputs.areaDamageType ?? "",
       melee: Boolean(inputs.melee),
+      // A Triumph's hit, for Undying ("anything but … an attack Triumph", step 52h).
+      triumph: tier === "triumph",
       weaponTags: inputs.power?.kind === "spell" ? "spell" : (inputs.weaponTags ?? []).join(","),
       label: inputs.foe
         ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: inputs.foe.name })

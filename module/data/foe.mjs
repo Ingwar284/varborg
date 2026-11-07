@@ -14,6 +14,7 @@ import {
 import { capHp } from "../rules/health.mjs";
 import { missingTokenDefaults } from "../rules/tokens.mjs";
 import { collectEffects } from "../rules/item-effects.mjs";
+import { heldBackByDamage } from "../rules/foe-hooks.mjs";
 
 /** Passes "stayed at 1 HP instead" from _preUpdate to _onUpdate (step 52f). */
 const STAYED_OPTION = "varBorgFoeStayed";
@@ -107,7 +108,10 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
       // Shell: step 52f, GAPS 250), and may lose its armour.
       const stay = collectEffects(this.parent?.items ?? [])
         .find(effect => effect.kind === "hook" && effect.event === "zeroHp" && effect.action === "dropToOne"
-          && !this.parent.items.get(effect.itemId)?.getFlag("var-borg", STAYED_FLAG));
+          && !this.parent.items.get(effect.itemId)?.getFlag("var-borg", STAYED_FLAG)
+          // Undying (step 52h): not from fire, nor from an attack's Triumph.
+          && !heldBackByDamage(effect, [options.varBorgHit?.damageType].filter(Boolean))
+          && !(effect.requires === "notTriumph" && options.varBorgHit?.triumph));
       if (stay) {
         hp.value = 1;
         if (stay.loseArmour) changes.system.armour = "";

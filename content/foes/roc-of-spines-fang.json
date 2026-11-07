@@ -54,7 +54,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -82,7 +83,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -110,7 +112,8 @@
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
-        "usedUp": false
+        "usedUp": false,
+        "automation": "auto"
       }
     },
     {
@@ -154,7 +157,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "partial"
       }
     },
     {
@@ -198,7 +202,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "partial"
       }
     },
     {
@@ -242,7 +247,8 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "partial"
       }
     },
     {
@@ -286,7 +292,34 @@
         },
         "sustaining": false,
         "kept": false,
-        "usedOutside": false
+        "usedOutside": false,
+        "automation": "partial",
+        "outcomeEffects": [
+          {
+            "kind": "condition",
+            "who": "target",
+            "tiers": {
+              "triumph": false,
+              "success": false,
+              "failure": false,
+              "ruin": true
+            },
+            "condition": "prone",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "amount": "",
+            "option": "",
+            "when": "result",
+            "damageType": "",
+            "soaked": false,
+            "nextOnly": false,
+            "test": false,
+            "whileSustained": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -300,7 +333,51 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "partial",
+        "effects": [
+          {
+            "kind": "immune",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "prone",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "loseArmour": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -314,7 +391,51 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "partial",
+        "effects": [
+          {
+            "kind": "immune",
+            "target": "hpMax",
+            "op": "add",
+            "value": 0,
+            "roll": "test",
+            "ability": "",
+            "against": "",
+            "weapon": "",
+            "vs": "",
+            "damageType": "",
+            "mode": "auto",
+            "grant": "",
+            "dr": 0,
+            "damage": "",
+            "per": "",
+            "rerollOnes": false,
+            "choose": "weapon",
+            "from": "any",
+            "chosen": "",
+            "chosenName": "",
+            "event": "turnStart",
+            "action": "reminder",
+            "amount": "",
+            "condition": "restrained",
+            "keep": "better",
+            "requires": "",
+            "failAgain": "",
+            "resist": "half",
+            "gift": "",
+            "setDamage": "",
+            "companion": "minion",
+            "armour": "",
+            "power": "",
+            "option": "",
+            "radius": 0,
+            "allyCount": 0,
+            "unlessDamaged": "",
+            "loseArmour": false,
+            "note": ""
+          }
+        ]
       }
     },
     {
@@ -328,7 +449,8 @@
         "belongsTo": "",
         "improving": false,
         "frequency": "",
-        "frequencyUsed": false
+        "frequencyUsed": false,
+        "automation": "text"
       }
     }
   ]

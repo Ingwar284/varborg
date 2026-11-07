@@ -56,7 +56,7 @@ const NO_COMBAT = "none";
  *   "ranged"…), for resists by weapon (step 52c); null for powers and spells.
  * @returns {Promise<boolean>} Whether the hit brought the foe to 0 HP.
  */
-export async function inflictDamage(foe, damage, armour, attack, damageType = "", weaponTags = null) {
+export async function inflictDamage(foe, damage, armour, attack, damageType = "", weaponTags = null, { triumph = false } = {}) {
   const i18n = game.i18n;
   const rolls = [];
   let soak = 0;
@@ -76,7 +76,8 @@ export async function inflictDamage(foe, damage, armour, attack, damageType = ""
   const from = foe.system.hp.value;
   // The damage types it took since its last turn (Regeneration, GAPS 238).
   const damagedBy = withDamagedBy(foe.getFlag(SYSTEM, DAMAGED_BY_FLAG), damageType, taken);
-  await foe.update({ "system.hp.value": hpAfterDamage(from, taken), [`flags.${SYSTEM}.${DAMAGED_BY_FLAG}`]: damagedBy });
+  await foe.update({ "system.hp.value": hpAfterDamage(from, taken), [`flags.${SYSTEM}.${DAMAGED_BY_FLAG}`]: damagedBy },
+    { varBorgHit: { damageType: taken > 0 ? damageType : "", triumph } });
   // As saved: a foe that stays at 1 HP the first time (Abandon Shell, step 52f) has not fallen.
   const to = foe.system.hp.value;
 
@@ -350,7 +351,8 @@ export function addMoraleCardListeners(message, html) {
       if (key) await message.setFlag(SYSTEM, "inflictedKeys", [...(message.getFlag(SYSTEM, "inflictedKeys") ?? []), key]);
       else await message.setFlag(SYSTEM, "damageInflicted", true);
       const tags = inflict.dataset.weaponTags ? inflict.dataset.weaponTags.split(",") : null;
-      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack, inflict.dataset.damageType ?? "", tags);
+      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack, inflict.dataset.damageType ?? "", tags,
+        { triumph: inflict.dataset.triumph === "true" });
       // A kill counts for the card's character (Bloodlust, GAPS 205).
       const attackerUuid = message.getFlag(SYSTEM, "fortune")?.actorUuid;
       const attacker = attackerUuid ? await fromUuid(attackerUuid) : null;

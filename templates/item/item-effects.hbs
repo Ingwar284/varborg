@@ -95,6 +95,12 @@
       <input type="number" step="5" data-effect-field="value" value="{{value}}" {{#unless @root.editable}}disabled{{/unless}}>
     </label>
     {{/if}}
+    {{#if isAttackHits}}
+    <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.HitWeaponHint'}}">
+      <span>{{localize "VARBORG.Effects.HitWeaponLabel"}}</span>
+      <input type="text" data-effect-field="power" value="{{power}}" {{#unless @root.editable}}disabled{{/unless}}>
+    </label>
+    {{/if}}
     {{#if isTargetCondition}}
     <label class="effect-small" data-tooltip="{{localize 'VARBORG.Effects.TargetRoundsHint'}}">
       <span>{{localize "VARBORG.Effects.TargetRoundsLabel"}}</span>

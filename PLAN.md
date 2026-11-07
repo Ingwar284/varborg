@@ -1427,6 +1427,15 @@ foes, with area spells.
       Ferocity stays at 1 HP (falling at the end of its next turn is a
       note). Grey Wolf's Hamstring Ruin is Prone with no timer and Slowed
       for 1 round, as its text says. EFFECTS_CONTENT 29.
+    - ~~52h. Foes 126–150 (GAPS 252).~~ Done: Pit Mastiff to Headless
+      Courier. Every foe item now has a status (783: 507 auto, 120 partial,
+      156 text). New: area Inflict buttons are marked as areas, so a
+      resist can be limited to areas or to single-target hits (Flock); "stay
+      at 1 HP" can skip fire ("Unless it took") and an attack's Triumph
+      (Undying: the Inflict button passes the Triumph); "when its attack
+      hits" can name one attack (Needle Teeth). An "any weapon" resist
+      now needs a melee, shooting or thrown attack. Salt spit deals acid,
+      Barrow-blade bleeding. EFFECTS_CONTENT 30.
 
 **Milestone 12 review:** fight three foes with resistances and
 regeneration.

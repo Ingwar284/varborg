@@ -117,3 +117,21 @@ test("'only if its defence was a Ruin' hooks wait for a Ruin (Plague-Carrier, st
   assert.equal(hookEffects(effects, "attackHits", { tier: "failure" }).length, 0);
   assert.equal(hookEffects(effects, "attackHits").length, 0);
 });
+
+test("Flock: half from single-target hits, double from areas (step 52h)", async () => {
+  const { resistsFor } = await import("../module/rules/item-effects.mjs");
+  const effects = collectEffects([{ name: "Flock", id: "f", system: { effects: [
+    { kind: "resist", resist: "half", weapon: "single" }, { kind: "resist", resist: "double", weapon: "area" }] } }]);
+  assert.deepEqual(resistsFor(effects, "fire", { weaponTags: ["spell", "area"] }).map(effect => effect.resist), ["double"]);
+  assert.deepEqual(resistsFor(effects, "fire", { weaponTags: ["spell"] }).map(effect => effect.resist), ["half"]);
+  assert.deepEqual(resistsFor(effects, "bleeding", { weaponTags: ["melee"] }).map(effect => effect.resist), ["half"]);
+  // An area power is not a weapon attack.
+  const bones = collectEffects([{ name: "Bones", id: "b", system: { effects: [{ kind: "resist", resist: "double", weapon: "weapon" }] } }]);
+  assert.equal(resistsFor(bones, "blunt", { weaponTags: ["area"] }).length, 0);
+});
+
+test("'when its attack hits' can name one attack (Needle Teeth, step 52h)", () => {
+  const effects = collectEffects([{ name: "Needle Teeth", id: "n", system: { effects: [{ kind: "hook", event: "attackHits", action: "targetPersistent", power: "Needle teeth" }] } }]);
+  assert.equal(hookEffects(effects, "attackHits", { weaponName: "Needle teeth" }).length, 1);
+  assert.equal(hookEffects(effects, "attackHits", { weaponName: "Tail slap" }).length, 0);
+});
