@@ -54,7 +54,7 @@ const OFFERED_TYPES = ["ancestry", "background", "class", "feat", "power", "spel
  * Every ancestry, background, class, feat, power and spell in the world's
  * Items and in Item compendiums, as { uuid, name, type, source, cost, spellList, from }.
  */
-async function gatherSources() {
+export async function gatherSources() {
   const list = [];
   for (const item of game.items) {
     if (!OFFERED_TYPES.includes(item.type)) continue;
@@ -80,7 +80,7 @@ async function gatherSources() {
 }
 
 /** The item data to create from a uuid, without its id. */
-async function itemData(uuid) {
+export async function itemData(uuid) {
   const doc = uuid ? await fromUuid(uuid) : null;
   if (!doc) return null;
   const data = doc.toObject();
@@ -91,7 +91,7 @@ async function itemData(uuid) {
 }
 
 /** Post a helper card: a title and lines, with any dice rolled. */
-async function postCard(actor, title, lines, rolls = []) {
+export async function postCard(actor, title, lines, rolls = []) {
   const content = await renderTemplate(CARD_TEMPLATE, { title, lines });
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -103,7 +103,7 @@ async function postCard(actor, title, lines, rolls = []) {
 }
 
 /** Roll a formula and keep the roll for the card. */
-async function rollInto(rolls, formula) {
+export async function rollInto(rolls, formula) {
   const roll = await new Roll(formula).evaluate();
   rolls.push(roll);
   return roll.total;
@@ -114,14 +114,14 @@ async function rollInto(rolls, formula) {
  * that were not gained through Improving: a character begins with one
  * ancestry feat and one class power (rules 2.1). Returns their names.
  */
-async function removeStarting(actor, type, source) {
+export async function removeStarting(actor, type, source) {
   const old = actor.itemTypes[type].filter(item => item.system.source === source && !item.system.improving);
   if (old.length) await actor.deleteEmbeddedDocuments("Item", old.map(item => item.id));
   return old.map(item => item.name);
 }
 
 /** Item data for one row of the starting equipment tables. */
-function equipmentItem(spec) {
+export function equipmentItem(spec) {
   const i18n = game.i18n;
   const textKey = `VARBORG.Creation.Item.${spec.key}Text`;
   return {
@@ -130,6 +130,121 @@ function equipmentItem(spec) {
     img: spec.img,
     system: { ...spec.system, description: i18n.has(textKey) ? i18n.localize(textKey) : "" }
   };
+}
+
+/**
+ * Add a class with its class feature and class power (rules 2.1 Step 4,
+ * 2.5), both set by the class, replacing those of an earlier class.
+ * @param {Actor} actor  A character.
+ * @param {object} cls   The class's item data (from itemData).
+ * @param {object[]} [sources]  From gatherSources, if already gathered.
+ * @returns {Promise<string[]>} The lines for a card (not posted here).
+ */
+export async function applyClassWithStarting(actor, cls, sources = null) {
+  const i18n = game.i18n;
+  const lines = [];
+  await addOrigin(actor, cls);
+  const names = classStarting(cls.system.description);
+  sources ??= await gatherSources();
+  const find = (type, source, name) => sources.find(s => s.type === type && s.source === source && s.name === name && belongsTo(s.belongsTo, cls.name));
+  const removed = [...await removeStarting(actor, "feat", "feature"), ...await removeStarting(actor, "power", "class")];
+  for (const [type, source, name, key] of [["feat", "feature", names.feature, "FeatureTaken"], ["power", "class", names.power, "PowerTaken"]]) {
+    const found = name ? find(type, source, name) : null;
+    const data = found ? await itemData(found.uuid) : null;
+    if (!data) {
+      lines.push(i18n.format("VARBORG.Creation.Class.NotFound", { name: name || "?" }));
+      continue;
+    }
+    await actor.createEmbeddedDocuments("Item", [data]);
+    lines.push(i18n.format(`VARBORG.Creation.Class.${key}`, { name: actor.name, power: data.name, feature: data.name }));
+  }
+  if (removed.length) lines.push(i18n.format("VARBORG.Creation.Removed", { names: removed.join(", ") }));
+  return lines;
+}
+
+/** Make the small vicious dog serve this character, if the example is in the world. Returns a card line. */
+export async function addDog(actor) {
+  const i18n = game.i18n;
+  const example = game.actors.get(DOG_ID);
+  if (!example || !game.user.can("ACTOR_CREATE")) return i18n.localize("VARBORG.Creation.Equipment.DogMissing");
+  const data = example.toObject();
+  delete data._id;
+  data.system.owner = actor.id;
+  data.folder = null;
+  // Refused when the character has no room under their minion limit (GAPS 171).
+  const dog = await Actor.create(data);
+  if (!dog) return i18n.format("VARBORG.Creation.Equipment.DogRefused", { name: actor.name });
+  return i18n.format("VARBORG.Creation.Equipment.DogAdded", { name: actor.name });
+}
+
+/**
+ * Starting equipment (rules 2.6): the class die on armour and weaponry,
+ * then d6, d8 and d10 on the gear tables. Posts one card.
+ * @param {Actor} actor  A character with a class.
+ * @param {object} [options]
+ * @param {(choice: object[]) => Promise<object>} [options.chooseCarrying]
+ *   Asks which carrying item to take when the row offers a choice. Without
+ *   it, the rolled item is taken (GAPS 256).
+ * @param {boolean} [options.askAgain=true]  Ask before rolling a second time.
+ * @returns {Promise<boolean>} Whether equipment was rolled.
+ */
+export async function rollStartingEquipment(actor, { chooseCarrying = null, askAgain = true } = {}) {
+  const i18n = game.i18n;
+  const cls = actor.itemTypes.class?.[0];
+  if (!cls) {
+    ui.notifications.warn("VARBORG.Creation.Equipment.NeedClass", { localize: true });
+    return false;
+  }
+  if (askAgain && actor.getFlag(SYSTEM, EQUIPMENT_FLAG)) {
+    const again = await DialogV2.confirm({
+      classes: VB_DIALOG_CLASSES,
+      window: { title: i18n.localize("VARBORG.Creation.Equipment.AgainTitle") },
+      content: `<p>${i18n.localize("VARBORG.Creation.Equipment.Again")}</p>`
+    });
+    if (!again) return false;
+  }
+
+  const die = cls.system.startingDie;
+  // A class with fixed starting weapons rolls on the armour table only (GAPS 183).
+  const fixedWeapons = cls.system.startingWeapons ?? [];
+  const rolls = [];
+  const results = {
+    armour: await rollInto(rolls, `1${die}`),
+    weaponry: fixedWeapons.length ? null : await rollInto(rolls, `1${die}`),
+    carrying: await rollInto(rolls, `1d${CARRYING_DIE}`),
+    tools: await rollInto(rolls, `1d${TOOLS_DIE}`),
+    odds: await rollInto(rolls, `1d${ODDS_DIE}`)
+  };
+  const found = startingEquipment(results, actor.system.abilities.sanity, fixedWeapons);
+  if (found.carryingChoice && chooseCarrying) found.carrying = [await chooseCarrying(found.carryingChoice)];
+
+  const dice = { armour: die, weaponry: die, carrying: `d${CARRYING_DIE}`, tools: `d${TOOLS_DIE}`, odds: `d${ODDS_DIE}` };
+  const toCreate = [];
+  const lines = [];
+  const extra = [];
+  for (const table of ["armour", "weaponry", "carrying", "tools", "odds"]) {
+    const names = [];
+    for (const spec of found[table]) {
+      if (spec === DOG) {
+        names.push(i18n.localize("VARBORG.Creation.Item.dog"));
+        extra.push(await addDog(actor));
+        continue;
+      }
+      const data = equipmentItem(spec);
+      toCreate.push(data);
+      names.push(data.system.quantity > 1 ? `${data.name} ×${data.system.quantity}` : data.name);
+    }
+    const items = names.join(", ") || i18n.localize("VARBORG.Creation.Equipment.Nothing");
+    const tableName = i18n.localize(`VARBORG.Creation.Equipment.Table.${table}`);
+    lines.push(results[table] === null
+      ? i18n.format("VARBORG.Creation.Equipment.FixedLine", { table: tableName, items })
+      : i18n.format("VARBORG.Creation.Equipment.Line", { table: tableName, die: dice[table], roll: results[table], items }));
+  }
+  if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate);
+  await actor.setFlag(SYSTEM, EQUIPMENT_FLAG, true);
+  lines.push(...extra, i18n.localize("VARBORG.Creation.Equipment.EquipHint"));
+  await postCard(actor, i18n.format("VARBORG.Creation.Equipment.CardTitle", { name: actor.name }), lines, rolls);
+  return true;
 }
 
 export default class CreationHelper extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -439,25 +554,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       ui.notifications.warn("VARBORG.Creation.PickFirst", { localize: true });
       return;
     }
-    const lines = [];
-    if (cls) {
-      await addOrigin(actor, cls);
-      const names = classStarting(cls.system.description);
-      const sources = await gatherSources();
-      const find = (type, source, name) => sources.find(s => s.type === type && s.source === source && s.name === name && belongsTo(s.belongsTo, cls.name));
-      const removed = [...await removeStarting(actor, "feat", "feature"), ...await removeStarting(actor, "power", "class")];
-      for (const [type, source, name, key] of [["feat", "feature", names.feature, "FeatureTaken"], ["power", "class", names.power, "PowerTaken"]]) {
-        const found = name ? find(type, source, name) : null;
-        const data = found ? await itemData(found.uuid) : null;
-        if (!data) {
-          lines.push(i18n.format("VARBORG.Creation.Class.NotFound", { name: name || "?" }));
-          continue;
-        }
-        await actor.createEmbeddedDocuments("Item", [data]);
-        lines.push(i18n.format(`VARBORG.Creation.Class.${key}`, { name: actor.name, power: data.name, feature: data.name }));
-      }
-      if (removed.length) lines.push(i18n.format("VARBORG.Creation.Removed", { names: removed.join(", ") }));
-    }
+    const lines = cls ? await applyClassWithStarting(actor, cls) : [];
     if (spell) {
       await actor.createEmbeddedDocuments("Item", [spell]);
       lines.push(i18n.format("VARBORG.Creation.Class.SpellLearned", { name: actor.name, spell: spell.name }));
@@ -483,79 +580,9 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     return choice[Number(picked ?? 0)] ?? choice[0];
   }
 
-  /** Make the small vicious dog serve this character, if the example is in the world. */
-  async #addDog() {
-    const i18n = game.i18n;
-    const example = game.actors.get(DOG_ID);
-    if (!example || !game.user.can("ACTOR_CREATE")) return i18n.localize("VARBORG.Creation.Equipment.DogMissing");
-    const data = example.toObject();
-    delete data._id;
-    data.system.owner = this.actor.id;
-    data.folder = null;
-    // Refused when the character has no room under their minion limit (GAPS 171).
-    const dog = await Actor.create(data);
-    if (!dog) return i18n.format("VARBORG.Creation.Equipment.DogRefused", { name: this.actor.name });
-    return i18n.format("VARBORG.Creation.Equipment.DogAdded", { name: this.actor.name });
-  }
-
-  /** Starting equipment (rules 2.6). */
+  /** Starting equipment (rules 2.6); the helper asks which carrying item to take. */
   static async #onRollEquipment() {
-    const i18n = game.i18n;
-    const actor = this.actor;
-    const cls = actor.itemTypes.class?.[0];
-    if (!cls) {
-      ui.notifications.warn("VARBORG.Creation.Equipment.NeedClass", { localize: true });
-      return;
-    }
-    if (actor.getFlag(SYSTEM, EQUIPMENT_FLAG)) {
-      const again = await DialogV2.confirm({
-        classes: VB_DIALOG_CLASSES,
-        window: { title: i18n.localize("VARBORG.Creation.Equipment.AgainTitle") },
-        content: `<p>${i18n.localize("VARBORG.Creation.Equipment.Again")}</p>`
-      });
-      if (!again) return;
-    }
-
-    const die = cls.system.startingDie;
-    // A class with fixed starting weapons rolls on the armour table only (GAPS 183).
-    const fixedWeapons = cls.system.startingWeapons ?? [];
-    const rolls = [];
-    const results = {
-      armour: await rollInto(rolls, `1${die}`),
-      weaponry: fixedWeapons.length ? null : await rollInto(rolls, `1${die}`),
-      carrying: await rollInto(rolls, `1d${CARRYING_DIE}`),
-      tools: await rollInto(rolls, `1d${TOOLS_DIE}`),
-      odds: await rollInto(rolls, `1d${ODDS_DIE}`)
-    };
-    const found = startingEquipment(results, actor.system.abilities.sanity, fixedWeapons);
-    if (found.carryingChoice) found.carrying = [await this.#chooseCarrying(found.carryingChoice)];
-
-    const dice = { armour: die, weaponry: die, carrying: `d${CARRYING_DIE}`, tools: `d${TOOLS_DIE}`, odds: `d${ODDS_DIE}` };
-    const toCreate = [];
-    const lines = [];
-    const extra = [];
-    for (const table of ["armour", "weaponry", "carrying", "tools", "odds"]) {
-      const names = [];
-      for (const spec of found[table]) {
-        if (spec === DOG) {
-          names.push(i18n.localize("VARBORG.Creation.Item.dog"));
-          extra.push(await this.#addDog());
-          continue;
-        }
-        const data = equipmentItem(spec);
-        toCreate.push(data);
-        names.push(data.system.quantity > 1 ? `${data.name} ×${data.system.quantity}` : data.name);
-      }
-      const items = names.join(", ") || i18n.localize("VARBORG.Creation.Equipment.Nothing");
-      const tableName = i18n.localize(`VARBORG.Creation.Equipment.Table.${table}`);
-      lines.push(results[table] === null
-        ? i18n.format("VARBORG.Creation.Equipment.FixedLine", { table: tableName, items })
-        : i18n.format("VARBORG.Creation.Equipment.Line", { table: tableName, die: dice[table], roll: results[table], items }));
-    }
-    if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate);
-    await actor.setFlag(SYSTEM, EQUIPMENT_FLAG, true);
-    lines.push(...extra, i18n.localize("VARBORG.Creation.Equipment.EquipHint"));
-    await postCard(actor, i18n.format("VARBORG.Creation.Equipment.CardTitle", { name: actor.name }), lines, rolls);
+    await rollStartingEquipment(this.actor, { chooseCarrying: choice => this.#chooseCarrying(choice) });
   }
 }
 

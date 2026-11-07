@@ -342,6 +342,20 @@
       "Explanation": "Ammunition was used in this combat. Roll its expendable die: on a 1 you have run out of ammunition.",
       "Button": "{name}: roll expendable {die}"
     },
+    "Random": {
+      "Tooltip": "Random character",
+      "ReplaceTitle": "Roll a new character",
+      "Replace": "{name} already has a class, ancestry or background. Roll a new character? Abilities, class, ancestry, background, the starting ancestry feat, class feature and class power, and the Details are replaced. Items and spells already on the sheet stay.",
+      "CardTitle": "{name}, rolled at random",
+      "AncestryLine": "Ancestry: {ancestry}, with the ancestry feat {feat}.",
+      "AncestryNoFeat": "Ancestry: {ancestry} (no ancestry feat found).",
+      "BackgroundRolled": "Background: {background} (d100: {roll}).",
+      "BackgroundLine": "Background: {background}.",
+      "ClassSpellLine": "Class: {cls}, knowing the spell {spell}.",
+      "ClassLine": "Class: {cls}.",
+      "EquipmentLine": "Starting equipment rolled: see its card.",
+      "NoneFound": "No {type} found in the world or the compendiums."
+    },
     "Personality": {
       "RollTooltip": "Roll on the table (rules 2.7). Replaces what is written here.",
       "TableMissing": "The personality table was not found in the Roll Tables compendium."

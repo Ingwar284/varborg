@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  pickRandom, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
+  pickRandom, uniqueByName, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
 } from "../module/rules/random.mjs";
 
 test("pickRandom picks by the random number", () => {
@@ -23,6 +23,13 @@ test("pickRandom of nothing is null", () => {
 
 test("pickRandom never goes past the end", () => {
   assert.equal(pickRandom(["a", "b"], () => 1), "b");
+});
+
+test("uniqueByName keeps each name once, the first one", () => {
+  const list = [{ name: "Dwarf", from: "" }, { name: "Elf", from: "" }, { name: "dwarf ", from: "Ancestries" }];
+  assert.deepEqual(uniqueByName(list), [{ name: "Dwarf", from: "" }, { name: "Elf", from: "" }]);
+  assert.deepEqual(uniqueByName([]), []);
+  assert.deepEqual(uniqueByName([{ name: "" }]), []);
 });
 
 test("personality traits are two draws, the other details one", () => {

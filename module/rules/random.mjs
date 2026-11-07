@@ -18,6 +18,22 @@ export function pickRandom(list, rng = Math.random) {
   return list[index];
 }
 
+/**
+ * Each name once, so an ancestry or class that is both in the world and in
+ * a compendium is not twice as likely (GAPS 256). The first one is kept.
+ * @param {{name: string}[]} list
+ * @returns {{name: string}[]}
+ */
+export function uniqueByName(list) {
+  const seen = new Set();
+  return (list ?? []).filter(entry => {
+    const key = String(entry?.name ?? "").trim().toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 /** The Details fields rolled on the rules 2.7 tables. */
 export const DETAIL_FIELDS = ["personality", "physicalMark", "idiosyncrasy", "callToAdventure"];
 

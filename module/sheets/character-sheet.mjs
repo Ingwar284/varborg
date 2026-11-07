@@ -39,6 +39,7 @@ import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs
 import { openCreationHelper } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { rollDetail } from "../personality.mjs";
+import { randomCharacter } from "../random-character.mjs";
 
 /**
  * The item effects on one sheet number, as text parts such as
@@ -217,6 +218,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       skipFeat: CharacterSheet.#onSkipFeat,
       openCreation: CharacterSheet.#onOpenCreation,
       rollDetail: CharacterSheet.#onRollDetail,
+      randomCharacter: CharacterSheet.#onRandomCharacter,
       showConditions: CharacterSheet.#onShowConditions,
       toggleDescription: CharacterSheet.#onToggleDescription
     }
@@ -626,6 +628,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
    */
   _getFrameButtons(options) {
     const buttons = super._getFrameButtons(options);
+    // Random character: the baseline way to make a character (GAPS 256).
+    if (this.isEditable) buttons.unshift({
+      icon: "fa-solid fa-dice",
+      label: "VARBORG.Random.Tooltip",
+      action: "randomCharacter"
+    });
     if (this.isEditable && creationHelperOn()) buttons.unshift({
       icon: "fa-solid fa-user-plus",
       label: "VARBORG.Creation.Tooltip",
@@ -652,6 +660,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Creation helper button: the steps of rules 2.1 in one window. */
   static #onOpenCreation(event, button) {
     openCreationHelper(this.document);
+  }
+
+  /** The Random character button: rolls every step of rules 2.1 (GAPS 256). */
+  static async #onRandomCharacter(event, button) {
+    await randomCharacter(this.document);
   }
 
   /** A dice button in Details: roll that field on its rules 2.7 table. */
