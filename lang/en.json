@@ -342,6 +342,12 @@
       "Explanation": "Ammunition was used in this combat. Roll its expendable die: on a 1 you have run out of ammunition.",
       "Button": "{name}: roll expendable {die}"
     },
+    "Settings": {
+      "CreationHelper": {
+        "Name": "Creation Helper",
+        "Hint": "Characters are made at random by default. Switch this on to show the Creation Helper button on character sheets, for choosing each step by hand, and to let players choose their feat when Improving."
+      }
+    },
     "Examples": {
       "MenuName": "Example content",
       "Label": "Import examples",

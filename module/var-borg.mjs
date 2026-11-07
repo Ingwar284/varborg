@@ -49,6 +49,7 @@ import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
 import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
+import { registerSettings } from "./settings.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -157,6 +158,9 @@ Hooks.once("init", () => {
   // The world's data version, for bringing old data up to date.
   registerMigrations();
   registerEffectsRefresh();
+
+  // World settings: the Creation Helper toggle.
+  registerSettings();
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

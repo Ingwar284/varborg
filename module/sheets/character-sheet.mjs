@@ -37,6 +37,7 @@ import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
 import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs";
 import { openCreationHelper } from "../creation.mjs";
+import { creationHelperOn } from "../settings.mjs";
 
 /**
  * The item effects on one sheet number, as text parts such as
@@ -623,7 +624,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
    */
   _getFrameButtons(options) {
     const buttons = super._getFrameButtons(options);
-    if (this.isEditable) buttons.unshift({
+    if (this.isEditable && creationHelperOn()) buttons.unshift({
       icon: "fa-solid fa-user-plus",
       label: "VARBORG.Creation.Tooltip",
       action: "openCreation"

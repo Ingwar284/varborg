@@ -33,6 +33,7 @@ import { belongsTo, classStarting } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
 import { fortuneFormula, FORTUNE_DIE } from "./rules/item-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { creationHelperOn } from "./settings.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2, DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -560,7 +561,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
 
 /** Open the helper for a character (one window per character). */
 export function openCreationHelper(actor) {
-  if (actor?.type !== "character" || !actor.isOwner) return null;
+  if (actor?.type !== "character" || !actor.isOwner || !creationHelperOn()) return null;
   const existing = foundry.applications.instances.get(`var-borg-creation-${actor.id}`);
   if (existing) return existing.render({ force: true });
   return new CreationHelper(actor).render({ force: true });
