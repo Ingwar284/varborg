@@ -38,7 +38,7 @@
       "HP": "HP",
       "HpFollows": "Max HP follows {base} + Toughness until the first Long Rest or Improving.",
       "RolledHint": "The score you rolled. Your class's +1 and lost Sanity are added on top.",
-      "AbilityInUse": "{parts} → {score}",
+      "BoostedHint": "The total in use. Click to change the number underneath ({base}); the bonuses below are added on top.",
       "ClassPart": "+{boost} {name}",
       "LostPart": "−{lost} lost",
       "Wounds": "Wounds",

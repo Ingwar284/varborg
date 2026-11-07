@@ -789,6 +789,48 @@
   opacity: 1;
 }
 
+/* A box with bonuses on top: the total sits over the input, which keeps the
+   stored number and shows it only while it is being edited. */
+.var-borg-sheet .boosted-box {
+  position: relative;
+  display: inline-flex;
+}
+
+.var-borg-sheet .boosted-box input:not(:focus) {
+  color: transparent;
+}
+
+.var-borg-sheet .boosted-total {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.var-borg-sheet .boosted-box:focus-within .boosted-total {
+  display: none;
+}
+
+.var-borg-sheet .ability .boosted-total {
+  font-size: 1.25rem;
+}
+
+.application.var-borg .var-borg-sheet .ability .boosted-total {
+  inset: 0 4px 4px 0; /* clear of the input's margin and shadow */
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--vb-ink);
+}
+
+.application.var-borg .var-borg-sheet .resource .boosted-total {
+  font-size: 1.15rem;
+  color: var(--vb-ink);
+}
+
 /* ---- Resources (HP, Wounds, Fortune, Sanity lost, Movement) ---- */
 .application.var-borg .var-borg-sheet .resources:not(.silver-footer) {
   padding: 0.5rem 0;

@@ -1,3 +1,14 @@
+{{!-- A max box: the max in use over the stored max while bonuses add to it. --}}
+{{#*inline "boostedMax"}}
+{{#if box.note}}
+<span class="boosted-box" data-tooltip="{{box.boxHint}}">
+  <input type="number" name="{{name}}" value="{{box.value}}" min="0" step="1">
+  <span class="boosted-total" aria-hidden="true">{{box.total}}</span>
+</span>
+{{else}}
+<input type="number" name="{{name}}" value="{{box.value}}" min="0" step="1">
+{{/if}}
+{{/inline}}
 <section class="tab var-borg-sheet {{tabs.main.cssClass}}" data-group="primary" data-tab="main">
   <section class="abilities">
     <h2>{{localize "VARBORG.Sheet.Abilities"}}</h2>
@@ -8,9 +19,16 @@
                 data-tooltip="{{localize 'VARBORG.Test.RollTooltip'}}">
           <i class="fa-solid fa-dice-d20"></i> {{localize label}}
         </button>
+        {{#if note}}
+        <span class="boosted-box" data-tooltip="{{boxHint}}">
+          <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1" aria-label="{{localize label}}">
+          <span class="boosted-total" aria-hidden="true">{{total}}</span>
+        </span>
+        <span class="ability-in-use">{{note}}</span>
+        {{else}}
         <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1"
                aria-label="{{localize label}}" data-tooltip="{{localize 'VARBORG.Sheet.RolledHint'}}">
-        {{#if inUse}}<span class="ability-in-use">{{inUse}}</span>{{/if}}
+        {{/if}}
       </div>
       {{/each}}
     </div>
@@ -33,18 +51,18 @@
       <span class="pair">
         <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0" step="1">
         <span>/</span>
-        <input type="number" name="system.hp.max" value="{{maxes.hp}}" min="0" step="1">
+        {{> boostedMax box=maxes.hp name="system.hp.max"}}
       </span>
-      {{#if maxes.hpNote}}<span class="ability-in-use">{{maxes.hpNote}}</span>{{/if}}
+      {{#if maxes.hp.note}}<span class="ability-in-use">{{maxes.hp.note}}</span>{{/if}}
     </label>
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Wounds"}}</span>
       <span class="pair">
         <input type="number" name="system.wounds.value" value="{{system.wounds.value}}" min="0" step="1">
         <span>/</span>
-        <input type="number" name="system.wounds.max" value="{{maxes.wounds}}" min="0" step="1">
+        {{> boostedMax box=maxes.wounds name="system.wounds.max"}}
       </span>
-      {{#if maxes.woundsNote}}<span class="ability-in-use">{{maxes.woundsNote}}</span>{{/if}}
+      {{#if maxes.wounds.note}}<span class="ability-in-use">{{maxes.wounds.note}}</span>{{/if}}
     </label>
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Fortune"}}</span>

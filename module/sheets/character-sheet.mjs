@@ -51,6 +51,19 @@ function effectParts(bonus) {
   return (bonus?.sources ?? []).map(({ item, op, value }) => i18n.format(`VARBORG.Effects.Part.${op}`, { item, value: op === "add" ? signed(value) : value }));
 }
 
+/**
+ * A sheet box whose number has bonuses on top: the box shows the total and
+ * the bonuses go under it, such as "+1 Hedge Mage". The input underneath
+ * keeps the stored number, shown while it is being edited.
+ * @param {string[]} parts  The bonuses as text; none means a plain box.
+ * @param {number|string} total  The number in use.
+ * @param {number} base  The stored number.
+ */
+function boosted(parts, total, base) {
+  if (!parts.length) return { total: null, note: "" };
+  return { total, note: parts.join(", "), boxHint: game.i18n.format("VARBORG.Sheet.BoostedHint", { base }) };
+}
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -263,8 +276,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const system = actor.system;
     context.actor = actor;
     context.system = system;
-    // The box holds the score as rolled. Under it, what is added on top and
-    // the score in use, such as "+1 Warrior → +3" (GAPS 111).
+    // The box shows the score in use, such as "+3", with what is added on top
+    // under it, such as "+1 Warrior" (GAPS 111). Clicking the box edits the
+    // score as rolled, which is what is stored.
     const i18n = game.i18n;
     const cls = actor.itemTypes.class?.[0];
     context.abilities = ABILITIES.map(key => {
@@ -280,22 +294,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         key,
         label: `VARBORG.Ability.${key}`,
         value: rolled,
-        inUse: parts.length ? i18n.format("VARBORG.Sheet.AbilityInUse", { parts: parts.join(", "), score: signed(system.abilities[key]) }) : ""
+        ...boosted(parts, signed(system.abilities[key]), rolled)
       };
     });
     // Max HP follows X + Toughness until it is fixed (GAPS 111).
     context.hpHint = cls && !system.hpFixed ? i18n.format("VARBORG.Sheet.HpFollows", { base: cls.system.hpBase }) : "";
-    // The max boxes hold max HP and max wounds without item effects; under
-    // them, what the effects add and the max in use (PLAN step 49b).
-    const maxNote = (target, max) => {
-      const parts = effectParts(system.statBonuses?.[target]);
-      return parts.length ? i18n.format("VARBORG.Sheet.AbilityInUse", { parts: parts.join(", "), score: max }) : "";
-    };
+    // The max boxes show max HP and max wounds in use, with what item effects
+    // add under them (PLAN step 49b). Clicking a box edits the stored max,
+    // which is without the effects.
+    const maxBox = (target, stored, max) => ({ value: stored, ...boosted(effectParts(system.statBonuses?.[target]), max, stored) });
     context.maxes = {
-      hp: system._source.hp.max,
-      wounds: system._source.wounds.max,
-      hpNote: maxNote("hpMax", system.hp.max),
-      woundsNote: maxNote("woundsMax", system.wounds.max)
+      hp: maxBox("hpMax", system._source.hp.max, system.hp.max),
+      wounds: maxBox("woundsMax", system._source.wounds.max, system.wounds.max)
     };
 
     // Containers on this character, and how many items each one holds.
