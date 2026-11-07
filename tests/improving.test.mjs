@@ -7,7 +7,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   ABILITY_DIE, HP_ROLL, HP_GAIN_DIE, FIND_DIE, FIND_SILVER, FIND_TABLE,
-  abilityDirection, improveAbility, improveAbilities, gainsHp, findResult
+  abilityDirection, improveAbility, improveAbilities, gainsHp, findResult,
+  FIND_WEAPON_DIE, findWeapon
 } from "../module/rules/improving.mjs";
 
 test("the dice of rules 2.8", () => {
@@ -89,4 +90,12 @@ test("the find table", () => {
   assert.equal(findResult(4), "silver");
   assert.equal(findResult(6), "spellTome");
   assert.throws(() => findResult(0), RangeError);
+});
+
+test("a found weapon is a d10 on the weaponry table, with its shield (GAPS 257)", () => {
+  assert.equal(FIND_WEAPON_DIE, "1d10");
+  assert.deepEqual(findWeapon(1).map(s => s.key), ["dagger"]);
+  assert.deepEqual(findWeapon(2).map(s => s.key), ["shortsword", "lightShield"]);
+  assert.deepEqual(findWeapon(10).map(s => s.key), ["greatsword"]);
+  assert.throws(() => findWeapon(11));
 });

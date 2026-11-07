@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  pickRandom, uniqueByName, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
+  pickRandom, uniqueByName, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
 } from "../module/rules/random.mjs";
 
 test("pickRandom picks by the random number", () => {
@@ -58,4 +58,55 @@ test("keepResult rolls a repeated trait again", () => {
 
 test("keepResult skips an empty result", () => {
   assert.equal(keepResult([], ""), false);
+});
+
+// Improving II (GAPS 257).
+const SOURCES = [
+  { type: "feat", source: "general", name: "Tough", belongsTo: "" },
+  { type: "feat", source: "general", name: "Quick", belongsTo: "" },
+  { type: "power", source: "general", name: "General power", belongsTo: "" },
+  { type: "feat", source: "ancestry", name: "Stonecunning", belongsTo: "Dwarf" },
+  { type: "power", source: "ancestry", name: "Dwarven rage", belongsTo: "Dwarf" },
+  { type: "feat", source: "ancestry", name: "Elven grace", belongsTo: "Elf" },
+  { type: "feat", source: "ancestry", name: "Unrecorded", belongsTo: "" },
+  { type: "feat", source: "class", name: "Cleave", belongsTo: "Warrior" },
+  { type: "power", source: "class", name: "Shield bash", belongsTo: "warrior " },
+  { type: "feat", source: "feature", name: "Battle-hardened", belongsTo: "Warrior" },
+  { type: "feat", source: "difficulty", name: "Doomsworn", belongsTo: "" },
+  { type: "spell", source: undefined, name: "Fire", belongsTo: "" }
+];
+const names = list => list.map(s => s.name);
+
+test("the three Improving groups, in d3 order", () => {
+  assert.deepEqual(IMPROVING_GROUPS, ["general", "ancestry", "class"]);
+});
+
+test("the general group is general feats only", () => {
+  assert.deepEqual(names(improvingCandidates(SOURCES, "general", {})), ["Tough", "Quick"]);
+});
+
+test("the ancestry group is that ancestry's feats and powers, and unrecorded ones", () => {
+  assert.deepEqual(names(improvingCandidates(SOURCES, "ancestry", { ancestry: "Dwarf" })), ["Stonecunning", "Dwarven rage", "Unrecorded"]);
+});
+
+test("the class group is that class's feats and powers, not its feature", () => {
+  assert.deepEqual(names(improvingCandidates(SOURCES, "class", { cls: "Warrior" })), ["Cleave", "Shield bash"]);
+});
+
+test("without an ancestry or class, that group is empty", () => {
+  assert.deepEqual(improvingCandidates(SOURCES, "ancestry", {}), []);
+  assert.deepEqual(improvingCandidates(SOURCES, "class", { cls: "" }), []);
+});
+
+test("feats and powers the character has are left out", () => {
+  assert.deepEqual(names(improvingCandidates(SOURCES, "general", { owned: ["tough"] })), ["Quick"]);
+  assert.deepEqual(names(improvingCandidates(SOURCES, "class", { cls: "Warrior", owned: ["Cleave", "Shield bash"] })), []);
+});
+
+test("groupForRoll maps the die to a group", () => {
+  assert.equal(groupForRoll(1), "general");
+  assert.equal(groupForRoll(3), "class");
+  assert.equal(groupForRoll(2, ["general", "class"]), "class");
+  assert.throws(() => groupForRoll(4));
+  assert.throws(() => groupForRoll(0, ["general"]));
 });

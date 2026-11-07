@@ -20,6 +20,7 @@
  */
 
 import { ABILITIES, clampAbility } from "./abilities.mjs";
+import { WEAPONRY_TABLE } from "./creation.mjs";
 
 /** The die rolled for each ability (step I). */
 export const ABILITY_DIE = "1d6";
@@ -32,6 +33,20 @@ export const HP_GAIN_DIE = "1d6";
 export const FIND_DIE = "1d6";
 export const FIND_SILVER = "3d10";
 export const FIND_TABLE = ["nothing", "trinket", "weapon", "silver", "relic", "spellTome"];
+
+/** "A weapon": d10 on the 2.6 weaponry table, shield included where the row has one (GAPS 257). */
+export const FIND_WEAPON_DIE = "1d10";
+
+/**
+ * The weaponry table row for the find's d10.
+ * @param {number} roll  1 … 10.
+ * @returns {object[]} The row's items (a weapon, and maybe a shield).
+ */
+export function findWeapon(roll) {
+  const row = WEAPONRY_TABLE[roll - 1];
+  if (!row) throw new RangeError(`No weaponry row ${roll}`);
+  return row;
+}
 
 /** Whether a d6 roll is a whole number from 1 to 6. */
 function checkD6(roll) {

@@ -35,7 +35,7 @@ import { ORIGIN_TYPES, currentAbilities } from "../rules/origins.mjs";
 import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
 import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
-import { improveCharacter, choosingFeat, skipFeatChoice } from "../improving.mjs";
+import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat } from "../improving.mjs";
 import { openCreationHelper } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { rollDetail } from "../personality.mjs";
@@ -216,6 +216,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       openMinion: CharacterSheet.#onOpenMinion,
       improve: CharacterSheet.#onImprove,
       skipFeat: CharacterSheet.#onSkipFeat,
+      rollImprovingFeat: CharacterSheet.#onRollImprovingFeat,
       openCreation: CharacterSheet.#onOpenCreation,
       rollDetail: CharacterSheet.#onRollDetail,
       randomCharacter: CharacterSheet.#onRandomCharacter,
@@ -655,6 +656,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Skip button: no feat or power is taken for this Improving. */
   static async #onSkipFeat(event, button) {
     await skipFeatChoice(this.document);
+  }
+
+  /** The Roll a feat button: roll the Improving feat instead of choosing (GAPS 257). */
+  static async #onRollImprovingFeat(event, button) {
+    await rollImprovingFeat(this.document);
   }
 
   /** The Creation helper button: the steps of rules 2.1 in one window. */

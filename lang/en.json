@@ -2412,9 +2412,10 @@
     },
     "Improving": {
       "Button": "Improve",
-      "Tooltip": "Improving (rules 2.8): roll for each ability, more HP and a find, then the player chooses a feat. Dark Master only.",
+      "Tooltip": "Improving (rules 2.8): roll for each ability, a feat, more HP and a find. Dark Master only.",
       "AskTitle": "Improve {name}",
       "Ask": "Improve {name} now? Each ability rolls a d6, then 6d10 for more HP and a d6 on the find table. Afterwards the player chooses a feat or power.",
+      "AskRandom": "Improve {name} now? Each ability rolls a d6, a d3 rolls the feat or power, then 6d10 for more HP and a d6 on the find table.",
       "Title": "{name} improves",
       "HpFixedNow": "Max HP no longer follows Toughness from now on: Improving fixes it.",
       "Step": {
@@ -2424,6 +2425,19 @@
         "find": "IV. Amidst shadowed crevices you find…"
       },
       "FeatCard": "Choose or roll for one general feat, or one feat or power of your ancestry or class, and drop it on your sheet. A feat is marked “Gained through Improving”.",
+      "FeatNone": "No feat or power is left to roll: choose one by hand and drop it on the sheet.",
+      "GroupRolled": "{die}: {roll} → {group}.",
+      "GroupEmpty": "{die}: {roll} → {group}, but none is left to gain: rolled again → {next}.",
+      "FeatRolled": "Gains the feat {item}, marked “Gained through Improving”.",
+      "PowerRolled": "Gains the power {item}.",
+      "FeatRollTitle": "{name} rolls an Improving feat",
+      "RollFeat": "Roll a feat",
+      "RollFeatTooltip": "Roll a d3 for a general feat, or a feat or power of your ancestry or class, and gain one at random",
+      "Group": {
+        "general": "a general feat",
+        "ancestry": "a feat or power of your ancestry",
+        "class": "a feat or power of your class"
+      },
       "HpGain": "6d10: {total}, at least max HP {max}. Max HP and HP go up by d6: {gain} (max HP {newMax}).",
       "HpNone": "6d10: {total}, below max HP {max}. No more HP.",
       "Find": {
@@ -2432,9 +2446,16 @@
         "weapon": "A weapon.",
         "silverRolled": "3d10 s: {silver} s, added to silver (now {total} s).",
         "relic": "A relic.",
-        "spellTome": "A spell tome holding a random spell (see Learning spells in rules 3.11)."
+        "spellTome": "A spell tome holding a random spell (see Learning spells in rules 3.11).",
+        "TrinketName": "Trinket",
+        "TrinketAdded": "Added to the Inventory: {text}",
+        "WeaponAdded": "d10 on the weaponry table: {roll} → {items}, added to the Inventory.",
+        "RelicAdded": "Added to the Inventory: {name}.",
+        "TomeName": "Spell tome: {spell}",
+        "TomeNote": "A spell tome holding {spell}. Study it during Downtime to learn the spell for good (add the spell to the sheet), or read it aloud like a scroll, which burns it to ash.",
+        "TomeAdded": "A spell tome holding {spell}, added to the Inventory.",
+        "Missing": "The table or item was not found: the Dark Master hands it out."
       },
-      "TreasureHint": "Trinkets, relics and random spells are rolled on the Treasure tables (rules 5). The Dark Master hands it out.",
       "Choose": "Improving: choose a general feat, or a feat or power of your ancestry or class, and drop it here.",
       "Skip": "Skip",
       "SkipTooltip": "Take no feat or power for this Improving",

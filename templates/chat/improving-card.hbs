@@ -14,12 +14,13 @@
   </ul>
 
   <h4>{{localize "VARBORG.Improving.Step.feat"}}</h4>
-  <p>{{localize "VARBORG.Improving.FeatCard"}}</p>
+  {{#each feat.lines}}<p>{{this}}</p>{{/each}}
+  {{#if feat.choose}}<p>{{feat.chooseLine}}</p>{{/if}}
 
   <h4>{{localize "VARBORG.Improving.Step.hp"}}</h4>
   <p class="{{#if hp.gained}}improving-up{{/if}}">{{hp.line}}</p>
 
   <h4>{{localize "VARBORG.Improving.Step.find"}}</h4>
   <p><span class="die">{{find.roll}}</span> {{find.line}}</p>
-  {{#if find.treasure}}<p class="sum">{{localize "VARBORG.Improving.TreasureHint"}}</p>{{/if}}
+  {{#if find.item}}<p class="improving-up">{{find.item}}</p>{{/if}}
 </div>

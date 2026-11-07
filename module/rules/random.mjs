@@ -34,6 +34,50 @@ export function uniqueByName(list) {
   });
 }
 
+/**
+ * Improving II (rules 2.8): "one feat or power from one of the following:
+ * a general feat; a feat or power associated with your Ancestry; or a feat
+ * or power associated with your Class." Rolled d3 in this order (GAPS 257).
+ */
+export const IMPROVING_GROUPS = ["general", "ancestry", "class"];
+
+/**
+ * The feats and powers one group offers a character (GAPS 257): general
+ * feats; or the feats and powers of the character's ancestry or class
+ * ("belongs to" matches, or is still blank). Feats and powers the character
+ * already has are left out, and a group is empty without an ancestry or class.
+ * @param {{type: string, source: string, name: string, belongsTo?: string}[]} sources
+ * @param {string} group  One of IMPROVING_GROUPS.
+ * @param {object} character
+ * @param {string} [character.ancestry]  The ancestry's name.
+ * @param {string} [character.cls]       The class's name.
+ * @param {string[]} [character.owned]   Names of the feats and powers the character has.
+ * @returns {object[]} The matching sources, each name once.
+ */
+export function improvingCandidates(sources, group, { ancestry = "", cls = "", owned = [] } = {}) {
+  const have = new Set(owned.map(name => String(name).trim().toLowerCase()));
+  const name = { ancestry, class: cls }[group];
+  const fits = source => {
+    if (group === "general") return source.type === "feat" && source.source === "general";
+    if (!name || !["feat", "power"].includes(source.type) || source.source !== group) return false;
+    const own = String(source.belongsTo ?? "").trim().toLowerCase();
+    return !own || own === String(name).trim().toLowerCase();
+  };
+  return uniqueByName((sources ?? []).filter(s => fits(s) && !have.has(String(s.name).trim().toLowerCase())));
+}
+
+/**
+ * The group a die gives: the d3 on all three groups, or, when the rolled
+ * group had nothing left, a die as big as the groups still left (GAPS 257).
+ * @param {number} roll        1 … groups.length.
+ * @param {string[]} groups    The groups the die is rolled on.
+ * @returns {string}
+ */
+export function groupForRoll(roll, groups = IMPROVING_GROUPS) {
+  if (!Number.isInteger(roll) || roll < 1 || roll > groups.length) throw new RangeError(`A roll of 1 … ${groups.length}, got ${roll}`);
+  return groups[roll - 1];
+}
+
 /** The Details fields rolled on the rules 2.7 tables. */
 export const DETAIL_FIELDS = ["personality", "physicalMark", "idiosyncrasy", "callToAdventure"];
 
