@@ -1380,7 +1380,10 @@ foes, with area spells.
       (Rubbery Hide, Warded Plates, Scorching Breath).
     - 52c2–52h. The 150 foes, about 25 per step, in the order they first
       appear in the rules document: passives and the remaining gloom
-      abilities, every foe item with a status. 52c2 is the first 25:
+      abilities, every foe item with a status. ~~52c2~~ (done) is the
+      first 25 (147 items: 91 auto, 16 partial, 40 text; weapons are
+      auto, their card deals their damage; a Morale ally count with no
+      distance counts allies anywhere on the scene; EFFECTS_CONTENT 25):
       Directorate Surveyor, Godstone Sentinel, Brass Revenant, Cinder
       Mote, Spill Ogre, Blood Vulture, Gasbloat Drake, Soot Drake, Sunscale
       Wyrm, Tenebrous Dragon, The Starless Wyrm, Ceiling Spider,

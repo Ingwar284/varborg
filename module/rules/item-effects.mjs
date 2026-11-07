@@ -952,7 +952,8 @@ export function effectProblems(effect) {
     if (effect.target === "morale") {
       if (!["", "allies"].includes(effect.vs ?? "")) problems.push(`vs: ${effect.vs}`);
       if (!["add", "set"].includes(effect.op)) problems.push(`morale op: ${effect.op}`);
-      if ((effect.vs === "allies" || Number(effect.allyCount) > 0) && !(Number(effect.radius) > 0)) problems.push(`morale radius: ${effect.radius}`);
+      // An ally count with no distance counts allies anywhere on the scene (Closed Ranks, step 52c2).
+      if (effect.vs === "allies" && !(Number(effect.radius) > 0)) problems.push(`morale radius: ${effect.radius}`);
     }
   }
   if (effect.kind === "roll" || effect.kind === "reminder") {

@@ -254,7 +254,8 @@ function moraleChanges(foe) {
     : [];
   const found = [];
   for (const effect of collectEffects(foe.items).filter(isMoraleEffect)) {
-    const alliesNear = own && effect.radius > 0 ? others.filter(token => tokenGap(own, token, effect.radius)).length : 0;
+    // No distance: allies anywhere on the scene (Closed Ranks, step 52c2).
+    const alliesNear = own ? others.filter(token => !(effect.radius > 0) || tokenGap(own, token, effect.radius)).length : 0;
     if (moraleEffectCounts(effect, { own: true, alliesNear })) found.push({ op: effect.op, value: effect.value, source: effect.item });
   }
   for (const token of others) {

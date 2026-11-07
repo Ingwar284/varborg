@@ -3020,7 +3020,7 @@
       "UnlessDamagedLabel": "Unless it took",
       "UnlessDamagedHint": "Not if it took damage of these types since its last turn, such as \"fire, acid\" (Regeneration). Types: blunt, bleeding, shot, fire, gore, poison, acid, lightning, radiant.",
       "RadiusLabel": "Within (feet)",
-      "RadiusHint": "How far from this foe's token. For its own Morale: where its allies must stand. For its allies: who it reaches.",
+      "RadiusHint": "How far from this foe's token. For its own Morale: where its allies must stand (0: anywhere on the scene). For its allies: who it reaches.",
       "AllyCountLabel": "Allies needed",
       "AllyCountHint": "Its own Morale only: how many other standing foes must be within the distance (Mob Courage: 3). 0: always.",
       "MoraleWhoLabel": "Whose Morale",

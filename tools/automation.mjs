@@ -21,9 +21,10 @@ export function automationEntries(files) {
     if (!AUTOMATED_TYPES.includes(item?.type)) return;
     const effects = item.system?.effects ?? [];
     // A power's or spell's "What it gives" entries count too (step 51c),
-    // and so does its own damage, which its card deals (step 51d).
+    // and so does its own damage, which its card deals (step 51d), as a
+    // weapon's does (a foe's attack, step 52c2).
     const outcomes = item.system?.outcomeEffects ?? [];
-    const ownDamage = ["power", "spell"].includes(item.type) && String(item.system?.damage ?? "").trim() ? 1 : 0;
+    const ownDamage = ["power", "spell", "weapon"].includes(item.type) && String(item.system?.damage ?? "").trim() ? 1 : 0;
     entries.push({
       folder,
       name: owner ? `${owner}: ${item.name}` : item.name,
