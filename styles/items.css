@@ -1,0 +1,342 @@
+/* VÅR BORG: item sheets and the item effects editor. */
+
+/* ---------- Item sheets ---------- */
+.var-borg.item .window-content {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.var-borg-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.var-borg-item-header .item-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: none;
+  cursor: pointer;
+}
+
+.var-borg-item-header .item-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.var-borg-item-header .item-name {
+  font-size: 1.3rem;
+  height: auto;
+}
+
+.var-borg-item-header .item-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.var-borg-item-header .item-meta label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.var-borg-item-header .item-meta input[type="number"] {
+  width: 4rem;
+}
+
+.var-borg-item-details h3 {
+  margin: 0.6rem 0 0.3rem;
+  border-bottom: 1px solid currentColor;
+}
+
+.var-borg-item-details .field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.var-borg-item-details .field-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.var-borg-item-details .field-grid label:has(> input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+}
+
+.var-borg-item-details .trait-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.var-borg-item-details .trait-flags label {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.var-borg-item-description label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.var-borg-item-description textarea {
+  resize: vertical;
+}
+
+/* ---------- Item effects (PLAN step 49a) ---------- */
+.var-borg-item-effects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+.var-borg-item-effects .effects-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.var-borg-item-effects .effects-header h3 {
+  flex: 1;
+  margin: 0;
+}
+
+.var-borg-item-effects .effects-header label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.var-borg-item-effects button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.var-borg-item-effects .effect-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  border: 1px solid var(--vb-ink);
+  border-radius: 3px;
+}
+
+.var-borg-item-effects .effect-row select {
+  flex: 1 1 8rem;
+}
+
+.var-borg-item-effects .effect-row input[type="number"] {
+  width: 4rem;
+  flex: 0 0 auto;
+}
+
+.var-borg-item-effects .effect-small {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.var-borg-item-effects .effect-small input[type="text"] {
+  width: 4rem;
+}
+
+.var-borg-item-effects .effect-note {
+  flex: 1 1 100%;
+}
+
+.var-borg-item-details fieldset label {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.2rem 0;
+}
+
+.var-borg-item-details fieldset label span {
+  flex: 0 0 5rem;
+}
+
+/* Relics (step 43) */
+.var-borg-item-details label.wide {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
+}
+
+.var-borg-item-details label.wide textarea { resize: vertical; }
+
+.var-borg-item-effects .effect-chosen {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* =====================================================================
+   Etched item sheets (V5). Shared buttons and fields are in base.css.
+   ===================================================================== */
+
+/* ---- Header band: framed picture, blackletter name, details in bone ---- */
+.application.var-borg.item .var-borg-item-header {
+  margin: -0.75rem -0.75rem 0;
+  padding: 0.6rem 0.9rem 0.7rem;
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+  border-bottom: 3px solid var(--vb-orange);
+}
+
+.application.var-borg.item .var-borg-item-header .item-img {
+  flex: 0 0 auto;
+  margin: 4px;
+  border: 2px solid var(--vb-paper);
+  outline: 1px solid var(--vb-paper);
+  outline-offset: 3px;
+  background: var(--vb-paper-shade) var(--vb-crosshatch);
+}
+
+.application.var-borg.item .var-borg-item-header input.item-name {
+  height: auto;
+  padding: 0 0.2rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--vb-paper);
+  font-size: 1.9rem;
+  font-weight: 400;
+  line-height: 1.15;
+  text-shadow: 2px 2px 0 var(--vb-orange);
+}
+
+.application.var-borg.item .var-borg-item-header input.item-name::placeholder {
+  color: var(--vb-paper-shade);
+  opacity: 0.6;
+}
+
+.application.var-borg.item .var-borg-item-header input.item-name:hover {
+  border-bottom-color: var(--vb-ink-soft);
+}
+
+.application.var-borg.item .var-borg-item-header input.item-name:focus {
+  outline: none;
+  border-bottom-color: var(--vb-yellow);
+}
+
+.application.var-borg.item .var-borg-item-header .item-meta {
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.03em;
+}
+
+.application.var-borg.item .var-borg-item-header .hint {
+  color: var(--vb-paper-shade);
+  opacity: 1;
+}
+
+/* Fields on the black band: bone lines, yellow while typing. */
+.application.var-borg.item .var-borg-item-header .item-meta :is(input[type="number"], input[type="text"]) {
+  border: none;
+  border-bottom: 1px solid var(--vb-paper);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--vb-paper);
+  font-family: var(--vb-font-body);
+  font-weight: 600;
+}
+
+.application.var-borg.item .var-borg-item-header .item-meta :is(input[type="number"], input[type="text"]):focus {
+  outline: none;
+  background: var(--vb-yellow);
+  color: var(--vb-ink);
+}
+
+.application.var-borg.item .var-borg-item-header .item-meta select {
+  border: none;
+  border-radius: 0;
+  background: var(--vb-paper);
+  color: var(--vb-ink);
+  font-family: var(--vb-font-body);
+}
+
+.application.var-borg.item .var-borg-item-header input[type="checkbox"] {
+  accent-color: var(--vb-orange);
+}
+
+/* ---- Body ---- */
+.application.var-borg.item .window-content input[type="checkbox"] {
+  accent-color: var(--vb-ink);
+}
+
+/* Field names over their boxes, in print capitals. */
+.application.var-borg.item :is(.field-grid, .var-borg-item-description, label.wide) > label > span:first-child,
+.application.var-borg.item .var-borg-item-description label > span,
+.application.var-borg.item label.wide > span {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.04em;
+}
+
+.application.var-borg.item .var-borg-item-details .trait-flags label {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.03em;
+}
+
+.application.var-borg.item .var-borg-item-details fieldset {
+  border: 1px solid var(--vb-ink);
+  border-radius: 0;
+}
+
+.application.var-borg.item .var-borg-item-details legend {
+  padding: 0 0.3rem;
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.04em;
+}
+
+.application.var-borg.item .hint {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}
+
+/* ---- Effects editor: each effect is a ruled card on shaded paper ---- */
+.application.var-borg.item .var-borg-item-effects .effect-row {
+  border: 1px solid var(--vb-ink);
+  border-left: 4px solid var(--vb-ink);
+  border-radius: 0;
+  background: var(--vb-paper-shade);
+}
+
+.application.var-borg.item .var-borg-item-effects .effects-header h3 {
+  border-bottom: 3px double var(--vb-ink);
+}
+
+/* Remove: outlined, so it does not shout. */
+.application.var-borg.item .var-borg-item-effects .effect-remove {
+  --vb-btn-bg: transparent;
+  --vb-btn-fg: var(--vb-ink);
+  border-width: 1px;
+}
+
+.application.var-borg.item .var-borg-item-effects .effect-small > span {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.03em;
+}
+
+.application.var-borg.item .var-borg-item-effects .effect-chosen {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}

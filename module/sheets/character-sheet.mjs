@@ -181,7 +181,7 @@ function spellSummary(item) {
 
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "character"],
+    classes: ["var-borg", "themed", "theme-light", "character"],
     position: { width: 600, height: 680 },
     window: { resizable: true },
     form: { submitOnChange: true },
@@ -613,6 +613,27 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onLastRite(event, button) {
     const item = this.#itemFor(button);
     if (item) await performLastRite(this.document, item);
+  }
+
+  /**
+   * Buttons in the window's title bar, beside the controls menu:
+   * Creation helper (if you may edit the sheet) and Improve (Dark Master only).
+   * They use the actions openCreation and improve below.
+   * @override
+   */
+  _getFrameButtons(options) {
+    const buttons = super._getFrameButtons(options);
+    if (this.isEditable) buttons.unshift({
+      icon: "fa-solid fa-user-plus",
+      label: "VARBORG.Creation.Tooltip",
+      action: "openCreation"
+    });
+    if (game.user.isGM) buttons.unshift({
+      icon: "fa-solid fa-arrow-trend-up",
+      label: "VARBORG.Improving.Tooltip",
+      action: "improve"
+    });
+    return buttons;
   }
 
   /** The Improve button (Dark Master only): rules 2.8, all on one card. */

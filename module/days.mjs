@@ -34,6 +34,7 @@ import { endNewDayTimers } from "./timers.mjs";
 import { weatherForNewDay } from "./weather.mjs";
 import { miseryForNewDay } from "./misery.mjs";
 import { runItemHooks } from "./effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -101,6 +102,7 @@ export async function newDay() {
       + `<p class="hint">${i18n.localize("VARBORG.Day.SleptHint")}</p>`
     : `<p>${i18n.localize("VARBORG.Day.NoCharacters")}</p>`;
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Day.DialogTitle", { day }) },
     content,
     ok: { label: "VARBORG.Day.Begin", icon: "fa-solid fa-sun" },

@@ -20,6 +20,7 @@ import { gainEmber, adjustPoolBy, runningCombat } from "./pools.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
 import { makeItemMinion, makeCompanion, raiseThrall, ownedThralls } from "./minions.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -293,6 +294,7 @@ async function pickCompanion(actor, effect) {
   }
   if (found.length === 1) return found[0];
   const data = await foundry.applications.api.DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: effect.item },
     content: `<div class="form-group"><label>${i18n.localize("VARBORG.Effects.WhichCompanion")}</label><select name="id">`
       + found.map(other => `<option value="${other.id}">${foundry.utils.escapeHTML(other.name)}</option>`).join("") + "</select></div>",
@@ -808,6 +810,7 @@ export async function rollTwiceFor(actor, event, formula) {
   let kept = keptRoll(first.total, second.total, keep);
   if (keep === "choose") {
     const picked = await DialogV2.wait({
+      classes: VB_DIALOG_CLASSES,
       window: { title: i18n.format("VARBORG.Effects.ChooseTitle", { name: actor.name }) },
       content: `<p>${foundry.utils.escapeHTML(i18n.format("VARBORG.Effects.ChooseHint", { items }))}</p>`,
       buttons: [

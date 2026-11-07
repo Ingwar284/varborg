@@ -15,6 +15,7 @@
 import { choiceCandidates, CHOOSABLE_SPELL_LISTS } from "./rules/item-effects.mjs";
 import { FOE_CATEGORIES } from "./rules/foe.mjs";
 import { DAMAGE_TYPES, ELEMENTS } from "./rules/equipment.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -136,6 +137,7 @@ export async function makeChoice(item, index) {
       ? `<select name="chosen">${options.map(option => `<option value="${esc(option.value)}"${option.value === effect.chosen ? " selected" : ""}>${esc(option.label)}</option>`).join("")}</select>`
       : `<input type="text" name="chosen" value="${esc(effect.chosen)}">`;
     const data = await DialogV2.input({
+      classes: VB_DIALOG_CLASSES,
       window: { title: i18n.format("VARBORG.Effects.Choice.Title", { item: item.name }) },
       content: `<p>${esc(i18n.localize(`VARBORG.Effects.Choice.Ask.${effect.choose}`))}</p>`
         + (effect.note ? `<p class="hint">${esc(effect.note)}</p>` : "")

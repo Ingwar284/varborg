@@ -38,6 +38,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 import { rollTwiceFor, escapeDeath } from "./effects.mjs";
 import { turnState } from "./combat.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -134,6 +135,7 @@ async function askAndRoll(actor) {
       options.push(`<option value="${roll}">${roll}: ${name}</option>`);
     }
     const data = await DialogV2.input({
+      classes: VB_DIALOG_CLASSES,
       window: { title: i18n.format("VARBORG.DeathsDoor.DialogTitle", { name: actor.name }) },
       content: `<div class="form-group"><label>${i18n.localize("VARBORG.DeathsDoor.ResultLabel")}</label>`
         + `<select name="roll">${options.join("")}</select></div>`

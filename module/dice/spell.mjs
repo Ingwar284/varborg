@@ -51,6 +51,7 @@ import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mj
 import {
   checkPowerUse, payPowerEmber, spendPowerActions, emberNote, powerInputs, powerDamageDice
 } from "./power.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -193,6 +194,7 @@ export async function castSpell(actor, spell) {
     secondOption: (spell.system.triumphPicks ?? 1) > 1
   });
   const options = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format(scroll ? "VARBORG.Spell.ScrollDialogTitle" : "VARBORG.Spell.DialogTitle", { name: spell.name }) },
     content,
     ok: { label: "VARBORG.Spell.Cast", icon: scroll ? "fa-solid fa-scroll" : "fa-solid fa-wand-sparkles" },

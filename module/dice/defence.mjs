@@ -51,6 +51,7 @@ import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mj
 import { rollResists, resistLines, takenWithResists, runItemHooks } from "../effects.mjs";
 import { useUpNextAttackMarks, giveGloomOutcomes } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -469,6 +470,7 @@ async function askDefenceOptions(actor, attack, automatic, conditions, optionalE
   });
 
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Defence.DialogTitle", { name: actor.name }) },
     content,
     ok: { label: "VARBORG.Defence.Roll", icon: "fa-solid fa-shield-halved" },

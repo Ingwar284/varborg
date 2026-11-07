@@ -57,6 +57,7 @@ import { weaponTags, withExtraDamage, triumphDamage } from "../rules/item-effect
 import { powerDamage } from "../rules/powers.mjs";
 import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
 import { settleOutcomes } from "../outcomes.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -484,6 +485,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
   });
 
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Attack.DialogTitle", { name: item.name }) },
     content,
     ok: { label: "VARBORG.Attack.Roll", icon: "fa-solid fa-khanda" },

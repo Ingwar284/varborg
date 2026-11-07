@@ -37,6 +37,7 @@ import { hpAfterDamage } from "./rules/health.mjs";
 import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { killedByDamage } from "./deaths-door.mjs";
 import { markDefeated } from "./dice/morale.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -236,6 +237,7 @@ async function askDriving(vehicle, allowed, load, fastDifficult = null) {
     <p class="hint">${i18n.localize("VARBORG.Vehicle.DriveHint")}</p>
   </div>`;
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Vehicle.DriveTitle", { name: vehicle.name }) },
     content,
     ok: { label: "VARBORG.Vehicle.Drive", icon: "fa-solid fa-truck-monster" },

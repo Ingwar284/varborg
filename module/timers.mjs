@@ -20,6 +20,7 @@ import {
   TIMER_KINDS, isRoundsFormula, newTimer, timerAtEndOfTurn, timerAtStartOfTurn, timerEndsWithCombat,
   timerEndsWithNewDay, longerTimer, ESCAPE_KINDS, isEscapeDr, breaksFree } from "./rules/timers.mjs";
 import { turnState } from "./combat.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const SYSTEM = "var-borg";
 const FLAG = "timer";
@@ -229,6 +230,7 @@ export async function askConditionTimer(actor, id) {
       <p class="hint">${i18n.localize("VARBORG.Timer.RoundsHint")}</p></div>
   </div>`;
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Timer.DialogTitle", { condition: i18n.localize(`VARBORG.Condition.${id}`), name: actor.name }) },
     content,
     ok: { label: "VARBORG.Timer.Set", icon: "fa-solid fa-hourglass-half" },

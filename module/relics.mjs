@@ -30,6 +30,7 @@ import { hasFrequency } from "./rules/uses.mjs";
 import { runningCombat, gainEmber } from "./pools.mjs";
 import { collectEffects, useEffects, CARD_ACTIONS } from "./rules/item-effects.mjs";
 import { doEffectAction } from "./effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -155,6 +156,7 @@ export async function performLastRite(actor, item) {
     return;
   }
   const ok = await DialogV2.confirm({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Relic.LastRiteAskTitle", { item: item.name }) },
     content: `<p>${i18n.format("VARBORG.Relic.LastRiteAsk", { item: esc(item.name) })}</p>`
       + (system.lastRite ? `<p><em>${cardText(system.lastRite)}</em></p>` : ""),

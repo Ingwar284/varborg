@@ -31,6 +31,7 @@ import { AGONY_TYPE_OPTION } from "./agony.mjs";
 import { rollResists, resistLines, DAMAGED_BY_FLAG } from "./effects.mjs";
 import { withDamagedBy } from "./rules/foe-hooks.mjs";
 import { resistedDamage } from "./rules/item-effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -113,6 +114,7 @@ export async function askPersistentDamage(actor) {
     current: persistentEffects(actor).map(({ effect }) => i18n.format("VARBORG.Persistent.Has", { name: effect.name }))
   });
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Persistent.DialogTitle", { name: actor.name }) },
     content,
     ok: { label: "VARBORG.Persistent.Add", icon: "fa-solid fa-fire" },

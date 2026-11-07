@@ -32,6 +32,7 @@ import {
 } from "../effects.mjs";
 import { foeDamageAfterResists } from "../rules/resistance.mjs";
 import { withDamagedBy, isMoraleEffect, moraleEffectCounts, moraleAfterEffects } from "../rules/foe-hooks.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 const { DialogV2 } = foundry.applications.api;
@@ -136,6 +137,7 @@ export async function inflictDamage(foe, damage, armour, attack, damageType = ""
  */
 async function askOptionalResist(effect) {
   return DialogV2.confirm({
+    classes: VB_DIALOG_CLASSES,
     window: { title: effect.item },
     content: `<p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.Resist.Ask", { item: effect.item, note: effect.note || game.i18n.localize("VARBORG.Effects.SeeText") }))}</p>`,
     rejectClose: false
@@ -162,6 +164,7 @@ export async function rollMorale(foe) {
   let mods = auto;
   if (optional.length) {
     const data = await DialogV2.input({
+      classes: VB_DIALOG_CLASSES,
       window: { title: i18n.format("VARBORG.MoraleRoll.DialogTitle", { name: foe.name }) },
       content: await optionalEffectsField(optional),
       ok: { label: "VARBORG.MoraleRoll.Roll", icon: "fa-solid fa-dice" },

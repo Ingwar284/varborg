@@ -37,6 +37,7 @@ import { statDrMods } from "../rules/item-effects.mjs";
 import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
 import { useUpNextAttackMarks, outcomeInputs, gloomGivesText } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -193,6 +194,7 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
     fortuneFields: await fortuneFields(actor, "gloom")
   });
   const options = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Gloom.DialogTitle", { name: actor.name, ability: power.name }) },
     content,
     // An ability's own test (Toll: Presence) is not a defence.

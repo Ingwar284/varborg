@@ -34,6 +34,7 @@ import { atDeathsDoor, killedByDamage } from "./deaths-door.mjs";
 import { runItemHooks, REST_GUARD_FLAG } from "./effects.mjs";
 import { fortuneFormula } from "./rules/item-effects.mjs";
 import { resetAndAnnounce } from "./uses.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -147,6 +148,7 @@ async function askRest(candidates, guards = []) {
     + `<p class="hint">${i18n.format("VARBORG.Rest.InterruptedHint", { dr: INTERRUPTION_DR })}</p>`
     + guardLines(guards);
   return DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: "VARBORG.Rest.DialogTitle" },
     content,
     ok: { label: "VARBORG.Rest.Begin", icon: "fa-solid fa-bed" },

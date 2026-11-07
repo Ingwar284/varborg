@@ -77,7 +77,7 @@ export async function importExamples() {
 export class ImportExamplesApp extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     id: "var-borg-import-examples",
-    classes: ["var-borg", "import-examples"],
+    classes: ["var-borg", "themed", "theme-light", "import-examples"],
     window: { title: "VARBORG.Examples.Title", icon: "fa-solid fa-file-import" },
     position: { width: 420 },
     actions: { import: ImportExamplesApp.#onImport }

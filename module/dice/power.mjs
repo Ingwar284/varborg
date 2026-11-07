@@ -50,6 +50,7 @@ function withChosen(inputs, chosen) {
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -306,6 +307,7 @@ async function rollPowerTest(actor, power) {
     } : null
   });
   const options = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Power.DialogTitle", { name: power.name }) },
     content,
     ok: { label: "VARBORG.Power.Use", icon: "fa-solid fa-fire" },

@@ -39,7 +39,7 @@ function attackSummary(weapon) {
 
 export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "foe"],
+    classes: ["var-borg", "themed", "theme-light", "foe"],
     position: { width: 560, height: 640 },
     window: { resizable: true },
     form: { submitOnChange: true },

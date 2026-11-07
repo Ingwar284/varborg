@@ -30,6 +30,7 @@ import {
   moveWeather, weatherAfterMove, cleanWeather, START_HEX
 } from "./rules/weather.mjs";
 import { AUTOMATED } from "./rules/weather-effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -207,9 +208,9 @@ export async function setWeatherByHand() {
     + `<select name="major">${eventOptions("major", today.hazard)}</select></div>`
     + `<p class="hint">${i18n.localize("VARBORG.Weather.EventHint")}</p>`;
   const data = await DialogV2.input({
+    classes: [...VB_DIALOG_CLASSES, "var-borg-weather-dialog"],
     window: { title: "VARBORG.Weather.SetTitle", icon: "fa-solid fa-cloud-sun-rain" },
     position: { width: 360 },
-    classes: ["var-borg-weather-dialog"],
     content,
     ok: { label: "VARBORG.Weather.Set", icon: "fa-solid fa-check" },
     rejectClose: false

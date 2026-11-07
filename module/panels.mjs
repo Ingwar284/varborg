@@ -52,7 +52,7 @@ class SharedPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   static KEY = "";
 
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "table-panel"],
+    classes: ["var-borg", "themed", "theme-light", "table-panel"],
     window: { resizable: false },
     position: { width: 280 }
   };

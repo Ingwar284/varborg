@@ -18,6 +18,7 @@ import { minionLimit, canTakeMinion, minionTurn, COMMAND_ACTIONS, MINION_TIER_ST
 import { minionTierFor } from "./rules/item-effects.mjs";
 import { turnState } from "./combat.mjs";
 import { markDefeated } from "./dice/morale.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -107,6 +108,7 @@ export async function makeItemMinion(owner, effect) {
   }
   if (refuseOverLimit(owner.id, null, i18n.localize("VARBORG.Minion.Beast"))) return nothing;
   const data = await foundry.applications.api.DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Minion.NameTitle", { item: effect.item }) },
     content: `<div class="form-group"><label>${i18n.localize("VARBORG.Minion.NameLabel")}</label>`
       + `<input type="text" name="name" value="${foundry.utils.escapeHTML(i18n.localize("VARBORG.Minion.Beast"))}" autofocus></div>`

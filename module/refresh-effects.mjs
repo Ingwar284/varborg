@@ -128,7 +128,7 @@ const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 export class RefreshEffectsApp extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     id: "var-borg-refresh-effects",
-    classes: ["var-borg", "import-examples"],
+    classes: ["var-borg", "themed", "theme-light", "import-examples"],
     window: { title: "VARBORG.Effects.RefreshTitle", icon: "fa-solid fa-wand-magic-sparkles" },
     position: { width: 420 },
     actions: { refresh: RefreshEffectsApp.#onRefresh }

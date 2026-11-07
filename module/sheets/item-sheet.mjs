@@ -29,7 +29,7 @@ const TEMPLATES = "systems/var-borg/templates/item";
 
 class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "item"],
+    classes: ["var-borg", "themed", "theme-light", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
@@ -163,7 +163,7 @@ function belongingContext(system) {
  */
 export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "item"],
+    classes: ["var-borg", "themed", "theme-light", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
@@ -206,7 +206,7 @@ export class FeatSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
  */
 export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "item"],
+    classes: ["var-borg", "themed", "theme-light", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
@@ -303,7 +303,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
  */
 export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "item"],
+    classes: ["var-borg", "themed", "theme-light", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
@@ -398,7 +398,7 @@ export class ScrollSheet extends EquipmentSheet {
  */
 class OriginSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "item"],
+    classes: ["var-borg", "themed", "theme-light", "item"],
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },

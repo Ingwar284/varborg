@@ -1,0 +1,228 @@
+/* VÅR BORG: fonts and the shared base look (ink on bone paper).
+   Fonts are SIL Open Font Licence; see fonts/ and THIRD_PARTY_NOTICES.md. */
+
+@font-face {
+  font-family: "VB UnifrakturMaguntia";
+  src: url("../fonts/unifraktur-maguntia/UnifrakturMaguntia-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VB IM Fell English SC";
+  src: url("../fonts/im-fell-english-sc/IMFeENsc28P.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VB Alegreya";
+  src: url("../fonts/alegreya/Alegreya-Variable.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "VB Alegreya";
+  src: url("../fonts/alegreya/Alegreya-Italic-Variable.ttf") format("truetype");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- VÅR BORG windows: sheets, panels, creation helper ----------
+   The windows always use Foundry's light theme (set in each window's
+   classes), so inputs and buttons stay dark-on-light on our paper. */
+
+.application.var-borg,
+.var-borg-card {
+  --font-body: var(--vb-font-body);
+  --font-sans: var(--vb-font-body);
+  --font-primary: var(--vb-font-body);
+}
+
+/* Square corners and an ink frame, like a printed plate. */
+.application.var-borg {
+  border: 2px solid var(--vb-ink);
+  border-radius: 0;
+}
+
+.application.var-borg .window-header {
+  border-radius: 0;
+}
+
+/* The title bar is solid ink, so it joins the black header band below it. */
+.application.var-borg .window-header {
+  --color-header-background: var(--vb-ink);
+  border-bottom: none;
+}
+
+.application.var-borg .window-header .window-title {
+  font-family: var(--vb-font-head);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--vb-paper);
+}
+
+.application.var-borg .window-header button.header-control {
+  --button-text-color: var(--vb-paper);
+}
+
+.application.var-borg .window-header button.header-control:hover {
+  --button-text-color: var(--vb-yellow);
+}
+
+/* Stippled paper, with small engraved corner marks in the bottom corners.
+   The marks sit in the outer 2–12px, inside the window's padding, so they
+   never cover text. They stay put while the content scrolls. */
+.application.var-borg .window-content {
+  background:
+    var(--vb-corner-bl) left 2px bottom 2px / 10px 10px no-repeat,
+    var(--vb-corner-br) right 2px bottom 2px / 10px 10px no-repeat,
+    var(--vb-stipple),
+    var(--vb-paper);
+  color: var(--vb-ink);
+  font-family: var(--vb-font-body);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.application.var-borg .window-content :is(input, select, textarea, button) {
+  font-family: var(--vb-font-body);
+}
+
+.application.var-borg .window-content :is(h1, h2, h3, h4),
+.application.var-borg nav.sheet-tabs,
+.var-borg-card :is(h3, h4) {
+  font-family: var(--vb-font-head);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+/* The name at the top of a sheet uses the blackletter. Names in lists do not. */
+.application.var-borg .window-content :is(input.actor-name, input.item-name) {
+  font-family: var(--vb-font-display);
+}
+
+/* ---------- Chat cards ---------- */
+
+.var-borg-card {
+  font-family: var(--vb-font-body);
+  color: var(--vb-ink);
+  background: var(--vb-paper);
+  padding: 0.3rem 0.4rem;
+  border: 1px solid var(--vb-ink);
+  /* A hard ink shadow, like a woodcut block; the margin leaves room for it. */
+  box-shadow: 3px 3px 0 var(--vb-ink);
+  margin: 0 3px 3px 0;
+}
+
+/* =====================================================================
+   Etched controls: headings, buttons and fields inside actor sheets,
+   the creation helper, item sheet bodies, table panels and system dialogs.
+   Orange and yellow are fills only.
+   ===================================================================== */
+
+/* Button colours use our own --vb-btn-* names. A place that wants different
+   buttons (the black header band, row icons) changes these. Foundry gives
+   disabled buttons dark colours of its own; our names keep them out. */
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) {
+  --vb-btn-bg: var(--vb-ink);
+  --vb-btn-fg: var(--vb-paper);
+  --vb-btn-border: var(--vb-ink);
+  --vb-btn-hover-bg: var(--vb-orange);
+  --vb-btn-hover-fg: var(--vb-ink);
+  --vb-btn-hover-border: var(--vb-ink);
+  --button-focus-outline-color: var(--vb-ink);
+  --input-background-color: transparent;
+  --input-border-color: var(--vb-ink);
+  --input-text-color: var(--vb-ink);
+  --input-focus-outline-color: var(--vb-ink);
+  --input-placeholder-color: var(--vb-ink-soft);
+}
+
+/* ---- Headings: print capitals over a double rule ---- */
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) h2 {
+  position: relative;
+  font-size: 1.2rem;
+  border-bottom: 3px double var(--vb-ink);
+}
+
+/* A printer's ornament breaks the double rule near its right end. It sits
+   on the rule, below the heading's text. */
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) h2::after {
+  content: "";
+  position: absolute;
+  right: 0.6rem;
+  bottom: -6.5px;
+  width: 26px;
+  height: 10px;
+  padding: 0 4px;
+  background: var(--vb-fleuron) center / 26px 10px no-repeat content-box, var(--vb-paper);
+  background-origin: content-box;
+  pointer-events: none;
+}
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) h3 {
+  font-size: 1.05rem;
+  border-bottom: 1px solid var(--vb-ink);
+}
+
+/* ---- Buttons: black stamps that turn orange; a disabled one keeps its colours, faded ---- */
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button {
+  --button-background-color: var(--vb-btn-bg);
+  --button-text-color: var(--vb-btn-fg);
+  --button-border-color: var(--vb-btn-border);
+  --button-hover-background-color: var(--vb-btn-hover-bg);
+  --button-hover-text-color: var(--vb-btn-hover-fg);
+  --button-hover-border-color: var(--vb-btn-hover-border);
+  border-width: 2px;
+  border-radius: 0;
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.03em;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:focus { box-shadow: none; }
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:focus-visible {
+  outline: 2px solid var(--vb-ink);
+  outline-offset: 2px;
+}
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:disabled,
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:disabled:hover {
+  background: var(--vb-btn-bg);
+  color: var(--vb-btn-fg);
+  border-color: var(--vb-btn-border);
+  opacity: 0.45;
+}
+
+/* ---- Fields: a ruled line to write on; yellow while you type ---- */
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]) {
+  border: none;
+  border-bottom: 2px solid var(--vb-ink);
+  border-radius: 0;
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]):focus {
+  outline: none;
+  background: var(--vb-yellow);
+}
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(select, textarea) {
+  border: 1px solid var(--vb-ink);
+  border-radius: 0;
+  background: var(--vb-paper);
+  color: var(--vb-ink);
+}
+
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(select, textarea):focus {
+  outline: 2px solid var(--vb-ink);
+  outline-offset: -2px;
+}

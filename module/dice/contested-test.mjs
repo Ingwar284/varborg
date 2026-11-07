@@ -18,6 +18,7 @@ import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
 import { conditionsOf, conditionNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { itemRollMods } from "../effects.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -162,6 +163,7 @@ async function askContestOptions(actor) {
   const content = await renderTemplate(DIALOG_TEMPLATE, { abilities, characters, foe: FOE });
 
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: game.i18n.format("VARBORG.Contest.DialogTitle", { name: actor.name }) },
     content,
     ok: { label: "VARBORG.Test.Roll", icon: "fa-solid fa-dice-d20" },

@@ -23,7 +23,7 @@ const TEMPLATES = "systems/var-borg/templates/actor";
 
 export default class VehicleSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["var-borg", "foe", "vehicle"],
+    classes: ["var-borg", "themed", "theme-light", "foe", "vehicle"],
     position: { width: 580, height: 680 },
     window: { resizable: true },
     form: { submitOnChange: true },

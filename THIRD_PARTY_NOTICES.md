@@ -7,6 +7,21 @@ as a development tool to build the compendiums in `packs/` from `content/`
 (see `tools/build-packs.mjs`). It is not part of the system Foundry loads
 and is not shipped with it; `node_modules/` is not committed.
 
+## Fonts (SIL Open Font Licence 1.1)
+
+These fonts are shipped in `fonts/`, unmodified, downloaded from Google's
+font repository (https://github.com/google/fonts). Each folder holds its
+full licence as `OFL.txt`. They are loaded in `styles/base.css`.
+
+- **UnifrakturMaguntia** (`fonts/unifraktur-maguntia/`): copyright 2010
+  j. 'mach' wust, copyright 2009 Peter Wiegel. Reserved Font Name
+  UnifrakturMaguntia.
+- **IM FELL English SC** (`fonts/im-fell-english-sc/`): copyright 2010
+  Igino Marini. Reserved Font Name IM FELL English SC.
+- **Alegreya**, regular and italic (`fonts/alegreya/`): copyright 2011 The
+  Alegreya Project Authors. The files are renamed from `Alegreya[wght].ttf`
+  and `Alegreya-Italic[wght].ttf`; their contents are unchanged.
+
 ## Pirate Borg Foundry system (code only)
 
 Some code in this system is adapted from the Pirate Borg Foundry VTT system

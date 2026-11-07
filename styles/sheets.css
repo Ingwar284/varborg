@@ -1,0 +1,1041 @@
+/* VÅR BORG: actor sheets (character, foe, minion, vehicle). */
+
+/* ---------- Character sheet ---------- */
+/* The black header band and tab bar run edge to edge; the tabs below get the padding. */
+.var-borg.character .window-content {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+
+/* Only the open tab is shown, and it scrolls on its own. */
+.var-borg.character .tab.var-borg-sheet {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+.var-borg.character .tab.var-borg-sheet.active {
+  display: flex;
+}
+
+/* Header band: portrait in an engraved frame, name in blackletter. */
+.var-borg.character header.var-borg-sheet {
+  flex: 0 0 auto;
+  padding: 0.6rem 0.9rem 0.7rem;
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+}
+
+.var-borg.character .sheet-header .portrait {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 84px;
+  margin: 4px;
+  border: 2px solid var(--vb-paper);
+  outline: 1px solid var(--vb-paper);
+  outline-offset: 3px;
+  background: var(--vb-paper-shade) var(--vb-crosshatch);
+}
+
+.application.var-borg.character .sheet-header .actor-name {
+  height: auto;
+  padding: 0 0.2rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--vb-paper);
+  font-size: 2.3rem;
+  font-weight: 400;
+  line-height: 1.15;
+  text-shadow: 3px 2px 0 var(--vb-orange);
+}
+
+.application.var-borg.character .sheet-header .actor-name::placeholder {
+  color: var(--vb-paper-shade);
+  opacity: 0.6;
+}
+
+.application.var-borg.character .sheet-header .actor-name:hover {
+  border-bottom-color: var(--vb-ink-soft);
+}
+
+.application.var-borg.character .sheet-header .actor-name:focus {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  border-bottom-color: var(--vb-yellow);
+}
+
+/* Tab bar: black, the open tab in orange, sitting on a thin orange line.
+   Each name stays on one line, and the row wraps on a narrow sheet. */
+.var-borg.character nav.sheet-tabs {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 2px;
+  margin: 0;
+  padding: 0 0.5rem;
+  border: none;
+  border-bottom: 3px solid var(--vb-orange);
+  background: var(--vb-ink);
+  font-size: 0.95rem;
+  line-height: 2;
+}
+
+.var-borg.character nav.sheet-tabs > a {
+  white-space: nowrap;
+  padding: 0 0.65rem;
+  color: var(--vb-paper);
+  text-shadow: none;
+}
+
+.var-borg.character nav.sheet-tabs > a > i {
+  margin-right: 0.25rem;
+  font-size: 0.875em;
+}
+
+.var-borg.character nav.sheet-tabs > a:hover {
+  color: var(--vb-yellow);
+  text-shadow: none;
+}
+
+.var-borg.character nav.sheet-tabs > a.active {
+  background: var(--vb-orange);
+  color: var(--vb-ink);
+  text-shadow: none;
+}
+
+.var-borg.character nav.sheet-tabs > a:focus-visible {
+  outline: 2px solid var(--vb-yellow);
+  outline-offset: -2px;
+}
+
+.var-borg-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.var-borg-sheet h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.1rem;
+  border-bottom: 1px solid currentColor;
+}
+
+.var-borg-sheet .sheet-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.var-borg-sheet .portrait {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: none;
+  cursor: pointer;
+}
+
+.var-borg-sheet .actor-name {
+  flex: 1;
+  font-size: 1.5rem;
+  height: auto;
+}
+
+.var-borg-sheet .ability-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.var-borg-sheet .ability,
+.var-borg-sheet .resource {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.var-borg-sheet .ability input {
+  width: 3.5rem;
+  text-align: center;
+  font-size: 1.25rem;
+  height: auto;
+}
+
+.var-borg-sheet .resources {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+/* Inventory tab: the silver box sits on its own at the bottom right. */
+.var-borg-sheet .resources.silver-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.var-borg-sheet .resource input {
+  width: 3rem;
+  text-align: center;
+}
+
+.var-borg-sheet .pair {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Character tab: a small icon for each active condition (opens the Conditions tab). */
+.var-borg-sheet .condition-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  width: auto;
+  height: auto;
+  margin: 0.25rem 0;
+  padding: 0.25rem;
+  background: none;
+}
+
+.var-borg-sheet .condition-strip img {
+  width: 24px;
+  height: 24px;
+  border: none;
+}
+
+.var-borg-sheet .details label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.var-borg-sheet .details textarea {
+  resize: vertical;
+}
+
+.var-borg-sheet .ability-in-use {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .ability-roll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .other-rolls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Carrying and movement */
+.var-borg-sheet .movement-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.var-borg-sheet .carrying-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+}
+
+.var-borg-sheet .carrying-state {
+  font-weight: bold;
+}
+
+.var-borg-sheet .carrying-encumbered .carrying-state { color: var(--vb-warning); }
+
+.var-borg-sheet .carrying-overloaded .carrying-state,
+.var-borg-sheet .carrying-overloaded .movement-value { color: var(--vb-bad); }
+
+/* Attack Ruin and Recover */
+.var-borg-sheet .attack-ruin {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--vb-bad);
+  border-radius: 4px;
+}
+
+.var-borg-sheet .attack-ruin p { flex: 1; margin: 0; }
+
+.var-borg-sheet .attack-ruin strong { color: var(--vb-bad); }
+
+.var-borg-sheet .attack-ruin button { flex: 0 0 auto; width: auto; }
+
+/* Inventory list */
+.var-borg-sheet h3 {
+  margin: 0.4rem 0 0.2rem;
+  font-size: 1rem;
+}
+
+.var-borg-sheet .item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.var-borg-sheet .item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0;
+  border-bottom: 1px solid var(--vb-rule-faint);
+}
+
+.var-borg-sheet .item-row img {
+  width: 28px;
+  height: 28px;
+  border: none;
+}
+
+.var-borg-sheet .item-row .item-name {
+  font-weight: bold;
+}
+
+.var-borg-sheet .item-row .item-summary {
+  flex: 1;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.var-borg-sheet .item-row.equipped .item-name::after {
+  content: " ✓";
+}
+
+.var-borg-sheet .icon-button {
+  flex: 0 0 auto;
+  width: 1.8rem;
+  height: 1.8rem;
+  padding: 0;
+}
+
+.var-borg-sheet .cumbersome-toggle {
+  opacity: 0.35;
+}
+
+.var-borg-sheet .cumbersome-toggle.active {
+  opacity: 1;
+}
+
+.var-borg-sheet .item-row .stored-in {
+  flex: 0 0 8rem;
+  width: 8rem;
+}
+
+.var-borg-sheet .item-row.over-capacity .item-summary {
+  color: var(--vb-bad);
+  font-weight: bold;
+  opacity: 1;
+}
+
+/* The description under an item row, opened by clicking the name. */
+.var-borg-sheet .item-list .item-description {
+  /* Keeps the description's own line breaks, but not stray spaces. */
+  white-space: pre-line;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  margin: 0.1rem 0 0.35rem 1.9rem;
+  padding: 0.2rem 0.5rem;
+  border-left: 2px solid var(--vb-rule-strong);
+}
+
+.var-borg-sheet .item-list .item-description[hidden] {
+  display: none;
+}
+
+.var-borg-sheet .item-list .empty {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.var-borg-sheet .hint,
+.var-borg.item .hint {
+  font-size: 0.875rem;
+  opacity: 0.75;
+  margin: 0.3rem 0 0;
+}
+
+/* Inventory: used-up items and the loaded/empty tag */
+.var-borg-sheet .item-row.used-up img,
+.var-borg-sheet .item-row.used-up .item-name {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* Dropped items: greyed out, not struck through (GAPS 254). */
+.var-borg-sheet .item-row.dropped img,
+.var-borg-sheet .item-row.dropped .item-name,
+.var-borg-sheet .item-row.dropped .item-summary {
+  opacity: 0.6;
+}
+
+.var-borg-sheet .item-row .item-state {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.var-borg-sheet .item-row .item-state.unloaded,
+.var-borg-sheet .item-row .item-state.used-up {
+  color: var(--vb-bad);
+}
+
+.var-borg-sheet .item-row .quantity {
+  flex: 0 0 3rem;
+  width: 3rem;
+  text-align: center;
+}
+
+/* ---------- Foe sheet ---------- */
+.var-borg.foe .window-content {
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.var-borg-sheet .foe-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.var-borg-sheet .foe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  align-items: center;
+}
+
+.var-borg-sheet .foe-meta label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.var-borg-sheet .foe-stats {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.var-borg-sheet .foe-stats select {
+  width: 100%;
+}
+
+.var-borg-sheet .attack-mark {
+  flex: 0 0 auto;
+  font-size: 1.1rem;
+}
+
+.var-borg-sheet .add-item {
+  margin-top: 0.3rem;
+  width: auto;
+  align-self: flex-start;
+}
+
+/* Feats and passives: name in bold, then the text. */
+.var-borg-sheet .feat-row .feat-text {
+  flex: 1;
+}
+
+.var-borg-sheet .foe-stats .armour-name {
+  width: 100%;
+  text-align: center;
+}
+
+/* ---------- Conditions (rules 3.13) ---------- */
+.var-borg-sheet .condition-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.var-borg-sheet .condition-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0;
+  border-bottom: 1px solid var(--vb-rule-faint);
+}
+
+.var-borg-sheet .condition-row img {
+  width: 24px;
+  height: 24px;
+  border: none;
+}
+
+.var-borg-sheet .condition-row .condition-text {
+  flex: 1;
+  font-size: 0.9rem;
+}
+
+.var-borg-sheet .condition-list .empty {
+  font-style: italic;
+  opacity: 0.6;
+}
+
+.var-borg-sheet .condition-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+
+.var-borg-sheet .condition-controls select {
+  flex: 1;
+}
+
+.var-borg-sheet .condition-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .condition-controls input {
+  width: 3rem;
+}
+
+/* Persistent damage: type, damage, Add and the Dark Master's Tick. */
+.var-borg-sheet .persistent-controls select {
+  flex: 0 1 auto;
+}
+
+.var-borg-sheet .persistent-controls input[type="text"] {
+  width: 4rem;
+}
+
+/* Defence: raised shield, destroyed items, card buttons (step 16) */
+.var-borg-sheet .shield-raised {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--vb-shield);
+  border-radius: 4px;
+}
+
+.var-borg-sheet .shield-raised p { flex: 1; margin: 0; }
+
+.var-borg-sheet .shield-raised strong { color: var(--vb-shield); }
+
+.var-borg-sheet .shield-raised button { flex: 0 0 auto; width: auto; }
+
+.var-borg-sheet .item-row .item-state.destroyed {
+  color: var(--vb-bad);
+}
+
+/* Damaging foes and Morale (step 17) */
+.var-borg-sheet .foe-stats .morale-button {
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+/* Death's Door on the character sheet: where the character stands, the Dark Vessel count and lost body parts. */
+.var-borg-sheet .deaths-door-panel {
+  margin-top: 0.5rem;
+}
+
+/* Conditions page: a line between each titled group. */
+.var-borg-sheet .conditions-section .condition-group + .condition-group {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--vb-rule);
+}
+
+.var-borg-sheet .deaths-door-panel h3 {
+  margin: 0 0 0.2rem;
+}
+
+.var-borg-sheet .deaths-door-status {
+  font-weight: bold;
+  margin: 0.2rem 0;
+}
+
+/* Powers (step 27) */
+.var-borg-sheet .power-row .text-button {
+  flex: 0 0 auto;
+  width: auto;
+  height: 1.8rem;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .item-row .item-state.sustaining {
+  margin-left: 0.3rem;
+  color: var(--vb-warning);
+}
+
+/* Ember abilities outside combat (step 28) */
+.var-borg-sheet .item-row .item-state.used-outside,
+.var-borg-sheet .item-row .item-state.used {
+  margin-left: 0.3rem;
+  color: var(--vb-muted);
+  font-style: italic;
+}
+
+/* Once per round, encounter or day (step 36b) */
+.var-borg-sheet .item-row button.use-limited:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Condition timers: the time left beside a condition's name. */
+.var-borg-sheet .condition-timer {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-sheet .condition-controls .starving {
+  color: var(--vb-hazard);
+  font-weight: bold;
+}
+
+/* Minions (step 42) */
+.var-borg-sheet .text-button {
+  flex: 0 0 auto;
+  width: auto;
+  height: 1.8rem;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .link-button {
+  display: inline;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  line-height: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.var-borg-sheet .link-button:hover { text-decoration: underline; }
+
+.var-borg-sheet .over-limit,
+.var-borg-sheet h2.over-limit {
+  color: var(--vb-bad);
+  font-weight: bold;
+}
+
+.var-borg-sheet .item-row.used-up .feat-text strong {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.var-borg-sheet .item-row:has(.relic-drawback) { flex-wrap: wrap; }
+
+.var-borg-sheet .item-row .relic-drawback {
+  order: 99;
+  flex: 1 1 100%;
+  padding-left: 2rem;
+  color: var(--vb-bad);
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+/* Vehicles (step 44) */
+.var-borg-sheet .vehicle-speeds .pair input { width: 3.2rem; }
+
+.var-borg-sheet .vehicle-sheet .details input[type="text"] { width: 100%; }
+
+.var-borg-sheet .vehicle-sheet .item-row select {
+  flex: 0 0 7rem;
+  width: 7rem;
+}
+
+.var-borg-sheet .vehicle-sheet .item-row .strapped {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .vehicle-sheet .item-row .item-name { flex: 1; }
+
+/* Vehicle cargo (step 44) */
+.var-borg-sheet .vehicle-sheet .vehicle-capacity {
+  display: flex;
+  gap: 1rem;
+}
+
+.var-borg-sheet .vehicle-sheet .vehicle-capacity label { flex: 1; }
+
+.var-borg-sheet .vehicle-sheet .vehicle-capacity input { width: 4rem; }
+
+/* Improving (step 45) */
+.var-borg-sheet .heading-with-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.var-borg-sheet .improving-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px dashed currentColor;
+  border-radius: 4px;
+}
+
+.var-borg-sheet .improving-choice span { flex: 1; }
+
+/* =====================================================================
+   Etched contents (V4). Applies inside every actor sheet's body
+   (character, foe, minion, vehicle) and the creation helper.
+   Rule: ink on paper for reading; orange and yellow only as fills.
+   ===================================================================== */
+
+/* Shared buttons, fields and headings are in base.css. */
+
+/* Small icon buttons on rows: outlined, so a long list is not a wall of black. */
+.application.var-borg .var-borg-sheet .icon-button {
+  --vb-btn-bg: transparent;
+  --vb-btn-fg: var(--vb-ink);
+  border-width: 1px;
+}
+
+/* Text that acts as a link (item names): plain ink, underlined on hover. */
+.application.var-borg .var-borg-sheet .link-button {
+  color: var(--vb-ink);
+  font-family: inherit;
+  letter-spacing: normal;
+}
+
+.application.var-borg .var-borg-sheet .link-button:hover {
+  background: none;
+  color: var(--vb-ink);
+}
+
+.application.var-borg .var-borg-sheet .condition-strip {
+  border: 1px solid transparent;
+}
+
+.application.var-borg .var-borg-sheet .condition-strip:hover {
+  background: var(--vb-paper-shade);
+  border-color: var(--vb-ink);
+}
+
+/* Over the minion limit, on a black button: orange text reads; rust would not. */
+.application.var-borg .var-borg-sheet .text-button.over-limit {
+  color: var(--vb-orange);
+}
+
+/* ---- Abilities: big numerals in stamped boxes ---- */
+.application.var-borg .var-borg-sheet .ability-row {
+  gap: 0.6rem;
+  align-items: start;
+}
+
+.application.var-borg .var-borg-sheet .ability {
+  gap: 0.45rem;
+}
+
+.application.var-borg .var-borg-sheet .ability-roll {
+  font-size: 0.875rem;
+  padding: 0 0.3rem;
+}
+
+.application.var-borg .var-borg-sheet .ability input[type="number"] {
+  width: 3.6rem;
+  height: 3.6rem;
+  margin: 0 4px 4px 0;
+  border: 2px solid var(--vb-ink);
+  background: var(--vb-paper);
+  box-shadow: 4px 4px 0 var(--vb-ink);
+  font-size: 1.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.application.var-borg .var-borg-sheet .ability input[type="number"]:focus {
+  background: var(--vb-yellow);
+}
+
+.application.var-borg .var-borg-sheet .ability-in-use {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}
+
+/* ---- Resources (HP, Wounds, Fortune, Sanity lost, Movement) ---- */
+.application.var-borg .var-borg-sheet .resources:not(.silver-footer) {
+  padding: 0.5rem 0;
+  border-top: 3px double var(--vb-ink);
+  border-bottom: 3px double var(--vb-ink);
+}
+
+.application.var-borg .var-borg-sheet .resource > span:first-child {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.04em;
+}
+
+.application.var-borg .var-borg-sheet .resource input[type="number"] {
+  font-size: 1.15rem;
+}
+
+.application.var-borg .var-borg-sheet .movement-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+/* ---- Rows: items, feats, powers, minions, conditions ---- */
+.application.var-borg .var-borg-sheet :is(.item-row, .condition-row) {
+  padding: 0.25rem 0.2rem;
+  border-bottom: 1px solid var(--vb-rule);
+}
+
+.application.var-borg .var-borg-sheet :is(.item-row, .condition-row):hover {
+  background: var(--vb-paper-shade);
+}
+
+.application.var-borg .var-borg-sheet .item-row img {
+  border: 1px solid var(--vb-ink);
+  background: var(--vb-paper-shade);
+}
+
+.application.var-borg .var-borg-sheet .item-row .item-summary {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}
+
+/* Equipped: a small yellow tag after the name. */
+.application.var-borg .var-borg-sheet .item-row.equipped .item-name::after {
+  content: "✓";
+  display: inline-block;
+  margin-left: 0.4em;
+  padding: 0 0.3em;
+  border: 1px solid var(--vb-ink);
+  background: var(--vb-yellow);
+  color: var(--vb-ink);
+  font-size: 0.8em;
+  line-height: 1.3;
+}
+
+/* States (loaded, used, sustaining, destroyed…): outlined tags in their colour. */
+.application.var-borg .var-borg-sheet .item-row .item-state {
+  padding: 0 0.3em;
+  border: 1px solid currentColor;
+  font-family: var(--vb-font-head);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.application.var-borg .var-borg-sheet .item-row .item-state.used-outside,
+.application.var-borg .var-borg-sheet .item-row .item-state.used {
+  color: var(--vb-ink-soft);
+}
+
+/* The opened description under a row: an orange bar down the left. */
+.application.var-borg .var-borg-sheet .item-list .item-description {
+  border-left: 3px solid var(--vb-orange);
+  background: rgba(217, 207, 184, 0.5);
+  color: var(--vb-ink);
+  font-size: 0.9rem;
+}
+
+.application.var-borg .var-borg-sheet :is(.item-list, .condition-list) .empty,
+.application.var-borg .var-borg-sheet .hint {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}
+
+/* ---- Warning panels ---- */
+
+/* Attack Ruin: a black block, the title in orange. */
+.application.var-borg .var-borg-sheet .attack-ruin {
+  border: 2px solid var(--vb-ink);
+  border-radius: 0;
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+}
+
+.application.var-borg .var-borg-sheet .attack-ruin strong { color: var(--vb-orange); }
+
+.application.var-borg .var-borg-sheet .attack-ruin button {
+  --vb-btn-bg: var(--vb-paper);
+  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-border: var(--vb-paper);
+}
+
+/* Raised shield: shaded paper with a thick ink bar. */
+.application.var-borg .var-borg-sheet .shield-raised {
+  border: none;
+  border-left: 6px solid var(--vb-ink);
+  border-radius: 0;
+  background: var(--vb-paper-shade);
+}
+
+.application.var-borg .var-borg-sheet .shield-raised strong { color: var(--vb-ink); }
+
+.application.var-borg .var-borg-sheet .improving-choice {
+  border: 1px dashed var(--vb-ink);
+  border-radius: 0;
+  background: var(--vb-paper-shade);
+}
+
+/* =====================================================================
+   Foe, minion and vehicle sheets (V6): a bestiary page.
+   ===================================================================== */
+
+/* ---- Header band (the sheet's whole window scrolls, band included) ---- */
+.application.var-borg.foe .foe-sheet > .sheet-header {
+  margin: -0.75rem -0.75rem 0;
+  padding: 0.6rem 0.9rem 0.7rem;
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+  border-bottom: 3px solid var(--vb-orange);
+  /* Buttons on the band: bone stamps that turn orange. */
+  --vb-btn-bg: var(--vb-paper);
+  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-border: var(--vb-paper);
+  --vb-btn-hover-bg: var(--vb-orange);
+  --vb-btn-hover-fg: var(--vb-ink);
+  --vb-btn-hover-border: var(--vb-orange);
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header .portrait {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 84px;
+  margin: 4px;
+  border: 2px solid var(--vb-paper);
+  outline: 1px solid var(--vb-paper);
+  outline-offset: 3px;
+  background: var(--vb-paper-shade) var(--vb-crosshatch);
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header input.actor-name {
+  height: auto;
+  padding: 0 0.2rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--vb-paper);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1.15;
+  text-shadow: 3px 2px 0 var(--vb-orange);
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header input.actor-name::placeholder {
+  color: var(--vb-paper-shade);
+  opacity: 0.6;
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header input.actor-name:hover {
+  border-bottom-color: var(--vb-ink-soft);
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header input.actor-name:focus {
+  outline: none;
+  background: transparent;
+  border-bottom-color: var(--vb-yellow);
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header .foe-meta {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.03em;
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header select {
+  border: none;
+  background: var(--vb-paper);
+  color: var(--vb-ink);
+  font-family: var(--vb-font-body);
+}
+
+.application.var-borg.foe .foe-sheet > .sheet-header input[type="checkbox"] {
+  accent-color: var(--vb-orange);
+}
+
+/* Tags on the band (such as Boon ready): yellow on black. */
+.application.var-borg.foe .foe-sheet > .sheet-header .item-state {
+  padding: 0 0.3em;
+  border: 1px solid var(--vb-yellow);
+  color: var(--vb-yellow);
+  font-family: var(--vb-font-head);
+  font-weight: 400;
+}
+
+/* A minion over its owner's limit: orange on black, since orange on bone would not read. */
+.application.var-borg.foe .foe-sheet > .sheet-header .text-button.over-limit {
+  --vb-btn-bg: var(--vb-ink);
+  --vb-btn-border: var(--vb-orange);
+  color: var(--vb-orange);
+}
+
+/* ---- The stat block: a framed box on shaded paper ---- */
+.application.var-borg.foe .var-borg-sheet .foe-stats {
+  padding: 0.5rem 0.6rem;
+  border: 2px solid var(--vb-ink);
+  outline: 1px solid var(--vb-ink);
+  outline-offset: 2px;
+  margin: 2px;
+  background: var(--vb-paper-shade);
+}
+
+/* ---- Row marks: ⚔ attacks in bone on black, ☾ Gloom in yellow on black ---- */
+.application.var-borg.foe .var-borg-sheet .attack-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+  font-size: 1rem;
+}
+
+.application.var-borg.foe .var-borg-sheet .gloom-abilities .attack-mark {
+  color: var(--vb-yellow);
+}
+
+/* The Gloom heading: yellow on a black strip, the foe's resource set apart. */
+.application.var-borg.foe .var-borg-sheet .gloom-abilities h2 {
+  padding: 0.05rem 0.45rem;
+  border-bottom: none;
+  background: var(--vb-ink);
+  color: var(--vb-yellow);
+}
+
+/* No rule under this heading, so no ornament on it. */
+.application.var-borg.foe .var-borg-sheet .gloom-abilities h2::after {
+  display: none;
+}
+
+/* Add buttons at the foot of each list: outlined. */
+.application.var-borg.foe .var-borg-sheet .add-item {
+  --vb-btn-bg: transparent;
+  --vb-btn-fg: var(--vb-ink);
+  border-width: 1px;
+  border-style: dashed;
+}
+
+.application.var-borg.foe .var-borg-sheet .add-item:hover {
+  border-style: solid;
+}

@@ -29,6 +29,7 @@ import { useUpNextTest } from "../panic.mjs";
 import { newFortuneData, fortuneFlags, fortuneSection, fortuneFields, payDialogFortune } from "../fortune.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { cappedArmourDr, masteredArmourDr } from "../rules/item-effects.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -227,6 +228,7 @@ async function askTestOptions(actor, abilityLabel, automatic, conditionNotes = [
   });
 
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: game.i18n.format("VARBORG.Test.DialogTitle", { ability: abilityLabel }) },
     content,
     ok: { label: "VARBORG.Test.Roll", icon: "fa-solid fa-dice-d20" },

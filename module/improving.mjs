@@ -27,6 +27,7 @@ import { ABILITIES } from "./rules/abilities.mjs";
 import { CLASS_BOOST } from "./rules/origins.mjs";
 import { canBeImproving } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -52,6 +53,7 @@ export async function improveCharacter(actor) {
   const i18n = game.i18n;
   const esc = foundry.utils.escapeHTML;
   const ok = await DialogV2.confirm({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Improving.AskTitle", { name: actor.name }) },
     content: `<p>${i18n.format("VARBORG.Improving.Ask", { name: esc(actor.name) })}</p>`
   });

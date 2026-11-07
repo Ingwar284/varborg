@@ -34,6 +34,7 @@ import { shiftWeather } from "./weather.mjs";
 import { miseryContext } from "./misery.mjs";
 import { currentWeather } from "./weather.mjs";
 import { travelFactorFor, travelSpeed } from "./rules/weather-effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -94,9 +95,9 @@ async function askTravel(phase, hazard) {
     + `<p class="hint">${i18n.localize("VARBORG.Travel.BoonHint")}</p>`
     + (weatherTravelLine(hazard) ? `<p class="hint">${escape(weatherTravelLine(hazard))}</p>` : "");
   return DialogV2.input({
+    classes: [...VB_DIALOG_CLASSES, "var-borg-travel-dialog"],
     window: { title: "VARBORG.Travel.Title", icon: "fa-solid fa-route" },
     position: { width: 380 },
-    classes: ["var-borg-travel-dialog"],
     content,
     ok: { label: "VARBORG.Travel.Go", icon: "fa-solid fa-route" },
     rejectClose: false

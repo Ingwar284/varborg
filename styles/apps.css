@@ -1,0 +1,713 @@
+/* VÅR BORG: roll dialogs, table panels, combat tracker pips, creation helper. */
+
+/* ---------- Test dialog ---------- */
+
+/* A long dialog (such as Cast, with life force) scrolls inside the window,
+   so the roll button below it always stays on screen. */
+.var-borg-test-dialog {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+
+.var-borg-test-dialog .hint {
+  flex-basis: 100%;
+  margin: 0.1rem 0 0;
+}
+
+.var-borg-test-dialog .hint.automatic {
+  font-weight: bold;
+}
+
+/* What a test is for, such as ending persistent damage. */
+.var-borg-test-dialog .purpose,
+.var-borg-card .purpose {
+  font-style: italic;
+  margin: 0 0 0.3rem;
+}
+
+/* A situational Bane the player judges: shown, not added. */
+.var-borg-test-dialog .hint.reminder {
+  font-style: italic;
+}
+
+/* ---------- Combat Tracker: action and reaction pips ---------- */
+.var-borg-pips {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.15rem;
+}
+
+.var-borg-pips .pip-group {
+  display: flex;
+  gap: 0.1rem;
+}
+
+.var-borg-pips .pip {
+  width: auto;
+  height: auto;
+  min-height: 0;
+  padding: 0 0.15rem;
+  border: none;
+  background: none;
+  line-height: 1.1;
+  font-size: 1rem;
+}
+
+.var-borg-pips .pip.spent {
+  opacity: 0.3;
+}
+
+.var-borg-pips .pip:disabled {
+  cursor: default;
+}
+
+/* ---------- The shared panels: calendar, light, Ember and Gloom (steps 26, 35, 37) ---------- */
+.var-borg.table-panel .window-content {
+  padding: 0.5rem;
+}
+
+.var-borg-table-panel .round,
+.var-borg-table-panel .hint {
+  margin: 0 0 0.4rem;
+  font-style: italic;
+}
+
+.var-borg-table-panel .pool {
+  border-top: 1px solid var(--vb-rule);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .pool-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-table-panel .pool-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .pool-count {
+  min-width: 2ch;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .pool.ember .pool-count {
+  color: var(--vb-ember);
+}
+
+.var-borg-table-panel .pool.gloom .pool-count {
+  color: var(--vb-gloom);
+}
+
+.var-borg-table-panel button.adjust {
+  flex: 0 0 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+}
+
+.var-borg-table-panel .pool-spend {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.25rem;
+}
+
+.var-borg-table-panel .pool-spend .spend-label {
+  margin-right: 0.2rem;
+}
+
+.var-borg-table-panel .pool-spend button {
+  flex: 1;
+  padding: 0 0.1rem;
+  line-height: 1.6rem;
+}
+
+.var-borg-table-panel button.reset-ember {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+/* Days (step 32) */
+.var-borg-table-panel .day-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-bottom: 0.35rem;
+}
+
+.var-borg-table-panel button.new-day {
+  flex: 1;
+  padding: 0 0.5rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+/* Calendar and time of day (step 37) */
+.var-borg-table-panel .calendar-row {
+  padding-bottom: 0.35rem;
+}
+
+.var-borg-table-panel .calendar-date,
+.var-borg-table-panel .calendar-time {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.var-borg-table-panel .date-name,
+.var-borg-table-panel .phase-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .day-number {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-table-panel .clock {
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+}
+
+.var-borg-table-panel .calendar-row .waiting {
+  margin: 0.2rem 0 0;
+  color: var(--vb-hazard);
+}
+
+.var-borg-table-panel .calendar-controls {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.var-borg-table-panel .calendar-controls button {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0 0.5rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+.var-borg-table-panel .calendar-controls button.next-phase {
+  flex: 1;
+}
+
+.var-borg-tick-table {
+  width: 100%;
+  margin: 0.4rem 0;
+  border-collapse: collapse;
+}
+
+.var-borg-tick-table th,
+.var-borg-tick-table td {
+  padding: 0.15rem 0.3rem;
+  text-align: center;
+}
+
+.var-borg-tick-table th:first-child,
+.var-borg-tick-table td:first-child {
+  text-align: left;
+}
+
+.var-borg-tick-table .hint {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Light timer (step 35) */
+.var-borg-table-panel .light-row {
+  border-top: 1px solid var(--vb-rule);
+  padding: 0.35rem 0;
+}
+
+/* In its own panel, the light row needs no line above it. */
+.var-borg-light-panel .light-row {
+  border-top: none;
+  padding-top: 0;
+}
+
+.var-borg-table-panel .light-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-table-panel .light-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.var-borg-table-panel .light-clock {
+  font-size: 1.4rem;
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
+  color: var(--vb-light);
+}
+
+.var-borg-table-panel .light-row .hint {
+  margin: 0;
+}
+
+.var-borg-table-panel .light-controls {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.var-borg-table-panel .light-controls input {
+  width: 4.5rem;
+  flex: 0 0 auto;
+}
+
+.var-borg-table-panel .light-controls button {
+  flex: 1;
+  white-space: nowrap;
+}
+
+/* ---------- Weather and the hex flower (step 38) ---------- */
+.var-borg-table-panel .weather-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-top: 1px solid var(--vb-rule);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .weather-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.var-borg-table-panel .weather-label {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-table-panel .weather-name {
+  font-weight: bold;
+}
+
+.var-borg-table-panel .weather-hazard {
+  color: var(--vb-hazard);
+  font-weight: bold;
+  cursor: help;
+}
+
+.var-borg-table-panel button.set-weather {
+  margin-top: 0.2rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+/* The flower: flat-topped hexes placed by --x and --y (module/rules/weather.mjs). */
+.var-borg-hex-flower {
+  --w: 22px;
+  --h: calc(var(--w) * 0.866);
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(var(--w) * 4);
+  height: calc(var(--h) * 5);
+}
+
+.var-borg-hex-flower.pick {
+  --w: 76px;
+  margin: 0.4rem auto 0.6rem;
+}
+
+.var-borg-hex-flower .hex {
+  position: absolute;
+  left: calc(var(--x) * var(--w));
+  top: calc(var(--y) * var(--h));
+  width: calc(var(--w) - 2px);
+  height: calc(var(--h) - 2px);
+  margin: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  color: var(--vb-hex-text);
+  opacity: 0.55;
+}
+
+.var-borg-hex-flower.pick .hex {
+  cursor: pointer;
+  opacity: 0.45;
+}
+
+.var-borg-hex-flower.pick .hex:hover {
+  opacity: 0.8;
+}
+
+.var-borg-hex-flower .hex.current,
+.var-borg-hex-flower.pick .hex:has(input:checked) {
+  opacity: 1;
+}
+
+.var-borg-hex-flower.pick .hex:has(input:checked) .hex-name {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.var-borg-hex-flower.pick .hex input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.var-borg-hex-flower .hex-name {
+  padding: 0 14%;
+  font-size: 0.62rem;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.var-borg-hex-flower .hex-token {
+  width: 45%;
+  height: 52%;
+  border-radius: 50%;
+  background: var(--vb-hex-token);
+  border: 2px solid var(--vb-hex-token-ring);
+}
+
+.var-borg-hex-flower .kind-perfectDay { --hex-fill: var(--vb-weather-perfect-day); }
+
+.var-borg-hex-flower .kind-clearSky { --hex-fill: var(--vb-weather-clear-sky); }
+
+.var-borg-hex-flower .kind-clouded { --hex-fill: var(--vb-weather-clouded); }
+
+.var-borg-hex-flower .kind-lightPrecipitation { --hex-fill: var(--vb-weather-light-precipitation); }
+
+.var-borg-hex-flower .kind-heavyPrecipitation { --hex-fill: var(--vb-weather-heavy-precipitation); color: var(--vb-hex-text-light); }
+
+.var-borg-hex-flower .kind-storm { --hex-fill: var(--vb-weather-storm); color: var(--vb-hex-text-light); }
+
+.var-borg-hex-flower .kind-minorHazard { --hex-fill: var(--vb-weather-minor-hazard); }
+
+.var-borg-hex-flower .kind-majorHazard { --hex-fill: var(--vb-weather-major-hazard); color: var(--vb-hex-text-light); }
+
+.var-borg-travel-dialog fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* ---------- The Miseries (step 39) ---------- */
+.var-borg-table-panel .misery-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  border-top: 1px solid var(--vb-rule);
+  padding: 0.35rem 0;
+}
+
+.var-borg-table-panel .misery-icon {
+  font-size: 1.4rem;
+  width: 1.6rem;
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+
+.var-borg-table-panel .misery-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.var-borg-table-panel .misery-label,
+.var-borg-table-panel .misery-light {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.var-borg-table-panel .misery-name {
+  font-weight: bold;
+}
+
+.var-borg-table-panel .misery-omen {
+  font-size: 0.9em;
+}
+
+.var-borg-table-panel .misery-sunless,
+.var-borg-table-panel .misery-row.end .misery-name {
+  color: var(--vb-hazard);
+  font-weight: bold;
+}
+
+.var-borg-table-panel button.set-misery {
+  margin-top: 0.2rem;
+  line-height: 1.6rem;
+  white-space: nowrap;
+}
+
+.vehicle-dialog .vehicle-table {
+  width: 100%;
+  margin: 0.4rem 0;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.vehicle-dialog .vehicle-table th:first-child { text-align: left; }
+
+/* Character creation helper (step 46) */
+
+/* The window keeps its size; the steps scroll inside it. */
+.creation-helper .window-content {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.creation-helper .creation-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+.creation-helper .creation-step {
+  border-top: 1px solid var(--vb-rule);
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.creation-helper .creation-step h2 { margin: 0; font-size: 1.1em; }
+
+.creation-helper .creation-now { margin: 0; font-style: italic; }
+
+.creation-helper .hint { margin: 0; font-size: 0.875em; opacity: 0.8; }
+
+.creation-helper .creation-array { display: flex; gap: 0.25rem; align-items: center; }
+
+.creation-helper .creation-array input { width: 3.2rem; text-align: center; }
+
+.creation-helper .text-button { align-self: flex-start; }
+
+/* ---------- Optional item effects in roll dialogs (PLAN step 49d) ---------- */
+.var-borg-optional-effects {
+  margin: 0.4rem 0;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--vb-ink);
+  border-radius: 3px;
+}
+
+.var-borg-optional-effects legend {
+  padding: 0 0.3rem;
+  font-weight: bold;
+}
+
+/* =====================================================================
+   Dialogs and panels (V8). The windows get paper, fonts and the black
+   title bar from base.css; buttons and fields come from the shared
+   "etched controls" there.
+   ===================================================================== */
+
+/* ---- Roll dialogs and other system dialogs ---- */
+.application.var-borg-dialog .window-content {
+  padding: 0.6rem 0.8rem 0.7rem;
+}
+
+.application.var-borg-dialog .dialog-content .form-group > label,
+.application.var-borg-dialog .dialog-content fieldset legend {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.04em;
+  color: var(--vb-ink);
+}
+
+.application.var-borg-dialog .dialog-content .form-group {
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--vb-rule-faint);
+}
+
+.application.var-borg-dialog .hint,
+.application.var-borg-dialog .dialog-content p.hint {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}
+
+/* Notes the system works out for you (armour, encumbrance, conditions). */
+.application.var-borg-dialog .hint.automatic {
+  color: var(--vb-ink);
+  padding-left: 0.4rem;
+  border-left: 3px solid var(--vb-orange);
+}
+
+.application.var-borg-dialog .purpose {
+  color: var(--vb-ink);
+  font-family: var(--vb-font-head);
+  font-style: normal;
+  letter-spacing: 0.03em;
+}
+
+.application.var-borg-dialog input[type="checkbox"],
+.application.var-borg.table-panel input[type="checkbox"] {
+  accent-color: var(--vb-ink);
+}
+
+.application.var-borg-dialog :is(fieldset, .var-borg-optional-effects) {
+  border: 1px solid var(--vb-ink);
+  border-radius: 0;
+}
+
+/* The footer: the default button (Roll, Confirm…) is orange; the others black. */
+.application.var-borg-dialog .form-footer {
+  padding-top: 0.5rem;
+  border-top: 3px double var(--vb-ink);
+}
+
+.application.var-borg-dialog .form-footer button[autofocus] {
+  --vb-btn-bg: var(--vb-orange);
+  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-border: var(--vb-ink);
+  --vb-btn-hover-bg: var(--vb-ink);
+  --vb-btn-hover-fg: var(--vb-orange);
+}
+
+/* ---- Table panels: calendar, light, Ember and Gloom ---- */
+.var-borg-table-panel :is(.pool, .light-row, .weather-row, .misery-row) {
+  border-top-color: var(--vb-ink);
+}
+
+.var-borg-table-panel :is(.pool-name, .light-name, .date-name, .phase-name, .weather-name, .misery-name) {
+  font-family: var(--vb-font-head);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.var-borg-table-panel :is(.round, .hint, .weather-label, .misery-label, .misery-light, .day-number) {
+  color: var(--vb-ink-soft);
+  opacity: 1;
+}
+
+/* The pool counts as stamped tiles: Ember black on orange, Gloom yellow on black. */
+.var-borg-table-panel .pool-count {
+  min-width: 2.4rem;
+  padding: 0 0.3rem;
+  border: 2px solid var(--vb-ink);
+  box-shadow: 3px 3px 0 var(--vb-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+.var-borg-table-panel .pool.ember .pool-count {
+  background: var(--vb-orange);
+  color: var(--vb-ink);
+}
+
+.var-borg-table-panel .pool.gloom .pool-count {
+  background: var(--vb-ink);
+  color: var(--vb-yellow);
+}
+
+/* − and + beside a count: outlined. */
+.var-borg-table-panel button.adjust {
+  --vb-btn-bg: transparent;
+  --vb-btn-fg: var(--vb-ink);
+  border-width: 1px;
+}
+
+.var-borg-table-panel :is(.clock, .light-clock) {
+  font-weight: 800;
+}
+
+.var-borg-table-panel .light-clock {
+  color: var(--vb-light);
+}
+
+.var-borg-table-panel .misery-icon {
+  color: var(--vb-ink);
+  opacity: 1;
+}
+
+/* The end of the Miseries: a black block. */
+.var-borg-table-panel .misery-row.end {
+  padding: 0.35rem 0.4rem;
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+}
+
+.var-borg-table-panel .misery-row.end :is(.misery-name, .misery-sunless, .misery-icon) {
+  color: var(--vb-orange);
+}
+
+.var-borg-table-panel .misery-row.end :is(.misery-label, .misery-light, .misery-omen) {
+  color: var(--vb-paper-shade);
+}
+
+.var-borg-table-panel .misery-row.end button {
+  --vb-btn-bg: var(--vb-paper);
+  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-border: var(--vb-paper);
+}
+
+/* ---- Weather hex flower: each hex outlined in ink ---- */
+.var-borg-hex-flower .hex {
+  background: var(--vb-ink);
+}
+
+.var-borg-hex-flower .hex::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  background: var(--hex-fill, var(--vb-paper));
+}
+
+.var-borg-hex-flower .hex > * {
+  position: relative;
+}
+
+.var-borg-hex-flower .hex-name {
+  font-weight: 600;
+}
+
+/* The weather picker (V10): hex names must stay readable, so no hex is faded.
+   Hover thickens the ink outline; the chosen hex gets a thick orange one. */
+.var-borg-hex-flower.pick .hex,
+.var-borg-hex-flower.pick .hex:hover {
+  opacity: 1;
+}
+
+.var-borg-hex-flower.pick .hex:hover::before {
+  inset: 3px;
+}
+
+.var-borg-hex-flower.pick .hex:has(input:checked) {
+  background: var(--vb-orange);
+}
+
+.var-borg-hex-flower.pick .hex:has(input:checked)::before {
+  inset: 5px;
+}
+
+.var-borg-hex-flower.pick .hex-name {
+  font-size: 0.72rem;
+}
+
+/* Keyboard users see which hex has focus. */
+.var-borg-hex-flower.pick .hex:has(input:focus-visible:not(:checked)) {
+  background: var(--vb-ink-soft);
+}
+
+/* ---- Import examples and refresh effects windows ---- */
+.application.var-borg .var-borg-import {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}

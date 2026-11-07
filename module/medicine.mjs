@@ -27,6 +27,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { persistentEffects } from "./persistent.mjs";
 import { turnState } from "./combat.mjs";
 import { isDead } from "./deaths-door.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -137,6 +138,7 @@ async function askUse(actor, patient) {
   const content = `<p>${patientLine}</p><div class="form-group stacked">${options}</div>`
     + `<p class="hint">${i18n.format("VARBORG.Medicine.DialogHint", { dr: MEDICINE_DR })}</p>`;
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: "VARBORG.Medicine.DialogTitle" },
     content,
     ok: { label: "VARBORG.Medicine.Apply", icon: "fa-solid fa-kit-medical" },

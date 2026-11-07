@@ -19,6 +19,7 @@ import { canUseOnce, hasFrequency, itemsToReset } from "./rules/uses.mjs";
 import { collectEffects, useEffects } from "./rules/item-effects.mjs";
 import { doEffectAction } from "./effects.mjs";
 import { useChoices } from "./rules/item-effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -93,6 +94,7 @@ async function pickUseEffects(item) {
     return i18n.localize(`VARBORG.Effects.Action.${effect.action}`);
   };
   const picked = await foundry.applications.api.DialogV2.wait({
+    classes: VB_DIALOG_CLASSES,
     window: { title: item.name },
     content: `<p>${foundry.utils.escapeHTML(i18n.localize("VARBORG.Uses.Which"))}</p>`,
     buttons: choices.map((list, index) => ({ action: String(index), label: list.map(label).join(" + "), default: index === 0 })),

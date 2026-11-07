@@ -1,0 +1,77 @@
+/* VÅR BORG: colour and font tokens. Every system colour is named here and
+   used elsewhere as var(--vb-…). Change a value here and it changes everywhere.
+
+   Legibility rule: on paper, text is ink, soft ink or rust only. Orange and
+   yellow are fills (with ink text on them) or text on black. */
+
+:root {
+  /* ---- The palette ---- */
+  --vb-ink: #141210;          /* primary: near-black. 14.8 : 1 on paper */
+  --vb-ink-soft: #4a433a;     /* muted text. 7.7 : 1 on paper */
+  --vb-paper: #ece4d2;        /* bone print paper */
+  --vb-paper-shade: #d9cfb8;  /* shaded paper: hover, panels */
+  --vb-orange: #ec6a1f;       /* secondary: fills, and text on black only. 5.9 : 1 with ink */
+  --vb-yellow: #f2c230;       /* tertiary: fills, and text on black only */
+  --vb-rust: #8f3208;         /* text-safe orange for warnings on paper. 6.3 : 1 */
+
+  /* ---- Fonts ---- */
+  --vb-font-display: "VB UnifrakturMaguntia", "Old English Text MT", serif;
+  --vb-font-head: "VB IM Fell English SC", Georgia, serif;
+  --vb-font-body: "VB Alegreya", Georgia, "Times New Roman", serif;
+
+  /* ---- Etching textures (drawn in SVG, ink on transparent) ---- */
+  --vb-stipple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%23141210' fill-opacity='.08'%3E%3Ccircle cx='3' cy='5' r='.6'/%3E%3Ccircle cx='17' cy='2' r='.5'/%3E%3Ccircle cx='29' cy='11' r='.7'/%3E%3Ccircle cx='9' cy='21' r='.5'/%3E%3Ccircle cx='35' cy='27' r='.6'/%3E%3Ccircle cx='22' cy='33' r='.5'/%3E%3Ccircle cx='5' cy='36' r='.7'/%3E%3Ccircle cx='26' cy='19' r='.4'/%3E%3C/g%3E%3C/svg%3E");
+  --vb-hatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M-1 1l2-2M0 6l6-6M5 7l2-2' stroke='%23141210' stroke-width='.7'/%3E%3C/svg%3E");
+  --vb-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 6l6-6M-1 1l2-2M5 7l2-2M0 0l6 6M-1 5l2 2M5 -1l2 2' stroke='%23141210' stroke-width='.6'/%3E%3C/svg%3E");
+
+  /* ---- Printer's ornaments (ink, drawn in SVG) ---- */
+  /* A lozenge between two dots: sits on a heading's double rule. */
+  --vb-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 10'%3E%3Cpath d='M13 0l5 5-5 5-5-5z' fill='%23141210'/%3E%3Ccircle cx='3.5' cy='5' r='1.6' fill='%23141210'/%3E%3Ccircle cx='22.5' cy='5' r='1.6' fill='%23141210'/%3E%3C/svg%3E");
+  /* Engraved corner marks for the bottom of a window. */
+  --vb-corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 0v10.5H12' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='4' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
+  --vb-corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M10.5 0v10.5H0' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='5.5' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
+
+  /* ---- Lines ---- */
+  --vb-rule: rgba(20, 18, 16, 0.35);
+  --vb-rule-faint: rgba(20, 18, 16, 0.2);
+  --vb-rule-strong: rgba(20, 18, 16, 0.5);
+
+  /* ---- Meanings (what each colour is for) ---- */
+  --vb-bad: var(--vb-rust);          /* destroyed, used up, over capacity, drawbacks */
+  --vb-hazard: var(--vb-rust);       /* weather hazards, starving, waiting, sunless */
+  --vb-warning: var(--vb-rust);      /* encumbered, sustaining */
+  --vb-good: var(--vb-ink);          /* remains, improved, contest winner */
+  --vb-neutral: var(--vb-ink-soft);
+  --vb-shield: var(--vb-ink);
+  --vb-muted: var(--vb-ink-soft);
+  --vb-magic: var(--vb-ink-soft);    /* Fortune lines, light gone out */
+  --vb-magic-strong: var(--vb-ink);
+  --vb-ember: var(--vb-rust);        /* Ember count on paper */
+  --vb-gloom: var(--vb-ink);         /* Gloom count on paper */
+  --vb-light: var(--vb-rust);        /* light timer */
+
+  /* ---- Test results (chat cards). The fills are set in cards.css. ---- */
+  --vb-tier-triumph: var(--vb-ink);
+  --vb-tier-success: var(--vb-ink);
+  --vb-tier-failure: var(--vb-ink);
+  --vb-tier-ruin: var(--vb-orange);  /* orange text on a black block */
+
+  /* ---- Misery: the end ---- */
+  --vb-misery-end-bg: var(--vb-ink);
+  --vb-misery-end-text: var(--vb-paper);
+
+  /* ---- Weather hex flower: light to dark as the weather worsens, hazards
+     in orange and rust. Each hex has an ink outline (apps.css). ---- */
+  --vb-hex-text: var(--vb-ink);
+  --vb-hex-text-light: var(--vb-paper);
+  --vb-hex-token: var(--vb-orange);
+  --vb-hex-token-ring: var(--vb-ink);
+  --vb-weather-perfect-day: var(--vb-yellow);
+  --vb-weather-clear-sky: #f7f2e6;
+  --vb-weather-clouded: var(--vb-paper-shade);
+  --vb-weather-light-precipitation: #b3a68c;
+  --vb-weather-heavy-precipitation: var(--vb-ink-soft);
+  --vb-weather-storm: var(--vb-ink);
+  --vb-weather-minor-hazard: var(--vb-orange);
+  --vb-weather-major-hazard: var(--vb-rust);
+}

@@ -32,6 +32,7 @@ import { addOrigin } from "./origins.mjs";
 import { belongsTo, classStarting } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
 import { fortuneFormula, FORTUNE_DIE } from "./rules/item-effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2, DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -139,7 +140,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
 
   static DEFAULT_OPTIONS = {
     tag: "form",
-    classes: ["var-borg", "creation-helper"],
+    classes: ["var-borg", "themed", "theme-light", "creation-helper"],
     window: { icon: "fa-solid fa-user-plus", resizable: true },
     position: { width: 520, height: 700 },
     form: { handler: CreationHelper.#onChange, submitOnChange: true, closeOnSubmit: false },
@@ -294,6 +295,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     const rolled = this.actor.system.rolledAbilities;
     if (ABILITIES.every(key => rolled[key] === 0)) return true;
     return DialogV2.confirm({
+      classes: VB_DIALOG_CLASSES,
       window: { title: game.i18n.localize("VARBORG.Creation.Abilities.ReplaceTitle") },
       content: `<p>${game.i18n.localize("VARBORG.Creation.Abilities.Replace")}</p>`
     });
@@ -467,6 +469,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
   async #chooseCarrying(choice) {
     const i18n = game.i18n;
     const picked = await DialogV2.wait({
+      classes: VB_DIALOG_CLASSES,
       window: { title: i18n.localize("VARBORG.Creation.Equipment.ChooseTitle") },
       content: `<p>${i18n.localize("VARBORG.Creation.Equipment.Choose")}</p>`,
       buttons: choice.map((spec, index) => ({
@@ -505,6 +508,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
     }
     if (actor.getFlag(SYSTEM, EQUIPMENT_FLAG)) {
       const again = await DialogV2.confirm({
+        classes: VB_DIALOG_CLASSES,
         window: { title: i18n.localize("VARBORG.Creation.Equipment.AgainTitle") },
         content: `<p>${i18n.localize("VARBORG.Creation.Equipment.Again")}</p>`
       });

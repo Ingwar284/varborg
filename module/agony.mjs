@@ -30,6 +30,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { addPersistentDamage } from "./persistent.mjs";
 import { enterDeathsDoor, killCharacter } from "./deaths-door.mjs";
 import { runItemHooks, agonyDeathsDoorInstead } from "./effects.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -195,6 +196,7 @@ async function askAndRollAgony(actor, type) {
     return `<option value="${id}"${selected}>${id === suggested ? i18n.format("VARBORG.Agony.Suggested", { type: label }) : label}</option>`;
   }).join("");
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: i18n.format("VARBORG.Agony.DialogTitle", { name: actor.name }) },
     content: `<div class="form-group"><label>${i18n.localize("VARBORG.Agony.TypeLabel")}</label>`
       + `<select name="type">${options}</select></div>`

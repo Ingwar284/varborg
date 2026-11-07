@@ -20,6 +20,7 @@
 import {
   LIGHT_DICE, OMEN_DIE, END_LEVEL, numeral, sunriseDie, isEnd, isOne, cleanMisery, afterLightDie
 } from "./rules/misery.mjs";
+import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -188,6 +189,7 @@ export async function setMiseryByHand() {
     + `<div class="form-group"><label>${i18n.localize("VARBORG.Misery.SunlessLabel")}</label>`
     + `<input type="checkbox" name="sunless" ${now.sunless ? "checked" : ""}></div>`;
   const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
     window: { title: "VARBORG.Misery.SetTitle", icon: "fa-solid fa-skull" },
     position: { width: 380 },
     content,
