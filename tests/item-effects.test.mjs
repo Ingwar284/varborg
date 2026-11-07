@@ -14,7 +14,7 @@ import {
   resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions,
   betterMode, chosenWeaponTraits, changedSpeeds, isOn, lifeForceDie, masteredArmourDr, drivingDrWith, triumphDamage,
   hasAdrenaline, isRiskyPower, auraReaches, chosenSpellList,
-  notedKinds, withNotedKind, isActorUuid, useChoices
+  notedKinds, withNotedKind, isActorUuid, useChoices, immunityTo
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -689,4 +689,45 @@ test("next-spell buffs and damage reduced from any hit (step 51e2, GAPS 231)", (
   assert.equal(resistsFor([ward], "fire").length, 1);
   assert.equal(resistsFor([ward], "fire", { persistent: true }).length, 0);
   assert.deepEqual(effectProblems(stat("spellFree", 1, "set")), []);
+});
+
+// --- Step 53a: relics' effects ----------------------------------------------
+
+const relicItem = (system, effects) => ({ id: "r1", name: "Relic", type: "relic", system: { destroyed: false, frequency: "day", frequencyUsed: false, ...system, effects } });
+
+test("a once-per-day immunity works until its use is spent (Antler of the Glass Stag)", () => {
+  const antler = [{ ...blankEffect("immune"), condition: "charmed" }, { ...blankEffect("immune"), condition: "frightened" }];
+  const fresh = collectEffects([relicItem({}, antler)]);
+  assert.deepEqual([...immuneConditions(fresh)].sort(), ["charmed", "frightened"]);
+  const blocked = immunityTo(fresh, "frightened");
+  assert.equal(blocked.blocked, true);
+  assert.equal(blocked.spends.itemId, "r1");
+  assert.deepEqual(immunityTo(fresh, "prone"), { blocked: false, spends: null });
+  const spent = collectEffects([relicItem({ frequencyUsed: true }, antler)]);
+  assert.equal(immuneConditions(spent).size, 0);
+  assert.equal(immunityTo(spent, "charmed").blocked, false);
+  // A destroyed relic gives nothing.
+  assert.equal(immuneConditions(collectEffects([relicItem({ destroyed: true }, antler)])).size, 0);
+});
+
+test("an immunity with no limit is used before a limited one, so nothing is spent", () => {
+  const feat = { id: "f1", name: "Incorruptible", type: "feat", system: { effects: [{ ...blankEffect("immune"), condition: "charmed" }] } };
+  const antler = relicItem({}, [{ ...blankEffect("immune"), condition: "charmed" }]);
+  assert.deepEqual(immunityTo(collectEffects([antler, feat]), "charmed"), { blocked: true, spends: null });
+});
+
+test("Vex's loaded die offers a Turn over button once per card while its use is not spent", () => {
+  const vex = [{ ...blankEffect("use"), action: "flip", roll: "test" }];
+  assert.deepEqual(effectProblems(vex[0]), []);
+  const buttons = cardButtons(collectEffects([relicItem({}, vex)]), "test", { tier: "success" });
+  assert.deepEqual(buttons.map(b => b.action), ["flip"]);
+  assert.equal(cardButtons(collectEffects([relicItem({}, vex)]), "attack", {}).length, 0);
+  assert.equal(cardButtons(collectEffects([relicItem({}, vex)]), "test", { used: ["r1"] }).length, 0);
+  assert.equal(cardButtons(collectEffects([relicItem({ frequencyUsed: true }, vex)]), "test", {}).length, 0);
+});
+
+test("guarding a rest is a Use effect (Hearth-tallow of Anashe)", () => {
+  const effect = { ...blankEffect("use"), action: "guardRest" };
+  assert.deepEqual(effectProblems(effect), []);
+  assert.equal(useEffects([effect]).length, 1);
 });

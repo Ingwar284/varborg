@@ -17,6 +17,7 @@
     "faction": "the Solemn Order of the Candle-Wicked Men",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

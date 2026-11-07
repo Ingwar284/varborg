@@ -21,6 +21,19 @@
   display: flex;
 }
 
+/* Six tabs: each name stays on one line, and the row wraps on a narrow sheet. */
+.var-borg.character nav.sheet-tabs {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 0.75rem;
+  font-size: var(--font-size-13, 0.8125rem);
+}
+
+.var-borg.character nav.sheet-tabs > a {
+  white-space: nowrap;
+}
+
 .var-borg-sheet {
   display: flex;
   flex-direction: column;
@@ -81,6 +94,12 @@
   gap: 0.5rem;
 }
 
+/* Inventory tab: the silver box sits on its own at the bottom right. */
+.var-borg-sheet .resources.silver-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .var-borg-sheet .resource input {
   width: 3rem;
   text-align: center;
@@ -90,6 +109,23 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+/* Character tab: a small icon for each active condition (opens the Conditions tab). */
+.var-borg-sheet .condition-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  width: auto;
+  height: auto;
+  margin: 0.25rem 0;
+  padding: 0.25rem;
+  background: none;
+}
+.var-borg-sheet .condition-strip img {
+  width: 24px;
+  height: 24px;
+  border: none;
 }
 
 .var-borg-sheet .details label {
@@ -223,6 +259,21 @@
   color: #b71c1c;
   font-weight: bold;
   opacity: 1;
+}
+
+/* The description under an item row, opened by clicking the name. */
+.var-borg-sheet .item-list .item-description {
+  /* Keeps the description's own line breaks, but not stray spaces. */
+  white-space: pre-line;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  margin: 0.1rem 0 0.35rem 1.9rem;
+  padding: 0.2rem 0.5rem;
+  border-left: 2px solid rgba(128, 128, 128, 0.5);
+}
+
+.var-borg-sheet .item-list .item-description[hidden] {
+  display: none;
 }
 
 .var-borg-sheet .item-list .empty {
@@ -519,6 +570,13 @@
   text-decoration: line-through;
 }
 
+/* Dropped items: greyed out, not struck through (GAPS 254). */
+.var-borg-sheet .item-row.dropped img,
+.var-borg-sheet .item-row.dropped .item-name,
+.var-borg-sheet .item-row.dropped .item-summary {
+  opacity: 0.45;
+}
+
 .var-borg-sheet .item-row .item-state {
   flex: 0 0 auto;
   font-size: 0.8rem;
@@ -765,6 +823,13 @@
 /* Death's Door on the character sheet: where the character stands, the Dark Vessel count and lost body parts. */
 .var-borg-sheet .deaths-door-panel {
   margin-top: 0.5rem;
+}
+
+/* Conditions page: a line between each titled group. */
+.var-borg-sheet .conditions-section .condition-group + .condition-group {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-light-tertiary, rgba(128, 128, 128, 0.5));
 }
 
 .var-borg-sheet .deaths-door-panel h3 {

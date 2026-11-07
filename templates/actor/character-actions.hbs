@@ -1,0 +1,93 @@
+<section class="inventory-section action-list">
+  <h2 data-tooltip="{{localize 'VARBORG.Sheet.ActionsHint'}}">{{localize "VARBORG.Sheet.Actions"}}</h2>
+  <ul class="item-list">
+    {{#each actionList}}
+    <li class="item-row feat-row" data-item-id="{{item.id}}">
+      <img src="{{item.img}}" alt="">
+      <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
+        {{#each states}} <span class="item-state {{key}}">{{localize label}}</span>{{/each}}
+        {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}</span>
+      {{#if canAttack}}
+      <button type="button" class="icon-button" data-action="attack"
+              data-tooltip="{{localize 'VARBORG.Attack.Tooltip'}}" aria-label="{{localize 'VARBORG.Attack.Tooltip'}}">
+        <i class="fa-solid fa-khanda"></i>
+      </button>
+      {{/if}}
+      {{#if canFire}}
+      <button type="button" class="icon-button" data-action="fireWeapon"
+              data-tooltip="{{localize 'VARBORG.Reload.FireTooltip'}}" aria-label="{{localize 'VARBORG.Reload.FireTooltip'}}">
+        <i class="fa-solid fa-burst"></i>
+      </button>
+      {{/if}}
+      {{#if canReload}}
+      <button type="button" class="icon-button" data-action="reloadWeapon"
+              data-tooltip="{{reloadTooltip}}" aria-label="{{reloadTooltip}}">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+      {{/if}}
+      {{#if canRaise}}
+      <button type="button" class="icon-button" data-action="raiseShield"
+              data-tooltip="{{localize 'VARBORG.Defence.RaiseTooltip'}}" aria-label="{{localize 'VARBORG.Defence.RaiseTooltip'}}">
+        <i class="fa-solid fa-shield-halved"></i>
+      </button>
+      {{/if}}
+      {{#if canCast}}
+      <button type="button" class="icon-button" data-action="castSpell"
+              data-tooltip="{{localize 'VARBORG.Spell.ScrollCastTooltip'}}" aria-label="{{localize 'VARBORG.Spell.ScrollCastTooltip'}}">
+        <i class="fa-solid fa-scroll"></i>
+      </button>
+      {{/if}}
+      {{#if canMedicine}}
+      <button type="button" class="icon-button" data-action="useMedicine"
+              data-tooltip="{{localize 'VARBORG.Medicine.Tooltip'}}" aria-label="{{localize 'VARBORG.Medicine.Tooltip'}}">
+        <i class="fa-solid fa-kit-medical"></i>
+      </button>
+      {{/if}}
+      {{#if canLight}}
+      <button type="button" class="icon-button" data-action="lightItem"
+              data-tooltip="{{localize 'VARBORG.Light.Tooltip'}}" aria-label="{{localize 'VARBORG.Light.Tooltip'}}">
+        <i class="fa-solid fa-fire-flame-curved"></i>
+      </button>
+      {{/if}}
+      {{#if canExpendable}}
+      <button type="button" class="icon-button" data-action="rollExpendable"
+              data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"
+              aria-label="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}">
+        <i class="fa-solid fa-dice-six"></i>
+      </button>
+      {{/if}}
+      {{#if item.system.sustaining}}
+      <button type="button" class="text-button" data-action="sustainPower" data-tooltip="{{localize 'VARBORG.Power.SustainTooltip'}}">
+        ◈ {{localize "VARBORG.Power.Sustain"}}
+      </button>
+      <button type="button" class="text-button" data-action="endPower" data-tooltip="{{localize 'VARBORG.Power.EndTooltip'}}">
+        {{localize "VARBORG.Power.End"}}
+      </button>
+      {{/if}}
+      {{#if isPower}}
+      <button type="button" class="icon-button" data-action="usePower"
+              data-tooltip="{{localize 'VARBORG.Power.UseTooltip'}}" aria-label="{{localize 'VARBORG.Power.UseTooltip'}}">
+        <i class="fa-solid fa-fire"></i>
+      </button>
+      {{/if}}
+      {{#if isSpell}}
+      <button type="button" class="icon-button" data-action="castSpell"
+              data-tooltip="{{localize 'VARBORG.Spell.CastTooltip'}}" aria-label="{{localize 'VARBORG.Spell.CastTooltip'}}">
+        <i class="fa-solid fa-wand-sparkles"></i>
+      </button>
+      {{/if}}
+      {{#if isRelic}}
+      <button type="button" class="icon-button use-limited" data-action="useRelic" {{#unless canUseRelic}}disabled{{/unless}}
+              data-tooltip="{{relicUseTooltip}}" aria-label="{{relicUseTooltip}}">
+        <i class="fa-solid {{#if relicDaily}}fa-dice-d20{{else}}fa-hand-sparkles{{/if}}"></i>
+      </button>
+      {{else}}
+      {{> "systems/var-borg/templates/actor/use-button.hbs"}}
+      {{/if}}
+    </li>
+    {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
+    {{else}}
+    <li class="empty">{{localize "VARBORG.Sheet.NoActions"}}</li>
+    {{/each}}
+  </ul>
+</section>

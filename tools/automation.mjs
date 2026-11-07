@@ -27,12 +27,14 @@ export function automationEntries(files) {
     const ownDamage = ["power", "spell", "weapon"].includes(item.type) && String(item.system?.damage ?? "").trim() ? 1 : 0;
     // A gloom ability's own conditions, which its card gives (Hawk's Cry: Frightened, step 52d).
     const ownConditions = Object.values(item.system?.conditions ?? {}).filter(Boolean).length;
+    // A relic's Ember pool gain, which its Use button adds (the Shard of the Great Brazier, step 53a).
+    const ownEmber = item.type === "relic" && item.system?.emberGain > 0 ? 1 : 0;
     entries.push({
       folder,
       name: owner ? `${owner}: ${item.name}` : item.name,
       type: item.type,
       status: item.system?.automation ?? "",
-      effects: effects.length + outcomes.length + ownDamage + ownConditions,
+      effects: effects.length + outcomes.length + ownDamage + ownConditions + ownEmber,
       rawEffects: effects
     });
   };

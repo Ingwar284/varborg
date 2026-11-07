@@ -416,6 +416,21 @@ test("relics are once per day; those rolled once per day are always on; the Shar
   assert.deepEqual(relics.filter(r => r.system.alwaysOn).map(r => r.name).sort(), ["Directorate compass", "Gasman's rebreather"]);
 });
 
+test("step 53a: every relic has a status; the four named relics have their effects", () => {
+  for (const r of relics) assert.ok(["auto", "partial", "text"].includes(r.system.automation), r.name);
+  const byName = name => relics.find(r => r.name === name);
+  const knuckle = byName("Saint's knucklebone").system.effects;
+  assert.deepEqual(knuckle.map(e => [e.kind, e.event, e.action, e.keep]), [["hook", "deathsDoor", "rollTwice", "choose"]]);
+  const vex = byName("Vex's loaded die").system.effects;
+  assert.deepEqual(vex.map(e => e.action), Array(6).fill("flip"));
+  assert.deepEqual(vex.map(e => e.roll).sort(), ["attack", "defence", "gloomTest", "power", "spell", "test"]);
+  const antler = byName("Antler of the Glass Stag").system.effects;
+  assert.deepEqual(antler.map(e => [e.kind, e.condition]), [["immune", "charmed"], ["immune", "frightened"]]);
+  const tallow = byName("Hearth-tallow of Anashe").system;
+  assert.deepEqual(tallow.effects.map(e => e.action), ["guardRest"]);
+  assert.equal(tallow.automation, "partial");
+});
+
 // 48i: foes and minions (every stat block in the rules).
 const foeActors = readAll(join(root, "content", "foes")).map(({ data }) => data);
 const minionActors = readAll(join(root, "content", "minions")).map(({ data }) => data);

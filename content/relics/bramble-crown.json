@@ -17,6 +17,7 @@
     "faction": "the Wardens of the Flow",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

@@ -17,6 +17,7 @@
     "faction": "the Worshipful Company of Smiths and Metalmasters",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

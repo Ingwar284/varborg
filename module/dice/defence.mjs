@@ -216,7 +216,7 @@ export async function settleDefenceCard(actor, data) {
     rolls.push(roll);
     state.dice = diceOf(roll);
   }
-  const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr });
+  const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr, flipped: Boolean(state.flipped) });
   const tier = fortuneTier(result.tier, state.softened);
   state.tier = tier;
   const outcome = defenceOutcome(tier);

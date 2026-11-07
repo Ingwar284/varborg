@@ -19,7 +19,7 @@
 
 import { FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD, canSpend, spend, dialogCost, availableSpends } from "./rules/fortune.mjs";
 import { collectEffects, cardButtons, betterMode, ALLIES, interceptedDamage } from "./rules/item-effects.mjs";
-import { diceFormula } from "./rules/test-roll.mjs";
+import { diceFormula, keptDie, flippedDie } from "./rules/test-roll.mjs";
 import { rollShadowblight } from "./shadowblight.mjs";
 import { hasFrequency } from "./rules/uses.mjs";
 
@@ -39,6 +39,12 @@ const BEND = "lowerReroll";
 /** An ally's button: they take the damage instead (GAPS 229). */
 const INTERCEPT = "intercept";
 
+/** An item button that turns the kept d20 over (Vex's loaded die, step 53a). */
+const FLIP = "flip";
+
+/** Item buttons whose kind is written after the item id ("item:<id>:<kind>"). */
+const NAMED_KINDS = [SUCCESS, LOWER, BEND, INTERCEPT, FLIP];
+
 /**
  * The item id and action of an item button, and the actor whose item it is
  * when that is another character ("item:actorId.itemId", Call upon the
@@ -47,7 +53,7 @@ const INTERCEPT = "intercept";
 function itemAction(action) {
   const [ref, kind] = action.slice(ITEM_PREFIX.length).split(":");
   const [ownerId, itemId] = ref.includes(".") ? ref.split(".") : [null, ref];
-  return { itemId, ownerId, kind: [SUCCESS, LOWER, BEND, INTERCEPT].includes(kind) ? kind : SPEND.REROLL };
+  return { itemId, ownerId, kind: NAMED_KINDS.includes(kind) ? kind : SPEND.REROLL };
 }
 
 /**
@@ -149,14 +155,14 @@ export async function fortuneSection(data, shown) {
     // Taking an ally's damage is only for others' cards (GAPS 229).
     ? [...cardButtons(collectEffects(actor.items).filter(effect => effect.action !== "intercept"), cardRoll(data), card), ...allyButtons(actor, cardRoll(data), card)]
     : [];
-  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${[SUCCESS, LOWER, BEND, INTERCEPT].includes(entry.action) ? `:${entry.action}` : ""}`;
+  const keyOf = entry => `${ITEM_PREFIX}${entry.ownerId ? `${entry.ownerId}.` : ""}${entry.itemId}${NAMED_KINDS.includes(entry.action) ? `:${entry.action}` : ""}`;
   data.offered.push(...items.map(keyOf));
   return renderTemplate(BUTTONS_TEMPLATE, {
     buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
       ? {
         action,
-        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL], [INTERCEPT]: "fa-solid fa-shield-heart" }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
-        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton", [INTERCEPT]: "VARBORG.Effects.InterceptButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
+        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL], [INTERCEPT]: "fa-solid fa-shield-heart", [FLIP]: "fa-solid fa-arrows-up-down" }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
+        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton", [INTERCEPT]: "VARBORG.Effects.InterceptButton", [FLIP]: "VARBORG.Effects.FlipButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
           { item: items.find(entry => action === keyOf(entry))?.item ?? "", amount: items.find(entry => action === keyOf(entry))?.amount ?? "" })
       }
       : {
@@ -170,7 +176,7 @@ export async function fortuneSection(data, shown) {
     log: data.state.log.map(entry => (entry.failedAgain
       ? i18n.format("VARBORG.Effects.FailedAgain", { item: entry.item, note: entry.note || i18n.localize("VARBORG.Effects.SeeText") })
       : entry.item
-      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog", [INTERCEPT]: "VARBORG.Effects.InterceptLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
+      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog", [INTERCEPT]: "VARBORG.Effects.InterceptLog", [FLIP]: "VARBORG.Effects.FlipLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
       : i18n.format("VARBORG.Fortune.Spent", {
         name: entry.name,
         use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
@@ -278,6 +284,8 @@ async function applyFortune({ messageId, action, spenderUuid }) {
   let failAgain = null;
   let lowerEffect = null;
   let rerollEffect = null;
+  // A relic used on a card rolls its Expendable d20 afterwards (rules 4.2, step 53a).
+  let relic = null;
   if (action.startsWith(ITEM_PREFIX)) {
     // An item's reroll or Success: its use is spent instead of Fortune
     // (steps 49g, 50b2).
@@ -297,6 +305,7 @@ async function applyFortune({ messageId, action, spenderUuid }) {
     entry.action = kind;
     entry.item = item.name;
     entry.itemId = item.id;
+    if (item.type === "relic") relic = item;
     const effect = collectEffects([item]).find(found => found.kind === "use" && found.action === kind && found.roll === cardRoll(data));
     failAgain = effect?.failAgain ? effect : null;
     lowerEffect = [LOWER, BEND, INTERCEPT].includes(kind) ? effect : null;
@@ -323,7 +332,18 @@ async function applyFortune({ messageId, action, spenderUuid }) {
       state.dice = null;
       state.softened = false;
       state.succeeded = false;
+      state.flipped = false;
       break;
+    case FLIP: {
+      // Vex's loaded die (rules 4.2): "the result becomes 21 minus the
+      // roll. The new number is not a natural 1 or 20." Once per card.
+      if (!state.dice?.length || state.flipped) break;
+      const mode = data.inputs.mode ?? data.inputs.diceRule;
+      const kept = keptDie(state.dice.map(die => die.value), mode);
+      state.flipped = true;
+      entry.value = `${kept} → ${flippedDie(kept)}`;
+      break;
+    }
     case SUCCESS:
       state.succeeded = true;
       break;
@@ -401,6 +421,10 @@ async function applyFortune({ messageId, action, spenderUuid }) {
     [`flags.${SYSTEM}.${FLAG}`]: data
   });
   if (rolls.length || extraRolls.length) foundry.audio.AudioHelper.play({ src: CONFIG.sounds.dice }, true);
+  if (relic) {
+    const { rollRelicDie } = await import("./relics.mjs");
+    await rollRelicDie(relic.actor, relic);
+  }
   return { ok: true };
 }
 

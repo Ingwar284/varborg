@@ -17,6 +17,7 @@
     "faction": "the Iron Ledger Society",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

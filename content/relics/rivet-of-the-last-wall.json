@@ -17,6 +17,7 @@
     "faction": "the Brotherhood of the Forge-Heart",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

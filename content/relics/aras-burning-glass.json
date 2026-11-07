@@ -17,6 +17,7 @@
     "faction": "the Solar Conclave",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

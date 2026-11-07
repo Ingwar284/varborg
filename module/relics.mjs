@@ -13,6 +13,13 @@
  * shown; every card that destroys it shows the drawback too. The Dark
  * Master unticks Destroyed on the relic's sheet when it is recovered.
  *
+ * Step 53a: a relic's effects work like a feat's. Its Use button runs its
+ * Use effects (guard the next rest: Hearth-tallow of Anashe). A relic
+ * whose effect fires by itself (a hook: Saint's knucklebone at Death's
+ * Door; a once-per-day immunity: the Antler of the Glass Stag) or from a
+ * card button (Vex's loaded die) spends its use there, and then rolls its
+ * Expendable d20 on a card of its own (rollRelicDie).
+ *
  * The maths lives in module/rules/relics.mjs.
  */
 
@@ -21,6 +28,8 @@ import {
 } from "./rules/relics.mjs";
 import { hasFrequency } from "./rules/uses.mjs";
 import { runningCombat, gainEmber } from "./pools.mjs";
+import { collectEffects, useEffects, CARD_ACTIONS } from "./rules/item-effects.mjs";
+import { doEffectAction } from "./effects.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -96,6 +105,16 @@ export async function useRelic(actor, item) {
   const frequency = relicFrequency(system);
   if (hasFrequency({ frequency })) await item.update({ "system.frequencyUsed": true });
 
+  // Its Use effects, as a feat's Use button does (step 53a). Card buttons
+  // (Vex's loaded die) are pressed on the card instead.
+  const done = [];
+  const effectRolls = [];
+  for (const effect of useEffects(collectEffects([item])).filter(effect => !CARD_ACTIONS.includes(effect.action))) {
+    const result = await doEffectAction(actor, effect);
+    done.push(...result.lines);
+    effectRolls.push(...result.rolls);
+  }
+
   const roll = await new Roll(RELIC_DIE).evaluate();
   const { destroyed } = afterUse(roll.total);
   if (destroyed) await item.update({ "system.destroyed": true });
@@ -107,6 +126,7 @@ export async function useRelic(actor, item) {
     frequency ? `<p class="sum">${i18n.format("VARBORG.Uses.CardLine", { frequency: frequencyText(system) })}</p>` : "",
     effect ? `<p>${effect}</p>` : "",
     ember.gain ? `<p class="modifier">${i18n.format("VARBORG.Relic.GainLine", { amount: ember.gain })}</p>` : "",
+    ...done.map(line => `<p class="modifier">${esc(line)}</p>`),
     `<p class="relic-roll">${i18n.format("VARBORG.Relic.Roll", { roll: roll.total })} `
       + `<strong>${i18n.localize(destroyed ? "VARBORG.Relic.UsedUp" : "VARBORG.Relic.Holds")}</strong></p>`,
     destroyed ? drawbackLine(system) : ""
@@ -115,7 +135,7 @@ export async function useRelic(actor, item) {
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content: `<div class="var-borg-card relic-card"><h3>${title}</h3>${lines.join("")}</div>`,
-    rolls: [roll],
+    rolls: [...effectRolls, roll],
     sound: CONFIG.sounds.dice
   });
 }
@@ -154,6 +174,37 @@ export async function performLastRite(actor, item) {
       + drawbackLine(system)
       + `</div>`
   });
+}
+
+/**
+ * After a relic's effect was used somewhere other than its Use button (a
+ * hook, an immunity, a card button: step 53a): roll its Expendable d20 on
+ * a card of its own, and destroy it on a 1 (rules 4.2: "After each use,
+ * roll a d20"). Run by whichever client spent the use.
+ * @param {Actor} actor
+ * @param {Item} item  The relic.
+ * @returns {Promise<boolean>}  Whether the relic was destroyed.
+ */
+export async function rollRelicDie(actor, item) {
+  if (!actor || item?.type !== "relic" || item.system.destroyed) return false;
+  const i18n = game.i18n;
+  const esc = foundry.utils.escapeHTML;
+  const roll = await new Roll(RELIC_DIE).evaluate();
+  const { destroyed } = afterUse(roll.total);
+  if (destroyed) await item.update({ "system.destroyed": true });
+  const title = i18n.format("VARBORG.Relic.DieTitle", { name: esc(actor.name), item: esc(item.name) });
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    flavor: title,
+    content: `<div class="var-borg-card relic-card"><h3>${title}</h3>`
+      + `<p class="relic-roll">${i18n.format("VARBORG.Relic.Roll", { roll: roll.total })} `
+      + `<strong>${i18n.localize(destroyed ? "VARBORG.Relic.UsedUp" : "VARBORG.Relic.Holds")}</strong></p>`
+      + (destroyed ? drawbackLine(item.system) : "")
+      + `</div>`,
+    rolls: [roll],
+    sound: CONFIG.sounds.dice
+  });
+  return destroyed;
 }
 
 /** The drawback on a card: "If lost or destroyed: …". */

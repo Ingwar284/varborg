@@ -12,6 +12,7 @@
  */
 
 import { withStat } from "./item-effects.mjs";
+import { droppedContainerIds, isDropped } from "./dropped.mjs";
 
 /** A creature moves 20' in one Move action unless told otherwise (rules 3.7). */
 export const BASE_MOVEMENT = 20;
@@ -88,7 +89,10 @@ export function isCumbersomeByDefault(type, system) {
  * @returns {{cumbersome: number, limit: number, state: string, movement: number}}
  */
 export function carrying(items, toughness, bonuses = {}) {
-  const cumbersome = items.filter(countsAsCumbersome).reduce((sum, item) => sum + itemCount(item), 0);
+  // Dropped items are not carried (GAPS 254).
+  const droppedIds = droppedContainerIds(items);
+  const cumbersome = items.filter(item => !isDropped(item, droppedIds) && countsAsCumbersome(item))
+    .reduce((sum, item) => sum + itemCount(item), 0);
   const limit = Math.max(1, withStat(cumbersomeLimit(toughness), bonuses.carryLimit));
   const state = carryingState(cumbersome, limit);
   const moves = state === "overloaded" ? 0 : Math.max(0, withStat(movement(state), bonuses.movement));

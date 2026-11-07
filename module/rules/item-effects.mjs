@@ -23,6 +23,7 @@ import { ABILITIES, clampAbility } from "./abilities.mjs";
 import { CONDITIONS } from "./conditions.mjs";
 import { DAMAGE_TYPES } from "./equipment.mjs";
 import { heldBackByDamage, parseDamageTypes } from "./foe-hooks.mjs";
+import { droppedContainerIds, isDropped } from "./dropped.mjs";
 
 /** Every kind of effect, in the order the sheet offers them. */
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist", "gift"];
@@ -32,12 +33,35 @@ export const BUILT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice",
 
 /**
  * The conditions the items' immune effects keep off (Incorruptible:
- * Charmed, step 50e). Foes use the same in step 52a.
+ * Charmed, step 50e). Foes use the same in step 52a. An immunity on an
+ * item with a limited use (the Antler of the Glass Stag: once per day,
+ * step 53a) only counts while that use is not spent.
  * @param {object[]} effects  From collectEffects.
  * @returns {Set<string>}
  */
 export function immuneConditions(effects) {
-  return new Set((effects ?? []).filter(effect => effect.kind === "immune" && effect.condition).map(effect => effect.condition));
+  return new Set(workingImmunities(effects).map(effect => effect.condition));
+}
+
+/** The immune effects that work now: not on an item whose use is spent. */
+function workingImmunities(effects) {
+  return (effects ?? []).filter(effect => effect.kind === "immune" && effect.condition && !(effect.frequency && effect.used));
+}
+
+/**
+ * Whether a condition is kept off, and which limited use it costs (step
+ * 53a). An immunity with no limit is used first, so it costs nothing;
+ * otherwise the first limited one is spent ("Once per day, when you would
+ * become Charmed or Frightened, you do not").
+ * @param {object[]} effects   From collectEffects.
+ * @param {string} condition
+ * @returns {{blocked: boolean, spends: object|null}}  spends: the effect whose item's use is spent.
+ */
+export function immunityTo(effects, condition) {
+  const found = workingImmunities(effects).filter(effect => effect.condition === condition);
+  if (!found.length) return { blocked: false, spends: null };
+  if (found.some(effect => !effect.frequency)) return { blocked: true, spends: null };
+  return { blocked: true, spends: found[0] };
 }
 
 /**
@@ -244,7 +268,11 @@ export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll
   // targeted foe's name into the item's text choice (GAPS 214).
   "makeCompanion", "mount", "raiseThrall", "thrallAttack", "recordKind",
   // A buff item ends itself (a Morph's Revert, GAPS 226).
-  "endBuff"];
+  "endBuff",
+  // Step 53a: a button on the owner's d20 test cards turns the kept die
+  // over, 21 minus the roll (Vex's loaded die); the party's next rest
+  // cannot be interrupted (Hearth-tallow of Anashe).
+  "flip", "guardRest"];
 
 /**
  * Use actions that are done on their own: an item with one of these and
@@ -334,7 +362,10 @@ export const CARD_ACTIONS = ["reroll", "success", "lowerDamage",
   // Another character takes the damage instead, all of it or (amount
   // "half") half, through their own armour (Guardian, Faithful
   // intercession, GAPS 229).
-  "intercept"];
+  "intercept",
+  // The kept d20 is turned over: 21 minus the roll, not a natural 1 or 20
+  // (Vex's loaded die, step 53a).
+  "flip"];
 
 /**
  * The damage a protector takes for an ally (GAPS 229): all of it, or half
@@ -786,8 +817,10 @@ export function isActive(item) {
  */
 export function collectEffects(items) {
   const found = [];
+  // A dropped item's effects stop until it is picked up (GAPS 254).
+  const droppedIds = droppedContainerIds([...(items ?? [])]);
   for (const item of items ?? []) {
-    if (!isActive(item)) continue;
+    if (!isActive(item) || isDropped(item, droppedIds)) continue;
     (item.system?.effects ?? []).forEach((effect, index) => {
       // The item's limited use (once per day…), for hooks (step 49f).
       found.push({

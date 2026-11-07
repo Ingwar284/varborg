@@ -340,10 +340,19 @@ async function companionAction(actor, effect) {
 }
 
 /** Mark an item's limited use spent (once per day and so on). */
-async function markUsed(actor, itemId) {
+export async function markUsed(actor, itemId) {
   const item = actor.items.get(itemId);
-  if (item && !item.system.frequencyUsed) await item.update({ "system.frequencyUsed": true });
+  if (!item || item.system.frequencyUsed) return;
+  await item.update({ "system.frequencyUsed": true });
+  // A relic rolls its Expendable d20 after each use (rules 4.2, step 53a).
+  if (item.type === "relic") {
+    const { rollRelicDie } = await import("./relics.mjs");
+    await rollRelicDie(actor, item);
+  }
 }
+
+/** The flag on a character whose relic guards the party's next rest (step 53a). */
+export const REST_GUARD_FLAG = "restGuard";
 
 /**
  * Do one hook's or Use effect's action: heal, roll, add to the Ember
@@ -523,6 +532,12 @@ export async function doEffectAction(actor, effect, context = {}) {
     // Items that act when a surge occurs (Harmonious Light, Surge Surfer).
     await runItemHooks(actor, "surge");
     return { lines: [i18n.format(table ? "VARBORG.Effects.Surge" : "VARBORG.Effects.SurgeNoTable", { item, total: roll.total })], rolls: [roll], acted: true };
+  }
+  if (effect.action === "guardRest") {
+    // Hearth-tallow of Anashe (step 53a): lit when the party begins a
+    // rest, that rest cannot be interrupted. The Rest button reads it.
+    await actor.setFlag("var-borg", REST_GUARD_FLAG, item);
+    return { lines: [i18n.format("VARBORG.Effects.RestGuarded", { item, note })], rolls: [], acted: true };
   }
   if (effect.action === "chanceDie") {
     // Pack Rat (step 50b2): the Chance Die posts its own card.

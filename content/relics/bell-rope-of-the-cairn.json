@@ -17,6 +17,7 @@
     "faction": "the Silent Fraternity of the Cairn",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

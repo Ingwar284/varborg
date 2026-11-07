@@ -45,6 +45,13 @@
       "Fortune": "Fortune",
       "Silver": "Silver (s)",
       "Details": "Details",
+      "ConditionStripHint": "Active conditions. Click to open the Conditions tab.",
+      "History": "History",
+      "DescriptionHint": "Click to show or hide the description.",
+      "NoDescription": "No description.",
+      "Actions": "Actions",
+      "ActionsHint": "What this character can do: equipped or loose items with a button, powers, spells and feats with a Use button. Items packed in a container or dropped are not listed.",
+      "NoActions": "Nothing to use yet. Carry or equip an item, or add a power, spell or usable feat.",
       "Personality": "Personality traits",
       "PhysicalMark": "Physical mark",
       "Idiosyncrasy": "Idiosyncrasy",
@@ -64,7 +71,12 @@
       "Container": "VÅR BORG container sheet",
       "Tab": {
         "main": "Character",
-        "inventory": "Inventory"
+        "conditions": "Conditions",
+        "ConditionsCount": "Conditions ({count})",
+        "feats": "Feats",
+        "powers": "Powers & spells",
+        "inventory": "Inventory",
+        "details": "Details"
       },
       "Inventory": {
         "weapon": "Weapons",
@@ -346,6 +358,7 @@
       "Hint": "A container lets you find what you need. It does not raise your cumbersome limit.",
       "Holds": "{count}/{capacity} items",
       "Loose": "Carried loose",
+      "Dropped": "Dropped",
       "StoredIn": "Stored in"
     },
     "Carrying": {
@@ -520,6 +533,7 @@
       "Interrupted": "Interrupted",
       "AteHint": "Ate and drank counts for a Long rest and Downtime only. Without it the rest gives no benefit.",
       "InterruptedHint": "Interrupted: the character tests Toughness DR{dr}. On a Failure the rest gives no benefit.",
+      "Guarded": "{item} ({name}): the rest cannot be interrupted.",
       "InterruptedPurpose": "Interrupted rest",
       "Begin": "Rest",
       "Cancelled": "The rest was cancelled. Nothing has changed.",
@@ -875,6 +889,7 @@
     },
     "Persistent": {
       "Label": "Persistent damage",
+      "None": "No persistent damage.",
       "TypeLabel": "Damage type",
       "Type": {
         "fire": "Fire",
@@ -945,6 +960,7 @@
         "Fatigued": "The effort costs them: Fatigued, level {level}."
       },
       "Remove": "Remove this Panic result",
+      "None": "No Panic results.",
       "Add": "Add a Panic result…",
       "AddHint": "Dark Master only. Gives the character a lasting Panic result, with its 1d10 duration rolled.",
       "LostSanity": "Lost Sanity",
@@ -1072,6 +1088,8 @@
       "Spared": "{name} does not die (see the card above).",
       "ByHand": "The system does not apply this. The Dark Master decides what happens.",
       "Remove": "Remove this injury",
+      "InjuriesTitle": "Injuries",
+      "None": "No injuries.",
       "Result": {
         "knockedProne": {
           "name": "Knocked prone",
@@ -2271,6 +2289,7 @@
       "UsedUp": "Used up: the relic is destroyed!",
       "IsDestroyed": "{item} is destroyed. Untick Destroyed on it if it is recovered.",
       "NeedsCombat": "{item} adds to the Ember pool, and there is no pool outside combat.",
+      "DieTitle": "{name} used {item}",
       "LastRiteAskTitle": "Last Rite: {item}",
       "LastRiteAsk": "Burn {item} out for its Last Rite? It always works, and the relic is destroyed.",
       "LastRiteTitle": "{name} performs the Last Rite of {item}",
@@ -2812,7 +2831,9 @@
         "testButton": "The attacker tests (button)",
         "targetCondition": "The creature it hit gains a condition",
         "targetPersistent": "The creature it hit takes persistent damage",
-        "dropToOne": "The first time: stay at 1 HP instead"
+        "dropToOne": "The first time: stay at 1 HP instead",
+        "flip": "Card button: turn the kept d20 over (21 minus the roll)",
+        "guardRest": "The party's next rest cannot be interrupted"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -2889,6 +2910,8 @@
       "LowerLog": "{name} uses {item}: damage {value}",
       "FeatLowered": "Lowered by feats (at least 1)",
       "ImmuneCondition": "{name} is immune to {condition}.",
+      "ImmuneSpent": "{item} keeps {condition} off {name}. It is used until it comes back.",
+      "RestGuarded": "{item}: {note}",
       "CompanionLabel": "Which companion",
       "Companion": {
         "minion": "A minion you own",
@@ -3028,6 +3051,8 @@
       "Stayed": "{item}: {name} collapses dramatically but stays at 1 HP. As long as they do not act, they look dead.",
       "InterceptButton": "{item}: take the damage instead",
       "InterceptLog": "{name} uses {item} and takes {value} damage instead.",
+      "FlipButton": "Turn over ({item})",
+      "FlipLog": "{name} uses {item}: the die is turned over ({value}), not a natural 1 or 20",
       "Intercepted": "{name} takes it instead: {taken} damage after their armour. This character takes none.",
       "UnlessDamagedLabel": "Unless it took",
       "UnlessDamagedHint": "Not if it took damage of these types since its last turn, such as \"fire, acid\" (Regeneration). Types: blunt, bleeding, shot, fire, gore, poison, acid, lightning, radiant.",

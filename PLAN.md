@@ -1443,9 +1443,21 @@ regeneration.
 ## Milestone 13: Relics and gear
 
 53. **Relics and gear.**
-    - 53a. Relics (22): uses and hooks (Saint's knucklebone, Vex's loaded
-      die, Antler of the Glass Stag, Hearth-tallow). Last Rites and
-      drawbacks stay text.
+    - ~~53a. Relics (22): uses and hooks (GAPS 253, resolved).~~ Done: every relic
+      has a status (5 auto, 1 partial, 16 text); a status covers the
+      relic's effect, while Last Rites and drawbacks stay text. A relic's
+      Use button now runs its Use effects. A relic spent anywhere else (a
+      hook, an immunity, a card button) rolls its Expendable d20 on a card
+      of its own and is destroyed on a 1. Saint's knucklebone: roll twice
+      and choose on Death's Door. Vex's loaded die: a "Turn over" button on
+      its owner's test, attack, defence, gloom, power and spell cards (21
+      minus the kept die, never a natural 1 or 20; a reroll undoes it).
+      Antler of the Glass Stag: once-per-day immunity to Charmed and
+      Frightened, spent when it keeps one off (an unlimited immunity is
+      used first). Hearth-tallow of Anashe (partial): Use when the party
+      begins a rest; the Dark Master's next Rest ignores the Interrupted
+      ticks and says why. The Shard's Ember gain counts as its effect in
+      the report. EFFECTS_CONTENT 31.
     - 53b. Gear and weapons: poisons (a Toughness button and a condition),
       thrown area items and grenades (area targets of 51b), the
       blunderbuss's damage by range, lockpicks with a die per result (GAPS

@@ -1,15 +1,4 @@
 <section class="tab var-borg-sheet {{tabs.inventory.cssClass}}" data-group="primary" data-tab="inventory">
-  <section class="carrying carrying-{{carrying.state}}">
-    <h2>{{localize "VARBORG.Carrying.Title"}}</h2>
-    <p class="carrying-line">
-      <span>{{localize "VARBORG.Carrying.CumbersomeCount" cumbersome=carrying.cumbersome limit=carrying.limit}}</span>
-      <span class="carrying-state">{{localize carrying.stateLabel}}</span>
-      <span>{{localize "VARBORG.Carrying.Movement"}}: {{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
-    </p>
-    <p class="hint">{{localize (concat "VARBORG.Carrying.Hint." carrying.state)}}</p>
-    {{#if carrying.effects}}<p class="hint">{{carrying.effects}}</p>{{/if}}
-  </section>
-
   {{#if system.attackRuin}}
   <section class="attack-ruin">
     <p><strong>{{localize "VARBORG.Attack.RuinedTitle"}}</strong> {{localize "VARBORG.Attack.RuinedHint"}}</p>
@@ -33,25 +22,20 @@
     <h3>{{localize section.label}}</h3>
     <ul class="item-list">
       {{#each section.items}}
-      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}{{#if relicDestroyed}} used-up{{/if}}" data-item-id="{{item.id}}">
-        {{#if section.canEquip}}
-        <button type="button" class="icon-button" data-action="toggleEquipped"
-                data-tooltip="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}"
-                aria-label="{{localize (ifThen item.system.equipped 'VARBORG.Sheet.Equipment.Unequip' 'VARBORG.Sheet.Equipment.Equip')}}">
-          <i class="{{#if item.system.equipped}}fa-solid fa-circle-check{{else}}fa-regular fa-circle{{/if}}"></i>
-        </button>
-        {{/if}}
+      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}{{#if relicDestroyed}} used-up{{/if}}{{#if dropped}} dropped{{/if}}" data-item-id="{{item.id}}">
         <img src="{{item.img}}" alt="">
         {{#if section.hasQuantity}}
         <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="1" step="1"
                aria-label="{{localize 'VARBORG.Item.Quantity'}}" data-tooltip="{{localize 'VARBORG.Item.Quantity'}}">
         {{/if}}
-        <span class="item-name">{{item.name}}</span>
+        <button type="button" class="link-button item-name" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}">{{item.name}}</button>
         <span class="item-summary">{{summary}}</span>
         {{#if drawback}}<span class="relic-drawback" data-tooltip="{{localize 'VARBORG.Relic.DrawbackHint'}}">{{drawback}}</span>{{/if}}
         {{#each states}}
         <span class="item-state {{key}}">{{localize label}}</span>
         {{/each}}
+        {{#if dropped}}<span class="item-state dropped">{{localize "VARBORG.Container.Dropped"}}</span>{{/if}}
+        {{#unless dropped}}
         {{#if canAttack}}
         <button type="button" class="icon-button" data-action="attack"
                 data-tooltip="{{localize 'VARBORG.Attack.Tooltip'}}" aria-label="{{localize 'VARBORG.Attack.Tooltip'}}">
@@ -112,12 +96,11 @@
           <i class="fa-solid fa-dice-six"></i>
         </button>
         {{/if}}
-        {{#if section.canStore}}
+        {{/unless}}
         <select class="stored-in" data-stored-in aria-label="{{localize 'VARBORG.Container.StoredIn'}}"
                 data-tooltip="{{localize 'VARBORG.Container.StoredIn'}}">
-          {{selectOptions @root.containerOptions selected=storedIn}}
+          {{selectOptions section.menuOptions selected=storedIn}}
         </select>
-        {{/if}}
         <button type="button" class="icon-button cumbersome-toggle{{#if item.system.cumbersome}} active{{/if}}" data-action="toggleCumbersome"
                 data-tooltip="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
                 aria-label="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
@@ -133,6 +116,7 @@
           <i class="fa-solid fa-trash"></i>
         </button>
       </li>
+      {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
       {{else}}
       <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
       {{/each}}
@@ -140,4 +124,22 @@
   </section>
   {{/each}}
   <p class="hint">{{localize "VARBORG.Sheet.Equipment.DropHint"}}</p>
+
+  <section class="resources silver-footer">
+    <label class="resource">
+      <span>{{localize "VARBORG.Sheet.Silver"}}</span>
+      <input type="number" name="system.silver" value="{{system.silver}}" min="0" step="1">
+    </label>
+  </section>
+
+  <section class="carrying carrying-{{carrying.state}}">
+    <h2>{{localize "VARBORG.Carrying.Title"}}</h2>
+    <p class="carrying-line">
+      <span>{{localize "VARBORG.Carrying.CumbersomeCount" cumbersome=carrying.cumbersome limit=carrying.limit}}</span>
+      <span class="carrying-state">{{localize carrying.stateLabel}}</span>
+      <span>{{localize "VARBORG.Carrying.Movement"}}: {{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
+    </p>
+    <p class="hint">{{localize (concat "VARBORG.Carrying.Hint." carrying.state)}}</p>
+    {{#if carrying.effects}}<p class="hint">{{carrying.effects}}</p>{{/if}}
+  </section>
 </section>

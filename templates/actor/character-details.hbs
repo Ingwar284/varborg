@@ -1,0 +1,60 @@
+<section class="tab var-borg-sheet {{tabs.details.cssClass}}" data-group="primary" data-tab="details">
+  <section class="inventory-section origins">
+    <h2 class="heading-with-button"><span data-tooltip="{{localize 'VARBORG.Origin.DropHint'}}">{{localize "VARBORG.Origin.Heading"}}</span>
+      {{#if editable}}
+      <button type="button" class="text-button" data-action="openCreation" data-tooltip="{{localize 'VARBORG.Creation.Tooltip'}}">
+        <i class="fa-solid fa-user-plus"></i> {{localize "VARBORG.Creation.Button"}}
+      </button>
+      {{/if}}
+    </h2>
+    <ul class="item-list">
+      {{#each origins}}
+      {{#if item}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><span class="item-summary">{{localize label}}:</span> <button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span></span>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
+      {{else}}
+      <li class="empty">{{localize label}}: {{localize "VARBORG.Origin.NoneYet"}}</li>
+      {{/if}}
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="details">
+    <h2>{{localize "VARBORG.Sheet.Details"}}</h2>
+    <label>
+      <span>{{localize "VARBORG.Sheet.History"}}</span>
+      <textarea name="system.details.history" rows="8">{{system.details.history}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.Personality"}}</span>
+      <textarea name="system.details.personality" rows="2">{{system.details.personality}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.PhysicalMark"}}</span>
+      <textarea name="system.details.physicalMark" rows="2">{{system.details.physicalMark}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.Idiosyncrasy"}}</span>
+      <textarea name="system.details.idiosyncrasy" rows="2">{{system.details.idiosyncrasy}}</textarea>
+    </label>
+    <label>
+      <span>{{localize "VARBORG.Sheet.CallToAdventure"}}</span>
+      <textarea name="system.details.callToAdventure" rows="2">{{system.details.callToAdventure}}</textarea>
+    </label>
+    <label data-tooltip="{{localize 'VARBORG.Panic.PhobiasHint'}}">
+      <span>{{localize "VARBORG.Panic.Phobias"}}</span>
+      <textarea name="system.phobias" rows="2">{{system.phobias}}</textarea>
+    </label>
+  </section>
+</section>

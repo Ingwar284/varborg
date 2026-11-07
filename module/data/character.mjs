@@ -90,7 +90,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
         personality: new StringField({ required: true, initial: "" }),
         physicalMark: new StringField({ required: true, initial: "" }),
         idiosyncrasy: new StringField({ required: true, initial: "" }),
-        callToAdventure: new StringField({ required: true, initial: "" })
+        callToAdventure: new StringField({ required: true, initial: "" }),
+        // Free notes on the character's past; not a rule, just for the player.
+        history: new StringField({ required: true, initial: "" })
       })
     };
   }

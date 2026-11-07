@@ -17,6 +17,7 @@
     "faction": "the Shroud Brethren",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

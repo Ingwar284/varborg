@@ -1,34 +1,4 @@
 <section class="tab var-borg-sheet {{tabs.main.cssClass}}" data-group="primary" data-tab="main">
-  <section class="inventory-section origins">
-    <h2 class="heading-with-button"><span data-tooltip="{{localize 'VARBORG.Origin.DropHint'}}">{{localize "VARBORG.Origin.Heading"}}</span>
-      {{#if editable}}
-      <button type="button" class="text-button" data-action="openCreation" data-tooltip="{{localize 'VARBORG.Creation.Tooltip'}}">
-        <i class="fa-solid fa-user-plus"></i> {{localize "VARBORG.Creation.Button"}}
-      </button>
-      {{/if}}
-    </h2>
-    <ul class="item-list">
-      {{#each origins}}
-      {{#if item}}
-      <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><span class="item-summary">{{localize label}}:</span> <strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span></span>
-        <button type="button" class="icon-button" data-action="editItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="deleteItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize label}}: {{localize "VARBORG.Origin.NoneYet"}}</li>
-      {{/if}}
-      {{/each}}
-    </ul>
-  </section>
-
   <section class="abilities">
     <h2>{{localize "VARBORG.Sheet.Abilities"}}</h2>
     <div class="ability-row">
@@ -84,10 +54,6 @@
       <span>{{localize "VARBORG.Panic.LostSanity"}}</span>
       <input type="number" name="system.sanityLost" value="{{system.sanityLost}}" min="0" step="1">
     </label>
-    <label class="resource">
-      <span>{{localize "VARBORG.Sheet.Silver"}}</span>
-      <input type="number" name="system.silver" value="{{system.silver}}" min="0" step="1">
-    </label>
     <div class="resource movement carrying-{{carrying.state}}" data-tooltip="{{localize (concat 'VARBORG.Carrying.Hint.' carrying.state)}}">
       <span>{{localize "VARBORG.Carrying.Movement"}}</span>
       <span class="movement-value">{{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
@@ -96,45 +62,14 @@
     </div>
   </section>
 
-  {{> "systems/var-borg/templates/actor/conditions.hbs"}}
+  {{#if conditionIcons.length}}
+  <button type="button" class="condition-strip" data-action="showConditions"
+          data-tooltip="{{localize 'VARBORG.Sheet.ConditionStripHint'}}" aria-label="{{localize 'VARBORG.Sheet.ConditionStripHint'}}">
+    {{#each conditionIcons}}<img src="{{img}}" alt="{{label}}" data-tooltip="{{label}}">{{/each}}
+  </button>
+  {{/if}}
 
-  <section class="inventory-section">
-    <h2 class="heading-with-button">{{localize "VARBORG.Sheet.Feats"}}
-      {{#if isGM}}
-      <button type="button" class="text-button" data-action="improve" data-tooltip="{{localize 'VARBORG.Improving.Tooltip'}}">
-        <i class="fa-solid fa-arrow-trend-up"></i> {{localize "VARBORG.Improving.Button"}}
-      </button>
-      {{/if}}
-    </h2>
-    {{#if choosingFeat}}
-    <p class="improving-choice">
-      <span>{{localize "VARBORG.Improving.Choose"}}</span>
-      <button type="button" class="text-button" data-action="skipFeat" data-tooltip="{{localize 'VARBORG.Improving.SkipTooltip'}}">
-        {{localize "VARBORG.Improving.Skip"}}
-      </button>
-    </p>
-    {{/if}}
-    <ul class="item-list">
-      {{#each feats}}
-      <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span>
-          {{#each states}} <span class="item-state {{key}}">{{localize label}}</span>{{/each}}</span>
-        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
-        <button type="button" class="icon-button" data-action="editItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="deleteItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
-      {{/each}}
-    </ul>
-  </section>
+  {{> "systems/var-borg/templates/actor/character-actions.hbs"}}
 
   <section class="inventory-section minions">
     <h2 class="{{#if minions.over}}over-limit{{/if}}" data-tooltip="{{localize 'VARBORG.Minion.LimitHint'}}">{{minions.heading}}</h2>
@@ -154,102 +89,5 @@
       <li class="empty">{{localize "VARBORG.Minion.NoneYet"}}</li>
       {{/each}}
     </ul>
-  </section>
-
-  <section class="inventory-section powers">
-    <h2>{{localize "VARBORG.Sheet.Powers"}}</h2>
-    {{#if dancePartner}}<p class="hint">{{dancePartner}}</p>{{/if}}
-    <ul class="item-list">
-      {{#each powers}}
-      <li class="item-row feat-row power-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span>
-          {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}
-          {{#if item.system.usedOutside}}<span class="item-state used-outside" data-tooltip="{{localize 'VARBORG.Power.UsedOutsideHint'}}">{{localize "VARBORG.Power.UsedOutside"}}</span>{{/if}}</span>
-        {{#if item.system.sustaining}}
-        <button type="button" class="text-button" data-action="sustainPower" data-tooltip="{{localize 'VARBORG.Power.SustainTooltip'}}">
-          ◈ {{localize "VARBORG.Power.Sustain"}}
-        </button>
-        <button type="button" class="text-button" data-action="endPower" data-tooltip="{{localize 'VARBORG.Power.EndTooltip'}}">
-          {{localize "VARBORG.Power.End"}}
-        </button>
-        {{/if}}
-        <button type="button" class="icon-button" data-action="usePower"
-                data-tooltip="{{localize 'VARBORG.Power.UseTooltip'}}" aria-label="{{localize 'VARBORG.Power.UseTooltip'}}">
-          <i class="fa-solid fa-fire"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="editItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="deleteItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
-      {{/each}}
-    </ul>
-  </section>
-
-  <section class="inventory-section spells">
-    <h2>{{localize "VARBORG.Sheet.Spells"}}</h2>
-    <ul class="item-list">
-      {{#each spells}}
-      <li class="item-row feat-row power-row spell-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><strong>{{item.name}}</strong> <span class="item-summary">{{summary}}</span>
-          {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}
-          {{#if item.system.usedOutside}}<span class="item-state used-outside" data-tooltip="{{localize 'VARBORG.Power.UsedOutsideHint'}}">{{localize "VARBORG.Power.UsedOutside"}}</span>{{/if}}</span>
-        {{#if item.system.sustaining}}
-        <button type="button" class="text-button" data-action="sustainPower" data-tooltip="{{localize 'VARBORG.Power.SustainTooltip'}}">
-          ◈ {{localize "VARBORG.Power.Sustain"}}
-        </button>
-        <button type="button" class="text-button" data-action="endPower" data-tooltip="{{localize 'VARBORG.Power.EndTooltip'}}">
-          {{localize "VARBORG.Power.End"}}
-        </button>
-        {{/if}}
-        <button type="button" class="icon-button" data-action="castSpell"
-                data-tooltip="{{localize 'VARBORG.Spell.CastTooltip'}}" aria-label="{{localize 'VARBORG.Spell.CastTooltip'}}">
-          <i class="fa-solid fa-wand-sparkles"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="editItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="deleteItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
-      {{/each}}
-    </ul>
-  </section>
-
-  <section class="details">
-    <h2>{{localize "VARBORG.Sheet.Details"}}</h2>
-    <label data-tooltip="{{localize 'VARBORG.Panic.PhobiasHint'}}">
-      <span>{{localize "VARBORG.Panic.Phobias"}}</span>
-      <textarea name="system.phobias" rows="2">{{system.phobias}}</textarea>
-    </label>
-    <label>
-      <span>{{localize "VARBORG.Sheet.Personality"}}</span>
-      <textarea name="system.details.personality" rows="2">{{system.details.personality}}</textarea>
-    </label>
-    <label>
-      <span>{{localize "VARBORG.Sheet.PhysicalMark"}}</span>
-      <textarea name="system.details.physicalMark" rows="2">{{system.details.physicalMark}}</textarea>
-    </label>
-    <label>
-      <span>{{localize "VARBORG.Sheet.Idiosyncrasy"}}</span>
-      <textarea name="system.details.idiosyncrasy" rows="2">{{system.details.idiosyncrasy}}</textarea>
-    </label>
-    <label>
-      <span>{{localize "VARBORG.Sheet.CallToAdventure"}}</span>
-      <textarea name="system.details.callToAdventure" rows="2">{{system.details.callToAdventure}}</textarea>
-    </label>
   </section>
 </section>

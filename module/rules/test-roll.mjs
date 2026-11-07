@@ -120,6 +120,16 @@ export function keptDie(dice, mode) {
 }
 
 /**
+ * A d20 turned over (Vex's loaded die, rules 4.2): "the result becomes 21
+ * minus the roll".
+ * @param {number} die  1 … 20.
+ */
+export function flippedDie(die) {
+  if (!Number.isInteger(die) || die < 1 || die > 20) throw new RangeError(`A d20 shows 1 to 20, got ${die}`);
+  return 21 - die;
+}
+
+/**
  * The modifier from allies aiding a test.
  * @param {number} successes  Allies who succeeded.
  * @param {number} failures   Allies who failed.
@@ -139,18 +149,22 @@ export function aidModifier(successes = 0, failures = 0) {
  * @param {number} options.ability    The ability score added to the roll.
  * @param {number} options.dr         The Difficulty Rating.
  * @param {number} [options.aid]      The aid modifier (see aidModifier).
+ * @param {boolean} [options.flipped] The kept die was turned over (Vex's
+ *   loaded die, step 53a): it counts as 21 minus the roll, and is never a
+ *   natural 1 or 20.
  * @returns {{kept: number, total: number, natural: number|null, baseTier: string, tier: string}}
  *   natural is 20 or 1 when the kept die shows it, otherwise null. baseTier is
  *   the outcome before the natural 20 or 1, tier the final outcome.
  */
-export function resolveTest({ dice, mode = MODE.NORMAL, ability, dr, aid = 0 }) {
+export function resolveTest({ dice, mode = MODE.NORMAL, ability, dr, aid = 0, flipped = false }) {
   requireWhole(ability, "Ability");
   requireWhole(aid, "Aid");
   if (Math.abs(aid) > AID_MAX) throw new RangeError(`Aid must be from -2 to +2, got ${aid}`);
-  const kept = keptDie(dice, mode);
+  const rolled = keptDie(dice, mode);
+  const kept = flipped ? flippedDie(rolled) : rolled;
   const total = kept + ability + aid;
   const baseTier = tierFromTotal(total, dr);
-  const natural = kept === 20 || kept === 1 ? kept : null;
+  const natural = !flipped && (kept === 20 || kept === 1) ? kept : null;
   const tier = natural === 20 ? shiftTier(baseTier, 1)
     : natural === 1 ? shiftTier(baseTier, -1)
     : baseTier;

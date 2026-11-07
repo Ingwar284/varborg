@@ -17,6 +17,7 @@
     "faction": "the smith-priests of the Obsidian Bastion",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

@@ -17,6 +17,7 @@
     "faction": "the Lord of Light",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "auto"
   }
 }

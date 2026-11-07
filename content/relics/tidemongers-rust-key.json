@@ -17,6 +17,7 @@
     "faction": "the Tidemongers",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

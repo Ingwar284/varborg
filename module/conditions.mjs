@@ -23,7 +23,7 @@ import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
 import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
 import { conditionTimer, timerText, askConditionTimer } from "./timers.mjs";
 import { isStarving } from "./rules/days.mjs";
-import { collectEffects, immuneConditions } from "./rules/item-effects.mjs";
+import { collectEffects, immuneConditions, immunityTo } from "./rules/item-effects.mjs";
 import { fatigueBlocked } from "./rules/resistance.mjs";
 
 const SYSTEM = "var-borg";
@@ -78,11 +78,31 @@ export function registerConditions() {
 function keepOffImmune(effect) {
   const actor = effect.parent;
   if (!(actor instanceof Actor) || !actor.items) return true;
-  const immune = immuneConditions(collectEffects(actor.items));
-  const blocked = [...(effect.statuses ?? [])].find(status => immune.has(status));
+  const effects = collectEffects(actor.items);
+  const blocked = [...(effect.statuses ?? [])].find(status => immunityTo(effects, status).blocked);
   if (!blocked) return true;
   ui.notifications.warn(game.i18n.format("VARBORG.Effects.ImmuneCondition", { name: actor.name, condition: statusName(blocked) }));
+  spendImmunity(actor, immunityTo(effects, blocked).spends, blocked);
   return false;
+}
+
+/**
+ * A once-per-day immunity that kept a condition off spends its item's
+ * use; a relic then rolls its Expendable d20 (the Antler of the Glass
+ * Stag, step 53a). Not awaited: the condition is already kept off.
+ * @param {Actor} actor
+ * @param {object|null} spends  From immunityTo.
+ * @param {string} condition
+ */
+function spendImmunity(actor, spends, condition) {
+  if (!spends) return;
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Effects.ImmuneSpent", { item: spends.item, name: actor.name, condition: statusName(condition) }))}</p></div>`
+  })
+    .then(() => import("./effects.mjs"))
+    .then(({ markUsed }) => markUsed(actor, spends.itemId))
+    .catch(error => console.error("VÅR BORG | Could not spend the immunity's use", error));
 }
 
 /**
@@ -95,9 +115,11 @@ function keepFatigueOffImmune(actor, changes) {
   if (!foundry.utils.hasProperty(changes, "system.fatigue") || !actor.items) return;
   const before = actor.system.fatigue ?? 0;
   const after = foundry.utils.getProperty(changes, "system.fatigue");
-  if (!fatigueBlocked(immuneConditions(collectEffects(actor.items)), before, after)) return;
+  const effects = collectEffects(actor.items);
+  if (!fatigueBlocked(immuneConditions(effects), before, after)) return;
   foundry.utils.setProperty(changes, "system.fatigue", before);
   ui.notifications.warn(game.i18n.format("VARBORG.Effects.ImmuneCondition", { name: actor.name, condition: statusName("fatigued") }));
+  spendImmunity(actor, immunityTo(effects, "fatigued").spends, "fatigued");
 }
 
 /** The conditions an actor has, and its fatigue level, for the rules. */
@@ -176,6 +198,8 @@ export function sheetConditions(actor) {
   const isFoe = actor.type === "foe";
   const active = CONDITIONS.filter(id => actor.statuses.has(id));
   return {
+    // Panic, injuries and Death's Door are for characters only.
+    isCharacter: actor.type === "character",
     fatigue: actor.system.fatigue,
     // Characters only: days without food (rules 3.16, module/days.mjs).
     food: actor.type !== "character" ? null : { days: actor.system.daysWithoutFood, starving: isStarving(actor.system.daysWithoutFood) },

@@ -1,0 +1,40 @@
+<section class="tab var-borg-sheet {{tabs.feats.cssClass}}" data-group="primary" data-tab="feats">
+  <section class="inventory-section">
+    <h2 class="heading-with-button">{{localize "VARBORG.Sheet.Feats"}}
+      {{#if isGM}}
+      <button type="button" class="text-button" data-action="improve" data-tooltip="{{localize 'VARBORG.Improving.Tooltip'}}">
+        <i class="fa-solid fa-arrow-trend-up"></i> {{localize "VARBORG.Improving.Button"}}
+      </button>
+      {{/if}}
+    </h2>
+    {{#if choosingFeat}}
+    <p class="improving-choice">
+      <span>{{localize "VARBORG.Improving.Choose"}}</span>
+      <button type="button" class="text-button" data-action="skipFeat" data-tooltip="{{localize 'VARBORG.Improving.SkipTooltip'}}">
+        {{localize "VARBORG.Improving.Skip"}}
+      </button>
+    </p>
+    {{/if}}
+    <ul class="item-list">
+      {{#each feats}}
+      <li class="item-row feat-row" data-item-id="{{item.id}}">
+        <img src="{{item.img}}" alt="">
+        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
+          {{#each states}} <span class="item-state {{key}}">{{localize label}}</span>{{/each}}</span>
+        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+</section>

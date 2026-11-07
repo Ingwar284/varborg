@@ -250,7 +250,7 @@ export async function settleAttackCard(actor, data) {
     rolls.push(roll);
     state.dice = diceOf(roll);
   }
-  const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr });
+  const result = resolveTest({ dice: state.dice.map(die => die.value), mode: inputs.diceRule, ability: inputs.abilityScore, dr: inputs.dr, flipped: Boolean(state.flipped) });
   let tier = fortuneTier(result.tier, state.softened);
   // Field notes: Study the specimen cannot Ruin against a noted kind (GAPS 214).
   if (inputs.noRuin && tier === "ruin") tier = "failure";

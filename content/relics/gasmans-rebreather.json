@@ -17,6 +17,7 @@
     "faction": "the Gasmen of the Undercity",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

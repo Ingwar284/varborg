@@ -139,7 +139,8 @@ export async function settleTestCard(actor, data) {
 async function renderTestCard(data, withFortune) {
   const { inputs, state } = data;
   const rules = resolveTest({
-    dice: state.dice.map(die => die.value), mode: inputs.mode, ability: inputs.abilityScore, dr: inputs.dr, aid: inputs.aid
+    dice: state.dice.map(die => die.value), mode: inputs.mode, ability: inputs.abilityScore, dr: inputs.dr, aid: inputs.aid,
+    flipped: Boolean(state.flipped)
   });
   // Human Ingenuity turns a failed test into a Success (GAPS 198).
   const softened = fortuneTier(rules.tier, state.softened);

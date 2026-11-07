@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   TIERS, DR_MIN, DR_MAX, DR_TABLE, DR_DEFAULT, MODE,
-  tierFromTotal, shiftTier, diceMode, diceCount, diceFormula, keptDie, aidModifier, resolveTest
+  tierFromTotal, shiftTier, diceMode, diceCount, diceFormula, keptDie, aidModifier, resolveTest, flippedDie
 } from "../module/rules/test-roll.mjs";
 
 // --- Tiers against a DR -----------------------------------------------------
@@ -180,4 +180,32 @@ test("the dice formula: one d20, or two keeping the higher or lower", () => {
   assert.equal(diceFormula(MODE.BOON), "2d20kh");
   assert.equal(diceFormula(MODE.BANE), "2d20kl");
   assert.throws(() => diceFormula("sideways"), RangeError);
+});
+
+// --- Vex's loaded die (rules 4.2, step 53a) ---------------------------------
+
+test("a die turned over is 21 minus the roll", () => {
+  assert.equal(flippedDie(1), 20);
+  assert.equal(flippedDie(7), 14);
+  assert.equal(flippedDie(20), 1);
+  assert.throws(() => flippedDie(0), RangeError);
+});
+
+test("a turned-over die is never a natural 1 or 20", () => {
+  // A 1 turned over is a 20 but not a natural 20: 20 + 2 vs DR12 is a Triumph by total, not shifted.
+  const high = resolveTest({ dice: [1], ability: 2, dr: 12, flipped: true });
+  assert.equal(high.kept, 20);
+  assert.equal(high.natural, null);
+  assert.equal(high.tier, "triumph");
+  // A 20 turned over is a 1 but not a natural 1: 1 + 0 vs DR6 is a Failure, not a Ruin.
+  const low = resolveTest({ dice: [20], ability: 0, dr: 6, flipped: true });
+  assert.equal(low.kept, 1);
+  assert.equal(low.natural, null);
+  assert.equal(low.tier, "failure");
+});
+
+test("with Boon, the kept die is the one turned over", () => {
+  const result = resolveTest({ dice: [4, 9], mode: MODE.BOON, ability: 0, dr: 12, flipped: true });
+  assert.equal(result.kept, 12);
+  assert.equal(result.tier, "success");
 });

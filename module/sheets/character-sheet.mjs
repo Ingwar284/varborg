@@ -1,8 +1,10 @@
 /**
  * The character sheet (ApplicationV2). Every change is saved as soon as
- * you leave a field. Two tabs: Character (origins, abilities, resources,
- * conditions, feats, details) and Inventory (carrying, equipment, gear and
- * containers). Dropping a class, ancestry or background applies it.
+ * you leave a field. Six tabs: Character (abilities, resources,
+ * active-condition icons, actions, minions), Conditions, Feats,
+ * Powers & spells, Inventory (silver, carrying, equipment, gear and
+ * containers) and Details (origins, details, history).
+ * Dropping a class, ancestry or background applies it.
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -24,6 +26,7 @@ import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
 import { effectiveWeapon } from "../effects.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
+import { DROPPED, droppedContainerIds, isDropped } from "../rules/dropped.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { rollPanicTest } from "../panic.mjs";
@@ -49,6 +52,9 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
 const TEMPLATES = "systems/var-borg/templates/actor";
+
+/** The description under an item row, shared by every list on the sheet. */
+const DESCRIPTION_ROW = `${TEMPLATES}/item-description-row.hbs`;
 
 /** Item types shown in the Inventory tab, in this order. */
 const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container", "scroll", "relic"];
@@ -186,7 +192,6 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollPanic: CharacterSheet.#onRollPanic,
       editItem: CharacterSheet.#onEditItem,
       deleteItem: CharacterSheet.#onDeleteItem,
-      toggleEquipped: CharacterSheet.#onToggleEquipped,
       toggleCumbersome: CharacterSheet.#onToggleCumbersome,
       rollExpendable: CharacterSheet.#onRollExpendable,
       useMedicine: CharacterSheet.#onUseMedicine,
@@ -208,31 +213,46 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       openMinion: CharacterSheet.#onOpenMinion,
       improve: CharacterSheet.#onImprove,
       skipFeat: CharacterSheet.#onSkipFeat,
-      openCreation: CharacterSheet.#onOpenCreation
+      openCreation: CharacterSheet.#onOpenCreation,
+      showConditions: CharacterSheet.#onShowConditions,
+      toggleDescription: CharacterSheet.#onToggleDescription
     }
   };
 
   static PARTS = {
     header: { template: `${TEMPLATES}/character-header.hbs` },
     tabs: { template: "templates/generic/tab-navigation.hbs" },
-    main: { template: `${TEMPLATES}/character-main.hbs`, scrollable: [""] },
-    inventory: { template: `${TEMPLATES}/character-inventory.hbs`, scrollable: [""] }
+    main: { template: `${TEMPLATES}/character-main.hbs`, templates: [`${TEMPLATES}/character-actions.hbs`, DESCRIPTION_ROW], scrollable: [""] },
+    conditions: { template: `${TEMPLATES}/character-conditions.hbs`, scrollable: [""] },
+    feats: { template: `${TEMPLATES}/character-feats.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
+    powers: { template: `${TEMPLATES}/character-powers.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
+    inventory: { template: `${TEMPLATES}/character-inventory.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
+    details: { template: `${TEMPLATES}/character-details.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] }
   };
 
   static TABS = {
     primary: {
       tabs: [
         { id: "main", icon: "fa-solid fa-user" },
-        { id: "inventory", icon: "fa-solid fa-sack" }
+        { id: "conditions", icon: "fa-solid fa-heart-crack" },
+        { id: "feats", icon: "fa-solid fa-star" },
+        { id: "powers", icon: "fa-solid fa-fire" },
+        { id: "inventory", icon: "fa-solid fa-sack" },
+        { id: "details", icon: "fa-solid fa-feather" }
       ],
       initial: "main",
       labelPrefix: "VARBORG.Sheet.Tab"
     }
   };
 
+  /** The items whose description is open, by id. Kept while the sheet is open. */
+  #expanded = new Set();
+
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    // Which item descriptions are open (item-description-row.hbs).
+    context.expanded = Object.fromEntries([...this.#expanded].map(id => [id, true]));
     const actor = this.document;
     const system = actor.system;
     context.actor = actor;
@@ -282,23 +302,35 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       // A stack fills one place per piece (GAPS 54).
       if (containerIds.has(id) && id !== item.id) stored.set(id, (stored.get(id) ?? 0) + itemCount(item.system));
     }
-    context.containerOptions = {
-      "": game.i18n.localize("VARBORG.Container.Loose"),
-      ...Object.fromEntries(containers.map(c => [c.id, c.name]))
+    // The "Stored in" menu on each row: carried loose, each container, or
+    // dropped (GAPS 254). Weapons, armour and shields can also be equipped
+    // from it; a container can only be carried loose or dropped.
+    const loose = { "": i18n.localize("VARBORG.Container.Loose") };
+    const dropped = { [DROPPED]: i18n.localize("VARBORG.Container.Dropped") };
+    const storeOptions = { ...loose, ...Object.fromEntries(containers.map(c => [c.id, c.name])), ...dropped };
+    const menuOptions = {
+      equip: { equipped: i18n.localize("VARBORG.Item.Equipped"), ...storeOptions },
+      store: storeOptions,
+      container: { ...loose, ...dropped }
     };
+    const droppedIds = droppedContainerIds(actor.items);
 
     context.inventory = INVENTORY_TYPES.map(type => ({
       type,
       label: `VARBORG.Sheet.Inventory.${type}`,
       canEquip: EQUIPPABLE_TYPES.includes(type),
-      canStore: type !== "container",
       hasQuantity: type === "gear",
+      menuOptions: EQUIPPABLE_TYPES.includes(type) ? menuOptions.equip : type === "container" ? menuOptions.container : menuOptions.store,
       items: actor.itemTypes[type]
         .toSorted((a, b) => a.sort - b.sort)
         .map(item => ({
           item,
           summary: itemSummary(item, stored),
-          storedIn: containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
+          storedIn: EQUIPPABLE_TYPES.includes(type) && item.system.equipped ? "equipped"
+            : item.system.storedIn === DROPPED ? DROPPED
+            : containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
+          // Dropped, or in a dropped container: greyed out, no buttons (GAPS 254).
+          dropped: isDropped(item, droppedIds),
           states: itemStates(item),
           canAttack: item.type === "weapon",
           canCast: item.type === "scroll",
@@ -358,8 +390,24 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: spellSummary(item) }));
 
+    // Actions on the Character tab: what this character can do right now,
+    // gathered from the other tabs. Items that are equipped or carried
+    // loose and have a button (attack, raise, cast from a scroll, medicine,
+    // light, Use, relic, expendable die), then powers, spells and feats
+    // with a Use button. Items packed in a container or dropped are left
+    // out. The buttons are the same ones as on the other tabs.
+    const hasItemAction = row => row.canAttack || row.canCast || row.canRaise || row.canFire || row.canReload
+      || row.canMedicine || row.canLight || row.hasUse || row.canExpendable || (row.isRelic && !row.relicDestroyed);
+    context.actionList = [
+      ...context.inventory.flatMap(group => group.items)
+        .filter(row => ["", "equipped"].includes(row.storedIn) && !row.dropped && hasItemAction(row)),
+      ...context.powers.map(row => ({ ...row, isPower: true })),
+      ...context.spells.map(row => ({ ...row, isSpell: true })),
+      ...context.feats.filter(row => row.hasUse)
+    ];
+
     const carried = carrying(
-      actor.items.map(item => ({ type: item.type, ...item.system })),
+      actor.items.map(item => ({ id: item.id, type: item.type, ...item.system })),
       system.abilities.toughness,
       system.statBonuses
     );
@@ -391,6 +439,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       }))
     };
     context.conditions = sheetConditions(actor);
+    // The Conditions tab shows how many are active, such as "Conditions (2)".
+    // The Character tab shows a small icon for each one, as a reminder.
+    context.conditionIcons = [
+      ...context.conditions.list,
+      ...context.conditions.persistent.list,
+      ...context.conditions.panic.list,
+      ...context.conditions.injuries
+    ].map(({ img, label }) => ({ img, label }));
+    const conditionCount = context.conditionIcons.length;
+    if (conditionCount && context.tabs?.conditions) {
+      context.tabs.conditions.label = i18n.format("VARBORG.Sheet.Tab.ConditionsCount", { count: conditionCount });
+    }
 
     // A raised shield: which one counts, and its cover (GAPS 46).
     if (system.shieldRaised) {
@@ -408,10 +468,17 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     await super._onRender(context, options);
     activateConditionControls(this.element, this.document);
     // The "Stored in" menus and quantity boxes have no form name, so they
-    // change the item, not the character.
+    // change the item, not the character. For weapons, armour and shields
+    // the menu also equips: "Equipped" takes the item out of any container,
+    // and choosing loose or a container unequips it.
     for (const select of this.element.querySelectorAll("select[data-stored-in]")) {
       select.addEventListener("change", event => {
-        this.#itemFor(event.currentTarget)?.update({ "system.storedIn": event.currentTarget.value });
+        const item = this.#itemFor(event.currentTarget);
+        if (!item) return;
+        const value = event.currentTarget.value;
+        if (!EQUIPPABLE_TYPES.includes(item.type)) return item.update({ "system.storedIn": value });
+        if (value === "equipped") return item.update({ "system.equipped": true, "system.storedIn": "" });
+        return item.update({ "system.equipped": false, "system.storedIn": value });
       });
     }
     for (const input of this.element.querySelectorAll("input[data-quantity]")) {
@@ -447,12 +514,6 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The bin button asks first, then deletes the item from the character. */
   static async #onDeleteItem(event, button) {
     await this.#itemFor(button)?.deleteDialog();
-  }
-
-  /** The circle button equips or unequips the item. */
-  static async #onToggleEquipped(event, button) {
-    const item = this.#itemFor(button);
-    await item?.update({ "system.equipped": !item.system.equipped });
   }
 
   /** The weight button marks the item cumbersome, or not. */
@@ -567,6 +628,25 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Creation helper button: the steps of rules 2.1 in one window. */
   static #onOpenCreation(event, button) {
     openCreationHelper(this.document);
+  }
+
+  /**
+   * Clicking an item, feat or power name opens its description under the
+   * row, or closes it. No re-render, so it opens at once; it stays open
+   * when the sheet redraws.
+   */
+  static #onToggleDescription(event, button) {
+    const id = button.closest("[data-item-id]")?.dataset.itemId;
+    if (!id) return;
+    const open = !this.#expanded.has(id);
+    if (open) this.#expanded.add(id);
+    else this.#expanded.delete(id);
+    for (const row of this.element.querySelectorAll(`[data-description-for="${id}"]`)) row.hidden = !open;
+  }
+
+  /** The strip of condition icons on the Character tab opens the Conditions tab. */
+  static #onShowConditions(event, button) {
+    this.changeTab("conditions", "primary");
   }
 
   /** The Command button: ◈ to give the minion two actions on its turn (rules 3.14). */

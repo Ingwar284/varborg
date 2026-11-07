@@ -15,6 +15,9 @@
  * 4. a Long rest starts the next day, Downtime three (module/days.mjs).
  *    Those who rested slept; characters left out are treated as having
  *    eaten and slept (GAPS 148).
+ * A rest guarded by a relic (Hearth-tallow of Anashe, lit with its Use
+ * button when the party begins the rest, step 53a) cannot be interrupted:
+ * the Interrupted ticks are ignored, and the guard is used up by the rest.
  *
  * The maths lives in module/rules/rest.mjs.
  */
@@ -28,7 +31,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { resetEmberAbilities } from "./dice/power.mjs";
 import { livingCharacters, startDays } from "./days.mjs";
 import { atDeathsDoor, killedByDamage } from "./deaths-door.mjs";
-import { runItemHooks } from "./effects.mjs";
+import { runItemHooks, REST_GUARD_FLAG } from "./effects.mjs";
 import { fortuneFormula } from "./rules/item-effects.mjs";
 import { resetAndAnnounce } from "./uses.mjs";
 
@@ -54,7 +57,9 @@ export async function rest() {
     return false;
   }
 
-  const data = await askRest(candidates);
+  // Relics lit for this rest (Hearth-tallow of Anashe): "the rest cannot be interrupted".
+  const guards = candidates.filter(actor => actor.getFlag(SYSTEM, REST_GUARD_FLAG));
+  const data = await askRest(candidates, guards);
   if (!data || !Object.values(REST).includes(data.kind)) return false;
   const kind = data.kind;
   const resting = candidates.filter(actor => data[`rests-${actor.id}`]);
@@ -63,9 +68,9 @@ export async function rest() {
     return false;
   }
 
-  // 1. Interrupted rest tests, before anything changes.
+  // 1. Interrupted rest tests, before anything changes; none when a relic guards the rest.
   const tiers = new Map();
-  for (const actor of resting.filter(actor => data[`interrupted-${actor.id}`])) {
+  for (const actor of guards.length ? [] : resting.filter(actor => data[`interrupted-${actor.id}`])) {
     const result = await rollAbilityTest(actor, INTERRUPTION_ABILITY, {
       dr: INTERRUPTION_DR,
       purpose: i18n.localize("VARBORG.Rest.InterruptedPurpose")
@@ -79,8 +84,10 @@ export async function rest() {
 
   await ChatMessage.create({
     content: `<div class="var-borg-card rest-card"><h3>${i18n.localize(`VARBORG.Rest.Kind.${kind}`)}</h3>`
-      + `<p>${i18n.format("VARBORG.Rest.Who", { names: resting.map(actor => foundry.utils.escapeHTML(actor.name)).join(", ") })}</p></div>`
+      + `<p>${i18n.format("VARBORG.Rest.Who", { names: resting.map(actor => foundry.utils.escapeHTML(actor.name)).join(", ") })}</p>`
+      + guardLines(guards) + `</div>`
   });
+  for (const actor of guards) await actor.unsetFlag(SYSTEM, REST_GUARD_FLAG);
 
   // 2. Healing, or no benefit; Infected damage.
   const ate = new Set();
@@ -104,8 +111,16 @@ export async function rest() {
   return true;
 }
 
+/** "Hearth-tallow of Anashe (Mira): the rest cannot be interrupted.", one line per guard. */
+function guardLines(guards) {
+  const esc = foundry.utils.escapeHTML;
+  return guards.map(actor => `<p class="modifier">${esc(game.i18n.format("VARBORG.Rest.Guarded", {
+    item: actor.getFlag(SYSTEM, REST_GUARD_FLAG), name: actor.name
+  }))}</p>`).join("");
+}
+
 /** The rest dialog: which rest, and a row of ticks per character. */
-async function askRest(candidates) {
+async function askRest(candidates, guards = []) {
   const i18n = game.i18n;
   const kinds = Object.values(REST).map(id => `<option value="${id}"${id === REST.LONG ? " selected" : ""}>`
     + `${i18n.localize(`VARBORG.Rest.Kind.${id}`)}</option>`).join("");
@@ -129,7 +144,8 @@ async function askRest(candidates) {
     + `<th>${i18n.localize("VARBORG.Rest.Interrupted")}</th></tr></thead>`
     + `<tbody>${rows}</tbody></table>`
     + `<p class="hint">${i18n.localize("VARBORG.Rest.AteHint")}</p>`
-    + `<p class="hint">${i18n.format("VARBORG.Rest.InterruptedHint", { dr: INTERRUPTION_DR })}</p>`;
+    + `<p class="hint">${i18n.format("VARBORG.Rest.InterruptedHint", { dr: INTERRUPTION_DR })}</p>`
+    + guardLines(guards);
   return DialogV2.input({
     window: { title: "VARBORG.Rest.DialogTitle" },
     content,

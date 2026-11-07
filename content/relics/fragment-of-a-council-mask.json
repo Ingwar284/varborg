@@ -17,6 +17,7 @@
     "faction": "the Council of Many",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

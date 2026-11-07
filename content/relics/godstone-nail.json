@@ -17,6 +17,7 @@
     "faction": "the Fabricators of the Sacred Gear",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }

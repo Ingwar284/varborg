@@ -1,0 +1,3 @@
+{{!-- The description under an item row, shown when its name is clicked.
+     Kept on one line: the row keeps line breaks, so any space here would show. --}}
+<li class="item-description" data-description-for="{{item.id}}" {{#unless (lookup @root.expanded item.id)}}hidden{{/unless}}>{{#if item.system.description}}{{item.system.description}}{{else}}<em>{{localize "VARBORG.Sheet.NoDescription"}}</em>{{/if}}</li>

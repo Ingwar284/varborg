@@ -17,6 +17,7 @@
     "faction": "the cult of the Last Flame",
     "price": 0,
     "cumbersome": false,
-    "storedIn": ""
+    "storedIn": "",
+    "automation": "text"
   }
 }
