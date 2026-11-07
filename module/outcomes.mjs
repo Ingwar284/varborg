@@ -254,6 +254,8 @@ async function runOp51d(actor, op) {
       if (actor.system.fatigue === undefined) return { line: "" };
       const level = (actor.system.fatigue ?? 0) + 1;
       await actor.update({ "system.fatigue": level });
+      // Immune to Fatigued (step 52a): the level stayed, and a warning said why.
+      if ((actor.system.fatigue ?? 0) < level) return { line: "" };
       return { fatigued: true, line: noted(i18n.format("VARBORG.Outcome.Fatigued", { name: actor.name, level }), entry.note) };
     }
     case "cure": {

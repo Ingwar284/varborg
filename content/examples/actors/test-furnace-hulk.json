@@ -1,0 +1,85 @@
+{
+  "_id": "vbTestFurnHulk01",
+  "name": "Test: Furnace Hulk",
+  "type": "foe",
+  "prototypeToken": {
+    "actorLink": false,
+    "disposition": -1,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "tier": "moderate",
+    "category": "construct",
+    "description": "Play-test foe (immunities and resistances). No armour, so the numbers on the damage card are easy to follow.",
+    "hp": {
+      "value": 40,
+      "max": 40
+    },
+    "morale": null,
+    "armour": "",
+    "armourName": "",
+    "initiative": 0,
+    "mook": false
+  },
+  "items": [
+    {
+      "_id": "vbTestHulkFire00",
+      "name": "Test: Fire-Hardened",
+      "type": "feat",
+      "img": "icons/svg/fire.svg",
+      "system": {
+        "description": "Takes half damage from fire.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          { "kind": "resist", "resist": "half", "damageType": "fire" }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestHulkBrittl",
+      "name": "Test: Brittle Plates",
+      "type": "feat",
+      "img": "icons/svg/break.svg",
+      "system": {
+        "description": "Takes double damage from bleeding damage (blades).",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          { "kind": "resist", "resist": "double", "damageType": "bleeding" }
+        ],
+        "automation": "auto"
+      }
+    },
+    {
+      "_id": "vbTestHulkUnfeel",
+      "name": "Test: Unfeeling",
+      "type": "feat",
+      "img": "icons/svg/statue.svg",
+      "system": {
+        "description": "Immune to poison damage, and cannot be Frightened or Fatigued.",
+        "source": "passive",
+        "improving": false,
+        "effects": [
+          { "kind": "resist", "resist": "immune", "damageType": "poison" },
+          { "kind": "immune", "condition": "frightened" },
+          { "kind": "immune", "condition": "fatigued" }
+        ],
+        "automation": "auto"
+      }
+    }
+  ],
+  "flags": {
+    "var-borg": {
+      "notPacked": true
+    }
+  }
+}

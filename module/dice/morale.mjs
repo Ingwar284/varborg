@@ -23,12 +23,13 @@ import { armourAfterIgnored, statBonuses, collectEffects } from "../rules/item-e
 import { stepDownArmourDie } from "../rules/attack.mjs";
 import { hpAfterDamage } from "../rules/health.mjs";
 import {
-  MORALE_DICE, DEMORALISED_DIE, foeDamageTaken, canRollMorale, moraleTriggers, moraleResult, moraleDice
+  MORALE_DICE, DEMORALISED_DIE, canRollMorale, moraleTriggers, moraleResult, moraleDice
 } from "../rules/morale.mjs";
 import { totalModifiers } from "../rules/conditions.mjs";
 import { conditionNotes } from "../conditions.mjs";
-import { itemRollMods, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
+import { itemRollMods, itemOptionalMods, optionalEffectsField, tickedMods, rollResists, resistLines } from "../effects.mjs";
 import { countKill } from "../effects.mjs";
+import { foeDamageAfterResists } from "../rules/resistance.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 const { DialogV2 } = foundry.applications.api;
@@ -47,9 +48,11 @@ const NO_COMBAT = "none";
  * @param {number} damage    The attack's damage (already doubled on a Triumph).
  * @param {string} armour    The armour die that soaks this hit ("" for none).
  * @param {string} attack    The attack's name, for the card.
+ * @param {string} [damageType]  The hit's damage type, for the foe's
+ *   immunities and resistances (step 52a): "" for none.
  * @returns {Promise<boolean>} Whether the hit brought the foe to 0 HP.
  */
-export async function inflictDamage(foe, damage, armour, attack) {
+export async function inflictDamage(foe, damage, armour, attack, damageType = "") {
   const i18n = game.i18n;
   const rolls = [];
   let soak = 0;
@@ -61,7 +64,11 @@ export async function inflictDamage(foe, damage, armour, attack) {
     rolls.push(soakRoll);
     soak = soakRoll.total;
   }
-  const { taken, minimum } = foeDamageTaken(damage, soak);
+  // Immunities and resistances by damage type, before armour (step 52a,
+  // GAPS 236): Stone Skin halves fire, Iron Regulation is immune to poison.
+  const resist = await rollResists(foe, damageType);
+  rolls.push(...resist.rolls);
+  const { taken, minimum } = foeDamageAfterResists(damage, soak, resist.kept.items, resist.kept.totals);
   const from = foe.system.hp.value;
   const to = hpAfterDamage(from, taken);
   await foe.update({ "system.hp.value": to });
@@ -92,6 +99,8 @@ export async function inflictDamage(foe, damage, armour, attack) {
     title: i18n.format("VARBORG.FoeDamage.CardTitle", { name: foe.name }),
     attack: attack ? i18n.format("VARBORG.FoeDamage.From", { attack }) : null,
     damage,
+    damageType: damageType ? i18n.localize(`VARBORG.DamageType.${damageType}`) : null,
+    resistLines: resistLines(resist.kept),
     soakDie: armour ? i18n.localize(`VARBORG.Foe.Armour.${armour}`) : null,
     soak,
     taken,
@@ -268,7 +277,7 @@ export function addMoraleCardListeners(message, html) {
       const armour = stored ? inflict.dataset.armour : foe.system.armour;
       if (key) await message.setFlag(SYSTEM, "inflictedKeys", [...(message.getFlag(SYSTEM, "inflictedKeys") ?? []), key]);
       else await message.setFlag(SYSTEM, "damageInflicted", true);
-      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack);
+      const killed = await inflictDamage(foe, Number(inflict.dataset.damage), armour, inflict.dataset.attack, inflict.dataset.damageType ?? "");
       // A kill counts for the card's character (Bloodlust, GAPS 205).
       const attackerUuid = message.getFlag(SYSTEM, "fortune")?.actorUuid;
       if (killed && attackerUuid) await countKill(await fromUuid(attackerUuid));

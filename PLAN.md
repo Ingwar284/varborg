@@ -1342,10 +1342,19 @@ foes, with area spells.
 ## Milestone 12: Foes
 
 52. **Foes.**
-    - 52a. Immunities and resistances, in `module/rules/resistance.mjs`
-      with tests: an immune foe cannot be given that condition (with a
-      warning), and Inflict damage applies ×½ or ×2 by damage type, saying
-      why on the card.
+    - ~~52a. Immunities and resistances.~~ Done: `module/rules/resistance.mjs`
+      (`foeDamageAfterResists`, `fatigueBlocked`) with
+      `tests/resistance.test.mjs`. A foe's passives use the same resist
+      and immune effects as characters' feats. Inflict damage buttons
+      carry the weapon's, power's or spell's damage type; the foe damage
+      card shows the type and a line per resistance ("Test: Fire-Hardened:
+      fire damage halved"), before armour (GAPS 236). A
+      blocked condition now gives a warning, and an actor immune to
+      Fatigued keeps its level when something would raise it. Play-test
+      foe: Test: Furnace Hulk in `content/examples/actors/` (not packed).
+      Not yet: cold, necrotic and sonic damage, "crushing" and
+      "non-magical" (GAPS 237, asked at 52c); Primal Conduit's 1 damage
+      has no type.
     - 52b. Foe hooks: regeneration at turn start, auras as a turn-start
       reminder, triggers at 0 HP or death, Morale changes, retaliation,
       gloom pool hooks.

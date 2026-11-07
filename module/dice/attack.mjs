@@ -169,6 +169,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     // Extra damage only on a Triumph, added after doubling (Holy smite, step 51a).
     triumphDamage: triumphDamage(conditions.own),
     weaponDamage: weapon.damage,
+    // The weapon's damage type, for the foe's resistances (step 52a).
+    damageType: weapon.damageType ?? "",
     ruinedBefore: ruined,
     // Characters defend instead, so only a foe or no target gets Inflict damage.
     inflicts: target?.type !== "character",
@@ -335,6 +337,8 @@ export async function settleAttackCard(actor, data) {
         foeUuid: target.uuid,
         armour: inputs.ignoresArmour ? "" : target.armour,
         attack: inputs.attackName,
+        // For the foe's immunities and resistances (step 52a).
+        damageType: inputs.areaDamageType ?? "",
         label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
       })),
       defenders: inputs.area.defenders.map(target => ({
@@ -353,6 +357,9 @@ export async function settleAttackCard(actor, data) {
       // Damage that ignores armour (Sacred flame, step 51e).
       armour: inputs.ignoresArmour ? "" : from ?? "",
       attack: inputs.attackName,
+      // For the foe's immunities and resistances (step 52a): the weapon's,
+      // power's or spell's damage type.
+      damageType: inputs.damageType ?? inputs.areaDamageType ?? "",
       label: inputs.foe
         ? i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: inputs.foe.name })
         : i18n.format("VARBORG.FoeDamage.Inflict", { damage: damage.total })

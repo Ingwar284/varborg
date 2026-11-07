@@ -2,7 +2,8 @@
   <h3>{{title}}</h3>
   {{#if attack}}<p class="modifier">{{attack}}</p>{{/if}}
   <div class="damage">
-    <p class="damage-line">{{localize "VARBORG.Attack.Damage"}}: {{damage}}</p>
+    <p class="damage-line">{{localize "VARBORG.Attack.Damage"}}: {{damage}}{{#if damageType}} ({{damageType}}){{/if}}</p>
+    {{#each resistLines}}<p class="damage-line">{{this}}</p>{{/each}}
     {{#if soakDie}}
     <p class="damage-line">{{localize "VARBORG.Defence.Soak"}} ({{soakDie}}): −{{soak}}</p>
     {{/if}}

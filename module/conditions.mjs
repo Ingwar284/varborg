@@ -24,6 +24,7 @@ import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
 import { conditionTimer, timerText, askConditionTimer } from "./timers.mjs";
 import { isStarving } from "./rules/days.mjs";
 import { collectEffects, immuneConditions } from "./rules/item-effects.mjs";
+import { fatigueBlocked } from "./rules/resistance.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -61,6 +62,7 @@ export function registerConditions() {
   CONFIG.specialStatusEffects.BLIND = "blinded";
 
   Hooks.on("updateActor", syncFatigueIcon);
+  Hooks.on("preUpdateActor", keepFatigueOffImmune);
   Hooks.on("preCreateActiveEffect", keepOffImmune);
   Hooks.on("createActiveEffect", onConditionAdded);
   Hooks.on("deleteActiveEffect", onConditionRemoved);
@@ -68,8 +70,10 @@ export function registerConditions() {
 }
 
 /**
- * A condition an actor's items make it immune to is not added (Incorruptible:
- * Charmed, step 50e). Hooked to preCreateActiveEffect.
+ * A condition an actor's items make it immune to is not added, with a
+ * warning (Incorruptible: Charmed, step 50e; a foe's passive such as
+ * Iron Regulation: Frightened and Charmed, step 52a). Hooked to
+ * preCreateActiveEffect.
  */
 function keepOffImmune(effect) {
   const actor = effect.parent;
@@ -77,8 +81,23 @@ function keepOffImmune(effect) {
   const immune = immuneConditions(collectEffects(actor.items));
   const blocked = [...(effect.statuses ?? [])].find(status => immune.has(status));
   if (!blocked) return true;
-  ui.notifications.info(game.i18n.format("VARBORG.Effects.ImmuneCondition", { name: actor.name, condition: statusName(blocked) }));
+  ui.notifications.warn(game.i18n.format("VARBORG.Effects.ImmuneCondition", { name: actor.name, condition: statusName(blocked) }));
   return false;
+}
+
+/**
+ * Fatigued is a level on the sheet, so an actor immune to Fatigued (a
+ * construct "cannot be … Fatigued") keeps its level when something would
+ * raise it, with a warning; the rest of the update goes ahead (step 52a).
+ * Hooked to preUpdateActor.
+ */
+function keepFatigueOffImmune(actor, changes) {
+  if (!foundry.utils.hasProperty(changes, "system.fatigue") || !actor.items) return;
+  const before = actor.system.fatigue ?? 0;
+  const after = foundry.utils.getProperty(changes, "system.fatigue");
+  if (!fatigueBlocked(immuneConditions(collectEffects(actor.items)), before, after)) return;
+  foundry.utils.setProperty(changes, "system.fatigue", before);
+  ui.notifications.warn(game.i18n.format("VARBORG.Effects.ImmuneCondition", { name: actor.name, condition: statusName("fatigued") }));
 }
 
 /** The conditions an actor has, and its fatigue level, for the rules. */
