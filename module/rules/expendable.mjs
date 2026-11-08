@@ -39,16 +39,11 @@ export function expendableOutcome(result, quantity = null) {
 
 /**
  * Whether a stack with an expendable die is used up after its quantity is
- * changed by hand (GAPS 260): at 0 it is used up; raised again, it is not.
- * Other changes leave "used up" as it was.
- * @param {number} before   The quantity before.
- * @param {number} after    The quantity after.
- * @param {boolean} usedUp  Used up before.
+ * changed by hand (GAPS 260): at 0 it is used up; with any left, it is not.
+ * @param {number} after  The new quantity.
  */
-export function usedUpForQuantity(before, after, usedUp) {
-  if (after <= 0) return true;
-  if (after > before) return false;
-  return usedUp;
+export function usedUpForQuantity(after) {
+  return after <= 0;
 }
 
 /**

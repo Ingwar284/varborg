@@ -74,12 +74,11 @@ test("on a 1, the last one goes to 0 and is marked used up; a weapon's ammunitio
   assert.deepEqual(expendableOutcome(1), { quantity: null, usedUp: true, spent: true });
 });
 
-test("changing a stack's quantity by hand: 0 is used up, raised again is not (GAPS 260)", async () => {
+test("changing a stack's quantity by hand: 0 is used up, any left is not (GAPS 260)", async () => {
   const { usedUpForQuantity } = await import("../module/rules/expendable.mjs");
-  assert.equal(usedUpForQuantity(1, 0, false), true);
-  assert.equal(usedUpForQuantity(0, 2, true), false);
-  assert.equal(usedUpForQuantity(3, 2, false), false);
-  assert.equal(usedUpForQuantity(3, 2, true), true, "lowering leaves it as it was");
+  assert.equal(usedUpForQuantity(0), true);
+  assert.equal(usedUpForQuantity(2), false);
+  assert.equal(usedUpForQuantity(1), false);
 });
 
 test("only shooting weapons with an expendable die use ammunition", () => {

@@ -124,21 +124,6 @@ export class WeaponData extends EquipmentData {
 
   static KINDS = labels(WEAPON_KINDS, "Weapon.Kind");
   static DAMAGE_TYPES = labels(DAMAGE_TYPES, "DamageType");
-  /**
-   * A stack with an expendable die: at quantity 0 it is used up; when the
-   * quantity is raised again it is not (GAPS 260). A change that sets
-   * "used up" itself (the expendable roll) is left alone.
-   */
-  async _preUpdate(changes, options, user) {
-    const allowed = await super._preUpdate(changes, options, user);
-    if (allowed === false) return false;
-    const system = changes.system;
-    if (!system || !("quantity" in system) || "usedUp" in system) return;
-    if (!(system.expendable ?? this.expendable)) return;
-    const usedUp = usedUpForQuantity(this.quantity, Number(system.quantity), this.usedUp);
-    if (usedUp !== this.usedUp) system.usedUp = usedUp;
-  }
-
   static EXPENDABLE_DICE = labels(EXPENDABLE_DICE, "Expendable");
 }
 
@@ -225,6 +210,21 @@ export class GearData extends CarriedData {
     const allowed = await super._preCreate(data, options, user);
     if (allowed === false) return false;
     presetFrequency(this, data);
+  }
+
+  /**
+   * A stack with an expendable die: when its quantity changes, it is used
+   * up at 0 and not used up with any left (GAPS 260). A change that sets
+   * "used up" itself (the expendable roll) is left alone.
+   */
+  async _preUpdate(changes, options, user) {
+    const allowed = await super._preUpdate(changes, options, user);
+    if (allowed === false) return false;
+    const system = changes.system;
+    if (!system || !("quantity" in system) || "usedUp" in system) return;
+    if (!(system.expendable ?? this.expendable)) return;
+    const usedUp = usedUpForQuantity(Number(system.quantity));
+    if (usedUp !== this.usedUp) system.usedUp = usedUp;
   }
 
   static EXPENDABLE_DICE = labels(EXPENDABLE_DICE, "Expendable");
