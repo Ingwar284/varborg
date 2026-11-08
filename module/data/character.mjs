@@ -79,6 +79,10 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       fatigue: wholeNumber(),
       // Sanity lost for a while (Teetering); a Panic Triumph restores it (rules 3.12, GAPS 81).
       sanityLost: wholeNumber(),
+      // Temporary changes made by hand with − and + under each ability on the
+      // sheet. Sanity's − goes into sanityLost instead (stepAbility).
+      abilityAdjust: new SchemaField(Object.fromEntries(ABILITIES.map(ability =>
+        [ability, wholeNumber({ min: ABILITY_MIN - ABILITY_MAX, max: ABILITY_MAX - ABILITY_MIN })]))),
       // Dark Vessels since the last Long Rest; the second kills (rules 3.6, GAPS 93).
       darkVessels: wholeNumber(),
       // Days in a row without food or drink; more than 2 is starving (rules 3.16, GAPS 142).
@@ -111,7 +115,7 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     // Meat's +4 max HP. Max HP and max wounds are stored without them.
     // "Only while switched on" stats count for the current combat (Barbaric Rage, step 51a).
     this.statBonuses = statBonuses(collectEffects(this.parent.items), { combatId: currentCombatId() });
-    const inUse = currentAbilities(this.rolledAbilities, this.keyAbility, this.sanityLost);
+    const inUse = currentAbilities(this.rolledAbilities, this.keyAbility, this.sanityLost, this.abilityAdjust);
     Object.assign(this.abilities, withAbilityBonuses(inUse, this.statBonuses));
     this.hp.max = this.#withBonus("hpMax", this._source.hp.max);
     this.wounds.max = this.#withBonus("woundsMax", this._source.wounds.max);

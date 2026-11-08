@@ -19,6 +19,7 @@ import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { minionCount } from "../minions.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
+import { onPostItem } from "../item-chat.mjs";
 
 const { HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -44,6 +45,7 @@ export default class MinionSheet extends HandlebarsApplicationMixin(ActorSheetV2
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
+      postItem: onPostItem,
       createItem: MinionSheet.#onCreateItem,
       editItem: MinionSheet.#onEditItem,
       deleteItem: MinionSheet.#onDeleteItem,

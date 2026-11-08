@@ -32,3 +32,14 @@ test("bad input is refused", () => {
   assert.throws(() => adjustLeft(1.5, -1, 3), RangeError);
   assert.throws(() => adjustLeft(1, -1, undefined), RangeError);
 });
+
+test("basic activities: free outside combat, own turn only in combat", async () => {
+  const { activityCost, BASIC_ACTIVITIES } = await import("../module/rules/actions.mjs");
+  assert.deepEqual(BASIC_ACTIVITIES.move, { min: 1, max: 1 });
+  assert.deepEqual(activityCost("move", 1), { allowed: true, actions: 0 });
+  assert.deepEqual(activityCost("interact", 2, { inCombat: true, onOwnTurn: true }), { allowed: true, actions: 2 });
+  assert.deepEqual(activityCost("improvise", 3, { inCombat: true, onOwnTurn: false }), { allowed: false, actions: 0 });
+  assert.throws(() => activityCost("move", 2), RangeError);
+  assert.throws(() => activityCost("interact", 0), RangeError);
+  assert.throws(() => activityCost("dance", 1), RangeError);
+});

@@ -14,6 +14,7 @@ import {
   ARMOUR_TIER_MIN, ARMOUR_TIER_MAX, isMetalByDefault, capArmourTier
 } from "../rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../rules/carrying.mjs";
+import { usedUpForQuantity } from "../rules/expendable.mjs";
 import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rules/light.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
 import { effectFields } from "./effects.mjs";
@@ -123,6 +124,21 @@ export class WeaponData extends EquipmentData {
 
   static KINDS = labels(WEAPON_KINDS, "Weapon.Kind");
   static DAMAGE_TYPES = labels(DAMAGE_TYPES, "DamageType");
+  /**
+   * A stack with an expendable die: at quantity 0 it is used up; when the
+   * quantity is raised again it is not (GAPS 260). A change that sets
+   * "used up" itself (the expendable roll) is left alone.
+   */
+  async _preUpdate(changes, options, user) {
+    const allowed = await super._preUpdate(changes, options, user);
+    if (allowed === false) return false;
+    const system = changes.system;
+    if (!system || !("quantity" in system) || "usedUp" in system) return;
+    if (!(system.expendable ?? this.expendable)) return;
+    const usedUp = usedUpForQuantity(this.quantity, Number(system.quantity), this.usedUp);
+    if (usedUp !== this.usedUp) system.usedUp = usedUp;
+  }
+
   static EXPENDABLE_DICE = labels(EXPENDABLE_DICE, "Expendable");
 }
 
@@ -180,8 +196,9 @@ export class GearData extends CarriedData {
   static defineSchema() {
     return {
       ...super.defineSchema(),
-      // How many of this item: 6 torches, 10 iron nails (GAPS 54).
-      quantity: wholeNumber({ min: 1, initial: 1 }),
+      // How many of this item: 6 torches, 10 iron nails (GAPS 54). 0 when
+      // the last one is used up (GAPS 260).
+      quantity: wholeNumber({ min: 0, initial: 1 }),
       expendable: choice(EXPENDABLE_DICE, ""),
       // The expendable die rolled a 1. The item stays until someone deletes
       // or refills it (GAPS 52).

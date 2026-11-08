@@ -1,0 +1,56 @@
+{
+  "_id": "vbVehicleCart000",
+  "name": "Handcart",
+  "type": "vehicle",
+  "img": "icons/environment/settlement/wagon.webp",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 0,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "description": "A small two-wheeled cart of planks and iron-shod wheels, pushed or pulled by hand. It carries heavy items for you (rules 4.1, Carrying).",
+    "hp": {
+      "value": 10,
+      "max": 10
+    },
+    "armour": "",
+    "armourName": "",
+    "speed": {
+      "safe": 10,
+      "normal": 20,
+      "fast": 0
+    },
+    "crew": "1 person pushing or pulling",
+    "passengers": "None, or 6 heavy items of cargo",
+    "passengerSeats": 0,
+    "cargoLimit": 6,
+    "fuel": "",
+    "price": 40,
+    "occupants": [],
+    "driveBoon": false
+  },
+  "items": [
+    {
+      "_id": "vbVehicleCartIt1",
+      "name": "Pushed by hand",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "One person pushes or pulls the handcart, using both hands. It has no fast speed.",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -51,17 +51,7 @@
   </fieldset>
   {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
-  {{{optionalEffects}}}
-  <div class="form-group">
-    <label for="var-borg-spell-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-spell-boon" type="checkbox" name="boon">
-    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
-  </div>
-  <div class="form-group">
-    <label for="var-borg-spell-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-spell-bane" type="checkbox" name="bane">
-    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
-  </div>
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs"}}
   {{#if outcomeOptions.length}}
   <div class="form-group">
     <label for="var-borg-spell-option">{{localize "VARBORG.Outcome.Option"}}</label>
@@ -75,4 +65,5 @@
   {{/if}}
   {{/if}}
   {{{fortuneFields}}}
+  {{{optionalEffects}}}
 </div>

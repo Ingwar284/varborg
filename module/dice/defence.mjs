@@ -448,7 +448,8 @@ async function askDefenceOptions(actor, attack, automatic, conditions, optionalE
     ? i18n.format("VARBORG.Effects.StartingDr", { items: ranged.sources.map(source => source.item).join(", "), dr: startDr })
     : null;
   const content = await renderTemplate(DIALOG_TEMPLATE, {
-    against: i18n.format("VARBORG.Defence.Against", { name: foe?.name ?? "", attack: attack.name }),
+    // Without a foe (the sheet's Defend button), just the attack's name.
+    against: foe ? i18n.format("VARBORG.Defence.Against", { name: foe.name, attack: attack.name }) : attack.name,
     damage: attack.system.damage,
     drs: DR_TABLE.map(dr => ({
       value: dr,

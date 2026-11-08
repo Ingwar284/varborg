@@ -110,3 +110,25 @@ test("background wealth as the rules write it becomes a dice formula", () => {
   assert.equal(wealthFormula(""), "");
   assert.equal(wealthFormula("lots"), "");
 });
+
+test("temporary changes by hand are added last, inside −3 to +6", async () => {
+  const { currentAbilities } = await import("../module/rules/origins.mjs");
+  const zero = { strength: 0, agility: 0, toughness: 0, presence: 0, sanity: 0 };
+  assert.equal(currentAbilities(zero, null, 0, { strength: 2 }).strength, 2);
+  assert.equal(currentAbilities(zero, "agility", 0, { agility: -1 }).agility, 0);
+  assert.equal(currentAbilities({ ...zero, sanity: 2 }, null, 1, { sanity: 1 }).sanity, 2);
+  assert.equal(currentAbilities({ ...zero, presence: 5 }, null, 0, { presence: 4 }).presence, 6);
+  assert.equal(currentAbilities({ ...zero, presence: -2 }, null, 0, { presence: -4 }).presence, -3);
+});
+
+test("− and + on an ability; Sanity uses lost Sanity first", async () => {
+  const { stepAbility } = await import("../module/rules/origins.mjs");
+  assert.deepEqual(stepAbility("strength", -1, {}), { adjust: -1, sanityLost: 0 });
+  assert.deepEqual(stepAbility("strength", 1, { adjust: -1 }), { adjust: 0, sanityLost: 0 });
+  assert.deepEqual(stepAbility("sanity", -1, {}), { adjust: 0, sanityLost: 1 });
+  assert.deepEqual(stepAbility("sanity", 1, { sanityLost: 2 }), { adjust: 0, sanityLost: 1 });
+  assert.deepEqual(stepAbility("sanity", 1, { sanityLost: 0 }), { adjust: 1, sanityLost: 0 });
+  assert.deepEqual(stepAbility("sanity", -1, { adjust: 1 }), { adjust: 0, sanityLost: 0 });
+  assert.throws(() => stepAbility("luck", 1, {}), RangeError);
+  assert.throws(() => stepAbility("sanity", 2, {}), RangeError);
+});

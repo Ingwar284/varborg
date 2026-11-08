@@ -3,7 +3,7 @@
  * GAPS 52, 53 and 54).
  *
  * The Expendable button rolls the item's die. On a 1 one of a stack is used
- * up, and the last one (or a weapon's ammunition) is marked used up.
+ * up; at 0 it is marked used up (GAPS 260). A weapon's ammunition is used up.
  * A weapon with Reload is loaded or empty: Fire empties it, Reload fills it
  * and the card lists the Interact actions it costs. In combat, reloading is
  * done on your own turn and uses that many action pips.
@@ -34,10 +34,11 @@ export async function rollExpendable(actor, item) {
   const roll = new Roll(expendableFormula(die));
   await roll.evaluate();
   const result = roll.total;
-  const after = expendableOutcome(result, item.system.quantity ?? 1);
+  const hasQuantity = "quantity" in item.system;
+  const after = expendableOutcome(result, hasQuantity ? item.system.quantity : null);
   if (after.spent) {
     const changes = { "system.usedUp": after.usedUp };
-    if ("quantity" in item.system) changes["system.quantity"] = after.quantity;
+    if (hasQuantity) changes["system.quantity"] = after.quantity;
     await item.update(changes);
   }
 

@@ -400,3 +400,42 @@
 .var-borg-card.improving-card .improving-up { color: var(--vb-good); }
 
 .var-borg-card.improving-card .improving-down { color: var(--vb-bad); }
+
+/* ---------- Item card: an item's picture, name and description ---------- */
+/* The same black headline band as other cards, with the picture in it. */
+.var-borg-card .item-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: -0.3rem -0.4rem 0.45rem;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 3px solid var(--vb-orange);
+  background: var(--vb-ink);
+  color: var(--vb-paper);
+}
+
+.var-borg-card .item-card-header img {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--vb-paper);
+  background: var(--vb-paper-shade);
+}
+
+.var-borg-card .item-card-header h3 {
+  margin: 0;
+  border: none;
+  color: var(--vb-paper);
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.var-borg-card .item-card-type {
+  font-size: 0.8rem;
+  color: var(--vb-paper-shade);
+}
+
+/* Descriptions are plain text: keep their line breaks. */
+.var-borg-card .item-card-description {
+  white-space: pre-line;
+}

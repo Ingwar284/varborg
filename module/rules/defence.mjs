@@ -194,3 +194,16 @@ export function raiseShieldCost({ inCombat = false, onOwnTurn = false } = {}) {
   if (!onOwnTurn) return { allowed: false, actions: 0 };
   return { allowed: true, actions: RAISE_SHIELD_ACTIONS };
 }
+
+/**
+ * The damage typed into the sheet's Defend dialog, for an attack that has no
+ * foe card: dice such as "d6" or "2d4", or a set number such as "3".
+ * @param {string} text
+ * @returns {{damage: string, fixedDamage: number|null}|null}  null when it is neither.
+ */
+export function manualDamage(text) {
+  const value = String(text ?? "").trim().toLowerCase();
+  if (/^\d+$/.test(value)) return { damage: value, fixedDamage: Number(value) };
+  if (/^\d*d\d+$/.test(value)) return { damage: value, fixedDamage: null };
+  return null;
+}

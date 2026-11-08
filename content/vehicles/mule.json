@@ -1,0 +1,56 @@
+{
+  "_id": "vbVehicleMule000",
+  "name": "Mule",
+  "type": "vehicle",
+  "img": "icons/environment/creatures/horse-brown.webp",
+  "prototypeToken": {
+    "actorLink": true,
+    "disposition": 0,
+    "displayName": 30,
+    "displayBars": 30,
+    "bar1": {
+      "attribute": "hp"
+    },
+    "bar2": {
+      "attribute": null
+    }
+  },
+  "system": {
+    "description": "A pack mule, slower than a horse and twice as stubborn, but sure-footed and hard to kill. It carries a rider or heavy items for you (rules 4.1, Carrying).",
+    "hp": {
+      "value": 12,
+      "max": 12
+    },
+    "armour": "d2",
+    "armourName": "Shaggy hide",
+    "speed": {
+      "safe": 20,
+      "normal": 30,
+      "fast": 40
+    },
+    "crew": "1 rider",
+    "passengers": "None, or 8 heavy items of cargo",
+    "passengerSeats": 0,
+    "cargoLimit": 8,
+    "fuel": "Feed and water.",
+    "price": 30,
+    "occupants": [],
+    "driveBoon": false
+  },
+  "items": [
+    {
+      "_id": "vbVehicleMuleIt1",
+      "name": "Stubborn",
+      "type": "feat",
+      "img": "icons/svg/aura.svg",
+      "system": {
+        "description": "In complete darkness the mule will not move unless its rider succeeds on a Presence test (DR12).",
+        "source": "passive",
+        "belongsTo": "",
+        "improving": false,
+        "frequency": "",
+        "frequencyUsed": false
+      }
+    }
+  ]
+}

@@ -19,106 +19,17 @@
 
   {{#each inventory as |section|}}
   <section class="inventory-section">
-    <h3>{{localize section.label}}</h3>
+    <div class="section-header"><h3>{{localize section.label}}</h3><button type="button" class="add-item header-add" data-action="createItem" data-type="{{section.type}}" data-tooltip="{{localize 'VARBORG.Sheet.AddTooltip'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "VARBORG.Sheet.Add"}}</button></div>
     <ul class="item-list">
       {{#each section.items}}
-      <li class="item-row draggable{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}{{#if relicDestroyed}} used-up{{/if}}{{#if dropped}} dropped{{/if}}" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        {{#if section.hasQuantity}}
-        <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="1" step="1"
-               aria-label="{{localize 'VARBORG.Item.Quantity'}}" data-tooltip="{{localize 'VARBORG.Item.Quantity'}}">
-        {{/if}}
-        <button type="button" class="link-button item-name" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}">{{item.name}}</button>
-        <span class="item-summary">{{summary}}</span>
-        {{#if drawback}}<span class="relic-drawback" data-tooltip="{{localize 'VARBORG.Relic.DrawbackHint'}}">{{drawback}}</span>{{/if}}
-        {{#each states}}
-        <span class="item-state {{key}}">{{localize label}}</span>
-        {{/each}}
-        {{#if dropped}}<span class="item-state dropped">{{localize "VARBORG.Container.Dropped"}}</span>{{/if}}
-        {{#unless dropped}}
-        {{#if canAttack}}
-        <button type="button" class="icon-button" data-action="attack"
-                data-tooltip="{{localize 'VARBORG.Attack.Tooltip'}}" aria-label="{{localize 'VARBORG.Attack.Tooltip'}}">
-          <i class="fa-solid fa-khanda"></i>
-        </button>
-        {{/if}}
-        {{#if canCast}}
-        <button type="button" class="icon-button" data-action="castSpell"
-                data-tooltip="{{localize 'VARBORG.Spell.ScrollCastTooltip'}}" aria-label="{{localize 'VARBORG.Spell.ScrollCastTooltip'}}">
-          <i class="fa-solid fa-scroll"></i>
-        </button>
-        {{/if}}
-        {{#if canRaise}}
-        <button type="button" class="icon-button" data-action="raiseShield"
-                data-tooltip="{{localize 'VARBORG.Defence.RaiseTooltip'}}" aria-label="{{localize 'VARBORG.Defence.RaiseTooltip'}}">
-          <i class="fa-solid fa-shield-halved"></i>
-        </button>
-        {{/if}}
-        {{#if canFire}}
-        <button type="button" class="icon-button" data-action="fireWeapon"
-                data-tooltip="{{localize 'VARBORG.Reload.FireTooltip'}}" aria-label="{{localize 'VARBORG.Reload.FireTooltip'}}">
-          <i class="fa-solid fa-burst"></i>
-        </button>
-        {{/if}}
-        {{#if canReload}}
-        <button type="button" class="icon-button" data-action="reloadWeapon"
-                data-tooltip="{{reloadTooltip}}" aria-label="{{reloadTooltip}}">
-          <i class="fa-solid fa-rotate-right"></i>
-        </button>
-        {{/if}}
-        {{#if canMedicine}}
-        <button type="button" class="icon-button" data-action="useMedicine"
-                data-tooltip="{{localize 'VARBORG.Medicine.Tooltip'}}" aria-label="{{localize 'VARBORG.Medicine.Tooltip'}}">
-          <i class="fa-solid fa-kit-medical"></i>
-        </button>
-        {{/if}}
-        {{#if canLight}}
-        <button type="button" class="icon-button" data-action="lightItem"
-                data-tooltip="{{localize 'VARBORG.Light.Tooltip'}}" aria-label="{{localize 'VARBORG.Light.Tooltip'}}">
-          <i class="fa-solid fa-fire-flame-curved"></i>
-        </button>
-        {{/if}}
-        {{> "systems/var-borg/templates/actor/use-button.hbs"}}
-        {{#if isRelic}}
-        <button type="button" class="icon-button use-limited" data-action="useRelic" {{#unless canUseRelic}}disabled{{/unless}}
-                data-tooltip="{{relicUseTooltip}}" aria-label="{{relicUseTooltip}}">
-          <i class="fa-solid {{#if relicDaily}}fa-dice-d20{{else}}fa-hand-sparkles{{/if}}"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="lastRite" {{#unless canLastRite}}disabled{{/unless}}
-                data-tooltip="{{localize 'VARBORG.Relic.LastRiteTooltip'}}" aria-label="{{localize 'VARBORG.Relic.LastRiteTooltip'}}">
-          <i class="fa-solid fa-fire-burner"></i>
-        </button>
-        {{/if}}
-        {{#if canExpendable}}
-        <button type="button" class="icon-button" data-action="rollExpendable"
-                data-tooltip="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}"
-                aria-label="{{localize 'VARBORG.Expendable.Tooltip' die=item.system.expendable}}">
-          <i class="fa-solid fa-dice-six"></i>
-        </button>
-        {{/if}}
-        {{/unless}}
-        <select class="stored-in" data-stored-in aria-label="{{localize 'VARBORG.Container.StoredIn'}}"
-                data-tooltip="{{localize 'VARBORG.Container.StoredIn'}}">
-          {{selectOptions section.menuOptions selected=storedIn}}
-        </select>
-        <button type="button" class="icon-button cumbersome-toggle{{#if item.system.cumbersome}} active{{/if}}" data-action="toggleCumbersome"
-                data-tooltip="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
-                aria-label="{{localize (ifThen item.system.cumbersome 'VARBORG.Carrying.MarkNotCumbersome' 'VARBORG.Carrying.MarkCumbersome')}}"
-                aria-pressed="{{#if item.system.cumbersome}}true{{else}}false{{/if}}">
-          <i class="fa-solid fa-weight-hanging"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="editItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="icon-button" data-action="deleteItem"
-                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </li>
+      {{> "systems/var-borg/templates/actor/inventory-row.hbs"}}
       {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
+      {{#each contents}}
+      {{> "systems/var-borg/templates/actor/inventory-row.hbs" stored=true}}
+      {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
+      {{/each}}
       {{else}}
-      <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
+      {{#unless section.allStored}}<li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>{{/unless}}
       {{/each}}
     </ul>
   </section>

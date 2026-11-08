@@ -302,7 +302,7 @@ test("each armour's price and tier are as its line in 4.1; tier 2 and up is meta
 });
 
 test("each gear item's price is as its line in 4.1, with its expendable die and effect", () => {
-  assert.equal(gearItems.length, 51, "43 gear, 3 containers, 3 ammunition, fire pot and smoke bomb");
+  assert.equal(gearItems.length, 50, "42 gear (the small wagon is now the Handcart vehicle, GAPS 259), 3 containers, 3 ammunition, fire pot and smoke bomb");
   for (const g of gearItems) {
     // Bombs write their damage before the price: "Fire pot Special 15 s", "Smoke bomb - 10 s".
     const line = lineFor(`${g.name} ${priceText(g.system.price)}`)
@@ -592,6 +592,15 @@ test("the Charioteer's rig is a vehicle as its stat block writes it", () => {
   assert.ok(flatRules.includes("Speed 30' safe, 50' normal, 70' fast per Move"));
   assert.ok(flatRules.includes(`Passengers ${s.passengers}`));
   for (const item of rig.items) assert.ok(inRules(`${item.name} ${item.system.description}`), item.name);
+});
+
+test("the mule and handcart are vehicles with the stats agreed in GAPS 259", () => {
+  const vehicles = readAll(join(root, "content", "vehicles")).map(({ data }) => data);
+  const stats = v => [v.system.hp.max, v.system.armour, v.system.speed.safe, v.system.speed.normal, v.system.speed.fast, v.system.passengerSeats, v.system.cargoLimit, v.system.price];
+  assert.deepEqual(stats(vehicles.find(v => v.name === "Mule")), [12, "d2", 20, 30, 40, 0, 8, 30]);
+  assert.deepEqual(stats(vehicles.find(v => v.name === "Handcart")), [10, "", 10, 20, 0, 0, 6, 40]);
+  // Their prices are the rules' (4.1): "Mule 30 s", "Small wagon 40 s".
+  assert.ok(flatRules.includes("Mule 30 s") && flatRules.includes("Small wagon 40 s"));
 });
 
 test("no foe comes from an adventure page (Operation:, Exeunt: or the Entities appendix), for now", () => {

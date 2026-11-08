@@ -180,6 +180,34 @@ export async function addDog(actor) {
 }
 
 /**
+ * A mule or handcart from the carrying table (GAPS 259): a copy of the
+ * Vehicles compendium's vehicle, named after the character (such as
+ * "Ada's Mule") and owned by the character's players.
+ * @param {Actor} actor  The character.
+ * @param {{key: string, vehicleId: string}} spec  The carrying table entry.
+ * @returns {Promise<string>} The line for the card.
+ */
+export async function addVehicle(actor, spec) {
+  const i18n = game.i18n;
+  const label = i18n.localize(`VARBORG.Creation.Item.${spec.key}`);
+  const source = await game.packs.get(`${SYSTEM}.vehicles`)?.getDocument(spec.vehicleId);
+  if (!source || !game.user.can("ACTOR_CREATE")) return i18n.format("VARBORG.Creation.Equipment.VehicleMissing", { vehicle: label });
+  const data = source.toObject();
+  delete data._id;
+  data.folder = null;
+  data.name = i18n.format("VARBORG.Creation.Equipment.VehicleName", { name: actor.name, vehicle: source.name });
+  if (data.prototypeToken) data.prototypeToken.name = data.name;
+  // The character's owners own it too, so they can drive and load it.
+  const OWNER = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+  data.ownership = { default: 0, ...Object.fromEntries(Object.entries(actor.ownership)
+    .filter(([id, level]) => id !== "default" && level >= OWNER).map(([id]) => [id, OWNER])) };
+  const made = await Actor.create(data);
+  return made
+    ? i18n.format("VARBORG.Creation.Equipment.VehicleAdded", { name: actor.name, vehicle: made.name })
+    : i18n.format("VARBORG.Creation.Equipment.VehicleMissing", { vehicle: label });
+}
+
+/**
  * Starting equipment (rules 2.6): the class die on armour and weaponry,
  * then d6, d8 and d10 on the gear tables. Posts one card.
  * @param {Actor} actor  A character with a class.
@@ -232,6 +260,11 @@ export async function rollStartingEquipment(actor, { chooseCarrying = null, askA
       if (spec === DOG) {
         names.push(i18n.localize("VARBORG.Creation.Item.dog"));
         extra.push(await addDog(actor));
+        continue;
+      }
+      if (spec.type === "vehicle") {
+        names.push(i18n.localize(`VARBORG.Creation.Item.${spec.key}`));
+        extra.push(await addVehicle(actor, spec));
         continue;
       }
       const data = equipmentItem(spec);

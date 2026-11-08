@@ -41,3 +41,34 @@ export function adjustLeft(left, delta, max) {
 export function pips(left, max) {
   return Array.from({ length: max }, (_, i) => i < left);
 }
+
+/**
+ * The basic activities of rules 3.4 that need no roll, and how many actions
+ * each can cost. Improvise and Interact cost ◈ to ◈◈◈ (the Dark Master
+ * decides); Move costs ◈.
+ */
+export const BASIC_ACTIVITIES = {
+  improvise: { min: 1, max: 3 },
+  interact: { min: 1, max: 3 },
+  move: { min: 1, max: 1 }
+};
+
+/**
+ * What doing one of the basic activities costs right now. Outside combat
+ * it is free. In combat it must be your own turn, and spends its actions.
+ * @param {string} activity  "improvise", "interact" or "move".
+ * @param {number} actions   How many ◈ the player chose.
+ * @param {{inCombat: boolean, onOwnTurn: boolean}} turn
+ * @returns {{allowed: boolean, actions: number}}
+ * @throws {RangeError} For an unknown activity or a number of actions it cannot cost.
+ */
+export function activityCost(activity, actions, { inCombat = false, onOwnTurn = false } = {}) {
+  const range = BASIC_ACTIVITIES[activity];
+  if (!range) throw new RangeError(`Unknown activity: ${activity}`);
+  if (!Number.isInteger(actions) || actions < range.min || actions > range.max) {
+    throw new RangeError(`${activity} costs ${range.min} to ${range.max} actions, got ${actions}`);
+  }
+  if (!inCombat) return { allowed: true, actions: 0 };
+  if (!onOwnTurn) return { allowed: false, actions: 0 };
+  return { allowed: true, actions };
+}

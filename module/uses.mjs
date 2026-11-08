@@ -20,6 +20,9 @@ import { collectEffects, useEffects } from "./rules/item-effects.mjs";
 import { doEffectAction } from "./effects.mjs";
 import { useChoices } from "./rules/item-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { rollExpendable } from "./dice/expendable.mjs";
+import { turnState } from "./combat.mjs";
+import { CONSUME_ACTIONS } from "./rules/expendable.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -38,6 +41,15 @@ function itemUseEffects(item) {
 }
 
 /**
+ * A consumable: gear with an expendable die and Use effects, such as the
+ * healing potion. Its button is Interact ◈: do the effects (the healing),
+ * then roll the expendable die (GAPS 260). It has no separate die button.
+ */
+export function isConsumable(item) {
+  return item.type === "gear" && Boolean(item.system.expendable) && itemUseEffects(item).length > 0;
+}
+
+/**
  * Whether the sheet shows a Use button for this item: it has a limited use,
  * or Use effects (step 49g).
  */
@@ -48,6 +60,7 @@ export function hasLimitedUse(item) {
 /** Whether the Use button can be pressed now: unspent, or with no limit. */
 export function canUseItem(item) {
   if (!TYPES.includes(item.type)) return false;
+  if (isConsumable(item) && item.system.usedUp) return false;
   return hasFrequency(item.system) ? canUseOnce(item.system) : itemUseEffects(item).length > 0;
 }
 
@@ -64,6 +77,16 @@ export function useButton(item) {
   if (!hasLimitedUse(item)) return { hasUse: false };
   const i18n = game.i18n;
   const usable = canUseItem(item);
+  if (isConsumable(item)) {
+    return {
+      hasUse: true,
+      canUse: usable,
+      useInteract: true,
+      useTooltip: usable
+        ? i18n.format("VARBORG.Uses.InteractTooltip", { die: item.system.expendable })
+        : i18n.localize("VARBORG.Expendable.UsedUp")
+    };
+  }
   return {
     hasUse: true,
     canUse: usable,
@@ -115,9 +138,20 @@ export async function useLimitedItem(actor, item) {
     ui.notifications.warn(i18n.format("VARBORG.Uses.AlreadyUsed", { item: item.name, frequency: frequencyLabel(item).toLowerCase() }));
     return;
   }
+  // A consumable is used with Interact ◈: in combat on your own turn only (GAPS 260).
+  const consumable = isConsumable(item);
+  const turn = consumable ? turnState(actor) : { combatant: null };
+  if (turn.combatant && !turn.onOwnTurn) {
+    ui.notifications.warn(i18n.localize("VARBORG.Manual.NotYourTurn"));
+    return;
+  }
   // Several Use actions that are done on their own: ask which (step 51a3).
   const effects = await pickUseEffects(item);
   if (!effects) return;
+  if (turn.combatant) {
+    if (turn.combatant.actionsLeft < CONSUME_ACTIONS) ui.notifications.warn(i18n.localize("VARBORG.Manual.NoActions"));
+    await turn.combatant.adjustPips("actions", -CONSUME_ACTIONS);
+  }
   const limited = hasFrequency(item.system);
   if (limited) await item.update({ "system.frequencyUsed": true });
   // The item's Use effects: roll, heal, Ember, a condition (step 49g).
@@ -134,11 +168,14 @@ export async function useLimitedItem(actor, item) {
     speaker: ChatMessage.getSpeaker({ actor }),
     content: `<div class="var-borg-card uses-card"><h3>${i18n.format("VARBORG.Uses.CardTitle", { name: esc(actor.name), item: esc(item.name) })}</h3>`
       + (limited ? `<p class="sum">${i18n.format("VARBORG.Uses.CardLine", { frequency: frequencyLabel(item) })}</p>` : "")
+      + (consumable ? `<p class="sum">${esc(i18n.localize("VARBORG.Uses.InteractLine"))}</p>` : "")
       + lines.map(line => `<p class="sum">${esc(line)}</p>`).join("")
       + (text ? `<p>${text}</p>` : "") + `</div>`,
     rolls,
     sound: rolls.length ? CONFIG.sounds.dice : null
   });
+  // Then the expendable die: on a 1 one is used up (GAPS 260).
+  if (consumable) await rollExpendable(actor, item);
 }
 
 /**

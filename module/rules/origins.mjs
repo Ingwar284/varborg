@@ -36,13 +36,38 @@ export const CLASS_BOOST = 1;
  * @param {Record<string, number>} rolled  The scores as rolled.
  * @param {string|null} [boostedAbility]   The class's boosted ability, or null without a class.
  * @param {number} [sanityLost]            Sanity lost for a while.
+ * @param {Record<string, number>} [adjust] Temporary changes made by hand on
+ *   the sheet (− and + under each ability), added last.
  * @returns {Record<string, number>} The scores in use.
  */
-export function currentAbilities(rolled, boostedAbility = null, sanityLost = 0) {
+export function currentAbilities(rolled, boostedAbility = null, sanityLost = 0, adjust = {}) {
   const abilities = { ...rolled };
   if (ABILITIES.includes(boostedAbility)) abilities[boostedAbility] = clampAbility(abilities[boostedAbility] + CLASS_BOOST);
   if (sanityLost > 0) abilities.sanity = clampAbility(abilities.sanity - sanityLost);
+  for (const ability of ABILITIES) {
+    if (adjust?.[ability]) abilities[ability] = clampAbility(abilities[ability] + adjust[ability]);
+  }
   return abilities;
+}
+
+/**
+ * The − or + under an ability on the sheet: a temporary change by hand.
+ * For Sanity, − loses Sanity for a while (so rest and a Panic Triumph give it
+ * back, rules 3.12), and + first gives lost Sanity back; only then does it
+ * add a temporary bonus. A Sanity − first takes back a temporary bonus.
+ *
+ * @param {string} ability  One of the five.
+ * @param {number} step     +1 or −1.
+ * @param {{adjust: number, sanityLost: number}} now  This ability's temporary
+ *   change, and Sanity lost for a while.
+ * @returns {{adjust: number, sanityLost: number}} The new values.
+ */
+export function stepAbility(ability, step, { adjust = 0, sanityLost = 0 } = {}) {
+  if (!ABILITIES.includes(ability)) throw new RangeError(`Unknown ability: ${ability}`);
+  if (step !== 1 && step !== -1) throw new RangeError(`Step must be 1 or -1, got ${step}`);
+  if (ability !== "sanity") return { adjust: adjust + step, sanityLost };
+  if (step < 0) return adjust > 0 ? { adjust: adjust - 1, sanityLost } : { adjust, sanityLost: sanityLost + 1 };
+  return sanityLost > 0 ? { adjust, sanityLost: sanityLost - 1 } : { adjust: adjust + 1, sanityLost };
 }
 
 /**

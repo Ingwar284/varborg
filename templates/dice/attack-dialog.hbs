@@ -5,7 +5,6 @@
   {{#if multipleNote}}<p class="hint automatic">{{multipleNote}}</p>{{/if}}
   {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
-  {{{optionalEffects}}}
   {{#if modes}}
   <div class="form-group">
     <label for="var-borg-attack-mode">{{localize "VARBORG.Attack.Mode"}}</label>
@@ -48,15 +47,7 @@
     {{#if heavyNote}}<p class="hint automatic">{{heavyNote}}</p>{{/if}}
     <p class="hint">{{localize "VARBORG.Attack.AutomaticHint"}}</p>
   </div>
-  <div class="form-group">
-    <label for="var-borg-attack-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-attack-boon" type="checkbox" name="boon">
-    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
-  </div>
-  <div class="form-group">
-    <label for="var-borg-attack-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-attack-bane" type="checkbox" name="bane">
-    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
-  </div>
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs"}}
   {{{fortuneFields}}}
+  {{{optionalEffects}}}
 </div>

@@ -1,0 +1,14 @@
+<div class="var-borg-card item-card">
+  <header class="item-card-header">
+    <img src="{{img}}" alt="">
+    <div>
+      <h3>{{name}}</h3>
+      {{#if type}}<span class="item-card-type">{{type}}</span>{{/if}}
+    </div>
+  </header>
+  {{#if description}}
+  <div class="item-card-description">{{description}}</div>
+  {{else}}
+  <p class="hint">{{localize "VARBORG.Sheet.NoDescription"}}</p>
+  {{/if}}
+</div>

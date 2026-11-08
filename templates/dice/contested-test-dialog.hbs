@@ -8,14 +8,7 @@
       {{/each}}
     </select>
   </div>
-  <div class="form-group">
-    <label for="var-borg-contest-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-contest-boon" type="checkbox" name="boon">
-  </div>
-  <div class="form-group">
-    <label for="var-borg-contest-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-contest-bane" type="checkbox" name="bane">
-  </div>
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs" noHint=true}}
 
   <h4>{{localize "VARBORG.Contest.Opponent"}}</h4>
   <div class="form-group">
@@ -41,13 +34,6 @@
       {{/each}}
     </select>
   </div>
-  <div class="form-group">
-    <label for="var-borg-contest-opponent-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-contest-opponent-boon" type="checkbox" name="opponentBoon">
-  </div>
-  <div class="form-group">
-    <label for="var-borg-contest-opponent-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-contest-opponent-bane" type="checkbox" name="opponentBane">
-    <p class="hint">{{localize "VARBORG.Contest.CharacterHint"}}</p>
-  </div>
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs" boonName="opponentBoon" baneName="opponentBane" noHint=true}}
+  <p class="hint">{{localize "VARBORG.Contest.CharacterHint"}}</p>
 </div>

@@ -1,9 +1,17 @@
-<div class="form-group">
-  <label for="var-borg-{{prefix}}-fortune-boon">{{localize "VARBORG.Fortune.DialogBoon"}}</label>
-  <input id="var-borg-{{prefix}}-fortune-boon" type="checkbox" name="fortuneBoon">
-</div>
-<div class="form-group">
-  <label for="var-borg-{{prefix}}-fortune-bane">{{localize "VARBORG.Fortune.DialogBane"}}</label>
-  <input id="var-borg-{{prefix}}-fortune-bane" type="checkbox" name="fortuneBane">
-  <p class="hint">{{hint}}</p>
+<div class="form-group vb-choice-row">
+  <label>
+    {{localize "VARBORG.Fortune.DialogLabel"}}
+    <span class="vb-have">{{have}}</span>
+  </label>
+  <div class="vb-toggles">
+    <label class="vb-toggle">
+      <input type="checkbox" name="fortuneBoon" {{#unless fortune}}disabled{{/unless}}>
+      <span>{{localize "VARBORG.Test.Boon"}}</span>
+    </label>
+    <label class="vb-toggle">
+      <input type="checkbox" name="fortuneBane" {{#unless fortune}}disabled{{/unless}}>
+      <span>{{localize "VARBORG.Test.Bane"}}</span>
+    </label>
+  </div>
+  <p class="hint">{{localize "VARBORG.Fortune.DialogHint"}}</p>
 </div>

@@ -23,7 +23,6 @@
   {{#if encumberedNote}}<p class="hint automatic">{{encumberedNote}}</p>{{/if}}
   {{#each conditionNotes}}<p class="hint automatic">{{this}}</p>{{/each}}
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
-  {{{optionalEffects}}}
   {{#if magic}}
   <div class="form-group">
     <label for="var-borg-power-magic">{{localize "VARBORG.Power.Magic"}}</label>
@@ -31,16 +30,7 @@
     <p class="hint">{{localize "VARBORG.Power.MagicHint"}}</p>
   </div>
   {{/if}}
-  <div class="form-group">
-    <label for="var-borg-power-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-power-boon" type="checkbox" name="boon">
-    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
-  </div>
-  <div class="form-group">
-    <label for="var-borg-power-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-power-bane" type="checkbox" name="bane">
-    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
-  </div>
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs"}}
   {{#if thrallAsk}}
   <div class="form-group">
     <label for="var-borg-power-thralls">{{localize "VARBORG.Outcome.ThrallsAsk"}}</label>
@@ -61,4 +51,5 @@
   {{/if}}
   {{/if}}
   {{{fortuneFields}}}
+  {{{optionalEffects}}}
 </div>

@@ -1,0 +1,18 @@
+{{!-- Boon and Bane as two toggle buttons. Used by every roll dialog:
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs" boon=boon bane=bane}}
+  boonName / baneName change the form field names (default "boon" / "bane");
+  noHint leaves out the line of rules text. --}}
+<div class="form-group vb-choice-row">
+  <label>{{localize "VARBORG.Test.Dice"}}</label>
+  <div class="vb-toggles">
+    <label class="vb-toggle">
+      <input type="checkbox" name="{{#if boonName}}{{boonName}}{{else}}boon{{/if}}" {{#if boon}}checked{{/if}}>
+      <span>{{localize "VARBORG.Test.Boon"}}</span>
+    </label>
+    <label class="vb-toggle">
+      <input type="checkbox" name="{{#if baneName}}{{baneName}}{{else}}bane{{/if}}" {{#if bane}}checked{{/if}}>
+      <span>{{localize "VARBORG.Test.Bane"}}</span>
+    </label>
+  </div>
+  {{#unless noHint}}<p class="hint">{{localize "VARBORG.Test.BoonBaneHint"}}</p>{{/unless}}
+</div>

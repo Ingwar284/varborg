@@ -19,16 +19,23 @@
                 data-tooltip="{{localize 'VARBORG.Test.RollTooltip'}}">
           <i class="fa-solid fa-dice-d20"></i> {{localize label}}
         </button>
-        {{#if note}}
-        <span class="boosted-box" data-tooltip="{{boxHint}}">
-          <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1" aria-label="{{localize label}}">
-          <span class="boosted-total" aria-hidden="true">{{total}}</span>
-        </span>
-        <span class="ability-in-use">{{note}}</span>
-        {{else}}
-        <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1"
-               aria-label="{{localize label}}" data-tooltip="{{localize 'VARBORG.Sheet.RolledHint'}}">
-        {{/if}}
+        {{!-- The score box with − on its left and + on its right. --}}
+        <div class="ability-score">
+          <button type="button" class="ability-step" data-action="adjustAbility" data-ability="{{key}}" data-step="-1"
+                  data-tooltip="{{lowerHint}}" aria-label="{{lowerHint}}">−</button>
+          {{#if note}}
+          <span class="boosted-box" data-tooltip="{{boxHint}}">
+            <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1" aria-label="{{localize label}}">
+            <span class="boosted-total" aria-hidden="true">{{total}}</span>
+          </span>
+          {{else}}
+          <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1"
+                 aria-label="{{localize label}}" data-tooltip="{{localize 'VARBORG.Sheet.RolledHint'}}">
+          {{/if}}
+          <button type="button" class="ability-step" data-action="adjustAbility" data-ability="{{key}}" data-step="1"
+                  data-tooltip="{{raiseHint}}" aria-label="{{raiseHint}}">+</button>
+        </div>
+        {{#if note}}<span class="ability-in-use">{{note}}</span>{{/if}}
       </div>
       {{/each}}
     </div>
@@ -67,10 +74,6 @@
     <label class="resource">
       <span>{{localize "VARBORG.Sheet.Fortune"}}</span>
       <input type="number" name="system.fortune" value="{{system.fortune}}" min="0" step="1">
-    </label>
-    <label class="resource" data-tooltip="{{localize 'VARBORG.Panic.LostSanityHint'}}">
-      <span>{{localize "VARBORG.Panic.LostSanity"}}</span>
-      <input type="number" name="system.sanityLost" value="{{system.sanityLost}}" min="0" step="1">
     </label>
     <div class="resource movement carrying-{{carrying.state}}" data-tooltip="{{localize (concat 'VARBORG.Carrying.Hint.' carrying.state)}}">
       <span>{{localize "VARBORG.Carrying.Movement"}}</span>

@@ -1,10 +1,21 @@
 <section class="inventory-section action-list">
   <h2 data-tooltip="{{localize 'VARBORG.Sheet.ActionsHint'}}">{{localize "VARBORG.Sheet.Actions"}}</h2>
+  {{!-- The basic activities of rules 3.4, done by hand (module/manual-actions.mjs). --}}
+  <div class="manual-actions" role="group" aria-label="{{localize 'VARBORG.Manual.Title'}}">
+    {{#each manualActions}}
+    <button type="button" class="manual-action" data-action="manualAction" data-kind="{{kind}}"
+            data-tooltip="{{tooltip}}" aria-label="{{tooltip}}">
+      <i class="fa-solid {{icon}}" aria-hidden="true"></i>
+      <span class="manual-label">{{label}}</span>
+      {{#if cost}}<span class="manual-cost" aria-hidden="true">{{cost}}</span>{{/if}}
+    </button>
+    {{/each}}
+  </div>
   <ul class="item-list">
     {{#each actionList}}
     <li class="item-row feat-row" data-item-id="{{item.id}}">
-      <img src="{{item.img}}" alt="">
-      <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
+      <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+      <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
         {{#each states}} <span class="item-state {{key}}">{{localize label}}</span>{{/each}}
         {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}</span>
       {{#if canAttack}}

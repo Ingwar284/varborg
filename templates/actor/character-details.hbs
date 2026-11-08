@@ -5,8 +5,8 @@
       {{#each origins}}
       {{#if item}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><span class="item-summary">{{localize label}}:</span> <button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span></span>
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        <span class="feat-text"><span class="item-summary">{{localize label}}:</span> <button type="button" class="link-button" data-action="toggleDescription"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span></span>
         <button type="button" class="icon-button" data-action="editItem"
                 data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
           <i class="fa-solid fa-pen"></i>

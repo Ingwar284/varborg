@@ -434,9 +434,11 @@ async function applyFortune({ messageId, action, spenderUuid }) {
  * @param {string} prefix  Keeps the field ids apart, such as "test" or "attack".
  */
 export function fortuneFields(actor, prefix) {
+  const fortune = actor.system.fortune ?? 0;
   return renderTemplate(FIELDS_TEMPLATE, {
     prefix,
-    hint: game.i18n.format("VARBORG.Fortune.DialogHint", { fortune: actor.system.fortune ?? 0 })
+    fortune,
+    have: game.i18n.format("VARBORG.Fortune.DialogHave", { fortune })
   });
 }
 

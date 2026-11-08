@@ -166,3 +166,12 @@ test("a ranged defence can start at an item's DR; melee always starts at 12 (GAP
   assert.equal(startingDefenceDr("melee", afterimage), 12);
   assert.equal(startingDefenceDr("shoot", undefined), 12);
 });
+
+test("damage typed by hand for a manual defence", async () => {
+  const { manualDamage } = await import("../module/rules/defence.mjs");
+  assert.deepEqual(manualDamage("d6"), { damage: "d6", fixedDamage: null });
+  assert.deepEqual(manualDamage(" 2D4 "), { damage: "2d4", fixedDamage: null });
+  assert.deepEqual(manualDamage("3"), { damage: "3", fixedDamage: 3 });
+  assert.equal(manualDamage(""), null);
+  assert.equal(manualDamage("d6+2"), null);
+});

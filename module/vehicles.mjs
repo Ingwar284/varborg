@@ -171,7 +171,8 @@ export async function driveVehicle(vehicle) {
 
   // Over twice its cargo limit it cannot move (GAPS 178).
   const load = vehicleLoad(vehicle);
-  const speeds = allowedSpeeds(load.state);
+  // A speed of 0 feet means the vehicle has no such speed (the handcart's fast).
+  const speeds = allowedSpeeds(load.state).filter(speed => vehicle.system.speed[speed] > 0);
   if (!speeds.length) {
     ui.notifications.warn(i18n.format("VARBORG.Vehicle.Overloaded", { name: vehicle.name, used: load.used, limit: load.limit }));
     return;

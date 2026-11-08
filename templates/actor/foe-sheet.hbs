@@ -68,7 +68,7 @@
       {{#each attacks}}
       <li class="item-row" data-item-id="{{item.id}}">
         <span class="attack-mark" aria-hidden="true">⚔</span>
-        <img src="{{item.img}}" alt="">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
         <span class="item-name">{{item.name}}</span>
         <span class="item-summary">{{summary}}</span>
         <button type="button" class="icon-button" data-action="attack"
@@ -99,8 +99,8 @@
       {{#each gloomAbilities}}
       <li class="item-row" data-item-id="{{item.id}}">
         <span class="attack-mark" aria-hidden="true">☾</span>
-        <img src="{{item.img}}" alt="">
-        <span class="item-name">{{item.name}}</span>
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        <button type="button" class="link-button item-name" data-action="toggleDescription">{{item.name}}</button>
         <span class="item-summary">{{cost}}{{#unless isGloom}} · {{localize "VARBORG.Gloom.NotGloom"}}{{/unless}}</span>
         {{#if isGloom}}
         <button type="button" class="icon-button" data-action="useGloom"
@@ -117,6 +117,7 @@
           <i class="fa-solid fa-trash"></i>
         </button>
       </li>
+      {{> "systems/var-borg/templates/actor/item-description-row.hbs"}}
       {{else}}
       <li class="empty">{{localize "VARBORG.Sheet.Equipment.None"}}</li>
       {{/each}}
@@ -131,7 +132,7 @@
     <ul class="item-list">
       {{#each passives}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
         <span class="feat-text"><strong>{{item.name}}</strong> {{#if frequency}}<span class="item-summary">{{frequency}}</span>{{/if}}
           {{#if item.system.frequencyUsed}}<span class="item-state used">{{localize "VARBORG.Uses.Used"}}</span>{{/if}}
           {{item.system.description}}</span>

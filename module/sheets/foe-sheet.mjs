@@ -15,6 +15,7 @@ import { rollMorale } from "../dice/morale.mjs";
 import { canRollMorale } from "../rules/morale.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
+import { onPostItem } from "../item-chat.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -44,23 +45,30 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
+      postItem: onPostItem,
       createItem: FoeSheet.#onCreateItem,
       editItem: FoeSheet.#onEditItem,
       deleteItem: FoeSheet.#onDeleteItem,
       attack: FoeSheet.#onAttack,
       useGloom: FoeSheet.#onUseGloom,
       rollMorale: FoeSheet.#onRollMorale,
-      useLimited: FoeSheet.#onUseLimited
+      useLimited: FoeSheet.#onUseLimited,
+      toggleDescription: FoeSheet.#onToggleDescription
     }
   };
 
   static PARTS = {
-    main: { template: `${TEMPLATES}/foe-sheet.hbs`, scrollable: [""] }
+    main: { template: `${TEMPLATES}/foe-sheet.hbs`, templates: [`${TEMPLATES}/item-description-row.hbs`], scrollable: [""] }
   };
+
+  /** The gloom abilities whose description is open, by id. Kept while the sheet is open. */
+  #expanded = new Set();
 
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    // Which descriptions are open (item-description-row.hbs).
+    context.expanded = Object.fromEntries([...this.#expanded].map(id => [id, true]));
     const actor = this.document;
     const system = actor.system;
     context.actor = actor;
@@ -117,6 +125,20 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const system = systems[type];
     const [item] = await this.document.createEmbeddedDocuments("Item", [{ name, type, system }]);
     item?.sheet.render(true);
+  }
+
+  /**
+   * Clicking a gloom ability's name opens its description under the row,
+   * or closes it, as on the character sheet. No re-render, so it opens at
+   * once; it stays open when the sheet redraws.
+   */
+  static #onToggleDescription(event, button) {
+    const id = button.closest("[data-item-id]")?.dataset.itemId;
+    if (!id) return;
+    const open = !this.#expanded.has(id);
+    if (open) this.#expanded.add(id);
+    else this.#expanded.delete(id);
+    for (const row of this.element.querySelectorAll(`[data-description-for="${id}"]`)) row.hidden = !open;
   }
 
   /** The sword button posts the attack, with a Defend button for each target. */

@@ -9,6 +9,9 @@
 /** The action symbol (rules 3.4). */
 export const ACTION_SYMBOL = "◈";
 
+/** Using a consumable is an Interact: one action (rules 3.4, GAPS 260). */
+export const CONSUME_ACTIONS = 1;
+
 /** The dice formula for an expendable die such as "d4", or "" for none. */
 export function expendableFormula(die) {
   return die ? `1${die}` : "";
@@ -21,15 +24,31 @@ export function isUsedUpRoll(result) {
 
 /**
  * What an expendable roll leaves. On a 1, one of a stack is used up: the
- * quantity drops by one, and the last one is marked used up instead (its
- * quantity stays 1, so unticking "used up" refills it). GAPS 52 and 54.
- * Weapons have no quantity and count as 1.
- * @returns {{quantity: number, usedUp: boolean, spent: boolean}}
+ * quantity drops by one, and at 0 the item is marked used up (GAPS 52, 54,
+ * 260). Weapons have no quantity: their ammunition is simply used up.
+ * @param {number} result      The die.
+ * @param {number|null} [quantity]  How many there are; null for a weapon.
+ * @returns {{quantity: number|null, usedUp: boolean, spent: boolean}}
  */
-export function expendableOutcome(result, quantity = 1) {
+export function expendableOutcome(result, quantity = null) {
   if (!isUsedUpRoll(result)) return { quantity, usedUp: false, spent: false };
-  if (quantity > 1) return { quantity: quantity - 1, usedUp: false, spent: true };
-  return { quantity, usedUp: true, spent: true };
+  if (quantity === null) return { quantity, usedUp: true, spent: true };
+  const left = Math.max(0, quantity - 1);
+  return { quantity: left, usedUp: left === 0, spent: true };
+}
+
+/**
+ * Whether a stack with an expendable die is used up after its quantity is
+ * changed by hand (GAPS 260): at 0 it is used up; raised again, it is not.
+ * Other changes leave "used up" as it was.
+ * @param {number} before   The quantity before.
+ * @param {number} after    The quantity after.
+ * @param {boolean} usedUp  Used up before.
+ */
+export function usedUpForQuantity(before, after, usedUp) {
+  if (after <= 0) return true;
+  if (after > before) return false;
+  return usedUp;
 }
 
 /** An item can roll its expendable die if it has one and is not used up. */

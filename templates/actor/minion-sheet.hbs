@@ -74,7 +74,7 @@
       {{#each attacks}}
       <li class="item-row" data-item-id="{{item.id}}">
         <span class="attack-mark" aria-hidden="true">⚔</span>
-        <img src="{{item.img}}" alt="">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
         <span class="item-name">{{item.name}}</span>
         <span class="item-summary">{{summary}}</span>
         <button type="button" class="icon-button" data-action="attack"
@@ -104,7 +104,7 @@
     <ul class="item-list">
       {{#each abilityItems}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
         <span class="feat-text"><strong>{{item.name}}</strong> {{#if frequency}}<span class="item-summary">{{frequency}}</span>{{/if}}
           {{#if item.system.frequencyUsed}}<span class="item-state used">{{localize "VARBORG.Uses.Used"}}</span>{{/if}}
           {{item.system.description}}</span>

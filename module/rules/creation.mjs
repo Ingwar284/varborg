@@ -10,6 +10,7 @@
 
 import { ABILITIES } from "./abilities.mjs";
 import { abilityScoreFromRollSum, MIN_ROLL_SUM, MAX_ROLL_SUM } from "./ability-score.mjs";
+import { blankEffect } from "./item-effects.mjs";
 
 /** Rules 2.2, Rolling for stats. */
 export const ABILITY_METHODS = ["individual", "together", "zero"];
@@ -74,6 +75,8 @@ const armour = (key, img, tier, price) => ({ key, type: "armour", img, system: {
 const shield = (key, img, size, price) => ({ key, type: "shield", img, system: { size, price } });
 const gear = (key, img, system = {}) => ({ key, type: "gear", img, system });
 const container = (key, img, capacity, price) => ({ key, type: "container", img, system: { capacity, price } });
+/** A vehicle from the Vehicles compendium, copied as a vehicle the character owns (GAPS 259). */
+const vehicle = (key, img, vehicleId) => ({ key, type: "vehicle", img, vehicleId, system: {} });
 
 /** Armour (rules 2.6), rolled with the class's die: one entry per row. */
 export const ARMOUR_TABLE = [
@@ -137,8 +140,8 @@ export function fixedWeaponry(keys) {
 const BANDOLEER =container("bandoleer", "icons/equipment/waist/belt-buckle-arrow-brown.webp", 5, 4);
 const SATCHEL = container("satchel", "icons/containers/bags/pack-leather-brown.webp", 10, 8);
 const BACKPACK = container("backpack", "icons/containers/bags/pack-engraved-leather-tan.webp", 15, 12);
-const SMALL_WAGON = gear("smallWagon", "icons/environment/settlement/wagon.webp", { price: 40 });
-const MULE = gear("mule", "icons/environment/creatures/horse-brown.webp", { price: 30 });
+const HANDCART = vehicle("handcart", "icons/environment/settlement/wagon.webp", "vbVehicleCart000");
+const MULE = vehicle("mule", "icons/environment/creatures/horse-brown.webp", "vbVehicleMule000");
 
 /**
  * Carrying (d6). Rows 5 and 6 offer "one of the above of your choice":
@@ -149,7 +152,7 @@ export const CARRYING_TABLE = [
   [BANDOLEER],
   [SATCHEL],
   [BACKPACK],
-  { items: [SMALL_WAGON], choice: [SMALL_WAGON, BANDOLEER, SATCHEL, BACKPACK] },
+  { items: [HANDCART], choice: [HANDCART, BANDOLEER, SATCHEL, BACKPACK] },
   { items: [MULE], choice: [MULE, BANDOLEER, SATCHEL, BACKPACK] }
 ];
 
@@ -175,7 +178,9 @@ export const DOG = "dog";
 
 /** Odds and ends (d10). */
 export const ODDS_TABLE = [
-  [gear("healingPotion", "icons/consumables/potions/potion-bottle-corked-labeled-red.webp", { price: 15, expendable: "d2" })],
+  [gear("healingPotion", "icons/consumables/potions/potion-bottle-corked-labeled-red.webp",
+    // Heals d6 HP: its Interact button heals, then rolls the d2 (GAPS 260).
+    { price: 15, expendable: "d2", effects: [{ ...blankEffect("use"), action: "heal", amount: "d6" }] })],
   [gear("spellScroll", "icons/sundries/scrolls/scroll-bound-sealed-red.webp")],
   [DOG],
   [gear("whisperingSkull", "icons/commodities/bones/skull-hollow-white.webp")],

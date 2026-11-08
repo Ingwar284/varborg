@@ -1,6 +1,6 @@
 <section class="tab var-borg-sheet {{tabs.feats.cssClass}}" data-group="primary" data-tab="feats">
   <section class="inventory-section">
-    <h2>{{localize "VARBORG.Sheet.Feats"}}</h2>
+    <div class="section-header"><h2>{{localize "VARBORG.Sheet.Feats"}}</h2><button type="button" class="add-item header-add" data-action="createItem" data-type="feat" data-tooltip="{{localize 'VARBORG.Sheet.AddTooltip'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "VARBORG.Sheet.Add"}}</button></div>
     {{#if choosingFeat}}
     <p class="improving-choice">
       <span>{{localize "VARBORG.Improving.Choose"}}</span>
@@ -15,8 +15,8 @@
     <ul class="item-list">
       {{#each feats}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
           {{#each states}} <span class="item-state {{key}}">{{localize label}}</span>{{/each}}</span>
         {{> "systems/var-borg/templates/actor/use-button.hbs"}}
         <button type="button" class="icon-button" data-action="editItem"

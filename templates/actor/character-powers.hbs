@@ -1,12 +1,12 @@
 <section class="tab var-borg-sheet {{tabs.powers.cssClass}}" data-group="primary" data-tab="powers">
   <section class="inventory-section powers">
-    <h2>{{localize "VARBORG.Sheet.Powers"}}</h2>
+    <div class="section-header"><h2>{{localize "VARBORG.Sheet.Powers"}}</h2><button type="button" class="add-item header-add" data-action="createItem" data-type="power" data-tooltip="{{localize 'VARBORG.Sheet.AddTooltip'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "VARBORG.Sheet.Add"}}</button></div>
     {{#if dancePartner}}<p class="hint">{{dancePartner}}</p>{{/if}}
     <ul class="item-list">
       {{#each powers}}
       <li class="item-row feat-row power-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
           {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}
           {{#if item.system.usedOutside}}<span class="item-state used-outside" data-tooltip="{{localize 'VARBORG.Power.UsedOutsideHint'}}">{{localize "VARBORG.Power.UsedOutside"}}</span>{{/if}}</span>
         {{#if item.system.sustaining}}
@@ -38,12 +38,12 @@
   </section>
 
   <section class="inventory-section spells">
-    <h2>{{localize "VARBORG.Sheet.Spells"}}</h2>
+    <div class="section-header"><h2>{{localize "VARBORG.Sheet.Spells"}}</h2><button type="button" class="add-item header-add" data-action="createItem" data-type="spell" data-tooltip="{{localize 'VARBORG.Sheet.AddTooltip'}}"><i class="fa-solid fa-plus" aria-hidden="true"></i> {{localize "VARBORG.Sheet.Add"}}</button></div>
     <ul class="item-list">
       {{#each spells}}
       <li class="item-row feat-row power-row spell-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
-        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription" data-tooltip="{{localize 'VARBORG.Sheet.DescriptionHint'}}"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        <span class="feat-text"><button type="button" class="link-button" data-action="toggleDescription"><strong>{{item.name}}</strong></button> <span class="item-summary">{{summary}}</span>
           {{#if item.system.sustaining}}<span class="item-state sustaining">{{localize "VARBORG.Power.Sustaining"}}</span>{{/if}}
           {{#if item.system.usedOutside}}<span class="item-state used-outside" data-tooltip="{{localize 'VARBORG.Power.UsedOutsideHint'}}">{{localize "VARBORG.Power.UsedOutside"}}</span>{{/if}}</span>
         {{#if item.system.sustaining}}

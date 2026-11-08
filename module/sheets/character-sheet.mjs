@@ -14,7 +14,7 @@ import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { lightItem, canLightItem } from "../light.mjs";
-import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
+import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton, isConsumable } from "../uses.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
 import { partnerOf, markOf } from "../outcomes.mjs";
@@ -31,7 +31,7 @@ import { canRollExpendable, needsReload, canFire, canReload } from "../rules/exp
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { rollPanicTest } from "../panic.mjs";
 import { addOrigin, isOrigin } from "../origins.mjs";
-import { ORIGIN_TYPES, currentAbilities } from "../rules/origins.mjs";
+import { ORIGIN_TYPES, currentAbilities, stepAbility } from "../rules/origins.mjs";
 import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
 import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
@@ -40,6 +40,8 @@ import { openCreationHelper } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { rollDetail } from "../personality.mjs";
 import { randomCharacter } from "../random-character.mjs";
+import { onPostItem } from "../item-chat.mjs";
+import { MANUAL_ACTIONS, runManualAction } from "../manual-actions.mjs";
 
 /**
  * The item effects on one sheet number, as text parts such as
@@ -202,13 +204,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
+      postItem: onPostItem,
+      manualAction: CharacterSheet.#onManualAction,
+      createItem: CharacterSheet.#onCreateItem,
       rollAbility: CharacterSheet.#onRollAbility,
+      adjustAbility: CharacterSheet.#onAdjustAbility,
       rollContest: CharacterSheet.#onRollContest,
       rollChance: CharacterSheet.#onRollChance,
       rollPanic: CharacterSheet.#onRollPanic,
       editItem: CharacterSheet.#onEditItem,
       deleteItem: CharacterSheet.#onDeleteItem,
       toggleCumbersome: CharacterSheet.#onToggleCumbersome,
+      toggleEquipped: CharacterSheet.#onToggleEquipped,
       rollExpendable: CharacterSheet.#onRollExpendable,
       useMedicine: CharacterSheet.#onUseMedicine,
       lightItem: CharacterSheet.#onLightItem,
@@ -245,7 +252,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     conditions: { template: `${TEMPLATES}/character-conditions.hbs`, scrollable: [""] },
     feats: { template: `${TEMPLATES}/character-feats.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
     powers: { template: `${TEMPLATES}/character-powers.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
-    inventory: { template: `${TEMPLATES}/character-inventory.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
+    inventory: { template: `${TEMPLATES}/character-inventory.hbs`, templates: [`${TEMPLATES}/inventory-row.hbs`, DESCRIPTION_ROW], scrollable: [""] },
     details: { template: `${TEMPLATES}/character-details.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] }
   };
 
@@ -289,11 +296,15 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         if (boost) parts.push(i18n.format("VARBORG.Sheet.ClassPart", { boost, name: cls.name }));
       }
       if (key === "sanity" && system.sanityLost) parts.push(i18n.format("VARBORG.Sheet.LostPart", { lost: system.sanityLost }));
+      const adjust = system.abilityAdjust?.[key] ?? 0;
+      if (adjust) parts.push(i18n.format("VARBORG.Sheet.TempPart", { change: signed(adjust) }));
       parts.push(...effectParts(system.statBonuses?.[key]));
       return {
         key,
         label: `VARBORG.Ability.${key}`,
         value: rolled,
+        lowerHint: i18n.localize(key === "sanity" ? "VARBORG.Sheet.LowerSanity" : "VARBORG.Sheet.LowerAbility"),
+        raiseHint: i18n.localize(key === "sanity" ? "VARBORG.Sheet.RaiseSanity" : "VARBORG.Sheet.RaiseAbility"),
         ...boosted(parts, signed(system.abilities[key]), rolled)
       };
     });
@@ -331,16 +342,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     };
     const droppedIds = droppedContainerIds(actor.items);
 
-    context.inventory = INVENTORY_TYPES.map(type => ({
+    const sections = INVENTORY_TYPES.map(type => ({
       type,
       label: `VARBORG.Sheet.Inventory.${type}`,
-      canEquip: EQUIPPABLE_TYPES.includes(type),
-      hasQuantity: type === "gear",
-      menuOptions: EQUIPPABLE_TYPES.includes(type) ? menuOptions.equip : type === "container" ? menuOptions.container : menuOptions.store,
       items: actor.itemTypes[type]
         .toSorted((a, b) => a.sort - b.sort)
         .map(item => ({
           item,
+          // Each row carries its own type's controls, because a row can also
+          // be shown under its container (inventory-row.hbs).
+          canEquip: EQUIPPABLE_TYPES.includes(type),
+          hasQuantity: type === "gear",
+          menuOptions: EQUIPPABLE_TYPES.includes(type) ? menuOptions.equip : type === "container" ? menuOptions.container : menuOptions.store,
           summary: itemSummary(item, stored),
           storedIn: EQUIPPABLE_TYPES.includes(type) && item.system.equipped ? "equipped"
             : item.system.storedIn === DROPPED ? DROPPED
@@ -355,12 +368,25 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canLight: canLightItem(item),
           ...useButton(item),
           ...(item.type === "relic" ? relicRow(item) : {}),
-          canExpendable: canRollExpendable(item.system),
+          // Consumables and medicine boxes roll their die from their own button (GAPS 260).
+          canExpendable: canRollExpendable(item.system) && !isConsumable(item) && !item.system.medicine,
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
           reloadTooltip: game.i18n.format("VARBORG.Reload.ReloadTooltip", { count: item.type === "weapon" ? effectiveWeapon(item).reload ?? 0 : 0 }),
           overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
         }))
+    }));
+    // Items stored in a container are listed under that container, not in
+    // their own section. A section left empty that way shows no "None" line.
+    const allRows = sections.flatMap(section => section.items);
+    const inContainer = row => containerIds.has(row.storedIn) && row.storedIn !== row.item.id;
+    for (const row of allRows) {
+      if (row.item.type === "container") row.contents = allRows.filter(other => inContainer(other) && other.storedIn === row.item.id);
+    }
+    context.inventory = sections.map(section => ({
+      ...section,
+      items: section.items.filter(row => !inContainer(row)),
+      allStored: section.items.length > 0 && section.items.every(inContainer)
     }));
 
     // Class, ancestry and background, one row each, with a short line such
@@ -414,8 +440,21 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     // out. The buttons are the same ones as on the other tabs.
     const hasItemAction = row => row.canAttack || row.canCast || row.canRaise || row.canFire || row.canReload
       || row.canMedicine || row.canLight || row.hasUse || row.canExpendable || (row.isRelic && !row.relicDestroyed);
+    // The Basic actions bar (rules 3.4): one button each, with its cost.
+    const MANUAL_ICONS = {
+      attack: "fa-khanda", defend: "fa-shield-halved", command: "fa-bullhorn", improvise: "fa-lightbulb",
+      interact: "fa-hand", move: "fa-person-running", cast: "fa-wand-sparkles", sustain: "fa-hourglass-half"
+    };
+    const MANUAL_COSTS = { attack: "◈", command: "◈", improvise: "◈–◈◈◈", interact: "◈–◈◈◈", move: "◈", cast: "◈–◈◈◈", sustain: "◈" };
+    context.manualActions = MANUAL_ACTIONS.map(kind => ({
+      kind,
+      icon: MANUAL_ICONS[kind],
+      cost: MANUAL_COSTS[kind] ?? "",
+      label: i18n.localize(`VARBORG.Manual.${kind}`),
+      tooltip: i18n.localize(`VARBORG.Manual.Tooltip.${kind}`)
+    }));
     context.actionList = [
-      ...context.inventory.flatMap(group => group.items)
+      ...allRows
         .filter(row => ["", "equipped"].includes(row.storedIn) && !row.dropped && hasItemAction(row)),
       ...context.powers.map(row => ({ ...row, isPower: true })),
       ...context.spells.map(row => ({ ...row, isSpell: true })),
@@ -499,7 +538,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     }
     for (const input of this.element.querySelectorAll("input[data-quantity]")) {
       input.addEventListener("change", event => {
-        const quantity = Math.max(1, Math.floor(Number(event.currentTarget.value)) || 1);
+        const quantity = Math.max(0, Math.floor(Number(event.currentTarget.value)) || 0);
         this.#itemFor(event.currentTarget)?.update({ "system.quantity": quantity });
       });
     }
@@ -530,6 +569,17 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The bin button asks first, then deletes the item from the character. */
   static async #onDeleteItem(event, button) {
     await this.#itemFor(button)?.deleteDialog();
+  }
+
+  /**
+   * The tick box on a weapon, armour or shield row equips it or not. It
+   * works like the "Stored in" menu: equipping takes the item out of any
+   * container (or picks it up), and unequipping leaves it carried loose.
+   */
+  static async #onToggleEquipped(event, button) {
+    const item = this.#itemFor(button);
+    if (!item || !EQUIPPABLE_TYPES.includes(item.type)) return;
+    await item.update({ "system.equipped": !item.system.equipped, "system.storedIn": "" });
   }
 
   /** The weight button marks the item cumbersome, or not. */
@@ -724,8 +774,38 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   }
 
   /** Clicking an ability name opens the test dialog for that ability, with Fortune buttons on its card. */
+  /**
+   * The Add button in a section heading (inventory, feats, powers, spells):
+   * a new item of that type, named such as "New weapon", opened for editing.
+   * Its other values are the item type's starting values.
+   */
+  static async #onCreateItem(event, button) {
+    const type = button.dataset.type;
+    if (!CONFIG.Item.dataModels[type]) return;
+    const i18n = game.i18n;
+    const name = i18n.format("VARBORG.Sheet.NewItem", { type: i18n.localize(`TYPES.Item.${type}`).toLocaleLowerCase() });
+    const [item] = await this.document.createEmbeddedDocuments("Item", [{ name, type }]);
+    item?.sheet.render(true);
+  }
+
+  /** A button on the Basic actions bar (rules 3.4). */
+  static async #onManualAction(event, button) {
+    await runManualAction(this.document, button.dataset.kind);
+  }
+
   static async #onRollAbility(event, button) {
     await rollAbilityTest(this.document, button.dataset.ability, { fortune: true });
+  }
+
+  /** − or + under an ability: a temporary change by hand (Sanity: lost Sanity first). */
+  static async #onAdjustAbility(event, button) {
+    const key = button.dataset.ability;
+    const system = this.document.system;
+    const next = stepAbility(key, Number(button.dataset.step), {
+      adjust: system.abilityAdjust?.[key] ?? 0,
+      sanityLost: system.sanityLost
+    });
+    await this.document.update({ [`system.abilityAdjust.${key}`]: next.adjust, "system.sanityLost": next.sanityLost });
   }
 
   /** The Contested test button opens the contest dialog. */

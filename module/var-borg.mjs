@@ -49,6 +49,7 @@ import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
 import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
+import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
 
 Hooks.once("init", () => {
@@ -147,6 +148,8 @@ Hooks.once("init", () => {
   Hooks.on("renderChatMessageHTML", addGloomCardListeners);
   // Inflict damage on an attack card, Morale on a foe damage card (rules 3.12).
   Hooks.on("renderChatMessageHTML", addMoraleCardListeners);
+  // The − and + buttons in roll dialogs.
+  registerDialogControls();
   // Fortune buttons on test, attack, defence and gloom test cards (rules 3.9).
   registerFortune({
     [CARD.TEST]: settleTestCard,

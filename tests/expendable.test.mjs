@@ -61,7 +61,7 @@ test("a reload shows one action symbol per Interact action", () => {
 
 test("on a 2 or more nothing is used up, whatever the quantity", () => {
   assert.deepEqual(expendableOutcome(2, 3), { quantity: 3, usedUp: false, spent: false });
-  assert.deepEqual(expendableOutcome(2), { quantity: 1, usedUp: false, spent: false });
+  assert.deepEqual(expendableOutcome(2), { quantity: null, usedUp: false, spent: false });
 });
 
 test("on a 1, one of a stack is used up (GAPS 54)", () => {
@@ -69,9 +69,17 @@ test("on a 1, one of a stack is used up (GAPS 54)", () => {
   assert.deepEqual(expendableOutcome(1, 2), { quantity: 1, usedUp: false, spent: true });
 });
 
-test("on a 1, the last one (or a weapon's ammunition) is marked used up", () => {
-  assert.deepEqual(expendableOutcome(1, 1), { quantity: 1, usedUp: true, spent: true });
-  assert.deepEqual(expendableOutcome(1), { quantity: 1, usedUp: true, spent: true });
+test("on a 1, the last one goes to 0 and is marked used up; a weapon's ammunition is used up (GAPS 260)", () => {
+  assert.deepEqual(expendableOutcome(1, 1), { quantity: 0, usedUp: true, spent: true });
+  assert.deepEqual(expendableOutcome(1), { quantity: null, usedUp: true, spent: true });
+});
+
+test("changing a stack's quantity by hand: 0 is used up, raised again is not (GAPS 260)", async () => {
+  const { usedUpForQuantity } = await import("../module/rules/expendable.mjs");
+  assert.equal(usedUpForQuantity(1, 0, false), true);
+  assert.equal(usedUpForQuantity(0, 2, true), false);
+  assert.equal(usedUpForQuantity(3, 2, false), false);
+  assert.equal(usedUpForQuantity(3, 2, true), true, "lowering leaves it as it was");
 });
 
 test("only shooting weapons with an expendable die use ammunition", () => {

@@ -1,6 +1,6 @@
 {{#if hasUse}}
 <button type="button" class="icon-button use-limited" data-action="useLimited" {{#unless canUse}}disabled{{/unless}}
         data-tooltip="{{useTooltip}}" aria-label="{{useTooltip}}">
-  <i class="fa-solid fa-hand-sparkles"></i>
+  <i class="fa-solid {{#if useInteract}}fa-hand{{else}}fa-hand-sparkles{{/if}}"></i>
 </button>
 {{/if}}

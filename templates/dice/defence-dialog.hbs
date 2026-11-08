@@ -2,7 +2,6 @@
   <p class="hint automatic">{{against}}{{#if damage}} · {{damage}}{{/if}}</p>
   {{#each notes}}<p class="hint automatic">{{this}}</p>{{/each}}
   {{#each reminders}}<p class="hint reminder">{{this}}</p>{{/each}}
-  {{{optionalEffects}}}
   <div class="form-group">
     <label for="var-borg-defence-dr">{{localize "VARBORG.Test.DR"}}</label>
     <select id="var-borg-defence-dr" name="dr">
@@ -12,15 +11,7 @@
     </select>
     <p class="hint">{{#if automaticHint}}{{automaticHint}}{{else}}{{localize "VARBORG.Defence.AutomaticHint"}}{{/if}}</p>
   </div>
-  <div class="form-group">
-    <label for="var-borg-defence-boon">{{localize "VARBORG.Test.Boon"}}</label>
-    <input id="var-borg-defence-boon" type="checkbox" name="boon">
-    <p class="hint">{{localize "VARBORG.Test.BoonHint"}}</p>
-  </div>
-  <div class="form-group">
-    <label for="var-borg-defence-bane">{{localize "VARBORG.Test.Bane"}}</label>
-    <input id="var-borg-defence-bane" type="checkbox" name="bane">
-    <p class="hint">{{localize "VARBORG.Test.BaneHint"}}</p>
-  </div>
+  {{> "systems/var-borg/templates/dice/boon-bane.hbs"}}
   {{{fortuneFields}}}
+  {{{optionalEffects}}}
 </div>

@@ -109,9 +109,9 @@
     <ul class="item-list">
       {{#each cargo}}
       <li class="item-row draggable" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
         {{#if hasQuantity}}
-        <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="1" step="1"
+        <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="0" step="1"
                aria-label="{{localize 'VARBORG.Item.Quantity'}}" data-tooltip="{{localize 'VARBORG.Item.Quantity'}}">
         {{/if}}
         <span class="item-name">{{item.name}}</span>
@@ -142,7 +142,7 @@
     <ul class="item-list">
       {{#each rulesItems}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">
-        <img src="{{item.img}}" alt="">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
         <span class="feat-text"><strong>{{item.name}}</strong> {{#if frequency}}<span class="item-summary">{{frequency}}</span>{{/if}}
           {{item.system.description}}</span>
         {{> "systems/var-borg/templates/actor/use-button.hbs"}}

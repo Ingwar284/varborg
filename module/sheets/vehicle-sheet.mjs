@@ -15,6 +15,7 @@ import VehicleData from "../data/vehicle.mjs";
 import { MOVING_ATTACK_DR, CARGO_TYPES, roomPerPassenger } from "../rules/vehicles.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { occupantsOf, boardVehicle, changeOccupant, driveVehicle, vehicleLoad, moveCargo } from "../vehicles.mjs";
+import { onPostItem } from "../item-chat.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -28,6 +29,7 @@ export default class VehicleSheet extends HandlebarsApplicationMixin(ActorSheetV
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
+      postItem: onPostItem,
       drive: VehicleSheet.#onDrive,
       removeOccupant: VehicleSheet.#onRemoveOccupant,
       openOccupant: VehicleSheet.#onOpenOccupant,
@@ -92,7 +94,7 @@ export default class VehicleSheet extends HandlebarsApplicationMixin(ActorSheetV
     // The quantity boxes have no form name, so they change the item, not the vehicle.
     for (const input of this.element.querySelectorAll("input[data-quantity]")) {
       input.addEventListener("change", event => {
-        const quantity = Math.max(1, Math.floor(Number(event.currentTarget.value)) || 1);
+        const quantity = Math.max(0, Math.floor(Number(event.currentTarget.value)) || 0);
         this.#itemFor(event.currentTarget)?.update({ "system.quantity": quantity });
       });
     }

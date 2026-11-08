@@ -108,6 +108,11 @@ test("carrying 1 is nothing; 5 and 6 offer a choice", () => {
   assert.equal(backpack.carrying[0].system.capacity, 15);
   const mule = startingEquipment({ armour: 1, weaponry: 1, carrying: 6, tools: 1, odds: 1 }, 0);
   assert.equal(mule.carrying[0].key, "mule");
+  assert.equal(mule.carrying[0].type, "vehicle");
+  assert.equal(mule.carrying[0].vehicleId, "vbVehicleMule000");
+  const cart = startingEquipment({ armour: 1, weaponry: 1, carrying: 5, tools: 1, odds: 1 }, 0);
+  assert.equal(cart.carrying[0].key, "handcart");
+  assert.equal(cart.carrying[0].vehicleId, "vbVehicleCart000");
   assert.deepEqual(mule.carryingChoice.map(item => item.key), ["mule", "bandoleer", "satchel", "backpack"]);
 });
 
