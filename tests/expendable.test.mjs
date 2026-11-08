@@ -109,3 +109,12 @@ test("weapons without ammunition are never rolled for after combat", () => {
   assert.ok(!needsAmmoRoll({ kind: "shoot", expendable: "", usedUp: false }, "combatA", "combatA"));
   assert.ok(!needsAmmoRoll({ kind: "throw", expendable: "d4", usedUp: false }, "combatA", "combatA"));
 });
+
+test("consumables: gear with an expendable die, not the medicine box (GAPS 260)", async () => {
+  const { isConsumableGear } = await import("../module/rules/expendable.mjs");
+  assert.ok(isConsumableGear("gear", { expendable: "d2" }), "healing potion");
+  assert.ok(isConsumableGear("gear", { expendable: "d10" }), "travel rations");
+  assert.ok(!isConsumableGear("gear", { expendable: "d6", medicine: true }), "medicine box has its own button");
+  assert.ok(!isConsumableGear("gear", { expendable: "" }), "rope");
+  assert.ok(!isConsumableGear("weapon", { expendable: "d4" }), "ammunition is rolled after combat");
+});

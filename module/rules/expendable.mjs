@@ -51,6 +51,17 @@ export function usedUpForQuantity(before, after, usedUp) {
   return usedUp;
 }
 
+/**
+ * A consumable: gear with an expendable die, except the medicine box, which
+ * has its own button (GAPS 149). Its button is Interact ◈: do its Use
+ * effects (if any), post its text, then roll the die (GAPS 260).
+ * @param {string} type     The item type.
+ * @param {object} system   The item's system data.
+ */
+export function isConsumableGear(type, system) {
+  return type === "gear" && Boolean(system?.expendable) && !system?.medicine;
+}
+
 /** An item can roll its expendable die if it has one and is not used up. */
 export function canRollExpendable(item) {
   return Boolean(item.expendable) && !item.usedUp;

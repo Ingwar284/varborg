@@ -22,7 +22,7 @@ import { useChoices } from "./rules/item-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 import { rollExpendable } from "./dice/expendable.mjs";
 import { turnState } from "./combat.mjs";
-import { CONSUME_ACTIONS } from "./rules/expendable.mjs";
+import { CONSUME_ACTIONS, isConsumableGear } from "./rules/expendable.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -41,12 +41,12 @@ function itemUseEffects(item) {
 }
 
 /**
- * A consumable: gear with an expendable die and Use effects, such as the
- * healing potion. Its button is Interact ◈: do the effects (the healing),
- * then roll the expendable die (GAPS 260). It has no separate die button.
+ * A consumable: gear with an expendable die, except the medicine box. Its
+ * button is Interact ◈: do its Use effects (the healing potion heals), post
+ * its text, then roll the expendable die (GAPS 260). No separate die button.
  */
 export function isConsumable(item) {
-  return item.type === "gear" && Boolean(item.system.expendable) && itemUseEffects(item).length > 0;
+  return isConsumableGear(item.type, item.system);
 }
 
 /**
@@ -54,13 +54,13 @@ export function isConsumable(item) {
  * or Use effects (step 49g).
  */
 export function hasLimitedUse(item) {
-  return TYPES.includes(item.type) && (hasFrequency(item.system) || itemUseEffects(item).length > 0);
+  return TYPES.includes(item.type) && (hasFrequency(item.system) || itemUseEffects(item).length > 0 || isConsumable(item));
 }
 
 /** Whether the Use button can be pressed now: unspent, or with no limit. */
 export function canUseItem(item) {
   if (!TYPES.includes(item.type)) return false;
-  if (isConsumable(item) && item.system.usedUp) return false;
+  if (isConsumable(item)) return !item.system.usedUp && (!hasFrequency(item.system) || canUseOnce(item.system));
   return hasFrequency(item.system) ? canUseOnce(item.system) : itemUseEffects(item).length > 0;
 }
 
