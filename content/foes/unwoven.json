@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "monstrosity",
     "description": "Once a man, perhaps. Now a tall figure of fraying cloth and loose, humming thread, its seams opening wider with every step. It wanders the Hinterlands pulling at whatever it meets, driven by the dim memory of a loom and the need to stitch itself whole from other people.",
     "hp": {
       "value": 20,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "When a spell goes wrong in Emberglow, the Shadowblight sometimes leaves something behind. A Gnawgrin is a mouth with legs: a too-wide grin of needle teeth on four knuckled limbs, scuttling after the smell of the weave. The Flux-Weavers keep cages for them. Cages are rarely enough.",
     "hp": {
       "value": 12,

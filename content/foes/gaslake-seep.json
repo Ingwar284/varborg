@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "elemental",
     "description": "An oily, iridescent shape that pulls itself out of the Gaslake's green shallows, wearing the silhouette of whatever drowned there last. It does not drown its victims so much as soak them, until they slip, and sink, and stop climbing.",
     "hp": {
       "value": 15,

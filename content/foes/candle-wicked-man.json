@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A silent figure hooded in black, a single candle lit from the Great Brazier burning in an iron cage at his breast. He is judge, jury and executioner for the Lord of Light, and he has already heard your case. He does not speak. The candle speaks for him.",
     "hp": {
       "value": 25,

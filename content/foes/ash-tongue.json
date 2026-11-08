@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "fiend",
     "description": "A thin, smoke-wreathed fiend with a mouth too wide for its face and a voice like warm ash. It whispers to the desperate in the voices of the ones they lost, and it never lies about anything it can profit from.",
     "hp": {
       "value": 15,

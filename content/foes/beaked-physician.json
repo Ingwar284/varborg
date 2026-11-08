@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "duskborn",
     "description": "The last plague in the Spill killed its physician too, and the physician never noticed. It still makes its rounds in a beaked mask stuffed with rotten herbs and a coat of waxed leather, bleeding the sick, lancing the swollen, and swinging its censer over patients who have been dead for twenty years. It is always looking for new patients. It always finds something wrong.",
     "hp": {
       "value": 20,

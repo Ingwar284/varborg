@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "elemental",
     "description": "A lumbering heap of fused bedrock, rising slowly from the broken ground of the Hinterlands. Layers of old foundations and forgotten graves grind together in its torso, and the earth groans wherever it steps. It wishes only to bury what remains.",
     "hp": {
       "value": 38,

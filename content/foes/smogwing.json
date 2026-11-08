@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "monstrosity",
     "description": "They roost on the flare-stacks of the Gaslake District with their wings wrapped round the flame, drinking it. Leathery, eyeless and as wide as a cart, they drop onto the rooftops whenever the flares gutter. The Gasmen count their missing by the empty boots left on the tiles.",
     "hp": {
       "value": 20,

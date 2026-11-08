@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A stooped, stained chemist from the Spill District, wearing goggles and a belt of clinking flasks. He sells tonics, poisons and cures, and swears that none of them are mislabelled on purpose. His apron has been on fire more than once.",
     "hp": {
       "value": 20,

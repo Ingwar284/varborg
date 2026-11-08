@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "monstrosity",
     "description": "Below the Gaunt Tombs, where the dead of the old city are stacked too tight to count, a centipede the length of a funeral procession has threaded itself through a hundred ribcages and wears them as its segments. When it moves, the whole hillside rattles.",
     "hp": {
       "value": 20,

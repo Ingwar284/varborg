@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "fiend",
     "description": "A tall fiend in a brass-buttoned coat, its face a polite mask of folded parchment. It arrives with a ledger, a quill and a smile, and it knows to the copper what you owe. Those who cannot pay discover that it accepts other currency.",
     "hp": {
       "value": 30,

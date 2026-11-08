@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "fiend",
     "description": "A sooty, ink-fingered fiend no larger than a rat, pulled up from the void by the weight of unpaid debts. It scuttles through tenements, counting coins with its claws and tallying what everyone owes. It always finds something to take.",
     "hp": {
       "value": 5,

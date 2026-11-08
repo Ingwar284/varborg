@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "monstrosity",
     "description": "A hunched, knobbly brute the colour of river mud, squatting beneath the stone bridges of the river Clear. It demands a toll in coin, and when there is no coin it takes the payment in meat. No wound holds for long, and many travellers have learned too late that the only way to stop it is fire, or the first light of morning.",
     "hp": {
       "value": 38,

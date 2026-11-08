@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "plant",
     "description": "An ancient tree whose roots grip the bones of a dozen forgotten kingdoms. Black sap weeps from its split bark, and the hollows in its trunk resemble a face that has forgotten how to scream. It wakes when the ground beneath it is disturbed, and it does not forgive.",
     "hp": {
       "value": 38,

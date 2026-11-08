@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "construct",
     "description": "A towering guardian cut from solid Godstone, its eyes burning with a slow blue light. It was forged to protect a vault whose contents have long since been forgotten, and it will defend the empty rooms until the stone itself wears away. It speaks in a language of grinding.",
     "hp": {
       "value": 38,

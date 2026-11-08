@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "humanoid",
     "description": "A thin, quick-fingered scrap of a person in a coat three sizes too large, working the crowds of the Spill District where nobody looks twice. Alone, a cutpurse is a nuisance. In a pack, they are a tide that strips a traveller to the buttons and vanishes into the soot.",
     "hp": {
       "value": 8,

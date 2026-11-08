@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "plant",
     "description": "A vast, sallow flower that turns its face to the failing suns and drinks until the soil around it cracks. Its petals shine like waxed paper, and the sweet pollen it sheds draws small things in to die.",
     "hp": {
       "value": 15,

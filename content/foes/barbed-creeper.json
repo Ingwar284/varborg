@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "plant",
     "description": "A knotted tangle of thorny vine that creeps across the ruins of the Hinterlands, tightening on whatever sleeps beside it. It has no eyes and no malice, only an endless, slow appetite for the warm.",
     "hp": {
       "value": 8,

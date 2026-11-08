@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "beast",
     "description": "Thirty years ago a menagerie keeper at the Market of the Outlandish lost a crate in the Undercity. The snake inside has grown fat in the cisterns since, on rats, on stray dogs, and on the Gasmen who go down to read the water gauges. It is as thick as a cask and patient as a debt.",
     "hp": {
       "value": 25,

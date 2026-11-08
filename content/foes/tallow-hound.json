@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "Sabb's Slaughterhouse renders what it cannot sell into tallow for the Candle-Wicked Men. Some of what goes into the vats crawls back out: dripping, hound-shaped and hungry, its hide a slick white crust over meat that never quite set. It smells like a chapel on fire.",
     "hp": {
       "value": 15,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "humanoid",
     "description": "A gaunt, soot-streaked little scavenger in a coat of stitched rags and tin, living in the walls of Oldtown where the gas pipes run. Goblins have learned that darkness belongs to the one holding the snuffer, and they gather in packs to put out every flame they find. Then they take whatever was lit.",
     "hp": {
       "value": 15,

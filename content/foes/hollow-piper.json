@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "fey",
     "description": "A gaunt, bright-eyed figure in a patchwork cloak, playing a flute carved from a child's femur. The tune is sweet and half remembered, always the one your mother hummed. It leads travellers off the road one pleasant step at a time.",
     "hp": {
       "value": 15,

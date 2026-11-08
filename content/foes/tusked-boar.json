@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "beast",
     "description": "The boars of the Verdant Still grow huge on acorns sealed in the Wailing Oak's amber, and their tusks come in yellow and glassy. Hunters say a Still boar is the only animal left in the Heartlands that is not afraid of anything. They are mostly right, and briefly.",
     "hp": {
       "value": 18,

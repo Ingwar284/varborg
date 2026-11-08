@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A weathered, hard-eyed bandit in a patchwork cloak, living off the roads of the Heartlands and the farms that cannot afford a guard. Outlaws do not boast and do not bargain. They watch from the ridge until the caravan is tired, and then they take everything.",
     "hp": {
       "value": 20,

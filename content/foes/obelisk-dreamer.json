@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "Those who sleep beneath the black obelisks of the Heartlands dream of horrors yet to come. Some never wake, but their bodies get up anyway: slack-jawed, eyes rolling beneath closed lids, mumbling of things that have not happened yet.",
     "hp": {
       "value": 18,

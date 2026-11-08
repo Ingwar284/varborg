@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "mighty",
-    "category": "",
+    "category": "humanoid",
     "description": "A lean, black-gloved professional with no name and a ledger of contracts. The Knife is hired when subtlety has failed, and it is never seen entering or leaving. Victims describe a shape in the lamplight, a cold touch and a taste of copper. Their friends describe the funeral.",
     "hp": {
       "value": 35,

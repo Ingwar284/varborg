@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "The Siphons take a Gasman most months. Their widows wait at the gates of the Gaslake works with black veils and lanterns, and a few of them never stopped waiting, not even after they died. When a Keening Widow wails, the Gasmen down below hear it in the pipes, and know whose name the Siphons will take next.",
     "hp": {
       "value": 12,

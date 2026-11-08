@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "duskborn",
     "description": "A Wickguard who died at his post and never learned to stop. Soot-black brass is welded to the rotting body beneath, and the dented lantern on his halberd still burns with a cold, sickly flame. He patrols the forgotten streets, calling out hours that no longer matter, and he arrests anyone who answers.",
     "hp": {
       "value": 20,

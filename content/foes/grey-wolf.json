@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "beast",
     "description": "The wolves of the Hinterlands follow the lamp-carts at a distance, a line of eyes at the edge of the light. They are leaner than the wolves in the old songs and far less patient. When a lantern gutters, the eyes come closer, and the horses start to scream.",
     "hp": {
       "value": 15,

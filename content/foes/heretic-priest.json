@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "humanoid",
     "description": "A haggard clergyman in vestments of scorched silk, preaching a doctrine that no temple will own. The Heretic believes the gods are dead and the world should be handed to whatever answers instead. Many things answer, and they all enjoy the sermon.",
     "hp": {
       "value": 30,

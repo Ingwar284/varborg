@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "Once they were people: gravediggers, mourners, and the hungry poor who found the doors behind the oldest tombs and went through. Below the Silent Fraternity's catacombs they became something else. Their skin is grey and rubbery, their faces have stretched into hound-like snouts, their feet have hardened into cloven hooves, and grave-mould grows on them like fur. They live on the dead the Silent Mourners never reach. They are not cruel. They are hungry and patient, and they were under Emberglow long before the Sepulcher wall was built. They dig and climb like hounds and see well in the dark.",
     "hp": {
       "value": 15,

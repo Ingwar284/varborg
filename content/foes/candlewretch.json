@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "A shambling corpse with a fat tallow wick burning from the crown of its skull, the dripping wax pooled in its eye sockets. It is one of the dead whom the Silent Mourners never severed from the world, and it drifts through the tenements in search of a flame to rejoin. Its light is warm. Its touch is not.",
     "hp": {
       "value": 15,

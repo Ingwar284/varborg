@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "duskborn",
     "description": "Duskborn do not only wear the dead. Sometimes one takes root in the living, and eats its way out slowly, until the person is a shell with black veins and something else behind the eyes. The Silent Fraternity quarantines whole tenements when it finds one.",
     "hp": {
       "value": 25,

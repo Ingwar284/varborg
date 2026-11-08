@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "beast",
     "description": "The Moon-Watchers keep great white owls in their towers as the eyes of Lun. The ones that escape grow wild over the Heartlands, wings as wide as a door, and hunt anything that moves under the cold moon. Their screech is said to be Lun's voice. It does not sound like a god who cares.",
     "hp": {
       "value": 12,

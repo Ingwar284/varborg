@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "humanoid",
     "description": "A gaunt believer in grey robes, hands stained with soot and eyes bright with a gentle, terrible certainty. The Ash Cultists preach that the dying of the light is a kindness, and they are eager to help it along.",
     "hp": {
       "value": 15,

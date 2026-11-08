@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "dragon",
     "description": "A great serpentine dragon with scales of beaten gold, its wings blotting out what little sun remains. It nests in the highest peaks of the Whistling Spine, and its roar rattles the valleys below. Some say it is the last creature that remembers what true daylight was.",
     "hp": {
       "value": 38,

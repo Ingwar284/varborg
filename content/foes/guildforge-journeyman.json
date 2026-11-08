@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "humanoid",
     "description": "A soot-faced journeyman in a leather apron, three years off his indenture and ten years from a master's chain. He drinks at the Grinning Gargoyle, hates every other guild on principle, and will happily break your fingers for an insult to his own. When the guilds strike, it is men like him who hold the doors of the Guildforge shut.",
     "hp": {
       "value": 8,

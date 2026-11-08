@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "humanoid",
     "description": "A grey-coated clerk of the Ministry of Preservation with a stick of grey chalk, a brass measuring-chain and a satchel of signed orders. He comes when the Preservers have failed, chalks the grey sign on your door, and has the house emptied by dusk. He does not raise his voice. He has never needed to.",
     "hp": {
       "value": 15,

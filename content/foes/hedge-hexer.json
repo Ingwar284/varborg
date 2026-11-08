@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A wild-haired, wary practitioner of cheap magic, hung with charms, knucklebones and tin bells. Hexers trade in curses, cures and small revenges for the villages that cannot afford priests. They do not like adventurers, and adventurers rarely give them reasons to.",
     "hp": {
       "value": 15,

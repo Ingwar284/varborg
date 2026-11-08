@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "elemental",
     "description": "A drifting, sour-smelling shape of trapped mine-gas, given hunger by the sparks of a hundred forgotten disasters. Lanterns gutter around it. Those who breathe it in first feel dizzy, then warm, then nothing at all.",
     "hp": {
       "value": 20,

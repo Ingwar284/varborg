@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A scarred, mail-clad veteran who fights for whoever is paying and, more importantly, whoever is paying more. Sellswords are loyal to a contract, not a cause. They are efficient, tired and always just a little bit open to a better offer.",
     "hp": {
       "value": 25,

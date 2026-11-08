@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "dragon",
     "description": "A lean, black-scaled drake, perched on the chimneys of the Spill District where the smog is thick enough to hide in. It hunts rats, pigeons and drunk men, and its breath leaves a stain that does not wash out.",
     "hp": {
       "value": 18,

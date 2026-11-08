@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "beast",
     "description": "A dog-sized, grey-furred spider that lives in the rafters of abandoned warehouses, its eight eyes catching the lamplight like wet pearls. It spins its webs in the dark and waits, motionless, for the smell of warm breath to drift upward.",
     "hp": {
       "value": 15,

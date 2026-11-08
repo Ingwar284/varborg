@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "monstrosity",
     "description": "A patient, rubbery horror that has learned to look like a brass-bound strongbox, a Wickguard crate or a bookcase in an abandoned archive. It waits for years, perfectly still, until a hand reaches for the lid. Then it opens, and the hand does not come back.",
     "hp": {
       "value": 25,

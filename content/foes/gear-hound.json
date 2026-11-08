@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "construct",
     "description": "A lean, dog-shaped automaton of brass ribs and exposed pistons, built to guard the factory floors of the Spindlecore District. It was never told its owners died. It still patrols, and it still bites trespassers.",
     "hp": {
       "value": 15,

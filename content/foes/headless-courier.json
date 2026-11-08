@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "duskborn",
     "description": "A courier of the Council of Many rode for the Obsidian Bastion with a sealed dispatch, and was taken on the Hinterlands road and beheaded for it. The dispatch was never delivered, so he never stopped riding. He carries his head in one hand like a lantern, burning from the inside, and it reads out names from the dispatch as he passes. Those whose names it reads do not live out the year.",
     "hp": {
       "value": 38,

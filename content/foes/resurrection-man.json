@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "humanoid",
     "description": "A spade, a sack, a shuttered lantern and no questions. Resurrection men dig the fresh dead out of the old yards the Silent Fraternity has not yet sealed, and sell them by the pound to the anatomy theatres of Inktown, where the scholars pay in silver and do not ask where the bodies came from. They work in pairs and by night, and they would rather bury a witness than have their names given to the Fraternity.",
     "hp": {
       "value": 12,

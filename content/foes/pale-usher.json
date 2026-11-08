@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "Tall, stooped and wrapped in a borrowed shroud, it waits in the doorways of Harkin's Last Hall, where the Shroud Brethren are too poor to post a watch. It beckons mourners to a back room that is not on any plan. It never speaks; it only hushes.",
     "hp": {
       "value": 12,

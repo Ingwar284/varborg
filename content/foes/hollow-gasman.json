@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "monstrosity",
     "description": "Only the Gasmen may enter the Siphons, and some of them swim too long in the air that drowns. Khael's breath fills them until there is no room left for the man: the mask fuses to the face, the oilskin to the flesh, and the body swells and hisses like a split main. The Gasmen put out their lamps when they hear one coming.",
     "hp": {
       "value": 25,

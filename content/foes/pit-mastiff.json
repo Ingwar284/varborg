@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "beast",
     "description": "Bred for the Fighting Pits, all jaw and scar, with a spiked collar and no memory of being anything else. The best of them fetch more than a journeyman earns in a year. The worst are turned loose in the alleys when they lose, and they have not forgotten how to win.",
     "hp": {
       "value": 15,

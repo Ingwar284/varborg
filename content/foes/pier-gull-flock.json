@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "beast",
     "description": "The gulls of the Gaslake piers have grown fat on offal and fish-guts and bold on the dockhands' fear. They take bread from hands, pies from windowsills and eyes from drunks asleep on the jetties. A single gull is a nuisance. The flock is a weather front with beaks.",
     "hp": {
       "value": 20,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "In the Rift of the Maw, where the old basalt bleeds Sun-Blood, long many-legged things drink at the seams. Their bellies glow through the cracks between their plates like coals through a grate. Oakhaven-on-the-Brink pays well for their heads, which stay warm for a month, and pays nothing at all for the men who go down to fetch them.",
     "hp": {
       "value": 18,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A slow, dim-eyed giant of a man, grey and bloated from the slag-runoff of the Spill District, who drifts through the alleys dragging a mangled iron lamp-post for a club. It does not speak. It is always hungry. It has never once been full.",
     "hp": {
       "value": 25,

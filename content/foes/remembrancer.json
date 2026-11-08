@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "An ancient member of the Society of the Last Witness, ink-fingered and half-blind, who carries a whole district of Emberglow in his head. He is no longer allowed to leave the city, in case the city goes with him. He rarely fights. When he does, the street fights for him, because it is exactly as he remembers it, and you are not.",
     "hp": {
       "value": 15,

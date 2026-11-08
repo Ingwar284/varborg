@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "duskborn",
     "description": "A tangle of grey bones in a scrap of burial cloth, rising from a shallow grave in the Hinterlands with a rusted blade in its fist. It does not remember who it was or why it fights. It only remembers how.",
     "hp": {
       "value": 10,

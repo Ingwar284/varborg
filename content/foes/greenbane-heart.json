@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "mighty",
-    "category": "",
+    "category": "plant",
     "description": "A mountainous, seething knot of vine, root and rotting bloom, bursting from a sinkhole in the Hinterlands where something once dug too deep. It pulses like a heart, and the earth around it blooms in sickly colours. It feeds on the world until the world has nothing left.",
     "hp": {
       "value": 55,

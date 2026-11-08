@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "humanoid",
     "description": "A road-worn knight in battered plate, mounted on a harnessed beast the size of a cart: scaled, feathered or worse, raised from the egg in the Citadel's deep stables and bound to her for life. She rides the Heartlands highways hunting raiders, beasts and the things that come out of the dark. She has buried most of her lance. She does not intend to be buried by you.",
     "hp": {
       "value": 30,

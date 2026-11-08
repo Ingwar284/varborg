@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "beast",
     "description": "A thick-bodied, eight-legged serpent with scales like cracked granite and a stare that turns the blood to sludge. It lairs in the dry caves beneath the Whistling Spine, and the statues around its nest are always in the poses of the last thing they saw. Some are very recent.",
     "hp": {
       "value": 30,

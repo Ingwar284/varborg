@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "The Solar Conclave teaches purity through suffering, and its most devout penitents stand in the fields with their faces lifted to Sol's gaze until they fall. The sun dries them hard and brown as old leather. Some of them get up again, still facing the sky, and walk the furrows touching anyone who has not suffered enough.",
     "hp": {
       "value": 18,

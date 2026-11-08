@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "The Carrion Count keeps a household, as any gentleman must: a butler, a maid, a few dinner guests who never quite left. His thralls are pale, quiet and exquisitely mannered, and they serve the Highrise's last great house with a devotion that no living servant ever matched. They are always hungry. He lets them eat after him.",
     "hp": {
       "value": 15,

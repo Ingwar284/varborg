@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "Some of the cairns at the edge of the Darklands were raised over kings and captains who swore to hold the line against the dark. They are still holding it. A Cairn Wight wears its grave-gold like armour and guards its stones against everything, the dark and the living alike.",
     "hp": {
       "value": 15,

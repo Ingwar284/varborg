@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "dragon",
     "description": "A cat-sized hatchling with oversized wings and a belly full of smouldering coals. It is bold beyond its size, and it bites at everything that is not its mother. Wherever it sleeps, the straw is always scorched.",
     "hp": {
       "value": 8,

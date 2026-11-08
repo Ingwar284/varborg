@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A magus of the Aetheric Order's protectors in warded blue robes, threads of aether drifting from her fingertips like loose silk. She hunts those who work the weave without licence, and she can feel a spell being cast three streets away. She would much rather bring you in alive. The Order pays more for the living.",
     "hp": {
       "value": 20,

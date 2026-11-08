@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "A sagging, rubbery sack of flesh that hangs from the ceilings of the Soot-Hollows, dangling a single burning bulb on a wet stalk. The light is warm, steady and kind; the only honest thing about it is the hunger beneath. It clings to walls and ceilings and drops on those who follow its glow. Travellers who do never speak of what they found.",
     "hp": {
       "value": 15,

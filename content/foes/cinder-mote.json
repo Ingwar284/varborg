@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "elemental",
     "description": "A fist-sized fleck of living ember that drifts up from dying braziers and forgotten forges. It means no harm. It simply wants to be fire, and everything around it is fuel.",
     "hp": {
       "value": 5,

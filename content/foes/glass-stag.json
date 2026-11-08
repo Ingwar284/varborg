@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "fey",
     "description": "A towering stag of translucent crystal, its antlers a thicket of living light. It haunts the fading forests at dusk, and wherever it passes the trees become briefly see-through, as though the world itself were remembering what it used to be. Those who meet its gaze forget why they came.",
     "hp": {
       "value": 30,

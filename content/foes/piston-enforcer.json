@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "construct",
     "description": "A squat, riveted automaton with a boiler for a chest and a pair of pneumatic fists for hands. Built to break strikes in the Spindlecore foundries, it still follows the last order its masters gave: restore order. It does not distinguish between lawbreakers and anyone who happens to be near.",
     "hp": {
       "value": 25,

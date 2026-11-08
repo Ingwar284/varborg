@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "humanoid",
     "description": "A bored, underpaid watchman in a padded coat and a brass-trimmed helm, carrying a cudgel and a hooded lantern. He patrols the lamplit streets of Emberglow and knows every shortcut, every bribe and every body in the canal. He is not paid enough to die for you.",
     "hp": {
       "value": 15,

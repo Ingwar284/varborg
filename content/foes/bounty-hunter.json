@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A patient, long-coated tracker with a ledger of faces and a bag of manacles. The Bounty Hunter does not enjoy the work and does not care who the target is. He wants the reward, and he wants the target breathing.",
     "hp": {
       "value": 20,

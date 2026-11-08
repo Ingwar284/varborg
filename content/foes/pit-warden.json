@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "mighty",
-    "category": "",
+    "category": "fiend",
     "description": "A towering, horned fiend in hellforged plate, its hide veined with glowing coals and its voice like a furnace door slamming. It is the overseer of the Pit, charged with keeping the furnaces of the damned stoked, and it arrives with an army when the Pit requires a debt collected in full. It does not bargain. It enforces.",
     "hp": {
       "value": 55,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "An old custom among Harkin's faithful: the first grave in a new burial ground is dug for a black dog, so that it may guard the dead that come after. Most of those grounds are full now, and their Grims are very old. A Grim does not trouble mourners. It hunts grave-robbers, resurrection men and anyone who disturbs the rest of its charges, and to see one is said to mean your own grave is already being dug.",
     "hp": {
       "value": 12,

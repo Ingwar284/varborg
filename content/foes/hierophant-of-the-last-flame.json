@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "mighty",
-    "category": "",
+    "category": "humanoid",
     "description": "A tall, robed zealot whose eyes burn like coals, the high priest of a cult that worships the dying of the sun. He preaches in plazas and sewers and cathedral crypts, and everywhere he speaks the lamps lean toward him. His followers believe that when the last flame goes out, he will be the one to bring the dark home.",
     "hp": {
       "value": 45,

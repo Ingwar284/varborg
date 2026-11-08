@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "duskborn",
     "description": "When a spell goes badly wrong, the Shadowblight sometimes takes the caster's shadow and leaves the caster. The shadow wanders off on its own, flat and cold, looking for a body to belong to. More than one Flux-Weaver in Emberglow casts no shadow at all, and does not like to be asked about it.",
     "hp": {
       "value": 5,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "duskborn",
     "description": "The lamp-routes of Emberglow are lit end to end, but no lamp reaches quite as far as the next. In the gap between two pools of light, something thin and black waits for a wick to gutter. The lamplighters count the gaps on their rounds, and count the lamplighters at the end of the night.",
     "hp": {
       "value": 12,

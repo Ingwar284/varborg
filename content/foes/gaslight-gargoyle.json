@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "construct",
     "description": "A hunched stone sentinel perched above the Highrise cornices, carved as a warning to thieves and crumbling pilgrims. The old sculptors gave it a purpose, the gas gave it a spark, and now it drops from the rooftops on anyone who looks too long at the lamps.",
     "hp": {
       "value": 20,

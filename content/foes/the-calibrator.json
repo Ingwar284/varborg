@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "mighty",
-    "category": "",
+    "category": "construct",
     "description": "A colossal engine of iron, gears and aetheric coils, the last masterwork of the Prime Geometrician's workshop. It was built to calibrate the city's aetheric heart, adjusting the world to its proper measure. It has come to believe that most living things are out of tolerance.",
     "hp": {
       "value": 55,

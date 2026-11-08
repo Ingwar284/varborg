@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "humanoid",
     "description": "A starving farmer with a pitchfork and nothing left to lose, driven from a dead field by the fading suns. One is a pitiful sight. A hundred are a riot, and a riot does not care who it tramples.",
     "hp": {
       "value": 5,

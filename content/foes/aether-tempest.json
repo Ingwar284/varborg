@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "mighty",
-    "category": "",
+    "category": "elemental",
     "description": "A roiling storm of raw aether, loosed when a great weave snapped over the old industrial districts. Its crackling heart burns white, and its thunder has the cadence of a voice shouting in a language the world forgot. It does not rage. It simply discharges.",
     "hp": {
       "value": 55,

@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "humanoid",
     "description": "A broad, bruise-knuckled drunk who has been in every fistfight on the Gaslake waterfront and lost very few. He swings a broken bottle with the confidence of a man who has forgotten what pain is.",
     "hp": {
       "value": 10,

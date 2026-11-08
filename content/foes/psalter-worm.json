@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "monstrosity",
     "description": "Beneath the Great Archives, among the records too heretical to burn and too dangerous to read, the worms have eaten well. A Psalter-Worm is as long as a hearse, its pale flesh tattooed from within by the ink it has swallowed, and it mutters what it has eaten in the Grand Archivist's own cadence. The Iron Ledger Society denies that it exists. It has eaten the denials too.",
     "hp": {
       "value": 20,

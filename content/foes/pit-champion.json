@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "humanoid",
     "description": "A mountain of scarred muscle who has survived forty bouts in the Spill District's fighting pits, each one a death sentence for the rest. He wears the crowd's cheers like armour, and he fights with the unhurried grace of a man who knows how the story ends.",
     "hp": {
       "value": 38,

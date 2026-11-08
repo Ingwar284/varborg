@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "monstrosity",
     "description": "The Great Reflectors on the Whistling Spine bend the last sun's light towards Emberglow, and their tenders polish them day after day. Those who polish too long begin to see someone else polishing back. Mirrorlings are what climbs out: thin, tarnished-silver figures that wear the face of whoever is looking at them. The Reflectors lose a tender every winter.",
     "hp": {
       "value": 12,

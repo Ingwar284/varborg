@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "duskborn",
     "description": "The Gaunt Tombs hold the dead of the old city, the one Lamoral ruled, and some of them were buried with their bows. Their skeletons rise in rusted mail with quivers that never seem to empty, and they shoot from the broken mausoleums in perfect volleys, as if someone long dead were still calling the orders.",
     "hp": {
       "value": 8,

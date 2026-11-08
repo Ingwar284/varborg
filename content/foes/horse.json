@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "beast",
     "description": "A rawboned Heartlands draught horse, blinkered against the dark and shod in pitted iron. Few horses are left that will walk beyond the cairn-lights; those that do are worth more than the riders on their backs, and every Wickguard stable keeps a lantern burning all night so they will not scream.\nAs a mount or draught animal, see Subsystem: Vehicles. A horse costs 80s (4.1 Gear).",
     "hp": {
       "value": 15,

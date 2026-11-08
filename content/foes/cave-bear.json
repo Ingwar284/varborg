@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "beast",
     "description": "The Obsidian Bastion's miners dig deeper every year, and sometimes they dig into a bear. The cave bears of the Whistling Spine sleep through winters that no longer end, and wake hungry, slow to anger and slower to stop. A miners' rule: if the tunnel smells of wet dog, leave the Godstone where it lies.",
     "hp": {
       "value": 25,

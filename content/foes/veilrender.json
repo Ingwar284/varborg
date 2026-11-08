@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "monstrosity",
     "description": "A gaunt, many-jointed shape that unfolds from places where the world has worn thin: the cloisters beneath the great temples, the sealed vaults, the last hollow of a dying fire. It does not walk so much as arrive, and where it has stood the air stays torn. The dead whisper from its wake, and they are never saying anything kind.",
     "hp": {
       "value": 30,

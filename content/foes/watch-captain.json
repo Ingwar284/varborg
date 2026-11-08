@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "strong",
-    "category": "",
+    "category": "humanoid",
     "description": "A grizzled veteran in brass-trimmed plate, her tabard stained with soot and old blood, her lantern always burning. She commands a district of Emberglow with a ledger and a longsword, and she has arrested a prince, a priest and a poet in the same week. She is fair, which is more dangerous than being kind.",
     "hp": {
       "value": 30,

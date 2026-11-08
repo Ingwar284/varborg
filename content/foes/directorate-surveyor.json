@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "humanoid",
     "description": "A lean, weather-cracked agent of the Second Directorate in a long grey oilskin and brass-lensed goggles, a long rifle across her back and a ledger of numbers no one else is allowed to read. She has stood at the cairn-line and taken a reading towards the dark. Whatever she saw there, it has made her very calm about you.",
     "hp": {
       "value": 20,

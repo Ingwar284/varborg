@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "dragon",
     "description": "A fat, wheezing drake whose belly is swollen with the gas of the deep strata, drawn to the Gaslake like a moth. It belches in lazy clouds, and those who strike it with flame learn why the locals give it a wide berth.",
     "hp": {
       "value": 25,

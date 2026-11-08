@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "weak",
-    "category": "",
+    "category": "humanoid",
     "description": "A lean, quiet hunter in a coat stitched from a dozen furs, taking game from lands that belong to someone else. He knows the forest better than the lords who own it, and he has learned that the safest prey is the one that wanders into his traps.",
     "hp": {
       "value": 12,

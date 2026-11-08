@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "beast",
     "description": "The walls of the Rift of the Maw are the warmest place in the Dusklands, and the scorpions there have grown as long as a cart. Their shells are black as the basalt, and in the glow of the Sun-Blood they look like moving stone. Oakhaven-on-the-Brink lines its walkways with brass bells so it can hear them climb.",
     "hp": {
       "value": 20,

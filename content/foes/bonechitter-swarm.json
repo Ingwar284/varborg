@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "duskborn",
     "description": "Rats die in the catacombs like everything else, and in the catacombs nothing stays dead for long. A Bonechitter Swarm is a pouring carpet of tiny skeletons, clicking and chittering, still hunting the same scraps they starved for. The Silent Mourners sweep them back into the ossuaries with brooms.",
     "hp": {
       "value": 10,

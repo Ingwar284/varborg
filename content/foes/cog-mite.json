@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "pitiful",
-    "category": "",
+    "category": "construct",
     "description": "A wind-up beetle of tarnished brass, the size of a boot, left ticking in the corners of abandoned workshops. It does not know why it was built, but it knows that it must bite whatever moves, and that it must keep ticking.",
     "hp": {
       "value": 5,

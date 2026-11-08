@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "plant",
     "description": "A squat mass of black, spongy root that erupts from the ground where something large died long ago. Its tendrils wind through the mud like veins, and its sour breath makes the eyes water. By the time a traveller notices the roots, they are already bound.",
     "hp": {
       "value": 25,

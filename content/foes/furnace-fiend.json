@@ -16,7 +16,7 @@
   },
   "system": {
     "tier": "moderate",
-    "category": "",
+    "category": "fiend",
     "description": "A hulking brute of black iron and glowing slag, hauled up from the deep furnaces beneath the Spill District where the heat never fades. It beats its chest and the walls blister. It remembers every forge-master who worked it to death.",
     "hp": {
       "value": 25,
