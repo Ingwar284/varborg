@@ -138,12 +138,14 @@ export function equipmentItem(spec) {
  * @param {Actor} actor  A character.
  * @param {object} cls   The class's item data (from itemData).
  * @param {object[]} [sources]  From gatherSources, if already gathered.
+ * @param {object} [collect]  Give { rolls } to put the class's own card
+ *   lines in the returned lines instead of posting its origin card.
  * @returns {Promise<string[]>} The lines for a card (not posted here).
  */
-export async function applyClassWithStarting(actor, cls, sources = null) {
+export async function applyClassWithStarting(actor, cls, sources = null, collect = null) {
   const i18n = game.i18n;
   const lines = [];
-  await addOrigin(actor, cls);
+  await addOrigin(actor, cls, collect ? { lines, rolls: collect.rolls } : null);
   const names = classStarting(cls.system.description);
   sources ??= await gatherSources();
   const find = (type, source, name) => sources.find(s => s.type === type && s.source === source && s.name === name && belongsTo(s.belongsTo, cls.name));
@@ -186,9 +188,11 @@ export async function addDog(actor) {
  *   Asks which carrying item to take when the row offers a choice. Without
  *   it, the rolled item is taken (GAPS 256).
  * @param {boolean} [options.askAgain=true]  Ask before rolling a second time.
+ * @param {{lines: string[], rolls: Roll[]}} [options.collect]  Collect the
+ *   card's lines and rolls here instead of posting the card.
  * @returns {Promise<boolean>} Whether equipment was rolled.
  */
-export async function rollStartingEquipment(actor, { chooseCarrying = null, askAgain = true } = {}) {
+export async function rollStartingEquipment(actor, { chooseCarrying = null, askAgain = true, collect = null } = {}) {
   const i18n = game.i18n;
   const cls = actor.itemTypes.class?.[0];
   if (!cls) {
@@ -243,7 +247,10 @@ export async function rollStartingEquipment(actor, { chooseCarrying = null, askA
   if (toCreate.length) await actor.createEmbeddedDocuments("Item", toCreate);
   await actor.setFlag(SYSTEM, EQUIPMENT_FLAG, true);
   lines.push(...extra, i18n.localize("VARBORG.Creation.Equipment.EquipHint"));
-  await postCard(actor, i18n.format("VARBORG.Creation.Equipment.CardTitle", { name: actor.name }), lines, rolls);
+  if (collect) {
+    collect.lines.push(...lines);
+    collect.rolls.push(...rolls);
+  } else await postCard(actor, i18n.format("VARBORG.Creation.Equipment.CardTitle", { name: actor.name }), lines, rolls);
   return true;
 }
 

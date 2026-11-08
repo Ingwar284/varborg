@@ -33,9 +33,14 @@ function signed(score) {
  * already has, and post a card.
  * @param {Actor} actor  A character.
  * @param {object} data  The item data to create (as from Item#toObject).
+ * @param {object} [collect]  Give arrays here to collect the card's lines
+ *   and the wealth roll instead of posting them (the random character
+ *   generator puts everything on one card).
+ * @param {string[]} [collect.lines]
+ * @param {Roll[]} [collect.rolls]
  * @returns {Promise<Item|null>} The new item.
  */
-export async function addOrigin(actor, data) {
+export async function addOrigin(actor, data, collect = null) {
   const i18n = game.i18n;
   // Replace the old one. An old class's +1 goes with it.
   const old = actor.itemTypes[data.type] ?? [];
@@ -83,7 +88,8 @@ export async function addOrigin(actor, data) {
     if (formula) {
       const roll = await new Roll(formula).evaluate();
       await actor.update({ "system.silver": actor.system.silver + roll.total });
-      await roll.toMessage({
+      if (collect) collect.rolls?.push(roll);
+      else await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor }),
         flavor: i18n.format("VARBORG.Origin.WealthFlavour", { name: data.name, wealth: data.system.wealth })
       });
@@ -93,6 +99,10 @@ export async function addOrigin(actor, data) {
     }
   }
 
+  if (collect) {
+    collect.lines?.push(...lines);
+    return item ?? null;
+  }
   const title = i18n.format(`VARBORG.Origin.Title.${data.type}`, { actor: actor.name, name: data.name });
   const content = await renderTemplate(CARD_TEMPLATE, { title, lines });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), flavor: title, content });

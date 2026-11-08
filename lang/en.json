@@ -347,13 +347,16 @@
       "ReplaceTitle": "Roll a new character",
       "Replace": "{name} already has a class, ancestry or background. Roll a new character? Abilities, class, ancestry, background, the starting ancestry feat, class feature and class power, and the Details are replaced. Items and spells already on the sheet stay.",
       "CardTitle": "{name}, rolled at random",
-      "AncestryLine": "Ancestry: {ancestry}, with the ancestry feat {feat}.",
-      "AncestryNoFeat": "Ancestry: {ancestry} (no ancestry feat found).",
-      "BackgroundRolled": "Background: {background} (d100: {roll}).",
-      "BackgroundLine": "Background: {background}.",
-      "ClassSpellLine": "Class: {cls}, knowing the spell {spell}.",
-      "ClassLine": "Class: {cls}.",
-      "EquipmentLine": "Starting equipment rolled: see its card.",
+      "Heading": {
+        "abilities": "Abilities (2.2)",
+        "ancestry": "Ancestry (2.3)",
+        "background": "Background (2.4)",
+        "class": "Class (2.5)",
+        "equipment": "Starting equipment (2.6)",
+        "details": "Details (2.7)"
+      },
+      "NoAncestryFeat": "No ancestry feat found for this ancestry.",
+      "BackgroundRolled": "d100: {roll} → {background}",
       "NoneFound": "No {type} found in the world or the compendiums."
     },
     "Personality": {

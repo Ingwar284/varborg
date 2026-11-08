@@ -369,7 +369,8 @@
   margin-bottom: 0.4rem;
 }
 
-.var-borg-card.improving-card h4 {
+.var-borg-card.improving-card h4,
+.var-borg-card.random-card h4 {
   margin: 0.5rem 0 0.2rem;
   border-bottom: 1px solid var(--vb-ink);
 }
