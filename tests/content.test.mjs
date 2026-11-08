@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
 import { frequencyFromText } from "../module/rules/uses.mjs";
 import { wealthFormula } from "../module/rules/origins.mjs";
+import { nameTableIds } from "../module/rules/random.mjs";
 import { AUTOMATION, effectProblems } from "../module/rules/item-effects.mjs";
 import { automationEntries } from "../tools/automation.mjs";
 
@@ -503,8 +504,11 @@ function rollSpan(formula) {
 /** The four rules 2.7 tables (step 54b), written in the rules as numbered lists. */
 const PERSONALITY_TABLES = ["Personality traits", "Physical mark", "Idiosyncrasy", "Call to adventure"];
 
-test("the fourteen roll tables are there", () => {
-  assert.deepEqual(rollTables.map(t => t.name).sort(), [
+/** The drafted name tables (GAPS 258): not from the rules. */
+const isNameTable = t => t.name.startsWith("Names: ");
+
+test("the fourteen rules roll tables are there", () => {
+  assert.deepEqual(rollTables.filter(t => !isNameTable(t)).map(t => t.name).sort(), [
     "Backgrounds", "Call to adventure", "Harkin's Reprieve: you wake…", "Idiosyncrasy", "Personality traits",
     "Photonic Surge", "Physical mark", "Relic", "Relics 13–22", "Relics 1–12",
     "Searching the fallen", "Spoils", "Trinkets", "Valuables"
@@ -535,6 +539,23 @@ test("every link in a table points to an entry that exists, in the right compend
   }
 });
 
+test("every ancestry has a d20 given-name and a d20 family-name table (GAPS 258)", () => {
+  const ancestries = allContent.filter(d => d.type === "ancestry").map(d => d.name);
+  assert.equal(rollTables.filter(isNameTable).length, ancestries.length * 2);
+  for (const ancestry of ancestries) {
+    for (const part of ["given", "family"]) {
+      const t = rollTables.find(t => t.name === `Names: ${ancestry} (${part})`);
+      assert.ok(t, `${ancestry} ${part}`);
+      assert.equal(t.formula, "1d20");
+      assert.equal(t.results.length, 20);
+      const ids = nameTableIds(ancestry);
+      assert.equal(t._id, ids[part], `${ancestry} ${part} id`);
+      const names = t.results.map(r => r.description);
+      assert.equal(new Set(names).size, 20, `${ancestry} ${part}: no name twice`);
+    }
+  }
+});
+
 test("the relic tables give the odds of rules 4.2: d2, then d12 or d10 + 12", () => {
   const byName = name => rollTables.find(t => t.name === name);
   assert.equal(byName("Relic").formula, "1d2");
@@ -545,7 +566,7 @@ test("the relic tables give the odds of rules 4.2: d2, then d12 or d10 + 12", ()
 
 test("the text results are word for word in the rules", () => {
   const plain = html => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim();
-  for (const t of rollTables.filter(t => !["Photonic Surge", "Searching the fallen", "Valuables", ...PERSONALITY_TABLES].includes(t.name))) {
+  for (const t of rollTables.filter(t => !isNameTable(t) && !["Photonic Surge", "Searching the fallen", "Valuables", ...PERSONALITY_TABLES].includes(t.name))) {
     for (const r of t.results.filter(r => r.type === "text")) assert.ok(rules.includes(`| ${plain(r.description)} |`), `${t.name}: ${plain(r.description)}`);
   }
   // Rules 2.7 numbers its d100 lists: "17.  Clumsy, awkward and accident-prone".

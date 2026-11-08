@@ -78,6 +78,34 @@ export function groupForRoll(roll, groups = IMPROVING_GROUPS) {
   return groups[roll - 1];
 }
 
+/**
+ * The name tables (GAPS 258): a d20 of given names and a d20 of family
+ * names for each ancestry, by the code in their ids (vbName<code>G00000
+ * and vbName<code>F00000). An ancestry without tables uses the human ones.
+ */
+export const NAME_TABLE_CODES = {
+  dragonkin: "Drag", dwarf: "Dwar", elf: "Elf0", gnome: "Gnom",
+  goblin: "Gobl", halfling: "Half", human: "Huma", orc: "Orc0"
+};
+
+/** The ancestry whose names are used when an ancestry has none. */
+export const DEFAULT_NAME_ANCESTRY = "human";
+
+/**
+ * The ids of the given-name and family-name tables for an ancestry.
+ * @param {string} ancestry  The ancestry's name, such as "Dwarf".
+ * @returns {{given: string, family: string}}
+ */
+export function nameTableIds(ancestry) {
+  const code = NAME_TABLE_CODES[String(ancestry ?? "").trim().toLowerCase()] ?? NAME_TABLE_CODES[DEFAULT_NAME_ANCESTRY];
+  return { given: `vbName${code}G00000`, family: `vbName${code}F00000` };
+}
+
+/** A whole name from its two rolled parts: "Brukka Coalbeard", "Vaskarr of the Ninth Oath". */
+export function joinName(given, family) {
+  return [given, family].map(part => String(part ?? "").trim()).filter(Boolean).join(" ");
+}
+
 /** The Details fields rolled on the rules 2.7 tables. */
 export const DETAIL_FIELDS = ["personality", "physicalMark", "idiosyncrasy", "callToAdventure"];
 
@@ -95,13 +123,23 @@ export const DETAIL_SEPARATOR = "; ";
  * @returns {string}
  */
 export function detailText(html) {
-  const text = String(html ?? "")
+  const text = plainText(html);
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/**
+ * A table result's text with tags removed and spaces tidied, letters as
+ * they are ("of the Ninth Oath" stays lower case).
+ * @param {string} html
+ * @returns {string}
+ */
+export function plainText(html) {
+  return String(html ?? "")
     .replace(/<[^>]*>/g, "")
     .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
     .replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, "\"").replace(/&nbsp;/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 /** How many draws to try for one field before giving up (a tiny table cannot loop for ever). */

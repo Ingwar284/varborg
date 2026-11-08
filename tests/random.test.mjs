@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  pickRandom, uniqueByName, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
+  pickRandom, uniqueByName, nameTableIds, joinName, plainText, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
 } from "../module/rules/random.mjs";
 
 test("pickRandom picks by the random number", () => {
@@ -109,4 +109,24 @@ test("groupForRoll maps the die to a group", () => {
   assert.equal(groupForRoll(2, ["general", "class"]), "class");
   assert.throws(() => groupForRoll(4));
   assert.throws(() => groupForRoll(0, ["general"]));
+});
+
+// Names (GAPS 258).
+test("each ancestry has its own name tables, others the human ones", () => {
+  assert.deepEqual(nameTableIds("Dwarf"), { given: "vbNameDwarG00000", family: "vbNameDwarF00000" });
+  assert.deepEqual(nameTableIds(" orc "), { given: "vbNameOrc0G00000", family: "vbNameOrc0F00000" });
+  assert.deepEqual(nameTableIds("Lizardfolk"), nameTableIds("Human"));
+  assert.deepEqual(nameTableIds(""), nameTableIds("Human"));
+});
+
+test("joinName puts the given name first", () => {
+  assert.equal(joinName("Brukka", "Coalbeard"), "Brukka Coalbeard");
+  assert.equal(joinName("Vaskarr", "of the Ninth Oath"), "Vaskarr of the Ninth Oath");
+  assert.equal(joinName("Pim", ""), "Pim");
+  assert.equal(joinName("", ""), "");
+});
+
+test("plainText keeps lower case, detailText starts with a capital", () => {
+  assert.equal(plainText("<p>of the Ninth Oath</p>"), "of the Ninth Oath");
+  assert.equal(detailText("<p>of the Ninth Oath</p>"), "Of the Ninth Oath");
 });

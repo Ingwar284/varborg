@@ -1,16 +1,19 @@
 /**
  * The random character generator (step 54c, GAPS 256): the baseline way
- * to make a character. One button on the character sheet rolls every step
- * of rules 2.1:
+ * to make a character. One button on the character sheet makes a fully new
+ * character (step 54f): it wipes the old one, name included (only the
+ * portrait and token image stay), rolls starting Fortune again, then rolls
+ * every step of rules 2.1:
  * 1. Abilities: 3d6 for each ability (rules 2.2, Roll individually).
- * 2. Ancestry, each equally likely, and one ancestry feat of that ancestry.
+ * 2. Ancestry, each equally likely, a name from that ancestry's name tables
+ *    (GAPS 258), and one ancestry feat of that ancestry.
  * 3. Background: d100 on the Backgrounds table (rules 2.4), which rolls
  *    its wealth and adds its keepsake.
  * 4. Class, each equally likely, with its class feature and class power,
  *    and one learnable spell (cost 3 or less, no rituals) if it has a list.
  * 5. Starting equipment (rules 2.6), taking the rolled carrying item.
  * 6. Details: the four rules 2.7 tables.
- * No difficulty feat is taken, and the name is left as it is.
+ * No difficulty feat is taken.
  *
  * Everything goes on one chat card, a section per step, with all the dice
  * rolled (step 54e).
@@ -30,9 +33,14 @@ import {
   applyClassWithStarting, rollStartingEquipment
 } from "./creation.mjs";
 import { rollAllDetails } from "./personality.mjs";
+import { rollName } from "./names.mjs";
+import { ownedMinions } from "./minions.mjs";
+import { STARTING_FORTUNE_FORMULA } from "./rules/fortune.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
+
+const SYSTEM = "var-borg";
 const { renderTemplate } = foundry.applications.handlebars;
 
 /** The one card the generator posts. */
@@ -41,16 +49,61 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/random-character-card.hbs
 /** The d100 Backgrounds table (content/tables/backgrounds.json). */
 const BACKGROUND_TABLE = "Compendium.var-borg.tables.RollTable.vbTableBackgrnd0";
 
-/** Ask first when the character already has a class, ancestry or background. */
+/** Whether anything is on the sheet yet: items, effects, minions or filled-in numbers and text. */
+function hasAnything(actor) {
+  if (actor.items.size || actor.effects.size || ownedMinions(actor).length) return true;
+  const blank = actor.system.schema.getInitialValue();
+  const now = actor.system.toObject();
+  delete now.fortune;
+  delete blank.fortune;
+  return !foundry.utils.isEmpty(foundry.utils.diffObject(blank, now));
+}
+
+/** Ask first when the character has anything on the sheet: all of it is wiped. */
 async function confirmReplace(actor) {
-  const hasOrigin = ["class", "ancestry", "background"].some(type => actor.itemTypes[type]?.length);
-  if (!hasOrigin) return true;
+  if (!hasAnything(actor)) return true;
   const i18n = game.i18n;
   return DialogV2.confirm({
     classes: VB_DIALOG_CLASSES,
     window: { title: i18n.localize("VARBORG.Random.ReplaceTitle") },
     content: `<p>${i18n.format("VARBORG.Random.Replace", { name: foundry.utils.escapeHTML(actor.name) })}</p>`
   });
+}
+
+/**
+ * Wipe the character (GAPS 256): every item, effect and system flag goes,
+ * the sheet's numbers and text return to a blank character's, and the
+ * minions serving them are deleted (or let go, when this user may not
+ * delete them). Starting Fortune is rolled again (d3, rules 3.9). Only the
+ * name, portrait and token stay. Returns the card lines.
+ */
+async function wipeCharacter(actor, rolls) {
+  const i18n = game.i18n;
+  const lines = [];
+  if (actor.items.size) await actor.deleteEmbeddedDocuments("Item", actor.items.map(item => item.id));
+  if (actor.effects.size) await actor.deleteEmbeddedDocuments("ActiveEffect", actor.effects.map(effect => effect.id));
+
+  for (const minion of ownedMinions(actor)) {
+    if (minion.canUserModify(game.user, "delete")) await minion.delete();
+    else if (minion.isOwner) await minion.update({ "system.owner": "" });
+    else {
+      lines.push(i18n.format("VARBORG.Random.MinionKept", { minion: minion.name }));
+      continue;
+    }
+    lines.push(i18n.format("VARBORG.Random.MinionGone", { minion: minion.name }));
+  }
+
+  // A blank character's data. HP is left to the class, which sets it: dropping
+  // HP to 0 here would count as being struck to 0 (a wound, rules 3.5).
+  const blank = actor.system.schema.getInitialValue();
+  delete blank.hp;
+  blank.fortune = await rollInto(rolls, STARTING_FORTUNE_FORMULA);
+  // The name is wiped too; a new one is rolled with the ancestry (GAPS 258).
+  // _del is Foundry v14's "delete this key" (as in module/light.mjs).
+  const nameless = i18n.localize("VARBORG.Random.Nameless");
+  await actor.update({ name: nameless, "prototypeToken.name": nameless, system: blank, flags: { [SYSTEM]: _del } });
+  lines.push(i18n.format("VARBORG.Random.FortuneLine", { fortune: blank.fortune }));
+  return lines;
 }
 
 /** Step 1: 3d6 for each ability, written to the character. Returns the card lines. */
@@ -109,12 +162,22 @@ export async function randomCharacter(actor) {
   };
   const none = type => i18n.format("VARBORG.Random.NoneFound", { type: i18n.localize(`TYPES.Item.${type}`) });
 
+  // 0. A fully new character: wipe the old one (GAPS 256).
+  const newLines = section("wiped");
+  newLines.push(...await wipeCharacter(actor, rolls));
+
   // 1. Abilities come first: the class's HP uses Toughness.
   section("abilities").push(...await rollAbilities(actor, rolls));
 
-  // 2. Ancestry and its one ancestry feat (rules 2.1, Step 2).
+  // 2. Ancestry, then a name from its name tables (GAPS 258), then its one
+  //    ancestry feat (rules 2.1, Step 2). Without an ancestry, human names.
   const ancestryLines = section("ancestry");
   const ancestry = await randomData(uniqueByName(sources.filter(s => s.type === "ancestry")));
+  const name = await rollName(ancestry?.name ?? "", rolls);
+  if (name) {
+    await actor.update({ name, "prototypeToken.name": name });
+    newLines.unshift(i18n.format("VARBORG.Random.NameLine", { name }));
+  }
   if (ancestry) {
     ancestryLines.push(ancestry.name);
     await addOrigin(actor, ancestry, { lines: ancestryLines, rolls });

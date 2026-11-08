@@ -345,9 +345,10 @@
     "Random": {
       "Tooltip": "Random character",
       "ReplaceTitle": "Roll a new character",
-      "Replace": "{name} already has a class, ancestry or background. Roll a new character? Abilities, class, ancestry, background, the starting ancestry feat, class feature and class power, and the Details are replaced. Items and spells already on the sheet stay.",
+      "Replace": "Roll a fully new character? Everything on {name}'s sheet is wiped: every item, feat, power and spell, abilities, HP, wounds, silver, Fortune, conditions, Details and notes, the name, and the minions that serve {name}. A new name is rolled. Only the portrait and token image stay. This cannot be undone.",
       "CardTitle": "{name}, rolled at random",
       "Heading": {
+        "wiped": "A new character",
         "abilities": "Abilities (2.2)",
         "ancestry": "Ancestry (2.3)",
         "background": "Background (2.4)",
@@ -355,6 +356,11 @@
         "equipment": "Starting equipment (2.6)",
         "details": "Details (2.7)"
       },
+      "Nameless": "Nameless",
+      "NameLine": "Name: {name}.",
+      "FortuneLine": "The old character is wiped. Starting Fortune (d3): {fortune}.",
+      "MinionGone": "{minion} no longer serves this character.",
+      "MinionKept": "{minion} still serves this character: only its owner or the Dark Master can let it go.",
       "NoAncestryFeat": "No ancestry feat found for this ancestry.",
       "BackgroundRolled": "d100: {roll} → {background}",
       "NoneFound": "No {type} found in the world or the compendiums."
