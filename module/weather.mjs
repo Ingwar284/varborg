@@ -22,6 +22,10 @@
  * module/travel.mjs, Blackburn in module/light.mjs. Their card says what
  * the system does; every other hazard stays as text.
  *
+ * The Weather subsystem can be switched off (module/settings.mjs). Then
+ * currentWeather() has no hazard, so nothing above has any effect, and no
+ * weather is rolled. The saved hex is kept for when it is switched back on.
+ *
  * The maths lives in module/rules/weather.mjs.
  */
 
@@ -31,6 +35,7 @@ import {
 } from "./rules/weather.mjs";
 import { AUTOMATED } from "./rules/weather-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { weatherOn } from "./settings.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -48,8 +53,14 @@ export function registerWeather(onChange) {
   });
 }
 
-/** Today's weather: {hex, hazard}. */
+/** Today's weather: {hex, hazard}. With the Weather subsystem off, there is no hazard. */
 export function currentWeather() {
+  const weather = savedWeather();
+  return weatherOn() ? weather : { ...weather, hazard: null };
+}
+
+/** The weather as saved, whether or not the Weather subsystem is in use. */
+function savedWeather() {
   return cleanWeather(game.settings.get(SYSTEM, SETTING));
 }
 
@@ -112,6 +123,7 @@ export function flowerHTML(current, { pick = false, labels = false } = {}) {
 export function weatherContext() {
   const { hex, hazard } = currentWeather();
   return {
+    on: weatherOn(),
     name: hexName(hex),
     kind: hexById(hex).kind,
     hazard: hazard ? hazardName(hazard) : "",
@@ -143,7 +155,7 @@ export async function shiftWeather() {
 
 /** Roll 2d6, move the weather, roll a hazard's d10, save and post the card. */
 async function rollWeatherMove(intro = "") {
-  if (!game.user.isGM) return;
+  if (!game.user.isGM || !weatherOn()) return;
   const i18n = game.i18n;
   const today = currentWeather();
   const roll = new Roll(MOVE_DICE);

@@ -5,10 +5,17 @@
  * setting off (the default), the Creation Helper window is hidden and
  * Improving rolls its feat. With it on, the Creation Helper button returns
  * to the character sheet and Improving lets the player choose the feat.
+ *
+ * Weather: the Weather subsystem is optional (Dark Master's guide,
+ * "Subsystems and optional rules"). With it off, no weather is rolled at a
+ * new day or by travel, the Calendar panel shows no weather, and no hazard
+ * has any effect (module/weather.mjs). The saved weather is kept, so
+ * switching it back on carries on where it left off.
  */
 
 const SYSTEM = "var-borg";
 const CREATION_HELPER = "creationHelper";
+const USE_WEATHER = "useWeather";
 
 /** Called from the init hook. */
 export function registerSettings() {
@@ -26,9 +33,31 @@ export function registerSettings() {
       }
     }
   });
+
+  game.settings.register(SYSTEM, USE_WEATHER, {
+    name: "VARBORG.Settings.UseWeather.Name",
+    hint: "VARBORG.Settings.UseWeather.Hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: true,
+    onChange: redrawTablePanels
+  });
+}
+
+/** Redraw the open table panels (Calendar, Light, Ember and Gloom). */
+function redrawTablePanels() {
+  for (const app of foundry.applications.instances.values()) {
+    if (app.options.classes?.includes("table-panel") && app.rendered) app.render();
+  }
 }
 
 /** Whether the Creation Helper (and choosing the Improving feat by hand) is switched on. */
 export function creationHelperOn() {
   return Boolean(game.settings.get(SYSTEM, CREATION_HELPER));
+}
+
+/** Whether the Weather subsystem is in use. */
+export function weatherOn() {
+  return Boolean(game.settings.get(SYSTEM, USE_WEATHER));
 }

@@ -390,6 +390,10 @@
       "CreationHelper": {
         "Name": "Creation Helper",
         "Hint": "Characters are made at random by default. Switch this on to show the Creation Helper button on character sheets, for choosing each step by hand, and to let players choose their feat when Improving."
+      },
+      "UseWeather": {
+        "Name": "Use the Weather subsystem",
+        "Hint": "Weather is an optional subsystem. Switch this off and no weather is rolled at a new day or while travelling, the Calendar panel shows no weather, and weather hazards have no effect. Today's weather is kept for when you switch it back on."
       }
     },
     "Examples": {
@@ -2110,6 +2114,7 @@
       "Cancelled": "The new day did not begin, so the party did not travel.",
       "CardTitle": "{method} through {region}",
       "Spent": "The {phase} phase is spent on the road (×{speed} speed).",
+      "WeatherOffReroll": "The weather is not in use, so the encounter d20 ({rolls}) was rolled again.",
       "WeatherSlower": "Energy void: the day's travel covers only half as much ground.",
       "WeatherFaster": "Energy font: the day's travel covers half as much ground again.",
       "WeatherSlowerCard": "{hazard}: only half as much ground today (×{speed} instead of ×{usual}).",

@@ -10,7 +10,8 @@
  * encounter d20 is rolled, with Boon if the phase was the night or the
  * party is in the Hinterlands, and a travel card is posted:
  * - 1 to 2: the weather shifts (the 2d6 move of module/weather.mjs, with
- *   its own weather card).
+ *   its own weather card). With the Weather subsystem switched off
+ *   (module/settings.mjs), this result is re-rolled instead (GAPS 261).
  * - Travel hardship: its d20 table is rolled and the hardship shown, with
  *   its place tag and, in the Heartlands, a note for misfits.
  * - Omen: the omen of the current Misery (basic rules 1.5).
@@ -35,6 +36,7 @@ import { miseryContext } from "./misery.mjs";
 import { currentWeather } from "./weather.mjs";
 import { travelFactorFor, travelSpeed } from "./rules/weather-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { weatherOn } from "./settings.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -132,10 +134,19 @@ export async function travel() {
   }
 
   const trip = { phase, region };
-  const roll = new Roll(encounterFormula(trip));
+  let roll = new Roll(encounterFormula(trip));
   await roll.evaluate();
-  const key = encounterFor(roll.total);
+  let key = encounterFor(roll.total);
   const rolls = [roll];
+  // No weather in use: "the weather shifts" is re-rolled (GAPS 261).
+  const rerolled = [];
+  while (key === "weather" && !weatherOn()) {
+    rerolled.push(roll.total);
+    roll = new Roll(encounterFormula(trip));
+    await roll.evaluate();
+    rolls.push(roll);
+    key = encounterFor(roll.total);
+  }
 
   let hardship = null;
   if (key === "hardship") {
@@ -145,7 +156,7 @@ export async function travel() {
     hardship = { roll: d20.total, ...hardshipFor(d20.total) };
   }
 
-  await postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard });
+  await postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard, rerolled });
   if (key === "weather") await shiftWeather();
   return true;
 }
@@ -189,7 +200,7 @@ function resultLines(key, hardship) {
   return [i18n.localize(`VARBORG.Travel.Result.${key}.Text`)];
 }
 
-async function postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard }) {
+async function postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard, rerolled = [] }) {
   const i18n = game.i18n;
   const escape = foundry.utils.escapeHTML;
   const trip = { phase, region };
@@ -204,6 +215,7 @@ async function postTravelCard({ method, region, phase, roll, key, hardship, roll
   const lines = [
     i18n.format("VARBORG.Travel.Spent", { phase: phaseName(phase), speed: speedText(travelSpeed(speed, hazard)) }),
     weatherTravelLine(hazard, speed),
+    rerolled.length ? i18n.format("VARBORG.Travel.WeatherOffReroll", { rolls: rerolled.join(i18n.localize("VARBORG.Travel.And")) }) : "",
     hasBoon(trip)
       ? i18n.format("VARBORG.Travel.RolledBoon", { dice: diceText(roll), reason: boonReason(trip) })
       : i18n.format("VARBORG.Travel.Rolled", { dice: diceText(roll) })
