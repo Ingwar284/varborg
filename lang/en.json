@@ -3311,8 +3311,9 @@
     },
     "Ongoing": {
       "Title": "Ongoing",
+      "TitleFor": "Ongoing: {name}",
       "Collapse": "Hide the names of ongoing effects",
-      "Expand": "Show the names of ongoing effects",
+      "Expand": "Ongoing conditions and effects: show their names",
       "None": "Nothing ongoing.",
       "NoneOther": "No other ongoing effects. Conditions are listed below.",
       "NextOnly": "next roll only",

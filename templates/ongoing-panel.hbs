@@ -1,0 +1,20 @@
+{{!-- The Ongoing panel beside Foundry's sidebar (module/ongoing-panel.mjs). --}}
+<div class="ongoing-inner{{#unless shown}} hidden{{/unless}}{{#if open}} open{{/if}}">
+  <button type="button" class="ongoing-toggle" data-action="toggleOngoing"
+          data-tooltip="{{#if open}}{{localize 'VARBORG.Ongoing.Collapse'}}{{else}}{{localize 'VARBORG.Ongoing.Expand'}}{{/if}}"
+          data-tooltip-direction="LEFT"
+          aria-expanded="{{#if open}}true{{else}}false{{/if}}" aria-label="{{localize 'VARBORG.Ongoing.Title'}}">
+    {{#if open}}<span class="ongoing-name">{{localize "VARBORG.Ongoing.TitleFor" name=name}}</span>{{/if}}
+    <i class="fa-solid {{#if open}}fa-angles-right{{else}}fa-angles-left{{/if}}" aria-hidden="true"></i>
+  </button>
+  <ul class="ongoing-list">
+    {{#each entries}}
+    <li class="ongoing-entry" data-tooltip="{{label}}{{#if detail}}: {{detail}}{{/if}}" data-tooltip-direction="LEFT">
+      {{#if ../open}}<span class="ongoing-label">{{label}}</span>{{/if}}
+      {{#if img}}<img src="{{img}}" alt="{{label}}">{{else}}<i class="fa-solid {{icon}}" aria-label="{{label}}"></i>{{/if}}
+    </li>
+    {{else}}
+    {{#if open}}<li class="ongoing-empty">{{localize "VARBORG.Ongoing.None"}}</li>{{/if}}
+    {{/each}}
+  </ul>
+</div>

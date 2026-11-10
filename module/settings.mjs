@@ -62,7 +62,7 @@ export function registerSettings() {
     default: "roll"
   });
 
-  // The ongoing sidebar on character sheets: open or collapsed, for this user.
+  // The Ongoing panel beside the sidebar: names shown or icons only, for this user.
   game.settings.register(SYSTEM, ONGOING_OPEN, {
     scope: "client",
     config: false,
@@ -110,12 +110,12 @@ export function playersImproveOn() {
   return Boolean(game.settings.get(SYSTEM, PLAYERS_IMPROVE));
 }
 
-/** Whether the ongoing sidebar of character sheets is open, for this user. */
+/** Whether the Ongoing panel shows names as well as icons, for this user. */
 export function ongoingOpen() {
   return Boolean(game.settings.get(SYSTEM, ONGOING_OPEN));
 }
 
-/** Open or collapse the ongoing sidebar, for this user. */
+/** Show or hide the names in the Ongoing panel, for this user. */
 export function setOngoingOpen(open) {
   return game.settings.set(SYSTEM, ONGOING_OPEN, Boolean(open));
 }

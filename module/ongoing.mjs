@@ -1,7 +1,7 @@
 /**
- * Everything going on with a character right now (player feedback): shown
- * in the sidebar of the character sheet and at the top of its Conditions
- * tab.
+ * Everything going on with a creature right now (player feedback): shown
+ * in the Ongoing panel beside Foundry's sidebar (module/ongoing-panel.mjs),
+ * and the non-condition part at the top of the character's Conditions tab.
  *
  * Conditions, persistent damage, Panic and injuries already have their own
  * place in the Conditions tab; ongoingEffects() adds the rest:
@@ -15,6 +15,7 @@
  */
 
 import { timerText } from "./timers.mjs";
+import { sheetConditions } from "./conditions.mjs";
 import { actorLight } from "./light.mjs";
 import { takenCover } from "./rules/defence.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
@@ -83,4 +84,20 @@ export function ongoingEffects(actor) {
     });
   }
   return list;
+}
+
+/**
+ * Conditions, persistent damage, Panic and injuries, then the other
+ * ongoing effects: the whole list for the Ongoing panel.
+ * @param {Actor} actor  A character, foe or minion.
+ */
+export function allOngoing(actor) {
+  const conditions = sheetConditions(actor);
+  const fromConditions = [
+    ...conditions.list.map(({ img, label, timer, text }) => ({ img, label, detail: [timer, text].filter(Boolean).join(" ") })),
+    ...(conditions.persistent?.list ?? []).map(({ img, label, text }) => ({ img, label, detail: text ?? "" })),
+    ...(conditions.panic?.list ?? []).map(({ img, label }) => ({ img, label, detail: "" })),
+    ...(conditions.injuries ?? []).map(({ img, label }) => ({ img, label, detail: "" }))
+  ];
+  return [...fromConditions, ...ongoingEffects(actor)];
 }

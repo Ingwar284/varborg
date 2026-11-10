@@ -888,3 +888,95 @@
   height: 1rem;
   margin: 0;
 }
+
+/* ---------- The Ongoing panel (player feedback) ----------
+   At the top of the column beside Foundry's sidebar: icons in a narrow dark
+   strip, with names when opened. #ui-right lets clicks through, so the
+   panel takes them back. */
+#var-borg-ongoing {
+  align-self: flex-end;
+  pointer-events: auto;
+  max-height: 60%;
+  display: flex;
+}
+
+#var-borg-ongoing .ongoing-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-height: 0;
+  padding: 4px;
+  border: 1px solid var(--color-border, #444);
+  border-radius: 6px;
+  background: rgba(11, 10, 19, 0.82);
+  color: #f0f0e0;
+}
+
+#var-borg-ongoing .ongoing-inner.hidden {
+  display: none;
+}
+
+#var-borg-ongoing .ongoing-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  width: auto;
+  min-width: 30px;
+  height: 30px;
+  margin: 0;
+  padding: 0 6px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+#var-borg-ongoing .ongoing-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+#var-borg-ongoing .ongoing-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+#var-borg-ongoing .ongoing-entry {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+#var-borg-ongoing .ongoing-entry img,
+#var-borg-ongoing .ongoing-entry i {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+#var-borg-ongoing .ongoing-label {
+  max-width: 180px;
+  text-align: right;
+}
+
+#var-borg-ongoing .ongoing-empty {
+  font-size: 0.8rem;
+  font-style: italic;
+  opacity: 0.75;
+  padding: 0 4px 4px;
+}

@@ -45,6 +45,7 @@ import { registerOutcomes } from "./outcomes.mjs";
 import { addEscapeListeners } from "./timers.mjs";
 import { registerPanicButtons } from "./panic.mjs";
 import { registerPanels } from "./panels.mjs";
+import { registerOngoingPanel } from "./ongoing-panel.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
 import { registerMedicine } from "./medicine.mjs";
 import { registerUses } from "./uses.mjs";
@@ -122,6 +123,8 @@ Hooks.once("init", () => {
   // The shared panels, each with its own toolbar button: the calendar
   // (days, clock, rest), the light timer, and the Ember and Gloom pools.
   registerPanels();
+  // The Ongoing panel beside the sidebar (player feedback).
+  registerOngoingPanel();
   // The Shadowblight table button on a spell's Ruin card (rules 3.11).
   registerShadowblight();
   // The Toughness button on medicine box cards (step 34).
