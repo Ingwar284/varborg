@@ -3309,6 +3309,23 @@
       "NextRollUsed": "{name} used up {list}.",
       "EmberLost": "{item}: the Ember pool loses {amount}."
     },
+    "Ongoing": {
+      "Title": "Ongoing",
+      "Collapse": "Hide the names of ongoing effects",
+      "Expand": "Show the names of ongoing effects",
+      "None": "Nothing ongoing.",
+      "NoneOther": "No other ongoing effects. Conditions are listed below.",
+      "NextOnly": "next roll only",
+      "WhileSustained": "while sustained",
+      "UntilTurn": "until the start of your next turn",
+      "Sustaining": "Sustaining {name}",
+      "SwitchedOn": "{name} is on",
+      "Mounted": "Mounted on {name}",
+      "ShieldRaised": "Shield raised",
+      "Cover": "In {size} cover ({dr} DR to defend)",
+      "AttackRuin": "Ruined: Bane on attacks",
+      "Adjust": "{ability} {change} for now"
+    },
     "Cover": {
       "Title": "{name} takes cover",
       "Ask": "How good is the cover? Light: a wooden door, an overturned table. Heavy: a stone pillar.",

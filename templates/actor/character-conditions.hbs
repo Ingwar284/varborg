@@ -1,3 +1,17 @@
 <section class="tab var-borg-sheet {{tabs.conditions.cssClass}}" data-group="primary" data-tab="conditions">
+  {{!-- Ongoing effects that are not conditions (player feedback). --}}
+  <section class="condition-group ongoing-group">
+    <h2>{{localize "VARBORG.Ongoing.Title"}}</h2>
+    <ul class="condition-list">
+      {{#each ongoing}}
+      <li class="condition-row">
+        {{#if img}}<img src="{{img}}" alt="">{{else}}<i class="fa-solid {{icon}} ongoing-icon" aria-hidden="true"></i>{{/if}}
+        <span class="condition-text"><strong>{{label}}</strong>{{#if detail}} {{detail}}{{/if}}</span>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Ongoing.NoneOther"}}</li>
+      {{/each}}
+    </ul>
+  </section>
   {{> "systems/var-borg/templates/actor/conditions.hbs"}}
 </section>

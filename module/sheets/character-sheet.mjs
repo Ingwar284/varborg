@@ -37,7 +37,8 @@ import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
 import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat, canImprove } from "../improving.mjs";
 import { openCreationHelper } from "../creation.mjs";
-import { creationHelperOn } from "../settings.mjs";
+import { creationHelperOn, ongoingOpen, setOngoingOpen } from "../settings.mjs";
+import { ongoingEffects } from "../ongoing.mjs";
 import { rollDetail } from "../personality.mjs";
 import { randomCharacter } from "../random-character.mjs";
 import { onPostItem } from "../item-chat.mjs";
@@ -68,6 +69,9 @@ function boosted(parts, total, base) {
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
+
+/** How wide the ongoing sidebar is, open and collapsed (styles/sheets.css). */
+const ONGOING_WIDTH = { open: 170, collapsed: 36 };
 
 const TEMPLATES = "systems/var-borg/templates/actor";
 
@@ -200,7 +204,8 @@ function spellSummary(item) {
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "themed", "theme-light", "character"],
-    position: { width: 600, height: 680 },
+    // 600 for the tabs, plus the ongoing sidebar (player feedback).
+    position: { width: 600 + ONGOING_WIDTH.open, height: 680 },
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
@@ -243,6 +248,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollDetail: CharacterSheet.#onRollDetail,
       randomCharacter: CharacterSheet.#onRandomCharacter,
       showConditions: CharacterSheet.#onShowConditions,
+      toggleOngoing: CharacterSheet.#onToggleOngoing,
       toggleDescription: CharacterSheet.#onToggleDescription
     }
   };
@@ -255,7 +261,9 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     feats: { template: `${TEMPLATES}/character-feats.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
     powers: { template: `${TEMPLATES}/character-powers.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
     inventory: { template: `${TEMPLATES}/character-inventory.hbs`, templates: [`${TEMPLATES}/inventory-row.hbs`, DESCRIPTION_ROW], scrollable: [""] },
-    details: { template: `${TEMPLATES}/character-details.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] }
+    details: { template: `${TEMPLATES}/character-details.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
+    // Every condition and ongoing effect at a glance (player feedback).
+    ongoing: { template: `${TEMPLATES}/character-ongoing.hbs`, scrollable: [".ongoing-list"] }
   };
 
   static TABS = {
@@ -275,6 +283,15 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
 
   /** The items whose description is open, by id. Kept while the sheet is open. */
   #expanded = new Set();
+
+  /** A sheet opens narrower when this user keeps the ongoing sidebar collapsed. */
+  _initializeApplicationOptions(options) {
+    const applied = super._initializeApplicationOptions(options);
+    if (!ongoingOpen() && typeof applied.position?.width === "number") {
+      applied.position.width -= ONGOING_WIDTH.open - ONGOING_WIDTH.collapsed;
+    }
+    return applied;
+  }
 
   /** @override */
   async _prepareContext(options) {
@@ -509,6 +526,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       ...context.conditions.panic.list,
       ...context.conditions.injuries
     ].map(({ img, label }) => ({ img, label }));
+    // Ongoing effects that are not conditions: buffs, cover, light… (player feedback).
+    context.ongoing = ongoingEffects(actor);
+    context.ongoingAll = [...context.conditionIcons, ...context.ongoing];
+    context.ongoingOpen = ongoingOpen();
     const conditionCount = context.conditionIcons.length;
     if (conditionCount && context.tabs?.conditions) {
       context.tabs.conditions.label = i18n.format("VARBORG.Sheet.Tab.ConditionsCount", { count: conditionCount });
@@ -772,6 +793,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The strip of condition icons on the Character tab opens the Conditions tab. */
   static #onShowConditions(event, button) {
     this.changeTab("conditions", "primary");
+  }
+
+  /** Open or collapse the ongoing sidebar; the window grows or shrinks to match. */
+  static async #onToggleOngoing(event, button) {
+    const open = !ongoingOpen();
+    await setOngoingOpen(open);
+    const change = ONGOING_WIDTH.open - ONGOING_WIDTH.collapsed;
+    this.setPosition({ width: this.position.width + (open ? change : -change) });
+    // Every open character sheet follows this user's choice.
+    for (const app of foundry.applications.instances.values()) {
+      if (app instanceof CharacterSheet && app.rendered) app.render({ parts: ["ongoing"] });
+    }
   }
 
   /** The Command button: ◈ to give the minion two actions on its turn (rules 3.14). */

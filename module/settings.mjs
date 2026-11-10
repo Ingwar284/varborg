@@ -25,6 +25,7 @@ const CREATION_HELPER = "creationHelper";
 const USE_WEATHER = "useWeather";
 const PLAYERS_IMPROVE = "playersImprove";
 const IMPROVING_GROUP = "improvingGroup";
+const ONGOING_OPEN = "ongoingOpen";
 
 /** Called from the init hook. */
 export function registerSettings() {
@@ -59,6 +60,14 @@ export function registerSettings() {
       choose: "VARBORG.Settings.ImprovingGroup.choose"
     },
     default: "roll"
+  });
+
+  // The ongoing sidebar on character sheets: open or collapsed, for this user.
+  game.settings.register(SYSTEM, ONGOING_OPEN, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: true
   });
 
   game.settings.register(SYSTEM, USE_WEATHER, {
@@ -99,6 +108,16 @@ export function weatherOn() {
 /** Whether players may press Improve on their own characters. */
 export function playersImproveOn() {
   return Boolean(game.settings.get(SYSTEM, PLAYERS_IMPROVE));
+}
+
+/** Whether the ongoing sidebar of character sheets is open, for this user. */
+export function ongoingOpen() {
+  return Boolean(game.settings.get(SYSTEM, ONGOING_OPEN));
+}
+
+/** Open or collapse the ongoing sidebar, for this user. */
+export function setOngoingOpen(open) {
+  return game.settings.set(SYSTEM, ONGOING_OPEN, Boolean(open));
 }
 
 /** Whether the Improving feat's group is chosen rather than rolled. */

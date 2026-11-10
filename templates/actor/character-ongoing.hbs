@@ -1,0 +1,20 @@
+{{!-- The ongoing sidebar (player feedback): every condition and ongoing effect
+      at a glance. Collapsed, it shows only the icons. --}}
+<aside class="var-borg-sheet ongoing-sidebar{{#unless ongoingOpen}} collapsed{{/unless}}" aria-label="{{localize 'VARBORG.Ongoing.Title'}}">
+  <button type="button" class="ongoing-toggle" data-action="toggleOngoing"
+          data-tooltip="{{#if ongoingOpen}}{{localize 'VARBORG.Ongoing.Collapse'}}{{else}}{{localize 'VARBORG.Ongoing.Expand'}}{{/if}}"
+          aria-expanded="{{#if ongoingOpen}}true{{else}}false{{/if}}" aria-label="{{localize 'VARBORG.Ongoing.Title'}}">
+    <i class="fa-solid {{#if ongoingOpen}}fa-angles-right{{else}}fa-angles-left{{/if}}" aria-hidden="true"></i>
+    {{#if ongoingOpen}}<span>{{localize "VARBORG.Ongoing.Title"}}</span>{{/if}}
+  </button>
+  <ul class="ongoing-list">
+    {{#each ongoingAll}}
+    <li class="ongoing-entry" data-tooltip="{{label}}{{#if detail}}: {{detail}}{{/if}}">
+      {{#if img}}<img src="{{img}}" alt="">{{else}}<i class="fa-solid {{icon}}" aria-hidden="true"></i>{{/if}}
+      <span class="ongoing-label">{{label}}</span>
+    </li>
+    {{else}}
+    <li class="ongoing-empty">{{localize "VARBORG.Ongoing.None"}}</li>
+    {{/each}}
+  </ul>
+</aside>
