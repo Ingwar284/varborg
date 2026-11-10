@@ -107,6 +107,15 @@ export function strongestShield(items) {
   return best;
 }
 
+/**
+ * The cover a character took behind something on the map (player
+ * feedback; rules 3.8 Armour and cover): 2 (light), 4 (heavy) or 0.
+ * @param {string} cover  "light", "heavy" or "".
+ */
+export function takenCover(cover) {
+  return COVER_DR[cover] ?? 0;
+}
+
 /** The cover a raised shield gives: 2 (light), 4 (heavy) or 0 when not raised. */
 export function shieldCover(shield, raised) {
   if (!raised || !shield || shield.destroyed) return 0;

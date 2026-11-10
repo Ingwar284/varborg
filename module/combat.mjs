@@ -112,6 +112,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     }
     for (const id of ended) await actor.toggleStatusEffect(id, { active: false });
     if (actor?.system.shieldRaised) await actor.update({ "system.shieldRaised": false });
+    // Cover taken lasts until the start of your next turn (player feedback).
+    if (actor?.system.cover) await actor.update({ "system.cover": "" });
     if (actor) await startOfTurnTimers(actor);
     // Once-per-turn uses come back (step 49g), then item effects at the
     // start of the turn, such as Regenerative Marrow (step 49f).
@@ -195,6 +197,7 @@ export class VarBorgCombat extends foundry.documents.Combat {
     drainPools();
     for (const combatant of this.combatants) {
       if (combatant.actor?.system.shieldRaised) combatant.actor.update({ "system.shieldRaised": false });
+      if (combatant.actor?.system.cover) combatant.actor.update({ "system.cover": "" });
     }
     if (this.started) askForAmmoRolls(this);
     // The encounter is over: its characters' ember abilities work once

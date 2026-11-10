@@ -3309,6 +3309,26 @@
       "NextRollUsed": "{name} used up {list}.",
       "EmberLost": "{item}: the Ember pool loses {amount}."
     },
+    "Cover": {
+      "Title": "{name} takes cover",
+      "Ask": "How good is the cover? Light: a wooden door, an overturned table. Heavy: a stone pillar.",
+      "Now": "You are in {size} cover now.",
+      "TakeLight": "Light cover (−2 DR)",
+      "TakeHeavy": "Heavy cover (−4 DR)",
+      "Leave": "Leave cover",
+      "Size": {
+        "light": "light",
+        "heavy": "heavy"
+      },
+      "Taken": "{name} takes {size} cover: {dr} DR to defend until the start of their next turn.",
+      "Left": "{name} leaves cover.",
+      "Note": "{dr} DR: in {size} cover",
+      "NotYourTurn": "In combat you can only take cover on your own turn.",
+      "NoActions": "No actions left this turn. Cover is taken anyway; the Dark Master decides.",
+      "Damaged": "Only the cover stopped the blow: it strikes the cover, which is now light cover.",
+      "Destroyed": "Only the cover stopped the blow: it strikes the cover, which is destroyed.",
+      "Back": "The cover is whole again."
+    },
     "Manual": {
       "Title": "Basic actions",
       "attack": "Attack",
@@ -3319,6 +3339,7 @@
       "move": "Move",
       "cast": "Cast",
       "sustain": "Sustain",
+      "cover": "Take cover",
       "Tooltip": {
         "attack": "Attack ◈: pick a weapon at hand and attack.",
         "defend": "Defend: test Agility DR12 against an attack that has no foe card. You give the damage.",
@@ -3327,7 +3348,8 @@
         "interact": "Interact ◈–◈◈◈: use an object, draw a weapon, pry open a door.",
         "move": "Move ◈: move your movement (normally 20 feet).",
         "cast": "Cast a spell ◈–◈◈◈: a Sanity Test (rules 3.11).",
-        "sustain": "Sustain ◈: keep one Sustained spell or power going until your next turn."
+        "sustain": "Sustain ◈: keep one Sustained spell or power going until your next turn.",
+        "cover": "Take cover ◈: duck behind something on the map. Light cover −2 DR, heavy cover −4 DR to defend, until the start of your next turn."
       },
       "Pick": {
         "attack": "Weapon",

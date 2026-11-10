@@ -75,6 +75,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       attackRuin: new BooleanField({ required: true, initial: false }),
       // A raised shield: cover until the start of your next turn (rules 3.8).
       shieldRaised: new BooleanField({ required: true, initial: false }),
+      // Cover taken behind something on the map, until the start of your
+      // next turn (rules 3.8, player feedback): "", "light" or "heavy".
+      cover: new StringField({ required: true, blank: true, initial: "", choices: ["", "light", "heavy"] }),
       // Levels of the Fatigued condition, no maximum (rules 3.13, GAPS 20).
       fatigue: wholeNumber(),
       // Sanity lost for a while (Teetering); a Panic Triumph restores it (rules 3.12, GAPS 81).

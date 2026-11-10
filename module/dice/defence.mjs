@@ -35,7 +35,7 @@ import { hpAfterDamage } from "../rules/health.mjs";
 import { killedByDamage } from "../deaths-door.mjs";
 import {
   DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, bestSoak, startingDefenceDr, strongestShield, shieldCover,
-  defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
+  defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost, takenCover
 } from "../rules/defence.mjs";
 import { signed, modeLabel, naturalNote, diceOf, fortuneTier } from "./ability-test.mjs";
 import { CARD, lowerDamage } from "../rules/fortune.mjs";
@@ -142,7 +142,7 @@ export async function rollDefence(actor, attack) {
   const title = i18n.format("VARBORG.Defence.CardTitle", { name: attack.name });
   const notes = [
     automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
-    automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
+    coverNote(automatic),
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
     ...conditionNotes(conditions.own),
     ...conditionNotes(conditions.foe, foe?.name),
@@ -168,7 +168,9 @@ export async function rollDefence(actor, attack) {
     soakDie: automatic.soakDie,
     // A minion's armour die, which a Ruin steps down (GAPS 169).
     minionArmour: actor.type === "minion" ? actor.system.armour : null,
-    shield: automatic.cover ? { id: automatic.shield.id, size: automatic.shield.size } : null,
+    shield: automatic.cover && !automatic.coverTaken ? { id: automatic.shield.id, size: automatic.shield.size } : null,
+    // Cover taken on the map, struck like a shield (player feedback).
+    takenCover: automatic.coverTaken ?? "",
     cover: automatic.cover,
     context: {
       title,
@@ -317,6 +319,19 @@ export async function settleDefenceCard(actor, data) {
     applied.shieldStruck = false;
     shieldNote = i18n.format("VARBORG.Fortune.ShieldBack", { name: shieldItem.name });
   }
+  // Cover taken on the map is struck the same way: heavy becomes light,
+  // light is gone (rules 3.8). Put back if a later result does not strike it.
+  const coverHit = Boolean(inputs.takenCover) && coverStruck({ tier, total: result.total, dr: inputs.dr, uncoveredDr: inputs.uncoveredDr });
+  if (coverHit) {
+    const damaged = damagedShield(inputs.takenCover);
+    if (!applied.coverStruck) await actor.update({ "system.cover": damaged.destroyed ? "" : damaged.size });
+    applied.coverStruck = true;
+    shieldNote = i18n.localize(damaged.destroyed ? "VARBORG.Cover.Destroyed" : "VARBORG.Cover.Damaged");
+  } else if (inputs.takenCover && applied.coverStruck) {
+    await actor.update({ "system.cover": inputs.takenCover });
+    applied.coverStruck = false;
+    shieldNote = i18n.localize("VARBORG.Cover.Back");
+  }
 
   const content = await renderTemplate(CARD_TEMPLATE, {
     ...inputs.context,
@@ -377,9 +392,28 @@ export function defenceModifiers(actor) {
     soakName: soak.natural ? natural.sources.map(source => source.item).join(", ") : nameOf(armour),
     shield,
     shieldName: nameOf(shield),
-    cover: shieldCover(shield, actor.system.shieldRaised),
+    ...bestCover(shieldCover(shield, actor.system.shieldRaised), actor.system.cover),
     encumberedBane: isEncumbered(carryingState)
   };
+}
+
+/**
+ * A raised shield or cover taken on the map: the better counts, not both
+ * (rules 3.8 gives one cover value). coverTaken is the size when the taken
+ * cover counts, else "".
+ */
+function bestCover(shieldDr, taken) {
+  const takenDr = takenCover(taken);
+  return takenDr > shieldDr ? { cover: takenDr, coverTaken: taken } : { cover: shieldDr, coverTaken: "" };
+}
+
+/** The note for the cover on a defence: a raised shield or cover taken. */
+function coverNote(automatic) {
+  if (!automatic.cover) return null;
+  const i18n = game.i18n;
+  const dr = signed(-automatic.cover);
+  if (automatic.coverTaken) return i18n.format("VARBORG.Cover.Note", { dr, size: i18n.localize(`VARBORG.Cover.Size.${automatic.coverTaken}`) });
+  return i18n.format("VARBORG.Defence.CoverNote", { dr, name: automatic.shieldName });
 }
 
 /**
@@ -459,7 +493,7 @@ async function askDefenceOptions(actor, attack, automatic, conditions, optionalE
     notes: [
       startNote,
       automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
-      automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
+      coverNote(automatic),
       soak ? i18n.format("VARBORG.Defence.SoakNote", { die: soak, name: automatic.soakName }) : null,
       automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
       ...conditionNotes(conditions.own),
@@ -516,6 +550,58 @@ export async function raiseShield(actor) {
       + (cost.actions ? `<p class="modifier">${i18n.localize("VARBORG.Attack.UsedAction")}</p>` : "")
       + "</div>"
   });
+}
+
+/**
+ * Take cover behind something on the map, such as a table (player
+ * feedback; rules 3.8): light (−2 DR to defend) or heavy (−4 DR) until the
+ * start of your next turn. In combat it must be your own turn and costs one
+ * action, like raising a shield. Leaving cover is free.
+ * @param {Actor} actor  The character.
+ */
+export async function takeCover(actor) {
+  const i18n = game.i18n;
+  const current = actor.system.cover ?? "";
+  const buttons = [
+    { action: "light", label: "VARBORG.Cover.TakeLight", icon: "fa-solid fa-table", default: true },
+    { action: "heavy", label: "VARBORG.Cover.TakeHeavy", icon: "fa-solid fa-landmark" }
+  ];
+  if (current) buttons.push({ action: "leave", label: "VARBORG.Cover.Leave", icon: "fa-solid fa-person-walking" });
+  const choice = await DialogV2.wait({
+    classes: VB_DIALOG_CLASSES,
+    window: { title: i18n.format("VARBORG.Cover.Title", { name: actor.name }) },
+    content: `<p>${i18n.localize("VARBORG.Cover.Ask")}</p>`
+      + (current ? `<p class="hint">${i18n.format("VARBORG.Cover.Now", { size: i18n.localize(`VARBORG.Cover.Size.${current}`) })}</p>` : ""),
+    buttons,
+    rejectClose: false
+  });
+  if (!choice) return;
+  const card = (text, extra = "") => ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${text}</p>${extra}</div>`
+  });
+  const name = foundry.utils.escapeHTML(actor.name);
+  if (choice === "leave") {
+    await actor.update({ "system.cover": "" });
+    await card(i18n.format("VARBORG.Cover.Left", { name }));
+    return;
+  }
+  // The same cost as raising a shield: one action, on your own turn.
+  const turn = turnState(actor);
+  const cost = raiseShieldCost({ inCombat: Boolean(turn.combatant), onOwnTurn: turn.onOwnTurn });
+  if (!cost.allowed) {
+    ui.notifications.warn(i18n.localize("VARBORG.Cover.NotYourTurn"));
+    return;
+  }
+  if (cost.actions) {
+    if (turn.combatant.actionsLeft < cost.actions) ui.notifications.warn(i18n.localize("VARBORG.Cover.NoActions"));
+    await turn.combatant.adjustPips("actions", -cost.actions);
+  }
+  await actor.update({ "system.cover": choice });
+  await card(
+    i18n.format("VARBORG.Cover.Taken", { name, size: i18n.localize(`VARBORG.Cover.Size.${choice}`), dr: signed(-takenCover(choice)) }),
+    cost.actions ? `<p class="modifier">${i18n.localize("VARBORG.Attack.UsedAction")}</p>` : ""
+  );
 }
 
 /** The Lower shield button: the cover ends. */

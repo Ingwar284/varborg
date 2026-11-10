@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-  DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, bestSoak, startingDefenceDr, strongestShield, shieldCover,
+  DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, bestSoak, startingDefenceDr, strongestShield, shieldCover, takenCover,
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
 } from "../module/rules/defence.mjs";
 
@@ -174,4 +174,11 @@ test("damage typed by hand for a manual defence", async () => {
   assert.deepEqual(manualDamage("3"), { damage: "3", fixedDamage: 3 });
   assert.equal(manualDamage(""), null);
   assert.equal(manualDamage("d6+2"), null);
+});
+
+test("cover taken behind a table or a pillar: light 2, heavy 4 (rules 3.8, player feedback)", () => {
+  assert.equal(takenCover("light"), 2);
+  assert.equal(takenCover("heavy"), 4);
+  assert.equal(takenCover(""), 0);
+  assert.equal(takenCover(undefined), 0);
 });

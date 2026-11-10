@@ -13,7 +13,7 @@
  */
 
 import { rollAttack } from "./dice/attack.mjs";
-import { rollDefence } from "./dice/defence.mjs";
+import { rollDefence, takeCover } from "./dice/defence.mjs";
 import { castSpell } from "./dice/spell.mjs";
 import { sustainPower } from "./dice/power.mjs";
 import { commandMinion, ownedMinions } from "./minions.mjs";
@@ -28,7 +28,7 @@ const { DialogV2 } = foundry.applications.api;
 const esc = text => foundry.utils.escapeHTML(String(text ?? ""));
 
 /** The bar's buttons, in the order of rules 3.4. */
-export const MANUAL_ACTIONS = ["attack", "defend", "command", "improvise", "interact", "move", "cast", "sustain"];
+export const MANUAL_ACTIONS = ["attack", "defend", "command", "improvise", "interact", "move", "cast", "sustain", "cover"];
 
 /**
  * Run one of the bar's buttons.
@@ -42,6 +42,8 @@ export async function runManualAction(actor, kind) {
     case "sustain": return pickAndRun(actor, kind, sustainedItems(actor), item => sustainPower(actor, item));
     case "command": return pickAndRun(actor, kind, ownedMinions(actor), minion => commandMinion(actor, minion));
     case "defend": return manualDefend(actor);
+    // Take cover behind something on the map (player feedback).
+    case "cover": return takeCover(actor);
     case "improvise":
     case "interact":
     case "move": return basicActivity(actor, kind);

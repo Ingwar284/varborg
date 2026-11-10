@@ -447,9 +447,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     // The Basic actions bar (rules 3.4): one button each, with its cost.
     const MANUAL_ICONS = {
       attack: "fa-khanda", defend: "fa-shield-halved", command: "fa-bullhorn", improvise: "fa-lightbulb",
-      interact: "fa-hand", move: "fa-person-running", cast: "fa-wand-sparkles", sustain: "fa-hourglass-half"
+      interact: "fa-hand", move: "fa-person-running", cast: "fa-wand-sparkles", sustain: "fa-hourglass-half",
+      cover: "fa-person-shelter"
     };
-    const MANUAL_COSTS = { attack: "◈", command: "◈", improvise: "◈–◈◈◈", interact: "◈–◈◈◈", move: "◈", cast: "◈–◈◈◈", sustain: "◈" };
+    const MANUAL_COSTS = { attack: "◈", command: "◈", improvise: "◈–◈◈◈", interact: "◈–◈◈◈", move: "◈", cast: "◈–◈◈◈", sustain: "◈", cover: "◈" };
     // The character's lit light: put it out, or dim a lantern (player feedback).
     context.light = actorLight(actor);
     context.manualActions = MANUAL_ACTIONS.map(kind => ({
