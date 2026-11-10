@@ -289,6 +289,7 @@ test("feat and spell choices list what fits, by name (step 49h)", () => {
   assert.deepEqual(names({ choose: "feat", from: "otherAncestry" }, { ancestry: "Elf" }), ["Breath", "Stone-Sense"]);
   assert.deepEqual(names({ choose: "feat", from: "otherClass" }, { className: "Wizard" }), ["Parry"]);
   assert.deepEqual(names({ choose: "feat", from: "otherClass" }, { className: "Warrior" }), []);
+  assert.deepEqual(names({ choose: "feat", from: "general" }), ["Tough"]);
   assert.deepEqual(names({ choose: "feat", from: "any" }), ["Alien Mind", "Parry", "Stone-Sense", "Tough"]);
   assert.deepEqual(names({ choose: "spell", from: "any", value: 3 }), ["Spark"]);
   assert.deepEqual(names({ choose: "spell", from: "any", value: 0 }), ["Inferno", "Spark"]);

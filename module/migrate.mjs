@@ -28,6 +28,10 @@
  * Version 7 (step 49g, GAPS 190): feats and gear with no frequency whose
  * text says "once per turn", "once per Long Rest", "once per Downtime"
  * or "once per visit" get that frequency (the version 5 step, run again).
+ *
+ * Version 8 (player feedback): a spell-list choice (Autodidactism) that
+ * picked "bloodline" is cleared, since bloodline is the Sorcerer's and not
+ * a list of spells. The player chooses again with the Choose button.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -41,7 +45,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 7;
+export const DATA_VERSION = 8;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -70,6 +74,7 @@ export async function migrateWorld() {
   if (version < 5) await setFrequencies();
   if (version < 6) await startClock();
   if (version < 7) await setFrequencies();
+  if (version < 8) await clearBloodlineChoices();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -101,6 +106,17 @@ async function updateItems(types, change) {
     const updates = updatesFor(actor.items);
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   }
+}
+
+/** Version 8: a spell-list choice of "bloodline" is cleared, to be made again. */
+function clearBloodlineChoices() {
+  return updateItems(["feat"], item => {
+    const effects = item.system.effects ?? [];
+    const stale = effect => effect.kind === "choice" && effect.choose === "spellList" && effect.chosen === "bloodline";
+    if (!effects.some(stale)) return null;
+    const cleared = item.toObject().system.effects.map(effect => stale(effect) ? { ...effect, chosen: "", chosenName: "" } : effect);
+    return { "system.effects": cleared };
+  });
 }
 
 /** Version 3: torches, candles, lanterns and lantern oil become light sources. */

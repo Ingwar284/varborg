@@ -82,8 +82,11 @@ export function isGiftUuid(text) {
  */
 export const CHOICE_KINDS = ["weapon", "feat", "spell", "category", "damageType", "text", "spellList"];
 
-/** The spell lists a spellList choice offers (Autodidactism, step 51a2; rules 3.11). */
-export const CHOOSABLE_SPELL_LISTS = ["arcane", "divine", "primal", "profane", "bloodline"];
+/**
+ * The spell lists a spellList choice offers (Autodidactism, step 51a2; rules 3.11).
+ * Bloodline is the Sorcerer's own choice, not a list of spells, so it is not offered.
+ */
+export const CHOOSABLE_SPELL_LISTS = ["arcane", "divine", "primal", "profane"];
 
 /**
  * The spell list a character chose with a spellList choice (Autodidactism),
@@ -96,11 +99,12 @@ export function chosenSpellList(effects) {
 
 /**
  * Where a feat or spell choice comes from: any; an ancestry feat or power
- * of another ancestry; a class feat of another class; a spell the
- * character already knows (only written down); a random spell.
+ * of another ancestry; a class feat of another class; a general feat
+ * (Ancient One, GAPS 262); a spell the character already knows (only
+ * written down); a random spell.
  */
 export const CHOICE_FROM_ELEMENT = "element";
-export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "known", "random", CHOICE_FROM_ELEMENT];
+export const CHOICE_FROM = ["any", "otherAncestry", "otherClass", "general", "known", "random", CHOICE_FROM_ELEMENT];
 
 /** Only against foes of the item's chosen Bestiary category (Favoured prey). */
 export const VERSUS = ["", "chosenCategory", "chosenDamageType", "persistent", "allies", "notedKind",
@@ -1307,6 +1311,7 @@ export function choiceCandidates(entries, choice, owner = {}) {
     if (choice.from === "otherClass") {
       return entry.type === "feat" && system.source === "class" && system.belongsTo !== (owner.className ?? "");
     }
+    if (choice.from === "general") return entry.type === "feat" && system.source === "general";
     return entry.type === "feat" && ["ancestry", "class", "general"].includes(system.source);
   };
   return (entries ?? []).filter(fits).toSorted((a, b) => a.name.localeCompare(b.name));

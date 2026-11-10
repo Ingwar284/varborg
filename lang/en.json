@@ -3071,6 +3071,7 @@
           "any": "Any",
           "otherAncestry": "Another ancestry",
           "otherClass": "Another class",
+          "general": "A general feat",
           "known": "Spells you know (only noted)",
           "random": "At random",
           "element": "An element (fire, poison, acid, lightning, radiant)"

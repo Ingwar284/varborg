@@ -28,7 +28,7 @@
         "per": "",
         "rerollOnes": false,
         "choose": "feat",
-        "from": "otherClass",
+        "from": "general",
         "chosen": "",
         "chosenName": "",
         "event": "turnStart",
@@ -37,7 +37,7 @@
         "condition": "",
         "keep": "better",
         "requires": "",
-        "note": ""
+        "note": "By house ruling, pick a general feat."
       }
     ],
     "automation": "auto"
