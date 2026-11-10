@@ -23,15 +23,12 @@
         <div class="ability-score">
           <button type="button" class="ability-step" data-action="adjustAbility" data-ability="{{key}}" data-step="-1"
                   data-tooltip="{{lowerHint}}" aria-label="{{lowerHint}}">−</button>
-          {{#if note}}
-          <span class="boosted-box" data-tooltip="{{boxHint}}">
+          {{!-- Every box shows its score signed, such as "+2"; the input underneath
+                keeps the rolled score, shown while it is being edited. --}}
+          <span class="boosted-box" data-tooltip="{{#if note}}{{boxHint}}{{else}}{{localize 'VARBORG.Sheet.RolledHint'}}{{/if}}">
             <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1" aria-label="{{localize label}}">
-            <span class="boosted-total" aria-hidden="true">{{total}}</span>
+            <span class="boosted-total" aria-hidden="true">{{shown}}</span>
           </span>
-          {{else}}
-          <input type="number" name="system.abilities.{{key}}" value="{{value}}" min="-3" max="6" step="1"
-                 aria-label="{{localize label}}" data-tooltip="{{localize 'VARBORG.Sheet.RolledHint'}}">
-          {{/if}}
           <button type="button" class="ability-step" data-action="adjustAbility" data-ability="{{key}}" data-step="1"
                   data-tooltip="{{raiseHint}}" aria-label="{{raiseHint}}">+</button>
         </div>

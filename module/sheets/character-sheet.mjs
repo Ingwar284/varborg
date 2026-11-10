@@ -305,6 +305,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         value: rolled,
         lowerHint: i18n.localize(key === "sanity" ? "VARBORG.Sheet.LowerSanity" : "VARBORG.Sheet.LowerAbility"),
         raiseHint: i18n.localize(key === "sanity" ? "VARBORG.Sheet.RaiseSanity" : "VARBORG.Sheet.RaiseAbility"),
+        // Shown signed on every box, boosted or not (player feedback).
+        shown: signed(system.abilities[key]),
         ...boosted(parts, signed(system.abilities[key]), rolled)
       };
     });
