@@ -25,6 +25,11 @@
  * - Blackburn (step 41, GAPS 168): while it is today's weather the timer
  *   burns at double speed and lit tokens shine to half their light's range.
  *   When the weather changes, both go back to normal.
+ * - Player feedback: a lit token flickers like a flame (a lantern gently).
+ *   A character can put their light out: their tokens go dark and the light
+ *   is spent (lighting again uses a new one); the timer runs on for the
+ *   others. A lit lantern can be dimmed to 5 feet (rules 4.1) and turned
+ *   back up.
  *
  * The maths lives in module/rules/light.mjs.
  */
@@ -32,7 +37,8 @@
 import {
   DEFAULT_LIGHT_MINUTES, noLight, timeLeft, isBurntOut, isCounting, lightLit,
   pauseLight, resumeLight, checkpointLight, lightAfterLoad, needsRedraw, setTimeLeft, changeTimeLeft,
-  clock, useOne, canLight, findFuel, litTokenLight, lightBefore, DEFAULT_LIGHT_RANGE, setLightRate, rateOf
+  clock, useOne, canLight, findFuel, litTokenLight, lightBefore, DEFAULT_LIGHT_RANGE, setLightRate, rateOf,
+  litKinds, flickerFor, DIMMED_RANGE
 } from "./rules/light.mjs";
 import { lightRateFor, lightRangeFor } from "./rules/weather-effects.mjs";
 import { currentWeather } from "./weather.mjs";
@@ -45,6 +51,10 @@ const NEW_TIMER_FLAG = "lightNewTimerUsed";
 const TOKEN_FLAG = "lightBefore";
 /** On a lit token: the full range of the light it carries (before Blackburn halves it). */
 const RANGE_FLAG = "lightRange";
+/** On a lit token: the kinds of light it carries ("burns", "lamp"), for the flicker. */
+const KINDS_FLAG = "lightKinds";
+/** On a lit token: its lantern is dimmed to 5 feet. */
+const DIM_FLAG = "lightDimmed";
 
 /** How often the time left is written down while it counts (GAPS 152). */
 const CHECKPOINT_MS = 60 * 1000;
@@ -65,6 +75,12 @@ export function registerLight(onChange) {
   CONFIG.queries[QUERY] = (request, { user }) => changeLight(request, user);
   Hooks.on("pauseGame", onPause);
   Hooks.on("renderChatMessageHTML", addLightCardListeners);
+  // A token lit, dimmed or put out: its character's sheet shows the change.
+  Hooks.on("updateToken", (token, changes) => {
+    if (!foundry.utils.hasProperty(changes, `flags.${SYSTEM}`)) return;
+    const sheet = token.actor?.sheet;
+    if (sheet?.rendered) sheet.render();
+  });
   Hooks.once("ready", onReady);
 }
 
@@ -177,15 +193,57 @@ async function saveLight(state) {
  * A character's light is lit: their tokens shine out to its range (half
  * of it in a Blackburn). With two lights lit, the longer range counts.
  */
-async function lightTokens(actor, range) {
+async function lightTokens(actor, range, kind) {
   const { hazard } = currentWeather();
   for (const token of actor.getDependentTokens({ concreteOnly: true })) {
-    const current = { bright: token.light.bright, dim: token.light.dim };
+    const source = token._source.light;
+    const current = { bright: source.bright, dim: source.dim, animation: source.animation };
     const before = lightBefore(current, token.getFlag(SYSTEM, TOKEN_FLAG));
     const full = Math.max(Number(range) || 0, Number(token.getFlag(SYSTEM, RANGE_FLAG)) || 0);
-    const light = litTokenLight(before, lightRangeFor(full, hazard));
-    await token.update({ light, flags: { [SYSTEM]: { [TOKEN_FLAG]: before, [RANGE_FLAG]: full } } });
+    const kinds = litKinds(token.getFlag(SYSTEM, KINDS_FLAG), kind);
+    // A new light shines at its full range: a dimmed lantern is turned back up.
+    const light = litTokenLight(before, lightRangeFor(full, hazard), flickerFor(kinds));
+    await token.update({
+      light,
+      flags: { [SYSTEM]: { [TOKEN_FLAG]: before, [RANGE_FLAG]: full, [KINDS_FLAG]: kinds, [DIM_FLAG]: false } }
+    });
   }
+}
+
+/** A lit token's light for today's weather, dimmed or not. */
+function shining(token, hazard, dimmed = Boolean(token.getFlag(SYSTEM, DIM_FLAG))) {
+  const range = dimmed ? DIMMED_RANGE : token.getFlag(SYSTEM, RANGE_FLAG);
+  return litTokenLight(token.getFlag(SYSTEM, TOKEN_FLAG), lightRangeFor(range, hazard), flickerFor(token.getFlag(SYSTEM, KINDS_FLAG)));
+}
+
+/** The update that gives a lit token its own light back. */
+function darkUpdate(token) {
+  const { bright, dim, animation } = token.getFlag(SYSTEM, TOKEN_FLAG);
+  const light = { bright, dim };
+  // Tokens lit before the flicker came in kept no animation, and never got one.
+  if (animation) light.animation = animation;
+  else if (token.getFlag(SYSTEM, KINDS_FLAG)) light.animation = { type: null };
+  return {
+    _id: token.id,
+    light,
+    flags: { [SYSTEM]: { [TOKEN_FLAG]: _del, [RANGE_FLAG]: _del, [KINDS_FLAG]: _del, [DIM_FLAG]: _del } }
+  };
+}
+
+/** A character's tokens that carry a lit light. */
+function litTokensOf(actor) {
+  return actor.getDependentTokens({ concreteOnly: true }).filter(token => token.getFlag(SYSTEM, TOKEN_FLAG));
+}
+
+/**
+ * What the character sheet shows about a character's light: whether it is
+ * lit, whether a lantern is among it, and whether that is dimmed.
+ */
+export function actorLight(actor) {
+  const token = actor ? litTokensOf(actor)[0] : null;
+  if (!token) return { lit: false };
+  const kinds = token.getFlag(SYSTEM, KINDS_FLAG) ?? [];
+  return { lit: true, lamp: kinds.includes("lamp"), dimmed: Boolean(token.getFlag(SYSTEM, DIM_FLAG)) };
 }
 
 /**
@@ -202,10 +260,7 @@ export async function weatherChangedLight() {
   for (const scene of game.scenes) {
     const updates = scene.tokens
       .filter(token => token.getFlag(SYSTEM, TOKEN_FLAG) && token.getFlag(SYSTEM, RANGE_FLAG))
-      .map(token => ({
-        _id: token.id,
-        light: litTokenLight(token.getFlag(SYSTEM, TOKEN_FLAG), lightRangeFor(token.getFlag(SYSTEM, RANGE_FLAG), hazard))
-      }))
+      .map(token => ({ _id: token.id, light: shining(token, hazard) }))
       .filter(update => {
         const token = scene.tokens.get(update._id);
         return token.light.bright !== update.light.bright || token.light.dim !== update.light.dim;
@@ -219,10 +274,7 @@ async function darkenTokens() {
   for (const scene of game.scenes) {
     const updates = scene.tokens
       .filter(token => token.getFlag(SYSTEM, TOKEN_FLAG))
-      .map(token => {
-        const { bright, dim } = token.getFlag(SYSTEM, TOKEN_FLAG);
-        return { _id: token.id, light: { bright, dim }, flags: { [SYSTEM]: { [TOKEN_FLAG]: _del, [RANGE_FLAG]: _del } } };
-      });
+      .map(darkUpdate);
     if (updates.length) await scene.updateEmbeddedDocuments("Token", updates);
   }
 }
@@ -287,8 +339,27 @@ async function applyChange(request, user) {
       if (!result.joined) await saveLight(result.state);
       // The character who lit it shines, if the one asking may act for them.
       const actor = request.actorUuid ? fromUuidSync(request.actorUuid) : null;
-      if (actor?.testUserPermission(user, "OWNER")) await lightTokens(actor, Number(request.range) || DEFAULT_LIGHT_RANGE);
+      if (actor?.testUserPermission(user, "OWNER")) await lightTokens(actor, Number(request.range) || DEFAULT_LIGHT_RANGE, request.lightKind);
       return { ok: true, joined: result.joined, lateLight: result.lateLight, left: timeLeft(result.state, at) };
+    }
+    case "putOut": {
+      // One character's light goes out; the timer runs on for the others.
+      const actor = request.actorUuid ? fromUuidSync(request.actorUuid) : null;
+      if (!actor?.testUserPermission(user, "OWNER")) return { error: "VARBORG.Light.NotYours" };
+      for (const token of litTokensOf(actor)) await token.update(darkUpdate(token));
+      return { ok: true };
+    }
+    case "dim": {
+      // A lantern dimmed to 5 feet, or turned back up (rules 4.1).
+      const actor = request.actorUuid ? fromUuidSync(request.actorUuid) : null;
+      if (!actor?.testUserPermission(user, "OWNER")) return { error: "VARBORG.Light.NotYours" };
+      const dimmed = Boolean(request.dimmed);
+      const { hazard } = currentWeather();
+      for (const token of litTokensOf(actor)) {
+        if (!(token.getFlag(SYSTEM, KINDS_FLAG) ?? []).includes("lamp")) continue;
+        await token.update({ light: shining(token, hazard, dimmed), flags: { [SYSTEM]: { [DIM_FLAG]: dimmed } } });
+      }
+      return { ok: true };
     }
     case "set":
       if (!user.isGM) return { error: "VARBORG.Light.GMOnly" };
@@ -341,7 +412,9 @@ export async function lightItem(actor, item) {
     minutes,
     actorUuid: actor.uuid,
     // A lantern lights as far as the lantern, not its oil.
-    range: item.system.lightRange || DEFAULT_LIGHT_RANGE
+    range: item.system.lightRange || DEFAULT_LIGHT_RANGE,
+    // A torch or candle flickers more than a lantern.
+    lightKind: item.system.light
   });
   if (result?.error) {
     ui.notifications.warn(result.error, { localize: true });
@@ -377,6 +450,46 @@ export async function lightItem(actor, item) {
       + `${i18n.format("VARBORG.Light.CardTitle", { item: esc(item.name) })}</h3>`
       + lines.map(line => `<p>${line}</p>`).join("") + button + `</div>`
   });
+}
+
+/** Post a short light card for a character. */
+async function lightCard(actor, icon, text) {
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card light-card"><p><i class="fa-solid ${icon}"></i> ${text}</p></div>`
+  });
+}
+
+/**
+ * Put a character's light out (player feedback): their tokens go dark. The
+ * light is spent; lighting again uses a new torch or more oil.
+ * @param {Actor} actor
+ */
+export async function putOutActorLight(actor) {
+  if (!actor?.isOwner || !actorLight(actor).lit) return;
+  const result = await sendChange({ kind: "putOut", actorUuid: actor.uuid });
+  if (result?.error) {
+    ui.notifications.warn(result.error, { localize: true });
+    return;
+  }
+  await lightCard(actor, "fa-moon", game.i18n.format("VARBORG.Light.PutOut", { name: foundry.utils.escapeHTML(actor.name) }));
+}
+
+/**
+ * Dim a character's lit lantern to 5 feet, or turn it back up (rules 4.1).
+ * @param {Actor} actor
+ * @param {boolean} dimmed  True to dim, false to turn it back up.
+ */
+export async function dimActorLight(actor, dimmed) {
+  const state = actorLight(actor);
+  if (!actor?.isOwner || !state.lamp) return;
+  const result = await sendChange({ kind: "dim", actorUuid: actor.uuid, dimmed });
+  if (result?.error) {
+    ui.notifications.warn(result.error, { localize: true });
+    return;
+  }
+  const name = foundry.utils.escapeHTML(actor.name);
+  await lightCard(actor, "fa-lightbulb", game.i18n.format(dimmed ? "VARBORG.Light.Dimmed" : "VARBORG.Light.TurnedUp", { name }));
 }
 
 /** The New timer button on a late light's card: Dark Master only. */

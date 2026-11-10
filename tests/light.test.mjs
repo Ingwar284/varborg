@@ -9,7 +9,8 @@ import {
   LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, LENIENCY_MINUTES, noLight, timeLeft, isBurntOut, isCounting,
   startLight, lightLit, pauseLight, resumeLight, checkpointLight, reopenLight, lightAfterLoad, needsRedraw, setTimeLeft, changeTimeLeft,
   clock, useOne, canLight, findFuel, lightFromName,
-  DEFAULT_LIGHT_RANGE, LIGHT_RANGES, litTokenLight, lightBefore, setLightRate, rateOf
+  DEFAULT_LIGHT_RANGE, LIGHT_RANGES, litTokenLight, lightBefore, setLightRate, rateOf,
+  LIGHT_ANIMATIONS, DIMMED_RANGE, litKinds, flickerFor
 } from "../module/rules/light.mjs";
 
 const MIN = 60 * 1000;
@@ -236,4 +237,25 @@ test("no light, no rate; the same rate changes nothing; a new rate redraws the p
   const lit = startLight(60, 0);
   assert.equal(setLightRate(lit, 1, 5 * MIN), lit);
   assert.ok(needsRedraw(lit, setLightRate(lit, 2, 0), 0));
+});
+
+test("a lit token flickers: a torch strongly, a lantern gently (player feedback)", () => {
+  assert.deepEqual(litTokenLight({ bright: 0, dim: 0 }, 40, flickerFor(["burns"])),
+    { bright: 40, dim: 40, animation: LIGHT_ANIMATIONS.burns });
+  assert.deepEqual(flickerFor(["lamp"]), LIGHT_ANIMATIONS.lamp);
+  assert.deepEqual(flickerFor(["lamp", "burns"]), LIGHT_ANIMATIONS.burns);
+  assert.equal(flickerFor([]), null);
+  assert.deepEqual(litKinds(undefined, "lamp"), ["lamp"]);
+  assert.deepEqual(litKinds(["lamp"], "lamp"), ["lamp"]);
+  assert.deepEqual(litKinds(["lamp"], "burns"), ["lamp", "burns"]);
+});
+
+test("the token's own flicker is remembered to give back (player feedback)", () => {
+  assert.deepEqual(lightBefore({ bright: 0, dim: 0, animation: { type: "pulse", speed: 2, intensity: 4 } }, null),
+    { bright: 0, dim: 0, animation: { type: "pulse", speed: 2, intensity: 4 } });
+});
+
+test("a dimmed lantern shines to 5 feet (rules 4.1)", () => {
+  assert.equal(DIMMED_RANGE, 5);
+  assert.deepEqual(litTokenLight({ bright: 0, dim: 0 }, DIMMED_RANGE), { bright: 5, dim: 5 });
 });

@@ -263,10 +263,44 @@ export function lightFromName(name) {
  * @param {number} range  The light's range, in the scene's units.
  * @returns {{bright: number, dim: number}}
  */
-export function litTokenLight(current, range) {
+export function litTokenLight(current, range, animation = null) {
   const reach = Math.max(0, Math.round(Number(range) || 0));
   const bright = Math.max(reach, Number(current?.bright) || 0);
-  return { bright, dim: Math.max(bright, Number(current?.dim) || 0) };
+  const light = { bright, dim: Math.max(bright, Number(current?.dim) || 0) };
+  // A flame flickers (player feedback); see flickerFor.
+  if (animation) light.animation = { ...animation };
+  return light;
+}
+
+/**
+ * How a lit token's light flickers (player feedback): a torch or candle
+ * flickers strongly, a lantern gently. Foundry's "torch" animation.
+ */
+export const LIGHT_ANIMATIONS = {
+  burns: { type: "torch", speed: 3, intensity: 3 },
+  lamp: { type: "torch", speed: 1, intensity: 1 }
+};
+
+/** A dimmed lantern sheds light to 5 feet (rules 4.1, Lantern). */
+export const DIMMED_RANGE = 5;
+
+/**
+ * The kinds of light a token carries, with one more lit.
+ * @param {string[]|undefined} kinds  Already lit ("burns", "lamp").
+ * @param {string} kind  The one just lit.
+ */
+export function litKinds(kinds, kind) {
+  const list = Array.isArray(kinds) ? [...kinds] : [];
+  if (kind && !list.includes(kind)) list.push(kind);
+  return list;
+}
+
+/** The flicker for the lights a token carries: a torch's when any torch burns. */
+export function flickerFor(kinds) {
+  const list = Array.isArray(kinds) ? kinds : [];
+  if (list.includes("burns")) return LIGHT_ANIMATIONS.burns;
+  if (list.includes("lamp")) return LIGHT_ANIMATIONS.lamp;
+  return null;
 }
 
 /**
@@ -278,5 +312,9 @@ export function litTokenLight(current, range) {
  */
 export function lightBefore(current, remembered) {
   if (remembered) return remembered;
-  return { bright: Number(current?.bright) || 0, dim: Number(current?.dim) || 0 };
+  const before = { bright: Number(current?.bright) || 0, dim: Number(current?.dim) || 0 };
+  // The token's own flicker, given back with its light.
+  const animation = current?.animation;
+  if (animation) before.animation = { type: animation.type ?? null, speed: animation.speed ?? 5, intensity: animation.intensity ?? 5 };
+  return before;
 }

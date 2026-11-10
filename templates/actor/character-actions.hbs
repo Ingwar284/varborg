@@ -11,6 +11,25 @@
     </button>
     {{/each}}
   </div>
+  {{!-- The character's lit light: dim a lantern, or put it out (player feedback). --}}
+  {{#if light.lit}}
+  <div class="light-controls">
+    <span class="light-state">
+      <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+      {{#if light.dimmed}}{{localize "VARBORG.Light.StateDimmed"}}{{else}}{{localize "VARBORG.Light.StateLit"}}{{/if}}
+    </span>
+    {{#if light.lamp}}
+    <button type="button" data-action="dimLight"
+            data-tooltip="{{#if light.dimmed}}{{localize 'VARBORG.Light.TurnUpTooltip'}}{{else}}{{localize 'VARBORG.Light.DimTooltip'}}{{/if}}">
+      <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+      {{#if light.dimmed}}{{localize "VARBORG.Light.TurnUp"}}{{else}}{{localize "VARBORG.Light.Dim"}}{{/if}}
+    </button>
+    {{/if}}
+    <button type="button" data-action="putOutLight" data-tooltip="{{localize 'VARBORG.Light.PutOutTooltip'}}">
+      <i class="fa-solid fa-moon" aria-hidden="true"></i> {{localize "VARBORG.Light.PutOutButton"}}
+    </button>
+  </div>
+  {{/if}}
   <ul class="item-list">
     {{#each actionList}}
     <li class="item-row feat-row" data-item-id="{{item.id}}">

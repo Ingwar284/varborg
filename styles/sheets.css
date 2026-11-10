@@ -1185,6 +1185,25 @@
   border-left: 2px solid var(--vb-ink);
 }
 
+/* ---- A character's lit light: dim a lantern, put it out (player feedback) ---- */
+.var-borg-sheet .light-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+}
+
+.var-borg-sheet .light-controls .light-state {
+  flex: 1;
+  font-weight: 600;
+}
+
+.application.var-borg .var-borg-sheet .light-controls button {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.15rem 0.6rem;
+}
+
 /* ---- Basic actions bar (rules 3.4) on the Character tab ----
    Eight outlined buttons in two rows of four: icon, name, and the cost in ◈
    in small type underneath. */

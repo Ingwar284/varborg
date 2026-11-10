@@ -13,7 +13,7 @@ import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
-import { lightItem, canLightItem } from "../light.mjs";
+import { lightItem, canLightItem, actorLight, putOutActorLight, dimActorLight } from "../light.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton, isConsumable } from "../uses.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
@@ -219,6 +219,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollExpendable: CharacterSheet.#onRollExpendable,
       useMedicine: CharacterSheet.#onUseMedicine,
       lightItem: CharacterSheet.#onLightItem,
+      putOutLight: CharacterSheet.#onPutOutLight,
+      dimLight: CharacterSheet.#onDimLight,
       useLimited: CharacterSheet.#onUseLimited,
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
@@ -448,6 +450,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       interact: "fa-hand", move: "fa-person-running", cast: "fa-wand-sparkles", sustain: "fa-hourglass-half"
     };
     const MANUAL_COSTS = { attack: "◈", command: "◈", improvise: "◈–◈◈◈", interact: "◈–◈◈◈", move: "◈", cast: "◈–◈◈◈", sustain: "◈" };
+    // The character's lit light: put it out, or dim a lantern (player feedback).
+    context.light = actorLight(actor);
     context.manualActions = MANUAL_ACTIONS.map(kind => ({
       kind,
       icon: MANUAL_ICONS[kind],
@@ -606,6 +610,16 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onLightItem(event, button) {
     const item = this.#itemFor(button);
     if (item) await lightItem(this.document, item);
+  }
+
+  /** Put the character's light out; it is spent (player feedback). */
+  static async #onPutOutLight(event, button) {
+    await putOutActorLight(this.document);
+  }
+
+  /** Dim a lit lantern to 5 feet, or turn it back up (rules 4.1). */
+  static async #onDimLight(event, button) {
+    await dimActorLight(this.document, !actorLight(this.document).dimmed);
   }
 
   /** The Use button marks a once-per-round, -encounter or -day item used (GAPS 161). */
