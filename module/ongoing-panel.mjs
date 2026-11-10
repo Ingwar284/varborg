@@ -5,13 +5,17 @@
  * button opens the panel wider to show the names too (remembered for each
  * user, the "ongoingOpen" client setting).
  *
+ * Left click raises an entry by one, right click lowers it by one and
+ * removes it at 0 (changeOngoing in module/ongoing.mjs). Only the
+ * creature's owners and the Dark Master can change it.
+ *
  * Whose effects: the token this user has selected, or else the user's own
  * character. With neither, the panel is hidden.
  *
  * The list itself comes from module/ongoing.mjs.
  */
 
-import { allOngoing } from "./ongoing.mjs";
+import { allOngoing, changeOngoing } from "./ongoing.mjs";
 import { ongoingOpen, setOngoingOpen } from "./settings.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
@@ -44,12 +48,37 @@ export class OngoingPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext(options) {
     const actor = OngoingPanel.currentActor();
     const open = ongoingOpen();
+    const i18n = game.i18n;
+    const canChange = Boolean(actor?.isOwner);
+    // What the clicks do, added to each entry's tooltip.
+    const hintFor = entry => {
+      if (!canChange || !(entry.up || entry.down)) return "";
+      if (["cover", "light"].includes(entry.kind)) return i18n.localize(`VARBORG.Ongoing.Hint.${entry.kind}`);
+      return i18n.localize(entry.up ? "VARBORG.Ongoing.Hint.both" : "VARBORG.Ongoing.Hint.remove");
+    };
     return {
       shown: Boolean(actor),
       name: actor?.name ?? "",
       open,
-      entries: actor ? allOngoing(actor) : []
+      entries: actor ? allOngoing(actor).map(entry => ({ ...entry, hint: hintFor(entry), clickable: Boolean(hintFor(entry)) })) : []
     };
+  }
+
+  /** @override */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    for (const li of this.element.querySelectorAll(".ongoing-entry[data-kind]")) {
+      const change = async (event, step) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const actor = OngoingPanel.currentActor();
+        if (!actor) return;
+        game.tooltip.deactivate();
+        await changeOngoing(actor, li.dataset.kind, li.dataset.ref, step);
+      };
+      li.addEventListener("click", event => change(event, 1));
+      li.addEventListener("contextmenu", event => change(event, -1));
+    }
   }
 
   /**

@@ -969,6 +969,15 @@
   font-size: 1rem;
 }
 
+#var-borg-ongoing .ongoing-entry.clickable {
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#var-borg-ongoing .ongoing-entry.clickable:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
 #var-borg-ongoing .ongoing-label {
   max-width: 180px;
   text-align: right;

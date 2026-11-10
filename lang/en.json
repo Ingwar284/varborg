@@ -3312,6 +3312,13 @@
     "Ongoing": {
       "Title": "Ongoing",
       "TitleFor": "Ongoing: {name}",
+      "NotYours": "Only this creature's owner or the Dark Master can change its effects.",
+      "Hint": {
+        "both": "Left click +1, right click −1 (removed at 0).",
+        "remove": "Right click to remove.",
+        "cover": "Left click: heavier cover. Right click: lighter cover, then none.",
+        "light": "Right click: dim a lantern, then put the light out (it is spent). Left click: turn a dimmed lantern back up."
+      },
       "Collapse": "Hide the names of ongoing effects",
       "Expand": "Ongoing conditions and effects: show their names",
       "None": "Nothing ongoing.",
