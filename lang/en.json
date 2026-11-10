@@ -649,6 +649,9 @@
       "ReactionNote": "Not your turn: this attack uses your reaction and does not count towards the multiple-attack Bane.",
       "NoTarget": "No target. Target a token to name it on the card and lower its armour on a Triumph.",
       "Against": "against {name}",
+      "RetargetTooltip": "Point this attack at the foe you target now. The roll stays the same.",
+      "RetargetNone": "Target a foe first, then press the crosshairs to point the attack at it.",
+      "Retargeted": "Retargeted at {name}. The roll and DR are unchanged.",
       "How": "{mode}, {ability}",
       "Outcome": {
         "triumph": "Double damage, and the foe’s armour is reduced by one tier.",

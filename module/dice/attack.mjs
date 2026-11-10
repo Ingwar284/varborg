@@ -387,6 +387,8 @@ export async function settleAttackCard(actor, data) {
     tierLabel: i18n.localize(`VARBORG.Tier.${tier}`),
     outcomeText: power ? powerOutcomeText(power, tier) : i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
     description: power?.description || null,
+    // A single-target card can be pointed at another foe (player feedback).
+    retarget: !inputs.area,
     sustainNote,
     outcomeLines: given.lines,
     // A spell's Ruin: the Shadowblight table (rules 3.11, module/shadowblight.mjs).
@@ -541,6 +543,7 @@ export async function recoverFromRuin(actor) {
  * attacker could not change the foe. Hooked to renderChatMessageHTML.
  */
 export function addAttackCardListeners(message, html) {
+  addRetargetListener(message, html);
   const button = html.querySelector("button[data-action='lowerArmour']");
   if (!button) return;
   // Cards from before Fortune remember it in their own flag.
@@ -560,6 +563,73 @@ export function addAttackCardListeners(message, html) {
     // Fortune reads this to put the armour back if a reroll loses the Triumph.
     await message.update({ [`flags.${SYSTEM}.armourLowered`]: true, [`flags.${SYSTEM}.fortune.applied.armourLowered`]: true });
   });
+}
+
+/**
+ * The retarget button (player feedback): only the card's owner and the
+ * Dark Master see it, and only until damage is inflicted.
+ */
+function addRetargetListener(message, html) {
+  const button = html.querySelector("button[data-action='retargetAttack']");
+  if (!button) return;
+  if (!message.isOwner || message.getFlag(SYSTEM, "damageInflicted")) {
+    button.remove();
+    return;
+  }
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    const done = await retargetAttack(message);
+    if (!done) button.disabled = false;
+  });
+}
+
+/**
+ * Point an attack card at the foe targeted now (player feedback). The roll
+ * stays the same: the DR and the old target's condition notes are not
+ * worked out again. A Triumph's lowered armour moves to the new foe.
+ * @param {ChatMessage} message  An attack card.
+ * @returns {Promise<boolean>} Whether the card changed.
+ */
+export async function retargetAttack(message) {
+  const i18n = game.i18n;
+  const data = foundry.utils.deepClone(message.getFlag(SYSTEM, "fortune"));
+  if (!data || data.card !== CARD.ATTACK || data.inputs.area) return false;
+  if (message.getFlag(SYSTEM, "damageInflicted")) return false;
+  const target = [...game.user.targets][0]?.actor ?? null;
+  if (target?.type !== "foe") {
+    ui.notifications.warn(i18n.localize("VARBORG.Attack.RetargetNone"));
+    return false;
+  }
+  if (target.uuid === data.inputs.foe?.uuid) return false;
+
+  // A Triumph already lowered the old foe's armour: it goes back first.
+  const lowered = data.applied.armourLowered || message.getFlag(SYSTEM, "armourLowered");
+  if (lowered && data.inputs.foe) {
+    const old = await fromUuid(data.inputs.foe.uuid);
+    if (old && !old.isOwner) {
+      ui.notifications.warn(i18n.localize("VARBORG.Attack.GMOnly"));
+      return false;
+    }
+    if (old) await old.update({ "system.armour": data.inputs.foe.armourBefore });
+  }
+  data.applied.armourLowered = false;
+
+  data.inputs.foe = { uuid: target.uuid, name: target.name, armourBefore: target.system.armour };
+  data.foeUuid = target.uuid;
+  data.inputs.inflicts = true;
+  data.inputs.context.target = i18n.format("VARBORG.Attack.Against", { name: target.name });
+  data.inputs.context.retargetNote = i18n.format("VARBORG.Attack.Retargeted", { name: target.name });
+
+  const actor = await fromUuid(data.actorUuid);
+  if (!actor) return false;
+  const { content, rolls } = await settleAttackCard(actor, data);
+  await message.update({
+    content,
+    rolls: [...message.rolls, ...rolls].map(roll => roll.toJSON()),
+    [`flags.${SYSTEM}.armourLowered`]: false,
+    [`flags.${SYSTEM}.fortune`]: data
+  });
+  return true;
 }
 
 /** "d2", or "none" for no armour. */

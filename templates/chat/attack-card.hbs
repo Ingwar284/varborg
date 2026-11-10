@@ -1,6 +1,14 @@
 <div class="var-borg-card test-card attack-card">
   <h3>{{title}}</h3>
-  <p class="modifier">{{how}}{{#if target}} · {{target}}{{/if}}</p>
+  <p class="modifier">{{how}}{{#if target}} · {{target}}{{/if}}
+    {{#if retarget}}
+    <button type="button" class="retarget" data-action="retargetAttack"
+            data-tooltip="{{localize 'VARBORG.Attack.RetargetTooltip'}}" aria-label="{{localize 'VARBORG.Attack.RetargetTooltip'}}">
+      <i class="fa-solid fa-crosshairs" aria-hidden="true"></i>
+    </button>
+    {{/if}}
+  </p>
+  {{#if retargetNote}}<p class="modifier">{{retargetNote}}</p>{{/if}}
   <div class="dice">
     {{#each dice}}
     <span class="die {{#unless kept}}dropped{{/unless}}">{{value}}</span>

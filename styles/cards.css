@@ -213,6 +213,22 @@
   transition: background-color 0.15s, color 0.15s;
 }
 
+/* The small crosshairs on an attack card: point it at the foe targeted now. */
+.var-borg-card button.retarget {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  min-height: 0;
+  margin: 0 0 0 0.3rem;
+  padding: 0;
+  border-width: 1px;
+  font-size: 0.75rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
 .var-borg-card button:focus { box-shadow: none; }
 
 .var-borg-card button:focus-visible {
