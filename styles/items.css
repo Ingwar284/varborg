@@ -1,11 +1,18 @@
 /* VÅR BORG: item sheets and the item effects editor. */
 
 /* ---------- Item sheets ---------- */
-.var-borg.item .window-content {
+.application.var-borg.item .window-content {
   padding: 0.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  /* A long weapon or spell scrolls instead of being cut off (player feedback). */
+  overflow-y: auto;
+}
+
+/* Parts keep their full height so the window scrolls rather than squashing them. */
+.application.var-borg.item .window-content > * {
+  flex-shrink: 0;
 }
 
 .var-borg-item-header {
