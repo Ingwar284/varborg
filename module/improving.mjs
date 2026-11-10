@@ -1,12 +1,14 @@
 /**
  * Improving in Foundry (rules 2.8, GAPS 16, 111, 179 and 257).
  *
- * The Dark Master decides when a character improves, so only the Dark
- * Master sees the Improve button (title bar of the character sheet).
+ * The Dark Master decides when a character improves. The Improve button
+ * (title bar of the character sheet) is the Dark Master's, and also the
+ * owning player's with the "Players can improve" setting on.
  * After asking, it:
  * - fixes max HP, if it still followed X + Toughness (GAPS 111);
  * I.   rolls a d6 for each ability and moves it 1 down or up;
- * II.  rolls the feat (GAPS 257): a d3 for general / ancestry / class, then
+ * II.  rolls the feat (GAPS 257): a d3 for general / ancestry / class (or
+ *      the group is chosen, with the "Improving feat group" setting), then
  *      one of that group's feats or powers the character does not have yet.
  *      With the Creation Helper setting on (or nothing left to roll), the
  *      player chooses instead: the sheet says to choose one, and the next
@@ -33,7 +35,7 @@ import { CLASS_BOOST } from "./rules/origins.mjs";
 import { canBeImproving } from "./rules/feats.mjs";
 import { signed } from "./dice/ability-test.mjs";
 import { gatherSources, itemData, equipmentItem } from "./creation.mjs";
-import { creationHelperOn } from "./settings.mjs";
+import { creationHelperOn, playersImproveOn, improvingGroupChosen } from "./settings.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -52,6 +54,32 @@ const PENDING_FLAG = "improvingFeat";
 /** Whether this character still has to choose the feat of an Improving. */
 export function choosingFeat(actor) {
   return actor?.type === "character" && Boolean(actor.getFlag(SYSTEM, PENDING_FLAG));
+}
+
+/** Whether this user may improve this character: the Dark Master, or its owner with the setting on. */
+export function canImprove(actor) {
+  if (actor?.type !== "character") return false;
+  return game.user.isGM || (actor.isOwner && playersImproveOn());
+}
+
+/**
+ * Ask which group the feat comes from (the "Improving feat group" setting).
+ * Only groups with something left are offered.
+ * @returns {Promise<string|null>} The group, or null when the dialog was closed.
+ */
+async function askGroup(actor, groups) {
+  const i18n = game.i18n;
+  return DialogV2.wait({
+    classes: VB_DIALOG_CLASSES,
+    window: { title: i18n.format("VARBORG.Improving.ChooseGroupTitle", { name: actor.name }) },
+    content: `<p>${i18n.localize("VARBORG.Improving.ChooseGroup")}</p>`,
+    buttons: groups.map((group, index) => ({
+      action: group,
+      label: `VARBORG.Improving.GroupButton.${group}`,
+      default: index === 0
+    })),
+    rejectClose: false
+  });
 }
 
 /** Roll a formula, keeping the roll for the card. */
@@ -84,6 +112,12 @@ async function rollFeat(actor, rolls) {
 
   const groupLabel = group => i18n.localize(`VARBORG.Improving.Group.${group}`);
   const lines = [];
+  // The group chosen instead of rolled (setting). Closing the dialog rolls it.
+  const chosen = improvingGroupChosen() ? await askGroup(actor, left) : null;
+  if (chosen && candidates[chosen]?.length) {
+    lines.push(i18n.format("VARBORG.Improving.GroupChosen", { group: groupLabel(chosen) }));
+    return gainFrom(actor, candidates[chosen], lines);
+  }
   const first = await rollInto(rolls, `1d${IMPROVING_GROUPS.length}`);
   let group = groupForRoll(first, IMPROVING_GROUPS);
   if (candidates[group].length) {
@@ -97,8 +131,13 @@ async function rollFeat(actor, rolls) {
       die: `d${IMPROVING_GROUPS.length}`, roll: first, group: groupLabel(emptied), next: groupLabel(group)
     }));
   }
+  return gainFrom(actor, candidates[group], lines);
+}
 
-  const data = await itemData(pickRandom(candidates[group]).uuid);
+/** Add one of the candidates at random, with its card line. */
+async function gainFrom(actor, candidates, lines) {
+  const i18n = game.i18n;
+  const data = await itemData(pickRandom(candidates).uuid);
   if (!data) return null;
   if (data.type === "feat" && canBeImproving(data.system.source)) data.system.improving = true;
   await actor.createEmbeddedDocuments("Item", [data]);
@@ -191,12 +230,12 @@ async function addFind(actor, find, rolls) {
 }
 
 /**
- * The Improve button: Dark Master only, after asking.
+ * The Improve button: the Dark Master, or the owner with the setting on; after asking.
  * @param {Actor} actor  A character.
  * @returns {Promise<boolean>} Whether the character improved.
  */
 export async function improveCharacter(actor) {
-  if (!game.user.isGM || actor?.type !== "character") return false;
+  if (!canImprove(actor)) return false;
   const i18n = game.i18n;
   const esc = foundry.utils.escapeHTML;
   const choosing = creationHelperOn();

@@ -394,6 +394,16 @@
       "UseWeather": {
         "Name": "Use the Weather subsystem",
         "Hint": "Weather is an optional subsystem. Switch this off and no weather is rolled at a new day or while travelling, the Calendar panel shows no weather, and weather hazards have no effect. Today's weather is kept for when you switch it back on."
+      },
+      "PlayersImprove": {
+        "Name": "Players can improve",
+        "Hint": "Show the Improve button to players on their own characters, not only to the Dark Master. The Dark Master still decides when a character improves."
+      },
+      "ImprovingGroup": {
+        "Name": "Improving feat group",
+        "Hint": "When improving, either roll a d3 for a general, ancestry or class feat, or let whoever improves choose the group. The feat within the group is still rolled.",
+        "roll": "Roll the group (d3)",
+        "choose": "Choose the group"
       }
     },
     "Examples": {
@@ -2445,7 +2455,7 @@
     },
     "Improving": {
       "Button": "Improve",
-      "Tooltip": "Improving (rules 2.8): roll for each ability, a feat, more HP and a find. Dark Master only.",
+      "Tooltip": "Improving (rules 2.8): roll for each ability, a feat, more HP and a find. The Dark Master decides when.",
       "AskTitle": "Improve {name}",
       "Ask": "Improve {name} now? Each ability rolls a d6, then 6d10 for more HP and a d6 on the find table. Afterwards the player chooses a feat or power.",
       "AskRandom": "Improve {name} now? Each ability rolls a d6, a d3 rolls the feat or power, then 6d10 for more HP and a d6 on the find table.",
@@ -2460,6 +2470,14 @@
       "FeatCard": "Choose or roll for one general feat, or one feat or power of your ancestry or class, and drop it on your sheet. A feat is marked “Gained through Improving”.",
       "FeatNone": "No feat or power is left to roll: choose one by hand and drop it on the sheet.",
       "GroupRolled": "{die}: {roll} → {group}.",
+      "GroupChosen": "Chose {group}.",
+      "ChooseGroupTitle": "{name}: which feat?",
+      "ChooseGroup": "Choose the group the new feat or power comes from. One is rolled from that group.",
+      "GroupButton": {
+        "general": "General feat",
+        "ancestry": "Ancestry",
+        "class": "Class"
+      },
       "GroupEmpty": "{die}: {roll} → {group}, but none is left to gain: rolled again → {next}.",
       "FeatRolled": "Gains the feat {item}, marked “Gained through Improving”.",
       "PowerRolled": "Gains the power {item}.",

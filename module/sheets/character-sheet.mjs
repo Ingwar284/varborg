@@ -35,7 +35,7 @@ import { ORIGIN_TYPES, currentAbilities, stepAbility } from "../rules/origins.mj
 import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
 import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
-import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat } from "../improving.mjs";
+import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat, canImprove } from "../improving.mjs";
 import { openCreationHelper } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { rollDetail } from "../personality.mjs";
@@ -685,7 +685,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
 
   /**
    * Buttons in the window's title bar, beside the controls menu:
-   * Creation helper (if you may edit the sheet) and Improve (Dark Master only).
+   * Creation helper (if you may edit the sheet) and Improve (Dark Master, or owner with the setting).
    * They use the actions openCreation and improve below.
    * @override
    */
@@ -702,7 +702,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       label: "VARBORG.Creation.Tooltip",
       action: "openCreation"
     });
-    if (game.user.isGM) buttons.unshift({
+    if (canImprove(this.document)) buttons.unshift({
       icon: "fa-solid fa-arrow-trend-up",
       label: "VARBORG.Improving.Tooltip",
       action: "improve"
@@ -710,7 +710,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     return buttons;
   }
 
-  /** The Improve button (Dark Master only): rules 2.8, all on one card. */
+  /** The Improve button: rules 2.8, all on one card. */
   static async #onImprove(event, button) {
     await improveCharacter(this.document);
   }
