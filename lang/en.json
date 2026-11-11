@@ -3428,6 +3428,63 @@
       "Spent": "Used {actions}.",
       "NotYourTurn": "In combat, you can only do this on your own turn.",
       "NoActions": "No actions left this turn; spent anyway."
+    },
+    "Encounter": {
+      "Open": "Build encounter (Dark Master)",
+      "Title": "Encounter builder",
+      "Players": "Players",
+      "DifficultyLabel": "Difficulty",
+      "Difficulty": {
+        "easy": "Easy",
+        "standard": "Standard",
+        "hard": "Hard",
+        "deadly": "Deadly"
+      },
+      "Feel": {
+        "easy": "A scuffle in the soot. Costs a little HP, maybe a torch.",
+        "standard": "A real fight. Someone will bleed.",
+        "hard": "The wick burns low. Expect a wound or a fallen PC.",
+        "deadly": "A boss, or a slaughter. Someone may not walk out."
+      },
+      "Points": "{points} points",
+      "DarkHint": "A Standard fight in the dark, with no light to see by, plays as a Hard one. Terrain and surprise can raise a fight a full step.",
+      "CategoryLabel": "Categories",
+      "RollCategory": "Roll type of creature",
+      "RollCategoryTooltip": "Roll the d10 Type of creature table and tick what it gives.",
+      "CategoryRolled": "d10: {roll}. {categories}",
+      "NoCategory": "Tick at least one category of foe.",
+      "Build": "Build encounter",
+      "Rebuild": "Roll again",
+      "Heading": "{difficulty} encounter for {players} players: {type}",
+      "Rolls": "d6: {rolls}",
+      "RollsAgain": "d6: {rolls} (rolled again until it fitted the party)",
+      "Type": {
+        "mob": "Mob",
+        "scout": "Scout and hangers-on",
+        "lone": "Lone threat",
+        "swarm": "Swarm",
+        "pair": "Pair",
+        "troop": "Troop",
+        "lieutenant": "Lieutenant and lackey",
+        "pack": "Pack",
+        "elitePair": "Elite pair",
+        "warBand": "War band",
+        "boss": "Boss",
+        "bossGuard": "Boss and guard",
+        "eliteBand": "Elite band",
+        "apex": "Apex"
+      },
+      "Threat": "Threat: {total} of {budget} points",
+      "NotFit": "No result on this table fits the budget for this party, so the foes are over budget. With fewer than four players, a foe this strong is a fight to survive, not to win: make sure the players can see a way out.",
+      "NoFoe": "No foe of this tier",
+      "Missing": "The ticked categories have no foe of some tiers. Tick another category and reroll that place.",
+      "MissingWarn": "Some places have no foe: the ticked categories have none of that tier.",
+      "RerollTooltip": "Pick another foe of this tier",
+      "Post": "Post to chat (Dark Master only)",
+      "Place": "Place tokens",
+      "NoScene": "There is no scene to place the foes on.",
+      "Placed": "{count} foes placed on {scene}.",
+      "Folder": "Encounter foes"
     }
   }
 }

@@ -989,3 +989,102 @@
   opacity: 0.75;
   padding: 0 4px 4px;
 }
+
+/* ---- Encounter builder (rules 2. Building Encounters) ---- */
+.application.var-borg .var-borg-encounter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.application.var-borg .var-borg-encounter fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  border: 1px solid var(--vb-rule);
+}
+
+.application.var-borg .var-borg-encounter .hint {
+  color: var(--vb-ink-soft);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.application.var-borg .vb-encounter-choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.4rem;
+  align-items: center;
+}
+
+.application.var-borg .vb-encounter-choice .hint {
+  grid-column: 2;
+}
+
+.application.var-borg .vb-encounter-choice .points {
+  color: var(--vb-ink-soft);
+}
+
+.application.var-borg .vb-encounter-categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.2rem 0.6rem;
+}
+
+.application.var-borg .vb-encounter-result h3 {
+  margin: 0;
+}
+
+.application.var-borg .vb-encounter-foes {
+  list-style: none;
+  margin: 0.4rem 0;
+  padding: 0;
+}
+
+.application.var-borg .vb-encounter-foes li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--vb-rule-faint);
+}
+
+.application.var-borg .vb-encounter-foes img {
+  width: 32px;
+  height: 32px;
+  border: none;
+  object-fit: cover;
+}
+
+.application.var-borg .vb-encounter-foes .foe-name {
+  flex: 1;
+}
+
+.application.var-borg .vb-encounter-foes .foe-tier {
+  color: var(--vb-ink-soft);
+  font-size: 0.85rem;
+}
+
+.application.var-borg .vb-encounter-foes li.missing .foe-name,
+.application.var-borg .var-borg-encounter .vb-warning {
+  color: var(--vb-warning);
+}
+
+.application.var-borg .vb-encounter-foes button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.application.var-borg .vb-encounter-total {
+  font-weight: bold;
+  margin: 0 0 0.4rem;
+}
+
+.var-borg-card .encounter-foes {
+  margin: 0.3rem 0;
+  padding-left: 1.2rem;
+}
+
+.var-borg-card .vb-warning {
+  color: var(--vb-warning);
+}

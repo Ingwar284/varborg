@@ -129,7 +129,7 @@
 /* Button colours use our own --vb-btn-* names. A place that wants different
    buttons (the black header band, row icons) changes these. Foundry gives
    disabled buttons dark colours of its own; our names keep them out. */
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) {
   --vb-btn-bg: var(--vb-ink);
   --vb-btn-fg: var(--vb-paper);
   --vb-btn-border: var(--vb-ink);
@@ -145,7 +145,7 @@
 }
 
 /* ---- Headings: print capitals over a double rule ---- */
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) h2 {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) h2 {
   position: relative;
   font-size: 1.2rem;
   border-bottom: 3px double var(--vb-ink);
@@ -153,7 +153,7 @@
 
 /* A printer's ornament breaks the double rule near its right end. It sits
    on the rule, below the heading's text. */
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) h2::after {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) h2::after {
   content: "";
   position: absolute;
   right: 0.6rem;
@@ -166,13 +166,13 @@
   pointer-events: none;
 }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) h3 {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) h3 {
   font-size: 1.05rem;
   border-bottom: 1px solid var(--vb-ink);
 }
 
 /* ---- Buttons: black stamps that turn orange; a disabled one keeps its colours, faded ---- */
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button {
   --button-background-color: var(--vb-btn-bg);
   --button-text-color: var(--vb-btn-fg);
   --button-border-color: var(--vb-btn-border);
@@ -186,15 +186,15 @@
   transition: background-color 0.15s, color 0.15s;
 }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:focus { box-shadow: none; }
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:focus { box-shadow: none; }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:focus-visible {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:focus-visible {
   outline: 2px solid var(--vb-ink);
   outline-offset: 2px;
 }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:disabled,
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) button:disabled:hover {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:disabled,
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:disabled:hover {
   background: var(--vb-btn-bg);
   color: var(--vb-btn-fg);
   border-color: var(--vb-btn-border);
@@ -202,7 +202,7 @@
 }
 
 /* ---- Fields: a ruled line to write on; yellow while you type ---- */
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]) {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]) {
   border: none;
   border-bottom: 2px solid var(--vb-ink);
   border-radius: 0;
@@ -210,19 +210,19 @@
   font-weight: 600;
 }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]):focus {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]):focus {
   outline: none;
   background: var(--vb-yellow);
 }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(select, textarea) {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(select, textarea) {
   border: 1px solid var(--vb-ink);
   border-radius: 0;
   background: var(--vb-paper);
   color: var(--vb-ink);
 }
 
-.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .dialog-content, .form-footer) :is(select, textarea):focus {
+.application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(select, textarea):focus {
   outline: 2px solid var(--vb-ink);
   outline-offset: -2px;
 }

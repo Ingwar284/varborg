@@ -1,0 +1,16 @@
+<div class="var-borg-card encounter-card">
+  <h3>{{heading}}</h3>
+  <p class="modifier">{{rolls}}</p>
+  <ul class="encounter-foes">
+    {{#each lines}}
+      <li><a class="content-link" data-foe-uuid="{{uuid}}"><i class="fa-solid fa-user"></i> {{name}}</a>{{#if many}} ×{{count}}{{/if}} <span class="modifier">({{tier}})</span></li>
+    {{/each}}
+  </ul>
+  <p>{{threat}}</p>
+  {{#if notFit}}<p class="vb-warning">{{localize "VARBORG.Encounter.NotFit"}}</p>{{/if}}
+  <div class="card-buttons">
+    <button type="button" data-action="placeEncounter">
+      <i class="fa-solid fa-chess-pawn"></i> {{localize "VARBORG.Encounter.Place"}}
+    </button>
+  </div>
+</div>

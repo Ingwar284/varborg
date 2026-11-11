@@ -1,0 +1,63 @@
+<section class="var-borg-encounter">
+  <div class="form-group">
+    <label for="vb-encounter-players">{{localize "VARBORG.Encounter.Players"}}</label>
+    <select id="vb-encounter-players" name="players">
+      {{#each players}}<option value="{{value}}" {{#if selected}}selected{{/if}}>{{value}}</option>{{/each}}
+    </select>
+  </div>
+
+  <fieldset>
+    <legend>{{localize "VARBORG.Encounter.DifficultyLabel"}}</legend>
+    {{#each difficulties}}
+      <label class="vb-encounter-choice">
+        <input type="radio" name="difficulty" value="{{key}}" {{#if checked}}checked{{/if}}>
+        <span class="choice-name">{{label}} <span class="points">({{localize "VARBORG.Encounter.Points" points=budget}})</span></span>
+        <span class="hint">{{feel}}</span>
+      </label>
+    {{/each}}
+    <p class="hint">{{localize "VARBORG.Encounter.DarkHint"}}</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "VARBORG.Encounter.CategoryLabel"}}</legend>
+    <div class="vb-encounter-categories">
+      {{#each categories}}
+        <label><input type="checkbox" name="category" value="{{key}}" {{#if checked}}checked{{/if}}> {{label}}</label>
+      {{/each}}
+    </div>
+    <button type="button" data-action="rollCategory" data-tooltip="{{localize 'VARBORG.Encounter.RollCategoryTooltip'}}">
+      <i class="fa-solid fa-dice-d20"></i> {{localize "VARBORG.Encounter.RollCategory"}}
+    </button>
+    {{#if categoryRoll}}<p class="hint">{{categoryRoll}}</p>{{/if}}
+  </fieldset>
+
+  <button type="button" data-action="build" class="vb-encounter-build">
+    <i class="fa-solid fa-dice-six"></i> {{#if encounter}}{{localize "VARBORG.Encounter.Rebuild"}}{{else}}{{localize "VARBORG.Encounter.Build"}}{{/if}}
+  </button>
+
+  {{#if encounter}}
+    <div class="vb-encounter-result">
+      <h3>{{encounter.heading}}</h3>
+      <p class="hint">{{encounter.rolls}}</p>
+      <ul class="vb-encounter-foes">
+        {{#each encounter.foes}}
+          <li class="{{#if missing}}missing{{/if}}">
+            {{#if img}}<img src="{{img}}" alt="">{{/if}}
+            <span class="foe-name">{{name}}</span>
+            <span class="foe-tier">{{tier}} · {{points}}</span>
+            <button type="button" data-action="rerollFoe" data-index="{{index}}"
+              data-tooltip="{{localize 'VARBORG.Encounter.RerollTooltip'}}" aria-label="{{localize 'VARBORG.Encounter.RerollTooltip'}}">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+          </li>
+        {{/each}}
+      </ul>
+      <p class="vb-encounter-total">{{localize "VARBORG.Encounter.Threat" total=encounter.total budget=encounter.budget}}</p>
+      {{#if encounter.notFit}}<p class="vb-warning">{{localize "VARBORG.Encounter.NotFit"}}</p>{{/if}}
+      {{#if encounter.missing}}<p class="vb-warning">{{localize "VARBORG.Encounter.Missing"}}</p>{{/if}}
+      <button type="button" data-action="post">
+        <i class="fa-solid fa-comment"></i> {{localize "VARBORG.Encounter.Post"}}
+      </button>
+    </div>
+  {{/if}}
+</section>
