@@ -204,7 +204,7 @@ function spellSummary(item) {
  * (GAPS 266). Used when a spell is dropped on the Inventory tab. A ritual
  * becomes a scroll like any spell, read at its own DR (cost = DR − 11).
  */
-function scrollOfSpell(spell) {
+export function scrollOfSpell(spell) {
   const fields = CONFIG.Item.dataModels.scroll?.schema?.fields ?? {};
   const source = spell.toObject().system;
   const system = Object.fromEntries(Object.keys(fields).filter(key => key in source).map(key => [key, source[key]]));

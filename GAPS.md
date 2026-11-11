@@ -317,6 +317,10 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | # | Question | Ruling | Status |
 |---|---|---|---|
 | 35 | Is silver the only currency? | Yes. | Resolved |
+| 270 | Treasure, Spoils 2–3 "A weapon (roll on the weaponry table in 2.6 Starting Equipment)": which die, and is the shield of a two-item row (shortsword and light shield, warhammer and heavy shield) found too? (Found building the treasure generator.) | Designer's ruling: any weapon of the Weapons compendium (melee, shoot and throw, bombs included), except Unarmed, Improvised weapon, Grave insult (the cutting insult) and the class gifts. One die over all of them (d47 today). No shield. | Resolved |
+| 271 | Treasure, Spoils 4: armour "is damaged, one tier lower, minimum t1". What happens to clothes (t0)? | Designer's ruling: armour of t1 and up is found one tier lower, never below t1; clothes stay t0. It is found in full repair at that lower tier (its original tier is the lower one too), not as damaged armour to be repaired. | Resolved |
+| 272 | Treasure: halved coin in the Heartlands or Emberglow, when the roll is odd? And where does a chest keep coin? | Halved coin is rounded down. Chests have a Silver number; the Dark Master can change it. A player whose token stands next to the chest takes it all with Take the silver, or anyone shares it with Split evenly (designer request): each player logged in gets the same whole amount on the character set in their User Configuration, and the remainder stays in the chest. | Resolved |
+| 273 | Treasure: a Mighty foe's lair holds a spell tome. How is a tome made in the system? | A scroll item named "Tome of <spell>", with the tome rule at the top of its description. Learning it after a Downtime of study is done by hand (drop the spell on the sheet). | Resolved |
 
 ## Relics
 

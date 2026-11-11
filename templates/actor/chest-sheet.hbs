@@ -23,6 +23,25 @@
   </section>
   {{/if}}
 
+  <section class="details chest-silver">
+    {{#if isGM}}
+    <label>
+      <span>{{localize "VARBORG.Chest.Silver"}}</span>
+      <input type="number" name="system.silver" value="{{silver}}" min="0" step="1">
+    </label>
+    {{else}}
+    <span>{{localize "VARBORG.Chest.Silver"}}: {{silver}} s</span>
+    {{/if}}
+    {{#if silver}}
+    <div class="chest-silver-buttons">
+      {{#unless isGM}}
+      <button type="button" data-action="takeSilver"><i class="fa-solid fa-coins"></i> {{localize "VARBORG.Chest.TakeSilver"}}</button>
+      {{/unless}}
+      <button type="button" data-action="splitSilver" data-tooltip="{{localize 'VARBORG.Chest.SplitHint'}}"><i class="fa-solid fa-scale-balanced"></i> {{localize "VARBORG.Chest.SplitEvenly"}}</button>
+    </div>
+    {{/if}}
+  </section>
+
   <section class="inventory-section">
     <h2 data-tooltip="{{localize 'VARBORG.Chest.ContentsHint'}}">{{localize "VARBORG.Chest.Contents"}}</h2>
     <ul class="item-list">

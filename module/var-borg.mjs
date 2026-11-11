@@ -18,6 +18,7 @@ import ChestData from "./data/chest.mjs";
 import ChestSheet from "./sheets/chest-sheet.mjs";
 import { registerChests } from "./chests.mjs";
 import { registerEncounters } from "./encounters.mjs";
+import { registerTreasure } from "./treasure.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
 import FeatData from "./data/feat.mjs";
 import PowerData from "./data/power.mjs";
@@ -152,6 +153,8 @@ Hooks.once("init", () => {
   registerChests();
   // The Dark Master's encounter builder (rules 2. Building Encounters).
   registerEncounters();
+  // The Dark Master's treasure generator (rules 5. Treasure), also on chests.
+  registerTreasure();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

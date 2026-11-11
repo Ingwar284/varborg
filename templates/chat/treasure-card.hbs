@@ -1,0 +1,12 @@
+<div class="var-borg-card treasure-card">
+  <h3>{{heading}}</h3>
+  {{#if settings}}<p class="modifier">{{settings}}</p>{{/if}}
+  <p><strong>{{coin}}</strong></p>
+  <p class="modifier">{{spoils}}</p>
+  <ul class="treasure-finds">
+    {{#each lines}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+  {{#if chestLine}}<p>{{chestLine}}</p>{{/if}}
+</div>

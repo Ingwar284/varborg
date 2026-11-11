@@ -2392,7 +2392,19 @@
       "CannotHold": "{item} cannot be put in a chest.",
       "NotYours": "You do not own {name}.",
       "NeedGM": "The Dark Master must be logged in to move items in or out of a chest.",
-      "OnlyGMAdds": "Only the Dark Master can put new items in a chest. Drag one from your character sheet instead."
+      "OnlyGMAdds": "Only the Dark Master can put new items in a chest. Drag one from your character sheet instead.",
+      "Silver": "Silver",
+      "TakeSilver": "Take the silver",
+      "NoSilverTaker": "Stand next to {name} with your token to take the silver.",
+      "TookSilver": "{who} takes {silver} s from {chest}.",
+      "SplitEvenly": "Split evenly",
+      "SplitHint": "Share the silver equally among the characters of the players logged in now (each player's character is set in User Configuration). What cannot be split stays in the chest.",
+      "Split": "{each} s from {chest} to each of {names}.",
+      "SplitLeft": "{left} s could not be split and stays in the chest.",
+      "NoOneToSplit": "No player logged in has a character set in User Configuration.",
+      "TooLittleToSplit": "{silver} s cannot be split among {count} characters.",
+      "OnlyGMDrops": "Only the Dark Master can put new items on the scene. Drag one from your character sheet instead.",
+      "DroppedItems": "Dropped items"
     },
     "Vehicle": {
       "Speed": {
@@ -3485,6 +3497,64 @@
       "NoScene": "There is no scene to place the foes on.",
       "Placed": "{count} foes placed on {scene}.",
       "Folder": "Encounter foes"
+    },
+    "Treasure": {
+      "Open": "Roll treasure (Dark Master)",
+      "Title": "Treasure",
+      "DialogTitle": "Roll treasure",
+      "DialogTitleChest": "Roll treasure into {name}",
+      "ChestButton": "Roll treasure into this chest",
+      "SizeLabel": "Dungeon",
+      "Size": {
+        "small": "Small: a cellar, a tomb, a smugglers' hole (1–3 encounters)",
+        "medium": "Medium: a ruined chapel, a warehouse, a bandit camp (4–6 encounters)",
+        "large": "Large: a drowned monastery, a foundry, a fortified keep (7–10 encounters)",
+        "lair": "Lair: the home of a Strong or Mighty foe"
+      },
+      "SizeShort": {
+        "small": "small dungeon",
+        "medium": "medium dungeon",
+        "large": "large dungeon",
+        "lair": "lair"
+      },
+      "RegionLabel": "Where",
+      "Region": {
+        "usual": "Elsewhere in the Dusklands",
+        "deep": "The Hinterlands or beyond the cairn-lights (double coin, one more Spoils roll)",
+        "picked": "The Heartlands or inside Emberglow (half coin)"
+      },
+      "RegionShort": {
+        "deep": "Where the dark is deeper: double coin, one more Spoils roll",
+        "picked": "Picked over: half coin"
+      },
+      "Mighty": "A Mighty foe's lair (adds a spell tome)",
+      "MightyShort": "A Mighty foe's lair",
+      "Hint": "Rolled once for the whole site, for a party of four. Scatter it through the rooms, bodies and hiding places.",
+      "Roll": "Roll treasure",
+      "Heading": "Treasure: {size}",
+      "HeadingChest": "Treasure in {name}: {size}",
+      "Coin": "Coin ({formula}): {silver} s",
+      "CoinChanged": "Coin ({formula}): rolled {rolled} s, now {silver} s",
+      "SpoilsRolls": "Spoils rolls: {count}",
+      "SpoilsLine": "Spoils (d20 {d20}): {what}",
+      "Line": {
+        "trinket": "Trinket: {what}",
+        "valuable": "Valuable: {what}",
+        "scroll": "Spell scroll: {what}",
+        "relic": "Relic: {what}",
+        "tome": "Spell tome: {what}"
+      },
+      "RelicRolled": "Relic (d6 {d6}): {what}",
+      "NoRelic": "No relic (d6 {d6}).",
+      "Nothing": "Nothing but bones, rags and a bad smell.",
+      "Again": "roll twice more on this table.",
+      "Purse": "a purse of {silver} s",
+      "Missing": "{name} (not found in the compendiums)",
+      "TrinketText": "A trinket: fetches 1–10 s from a curious buyer.",
+      "ValuableText": "A valuable: sells for its price.",
+      "TomeName": "Tome of {spell}",
+      "TomeText": "A spell tome teaches the spell permanently after a Downtime of study, or can be read aloud once like a scroll.",
+      "AddedToChest": "Put in {name}: {count} items and {silver} s."
     }
   }
 }

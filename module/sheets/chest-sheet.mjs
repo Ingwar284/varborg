@@ -4,13 +4,18 @@
  * token while standing next to it (module/chests.mjs), and drag items out
  * onto their own sheet, or from their sheet into the chest.
  *
- * Only the Dark Master can rename the chest, change its description, edit
- * or delete items in it, or drop new items in from the Items sidebar or a
- * compendium.
+ * Only the Dark Master can rename the chest, change its description or
+ * silver, edit or delete items in it, or drop new items in from the Items
+ * sidebar or a compendium. The Dark Master also has a gem button in the
+ * title bar that rolls treasure into the chest (module/treasure.mjs).
+ * Players take the chest's silver with the Take the silver button; anyone
+ * can share it with Split evenly.
  */
 
 import { onPostItem } from "../item-chat.mjs";
 import { canHold } from "../rules/chests.mjs";
+import { splitChestSilver, takeSilver } from "../chests.mjs";
+import { openTreasureDialog } from "../treasure.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -28,7 +33,10 @@ export default class ChestSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     actions: {
       postItem: onPostItem,
       editItem: ChestSheet.#onEditItem,
-      deleteItem: ChestSheet.#onDeleteItem
+      deleteItem: ChestSheet.#onDeleteItem,
+      rollTreasure: ChestSheet.#onRollTreasure,
+      takeSilver: ChestSheet.#onTakeSilver,
+      splitSilver: ChestSheet.#onSplitSilver
     }
   };
 
@@ -43,6 +51,7 @@ export default class ChestSheet extends HandlebarsApplicationMixin(ActorSheetV2)
     context.actor = actor;
     context.system = actor.system;
     context.isGM = game.user.isGM;
+    context.silver = actor.system.silver ?? 0;
     context.contents = actor.items.contents
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({
@@ -51,6 +60,25 @@ export default class ChestSheet extends HandlebarsApplicationMixin(ActorSheetV2)
         quantity: item.type === "gear" ? item.system.quantity : null
       }));
     return context;
+  }
+
+  /** The Dark Master's Roll treasure button in the title bar, before the menu and close buttons. */
+  async _renderFrame(options) {
+    const frame = await super._renderFrame(options);
+    if (game.user.isGM) {
+      const label = game.i18n.localize("VARBORG.Treasure.ChestButton");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "header-control icon fa-solid fa-gem";
+      button.dataset.action = "rollTreasure";
+      button.dataset.tooltip = label;
+      button.setAttribute("aria-label", label);
+      const before = frame.querySelector(".window-header [data-action=toggleControls]")
+        ?? frame.querySelector(".window-header [data-action=close]");
+      if (before) before.before(button);
+      else frame.querySelector(".window-header")?.append(button);
+    }
+    return frame;
   }
 
   /** Anyone who has the chest open may drop items on it. */
@@ -91,6 +119,21 @@ export default class ChestSheet extends HandlebarsApplicationMixin(ActorSheetV2)
   /** The bin button asks first, then deletes the item. */
   static async #onDeleteItem(event, button) {
     await this.#itemFor(button)?.deleteDialog();
+  }
+
+  /** The gem button: roll treasure into this chest. */
+  static #onRollTreasure(event, button) {
+    openTreasureDialog({ chest: this.document });
+  }
+
+  /** A player takes the chest's silver. */
+  static #onTakeSilver(event, button) {
+    takeSilver(this.document);
+  }
+
+  /** Split evenly: the silver goes to the characters of the players logged in. */
+  static #onSplitSilver(event, button) {
+    splitChestSilver(this.document);
   }
 
   /** The item a button in the list belongs to. */
