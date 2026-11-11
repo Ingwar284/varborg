@@ -12,6 +12,8 @@
  *   the HP bar always shown (step 42).
  * - Vehicles are neutral and linked to their actor, with the HP bar shown
  *   on hover (step 44).
+ * - Chests are neutral and not linked, so each chest placed on a map holds
+ *   its own items. They have no bars.
  */
 
 /** Foundry's CONST.TOKEN_DISPLAY_MODES (who sees a name or bar). */
@@ -52,6 +54,14 @@ export const TOKEN_DEFAULTS = {
     displayName: DISPLAY.HOVER,
     displayBars: DISPLAY.HOVER,
     bar1: { attribute: "hp" },
+    bar2: { attribute: null }
+  },
+  chest: {
+    actorLink: false,
+    disposition: DISPOSITION.NEUTRAL,
+    displayName: DISPLAY.HOVER,
+    displayBars: DISPLAY.NONE,
+    bar1: { attribute: null },
     bar2: { attribute: null }
   }
 };

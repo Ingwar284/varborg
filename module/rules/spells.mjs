@@ -187,6 +187,17 @@ export function scrollModifiers(options = {}) {
   return spellModifiers({ ...options, outsideList: false });
 }
 
+/**
+ * What a spell scroll costs to buy (rules 4. Economy, Spell scrolls): DR14
+ * 140 s, DR16 160 s, and DR12 120 s (designer, GAPS 266). DR18 and DR20 are
+ * not for sale, so the price is 0.
+ * @param {number} cost  The spell's listed ember cost.
+ */
+export const SCROLL_PRICES = { 12: 120, 14: 140, 16: 160 };
+export function scrollPrice(cost) {
+  return SCROLL_PRICES[spellDr(cost)] ?? 0;
+}
+
 /*
  * Rituals (rules 4.7, the Rituals part of each spell page; rules 7,
  * Rituals): "Rituals are spells cast over minutes or hours, outside combat.

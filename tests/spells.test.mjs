@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import {
   SPELL_ABILITY, CASTING_TIMES, spellDr, outsideSpellList, metalArmourBane, spellModifiers, spellOutcome,
   LIFE_FORCE_ABILITY, lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr,
-  scrollUse, scrollModifiers, RITUAL_DRS, castingDr, ritualUse, ritualModifiers
+  scrollUse, scrollModifiers, scrollPrice, RITUAL_DRS, castingDr, ritualUse, ritualModifiers
 } from "../module/rules/spells.mjs";
 import { diceMode, MODE } from "../module/rules/test-roll.mjs";
 import { modifiedDr } from "../module/rules/test-modifiers.mjs";
@@ -146,4 +146,8 @@ test("a Hedge Mage's chosen list decides the Bane once chosen (Autodidactism, st
   assert.equal(outsideSpellList("primal", "choose", "primal"), false);
   assert.equal(outsideSpellList("arcane", "choose", "primal"), true);
   assert.equal(outsideSpellList("arcane", "choose", ""), null);
+});
+
+test("a scroll costs 120 s at DR12, 140 s at DR14 and 160 s at DR16; DR18 and DR20 are not for sale", () => {
+  assert.deepEqual([1, 3, 5, 7, 9].map(scrollPrice), [120, 140, 160, 0, 0]);
 });

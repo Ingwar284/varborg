@@ -122,15 +122,22 @@ export async function moveCargo(target, item) {
     ui.notifications.warn(game.i18n.format("VARBORG.Vehicle.CannotMove", { item: item.name, from: source.name }));
     return null;
   }
-  const data = item.toObject();
-  delete data._id;
-  // It leaves its container behind, and is not worn or wielded in the cargo.
-  data.system.storedIn = "";
-  if ("equipped" in data.system) data.system.equipped = false;
-  const [created] = await target.createEmbeddedDocuments("Item", [data]);
+  const [created] = await target.createEmbeddedDocuments("Item", [movedItemData(item)]);
   if (!created) return null;
   await item.delete();
   return created;
+}
+
+/**
+ * An item's data for moving it to another actor (a vehicle or a chest): it
+ * leaves its container behind, and is no longer worn or wielded.
+ */
+export function movedItemData(item) {
+  const data = item.toObject();
+  delete data._id;
+  data.system.storedIn = "";
+  if ("equipped" in data.system) data.system.equipped = false;
+  return data;
 }
 
 /**

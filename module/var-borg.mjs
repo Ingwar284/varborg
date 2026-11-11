@@ -14,6 +14,9 @@ import { registerMinions } from "./minions.mjs";
 import VehicleData from "./data/vehicle.mjs";
 import VehicleSheet from "./sheets/vehicle-sheet.mjs";
 import { registerVehicles } from "./vehicles.mjs";
+import ChestData from "./data/chest.mjs";
+import ChestSheet from "./sheets/chest-sheet.mjs";
+import { registerChests } from "./chests.mjs";
 import { WeaponData, ArmourData, ShieldData, GearData, ContainerData } from "./data/equipment.mjs";
 import FeatData from "./data/feat.mjs";
 import PowerData from "./data/power.mjs";
@@ -62,6 +65,7 @@ Hooks.once("init", () => {
   CONFIG.Actor.dataModels.foe = FoeData;
   CONFIG.Actor.dataModels.minion = MinionData;
   CONFIG.Actor.dataModels.vehicle = VehicleData;
+  CONFIG.Actor.dataModels.chest = ChestData;
 
   // Actor sheets.
   const Actors = foundry.documents.collections.Actors;
@@ -73,6 +77,7 @@ Hooks.once("init", () => {
   Actors.registerSheet("var-borg", FoeSheet, { types: ["foe"], makeDefault: true, label: "VARBORG.Sheet.Foe" });
   Actors.registerSheet("var-borg", MinionSheet, { types: ["minion"], makeDefault: true, label: "VARBORG.Sheet.Minion" });
   Actors.registerSheet("var-borg", VehicleSheet, { types: ["vehicle"], makeDefault: true, label: "VARBORG.Sheet.Vehicle" });
+  Actors.registerSheet("var-borg", ChestSheet, { types: ["chest"], makeDefault: true, label: "VARBORG.Sheet.Chest" });
 
   // Item data and sheets: weapons, armour, shields, gear, containers, feats,
   // powers, spells, scrolls, and the class, ancestry and background a character comes from.
@@ -142,6 +147,8 @@ Hooks.once("init", () => {
   registerMinions();
   // Vehicles: the buttons on driving cards (step 44).
   registerVehicles();
+  // Chests: opened by double clicking their token when next to it.
+  registerChests();
 
   // Chat card buttons: lowering a foe's armour after a Triumph (rules 3.4).
   Hooks.on("renderChatMessageHTML", addAttackCardListeners);

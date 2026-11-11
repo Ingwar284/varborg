@@ -1,0 +1,52 @@
+<section class="var-borg-sheet foe-sheet chest-sheet">
+  <header class="sheet-header">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" {{#if isGM}}data-action="editImage" data-edit="img"{{/if}}>
+    <div class="foe-title">
+      {{#if isGM}}
+      <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+      {{else}}
+      <h1 class="actor-name">{{actor.name}}</h1>
+      {{/if}}
+    </div>
+  </header>
+
+  {{#if isGM}}
+  <section class="details">
+    <label>
+      <span>{{localize "VARBORG.Foe.Description"}}</span>
+      <textarea name="system.description" rows="3">{{system.description}}</textarea>
+    </label>
+  </section>
+  {{else if system.description}}
+  <section class="details">
+    <p>{{system.description}}</p>
+  </section>
+  {{/if}}
+
+  <section class="inventory-section">
+    <h2 data-tooltip="{{localize 'VARBORG.Chest.ContentsHint'}}">{{localize "VARBORG.Chest.Contents"}}</h2>
+    <ul class="item-list">
+      {{#each contents}}
+      <li class="item-row draggable" data-item-id="{{item.id}}">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        {{#if quantity}}<span class="item-summary">×{{quantity}}</span>{{/if}}
+        <span class="item-name">{{item.name}}</span>
+        <span class="item-summary">{{localize typeLabel}}</span>
+        {{#if @root.isGM}}
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+        {{/if}}
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.Chest.Empty"}}</li>
+      {{/each}}
+    </ul>
+    <p class="hint">{{localize "VARBORG.Chest.DragHint"}}</p>
+  </section>
+</section>

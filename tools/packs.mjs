@@ -35,7 +35,7 @@ export const PACKS = [
  * Document types that are never packed. Player characters are made in the
  * world (with the creation helper), so the Example Hero stays an example only.
  */
-export const UNPACKED_TYPES = ["character"];
+export const UNPACKED_TYPES = ["character", "chest"];
 
 /** Foundry's database collection name for each document class. */
 const COLLECTIONS = { Actor: "actors", Item: "items", RollTable: "tables" };

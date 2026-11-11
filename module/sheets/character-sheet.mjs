@@ -20,7 +20,7 @@ import { usePower, sustainPower, endPower } from "../dice/power.mjs";
 import { partnerOf, markOf } from "../outcomes.mjs";
 import { castSpell } from "../dice/spell.mjs";
 import { powerDr } from "../rules/powers.mjs";
-import { castingDr } from "../rules/spells.mjs";
+import { castingDr, scrollPrice, spellDr } from "../rules/spells.mjs";
 import { raiseShield, lowerShield } from "../dice/defence.mjs";
 import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
@@ -196,6 +196,26 @@ function spellSummary(item) {
     i18n.localize(`VARBORG.Class.SpellList.${system.spellList}`),
     system.sustained ? i18n.localize("VARBORG.Power.SustainedLabel") : ""
   ].filter(Boolean).join(" · ");
+}
+
+/**
+ * A scroll of a spell (rules 3.11 Scrolls): the spell's list, cost, actions,
+ * damage and outcomes on a scroll item, priced by rules 4. Economy
+ * (GAPS 266). Used when a spell is dropped on the Inventory tab. A ritual
+ * becomes a scroll like any spell, read at its own DR (cost = DR − 11).
+ */
+function scrollOfSpell(spell) {
+  const fields = CONFIG.Item.dataModels.scroll?.schema?.fields ?? {};
+  const source = spell.toObject().system;
+  const system = Object.fromEntries(Object.keys(fields).filter(key => key in source).map(key => [key, source[key]]));
+  if (source.ritual) system.cost = Math.max(0, source.ritualDr - spellDr(0));
+  system.price = scrollPrice(system.cost);
+  return {
+    name: game.i18n.format("VARBORG.Spell.ScrollName", { spell: spell.name }),
+    type: "scroll",
+    img: spell.img,
+    system
+  };
 }
 
 export default class CharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -564,6 +584,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     // Cargo dragged off a vehicle moves onto the character (GAPS 178).
     const moved = await moveCargo(this.actor, item);
     if (moved !== undefined) return moved;
+    // A spell dropped on the Inventory tab becomes a scroll of that spell.
+    if (item.type === "spell" && event.target?.closest?.('[data-tab="inventory"]')) {
+      if (!this.actor.isOwner) return null;
+      return this.actor.createEmbeddedDocuments("Item", [scrollOfSpell(item)]);
+    }
     if (!isOrigin(item.type)) return super._onDropItem(event, item);
     if (!this.actor.isOwner || this.actor.uuid === item.parent?.uuid) return null;
     const data = item.inCompendium ? game.items.fromCompendium(item, { clearFolder: true }) : item.toObject();

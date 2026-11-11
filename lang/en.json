@@ -4,7 +4,8 @@
       "character": "Character",
       "foe": "Foe",
       "minion": "Minion",
-      "vehicle": "Vehicle"
+      "vehicle": "Vehicle",
+      "chest": "Chest"
     },
     "Item": {
       "weapon": "Weapon",
@@ -79,7 +80,7 @@
         "Edit": "Edit",
         "Delete": "Delete",
         "None": "None",
-        "DropHint": "Drag weapons, armour, shields, gear, containers, scrolls and relics from the Items sidebar onto this sheet."
+        "DropHint": "Drag weapons, armour, shields, gear, containers, scrolls and relics from the Items sidebar onto this sheet. A spell dropped here becomes a scroll of that spell."
       },
       "Gear": "VÅR BORG gear sheet",
       "Container": "VÅR BORG container sheet",
@@ -114,7 +115,8 @@
       "Scroll": "VÅR BORG scroll sheet",
       "Minion": "VÅR BORG minion sheet",
       "Relic": "VÅR BORG relic sheet",
-      "Vehicle": "VÅR BORG vehicle sheet"
+      "Vehicle": "VÅR BORG vehicle sheet",
+      "Chest": "VÅR BORG chest sheet"
     },
     "Item": {
       "Price": "Price (s)",
@@ -1667,6 +1669,7 @@
         "hour": "Took 1 hour to cast: Boon."
       },
       "SeveralCastersNote": "Several casters: Boon.",
+      "ScrollName": "Scroll of {spell}",
       "ScrollSheetHint": "A spell written on a scroll. Anyone can read it once, without Ember, testing Sanity against the spell's normal DR. It is destroyed when read, even if the spell fails (rules 3.11).",
       "ScrollDrHint": "Read from the scroll: Sanity against DR{dr}, no Ember.",
       "ScrollCastTooltip": "Read this scroll (cast its spell)",
@@ -2378,6 +2381,18 @@
       "LastRiteRule": "A Last Rite always works, needs no ember and no Expendable roll.",
       "BurntOut": "The relic is burnt out and destroyed.",
       "RecoverHint": "If it is recovered, the Dark Master unticks Destroyed on the relic."
+    },
+    "Chest": {
+      "Contents": "Contents",
+      "ContentsHint": "What is inside. Drag an item onto your character sheet to take it, or from your sheet onto this list to put it in.",
+      "Empty": "Empty.",
+      "DragHint": "Drag items out to take them, or in to leave them here.",
+      "NoToken": "You need a token on this scene to open {name}.",
+      "TooFar": "Stand next to {name} to open it.",
+      "CannotHold": "{item} cannot be put in a chest.",
+      "NotYours": "You do not own {name}.",
+      "NeedGM": "The Dark Master must be logged in to move items in or out of a chest.",
+      "OnlyGMAdds": "Only the Dark Master can put new items in a chest. Drag one from your character sheet instead."
     },
     "Vehicle": {
       "Speed": {

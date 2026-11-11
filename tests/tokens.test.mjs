@@ -67,3 +67,11 @@ test("vehicles: linked, neutral, HP bar on hover", () => {
 test("an unknown actor type gets nothing", () => {
   assert.deepEqual(missingTokenDefaults("airship", {}), {});
 });
+
+test("chests: not linked, neutral, no bars", () => {
+  const c = TOKEN_DEFAULTS.chest;
+  assert.equal(c.actorLink, false);
+  assert.equal(c.disposition, DISPOSITION.NEUTRAL);
+  assert.equal(c.displayBars, DISPLAY.NONE);
+  assert.equal(c.bar1.attribute, null);
+});

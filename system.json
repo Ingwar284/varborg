@@ -12,6 +12,7 @@
       "name": "Ingwar284"
     }
   ],
+  "socket": true,
   "esmodules": [
     "module/var-borg.mjs"
   ],
@@ -35,7 +36,8 @@
       "character": {},
       "foe": {},
       "minion": {},
-      "vehicle": {}
+      "vehicle": {},
+      "chest": {}
     },
     "Item": {
       "weapon": {},
