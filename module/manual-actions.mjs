@@ -21,7 +21,7 @@ import { turnState } from "./combat.mjs";
 import { BASIC_ACTIVITIES, activityCost } from "./rules/actions.mjs";
 import { manualDamage } from "./rules/defence.mjs";
 import { droppedContainerIds, isDropped } from "./rules/dropped.mjs";
-import { carrying } from "./rules/carrying.mjs";
+import { actorSpeeds } from "./movement.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -161,18 +161,16 @@ async function basicActivity(actor, kind) {
     ui.notifications.warn(i18n.localize("VARBORG.Manual.NotYourTurn"));
     return;
   }
+  // A Move by button gives its feet to drag the token with (rules 3.7).
+  const movement = kind === "move" ? actorSpeeds(actor).walk : 0;
   if (cost.actions) {
     if (turn.combatant.actionsLeft < cost.actions) ui.notifications.warn(i18n.localize("VARBORG.Manual.NoActions"));
-    await turn.combatant.adjustPips("actions", -cost.actions);
+    await turn.combatant.adjustPips("actions", -cost.actions, kind === "move" ? { moveLeft: movement * cost.actions } : {});
   }
 
   const symbols = "◈".repeat(actions);
   const lines = [i18n.format(`VARBORG.Manual.Did.${kind}`, { name: esc(actor.name), actions: symbols })];
-  if (kind === "move") {
-    const items = actor.items.map(item => ({ id: item.id, type: item.type, ...item.system }));
-    const { movement } = carrying(items, actor.system.abilities.toughness, actor.system.statBonuses);
-    lines.push(i18n.format("VARBORG.Manual.MoveDistance", { feet: movement }));
-  }
+  if (kind === "move") lines.push(i18n.format("VARBORG.Manual.MoveDistance", { feet: movement }));
   if (note) lines.push(`<em>${esc(note)}</em>`);
   if (cost.actions) lines.push(`<span class="modifier">${esc(i18n.format("VARBORG.Manual.Spent", { actions: symbols }))}</span>`);
   await ChatMessage.create({

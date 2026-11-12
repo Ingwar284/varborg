@@ -74,7 +74,13 @@
     </label>
     <div class="resource movement carrying-{{carrying.state}}" data-tooltip="{{localize (concat 'VARBORG.Carrying.Hint.' carrying.state)}}">
       <span>{{localize "VARBORG.Carrying.Movement"}}</span>
-      <span class="movement-value">{{localize "VARBORG.Carrying.Feet" value=carrying.movement}}</span>
+      <span class="movement-value">{{localize "VARBORG.Carrying.Feet" value=speeds.walk}}
+        <button type="button" class="icon-button speeds-button" data-action="editSpeeds"
+                data-tooltip="{{localize 'VARBORG.Movement.EditSpeeds'}}" aria-label="{{localize 'VARBORG.Movement.EditSpeeds'}}">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </button>
+      </span>
+      {{#if speeds.others}}<span class="other-speeds">{{speeds.others}}</span>{{/if}}
       {{#unless (eq carrying.state "normal")}}<span class="carrying-state">{{localize carrying.stateLabel}}</span>{{/unless}}
       {{#if carrying.effects}}<span class="ability-in-use">{{carrying.effects}}</span>{{/if}}
     </div>

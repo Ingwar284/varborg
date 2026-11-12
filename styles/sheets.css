@@ -1303,3 +1303,26 @@
 .var-borg-sheet .section-header :is(h2, h3) {
   padding-right: 4.5rem;
 }
+
+/* ---- Movement speeds (rules 3.7) ---- */
+.var-borg-sheet .movement-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.var-borg-sheet .speeds-button {
+  font-size: 0.75rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.var-borg-sheet .other-speeds {
+  font-size: 0.8rem;
+}
+
+.var-borg-sheet .foe-stats.speeds {
+  margin-top: 0.5rem;
+}

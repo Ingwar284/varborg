@@ -26,6 +26,8 @@ import { strongestShield, shieldCover } from "../rules/defence.mjs";
 import { weaponTraits } from "../rules/equipment.mjs";
 import { effectiveWeapon } from "../effects.mjs";
 import { carrying, isOverCapacity, itemCount } from "../rules/carrying.mjs";
+import { characterSpeeds } from "../rules/movement.mjs";
+import { otherSpeedsLine, editCharacterSpeeds } from "../movement.mjs";
 import { DROPPED, droppedContainerIds, isDropped } from "../rules/dropped.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
@@ -264,7 +266,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       rollDetail: CharacterSheet.#onRollDetail,
       randomCharacter: CharacterSheet.#onRandomCharacter,
       showConditions: CharacterSheet.#onShowConditions,
-      toggleDescription: CharacterSheet.#onToggleDescription
+      toggleDescription: CharacterSheet.#onToggleDescription,
+      editSpeeds: CharacterSheet.#onEditSpeeds
     }
   };
 
@@ -503,6 +506,10 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         ...effectParts(system.statBonuses?.movement).map(part => i18n.format("VARBORG.Effects.OnMovement", { part }))
       ].join(", ")
     };
+
+    // Speeds: walk from carrying plus extra feet, and fly, swim, climb (rules 3.7).
+    const speeds = characterSpeeds(carried, system.movement);
+    context.speeds = { ...speeds, others: otherSpeedsLine(speeds) };
 
     // Minions serving this character, and the limit: Presence, minimum 1 (rules 3.14).
     const minions = minionCount(actor);
@@ -795,6 +802,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     if (open) this.#expanded.add(id);
     else this.#expanded.delete(id);
     for (const row of this.element.querySelectorAll(`[data-description-for="${id}"]`)) row.hidden = !open;
+  }
+
+  /** The small button beside Movement: edit walk, fly, swim and climb speeds. */
+  static async #onEditSpeeds(event, button) {
+    await editCharacterSpeeds(this.document);
   }
 
   /** The strip of condition icons on the Character tab opens the Conditions tab. */

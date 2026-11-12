@@ -31,9 +31,8 @@ const SYSTEM = "var-borg";
 /** Marks the world chest actor that dropped items are placed from. */
 const DROPPED_FLAG = "droppedItems";
 
-/** Set up the token class, the socket and the drop hook. */
+/** Set up the socket and the drop hook. The token class is set in module/movement.mjs. */
 export function registerChests() {
-  CONFIG.Token.objectClass = ChestAwareToken;
   Hooks.once("ready", () => game.socket.on(SOCKET, onSocketMessage));
   Hooks.on("dropActorSheetData", onDropActorSheetData);
   Hooks.on("dropCanvasData", onDropCanvasData);
@@ -48,7 +47,7 @@ export function isChest(actor) {
  * Tokens: double clicking a chest opens it for anyone, if they are close
  * enough. Other tokens work as usual.
  */
-class ChestAwareToken extends foundry.canvas.placeables.Token {
+export class ChestAwareToken extends foundry.canvas.placeables.Token {
   /** @override  Anyone may double click a chest, not only those who can see its sheet. */
   _canView(user, event) {
     if (!isChest(this.actor)) return super._canView(user, event);

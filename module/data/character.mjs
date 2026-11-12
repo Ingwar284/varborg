@@ -90,6 +90,15 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
       darkVessels: wholeNumber(),
       // Days in a row without food or drink; more than 2 is starving (rules 3.16, GAPS 142).
       daysWithoutFood: wholeNumber(),
+      // Movement speeds (rules 3.7). Walk is the carrying movement plus
+      // walkBonus; a blank fly, swim or climb speed means the character
+      // cannot move that way. Edited with the button beside Movement.
+      movement: new SchemaField({
+        walkBonus: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
+        fly: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
+        swim: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
+        climb: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null })
+      }),
       // Phobias from the Panic table, written by hand (GAPS 82).
       phobias: new StringField({ required: true, initial: "" }),
       // Rules 2.1, Step 6: Details.

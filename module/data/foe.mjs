@@ -63,7 +63,15 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
       // A mook has 1 HP, fails every test and never rolls Morale.
       mook: new BooleanField({ initial: false }),
       // Levels of the Fatigued condition, no maximum (rules 3.13, GAPS 20).
-      fatigue: wholeNumber()
+      fatigue: wholeNumber(),
+      // Feet per Move action for each way of moving (rules 3.7). A blank
+      // fly, swim or climb speed means it cannot move that way.
+      movement: new SchemaField({
+        walk: wholeNumber({ initial: 20 }),
+        fly: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
+        swim: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
+        climb: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null })
+      })
     };
   }
 

@@ -58,6 +58,7 @@ import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
 import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
+import { registerMovement } from "./movement.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -154,6 +155,8 @@ Hooks.once("init", () => {
   registerVehicles();
   // Chests: opened by double clicking their token when next to it.
   registerChests();
+  // Movement: speeds, movement types and what moves cost (rules 3.7).
+  registerMovement();
   // The Dark Master's encounter builder (rules 2. Building Encounters).
   registerEncounters();
   // The Dark Master's treasure generator (rules 5. Treasure), also on chests.

@@ -10,6 +10,8 @@
  *   reactions     reactions left this turn
  *   maxActions    actions gained at the start of this turn
  *   maxReactions  reactions gained at the start of this turn
+ *   moveLeft      feet left over from the last Move this turn; gone when
+ *                 another action is spent or the turn starts again
  * A combatant without these flags has a full turn. Conditions change what
  * a turn starts with (rules 3.13, module/rules/conditions.mjs).
  *
@@ -104,7 +106,7 @@ export class VarBorgCombat extends foundry.documents.Combat {
     // Only the conditions the actor really has are taken off.
     const ended = worked.filter(id => own.has(id));
     await combatant.update({
-      [`flags.${SYSTEM}`]: { actions, reactions, maxActions: actions, maxReactions: reactions, attacks: 0 }
+      [`flags.${SYSTEM}`]: { actions, reactions, maxActions: actions, maxReactions: reactions, attacks: 0, moveLeft: 0 }
     });
     if (minion) await postMinionTurn(combatant, minion.commanded, actions);
     else if (actions !== ACTIONS_PER_TURN || reactions !== REACTIONS_PER_TURN) {
@@ -254,6 +256,15 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
     return this.getFlag(SYSTEM, "maxReactions") ?? baseTurn(this).reactions;
   }
 
+  /**
+   * Feet left over from the last Move action this turn (rules 3.7). They
+   * stay usable until an action is spent on anything else (designer
+   * decision, GAPS).
+   */
+  get moveLeft() {
+    return this.getFlag(SYSTEM, "moveLeft") ?? 0;
+  }
+
   /** Attacks made on this combatant's own turn so far (rules 3.4, GAPS 18). */
   get attacksThisTurn() {
     return this.getFlag(SYSTEM, "attacks") ?? 0;
@@ -266,13 +277,21 @@ export class VarBorgCombatant extends foundry.documents.Combatant {
 
   /**
    * Spend (delta −1) or give back (delta +1) actions or reactions.
+   * Spending an action on anything but movement loses the feet left over
+   * from the last Move (designer decision, GAPS).
    * @param {"actions"|"reactions"} kind
    * @param {number} delta
+   * @param {object} [options]
+   * @param {number} [options.moveLeft]  The action pays for movement: the
+   *   feet left over afterwards.
    */
-  async adjustPips(kind, delta) {
+  async adjustPips(kind, delta, { moveLeft } = {}) {
     const max = kind === "actions" ? this.maxActions : this.maxReactions;
     const left = kind === "actions" ? this.actionsLeft : this.reactionsLeft;
-    return this.setFlag(SYSTEM, kind, adjustLeft(left, delta, max));
+    const changes = { [kind]: adjustLeft(left, delta, max) };
+    if (moveLeft !== undefined) changes.moveLeft = Math.max(0, moveLeft);
+    else if (kind === "actions" && delta < 0) changes.moveLeft = 0;
+    return this.update({ [`flags.${SYSTEM}`]: changes });
   }
 
   /** Whenever initiative is set, roll a new random tiebreak with it. */
@@ -361,6 +380,14 @@ export function addTrackerPips(app, html) {
       pipGroup(combatant, "actions", combatant.actionsLeft, combatant.maxActions, "◈"),
       pipGroup(combatant, "reactions", combatant.reactionsLeft, combatant.maxReactions, "↻")
     );
+    // Feet left from the last Move, usable until another action (rules 3.7).
+    if (combatant.moveLeft > 0) {
+      const feet = document.createElement("span");
+      feet.className = "move-left";
+      feet.textContent = game.i18n.format("VARBORG.Carrying.Feet", { value: combatant.moveLeft });
+      feet.dataset.tooltip = game.i18n.format("VARBORG.Movement.LeftHint", { feet: combatant.moveLeft });
+      box.append(feet);
+    }
     row.querySelector(".token-name")?.append(box);
   }
 }

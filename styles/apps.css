@@ -1102,3 +1102,24 @@
 .var-borg-card .vb-warning {
   color: var(--vb-warning);
 }
+
+/* Feet left over from the last Move (rules 3.7). */
+.var-borg-pips .move-left {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+/* Token ruler: the Move actions a move costs (rules 3.7). */
+.waypoint-label .var-borg-move-cost {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.waypoint-label .var-borg-move-left {
+  opacity: 0.8;
+  font-size: 0.9em;
+}
+
+.waypoint-label.var-borg-too-far .var-borg-move-cost {
+  color: #ff6b5b;
+}

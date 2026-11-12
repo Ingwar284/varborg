@@ -389,6 +389,14 @@
       "TableMissing": "The personality table was not found in the Roll Tables compendium."
     },
     "Settings": {
+      "MovementAnimations": {
+        "Name": "Movement animations",
+        "Hint": "Tokens hop when they walk, lift off when they fly, sway when they swim, and so on. Off by default if your computer asks for reduced motion."
+      },
+      "ShowReach": {
+        "Name": "Show reach while dragging",
+        "Hint": "In combat, on a token's own turn, shade every square it can still reach this turn while you drag it, coloured by the Move action that pays for it."
+      },
       "CreationHelper": {
         "Name": "Creation Helper",
         "Hint": "Characters are made at random by default. Switch this on to show the Creation Helper button on character sheets, for choosing each step by hand, and to let players choose their feat when Improving."
@@ -426,6 +434,40 @@
       "Loose": "Carried loose",
       "Dropped": "Dropped",
       "StoredIn": "Stored in"
+    },
+    "Movement": {
+      "Type": {
+        "walk": "Walk",
+        "fly": "Fly",
+        "swim": "Swim",
+        "climb": "Climb",
+        "crawl": "Crawl"
+      },
+      "SpeedLine": "{type} {feet}′",
+      "EditSpeeds": "Speeds: extra walking feet, and fly, swim and climb",
+      "DialogTitle": "{name}: speeds",
+      "DialogHint": "Feet per Move action. Leave a box blank if the character cannot move that way.",
+      "Cannot": "cannot",
+      "Save": "Save",
+      "Field": {
+        "walkBonus": "Extra walking feet",
+        "fly": "Fly",
+        "swim": "Swim",
+        "climb": "Climb"
+      },
+      "Hint": {
+        "walkBonus": "Added to the walking speed from carrying (20′). Can be negative. Overloaded still means 0.",
+        "other": "Feet per Move. Overloaded makes it 0."
+      },
+      "Restrained": "{name} is Restrained and cannot move.",
+      "DiagonalsWarning": "VÅR BORG counts every second diagonal step double. Set Game Settings → Core → Grid Diagonals to \"Alternating (1/2)\" for the ruler to match the rules.",
+      "FeetLeft": "{feet}′ left",
+      "TooFar": "Not enough actions",
+      "NotEnough": "{name} cannot move that far: it costs {cost} and {left} is left this turn.",
+      "Moved": "{name} moves {feet}′ ({cost}).",
+      "NoNewAction": "no new action",
+      "LeftHint": "{feet}′ left from the last Move. Lost when an action is spent on anything else.",
+      "CreatureHint": "Feet per Move action. Leave fly, swim or climb blank if it cannot move that way."
     },
     "Carrying": {
       "Title": "Carrying",

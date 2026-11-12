@@ -57,7 +57,15 @@ export default class MinionData extends foundry.abstract.TypeDataModel {
       // Levels of the Fatigued condition, no maximum (rules 3.13, GAPS 20).
       fatigue: wholeNumber(),
       // An attack Ruin: Bane on attacks until Recover (rules 3.4, GAPS 17).
-      attackRuin: new BooleanField({ required: true, initial: false })
+      attackRuin: new BooleanField({ required: true, initial: false }),
+      // Feet per Move action for each way of moving (rules 3.7). A blank
+      // fly, swim or climb speed means it cannot move that way.
+      movement: new SchemaField({
+        walk: wholeNumber({ initial: 20 }),
+        fly: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
+        swim: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
+        climb: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null })
+      })
     };
   }
 
