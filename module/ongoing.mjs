@@ -28,6 +28,7 @@ import { takenCover } from "./rules/defence.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
 import { stepAbility } from "./rules/origins.mjs";
 import { signed } from "./dice/ability-test.mjs";
+import { descriptionText } from "./rules/random.mjs";
 import { lowerShield } from "./dice/defence.mjs";
 
 const SYSTEM = "var-borg";
@@ -62,7 +63,10 @@ export function ongoingEffects(actor) {
         buff.nextOnly ? i18n.localize("VARBORG.Ongoing.NextOnly") : "",
         buff.sustained ? i18n.localize("VARBORG.Ongoing.WhileSustained") : ""
       ].filter(Boolean).join(", ");
-      add({ img: item.img, label: item.name, detail, kind: "buff", ref: item.id, up: countsRounds(timer), down: true });
+      // What the buff does, such as "allies within 15' defend with -2 DR" (hover, playtest feedback).
+      const text = oneLine(item.system.description);
+      const shown = [detail, text].filter(Boolean).join(". ");
+      add({ img: item.img, label: item.name, detail: shown, kind: "buff", ref: item.id, up: countsRounds(timer), down: true });
     }
     if (item.system?.sustaining) {
       add({ icon: "fa-hourglass-half", label: i18n.format("VARBORG.Ongoing.Sustaining", { name: item.name }) });
@@ -120,21 +124,32 @@ export function ongoingEffects(actor) {
  * ongoing effects: the whole list for the Ongoing panel.
  * @param {Actor} actor  A character, foe or minion.
  */
+/** An Active Effect's own description, as plain text. */
+function effectText(actor, id) {
+  return oneLine(actor.effects.get(id)?.description);
+}
+
+/** A description as one line of plain text, for a tooltip. */
+function oneLine(text) {
+  return descriptionText(text ?? "").split("\n").filter(Boolean).join(" ");
+}
+
 export function allOngoing(actor) {
   const conditions = sheetConditions(actor);
   const fromConditions = [
-    ...conditions.list.map(({ id, img, label, timer, text }) => ({
-      img, label, detail: [timer, text].filter(Boolean).join(" "),
+    ...conditions.list.map(({ id, img, label, timer, text, source }) => ({
+      img, label, detail: [timer, text, source].filter(Boolean).join(" "),
       kind: "condition", ref: id,
       // Fatigued has levels; a condition with a rounds timer counts rounds.
       up: id === "fatigued" || countsRounds(conditionDoc(actor, id)?.getFlag(SYSTEM, TIMER_FLAG)), down: true
     })),
     ...(conditions.persistent?.list ?? []).map(({ id, img, label, text }) => ({ img, label, detail: text ?? "", kind: "effect", ref: id, up: false, down: true })),
+    // A Panic result and an injury: their rules text, as on the card (hover, playtest feedback).
     ...(conditions.panic?.list ?? []).map(({ id, img, label }) => ({
-      img, label, detail: "", kind: "panic", ref: id,
+      img, label, detail: effectText(actor, id), kind: "panic", ref: id,
       up: Number.isFinite(actor.effects.get(id)?.getFlag(SYSTEM, "panic")?.turns), down: true
     })),
-    ...(conditions.injuries ?? []).map(({ id, img, label }) => ({ img, label, detail: "", kind: "effect", ref: id, up: false, down: true }))
+    ...(conditions.injuries ?? []).map(({ id, img, label }) => ({ img, label, detail: effectText(actor, id), kind: "effect", ref: id, up: false, down: true }))
   ];
   return [...fromConditions, ...ongoingEffects(actor)].map(entry => ({ kind: "", ref: "", up: false, down: false, ...entry }));
 }
