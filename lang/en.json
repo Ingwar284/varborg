@@ -3603,6 +3603,14 @@
       "PlacedOn": "{name} placed on {scene}.",
       "ChestName": "Treasure ({size})",
       "NoScene": "There is no scene to place the treasure on."
+    },
+    "ChatRolls": {
+      "Test": "Ability test",
+      "TestTooltip": "Roll an ability test for your character",
+      "Panic": "Panic test",
+      "PickTitle": "{name}: which ability?",
+      "PickHint": "Choose the ability to test. You set the DR, Boon and Bane next.",
+      "NoCharacter": "Select your character's token, or choose a character for yourself in User Configuration."
     }
   }
 }

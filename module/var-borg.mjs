@@ -59,6 +59,7 @@ import { registerChoices } from "./choices.mjs";
 import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
 import { registerMovement } from "./movement.mjs";
+import { registerChatRolls } from "./chat-rolls.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -157,6 +158,8 @@ Hooks.once("init", () => {
   registerChests();
   // Movement: speeds, movement types and what moves cost (rules 3.7).
   registerMovement();
+  // Quick roll buttons above the chat message box.
+  registerChatRolls();
   // The Dark Master's encounter builder (rules 2. Building Encounters).
   registerEncounters();
   // The Dark Master's treasure generator (rules 5. Treasure), also on chests.

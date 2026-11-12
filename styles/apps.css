@@ -1123,3 +1123,20 @@
 .waypoint-label.var-borg-too-far .var-borg-move-cost {
   color: #ff6b5b;
 }
+
+/* Quick roll buttons above the chat message box (module/chat-rolls.mjs). */
+.var-borg-chat-rolls {
+  display: flex;
+  gap: 4px;
+  margin: 4px 0;
+}
+.var-borg-chat-rolls button {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  padding: 0 4px;
+  font-size: var(--font-size-12, 12px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
