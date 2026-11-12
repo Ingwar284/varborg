@@ -42,7 +42,7 @@ import { openCreationHelper } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { ongoingEffects } from "../ongoing.mjs";
 import { rollDetail } from "../personality.mjs";
-import { randomCharacter } from "../random-character.mjs";
+import { randomCharacter, chosenRandomCharacter } from "../random-character.mjs";
 import { onPostItem } from "../item-chat.mjs";
 import { MANUAL_ACTIONS, runManualAction } from "../manual-actions.mjs";
 
@@ -265,6 +265,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       openCreation: CharacterSheet.#onOpenCreation,
       rollDetail: CharacterSheet.#onRollDetail,
       randomCharacter: CharacterSheet.#onRandomCharacter,
+      chosenRandomCharacter: CharacterSheet.#onChosenRandomCharacter,
       showConditions: CharacterSheet.#onShowConditions,
       toggleDescription: CharacterSheet.#onToggleDescription,
       editSpeeds: CharacterSheet.#onEditSpeeds
@@ -747,6 +748,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       label: "VARBORG.Random.Tooltip",
       action: "randomCharacter"
     });
+    // The middle way: choose ancestry and class, roll the rest (playtest feedback).
+    if (this.isEditable) buttons.unshift({
+      icon: "fa-solid fa-user-gear",
+      label: "VARBORG.Random.ChooseTooltip",
+      action: "chosenRandomCharacter"
+    });
     if (this.isEditable && creationHelperOn()) buttons.unshift({
       icon: "fa-solid fa-user-plus",
       label: "VARBORG.Creation.Tooltip",
@@ -783,6 +790,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** The Random character button: rolls every step of rules 2.1 (GAPS 256). */
   static async #onRandomCharacter(event, button) {
     await randomCharacter(this.document);
+  }
+
+  /** Choose ancestry and class, roll the rest (playtest feedback). */
+  static async #onChosenRandomCharacter(event, button) {
+    await chosenRandomCharacter(this.document);
   }
 
   /** A dice button in Details: roll that field on its rules 2.7 table. */

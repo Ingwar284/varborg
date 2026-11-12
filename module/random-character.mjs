@@ -144,11 +144,40 @@ async function rollBackground(sources, rolls) {
 }
 
 /**
- * Roll a whole character (GAPS 256) and post one card.
+ * The middle way (playtest feedback): the player chooses the ancestry and
+ * class, and everything else is rolled as for a random character.
  * @param {Actor} actor  A character the user may edit.
  * @returns {Promise<boolean>} Whether a character was rolled.
  */
-export async function randomCharacter(actor) {
+export async function chosenRandomCharacter(actor) {
+  if (actor?.type !== "character" || !actor.isOwner) return false;
+  const i18n = game.i18n;
+  const esc = foundry.utils.escapeHTML;
+  const sources = await gatherSources();
+  const select = (type, name) => {
+    const options = uniqueByName(sources.filter(s => s.type === type))
+      .map(s => `<option value="${esc(s.uuid)}">${esc(s.name)}</option>`).join("");
+    return `<div class="form-group"><label>${esc(i18n.localize(`TYPES.Item.${type}`))}</label>`
+      + `<select name="${name}"><option value="">${esc(i18n.localize("VARBORG.Random.AtRandom"))}</option>${options}</select></div>`;
+  };
+  const picked = await foundry.applications.api.DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
+    window: { title: i18n.localize("VARBORG.Random.ChooseTitle") },
+    content: `<p>${esc(i18n.localize("VARBORG.Random.ChooseHint"))}</p>${select("ancestry", "ancestryUuid")}${select("class", "classUuid")}`,
+    ok: { label: i18n.localize("VARBORG.Random.ChooseRoll") },
+    rejectClose: false
+  });
+  if (!picked) return false;
+  return randomCharacter(actor, { ancestryUuid: picked.ancestryUuid || null, classUuid: picked.classUuid || null });
+}
+
+/**
+ * Roll a whole character (GAPS 256) and post one card.
+ * @param {Actor} actor  A character the user may edit.
+ * @param {object} [chosen]  The ancestry and class the player chose (uuids); the rest is rolled.
+ * @returns {Promise<boolean>} Whether a character was rolled.
+ */
+export async function randomCharacter(actor, { ancestryUuid = null, classUuid = null } = {}) {
   if (actor?.type !== "character" || !actor.isOwner) return false;
   if (!(await confirmReplace(actor))) return false;
   const i18n = game.i18n;
@@ -172,7 +201,7 @@ export async function randomCharacter(actor) {
   // 2. Ancestry, then a name from its name tables (GAPS 258), then its one
   //    ancestry feat (rules 2.1, Step 2). Without an ancestry, human names.
   const ancestryLines = section("ancestry");
-  const ancestry = await randomData(uniqueByName(sources.filter(s => s.type === "ancestry")));
+  const ancestry = ancestryUuid ? await itemData(ancestryUuid) : await randomData(uniqueByName(sources.filter(s => s.type === "ancestry")));
   const name = await rollName(ancestry?.name ?? "", rolls);
   if (name) {
     await actor.update({ name, "prototypeToken.name": name });
@@ -202,7 +231,7 @@ export async function randomCharacter(actor) {
 
   // 4. Class with its feature and power, and one spell (rules 2.1, Step 4).
   const classLines = section("class");
-  const cls = await randomData(uniqueByName(sources.filter(s => s.type === "class")));
+  const cls = classUuid ? await itemData(classUuid) : await randomData(uniqueByName(sources.filter(s => s.type === "class")));
   if (cls) {
     classLines.push(cls.name, ...await applyClassWithStarting(actor, cls, sources, { rolls }));
     const spells = sources.filter(s => s.type === "spell");

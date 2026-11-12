@@ -363,6 +363,11 @@
     },
     "Random": {
       "Tooltip": "Random character",
+      "ChooseTooltip": "Choose ancestry and class, roll the rest",
+      "ChooseTitle": "Choose ancestry and class",
+      "ChooseHint": "Choose the ancestry and class. Everything else is rolled as for a random character: abilities, name, ancestry feat, background, spell, starting equipment and details.",
+      "AtRandom": "At random",
+      "ChooseRoll": "Roll the rest",
       "ReplaceTitle": "Roll a new character",
       "Replace": "Roll a fully new character? Everything on {name}'s sheet is wiped: every item, feat, power and spell, abilities, HP, wounds, silver, Fortune, conditions, Details and notes, the name, and the minions that serve {name}. A new name is rolled. Only the portrait and token image stay. This cannot be undone.",
       "CardTitle": "{name}, rolled at random",
@@ -3292,6 +3297,14 @@
       "Attacks": "{name} makes a thrall's attack.",
       "Raised": "{item}: {owner} raises a thrall. It is a mook: 1 HP, it fails every test, and it collapses when the encounter ends (or after 10 minutes outside combat).",
       "Collapse": "The encounter is over: {count} thrall(s) collapse."
+    },
+    "LocalLinks": {
+      "MenuName": "Local file links",
+      "Label": "Check for local file links",
+      "Hint": "Lists every scene, actor, item, journal and other document that holds a file:/// address (a file picked from someone's own computer). A hosted game cannot load these and shows a Security Error. The list is whispered to you in chat; replace each file with one uploaded to the game.",
+      "Title": "Local file links",
+      "Found": "{count} documents hold a file:/// address. Open each one and replace the file with one uploaded to the game:",
+      "None": "No file:/// addresses found in the world. If the error remains, it may come from a module or a world compendium."
     },
     "Poison": {
       "How": "Use the poison on the targeted creatures, or coat a weapon: its next hit poisons the creature hit.",

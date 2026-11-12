@@ -39,6 +39,7 @@ import { registerFortune } from "./fortune.mjs";
 import { CARD } from "./rules/fortune.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerPoisons } from "./poison.mjs";
+import { registerLocalLinks } from "./local-links.mjs";
 import { registerConditions } from "./conditions.mjs";
 import { registerDarkness } from "./darkness.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
@@ -211,6 +212,9 @@ Hooks.once("init", () => {
     type: RefreshEffectsApp,
     restricted: true
   });
+
+  // GM-only "Check for local file links" button (playtest feedback).
+  registerLocalLinks();
 });
 
 Hooks.once("ready", async () => {
