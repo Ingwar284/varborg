@@ -130,6 +130,49 @@
         "note": ""
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "",
+      "size": 0,
+      "range": 0,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false,
+      "options": [
+        {
+          "option": "Allegro",
+          "shape": "emanation",
+          "size": 30,
+          "range": 0,
+          "width": 5,
+          "affects": "allies",
+          "includesUser": false
+        },
+        {
+          "option": "Adagio",
+          "shape": "emanation",
+          "size": 5,
+          "range": 0,
+          "width": 5,
+          "affects": "foes",
+          "includesUser": false
+        },
+        {
+          "option": "Defying Hymn",
+          "shape": "emanation",
+          "size": 15,
+          "range": 0,
+          "width": 5,
+          "affects": "allies",
+          "includesUser": false
+        }
+      ],
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": []
+      }
+    }
   }
 }

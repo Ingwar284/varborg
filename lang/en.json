@@ -3332,6 +3332,10 @@
     },
     "Area": {
       "Legend": "Area of effect",
+      "Options": {
+        "Legend": "Area for each option",
+        "Hint": "An option with its own area is aimed once it is chosen in the dialog, in place of the area above. Leave an option on None to use the area above."
+      },
       "Lasting": {
         "Legend": "Lasting area",
         "Hint": "On a Triumph or Success the area stays on the map: while Sustained, for some rounds, or until the encounter ends. A creature is affected when it enters or starts its turn there, no more than once per turn, unless an effect says otherwise. Foes take damage with Inflict damage; characters defend at Agility DR12. Armour soaks it.",

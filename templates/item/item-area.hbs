@@ -36,6 +36,41 @@
       {{/if}}
     </div>
   </fieldset>
+  {{#if optionAreas}}
+  <fieldset class="option-areas">
+    <legend>{{localize "VARBORG.Area.Options.Legend"}}</legend>
+    <p class="hint">{{localize "VARBORG.Area.Options.Hint"}}</p>
+    {{#each optionAreas.list}}
+    <div class="field-grid option-area" data-option-name="{{option}}">
+      <strong>{{option}}</strong>
+      <label>
+        <span>{{localize "VARBORG.Area.ShapeLabel"}}</span>
+        <select data-option-area="shape">{{selectOptions @root.optionAreas.shapes selected=shape localize=true}}</select>
+      </label>
+      {{#if shape}}
+      <label>
+        <span>{{localize "VARBORG.Area.Size"}}</span>
+        <input type="number" data-option-area="size" value="{{size}}" min="0" step="5">
+      </label>
+      {{#if isBurst}}
+      <label>
+        <span>{{localize "VARBORG.Area.Range"}}</span>
+        <input type="number" data-option-area="range" value="{{range}}" min="0" step="5">
+      </label>
+      {{/if}}
+      <label>
+        <span>{{localize "VARBORG.Area.AffectsLabel"}}</span>
+        <select data-option-area="affects">{{selectOptions @root.optionAreas.affects selected=affects localize=true}}</select>
+      </label>
+      <label>
+        <input type="checkbox" data-option-area="includesUser" {{checked includesUser}}>
+        <span>{{localize "VARBORG.Area.IncludesUser"}}</span>
+      </label>
+      {{/if}}
+    </div>
+    {{/each}}
+  </fieldset>
+  {{/if}}
   {{#if system.area.shape}}
   <fieldset class="lasting-area">
     <legend>{{localize "VARBORG.Area.Lasting.Legend"}}</legend>

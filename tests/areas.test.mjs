@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { areaFromText, isCaught, areaAffects, noArea } from "../module/rules/areas.mjs";
+import { areaFromText, isCaught, areaAffects, noArea, hasOptionAreas, areaForOption } from "../module/rules/areas.mjs";
 
 const read = text => {
   const area = areaFromText(text);
@@ -69,4 +69,18 @@ test("who an area catches: the user only when included, foes or allies by side",
   assert.equal(areaAffects({ ...all, affects: "foes" }, { isUser: false, isAlly: true }), false);
   assert.equal(areaAffects({ ...all, affects: "foes" }, { isUser: false, isAlly: false }), true);
   assert.equal(areaAffects({ ...all, affects: "allies" }, { isUser: false, isAlly: false }), false);
+});
+
+test("an option's own area counts when it is chosen (Songs of power)", () => {
+  const area = { ...noArea(), lasting: { duration: "" }, options: [
+    { option: "Allegro", shape: "emanation", size: 30, range: 0, width: 5, affects: "allies", includesUser: false },
+    { option: "Adagio", shape: "emanation", size: 5, range: 0, width: 5, affects: "foes", includesUser: false },
+    { option: "Unused", shape: "", size: 0, range: 0, width: 5, affects: "all", includesUser: false }
+  ] };
+  assert.equal(hasOptionAreas(area), true);
+  assert.equal(hasOptionAreas(noArea()), false);
+  assert.deepEqual([areaForOption(area, "Adagio").shape, areaForOption(area, "Adagio").size, areaForOption(area, "Adagio").affects], ["emanation", 5, "foes"]);
+  assert.equal(areaForOption(area, "Adagio").lasting.duration, "");
+  assert.equal(areaForOption(area, "Unused").shape, "");
+  assert.equal(areaForOption(area, "").shape, "");
 });

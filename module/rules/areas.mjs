@@ -144,6 +144,29 @@ export function areaAffects(area, { isUser, isAlly }) {
   return true;
 }
 
+/**
+ * Whether any of an item's options has its own area (Songs of power:
+ * Allegro, allies within 30'; Adagio, foes within 5'). Such an item is aimed
+ * after the option is chosen.
+ * @param {object} area  system.area
+ */
+export function hasOptionAreas(area) {
+  return (area?.options ?? []).some(entry => entry.option && entry.shape);
+}
+
+/**
+ * The area that counts for the chosen option: the option's own, if it has
+ * one, keeping the item's lasting settings; otherwise the item's area.
+ * @param {object} area      system.area
+ * @param {string} [option]  The option chosen in the dialog.
+ */
+export function areaForOption(area, option) {
+  const own = option ? (area?.options ?? []).find(entry => entry.option === option && entry.shape) : null;
+  if (!own) return area;
+  const { option: _name, ...fields } = own;
+  return { ...area, ...fields };
+}
+
 /** "a 20' radius within 60'": the area in words, for cards and sheets. */
 export function areaKey(area) {
   return area?.shape ? `VARBORG.Area.Shape.${area.shape}` : "";

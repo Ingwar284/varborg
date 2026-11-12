@@ -52,6 +52,17 @@ export function areaField() {
     affects: new StringField({ required: true, choices: AREA_AFFECTS, initial: "all" }),
     // The user is caught too ("you included").
     includesUser: new BooleanField({ initial: false }),
+    // An area for each option that has its own (Songs of power): it takes
+    // the place of the area above when that option is chosen.
+    options: new ArrayField(new SchemaField({
+      option: new StringField({ required: true, initial: "" }),
+      shape: new StringField({ required: true, blank: true, choices: ["", ...AREA_SHAPES], initial: "" }),
+      size: feet(0),
+      range: feet(0),
+      width: feet(DEFAULT_AREA_WIDTH),
+      affects: new StringField({ required: true, choices: AREA_AFFECTS, initial: "all" }),
+      includesUser: new BooleanField({ initial: false })
+    })),
     // An area that stays on the map after it is used (lingering areas).
     lasting: new SchemaField({
       // "" while Sustained (or not at all), "rounds" or "encounter".

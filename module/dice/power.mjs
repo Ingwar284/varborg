@@ -268,7 +268,7 @@ async function rollPowerTest(actor, power) {
   const use = checkPowerUse(actor, power, turn);
   if (!use) return;
   // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
-  const aimed = await aimArea(actor, power);
+  let aimed = await aimArea(actor, power);
   if (!aimed.go) return;
   const target = [...game.user.targets][0]?.actor ?? null;
 
@@ -336,6 +336,12 @@ async function rollPowerTest(actor, power) {
     rejectClose: false
   });
   if (!options) return;
+  // An option with its own area (Songs of power) is aimed now it is chosen.
+  if (options.option !== undefined) {
+    const optionAim = await aimArea(actor, power, { option: options.option ?? "" });
+    if (!optionAim.go) return;
+    if (optionAim.region) aimed = optionAim;
+  }
   const ticked = tickedMods(optional, options);
   fromConditions = totalModifiers([...conditionMods, ...ticked]);
   notes.push(...conditionNotes(ticked));

@@ -19,7 +19,7 @@
  * A user with no token on the scene targets by hand, as before.
  */
 
-import { CONE_ANGLE, isCaught, areaAffects } from "./rules/areas.mjs";
+import { CONE_ANGLE, isCaught, areaAffects, hasOptionAreas, areaForOption } from "./rules/areas.mjs";
 import { tokenDistance } from "./rules/movement.mjs";
 import { areaStays, endsAtRound } from "./rules/lasting.mjs";
 import { LASTING_TYPE, ENDS_FLAG } from "./lasting.mjs";
@@ -92,14 +92,25 @@ function regionData(area, token, name) {
 /**
  * Aim a spell's or power's area and make every creature it catches a
  * target.
+ * An item whose options have their own areas (Songs of power) is aimed
+ * only once the option is chosen: before the dialog it does nothing, and
+ * after it the chosen option's area is aimed.
  * @param {Actor} actor
  * @param {Item} item  A spell, scroll or power with system.area.
+ * @param {object} [chosen]
+ * @param {string|null} [chosen.option]  The option chosen in the dialog; undefined before it.
  * @returns {Promise<{go: boolean, region: object|null}>}
  *   go: false when the player cancelled; region: the placed Region's data,
  *   to keep on the map if the power is Sustained.
  */
-export async function aimArea(actor, item) {
-  const area = item.system.area;
+export async function aimArea(actor, item, { option } = {}) {
+  const itemArea = item.system.area;
+  const byOption = hasOptionAreas(itemArea);
+  // Before the dialog, an item with option areas waits for the option.
+  if (byOption && option === undefined) return { go: true, region: null };
+  // After it, only an item with option areas is aimed (the others were aimed already).
+  if (!byOption && option !== undefined) return { go: true, region: null };
+  const area = byOption ? areaForOption(itemArea, option) : itemArea;
   if (!area?.shape || !canvas.ready) return { go: true, region: null };
   const i18n = game.i18n;
   const token = userToken(actor);
@@ -130,7 +141,7 @@ export async function aimArea(actor, item) {
   const caught = caughtTokens(doc, token, area);
   canvas.tokens.setTargets(caught.map(other => other.id), { mode: "replace" });
   if (!caught.length) ui.notifications.info(i18n.localize("VARBORG.Area.NoneCaught"));
-  return { go: true, region: { ...doc.toObject(), _tokenId: token.id } };
+  return { go: true, region: { ...doc.toObject(), _tokenId: token.id, _area: area } };
 }
 
 /** onMove for a cone or line: it starts at the user and points at the mouse. */
@@ -200,11 +211,12 @@ export function caughtTokens(region, user, area) {
  */
 export async function keepArea(actor, item, region, tier) {
   if (!region) return;
-  const area = item.system.area ?? {};
+  // The area that was aimed: the chosen option's, or the item's.
+  const area = region._area ?? item.system.area ?? {};
   const lasting = area.lasting ?? {};
   const sustaining = Boolean(item.system.sustaining);
   if (!areaStays(lasting, sustaining, tier)) return;
-  const { _id, _tokenId, ...data } = region;
+  const { _id, _tokenId, _area, ...data } = region;
   const combat = game.combat?.started ? game.combat : null;
   const flags = {};
   if (sustaining) flags[SOURCE_FLAG] = `${actor.uuid}|${item.id}`;

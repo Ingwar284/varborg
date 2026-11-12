@@ -13,7 +13,7 @@ import { BELONGING_SOURCES, canBeImproving } from "../rules/feats.mjs";
 import PowerData from "../data/power.mjs";
 import SpellData from "../data/spell.mjs";
 import { AREA_SHAPE_LABELS, AREA_AFFECTS_LABELS } from "../data/area.mjs";
-import { LASTING_ACTIONS, lastingContext, listenToLasting } from "./lasting-part.mjs";
+import { LASTING_ACTIONS, lastingContext, listenToLasting, optionAreasContext, listenToOptionAreas } from "./lasting-part.mjs";
 import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
 import { castingDr } from "../rules/spells.mjs";
@@ -233,7 +233,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _preparePartContext(partId, context, options) {
     const part = await super._preparePartContext(partId, context, options);
     if (partId === "buff") return { ...part, effectsPart: part.buffPart ?? null };
-    if (partId === "area") return { ...part, ...areaContext(this.document.system), ...lastingContext(this.document.system, part.damageTypes) };
+    if (partId === "area") return { ...part, ...areaContext(this.document.system), ...lastingContext(this.document.system, part.damageTypes), ...optionAreasContext(this.document.system) };
     return part;
   }
 
@@ -278,6 +278,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     listenToEffects(this);
     listenToOutcomes(this);
     listenToLasting(this);
+    listenToOptionAreas(this);
   }
 
   /** The fields a gloom ability shows. */
@@ -333,7 +334,7 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _preparePartContext(partId, context, options) {
     const part = await super._preparePartContext(partId, context, options);
     if (partId === "buff") return { ...part, effectsPart: part.buffPart ?? null };
-    if (partId === "area") return { ...part, ...areaContext(this.document.system), ...lastingContext(this.document.system, part.damageTypes) };
+    if (partId === "area") return { ...part, ...areaContext(this.document.system), ...lastingContext(this.document.system, part.damageTypes), ...optionAreasContext(this.document.system) };
     return part;
   }
 
@@ -360,6 +361,7 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     listenToEffects(this);
     listenToOutcomes(this);
     listenToLasting(this);
+    listenToOptionAreas(this);
   }
 }
 

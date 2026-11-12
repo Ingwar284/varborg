@@ -18,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "effectsContent";
 
 /** The effects content of this version of the system. */
-export const EFFECTS_CONTENT = 33;
+export const EFFECTS_CONTENT = 34;
 
 /** Register the world setting that remembers the effects content. */
 export function registerEffectsRefresh() {
@@ -87,6 +87,11 @@ function changesFor(item, source) {
   // Its lasting area (GAPS 284), when it has an area but nothing lasting set.
   else if (area?.shape && item.system?.area?.shape && !hasLasting(item.system.area.lasting) && hasLasting(area.lasting)) {
     changes["system.area.lasting"] = foundry.utils.deepClone(source.toObject().system.area.lasting);
+  }
+  // Its areas for each option (Songs of power), when it has none.
+  const optionAreas = source?.system?.area?.options ?? [];
+  if (optionAreas.length && item.system?.area && !(item.system.area.options ?? []).length) {
+    changes["system.area.options"] = foundry.utils.deepClone(source.toObject().system.area.options);
   }
   return Object.keys(changes).length ? changes : null;
 }

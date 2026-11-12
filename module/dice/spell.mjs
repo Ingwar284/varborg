@@ -139,7 +139,7 @@ export async function castSpell(actor, spell) {
   const use = scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn, { free });
   if (!use) return;
   // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
-  const aimed = await aimArea(actor, spell);
+  let aimed = await aimArea(actor, spell);
   if (!aimed.go) return;
   const target = [...game.user.targets][0]?.actor ?? null;
 
@@ -205,6 +205,12 @@ export async function castSpell(actor, spell) {
     rejectClose: false
   });
   if (!options) return;
+  // An option with its own area is aimed now it is chosen.
+  if (options.option !== undefined) {
+    const optionAim = await aimArea(actor, spell, { option: options.option ?? "" });
+    if (!optionAim.go) return;
+    if (optionAim.region) aimed = optionAim;
+  }
 
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;
