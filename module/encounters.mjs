@@ -24,6 +24,7 @@ import {
   creatureTypeFor, rollEncounterType, isPickable, CREATURE_TYPES
 } from "./rules/encounters.mjs";
 import { FOE_CATEGORIES } from "./rules/foe.mjs";
+import { encounterParty, setEncounterParty } from "./settings.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -36,8 +37,12 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/encounter-card.hbs";
 const CATEGORIES = CREATURE_TYPES.flatMap(row => row.categories)
   .filter(category => FOE_CATEGORIES.includes(category));
 
-/** The last choices made, offered again next time (this session only). */
-const last = { players: 4, difficulty: "standard", categories: [] };
+/**
+ * The last choices made, offered again next time. Difficulty and categories
+ * last this session only; the party size is kept between sessions (a
+ * setting of this user's, read when the builder first opens).
+ */
+const last = { players: null, difficulty: "standard", categories: [] };
 
 /* -------------------------------------------- */
 /*  Hooks                                        */
@@ -116,7 +121,8 @@ export class EncounterBuilder extends HandlebarsApplicationMixin(ApplicationV2) 
     id: "var-borg-encounter-builder",
     classes: ["var-borg", "themed", "theme-light", "encounter-builder"],
     window: { title: "VARBORG.Encounter.Title", icon: "fa-solid fa-skull-crossbones", resizable: true },
-    position: { width: 460, height: "auto" },
+    // A fixed height: the contents scroll inside the window.
+    position: { width: 460, height: 780 },
     actions: {
       rollCategory: EncounterBuilder.#onRollCategory,
       build: EncounterBuilder.#onBuild,
@@ -126,11 +132,11 @@ export class EncounterBuilder extends HandlebarsApplicationMixin(ApplicationV2) 
   };
 
   static PARTS = {
-    main: { template: "systems/var-borg/templates/apps/encounter-builder.hbs" }
+    main: { template: "systems/var-borg/templates/apps/encounter-builder.hbs", scrollable: [""] }
   };
 
   /** The choices on the form. */
-  players = last.players;
+  players = last.players ?? cleanParty(encounterParty());
   difficulty = last.difficulty;
   categories = new Set(last.categories);
   /** The d10 line under the categories, or "". */
@@ -187,6 +193,7 @@ export class EncounterBuilder extends HandlebarsApplicationMixin(ApplicationV2) 
     this.element.querySelector("[name='players']")?.addEventListener("change", event => {
       this.players = cleanParty(event.target.value);
       last.players = this.players;
+      setEncounterParty(this.players);
       this.render();
     });
     for (const input of this.element.querySelectorAll("[name='difficulty']")) {

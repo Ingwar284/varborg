@@ -3554,7 +3554,12 @@
       "ValuableText": "A valuable: sells for its price.",
       "TomeName": "Tome of {spell}",
       "TomeText": "A spell tome teaches the spell permanently after a Downtime of study, or can be read aloud once like a scroll.",
-      "AddedToChest": "Put in {name}: {count} items and {silver} s."
+      "AddedToChest": "Put in {name}: {count} items and {silver} s.",
+      "Place": "Place treasure",
+      "Placed": "Treasure placed",
+      "PlacedOn": "{name} placed on {scene}.",
+      "ChestName": "Treasure ({size})",
+      "NoScene": "There is no scene to place the treasure on."
     }
   }
 }

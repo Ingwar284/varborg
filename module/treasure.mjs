@@ -8,7 +8,8 @@
  *
  * Two ways in:
  * - the Roll treasure button in the token controls: the card lists the
- *   treasure, and nothing is created;
+ *   treasure, with a Place treasure button that puts one chest token
+ *   holding all of it (items and silver) in the middle of the view;
  * - the gem button in a chest's title bar: the items are put in that
  *   chest and the coin is added to its silver.
  *
@@ -24,11 +25,14 @@ import { ARMOUR_TABLE } from "./rules/creation.mjs";
 import { equipmentItem, itemData } from "./creation.mjs";
 import { scrollOfSpell } from "./sheets/character-sheet.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { placeChest } from "./chests.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
 
 const CARD_TEMPLATE = "systems/var-borg/templates/chat/treasure-card.hbs";
+const SYSTEM = "var-borg";
+const CHEST_IMG = "icons/containers/chest/chest-reinforced-steel-brown.webp";
 
 /** Compendium items the Spoils table names. */
 const GEAR = "Compendium.var-borg.gear.Item.";
@@ -59,6 +63,7 @@ function weaponList() {
 /** Set up the Dark Master's button in the token controls. */
 export function registerTreasure() {
   Hooks.on("getSceneControlButtons", addTreasureButton);
+  Hooks.on("renderChatMessageHTML", addTreasureCardListeners);
 }
 
 function addTreasureButton(controls) {
@@ -144,9 +149,10 @@ export async function generateTreasure({ size, region = "usual", mighty = false,
   }
 
   let chestLine = "";
+  // The dungeon's coin and any purses from the Spoils table.
+  const silver = treasure.silver + treasure.finds.reduce((sum, find) => sum + (find.silver ?? 0), 0);
   if (chest) {
     if (items.length) await chest.createEmbeddedDocuments("Item", items);
-    const silver = treasure.silver + treasure.finds.reduce((sum, find) => sum + (find.silver ?? 0), 0);
     if (silver) await chest.update({ "system.silver": (chest.system.silver ?? 0) + silver });
     chestLine = i18n.format("VARBORG.Treasure.AddedToChest", { name: chest.name, count: items.length, silver });
   }
@@ -167,14 +173,17 @@ export async function generateTreasure({ size, region = "usual", mighty = false,
     }),
     spoils: i18n.format("VARBORG.Treasure.SpoilsRolls", { count: treasure.spoilsRolls }),
     lines,
-    chestLine
+    chestLine,
+    canPlace: !chest && (items.length > 0 || silver > 0)
   });
   await ChatMessage.create({
     speaker: { alias: i18n.localize("VARBORG.Treasure.Title") },
     whisper: ChatMessage.getWhisperRecipients("GM").map(user => user.id),
     content,
     rolls,
-    sound: CONFIG.sounds.dice
+    sound: CONFIG.sounds.dice,
+    // Kept for the Place treasure button.
+    flags: chest ? {} : { [SYSTEM]: { treasure: { name: i18n.format("VARBORG.Treasure.ChestName", { size: sizeName }), items, silver } } }
   });
   return treasure;
 }
@@ -307,4 +316,46 @@ function findLine(find, items) {
   if (find.source === "spoils") return i18n.format("VARBORG.Treasure.SpoilsLine", { d20: find.d20, what });
   if (find.kind === "relic" && find.d6) return i18n.format("VARBORG.Treasure.RelicRolled", { d6: find.d6, what });
   return i18n.format(`VARBORG.Treasure.Line.${find.kind}`, { what });
+}
+
+/* -------------------------------------------- */
+/*  Place treasure                               */
+/* -------------------------------------------- */
+
+/** The Place treasure button on a treasure card (Dark Master only). */
+function addTreasureCardListeners(message, html) {
+  const data = message.getFlag(SYSTEM, "treasure");
+  const button = html.querySelector("button[data-action='placeTreasure']");
+  if (!data || !button) return;
+  if (!game.user.isGM || data.placed) {
+    button.disabled = true;
+    if (data.placed) button.innerHTML = `<i class="fa-solid fa-check"></i> ${game.i18n.localize("VARBORG.Treasure.Placed")}`;
+    return;
+  }
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    const placed = await placeTreasure(data);
+    if (placed) await message.setFlag(SYSTEM, "treasure.placed", true);
+    else button.disabled = false;
+  });
+}
+
+/**
+ * Put one chest token holding all the treasure in the middle of the view.
+ * @returns {Promise<boolean>} Whether it was placed.
+ */
+async function placeTreasure({ name, items = [], silver = 0 }) {
+  const scene = canvas.scene;
+  if (!scene) {
+    ui.notifications.warn("VARBORG.Treasure.NoScene", { localize: true });
+    return false;
+  }
+  const centre = canvas.stage.pivot;
+  const point = canvas.grid.isGridless
+    ? { x: centre.x - canvas.grid.size / 2, y: centre.y - canvas.grid.size / 2 }
+    : canvas.grid.getTopLeftPoint({ x: centre.x, y: centre.y });
+  const token = await placeChest(scene, { x: point.x, y: point.y, name, img: CHEST_IMG, items, silver });
+  if (!token) return false;
+  ui.notifications.info(game.i18n.format("VARBORG.Treasure.PlacedOn", { name, scene: scene.name }));
+  return true;
 }

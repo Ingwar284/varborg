@@ -319,16 +319,35 @@ async function dropItemChest({ itemUuid, sceneId, x, y, userId }) {
     data.folder = null;
   }
 
+  const token = await placeChest(scene, { x, y, name: data.name, img: data.img, items: [data] });
+  if (token?.actor?.items.size && source) await item.delete();
+}
+
+/**
+ * Put a new chest token on a scene, holding these items and silver. It is
+ * a token of the world "Dropped items" chest, with its own name, picture
+ * and contents. Dark Master only.
+ * @param {Scene} scene
+ * @param {object} chest
+ * @param {number} chest.x       The token's top-left corner.
+ * @param {number} chest.y
+ * @param {string} chest.name
+ * @param {string} chest.img     The token's picture.
+ * @param {object[]} [chest.items]  Item data to put inside.
+ * @param {number} [chest.silver]
+ * @returns {Promise<TokenDocument|null>}
+ */
+export async function placeChest(scene, { x, y, name, img, items = [], silver = 0 }) {
   const base = await droppedItemsActor();
-  if (!base) return;
+  if (!base) return null;
   const tokenDoc = await base.getTokenDocument({
-    x, y, name: data.name, texture: { src: data.img },
-    delta: { name: data.name, img: data.img }
+    x, y, name, texture: { src: img },
+    delta: { name, img, system: { silver } }
   }, { parent: scene });
   const [token] = await scene.createEmbeddedDocuments("Token", [tokenDoc.toObject()]);
-  if (!token?.actor) return;
-  const [created] = await token.actor.createEmbeddedDocuments("Item", [data]);
-  if (created && source) await item.delete();
+  if (!token?.actor) return null;
+  if (items.length) await token.actor.createEmbeddedDocuments("Item", items);
+  return token;
 }
 
 /** The world chest actor that dropped items are placed from, made if missing. */

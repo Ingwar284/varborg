@@ -9,4 +9,11 @@
     {{/each}}
   </ul>
   {{#if chestLine}}<p>{{chestLine}}</p>{{/if}}
+  {{#if canPlace}}
+  <div class="card-buttons">
+    <button type="button" data-action="placeTreasure">
+      <i class="fa-solid fa-box-open"></i> {{localize "VARBORG.Treasure.Place"}}
+    </button>
+  </div>
+  {{/if}}
 </div>

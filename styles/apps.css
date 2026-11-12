@@ -991,10 +991,24 @@
 }
 
 /* ---- Encounter builder (rules 2. Building Encounters) ---- */
+/* The window keeps its size; the builder scrolls inside it. */
+.application.var-borg.encounter-builder .window-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .application.var-borg .var-borg-encounter {
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+}
+
+.application.var-borg.encounter-builder .var-borg-encounter {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .application.var-borg .var-borg-encounter fieldset {
