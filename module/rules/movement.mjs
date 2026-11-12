@@ -224,3 +224,22 @@ export function reachableSquares(start, maxCost, squareFeet, enterCost, { limit 
   }
   return best;
 }
+
+/**
+ * How far apart two tokens are, edge to edge, in feet (the hover label,
+ * playtest feedback). Measured between centres, less half a square for
+ * each square of size beyond the first on each token, as auras are
+ *  (auraReaches), and rounded down to whole squares. Tokens in neighbouring
+ * squares are one square (5') apart.
+ * @param {object} facts
+ * @param {number} facts.centreDistance  Between the centres, in feet.
+ * @param {number} [facts.sizeA]         The first token's size, in squares.
+ * @param {number} [facts.sizeB]         The second's.
+ * @param {number} [facts.gridDistance]  One square, in feet (5).
+ * @returns {number}
+ */
+export function tokenDistance({ centreDistance, sizeA = 1, sizeB = 1, gridDistance = 5 }) {
+  const bulk = ((Math.max(1, sizeA) - 1) + (Math.max(1, sizeB) - 1)) * gridDistance / 2;
+  const feet = Math.max(0, centreDistance - bulk);
+  return Math.floor(feet / gridDistance + 0.01) * gridDistance;
+}

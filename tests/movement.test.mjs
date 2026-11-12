@@ -7,6 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   characterSpeeds, creatureSpeeds, speedFor, movesNeeded, reachBudget, alwaysDifficult, canMove, stepCost, payForSteps, reachableSquares
+  , tokenDistance
 } from "../module/rules/movement.mjs";
 
 test("a character walks at their carrying movement plus extra feet", () => {
@@ -117,4 +118,12 @@ test("difficult terrain doubles the steps into it", () => {
   const reach = reachableSquares({ i: 0, j: 0 }, 20, 5, mud);
   assert.equal(reach.get("0,2").cost, 15);
   assert.equal(reach.has("0,3"), false);
+});
+
+test("tokenDistance counts edge to edge in whole squares", () => {
+  assert.equal(tokenDistance({ centreDistance: 5 }), 5);
+  assert.equal(tokenDistance({ centreDistance: 30 }), 30);
+  // A large (2×2) foe whose centre is 15' away: its near edge is 10' away.
+  assert.equal(tokenDistance({ centreDistance: 15, sizeB: 2 }), 10);
+  assert.equal(tokenDistance({ centreDistance: 0 }), 0);
 });

@@ -20,6 +20,7 @@ import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 import VarBorgToken, { registerMovementAnimations } from "./canvas/token.mjs";
 import VarBorgTokenRuler from "./canvas/token-ruler.mjs";
 import { registerReachOverlay } from "./canvas/reach-overlay.mjs";
+import { registerHoverDistance } from "./canvas/hover-distance.mjs";
 
 /** The rules' diagonals: every second diagonal step costs double (rules 3.7). */
 const RULES_DIAGONALS = 4; // CONST.GRID_DIAGONALS.ALTERNATING_1
@@ -34,6 +35,7 @@ export function registerMovement() {
   CONFIG.Token.rulerClass = VarBorgTokenRuler;
   configureMovementActions();
   registerReachOverlay();
+  registerHoverDistance();
   registerMovementAnimations();
   Hooks.on("preMoveToken", checkMove);
   Hooks.on("moveToken", spendForMove);
@@ -114,7 +116,7 @@ function tokenCostFunction(action) {
   };
 }
 
-/** Moves a player makes by hand: the only ones that are checked and paid for. */
+/** Moves made by hand (dragging, arrow keys): the only ones that are checked and paid for. */
 const PAID_METHODS = ["dragging", "keyboard"];
 
 /** What each accepted move costs, from preMoveToken to moveToken, by movement id. */
@@ -123,24 +125,27 @@ const charges = new Map();
 /**
  * Before a token moves (on the mover's client only):
  * - a player cannot drag or key-move a Restrained token (rules 3.13);
- * - in combat, on the token's own turn, a player's move costs Move actions
- *   (rules 3.7). Leftover feet from the last Move are used first. A move
- *   that needs more actions than are left is refused.
- * The Dark Master's moves, moves on someone else's turn (pushes, reactions)
- * and moves outside combat are free.
+ * - in combat, on the token's own turn, a move by hand costs Move actions
+ *   (rules 3.7), whoever makes it: a foe the Dark Master drags on its turn
+ *   pays too (playtest feedback, GAPS 280). Leftover feet from the last
+ *   Move are used first. A move that needs more actions than are left is
+ *   refused.
+ * Moves on someone else's turn (pushes, reactions), moves outside combat
+ * and Foundry's other ways of moving a token (such as displacing it) are
+ * free, so the Dark Master can always put a token where it belongs.
  * @returns {false|void}  false stops the move.
  */
 function checkMove(token, movement) {
-  if (game.user.isGM || !PAID_METHODS.includes(movement.method)) return;
+  if (!PAID_METHODS.includes(movement.method)) return;
   const actor = token.actor;
   const i18n = game.i18n;
-  if (!canMove(actor?.statuses ?? [])) {
+  if (!game.user.isGM && !canMove(actor?.statuses ?? [])) {
     ui.notifications.warn(i18n.format("VARBORG.Movement.Restrained", { name: token.name }));
     return false;
   }
   // A move that carries on an earlier one (a pause at a region) was paid for then.
   if (movement.chain?.length) return;
-  const { combatant, onOwnTurn } = turnState(actor);
+  const { combatant, onOwnTurn } = tokenTurnState(token);
   if (!combatant || !onOwnTurn) return;
 
   const charge = moveCharge(actor, movement, combatant.moveLeft);
@@ -154,6 +159,21 @@ function checkMove(token, movement) {
     return false;
   }
   charges.set(movement.id, { ...charge, combatantId: combatant.id });
+}
+
+/**
+ * Where a token stands in the running combat. An unlinked foe is matched by
+ * its own token, so each copy of a foe has its own turn.
+ * @param {TokenDocument} token
+ * @returns {{combatant: Combatant|null, onOwnTurn: boolean}}
+ */
+function tokenTurnState(token) {
+  const combat = game.combat;
+  if (!combat?.started) return { combatant: null, onOwnTurn: false };
+  const mine = combat.getCombatantsByToken(token);
+  if (!mine.length) return turnState(token.actor);
+  const onOwnTurn = mine.includes(combat.combatant);
+  return { combatant: onOwnTurn ? combat.combatant : mine[0], onOwnTurn };
 }
 
 /**

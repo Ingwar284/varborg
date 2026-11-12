@@ -13,6 +13,10 @@
     },
     "bar2": {
       "attribute": null
+    },
+    "sight": {
+      "enabled": true,
+      "range": 0
     }
   },
   "system": {

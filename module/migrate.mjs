@@ -36,6 +36,9 @@
  * Version 9 (playtest feedback): item descriptions holding HTML tags (spell
  * tomes and trinkets found while Improving) become plain text, since the
  * sheet and the chat card show descriptions as they are.
+ *
+ * Version 10 (playtest feedback): every actor but a chest, and every token
+ * placed on a scene, gets vision (range 0: it sees only lit areas).
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -50,7 +53,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 9;
+export const DATA_VERSION = 10;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -81,6 +84,7 @@ export async function migrateWorld() {
   if (version < 7) await setFrequencies();
   if (version < 8) await clearBloodlineChoices();
   if (version < 9) await cleanDescriptions();
+  if (version < 10) await turnOnVision();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -111,6 +115,19 @@ async function updateItems(types, change) {
   for (const actor of game.actors) {
     const updates = updatesFor(actor.items);
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  }
+}
+
+/** Version 10: vision for actors' tokens and placed tokens, chests aside. */
+async function turnOnVision() {
+  const sees = actor => actor && actor.type !== "chest";
+  const actors = game.actors.filter(actor => sees(actor) && !actor.prototypeToken.sight.enabled)
+    .map(actor => ({ _id: actor.id, "prototypeToken.sight.enabled": true, "prototypeToken.sight.range": 0 }));
+  if (actors.length) await Actor.updateDocuments(actors);
+  for (const scene of game.scenes) {
+    const tokens = scene.tokens.filter(token => sees(token.actor) && !token.sight.enabled)
+      .map(token => ({ _id: token.id, "sight.enabled": true, "sight.range": 0 }));
+    if (tokens.length) await scene.updateEmbeddedDocuments("Token", tokens);
   }
 }
 

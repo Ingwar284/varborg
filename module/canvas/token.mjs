@@ -5,12 +5,15 @@
  * - while dragged in combat, the squares it can reach are shaded
  *   (module/canvas/reach-overlay.mjs);
  * - while it travels, its picture hops, flies, sways, climbs or crawls
- *   (module/canvas/motion.mjs). Each user can switch this off.
+ *   (module/canvas/motion.mjs). Each user can switch this off;
+ * - while hovered, it shows how far it is from your selected token
+ *   (module/canvas/hover-distance.mjs).
  */
 
 import { ChestAwareToken } from "../chests.mjs";
 import { showReach, hideReach } from "./reach-overlay.mjs";
 import { motionPose, stepPresence } from "./motion.mjs";
+import { showHoverDistance, hideHoverDistance } from "./hover-distance.mjs";
 
 const SYSTEM = "var-borg";
 /** The client setting that switches movement animations on or off. */
@@ -60,6 +63,22 @@ export default class VarBorgToken extends ChestAwareToken {
   _onDragEnd() {
     hideReach();
     super._onDragEnd();
+  }
+
+  /** @inheritDoc  Hovering: show how far this token is (module/canvas/hover-distance.mjs). */
+  _onHoverIn(event, options) {
+    super._onHoverIn(event, options);
+    try {
+      showHoverDistance(this);
+    } catch (error) {
+      console.error("VÅR BORG | Hover distance failed", error);
+    }
+  }
+
+  /** @inheritDoc  No longer hovered: remove the distance. */
+  _onHoverOut(event) {
+    hideHoverDistance(this);
+    super._onHoverOut(event);
   }
 
   /** @override  Moving from the token HUD (elevation). */

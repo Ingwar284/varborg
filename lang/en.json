@@ -393,6 +393,10 @@
         "Name": "Movement animations",
         "Hint": "Tokens hop when they walk, lift off when they fly, sway when they swim, and so on. Off by default if your computer asks for reduced motion."
       },
+      "ShowHoverDistance": {
+        "Name": "Show distance on hover",
+        "Hint": "When you hover over a token, show how far it is from your selected token (or, with none selected, from the token whose turn it is), counted edge to edge."
+      },
       "ShowReach": {
         "Name": "Show reach while dragging",
         "Hint": "In combat, on a token's own turn, shade every square it can still reach this turn while you drag it, coloured by the Move action that pays for it."
@@ -436,6 +440,7 @@
       "StoredIn": "Stored in"
     },
     "Movement": {
+      "HoverDistance": "{feet} {units}",
       "Type": {
         "walk": "Walk",
         "fly": "Fly",

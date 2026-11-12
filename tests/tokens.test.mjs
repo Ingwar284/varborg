@@ -36,7 +36,9 @@ test("a new actor with no token settings gets them all", () => {
     "prototypeToken.displayName": 30,
     "prototypeToken.displayBars": 30,
     "prototypeToken.bar1.attribute": "hp",
-    "prototypeToken.bar2.attribute": null
+    "prototypeToken.bar2.attribute": null,
+    "prototypeToken.sight.enabled": true,
+    "prototypeToken.sight.range": 0
   });
 });
 
@@ -74,4 +76,9 @@ test("chests: not linked, neutral, no bars", () => {
   assert.equal(c.disposition, DISPOSITION.NEUTRAL);
   assert.equal(c.displayBars, DISPLAY.NONE);
   assert.equal(c.bar1.attribute, null);
+});
+
+test("every token but a chest has vision, range 0 (sees only lit areas)", () => {
+  for (const type of ["character", "foe", "minion", "vehicle"]) assert.deepEqual(TOKEN_DEFAULTS[type].sight, { enabled: true, range: 0 });
+  assert.equal(TOKEN_DEFAULTS.chest.sight.enabled, false);
 });
