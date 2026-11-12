@@ -1075,6 +1075,12 @@
       "ByHand": "The system does not apply this. The Dark Master decides what happens to the character.",
       "Ends": "{name}: {result} ends.",
       "UsedUp": "{name}: {result} used up.",
+      "Group": {
+        "Button": "Group Panic test",
+        "Title": "Group Panic test",
+        "Speaker": "Panic",
+        "NoCharacters": "No characters to test: select their tokens, or place them on the scene."
+      },
       "RuinAsFailure": "{item}: {name}’s Ruin counts as a Failure, so the Panic table is rolled with 1d10.",
       "Nerves": {
         "Failed": "{name} fails the Panic test.",
@@ -3324,6 +3330,10 @@
       "NoGM": "No Dark Master is connected to change a creature you do not own.",
       "Healed": "{name} regains {amount} HP ({from} → {to}).",
       "BuffName": "{power} (buff)",
+      "BuffNameOption": "{power}: {option} (buff)",
+      "SourceOption": "{power}: {option}",
+      "ConditionFrom": "{condition} ({from})",
+      "SourceLine": "From {from}{note}.",
       "Buffed": "{name} gains {power}.",
       "Reminder": "{name}: see the text.",
       "BuffEnded": "{buff} ends for {name}.",

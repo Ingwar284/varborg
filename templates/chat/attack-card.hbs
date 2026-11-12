@@ -26,7 +26,15 @@
   {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
   <p class="tier tier-{{tier}}">{{tierLabel}}</p>
   {{#if naturalNote}}<p class="natural">{{naturalNote}}</p>{{/if}}
+  {{#if tierOutcomes}}
+  <ul class="tier-outcomes">
+    {{#each tierOutcomes}}
+    <li class="tier-outcome{{#if rolled}} rolled tier-{{tier}}{{/if}}"><strong>{{label}}:</strong> {{text}}</li>
+    {{/each}}
+  </ul>
+  {{else}}
   <p class="outcome">{{outcomeText}}</p>
+  {{/if}}
   {{#if description}}<p class="power-description">{{description}}</p>{{/if}}
   {{#if sustainNote}}<p class="modifier">{{sustainNote}}</p>{{/if}}
   {{#each outcomeLines}}<p class="modifier outcome-line">{{this}}</p>{{/each}}

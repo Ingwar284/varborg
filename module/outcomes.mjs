@@ -19,7 +19,7 @@
  */
 
 import { wantedOutcomes, outcomeDiff, buffEffectsFor, isMorphPower } from "./rules/outcomes.mjs";
-import { addTimedCondition, rollTimer } from "./timers.mjs";
+import { addTimedCondition, rollTimer, conditionEffect } from "./timers.mjs";
 import { addPersistentDamage, persistentEffects } from "./persistent.mjs";
 import { stepDownArmourDie } from "./rules/attack.mjs";
 
@@ -229,7 +229,8 @@ async function runOp(op) {
       // "While sustained" on targets keeps its own timer too, such as an escape roll (GAPS 233, 234).
       const spec = op.sustained && !entry.whileSustained ? null : entry.duration;
       const line = await addTimedCondition(actor, entry.condition, spec);
-      if (op.sustained && !had) await markSustained(actor, op.source, { condition: entry.condition });
+      if (!had) await markConditionSource(actor, entry, op.name);
+      if (op.sustained && !had) await markSustained(actor, op.source, { condition: entry.condition, option: entry.option || "" });
       return { condition: entry.condition, had, line: noted(line, entry.note) };
     }
     case "heal": {
@@ -249,7 +250,9 @@ async function runOp(op) {
       }
       const { timer } = await rollTimer(actor, entry.duration);
       const [item] = await actor.createEmbeddedDocuments("Item", [{
-        name: i18n.format("VARBORG.Outcome.BuffName", { power: op.name }),
+        name: entry.option
+          ? i18n.format("VARBORG.Outcome.BuffNameOption", { power: op.name, option: entry.option })
+          : i18n.format("VARBORG.Outcome.BuffName", { power: op.name }),
         type: "feat",
         img: "icons/svg/aura.svg",
         system: { description: entry.note || "", source: "general", effects: op.effects ?? [], automation: "auto" },
@@ -485,6 +488,28 @@ export async function useUpNextAttackMarks(foe) {
   for (const item of foe?.items?.filter(other => other.getFlag(SYSTEM, "buff")?.nextOnly) ?? []) {
     await doOp({ op: "undo", done: { actorUuid: foe.uuid, kind: "buff", itemId: item.id } });
   }
+}
+
+/**
+ * Name the power (and the option chosen, such as Songs of power: Allegro)
+ * that gave a condition, on its status effect (playtest feedback). The
+ * sheet shows it beside the condition, and the effect's name carries it.
+ * @param {Actor} actor
+ * @param {object} entry  The outcome entry.
+ * @param {string} power  The power's or spell's name.
+ */
+async function markConditionSource(actor, entry, power) {
+  const effect = conditionEffect(actor, entry.condition);
+  if (!effect || !power) return;
+  const i18n = game.i18n;
+  const from = entry.option
+    ? i18n.format("VARBORG.Outcome.SourceOption", { power, option: entry.option })
+    : power;
+  await effect.update({
+    name: i18n.format("VARBORG.Outcome.ConditionFrom", { condition: i18n.localize(`VARBORG.Condition.${entry.condition}`), from }),
+    description: entry.note || "",
+    [`flags.${SYSTEM}.source`]: { power, option: entry.option || "", note: entry.note || "" }
+  });
 }
 
 /** Remember a condition a Sustained power gave its user, on the user. */

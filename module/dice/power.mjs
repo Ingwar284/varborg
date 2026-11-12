@@ -213,6 +213,24 @@ export function powerOutcomeText(power, tier) {
   return own || game.i18n.localize(`${usual}.${tier}`);
 }
 
+/** The four results, best first, as the power and spell cards list them. */
+const OUTCOME_TIERS = ["triumph", "success", "failure", "ruin"];
+
+/**
+ * All four outcome lines for a power or spell card (playtest feedback):
+ * each result's text, with the rolled one marked so the card can
+ * highlight it.
+ * @returns {{tier: string, label: string, text: string, rolled: boolean}[]}
+ */
+export function powerOutcomeLines(power, rolledTier) {
+  return OUTCOME_TIERS.map(tier => ({
+    tier,
+    label: game.i18n.localize(`VARBORG.Tier.${tier}`),
+    text: powerOutcomeText(power, tier),
+    rolled: tier === rolledTier
+  }));
+}
+
 /** A character's ember abilities: powers and spells (both can be Sustained). */
 function emberAbilities(actor) {
   return [...(actor.itemTypes.power ?? []), ...(actor.itemTypes.spell ?? [])];

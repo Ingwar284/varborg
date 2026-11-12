@@ -627,6 +627,12 @@
   opacity: 0.8;
 }
 
+/* The power (and option) that gave a condition, such as Songs of power: Allegro. */
+.var-borg-sheet .condition-source {
+  display: block;
+  opacity: 0.8;
+}
+
 .var-borg-sheet .condition-controls .starving {
   color: var(--vb-hazard);
   font-weight: bold;

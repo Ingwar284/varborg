@@ -117,6 +117,39 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
 }
 
 /**
+ * A test with no dialog and no card of its own (the group Panic test,
+ * playtest feedback): the usual DR, no Boon or Bane chosen, no aid. The
+ * automatic modifiers still count: armour, Encumbered, conditions and item
+ * effects, such as In Darkness or Adrenaline Rush.
+ * @param {Actor} actor
+ * @param {string} ability
+ * @param {object} [options]
+ * @param {number} [options.dr]
+ * @param {string} [options.kind]  The feature's kind of roll for item effects, such as "panic".
+ * @returns {Promise<{tier: string, total: number, dr: number, natural: number|null, modeLabel: string, notes: string[], roll: Roll}>}
+ */
+export async function rollQuietTest(actor, ability, { dr: baseDr = DR_DEFAULT, kind = null } = {}) {
+  const automatic = actorTestModifiers(actor, ability);
+  const { conditions, fatigue } = conditionsOf(actor);
+  const effectContext = { roll: kind ? ["test", kind] : "test", ability };
+  const mods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
+  const fromConditions = totalModifiers(mods);
+  const boons = fromConditions.boons;
+  const banes = (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
+  const mode = diceMode(boons, banes);
+  const abilityScore = actor.system.abilities[ability];
+  const dr = modifiedDr(baseDr, automatic.armourDr + fromConditions.dr);
+  const roll = await new Roll(`${diceFormula(mode)} + @ability`, { ability: abilityScore }).evaluate();
+  const rules = resolveTest({ dice: diceOf(roll).map(die => die.value), mode, ability: abilityScore, dr, aid: 0, flipped: false });
+  const notes = [...conditionNotes(mods)];
+  if (automatic.encumberedBane) notes.push(game.i18n.localize("VARBORG.Test.EncumberedBane"));
+  const usedUp = await useUpNextTest(actor, { quiet: true });
+  if (usedUp) notes.push(usedUp);
+  await useUpNextRollBuffs(actor, ["test"]);
+  return { tier: rules.tier, total: rules.total, dr, natural: rules.natural ?? null, modeLabel: modeLabel(mode, boons, banes), notes, roll };
+}
+
+/**
  * Work a test card out again after Fortune was burned on it: new dice for a
  * reroll, or the same dice with a softened tier. A plain test changes
  * nothing else. Registered with module/fortune.mjs.

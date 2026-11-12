@@ -115,6 +115,50 @@
   background: var(--vb-ink);
 }
 
+/* All four outcomes of a power or spell (playtest feedback): the rolled one
+   takes its result's fill, the others are faded. */
+.var-borg-card .tier-outcomes {
+  list-style: none;
+  margin: 0.3rem 0;
+  padding: 0;
+}
+
+.var-borg-card .tier-outcome {
+  margin: 0.15rem 0;
+  padding: 0.1rem 0.4rem;
+  border: 2px solid transparent;
+  font-size: 0.9em;
+  opacity: 0.6;
+}
+
+.var-borg-card .tier-outcome.rolled {
+  opacity: 1;
+}
+
+/* The group Panic card (playtest feedback): one row per character. */
+.var-borg-card .group-panic-row {
+  border-top: 1px solid var(--vb-ink);
+  padding-top: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.var-borg-card .group-panic-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-card .group-panic-name img {
+  width: 28px;
+  height: 28px;
+  border: none;
+}
+
+.var-borg-card .group-panic-roll {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
 .var-borg-card .natural {
   text-align: center;
   font-style: italic;

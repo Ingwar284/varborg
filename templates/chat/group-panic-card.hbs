@@ -1,0 +1,31 @@
+{{!-- The Dark Master's group Panic test (playtest feedback): one row per character. --}}
+<div class="var-borg-card panic-card group-panic-card">
+  <h3>{{title}}</h3>
+  {{#each rows}}
+  <section class="group-panic-row" data-panic-row>
+    <header class="group-panic-name">
+      <img src="{{img}}" alt="">
+      <strong>{{name}}</strong>
+      <span class="group-panic-roll">{{total}} {{localize "VARBORG.Test.Versus"}} {{localize "VARBORG.Test.DR"}} {{dr}}</span>
+    </header>
+    <p class="modifier">{{modeLabel}}</p>
+    {{#each notes}}<p class="modifier">{{this}}</p>{{/each}}
+    <p class="tier tier-{{tier}}">{{tierLabel}}</p>
+    {{#each lines}}<p class="modifier">{{this}}</p>{{/each}}
+    {{#each results}}
+    <p class="sum">{{rolled}}</p>
+    <p class="total">{{name}}</p>
+    <p class="panic-text">{{text}}</p>
+    {{#each lines}}<p class="modifier">{{this}}</p>{{/each}}
+    {{/each}}
+    {{#if nerves}}
+    <button type="button" class="text-button" data-action="groupNerves" data-actor-uuid="{{actorUuid}}" data-item-id="{{nerves.itemId}}">
+      <i class="fa-solid fa-hand-fist"></i> {{nerves.use}}
+    </button>
+    <button type="button" class="text-button" data-action="groupTable" data-actor-uuid="{{actorUuid}}" data-formula="{{nerves.dice}}">
+      <i class="fa-solid fa-dice-d20"></i> {{nerves.roll}}
+    </button>
+    {{/if}}
+  </section>
+  {{/each}}
+</div>

@@ -6,7 +6,7 @@
       {{#each conditions.list}}
       <li class="condition-row">
         <img src="{{img}}" alt="">
-        <span class="condition-text"><strong>{{label}}</strong>{{#if timer}} <span class="condition-timer">({{timer}})</span>{{/if}} {{text}}</span>
+        <span class="condition-text"><strong>{{label}}</strong>{{#if timer}} <span class="condition-timer">({{timer}})</span>{{/if}} {{text}}{{#if source}} <em class="condition-source">{{source}}</em>{{/if}}</span>
         {{#if canTime}}
         <button type="button" class="icon-button" data-time-condition="{{id}}"
                 data-tooltip="{{localize 'VARBORG.Timer.Button'}}" aria-label="{{localize 'VARBORG.Timer.Button'}}">

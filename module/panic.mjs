@@ -27,7 +27,7 @@ import {
   PANIC_ABILITY, PANIC_DR, PANIC_RESULTS, PANIC_EFFECTS, DURATION_DICE, COMPOUNDING_DICE,
   panicDice, restoresSanity, panicResult, loseSanity, restoreSanity, countDown
 } from "./rules/panic.mjs";
-import { rollAbilityTest } from "./dice/ability-test.mjs";
+import { rollAbilityTest, rollQuietTest } from "./dice/ability-test.mjs";
 import { turnState } from "./combat.mjs";
 import { AGONY_RESULTS } from "./rules/agony.mjs";
 import { endsAfterHours, hoursLeft, hasEnded } from "./rules/calendar.mjs";
@@ -37,6 +37,7 @@ const { renderTemplate } = foundry.applications.handlebars;
 
 const SYSTEM = "var-borg";
 const CARD_TEMPLATE = "systems/var-borg/templates/chat/panic-card.hbs";
+const GROUP_TEMPLATE = "systems/var-borg/templates/chat/group-panic-card.hbs";
 
 /** Compounding problems can roll Compounding problems again; stop after this many. */
 const MAX_DEPTH = 10;
@@ -151,8 +152,149 @@ async function postNervesChoice(actor, nerves, dice) {
   });
 }
 
-/** Watch the buttons on Steady nerves cards (step 50a3). */
+/* -------------------------------------------- */
+/*  Group Panic test (playtest feedback)         */
+/* -------------------------------------------- */
+
+/**
+ * The characters a group Panic test is for: those of the selected tokens,
+ * or else every character with a token on the scene.
+ * @returns {Actor[]}
+ */
+function groupPanicActors() {
+  const characters = tokens => [...new Set(tokens.map(token => token.actor).filter(actor => actor?.type === "character"))];
+  const selected = characters(canvas.tokens?.controlled ?? []);
+  return selected.length ? selected : characters(canvas.tokens?.placeables ?? []);
+}
+
+/**
+ * The Dark Master's group Panic test: every character tests Sanity DR12
+ * at once, with no dialogs, and one card shows each result and its Panic
+ * table roll. A character with Steady nerves unspent gets the usual choice
+ * as two buttons on its row.
+ */
+export async function rollGroupPanic() {
+  const i18n = game.i18n;
+  const actors = groupPanicActors();
+  if (!actors.length) {
+    ui.notifications.warn(i18n.localize("VARBORG.Panic.Group.NoCharacters"));
+    return;
+  }
+  const rows = [];
+  const rolls = [];
+  for (const actor of actors) {
+    const { rolls: rowRolls, ...row } = await groupPanicRow(actor);
+    rows.push(row);
+    rolls.push(...rowRolls);
+  }
+  const content = await renderTemplate(GROUP_TEMPLATE, { title: i18n.localize("VARBORG.Panic.Group.Title"), rows });
+  await ChatMessage.create({
+    speaker: { alias: i18n.localize("VARBORG.Panic.Group.Speaker") },
+    flavor: i18n.localize("VARBORG.Panic.Title"),
+    content,
+    rolls,
+    sound: CONFIG.sounds.dice,
+    flags: { [SYSTEM]: { groupPanic: true } }
+  });
+}
+
+/** One character's row on the group Panic card, with its rolls. */
+async function groupPanicRow(actor) {
+  const i18n = game.i18n;
+  const test = await rollQuietTest(actor, PANIC_ABILITY, { dr: PANIC_DR, kind: "panic" });
+  const row = {
+    actorUuid: actor.uuid,
+    name: actor.name,
+    img: actor.img,
+    total: test.total,
+    dr: test.dr,
+    modeLabel: test.modeLabel,
+    tier: test.tier,
+    tierLabel: i18n.localize(`VARBORG.Tier.${test.tier}`),
+    notes: test.notes,
+    lines: [],
+    results: [],
+    nerves: null,
+    rolls: [test.roll]
+  };
+  // Item effects after a Panic test (step 49f).
+  await runItemHooks(actor, ["failure", "ruin"].includes(test.tier) ? "panicFailure" : "panicSuccess");
+  // Dwarven Doughtiness: a Ruin counts as a Failure (step 50b2).
+  const doughty = test.tier === "ruin" ? itemHooks(actor, "panicFailure").find(hook => hook.action === "ruinAsFailure") : null;
+  if (doughty) row.lines.push(i18n.format("VARBORG.Panic.RuinAsFailure", { item: doughty.item, name: actor.name }));
+  const dice = panicDice(doughty ? "failure" : test.tier);
+  // Steady nerves, while unspent: the player chooses on the card (GAPS 197).
+  const nerves = dice ? itemHooks(actor, "panicFailure").find(hook => hook.action === "steadyNerves") : null;
+  if (nerves) {
+    row.lines.push(i18n.format("VARBORG.Panic.Nerves.Offer", { item: nerves.item }));
+    row.nerves = {
+      itemId: nerves.itemId,
+      dice,
+      use: i18n.format("VARBORG.Panic.Nerves.Use", { item: nerves.item }),
+      roll: i18n.format("VARBORG.Panic.Nerves.Roll", { formula: dice })
+    };
+    return row;
+  }
+  if (dice) {
+    for (const result of await panicTableResults(actor, dice)) {
+      row.results.push({ rolled: result.rolled, name: panicName(result.id), text: i18n.localize(`VARBORG.Panic.Result.${result.id}.text`), lines: result.lines });
+      row.rolls.push(...result.rolls);
+    }
+    return row;
+  }
+  row.lines.push(i18n.format(test.tier === "triumph" ? "VARBORG.Panic.Unfazed" : "VARBORG.Panic.Calm", { name: actor.name }));
+  const lost = actor.system.sanityLost;
+  if (restoresSanity(test.tier) && lost > 0) {
+    const from = actor.system.abilities.sanity;
+    await actor.update({ "system.sanityLost": restoreSanity(from, lost).lost });
+    row.lines.push(i18n.format("VARBORG.Panic.Restored", { from, to: actor.system.abilities.sanity }));
+  }
+  return row;
+}
+
+/** The Dark Master's Group Panic test button in the token controls. */
+function addGroupPanicButton(controls) {
+  const tools = controls.tokens?.tools;
+  if (!tools || !game.user.isGM) return;
+  tools.varBorgGroupPanic = {
+    name: "varBorgGroupPanic",
+    title: "VARBORG.Panic.Group.Button",
+    icon: "fa-solid fa-face-dizzy",
+    order: Object.keys(tools).length,
+    button: true,
+    visible: true,
+    onChange: () => rollGroupPanic()
+  };
+}
+
+/**
+ * The Steady nerves buttons on a group Panic card: each character's owner
+ * chooses once, remembered per character on the message.
+ */
+function activateGroupPanicButtons(message, html) {
+  if (!message.getFlag(SYSTEM, "groupPanic")) return;
+  for (const button of html.querySelectorAll("button[data-action='groupNerves'], button[data-action='groupTable']")) {
+    const actor = fromUuidSync(button.dataset.actorUuid);
+    const key = actor?.id ?? "";
+    if (!actor?.isOwner || message.getFlag(SYSTEM, "groupPanicChosen")?.[key]) {
+      button.disabled = true;
+      continue;
+    }
+    button.addEventListener("click", async () => {
+      for (const other of button.closest("[data-panic-row]")?.querySelectorAll("button") ?? [button]) other.disabled = true;
+      const chosen = message.getFlag(SYSTEM, "groupPanicChosen") ?? {};
+      if (chosen[key]) return;
+      if (message.canUserModify(game.user, "update")) await message.setFlag(SYSTEM, "groupPanicChosen", { ...chosen, [key]: true });
+      if (button.dataset.action === "groupTable") await rollPanicTable(actor, button.dataset.formula);
+      else await useSteadyNerves(actor, button.dataset.itemId);
+    });
+  }
+}
+
+/** Watch the buttons on Steady nerves cards (step 50a3), and add the group Panic button. */
 export function registerPanicButtons() {
+  Hooks.on("getSceneControlButtons", addGroupPanicButton);
+  Hooks.on("renderChatMessageHTML", activateGroupPanicButtons);
   Hooks.on("renderChatMessageHTML", (message, html) => {
     if (!message.getFlag(SYSTEM, "panicChoice")) return;
     const buttons = [...html.querySelectorAll("button[data-action='steadyNerves'], button[data-action='panicTable']")];
@@ -209,19 +351,31 @@ async function useSteadyNerves(actor, itemId) {
  * @param {number} [depth]  How many Compounding problems led here.
  */
 export async function rollPanicTable(actor, formula, depth = 0) {
+  for (const result of await panicTableResults(actor, formula, depth)) {
+    await postResult(actor, result.id, result.lines, result.rolls, result.rolled);
+  }
+}
+
+/**
+ * Roll on the Panic table and apply each result (Compounding problems
+ * rolls 2d10 twice more), without posting.
+ * @returns {Promise<{id: string, rolled: string, lines: string[], rolls: Roll[]}[]>}
+ */
+async function panicTableResults(actor, formula, depth = 0) {
   const roll = new Roll(formula);
   await roll.evaluate();
   const id = panicResult(roll.total);
   const { lines, rolls } = await applyPanicResult(actor, id);
-  await postResult(actor, id, lines, [roll, ...rolls], game.i18n.format("VARBORG.Panic.Rolled", { formula, roll: roll.total }));
+  const results = [{ id, lines, rolls: [roll, ...rolls], rolled: game.i18n.format("VARBORG.Panic.Rolled", { formula, roll: roll.total }) }];
 
   const again = PANIC_RESULTS[id].rollsAgain ?? 0;
-  if (!again) return;
+  if (!again) return results;
   if (depth >= MAX_DEPTH) {
     ui.notifications.warn(game.i18n.localize("VARBORG.Panic.TooDeep"));
-    return;
+    return results;
   }
-  for (let i = 0; i < again; i++) await rollPanicTable(actor, COMPOUNDING_DICE, depth + 1);
+  for (let i = 0; i < again; i++) results.push(...await panicTableResults(actor, COMPOUNDING_DICE, depth + 1));
+  return results;
 }
 
 /**
@@ -346,17 +500,20 @@ export async function endPanicByClock(actor, now) {
  * Table of Agony (GAPS 88).
  * @param {Actor} actor
  */
-export async function useUpNextTest(actor) {
+export async function useUpNextTest(actor, { quiet = false } = {}) {
   const used = (actor?.effects ?? []).filter(effect => {
     const panic = effect.getFlag(SYSTEM, "panic");
     const agony = effect.getFlag(SYSTEM, "agony");
     return PANIC_RESULTS[panic?.result]?.next || AGONY_RESULTS[agony?.result]?.next;
   });
-  if (!used.length) return;
+  if (!used.length) return null;
   await actor.deleteEmbeddedDocuments("ActiveEffect", used.map(effect => effect.id));
-  await postLine(actor, game.i18n.format("VARBORG.Panic.UsedUp", {
+  const line = game.i18n.format("VARBORG.Panic.UsedUp", {
     name: actor.name, result: used.map(effect => effect.name).join(", ")
-  }));
+  });
+  // A quiet test (the group Panic card) shows the line itself.
+  if (!quiet) await postLine(actor, line);
+  return line;
 }
 
 async function postLine(actor, text) {

@@ -28,7 +28,7 @@ const FLAG = "timer";
 const { DialogV2 } = foundry.applications.api;
 
 /** The status effect that gives this condition, if the actor has it. */
-function conditionEffect(actor, id) {
+export function conditionEffect(actor, id) {
   return actor?.effects.find(effect => effect.statuses.has(id) && !effect.getFlag(SYSTEM, "panic") && !effect.getFlag(SYSTEM, "agony")) ?? null;
 }
 

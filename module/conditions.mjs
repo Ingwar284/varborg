@@ -21,7 +21,7 @@ import { panicName, sheetPanic, activatePanicControls } from "./panic.mjs";
 import { AGONY_EFFECTS } from "./rules/agony.mjs";
 import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
 import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
-import { conditionTimer, timerText, askConditionTimer } from "./timers.mjs";
+import { conditionTimer, conditionEffect, timerText, askConditionTimer } from "./timers.mjs";
 import { isStarving } from "./rules/days.mjs";
 import { collectEffects, immuneConditions, immunityTo } from "./rules/item-effects.mjs";
 import { fatigueBlocked } from "./rules/resistance.mjs";
@@ -189,6 +189,17 @@ export function reminderNotes(actor, where) {
     .map(condition => game.i18n.localize(`VARBORG.Condition.Reminder.${where}.${condition}`));
 }
 
+/** "From Songs of power: Allegro (…)": the power that gave a condition, or "". */
+function conditionSource(actor, id) {
+  const source = conditionEffect(actor, id)?.getFlag("var-borg", "source");
+  if (!source?.power) return "";
+  const i18n = game.i18n;
+  const from = source.option
+    ? i18n.format("VARBORG.Outcome.SourceOption", { power: source.power, option: source.option })
+    : source.power;
+  return i18n.format("VARBORG.Outcome.SourceLine", { from, note: source.note ? ` (${source.note})` : "" });
+}
+
 /**
  * The Conditions section of a sheet: each condition the actor has with its
  * rules text (a foe's Foe line where it has one), and the ones it can get.
@@ -216,7 +227,9 @@ export function sheetConditions(actor) {
       text: i18n.localize(`VARBORG.Condition.${isFoe && FOE_LINE_CONDITIONS.includes(id) ? "FoeText" : "Text"}.${id}`),
       // Fatigued is ended by levels, not time; the rest can have a timer (GAPS 129).
       canTime: id !== "fatigued",
-      timer: timerText(conditionTimer(actor, id))
+      timer: timerText(conditionTimer(actor, id)),
+      // The power and option that gave it (Songs of power: Allegro), playtest feedback.
+      source: conditionSource(actor, id)
     })),
     choices: CONDITIONS.filter(id => !actor.statuses.has(id))
       .map(id => ({ id, label: i18n.localize(`VARBORG.Condition.${id}`) }))

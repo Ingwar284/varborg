@@ -55,7 +55,7 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
 import { weaponTags, withExtraDamage, triumphDamage } from "../rules/item-effects.mjs";
 import { powerDamage } from "../rules/powers.mjs";
-import { powerOutcomeText, applySustain, powerCardOutcome } from "./power.mjs";
+import { powerOutcomeText, powerOutcomeLines, applySustain, powerCardOutcome } from "./power.mjs";
 import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
@@ -386,6 +386,7 @@ export async function settleAttackCard(actor, data) {
     tier,
     tierLabel: i18n.localize(`VARBORG.Tier.${tier}`),
     outcomeText: power ? powerOutcomeText(power, tier) : i18n.localize(`VARBORG.Attack.Outcome.${tier}`),
+    tierOutcomes: power ? powerOutcomeLines(power, tier) : null,
     description: power?.description || null,
     // A single-target card can be pointed at another foe (player feedback).
     retarget: !inputs.area,
