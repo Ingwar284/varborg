@@ -509,6 +509,6 @@ export function powerCardOutcome(tier) {
 async function postLine(actor, text) {
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card power-card"><p>${text}</p></div>`
+    content: `<div class="var-borg-card power-card"><p>${foundry.utils.escapeHTML(text)}</p></div>`
   });
 }

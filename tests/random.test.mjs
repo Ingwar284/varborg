@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  pickRandom, uniqueByName, nameTableIds, joinName, plainText, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult
+  pickRandom, uniqueByName, nameTableIds, joinName, plainText, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult, hasHtml, descriptionText
 } from "../module/rules/random.mjs";
 
 test("pickRandom picks by the random number", () => {
@@ -129,4 +129,21 @@ test("joinName puts the given name first", () => {
 test("plainText keeps lower case, detailText starts with a capital", () => {
   assert.equal(plainText("<p>of the Ninth Oath</p>"), "of the Ninth Oath");
   assert.equal(detailText("<p>of the Ninth Oath</p>"), "Of the Ninth Oath");
+});
+
+test("hasHtml finds description tags, not a lone less-than sign", () => {
+  assert.equal(hasHtml("<p><em>A tome.</em></p>Text"), true);
+  assert.equal(hasHtml("Line one<br>Line two"), true);
+  assert.equal(hasHtml("Damage < 5 is halved"), false);
+  assert.equal(hasHtml("Plain text\nwith lines"), false);
+  assert.equal(hasHtml(null), false);
+});
+
+test("descriptionText keeps paragraphs and list items as lines", () => {
+  assert.equal(descriptionText("<p><em>Studying this tome teaches Fireball.</em></p>Deal d8 damage."),
+    "Studying this tome teaches Fireball.\nDeal d8 damage.");
+  assert.equal(descriptionText("<p>Choose one:</p><ul><li>Allegro</li><li>Adagio</li></ul>"),
+    "Choose one:\n\n• Allegro\n• Adagio");
+  assert.equal(descriptionText("<p>salt &amp; pepper</p>"), "salt & pepper");
+  assert.equal(descriptionText("Already plain\ntext"), "Already plain\ntext");
 });

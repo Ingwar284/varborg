@@ -134,11 +134,50 @@ export function detailText(html) {
  * @returns {string}
  */
 export function plainText(html) {
-  return String(html ?? "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
-    .replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, "\"").replace(/&nbsp;/g, " ")
+  return decodeEntities(String(html ?? "").replace(/<[^>]*>/g, ""))
     .replace(/\s+/g, " ")
+    .trim();
+}
+
+function decodeEntities(text) {
+  return text
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">")
+    .replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, "\"").replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
+}
+
+/** The HTML tags a description may hold by mistake (paragraphs, emphasis, lists, breaks). */
+const DESCRIPTION_TAG = /<\/?(p|em|strong|b|i|u|br|ul|ol|li|div|span|h[1-6])\b[^>]*>/i;
+
+/**
+ * Whether an item description holds HTML tags. Item descriptions are plain
+ * text (the sheet and the chat card show them as they are), so tags show
+ * up as raw text and are cleaned with descriptionText.
+ * @param {string} text
+ * @returns {boolean}
+ */
+export function hasHtml(text) {
+  return DESCRIPTION_TAG.test(String(text ?? ""));
+}
+
+/**
+ * HTML as plain description text: paragraphs, line breaks and list items
+ * become separate lines (list items start with "• "), other tags are
+ * removed and spaces within a line are tidied.
+ * @param {string} html
+ * @returns {string}
+ */
+export function descriptionText(html) {
+  const marked = String(html ?? "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/<li\b[^>]*>/gi, "\n• ")
+    .replace(/<br\s*\/?>|<\/(p|div|ul|ol|h[1-6])>/gi, "\n")
+    .replace(/<[^>]*>/g, "");
+  return decodeEntities(marked)
+    .split("\n")
+    .map(line => line.replace(/[ \t]+/g, " ").trim())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 

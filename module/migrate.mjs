@@ -32,10 +32,15 @@
  * Version 8 (player feedback): a spell-list choice (Autodidactism) that
  * picked "bloodline" is cleared, since bloodline is the Sorcerer's and not
  * a list of spells. The player chooses again with the Choose button.
+ *
+ * Version 9 (playtest feedback): item descriptions holding HTML tags (spell
+ * tomes and trinkets found while Improving) become plain text, since the
+ * sheet and the chat card show descriptions as they are.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
 import { frequencyFromText } from "./rules/uses.mjs";
+import { hasHtml, descriptionText } from "./rules/random.mjs";
 import { MIGRATION_OPTION } from "./data/character.mjs";
 import { lightFromName, DEFAULT_LIGHT_RANGE } from "./rules/light.mjs";
 import { dawnOf, dayAt, endsAfterHours } from "./rules/calendar.mjs";
@@ -45,7 +50,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 8;
+export const DATA_VERSION = 9;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -75,6 +80,7 @@ export async function migrateWorld() {
   if (version < 6) await startClock();
   if (version < 7) await setFrequencies();
   if (version < 8) await clearBloodlineChoices();
+  if (version < 9) await cleanDescriptions();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -106,6 +112,17 @@ async function updateItems(types, change) {
     const updates = updatesFor(actor.items);
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   }
+}
+
+/** Version 9: descriptions with HTML tags become plain text. */
+function cleanDescriptions() {
+  const types = Object.keys(CONFIG.Item.dataModels);
+  return updateItems(types, item => {
+    const description = item.system.description;
+    return typeof description === "string" && hasHtml(description)
+      ? { "system.description": descriptionText(description) }
+      : null;
+  });
 }
 
 /** Version 8: a spell-list choice of "bloodline" is cleared, to be made again. */

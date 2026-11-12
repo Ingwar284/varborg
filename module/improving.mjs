@@ -29,7 +29,7 @@ import {
   ABILITY_DIE, HP_ROLL, HP_GAIN_DIE, FIND_DIE, FIND_SILVER, FIND_WEAPON_DIE,
   improveAbilities, gainsHp, findResult, findWeapon
 } from "./rules/improving.mjs";
-import { IMPROVING_GROUPS, improvingCandidates, groupForRoll, pickRandom, uniqueByName } from "./rules/random.mjs";
+import { IMPROVING_GROUPS, improvingCandidates, groupForRoll, pickRandom, uniqueByName, descriptionText } from "./rules/random.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
 import { CLASS_BOOST } from "./rules/origins.mjs";
 import { canBeImproving } from "./rules/feats.mjs";
@@ -169,7 +169,7 @@ async function drawText(uuid, rolls) {
   if (!table) return null;
   const draw = await table.draw({ displayChat: false });
   if (draw.roll) rolls.push(draw.roll);
-  return draw.results[0]?.description || draw.results[0]?.name || null;
+  return descriptionText(draw.results[0]?.description || draw.results[0]?.name || "") || null;
 }
 
 /**
@@ -181,8 +181,8 @@ function spellTome(spell) {
   const i18n = game.i18n;
   const fields = CONFIG.Item.dataModels.scroll?.schema?.fields ?? {};
   const system = Object.fromEntries(Object.keys(fields).filter(key => key in spell.system).map(key => [key, spell.system[key]]));
-  const note = `<p><em>${i18n.format("VARBORG.Improving.Find.TomeNote", { spell: foundry.utils.escapeHTML(spell.name) })}</em></p>`;
-  system.description = note + (spell.system.description ?? "");
+  const note = i18n.format("VARBORG.Improving.Find.TomeNote", { spell: spell.name });
+  system.description = `${note}\n${spell.system.description ?? ""}`;
   return {
     name: i18n.format("VARBORG.Improving.Find.TomeName", { spell: spell.name }),
     type: "scroll",
@@ -203,7 +203,7 @@ async function addFind(actor, find, rolls) {
     if (!text) return missing;
     const name = i18n.localize("VARBORG.Improving.Find.TrinketName");
     await actor.createEmbeddedDocuments("Item", [{ name, type: "gear", img: "icons/svg/item-bag.svg", system: { description: text } }]);
-    return i18n.format("VARBORG.Improving.Find.TrinketAdded", { text: text.replace(/<[^>]*>/g, "").trim() });
+    return i18n.format("VARBORG.Improving.Find.TrinketAdded", { text });
   }
   if (find === "weapon") {
     const roll = await rollInto(rolls, FIND_WEAPON_DIE);

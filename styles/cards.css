@@ -295,6 +295,7 @@
 .var-borg-card .power-description {
   font-style: italic;
   color: var(--vb-ink-soft);
+  white-space: pre-line;
 }
 
 /* Gloom abilities (step 29): the cost beside the card title, the rules
@@ -307,6 +308,7 @@
 .var-borg-card.gloom-card .gloom-description {
   font-style: italic;
   margin: 0.2rem 0;
+  white-space: pre-line;
 }
 
 .var-borg-card button[data-action="takeDamage"] {
