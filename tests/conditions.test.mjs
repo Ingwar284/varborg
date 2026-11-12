@@ -141,3 +141,11 @@ test("situational injuries are reminders on the test dialog", () => {
   assert.deepEqual(reminders(["blinded", "sprainedAnkle"], "test"), ["blinded", "sprainedAnkle"]);
   assert.deepEqual(reminders(["sprainedAnkle"], "defence"), []);
 });
+
+test("In Darkness gives Bane on tests, attacks and defences (rules 3.15, GAPS 274)", () => {
+  const has = ["inDarkness"];
+  assert.equal(total(testConditions(has)).banes, 1);
+  assert.equal(total(attackerConditions(has)).banes, 1);
+  assert.equal(total(defenderConditions(has, 0, "melee")).banes, 1);
+  assert.equal(total(defenderConditions(has, 0, "shoot")).banes, 1);
+});

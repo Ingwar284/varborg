@@ -39,6 +39,7 @@ import { registerFortune } from "./fortune.mjs";
 import { CARD } from "./rules/fortune.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerConditions } from "./conditions.mjs";
+import { registerDarkness } from "./darkness.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
 import { registerAgony } from "./agony.mjs";
 import { registerDeathsDoor } from "./deaths-door.mjs";
@@ -121,6 +122,8 @@ Hooks.once("init", () => {
   registerConditions();
   // Persistent Damage: one effect per type, ticking at the end of the turn.
   registerPersistentDamage();
+  // In Darkness: a marker from the scene's lighting, Bane on all tests (rules 3.15).
+  registerDarkness();
   // Wounds at 0 HP: the wound test and the Table of Agony (rules 3.5).
   registerAgony();
   // Death's Door and Dark Vessel (rules 3.6).

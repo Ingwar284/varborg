@@ -52,6 +52,18 @@ export const REMINDERS = {
   foeAttack: ["frightened"]
 };
 
+/**
+ * In Darkness (rules 3.15, GAPS 274): "Being in complete darkness gives Bane
+ * on all tests." Not a 3.13 condition but a marker the system puts on a
+ * character's token when no light reaches it (module/darkness.mjs).
+ */
+export const IN_DARKNESS = "inDarkness";
+
+/** In Darkness: Bane on every test, attack and defence. */
+function darknessModifier(has) {
+  return has.has(IN_DARKNESS) ? [{ condition: IN_DARKNESS, bane: true }] : [];
+}
+
 /** Conditions that work at the start of one turn and then end (GAPS 74). */
 export const ONE_TURN_CONDITIONS = ["quickened", "slowed"];
 
@@ -108,7 +120,7 @@ function fatigueModifier(conditions, fatigue, sign) {
  */
 export function testConditions(conditions, fatigue = 0, ability = null) {
   const has = asSet(conditions);
-  return [...fatigueModifier(has, fatigue, +1), ...nextTestModifiers(has), ...injuryModifiers(has, "test", ability)];
+  return [...fatigueModifier(has, fatigue, +1), ...darknessModifier(has), ...nextTestModifiers(has), ...injuryModifiers(has, "test", ability)];
 }
 
 /**
@@ -121,7 +133,7 @@ export function attackerConditions(conditions, fatigue = 0, ability = null) {
   if (has.has("prone")) mods.push({ condition: "prone", dr: PRONE_DR });
   if (has.has("darkVessel")) mods.push({ condition: "darkVessel", dr: -DARK_VESSEL_DR });
   if (has.has("restrained")) mods.push({ condition: "restrained", bane: true });
-  return [...mods, ...nextTestModifiers(has), ...injuryModifiers(has, "attack", ability)];
+  return [...mods, ...darknessModifier(has), ...nextTestModifiers(has), ...injuryModifiers(has, "attack", ability)];
 }
 
 /**
@@ -148,7 +160,7 @@ export function defenderConditions(conditions, fatigue = 0, kind = "melee") {
   if (has.has("prone")) mods.push({ condition: "prone", dr: isRanged(kind) ? -PRONE_DR : PRONE_DR });
   if (has.has("darkVessel")) mods.push({ condition: "darkVessel", dr: DARK_VESSEL_DR });
   if (has.has("restrained")) mods.push({ condition: "restrained", bane: true });
-  return [...mods, ...nextTestModifiers(has), ...injuryModifiers(has, "defence")];
+  return [...mods, ...darknessModifier(has), ...nextTestModifiers(has), ...injuryModifiers(has, "defence")];
 }
 
 /**

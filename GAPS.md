@@ -144,6 +144,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 
 | # | Question | Ruling | Status |
 |---|---|---|---|
+| 274 | Rules 3.15: "Being in complete darkness gives Bane on all tests." Can the system tell who is in complete darkness? | Designer's ruling: yes, from the scene's lighting. An In Darkness marker (not a 3.13 condition) is put on a player character's token when no light reaches it, and taken off when one does; it gives Bane on all tests, attacks and defences. Any light counts as light, dim light too. Player characters only. Scenes without token vision are left to the Dark Master. The hourly random encounter roll is not automated. | Resolved |
 | 8 | How do several Boons and Banes stack? | They cancel each other out: any Boon plus any Bane gives a plain roll. | Resolved |
 | 9 | With Boon or Bane, which die decides a natural 20 or 1? | The kept die. | Resolved |
 | 10 | Contested tests: do tiers matter? | Highest total wins. A natural 20 counts as +5 and a natural 1 as −5. A tie means no victor. | Resolved |

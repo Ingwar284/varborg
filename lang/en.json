@@ -794,6 +794,7 @@
       "infected": "Infected",
       "doomed": "Doomed",
       "encumbered": "Encumbered",
+      "inDarkness": "In Darkness",
       "Text": {
         "blinded": "You can’t see. All terrain is difficult terrain. Bane on tests that rely on sight.",
         "deafened": "You can’t hear. Bane on tests that rely on hearing.",
