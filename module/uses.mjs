@@ -23,6 +23,7 @@ import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 import { rollExpendable } from "./dice/expendable.mjs";
 import { turnState } from "./combat.mjs";
 import { CONSUME_ACTIONS, isConsumableGear } from "./rules/expendable.mjs";
+import { poisonOf, askPoisonUse, applyPoisonUse } from "./poison.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -145,6 +146,9 @@ export async function useLimitedItem(actor, item) {
     ui.notifications.warn(i18n.localize("VARBORG.Manual.NotYourTurn"));
     return;
   }
+  // A poison: on the targets, or on a weapon (GAPS 283).
+  const poison = poisonOf(item.name) ? await askPoisonUse(actor, item) : null;
+  if (poisonOf(item.name) && !poison) return;
   // Several Use actions that are done on their own: ask which (step 51a3).
   const effects = await pickUseEffects(item);
   if (!effects) return;
@@ -162,6 +166,7 @@ export async function useLimitedItem(actor, item) {
     lines.push(...done.lines);
     rolls.push(...done.rolls);
   }
+  if (poison?.mode === "coat") lines.push(await applyPoisonUse(actor, item, poison));
   const esc = foundry.utils.escapeHTML;
   const text = cardText(item.system.description);
   await ChatMessage.create({
@@ -174,6 +179,8 @@ export async function useLimitedItem(actor, item) {
     rolls,
     sound: rolls.length ? CONFIG.sounds.dice : null
   });
+  // A poison used on the targets: their Resist buttons (GAPS 283).
+  if (poison?.mode === "target") await applyPoisonUse(actor, item, poison);
   // Then the expendable die: on a 1 one is used up (GAPS 260).
   if (consumable) await rollExpendable(actor, item);
 }

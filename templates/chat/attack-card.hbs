@@ -56,10 +56,10 @@
     </p>
     {{/if}}
     {{#if area}}
-    <p class="hint">{{localize "VARBORG.Area.Hint"}}</p>
+    <p class="hint">{{area.hint}}</p>
     {{#each area.foes}}
     <button type="button" data-action="inflictDamage" data-key="{{key}}" data-damage="{{damage}}" data-foe-uuid="{{foeUuid}}"
-            data-armour="{{armour}}" data-attack="{{attack}}" data-damage-type="{{damageType}}" data-weapon-tags="{{weaponTags}}">
+            data-armour="{{armour}}" data-attack="{{attack}}" data-damage-type="{{damageType}}" data-weapon-tags="{{weaponTags}}" data-melee="{{melee}}" data-triumph="{{triumph}}">
       <i class="fa-solid fa-droplet"></i> {{label}}
     </button>
     {{/each}}
@@ -87,6 +87,7 @@
   <p class="modifier">{{armour.text}}</p>
   {{/if}}
   {{/if}}
+  {{#each areaArmour}}<p class="modifier">{{this}}</p>{{/each}}
   {{#if thrownNote}}<p class="modifier">{{thrownNote}}</p>{{/if}}
   {{#if pipNote}}<p class="modifier">{{pipNote}}</p>{{/if}}
   {{{fortune}}}

@@ -38,6 +38,7 @@ import { settleTestCard } from "./dice/ability-test.mjs";
 import { registerFortune } from "./fortune.mjs";
 import { CARD } from "./rules/fortune.mjs";
 import { addMoraleCardListeners } from "./dice/morale.mjs";
+import { registerPoisons } from "./poison.mjs";
 import { registerConditions } from "./conditions.mjs";
 import { registerDarkness } from "./darkness.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
@@ -173,6 +174,7 @@ Hooks.once("init", () => {
   Hooks.on("renderChatMessageHTML", addGloomCardListeners);
   // Inflict damage on an attack card, Morale on a foe damage card (rules 3.12).
   Hooks.on("renderChatMessageHTML", addMoraleCardListeners);
+  registerPoisons();
   // The − and + buttons in roll dialogs.
   registerDialogControls();
   // Fortune buttons on test, attack, defence and gloom test cards (rules 3.9).

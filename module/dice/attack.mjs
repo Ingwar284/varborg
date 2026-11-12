@@ -54,10 +54,11 @@ import { attackerConditions, attackTargetConditions, totalModifiers } from "../r
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
 import { weaponTags, withExtraDamage, triumphDamage } from "../rules/item-effects.mjs";
-import { powerDamage } from "../rules/powers.mjs";
+import { powerDamage, areaTargets } from "../rules/powers.mjs";
 import { powerOutcomeText, powerOutcomeLines, applySustain, powerCardOutcome } from "./power.mjs";
 import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
+import { weaponCoat, poisonFromHit } from "../poison.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -82,7 +83,12 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
 
   const turn = turnState(actor);
   const attacksBefore = turn.onOwnTurn ? turn.combatant.attacksThisTurn : 0;
-  const target = [...game.user.targets][0]?.actor ?? null;
+  // Every targeted creature (playtest feedback): with several, one attack
+  // roll and one damage roll count for all, and each gets its own button.
+  // The target's own conditions only count when there is one target.
+  const targets = [...new Set([...game.user.targets].map(token => token.actor).filter(other => other && other !== actor))];
+  const target = targets.length === 1 ? targets[0] : null;
+  const several = areaTargets(targets.map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour })), actor.uuid);
 
   const ruined = actor.system.attackRuin;
   // Item effects for the player to tick when they apply (PLAN step 49d),
@@ -153,6 +159,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     banes.ruin ? i18n.localize("VARBORG.Attack.RuinBane") : null,
     ...conditionNotes(conditions.own),
     ...conditionNotes(conditions.target, target?.name),
+    several ? i18n.localize("VARBORG.Attack.SeveralConditions") : null,
     paid.note
   ].filter(Boolean);
 
@@ -180,11 +187,14 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     // Characters defend instead, so only a foe or no target gets Inflict damage.
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
+    // Several targets: one button each (playtest feedback).
+    area: several,
+    areaDamageType: weapon.damageType ?? "",
     attackName: item.name,
     context: {
       title,
       how: i18n.format("VARBORG.Attack.How", { mode: i18n.localize(`VARBORG.Weapon.Kind.${mode}`), ability: abilityLabel }),
-      target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : null,
+      target: targets.length ? i18n.format("VARBORG.Attack.Against", { name: targets.map(other => other.name).join(", ") }) : null,
       modeLabel: modeLabel(diceRule, boonCount, baneCount),
       ability: signed(abilityScore),
       abilityLabel,
@@ -206,6 +216,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
+  // A poisoned weapon: its next hit poisons the creatures hit (GAPS 283).
+  if (weaponCoat(item) && attackOutcome(data.state.tier).hit) await poisonFromHit(actor, item, targets);
 }
 
 /**
@@ -323,6 +335,9 @@ export async function settleAttackCard(actor, data) {
     armour = { text: i18n.format("VARBORG.Fortune.ArmourBack", { name: inputs.foe.name, die: armourLabel(from) }) };
   }
 
+  // Several foes hit by one weapon attack: a Triumph lowers each one's armour.
+  const areaArmour = !power && inputs.area ? await lowerAreaArmour(inputs.area.foes, outcome.lowerArmour, applied) : [];
+
   // A Sustained power starts when it takes effect.
   const sustainNote = power ? await applySustain(actor, data, tier) : null;
   // What the result gives its targets and user, following Fortune (GAPS 219).
@@ -336,6 +351,7 @@ export async function settleAttackCard(actor, data) {
   let area = null;
   if (damage && !damage.invalid && inputs.area) {
     area = {
+      hint: i18n.localize(power ? "VARBORG.Area.Hint" : "VARBORG.Attack.SeveralHint"),
       foes: inputs.area.foes.map(target => ({
         key: target.uuid,
         damage: damage.total,
@@ -344,8 +360,11 @@ export async function settleAttackCard(actor, data) {
         attack: inputs.attackName,
         // For the foe's immunities and resistances (step 52a).
         damageType: inputs.areaDamageType ?? "",
-        // A spell's damage, for resists against spells (Aether Ward, step 52e).
-        weaponTags: inputs.power?.kind === "spell" ? "spell,area" : "area",
+        // A spell's damage, for resists against spells (Aether Ward, step 52e);
+        // a weapon's tags for a weapon attack on several foes.
+        weaponTags: inputs.power?.kind === "spell" ? "spell,area" : inputs.power ? "area" : (inputs.weaponTags ?? []).join(","),
+        melee: !power && Boolean(inputs.melee),
+        triumph: !power && tier === "triumph",
         label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
       })),
       defenders: inputs.area.defenders.map(target => ({
@@ -399,6 +418,7 @@ export async function settleAttackCard(actor, data) {
     inflict,
     area,
     armour,
+    areaArmour,
     ruinNote: nowRuined && !inputs.ruinedBefore ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
     // Powers are not weapon attacks: no maximum damage (GAPS 119).
     fortune: await fortuneSection(data, {
@@ -406,6 +426,42 @@ export async function settleAttackCard(actor, data) {
     })
   });
   return { content, rolls };
+}
+
+/**
+ * A weapon attack on several foes: a Triumph lowers each foe's armour die
+ * by one (GAPS 12), and a later result that is not a Triumph puts it back.
+ * Foes this user cannot change are left for the Dark Master, with a line.
+ * @param {{uuid: string, name: string, armour: string}[]} foes  Armour as before the attack.
+ * @param {boolean} lower     Whether the result lowers armour.
+ * @param {object} applied    The card's applied record (changed in place).
+ * @returns {Promise<string[]>} Card lines.
+ */
+async function lowerAreaArmour(foes, lower, applied) {
+  const i18n = game.i18n;
+  applied.areaArmour ??= {};
+  const lines = [];
+  for (const entry of foes) {
+    const foe = await fromUuid(entry.uuid);
+    const done = Boolean(applied.areaArmour[entry.uuid]);
+    if (lower) {
+      if (!entry.armour) {
+        lines.push(i18n.format("VARBORG.Attack.NoArmourToLower", { name: entry.name }));
+        continue;
+      }
+      const change = { name: entry.name, from: armourLabel(entry.armour), to: armourLabel(stepDownArmourDie(entry.armour)) };
+      if (!done && foe?.isOwner) {
+        await foe.update({ "system.armour": stepDownArmourDie(entry.armour) });
+        applied.areaArmour[entry.uuid] = true;
+      }
+      lines.push(i18n.format(applied.areaArmour[entry.uuid] ? "VARBORG.Attack.ArmourLowered" : "VARBORG.Attack.ArmourToLower", change));
+    } else if (done && foe) {
+      await foe.update({ "system.armour": entry.armour });
+      applied.areaArmour[entry.uuid] = false;
+      lines.push(i18n.format("VARBORG.Fortune.ArmourBack", { name: entry.name, die: armourLabel(entry.armour) }));
+    }
+  }
+  return lines;
 }
 
 /**
