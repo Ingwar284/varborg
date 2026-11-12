@@ -1205,8 +1205,11 @@ export function resistsFor(effects, damageType, { persistent = false, weaponTags
 
 /**
  * Damage after resist effects: halves first (rounded down), then doubles,
- * then the rolled reductions. Never below 0. An "extra" amount (step 52d)
- * is passed as a negative reduction, so it adds.
+ * then the rolled reductions. An "extra" amount (step 52d) is passed as a
+ * negative reduction, so it adds.
+ *
+ * Resistances never bring damage below 1 (playtest feedback, GAPS 204):
+ * only an immunity, or a hit that dealt nothing, gives 0.
  * @param {number} damage
  * @param {object[]} resists      From resistsFor, or { resist } entries.
  * @param {number[]} [reductions] The rolls of the "reduce" effects.
@@ -1214,10 +1217,11 @@ export function resistsFor(effects, damageType, { persistent = false, weaponTags
 export function resistedDamage(damage, resists, reductions = []) {
   let result = damage;
   if ((resists ?? []).some(effect => effect.resist === "immune")) return 0;
+  if (damage <= 0) return 0;
   for (const effect of resists ?? []) if (effect.resist === "half") result = Math.floor(result / 2);
   for (const effect of resists ?? []) if (effect.resist === "double") result *= 2;
   result -= (reductions ?? []).reduce((sum, value) => sum + value, 0);
-  return Math.max(0, result);
+  return Math.max(1, result);
 }
 
 /**

@@ -22,7 +22,7 @@ import { foeDamageTaken } from "./morale.mjs";
  * The damage a foe takes from a hit after its resistances and armour
  * (GAPS 236, as GAPS 204 for characters): resistances first (halves
  * rounded down, then doubles, then rolled reductions), then the armour
- * die. Resisted to 0 (an immunity) it takes nothing; otherwise a hit
+ * die. An immunity means it takes nothing; otherwise a hit
  * deals at least 1, as usual.
  * @param {number} damage          The hit's damage (already doubled on a Triumph).
  * @param {number} soak            The armour die's roll (0 for none).

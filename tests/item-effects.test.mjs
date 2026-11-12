@@ -445,7 +445,8 @@ test("resists: Tempered by the Forge halves fire, Ancestral Resonance takes d6 o
   assert.deepEqual(resistsFor([tempered, resonance], ""), []);
   assert.equal(resistedDamage(9, [tempered]), 4);
   assert.equal(resistedDamage(5, [resonance], [3]), 2);
-  assert.equal(resistedDamage(2, [resonance], [6]), 0);
+  assert.equal(resistedDamage(2, [resonance], [6]), 1);
+  assert.equal(resistedDamage(0, [resonance], [6]), 0);
   assert.equal(resistedDamage(9, [tempered, resonance], [3]), 1);
   assert.deepEqual(effectProblems(tempered), []);
   assert.deepEqual(effectProblems(resonance), []);

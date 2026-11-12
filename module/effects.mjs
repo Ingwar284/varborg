@@ -251,7 +251,7 @@ export function resistLines(kept) {
 
 /**
  * Damage taken after resists and soak, as the defence and gloom cards
- * work it out: no resists, the usual; resisted to 0, nothing; otherwise
+ * work it out: no resists, the usual; immune, nothing; otherwise
  * soaked, at least 1.
  */
 export function takenWithResists(before, usualTaken, soak, kept, minimum = 1) {

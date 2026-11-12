@@ -32,8 +32,10 @@ test("a halved hit that is not 0 still deals at least 1 through armour", () => {
   assert.deepEqual(foeDamageAfterResists(3, 4, [{ resist: "half" }]), { resisted: 1, taken: 1, minimum: true });
 });
 
-test("a hit halved to 0 deals nothing", () => {
-  assert.deepEqual(foeDamageAfterResists(1, 0, [{ resist: "half" }]), { resisted: 0, taken: 0, minimum: false });
+test("resistances never bring a hit below 1; only an immunity gives 0", () => {
+  assert.deepEqual(foeDamageAfterResists(1, 0, [{ resist: "half" }]), { resisted: 1, taken: 1, minimum: false });
+  assert.deepEqual(foeDamageAfterResists(3, 0, [{ resist: "reduce" }], [6]), { resisted: 1, taken: 1, minimum: false });
+  assert.deepEqual(foeDamageAfterResists(3, 0, [{ resist: "immune" }]), { resisted: 0, taken: 0, minimum: false });
 });
 
 test("rolled reductions come after halving and doubling", () => {
