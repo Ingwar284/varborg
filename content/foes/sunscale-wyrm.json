@@ -162,7 +162,15 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "emanation",
+          "size": 20,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -207,7 +215,15 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "emanation",
+          "size": 30,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -303,7 +319,15 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "line",
+          "size": 40,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

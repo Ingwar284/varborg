@@ -70,6 +70,14 @@
         "note": "or bring the structure down: everything within 30' takes 6d6 damage, you included if inside"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "cone",
+      "size": 15,
+      "range": 0,
+      "width": 5,
+      "affects": "foes",
+      "includesUser": false
+    }
   }
 }

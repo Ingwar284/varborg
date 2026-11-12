@@ -48,6 +48,14 @@
         "note": "until it succeeds on a Strength test (DR12): remove it by hand"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 20,
+      "range": 30,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

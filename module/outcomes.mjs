@@ -22,6 +22,7 @@ import { wantedOutcomes, outcomeDiff, buffEffectsFor, isMorphPower } from "./rul
 import { addTimedCondition, rollTimer, conditionEffect } from "./timers.mjs";
 import { addPersistentDamage, persistentEffects } from "./persistent.mjs";
 import { stepDownArmourDie } from "./rules/attack.mjs";
+import { removeSustainedAreas } from "./areas.mjs";
 
 const SYSTEM = "var-borg";
 const QUERY = "var-borg.outcome";
@@ -530,6 +531,8 @@ export async function endSustainedOutcomes(power) {
   const source = `${user.uuid}|${power.id}`;
   const i18n = game.i18n;
   const ended = [];
+  // Its area leaves the map (playtest feedback).
+  await removeSustainedAreas(source);
   // What the power gives its user when it ends (Beast Unleashed: Fatigued).
   for (const entry of (power.system.outcomeEffects ?? []).filter(other => other.when === "end")) {
     const result = await runOp({ op: "give", actorUuid: user.uuid, entry: foundry.utils.deepClone(entry), name: power.name, source, user: user.uuid });

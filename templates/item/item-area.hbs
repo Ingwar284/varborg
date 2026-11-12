@@ -1,0 +1,39 @@
+{{!-- The area of effect of a spell, scroll or power (playtest feedback). --}}
+<section class="var-borg-item-details var-borg-item-area">
+  <fieldset>
+    <legend>{{localize "VARBORG.Area.Legend"}}</legend>
+    <p class="hint">{{localize "VARBORG.Area.SheetHint"}}</p>
+    <div class="field-grid">
+      <label>
+        <span>{{localize "VARBORG.Area.ShapeLabel"}}</span>
+        <select name="system.area.shape">{{selectOptions areaShapes selected=system.area.shape localize=true}}</select>
+      </label>
+      {{#if system.area.shape}}
+      <label data-tooltip="{{localize 'VARBORG.Area.SizeHint'}}">
+        <span>{{localize "VARBORG.Area.Size"}}</span>
+        <input type="number" name="system.area.size" value="{{system.area.size}}" min="0" step="5">
+      </label>
+      {{#if areaIsBurst}}
+      <label data-tooltip="{{localize 'VARBORG.Area.RangeHint'}}">
+        <span>{{localize "VARBORG.Area.Range"}}</span>
+        <input type="number" name="system.area.range" value="{{system.area.range}}" min="0" step="5">
+      </label>
+      {{/if}}
+      {{#if areaHasWidth}}
+      <label>
+        <span>{{localize "VARBORG.Area.Width"}}</span>
+        <input type="number" name="system.area.width" value="{{system.area.width}}" min="5" step="5">
+      </label>
+      {{/if}}
+      <label>
+        <span>{{localize "VARBORG.Area.AffectsLabel"}}</span>
+        <select name="system.area.affects">{{selectOptions areaAffects selected=system.area.affects localize=true}}</select>
+      </label>
+      <label data-tooltip="{{localize 'VARBORG.Area.IncludesUserHint'}}">
+        <input type="checkbox" name="system.area.includesUser" {{checked system.area.includesUser}}>
+        <span>{{localize "VARBORG.Area.IncludesUser"}}</span>
+      </label>
+      {{/if}}
+    </div>
+  </fieldset>
+</section>

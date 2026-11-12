@@ -51,6 +51,7 @@ import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from ".
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
+import { aimArea, keepSustainedArea } from "../areas.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -266,6 +267,9 @@ async function rollPowerTest(actor, power) {
   const turn = turnState(actor);
   const use = checkPowerUse(actor, power, turn);
   if (!use) return;
+  // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
+  const aimed = await aimArea(actor, power);
+  if (!aimed.go) return;
   const target = [...game.user.targets][0]?.actor ?? null;
 
   // A power that adds weapon damage: a carried weapon, unarmed or improvised.
@@ -432,6 +436,8 @@ async function rollPowerTest(actor, power) {
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
+  // A Sustained power's area stays on the map until it ends.
+  await keepSustainedArea(actor, power, aimed.region);
   // A magic-themed power rolls for a Photonic Surge (Autodidactism, GAPS 208).
   if (options.magic) await runItemHooks(actor, "cast");
 }

@@ -94,6 +94,14 @@
         "note": ""
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 30,
+      "range": 60,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

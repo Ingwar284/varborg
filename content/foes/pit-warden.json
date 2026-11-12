@@ -303,7 +303,15 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "line",
+          "size": 40,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -399,7 +407,15 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "burst",
+          "size": 50,
+          "range": 100,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

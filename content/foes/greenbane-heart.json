@@ -207,7 +207,15 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "burst",
+          "size": 30,
+          "range": 60,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

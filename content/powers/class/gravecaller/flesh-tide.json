@@ -96,6 +96,14 @@
     "thrallDamage": "d6",
     "thrallMax": 3,
     "thrallSkip": 1,
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "line",
+      "size": 60,
+      "range": 0,
+      "width": 10,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

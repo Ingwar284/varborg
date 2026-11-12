@@ -9,6 +9,7 @@
  */
 
 import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS } from "../rules/powers.mjs";
+import { areaField } from "./area.mjs";
 import { POWER_RESOURCES, GLOOM_CONDITIONS, GLOOM_DEFENCE_DR } from "../rules/gloom.mjs";
 import { TIMER_KINDS } from "../rules/timers.mjs";
 import { endChoiceWith } from "../improving.mjs";
@@ -70,6 +71,8 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       // "additional d6" (GAPS 121). Only the dice: no traits, not an attack.
       addsWeaponDamage: new BooleanField({ initial: false }),
       sustained: new BooleanField({ initial: false }),
+      // Its area of effect, if it names one (playtest feedback).
+      area: areaField(),
       // A reaction (↻): used on any turn, with the reaction instead of actions (GAPS 184).
       reaction: new BooleanField({ initial: false }),
       // What each result does, when the power says. Empty uses the usual text.

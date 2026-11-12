@@ -48,6 +48,14 @@
         "note": "three or more thralls within 30' become a Colossus (6 HP each, up to 36, -d2 armour, 2d8 reach 10', Sweep ◈◈: 3d6 in a 10' cone); delete the thralls and make the Colossus by hand"
       }
     ],
-    "automation": "text"
+    "automation": "text",
+    "area": {
+      "shape": "cone",
+      "size": 10,
+      "range": 0,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

@@ -44,6 +44,14 @@
         "note": "allies within 30'"
       }
     ],
-    "automation": "auto"
+    "automation": "auto",
+    "area": {
+      "shape": "emanation",
+      "size": 30,
+      "range": 0,
+      "width": 5,
+      "affects": "allies",
+      "includesUser": false
+    }
   }
 }

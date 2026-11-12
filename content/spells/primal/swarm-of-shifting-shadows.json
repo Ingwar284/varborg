@@ -70,6 +70,14 @@
         "note": ""
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 10,
+      "range": 15,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

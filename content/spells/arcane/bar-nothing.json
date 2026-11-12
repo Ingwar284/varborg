@@ -70,6 +70,14 @@
         "note": "the wall closes around you"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "wall",
+      "size": 10,
+      "range": 0,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

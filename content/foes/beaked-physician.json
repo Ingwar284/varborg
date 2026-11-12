@@ -254,7 +254,15 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "burst",
+          "size": 15,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

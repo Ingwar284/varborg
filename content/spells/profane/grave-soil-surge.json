@@ -70,6 +70,14 @@
         "note": "one Grave Skeleton rises as a Pitiful foe that hates you and acts on your next turn"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 20,
+      "range": 60,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

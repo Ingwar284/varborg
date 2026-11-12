@@ -254,7 +254,15 @@
             "unlessDamaged": "",
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "emanation",
+          "size": 30,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -547,7 +555,15 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "emanation",
+          "size": 40,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

@@ -70,6 +70,14 @@
         "note": "at the start of each round, choose: Lightning (one creature in the area takes 4d6), Gale (all pushed 20') or Downpour (fire put out, difficult terrain)"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 30,
+      "range": 60,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

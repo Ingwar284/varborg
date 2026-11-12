@@ -345,7 +345,15 @@
             "loseArmour": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "emanation",
+          "size": 20,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

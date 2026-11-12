@@ -48,6 +48,14 @@
         "note": "foes that enter the area or start their turn in it take d6 and are Slowed until the end of their turn"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 15,
+      "range": 30,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

@@ -38,6 +38,7 @@ import { rollResists, resistLines, takenWithResists } from "../effects.mjs";
 import { useUpNextAttackMarks, outcomeInputs, gloomGivesText } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
+import { aimArea } from "../areas.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -76,6 +77,8 @@ export async function useGloomAbility(foe, power) {
     ui.notifications.warn(i18n.format(key, { name: power.name, foe: foe.name }));
     return;
   }
+  // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
+  if (!(await aimArea(foe, power)).go) return;
   if (use.gloom) {
     const left = getPools()[POOL.GLOOM];
     if (!canPay(left, use.gloom)) {

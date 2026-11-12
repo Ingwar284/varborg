@@ -253,7 +253,15 @@
         "kept": false,
         "usedOutside": false,
         "damageType": "fire",
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "emanation",
+          "size": 30,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -324,7 +332,15 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "emanation",
+          "size": 60,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

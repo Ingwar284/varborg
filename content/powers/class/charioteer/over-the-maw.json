@@ -92,6 +92,14 @@
         "note": "you come down nose-first: crash at fast speed, as on a driving test Ruin (the rig's Drive card)"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 10,
+      "range": 0,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

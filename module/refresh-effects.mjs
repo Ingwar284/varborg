@@ -18,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "effectsContent";
 
 /** The effects content of this version of the system. */
-export const EFFECTS_CONTENT = 31;
+export const EFFECTS_CONTENT = 32;
 
 /** Register the world setting that remembers the effects content. */
 export function registerEffectsRefresh() {
@@ -76,6 +76,9 @@ function changesFor(item, source) {
     changes["system.outcomeEffects"] = foundry.utils.deepClone(stored.outcomeEffects);
     changes["system.buffEffects"] = foundry.utils.deepClone(stored.buffEffects ?? []);
   }
+  // Its area of effect, when it has none (playtest feedback).
+  const area = source?.system?.area;
+  if (area?.shape && item.system?.area && !item.system.area.shape) changes["system.area"] = foundry.utils.deepClone(source.toObject().system.area);
   return Object.keys(changes).length ? changes : null;
 }
 

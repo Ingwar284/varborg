@@ -252,7 +252,15 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "partial"
+        "automation": "partial",
+        "area": {
+          "shape": "burst",
+          "size": 15,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

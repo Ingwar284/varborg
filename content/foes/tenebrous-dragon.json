@@ -207,7 +207,15 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "emanation",
+          "size": 15,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -253,7 +261,15 @@
         "kept": false,
         "usedOutside": false,
         "automation": "partial",
-        "damageType": "necrotic"
+        "damageType": "necrotic",
+        "area": {
+          "shape": "cone",
+          "size": 60,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {
@@ -298,7 +314,15 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "emanation",
+          "size": 60,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false
+        }
       }
     },
     {

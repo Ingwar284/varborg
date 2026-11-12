@@ -49,6 +49,14 @@
         "note": "undead, fiends and duskborn take d6 radiant damage when they enter the area or start their turn in it: Inflict it then"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 10,
+      "range": 30,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

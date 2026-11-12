@@ -12,6 +12,7 @@ import FeatData from "../data/feat.mjs";
 import { BELONGING_SOURCES, canBeImproving } from "../rules/feats.mjs";
 import PowerData from "../data/power.mjs";
 import SpellData from "../data/spell.mjs";
+import { AREA_SHAPE_LABELS, AREA_AFFECTS_LABELS } from "../data/area.mjs";
 import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
 import { castingDr } from "../rules/spells.mjs";
@@ -216,6 +217,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static PARTS = {
     header: { template: `${TEMPLATES}/feat-header.hbs` },
     details: { template: `${TEMPLATES}/power-details.hbs` },
+    area: { template: `${TEMPLATES}/item-area.hbs` },
     description: { template: `${TEMPLATES}/item-description.hbs` },
     outcomes: { template: OUTCOMES_TEMPLATE },
     buff: { template: EFFECTS_TEMPLATE },
@@ -230,6 +232,7 @@ export class PowerSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _preparePartContext(partId, context, options) {
     const part = await super._preparePartContext(partId, context, options);
     if (partId === "buff") return { ...part, effectsPart: part.buffPart ?? null };
+    if (partId === "area") return { ...part, ...areaContext(this.document.system) };
     return part;
   }
 
@@ -313,6 +316,7 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static PARTS = {
     header: { template: `${TEMPLATES}/origin-header.hbs` },
     details: { template: `${TEMPLATES}/spell-details.hbs` },
+    area: { template: `${TEMPLATES}/item-area.hbs` },
     description: { template: `${TEMPLATES}/item-description.hbs` },
     outcomes: { template: OUTCOMES_TEMPLATE },
     buff: { template: EFFECTS_TEMPLATE },
@@ -327,6 +331,7 @@ export class SpellSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _preparePartContext(partId, context, options) {
     const part = await super._preparePartContext(partId, context, options);
     if (partId === "buff") return { ...part, effectsPart: part.buffPart ?? null };
+    if (partId === "area") return { ...part, ...areaContext(this.document.system) };
     return part;
   }
 
@@ -455,4 +460,15 @@ export class AncestrySheet extends OriginSheet {}
 export class BackgroundSheet extends OriginSheet {
   static detailsTemplate = `${TEMPLATES}/background-details.hbs`;
   static hasEffects = false;
+}
+
+/** The Area part's choices and which boxes it shows (playtest feedback). */
+function areaContext(system) {
+  const shape = system.area?.shape ?? "";
+  return {
+    areaShapes: AREA_SHAPE_LABELS,
+    areaAffects: AREA_AFFECTS_LABELS,
+    areaIsBurst: shape === "burst",
+    areaHasWidth: shape === "line" || shape === "wall"
+  };
 }

@@ -94,6 +94,14 @@
         "note": "the chaff is you: a second level"
       }
     ],
-    "automation": "auto"
+    "automation": "auto",
+    "area": {
+      "shape": "emanation",
+      "size": 40,
+      "range": 0,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

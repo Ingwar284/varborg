@@ -71,6 +71,14 @@
         "note": "the bead bursts in your palm"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 20,
+      "range": 60,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

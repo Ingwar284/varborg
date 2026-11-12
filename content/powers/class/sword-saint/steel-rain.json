@@ -24,6 +24,14 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "automation": "auto"
+    "automation": "auto",
+    "area": {
+      "shape": "burst",
+      "size": 10,
+      "range": 0,
+      "width": 5,
+      "affects": "foes",
+      "includesUser": false
+    }
   }
 }

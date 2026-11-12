@@ -14,6 +14,7 @@ import { CarriedData } from "./equipment.mjs";
 import { effectFields } from "./effects.mjs";
 import { outcomeFields } from "./outcomes.mjs";
 import { DAMAGE_TYPES } from "../rules/equipment.mjs";
+import { areaField } from "./area.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -36,6 +37,8 @@ function spellFields() {
     // Its damage type, such as "fire" (step 50b3, GAPS 203). Blank: none.
     damageType: new StringField({ required: true, blank: true, choices: ["", ...DAMAGE_TYPES], initial: "" }),
     sustained: new BooleanField({ initial: false }),
+    // Its area of effect, if it names one (playtest feedback).
+    area: areaField(),
     // What each result does, when the spell says. Empty uses the usual text.
     outcomes: new SchemaField({
       triumph: text(),

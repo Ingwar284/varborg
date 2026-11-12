@@ -166,6 +166,14 @@
         "note": "the storm forms around you for one round"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 40,
+      "range": 100,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

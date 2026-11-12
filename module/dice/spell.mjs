@@ -52,6 +52,7 @@ import {
   checkPowerUse, payPowerEmber, spendPowerActions, emberNote, powerInputs, powerDamageDice
 } from "./power.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
+import { aimArea, keepSustainedArea } from "../areas.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -137,6 +138,9 @@ export async function castSpell(actor, spell) {
   const free = actor.system.statBonuses?.spellFree?.set > 0;
   const use = scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn, { free });
   if (!use) return;
+  // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
+  const aimed = await aimArea(actor, spell);
+  if (!aimed.go) return;
   const target = [...game.user.targets][0]?.actor ?? null;
 
   const facts = castingFacts(actor, spell);
@@ -327,6 +331,8 @@ export async function castSpell(actor, spell) {
     flags: fortuneFlags(data)
   });
 
+  // A Sustained spell's area stays on the map until it ends.
+  if (!scroll) await keepSustainedArea(actor, spell, aimed.region);
   // Each spell cast rolls for a Photonic Surge (Autodidactism, GAPS 208).
   await runItemHooks(actor, "cast");
   // Each wound spent tests Toughness, as a wound gained at 0 HP.

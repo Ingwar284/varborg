@@ -70,6 +70,14 @@
         "note": "the words keep reading you: roll on the Shadowblight table"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "emanation",
+      "size": 30,
+      "range": 0,
+      "width": 5,
+      "affects": "all",
+      "includesUser": false
+    }
   }
 }

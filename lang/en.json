@@ -3328,6 +3328,34 @@
       "Persistent": "{name} takes {formula} persistent poison damage."
     },
     "Area": {
+      "Legend": "Area of effect",
+      "NoToken": "{name} has no token on this scene: target the creatures in the area by hand.",
+      "Aim": "{name}: place the area and left-click. Right-click or Escape cancels.",
+      "NoneCaught": "The area catches no one.",
+      "TooFar": "Too far: {feet} ft, and the range is {range} ft.",
+      "SheetHint": "When it is used, the area is placed on the map and every creature it covers at least half of becomes a target (rules: Areas of Effect).",
+      "ShapeLabel": "Shape",
+      "Shape": {
+        "none": "None (targets)",
+        "emanation": "Emanation (from the user)",
+        "burst": "Burst (at a point)",
+        "cone": "Cone",
+        "line": "Line",
+        "wall": "Wall"
+      },
+      "Size": "Size (feet)",
+      "SizeHint": "The radius of an emanation or burst; the length of a cone, line or wall.",
+      "Range": "Range (feet)",
+      "RangeHint": "How far away the burst's point may be. 0 for no limit.",
+      "Width": "Width (feet)",
+      "AffectsLabel": "Affects",
+      "Affects": {
+        "all": "Everyone",
+        "foes": "Foes only",
+        "allies": "Allies only"
+      },
+      "IncludesUser": "User included",
+      "IncludesUserHint": "The user is caught in their own area (\"you included\").",
       "Hint": "An area: every targeted creature shares the one damage roll. Foes take it with Inflict damage (their armour soaks); characters and minions defend.",
       "DefendAs": "{name} defends ({damage} damage)",
       "SharedGloom": "Damage rolled once for every target: {rolls}."
