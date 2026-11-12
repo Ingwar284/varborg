@@ -53,6 +53,9 @@
       "ancestry": {},
       "background": {},
       "relic": {}
+    },
+    "RegionBehavior": {
+      "lasting": {}
     }
   },
   "packs": [

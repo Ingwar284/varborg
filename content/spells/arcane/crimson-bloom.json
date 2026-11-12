@@ -78,7 +78,27 @@
       "range": 60,
       "width": 5,
       "affects": "all",
-      "includesUser": false
+      "includesUser": false,
+      "lasting": {
+        "duration": "rounds",
+        "rounds": 3,
+        "difficult": true,
+        "effects": [
+          {
+            "trigger": "turnStart",
+            "kind": "damage",
+            "formula": "d4",
+            "damageType": "",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          }
+        ]
+      }
     }
   }
 }

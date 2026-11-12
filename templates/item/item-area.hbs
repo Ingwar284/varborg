@@ -36,4 +36,91 @@
       {{/if}}
     </div>
   </fieldset>
+  {{#if system.area.shape}}
+  <fieldset class="lasting-area">
+    <legend>{{localize "VARBORG.Area.Lasting.Legend"}}</legend>
+    <p class="hint">{{localize "VARBORG.Area.Lasting.Hint"}}</p>
+    <div class="field-grid">
+      <label>
+        <span>{{localize "VARBORG.Area.Lasting.DurationLabel"}}</span>
+        <select name="system.area.lasting.duration">{{selectOptions lastingPart.durations selected=system.area.lasting.duration localize=true}}</select>
+      </label>
+      {{#if lastingPart.isRounds}}
+      <label>
+        <span>{{localize "VARBORG.Area.Lasting.Rounds"}}</span>
+        <input type="number" name="system.area.lasting.rounds" value="{{system.area.lasting.rounds}}" min="1" step="1">
+      </label>
+      {{/if}}
+      <label>
+        <input type="checkbox" name="system.area.lasting.difficult" {{checked system.area.lasting.difficult}}>
+        <span>{{localize "VARBORG.Area.Lasting.Difficult"}}</span>
+      </label>
+    </div>
+    <h4>{{localize "VARBORG.Area.Lasting.Effects"}}</h4>
+    {{#each lastingPart.list}}
+    <div class="lasting-effect" data-lasting-index="{{index}}">
+      <div class="field-grid">
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.TriggerLabel"}}</span>
+          <select data-lasting-field="trigger">{{selectOptions @root.lastingPart.triggers selected=trigger localize=true}}</select>
+        </label>
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.KindLabel"}}</span>
+          <select data-lasting-field="kind">{{selectOptions @root.lastingPart.kinds selected=kind localize=true}}</select>
+        </label>
+        {{#if hasFormula}}
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.Formula"}}</span>
+          <input type="text" data-lasting-field="formula" value="{{formula}}" placeholder="d6">
+        </label>
+        {{/if}}
+        {{#if isDamage}}
+        <label>
+          <span>{{localize "VARBORG.Power.DamageType"}}</span>
+          <select data-lasting-field="damageType">{{selectOptions @root.lastingPart.damageTypes selected=damageType localize=true}}</select>
+        </label>
+        {{/if}}
+        {{#if isCondition}}
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.Kind.condition"}}</span>
+          <select data-lasting-field="condition">
+            <option value=""></option>
+            {{selectOptions @root.lastingPart.conditions selected=condition localize=true}}
+          </select>
+        </label>
+        {{/if}}
+        {{#if hasTimer}}
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.ConditionTime"}}</span>
+          <select data-lasting-field="duration.kind">{{selectOptions @root.lastingPart.timers selected=duration.kind localize=true}}</select>
+        </label>
+        {{#if isTimerRounds}}
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.Rounds"}}</span>
+          <input type="text" data-lasting-field="duration.rounds" value="{{duration.rounds}}">
+        </label>
+        {{/if}}
+        {{/if}}
+        <label>
+          <span>{{localize "VARBORG.Area.AffectsLabel"}}</span>
+          <select data-lasting-field="affects">{{selectOptions @root.lastingPart.affects selected=affects localize=true}}</select>
+        </label>
+      </div>
+      <div class="lasting-categories" data-tooltip="{{localize 'VARBORG.Area.Lasting.CategoriesHint'}}">
+        <span>{{localize "VARBORG.Area.Lasting.Categories"}}</span>
+        {{#each categoryList}}
+        <label><input type="checkbox" data-lasting-field="categories" value="{{key}}" {{checked on}}> {{localize label}}</label>
+        {{/each}}
+      </div>
+      <button type="button" class="icon-button" data-action="removeLastingEffect"
+              data-tooltip="{{localize 'VARBORG.Area.Lasting.Remove'}}" aria-label="{{localize 'VARBORG.Area.Lasting.Remove'}}">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+    </div>
+    {{/each}}
+    <button type="button" class="text-button" data-action="addLastingEffect">
+      <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Area.Lasting.Add"}}
+    </button>
+  </fieldset>
+  {{/if}}
 </section>

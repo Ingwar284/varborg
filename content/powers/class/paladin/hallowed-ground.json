@@ -56,7 +56,30 @@
       "range": 30,
       "width": 5,
       "affects": "all",
-      "includesUser": false
+      "includesUser": false,
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": [
+          {
+            "trigger": "enterOrStart",
+            "kind": "damage",
+            "formula": "d6",
+            "damageType": "radiant",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": [
+              "duskborn",
+              "fiend"
+            ]
+          }
+        ]
+      }
     }
   }
 }

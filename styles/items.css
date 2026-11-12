@@ -347,3 +347,25 @@
   color: var(--vb-ink-soft);
   opacity: 1;
 }
+
+/* Lasting areas (GAPS 284): each effect row with its own border. */
+.var-borg.item .lasting-effect {
+  position: relative;
+  border: 1px solid var(--vb-ink-soft);
+  padding: 0.3rem 2rem 0.3rem 0.4rem;
+  margin: 0.3rem 0;
+}
+
+.var-borg.item .lasting-effect > button[data-action="removeLastingEffect"] {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+}
+
+.var-borg.item .lasting-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+  font-size: 0.9em;
+  margin-top: 0.2rem;
+}

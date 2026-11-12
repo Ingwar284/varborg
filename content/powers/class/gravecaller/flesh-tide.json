@@ -103,7 +103,13 @@
       "range": 0,
       "width": 10,
       "affects": "all",
-      "includesUser": false
+      "includesUser": false,
+      "lasting": {
+        "duration": "encounter",
+        "rounds": 1,
+        "difficult": true,
+        "effects": []
+      }
     }
   }
 }

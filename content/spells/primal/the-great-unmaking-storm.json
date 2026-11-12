@@ -173,7 +173,66 @@
       "range": 100,
       "width": 5,
       "affects": "all",
-      "includesUser": false
+      "includesUser": false,
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": [
+          {
+            "trigger": "userTurn",
+            "kind": "damage",
+            "formula": "4d6",
+            "damageType": "",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          },
+          {
+            "trigger": "whileInside",
+            "kind": "condition",
+            "formula": "",
+            "damageType": "",
+            "condition": "blinded",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          },
+          {
+            "trigger": "whileInside",
+            "kind": "condition",
+            "formula": "",
+            "damageType": "",
+            "condition": "deafened",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          },
+          {
+            "trigger": "whileInside",
+            "kind": "condition",
+            "formula": "",
+            "damageType": "",
+            "condition": "slowed",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          }
+        ]
+      }
     }
   }
 }

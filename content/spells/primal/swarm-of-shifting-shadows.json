@@ -77,7 +77,40 @@
       "range": 15,
       "width": 5,
       "affects": "all",
-      "includesUser": false
+      "includesUser": false,
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": [
+          {
+            "trigger": "turnStart",
+            "kind": "damage",
+            "formula": "d6",
+            "damageType": "",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          },
+          {
+            "trigger": "whileInside",
+            "kind": "condition",
+            "formula": "",
+            "damageType": "",
+            "condition": "blinded",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": []
+          }
+        ]
+      }
     }
   }
 }

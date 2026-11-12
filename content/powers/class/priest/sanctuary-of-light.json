@@ -116,7 +116,27 @@
       "range": 0,
       "width": 5,
       "affects": "all",
-      "includesUser": false
+      "includesUser": false,
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": [
+          {
+            "trigger": "roundStart",
+            "kind": "heal",
+            "formula": "d8",
+            "damageType": "",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "allies",
+            "categories": []
+          }
+        ]
+      }
     }
   }
 }

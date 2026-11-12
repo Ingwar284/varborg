@@ -52,7 +52,7 @@ import {
   checkPowerUse, payPowerEmber, spendPowerActions, emberNote, powerInputs, powerDamageDice
 } from "./power.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
-import { aimArea, keepSustainedArea } from "../areas.mjs";
+import { aimArea, keepArea } from "../areas.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -331,8 +331,8 @@ export async function castSpell(actor, spell) {
     flags: fortuneFlags(data)
   });
 
-  // A Sustained spell's area stays on the map until it ends.
-  if (!scroll) await keepSustainedArea(actor, spell, aimed.region);
+  // A Sustained or lasting spell's area stays on the map (lingering areas).
+  await keepArea(actor, spell, aimed.region, data.state.tier);
   // Each spell cast rolls for a Photonic Surge (Autodidactism, GAPS 208).
   await runItemHooks(actor, "cast");
   // Each wound spent tests Toughness, as a wound gained at 0 HP.

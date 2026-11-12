@@ -34,6 +34,8 @@ test("every pack is in the VÅR BORG compendium folder", () => {
 
 test("every Actor and Item type in system.json has a pack, or is deliberately unpacked", () => {
   for (const [documentName, types] of Object.entries(manifest.documentTypes)) {
+    // Region behaviours (lasting areas) live on the map, never in a pack.
+    if (!["Actor", "Item"].includes(documentName)) continue;
     for (const type of Object.keys(types)) {
       const packed = PACKS.some(pack => pack.documentName === documentName && pack.types.includes(type));
       assert.ok(packed || UNPACKED_TYPES.includes(type), `${documentName} type "${type}" has no pack`);

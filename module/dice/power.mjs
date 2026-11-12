@@ -51,7 +51,7 @@ import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from ".
 import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
-import { aimArea, keepSustainedArea } from "../areas.mjs";
+import { aimArea, keepArea } from "../areas.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -436,8 +436,8 @@ async function rollPowerTest(actor, power) {
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
-  // A Sustained power's area stays on the map until it ends.
-  await keepSustainedArea(actor, power, aimed.region);
+  // A Sustained or lasting power's area stays on the map (lingering areas).
+  await keepArea(actor, power, aimed.region, data.state.tier);
   // A magic-themed power rolls for a Photonic Surge (Autodidactism, GAPS 208).
   if (options.magic) await runItemHooks(actor, "cast");
 }

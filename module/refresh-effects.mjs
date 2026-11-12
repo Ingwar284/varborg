@@ -18,7 +18,7 @@ const SYSTEM = "var-borg";
 const SETTING = "effectsContent";
 
 /** The effects content of this version of the system. */
-export const EFFECTS_CONTENT = 32;
+export const EFFECTS_CONTENT = 33;
 
 /** Register the world setting that remembers the effects content. */
 export function registerEffectsRefresh() {
@@ -45,6 +45,11 @@ function cachedLoader() {
     if (!cache.has(uuid)) cache.set(uuid, await fromUuid(uuid).catch(() => null));
     return cache.get(uuid);
   };
+}
+
+/** Whether an area lasts in any way: a duration, difficult terrain or effects. */
+function hasLasting(lasting) {
+  return Boolean(lasting?.duration || lasting?.difficult || lasting?.effects?.length);
 }
 
 /** Whether an item has neither effects nor a status of its own. */
@@ -79,6 +84,10 @@ function changesFor(item, source) {
   // Its area of effect, when it has none (playtest feedback).
   const area = source?.system?.area;
   if (area?.shape && item.system?.area && !item.system.area.shape) changes["system.area"] = foundry.utils.deepClone(source.toObject().system.area);
+  // Its lasting area (GAPS 284), when it has an area but nothing lasting set.
+  else if (area?.shape && item.system?.area?.shape && !hasLasting(item.system.area.lasting) && hasLasting(area.lasting)) {
+    changes["system.area.lasting"] = foundry.utils.deepClone(source.toObject().system.area.lasting);
+  }
   return Object.keys(changes).length ? changes : null;
 }
 

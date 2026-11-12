@@ -13,13 +13,16 @@
  *    (foes only, allies only, the user only when included), becomes a
  *    target. The usual card follows: one roll for all, one button each.
  * 3. An instant area leaves nothing on the map. A Sustained one stays as a
- *    Region (an emanation moves with its user) until the power ends.
+ *    Region (an emanation moves with its user) until the power ends; a
+ *    lasting one (module/lasting.mjs) stays for its rounds or encounter.
  *
  * A user with no token on the scene targets by hand, as before.
  */
 
 import { CONE_ANGLE, isCaught, areaAffects } from "./rules/areas.mjs";
 import { tokenDistance } from "./rules/movement.mjs";
+import { areaStays, endsAtRound } from "./rules/lasting.mjs";
+import { LASTING_TYPE, ENDS_FLAG } from "./lasting.mjs";
 
 const SYSTEM = "var-borg";
 /** The flag on a Region that a Sustained power left: "actorUuid|itemId". */
@@ -186,20 +189,47 @@ export function caughtTokens(region, user, area) {
 }
 
 /**
- * A Sustained power took effect: its area stays on the map. An emanation
- * is attached to its user's token, so it moves with them.
+ * After the card: the area stays on the map while the power is Sustained,
+ * or for its rounds or encounter on a Triumph or Success (lingering
+ * areas, GAPS 284). An emanation is attached to its user's token, so it
+ * moves with them. A lasting area gets its difficult terrain and effects.
  * @param {Actor} actor
  * @param {Item} item
  * @param {object|null} region  From aimArea.
+ * @param {string} tier         The card's result.
  */
-export async function keepSustainedArea(actor, item, region) {
-  if (!region || !item.system.sustaining) return;
+export async function keepArea(actor, item, region, tier) {
+  if (!region) return;
+  const area = item.system.area ?? {};
+  const lasting = area.lasting ?? {};
+  const sustaining = Boolean(item.system.sustaining);
+  if (!areaStays(lasting, sustaining, tier)) return;
   const { _id, _tokenId, ...data } = region;
-  data.flags = { ...(data.flags ?? {}), [SYSTEM]: { [SOURCE_FLAG]: `${actor.uuid}|${item.id}` } };
-  if (item.system.area?.shape === "emanation" && _tokenId) {
+  const combat = game.combat?.started ? game.combat : null;
+  const flags = {};
+  if (sustaining) flags[SOURCE_FLAG] = `${actor.uuid}|${item.id}`;
+  else if (lasting.duration === "rounds" || lasting.duration === "encounter") {
+    flags[ENDS_FLAG] = { combatId: combat?.id ?? "", endsAtRound: endsAtRound(lasting, combat?.round ?? 1), encounter: lasting.duration === "encounter" };
+  }
+  data.flags = { ...(data.flags ?? {}), [SYSTEM]: flags };
+  if (area.shape === "emanation" && _tokenId) {
     data.attachment = { token: _tokenId };
     data.hidden = Boolean(canvas.scene.tokens.get(_tokenId)?.hidden);
   }
+  const behaviors = [];
+  // Difficult terrain: walking, crawling, climbing and swimming cost double;
+  // flying is left for the Dark Master to decide on the Region (GAPS 278).
+  if (lasting.difficult) {
+    behaviors.push({ type: "modifyMovementCost", name: game.i18n.localize("VARBORG.Area.Lasting.Difficult"),
+      system: { difficulties: { walk: 2, crawl: 2, climb: 2, swim: 2 } } });
+  }
+  if (lasting.effects?.length) {
+    behaviors.push({ type: LASTING_TYPE, name: item.name, system: {
+      effects: foundry.utils.deepClone(item.toObject().system.area.lasting.effects),
+      userUuid: actor.uuid, userTokenId: _tokenId ?? "", name: item.name, damageType: item.system.damageType ?? ""
+    } });
+  }
+  data.behaviors = behaviors;
   try {
     await canvas.scene.createEmbeddedDocuments("Region", [data]);
   } catch (error) {

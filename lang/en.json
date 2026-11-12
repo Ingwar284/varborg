@@ -1,5 +1,8 @@
 {
   "TYPES": {
+    "RegionBehavior": {
+      "lasting": "Lasting area (VÅR BORG)"
+    },
     "Actor": {
       "character": "Character",
       "foe": "Foe",
@@ -3329,6 +3332,47 @@
     },
     "Area": {
       "Legend": "Area of effect",
+      "Lasting": {
+        "Legend": "Lasting area",
+        "Hint": "On a Triumph or Success the area stays on the map: while Sustained, for some rounds, or until the encounter ends. A creature is affected when it enters or starts its turn there, no more than once per turn, unless an effect says otherwise. Foes take damage with Inflict damage; characters defend at Agility DR12. Armour soaks it.",
+        "DurationLabel": "Lasts",
+        "Duration": {
+          "none": "While Sustained (or not at all)",
+          "rounds": "For a number of rounds",
+          "encounter": "Until the encounter ends"
+        },
+        "Rounds": "Rounds",
+        "Difficult": "Difficult terrain",
+        "Effects": "Effects",
+        "Add": "Add an effect",
+        "Remove": "Remove this effect",
+        "TriggerLabel": "When",
+        "Trigger": {
+          "enterOrStart": "Enters or starts its turn inside",
+          "enter": "Enters",
+          "turnStart": "Starts its turn inside",
+          "userTurn": "Everyone inside, at the start of the user's turns",
+          "roundStart": "Everyone inside, at the start of each round",
+          "whileInside": "While inside"
+        },
+        "KindLabel": "Does",
+        "Kind": {
+          "damage": "Damage",
+          "condition": "Condition",
+          "heal": "Healing"
+        },
+        "Formula": "Dice",
+        "ConditionTime": "For",
+        "Categories": "Only foes that are",
+        "CategoriesHint": "Tick none for any creature.",
+        "Caught": "{name} is caught in {area}.",
+        "Damage": "{name} is caught in {area}: {formula} damage, {damage}. Defend (Agility DR12); armour soaks it.",
+        "Healed": "{name} regains {amount} HP in {area} ({formula}).",
+        "WhileInsideNote": "Lasts while the creature is inside the area.",
+        "Behavior": {
+          "FIELDS": {}
+        }
+      },
       "NoToken": "{name} has no token on this scene: target the creatures in the area by hand.",
       "Aim": "{name}: place the area and left-click. Right-click or Escape cancels.",
       "NoneCaught": "The area catches no one.",
