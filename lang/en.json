@@ -3363,8 +3363,11 @@
         "Kind": {
           "damage": "Damage",
           "condition": "Condition",
-          "heal": "Healing"
+          "heal": "Healing",
+          "buff": "The power's buff"
         },
+        "OptionLabel": "Option",
+        "AnyOption": "Any option",
         "Formula": "Dice",
         "ConditionTime": "For",
         "Categories": "Only foes that are",

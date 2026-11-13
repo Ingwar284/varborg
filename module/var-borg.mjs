@@ -41,6 +41,7 @@ import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerPoisons } from "./poison.mjs";
 import { registerLocalLinks } from "./local-links.mjs";
 import { registerLasting } from "./lasting.mjs";
+import { registerAreaCleanup } from "./areas.mjs";
 import { registerConditions } from "./conditions.mjs";
 import { registerDarkness } from "./darkness.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
@@ -179,6 +180,8 @@ Hooks.once("init", () => {
   registerPoisons();
   // Lasting areas: their Region behaviour and the hooks that end them (GAPS 284).
   registerLasting();
+  // A deleted power or actor takes its kept areas with it.
+  registerAreaCleanup();
   // The − and + buttons in roll dialogs.
   registerDialogControls();
   // Fortune buttons on test, attack, defence and gloom test cards (rules 3.9).

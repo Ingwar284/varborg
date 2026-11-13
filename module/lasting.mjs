@@ -55,7 +55,10 @@ export function registerLasting() {
         userUuid: new fields.StringField({ required: true, blank: true, initial: "" }),
         userTokenId: new fields.StringField({ required: true, blank: true, initial: "" }),
         name: new fields.StringField({ required: true, blank: true, initial: "" }),
-        damageType: new fields.StringField({ required: true, blank: true, initial: "" })
+        damageType: new fields.StringField({ required: true, blank: true, initial: "" }),
+        // The option chosen (Songs of power: Allegro), and the power's buff for it.
+        option: new fields.StringField({ required: true, blank: true, initial: "" }),
+        buffEffects: new fields.ArrayField(new fields.ObjectField())
       };
     }
 
@@ -63,8 +66,8 @@ export function registerLasting() {
       [CONST.REGION_EVENTS.TOKEN_ENTER]: async function (event) { await onTokenEvent(this, event, "enter"); },
       [CONST.REGION_EVENTS.TOKEN_TURN_START]: async function (event) { await onTokenEvent(this, event, "turnStart"); },
       [CONST.REGION_EVENTS.TOKEN_ROUND_START]: async function (event) { await onTokenEvent(this, event, "roundStart"); },
-      [CONST.REGION_EVENTS.TOKEN_EXIT]: async function (event) { await onTokenExit(this, event); },
-      [CONST.REGION_EVENTS.BEHAVIOR_ACTIVATED]: async function () { await onActivated(this); }
+      // Foundry also sends enter and exit when the area itself appears, moves or goes.
+      [CONST.REGION_EVENTS.TOKEN_EXIT]: async function (event) { await onTokenExit(this, event); }
     };
   }
   CONFIG.RegionBehavior.dataModels[LASTING_TYPE] = LastingAreaBehavior;
@@ -87,7 +90,9 @@ async function onTokenEvent(behavior, event, name) {
   const region = behavior.parent.region;
   const triggers = triggersFor(name);
   const effects = behavior.effects.filter(effect => triggers.includes(effect.trigger));
-  if (name === "enter") await giveWhileInside(behavior, token);
+  // While inside: given on entering, and again at the start of each turn
+  // inside in case it was taken away meanwhile.
+  if (name === "enter" || name === "turnStart") await giveWhileInside(behavior, token);
   if (!effects.length) return;
   // Entering and starting a turn: no more than once per turn (rules: Lingering areas).
   if (name !== "roundStart") {
@@ -104,12 +109,6 @@ async function onTokenExit(behavior, event) {
   if (!isRunner()) return;
   const token = event.data?.token;
   if (token?.actor) await takeWhileInside(token.actor, behavior.parent.region.uuid);
-}
-
-/** The area was made: creatures already inside get its while-inside conditions. */
-async function onActivated(behavior) {
-  if (!isRunner()) return;
-  for (const token of behavior.parent.region.tokens) await giveWhileInside(behavior, token);
 }
 
 /**
@@ -215,22 +214,39 @@ async function applyEffect(behavior, token, effect) {
   });
 }
 
-/** Give a creature the area's while-inside conditions it does not already have. */
+/**
+ * Give a creature the area's while-inside conditions it does not already
+ * have, and the power's buff (Songs of power: Defying Hymn).
+ */
 async function giveWhileInside(behavior, token) {
   const actor = token.actor;
   if (!actor) return;
   const region = behavior.parent.region;
-  const ids = behavior.effects
-    .filter(effect => effect.trigger === "whileInside" && effect.kind === "condition" && effect.condition)
-    .filter(effect => lastingReaches(effect, relation(behavior, token)))
+  const inside = behavior.effects
+    .filter(effect => effect.trigger === "whileInside")
+    .filter(effect => lastingReaches(effect, relation(behavior, token)));
+  const i18n = game.i18n;
+  const from = behavior.option ? i18n.format("VARBORG.Outcome.SourceOption", { power: behavior.name, option: behavior.option }) : behavior.name;
+  // The buff: a temporary feat with the power's buff effects, as the outcome buff is.
+  const hasBuff = actor.items.some(item => item.getFlag(SYSTEM, INSIDE_FLAG) === region.uuid);
+  if (!hasBuff && inside.some(effect => effect.kind === "buff") && behavior.buffEffects?.length) {
+    await actor.createEmbeddedDocuments("Item", [{
+      name: i18n.format("VARBORG.Outcome.BuffName", { power: from }),
+      type: "feat",
+      img: "icons/svg/aura.svg",
+      system: { description: i18n.localize("VARBORG.Area.Lasting.WhileInsideNote"), source: "general", effects: foundry.utils.deepClone(behavior.buffEffects), automation: "auto" },
+      flags: { [SYSTEM]: { [INSIDE_FLAG]: region.uuid } }
+    }]);
+  }
+  const ids = inside
+    .filter(effect => effect.kind === "condition" && effect.condition)
     .map(effect => effect.condition)
     .filter(id => !actor.statuses.has(id));
   if (!ids.length) return;
-  const i18n = game.i18n;
   await actor.createEmbeddedDocuments("ActiveEffect", [...new Set(ids)].map(id => {
     const status = CONFIG.statusEffects.find(entry => entry.id === id);
     return {
-      name: i18n.format("VARBORG.Outcome.ConditionFrom", { condition: i18n.localize(`VARBORG.Condition.${id}`), from: behavior.name || region.name }),
+      name: i18n.format("VARBORG.Outcome.ConditionFrom", { condition: i18n.localize(`VARBORG.Condition.${id}`), from: from || region.name }),
       img: status?.img,
       statuses: [id],
       description: i18n.localize("VARBORG.Area.Lasting.WhileInsideNote"),
@@ -239,10 +255,22 @@ async function giveWhileInside(behavior, token) {
   }));
 }
 
-/** End the conditions an area gave a creature while it was inside. */
+/** End the conditions and buff an area gave a creature while it was inside. */
 async function takeWhileInside(actor, regionUuid) {
   const ids = actor.effects.filter(effect => effect.getFlag(SYSTEM, INSIDE_FLAG) === regionUuid).map(effect => effect.id);
   if (ids.length) await actor.deleteEmbeddedDocuments("ActiveEffect", ids);
+  const items = actor.items.filter(item => item.getFlag(SYSTEM, INSIDE_FLAG) === regionUuid).map(item => item.id);
+  if (items.length) await actor.deleteEmbeddedDocuments("Item", items);
+}
+
+/**
+ * Whether a creature holds a condition only because it stands in a lasting
+ * area. Such a Quickened or Slowed works at the start of each turn inside
+ * and does not end after one turn (module/combat.mjs).
+ */
+export function heldWhileInside(actor, id) {
+  const effects = actor?.effects?.filter(effect => effect.statuses.has(id)) ?? [];
+  return effects.length > 0 && effects.every(effect => effect.getFlag(SYSTEM, INSIDE_FLAG));
 }
 
 /** A short chat line, with any rolls. */

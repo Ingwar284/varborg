@@ -21,7 +21,8 @@
 
 import { CONE_ANGLE, isCaught, areaAffects, hasOptionAreas, areaForOption } from "./rules/areas.mjs";
 import { tokenDistance } from "./rules/movement.mjs";
-import { areaStays, endsAtRound } from "./rules/lasting.mjs";
+import { areaStays, endsAtRound, effectsForOption } from "./rules/lasting.mjs";
+import { buffEffectsFor } from "./rules/outcomes.mjs";
 import { LASTING_TYPE, ENDS_FLAG } from "./lasting.mjs";
 
 const SYSTEM = "var-borg";
@@ -141,7 +142,7 @@ export async function aimArea(actor, item, { option } = {}) {
   const caught = caughtTokens(doc, token, area);
   canvas.tokens.setTargets(caught.map(other => other.id), { mode: "replace" });
   if (!caught.length) ui.notifications.info(i18n.localize("VARBORG.Area.NoneCaught"));
-  return { go: true, region: { ...doc.toObject(), _tokenId: token.id, _area: area } };
+  return { go: true, region: { ...doc.toObject(), _tokenId: token.id, _area: area, _option: option ?? "" } };
 }
 
 /** onMove for a cone or line: it starts at the user and points at the mouse. */
@@ -216,7 +217,8 @@ export async function keepArea(actor, item, region, tier) {
   const lasting = area.lasting ?? {};
   const sustaining = Boolean(item.system.sustaining);
   if (!areaStays(lasting, sustaining, tier)) return;
-  const { _id, _tokenId, _area, ...data } = region;
+  // A Sustained power's area is kept even with nothing lasting, so it can be seen and moves with an emanation.
+  const { _id, _tokenId, _area, _option = "", ...data } = region;
   const combat = game.combat?.started ? game.combat : null;
   const flags = {};
   if (sustaining) flags[SOURCE_FLAG] = `${actor.uuid}|${item.id}`;
@@ -235,10 +237,14 @@ export async function keepArea(actor, item, region, tier) {
     behaviors.push({ type: "modifyMovementCost", name: game.i18n.localize("VARBORG.Area.Lasting.Difficult"),
       system: { difficulties: { walk: 2, crawl: 2, climb: 2, swim: 2 } } });
   }
-  if (lasting.effects?.length) {
+  // Only the chosen option's effects (Songs of power: Allegro), and its buff.
+  const effects = effectsForOption(foundry.utils.deepClone(item.toObject().system.area?.lasting?.effects ?? []), _option);
+  if (effects.length) {
     behaviors.push({ type: LASTING_TYPE, name: item.name, system: {
-      effects: foundry.utils.deepClone(item.toObject().system.area.lasting.effects),
-      userUuid: actor.uuid, userTokenId: _tokenId ?? "", name: item.name, damageType: item.system.damageType ?? ""
+      effects,
+      userUuid: actor.uuid, userTokenId: _tokenId ?? "", name: item.name, damageType: item.system.damageType ?? "",
+      option: _option,
+      buffEffects: buffEffectsFor(foundry.utils.deepClone(item.toObject().system.buffEffects ?? []), _option)
     } });
   }
   data.behaviors = behaviors;
@@ -256,6 +262,31 @@ export async function keepArea(actor, item, region, tier) {
 export async function removeSustainedAreas(source) {
   for (const scene of game.scenes) {
     const ids = scene.regions.filter(region => region.getFlag(SYSTEM, SOURCE_FLAG) === source && region.canUserModify(game.user, "delete"))
+      .map(region => region.id);
+    if (ids.length) await scene.deleteEmbeddedDocuments("Region", ids);
+  }
+}
+
+/**
+ * A power's kept area must not outlive it: when the power is deleted (a
+ * character rolled anew, an item removed by hand) or its actor is, its
+ * areas leave the map too. Done by the active Dark Master's client.
+ * Called once at init.
+ */
+export function registerAreaCleanup() {
+  const runner = () => game.users.activeGM?.isSelf ?? false;
+  Hooks.on("deleteItem", item => {
+    if (runner() && item.parent) removeSustainedAreas(`${item.parent.uuid}|${item.id}`);
+  });
+  Hooks.on("deleteActor", actor => {
+    if (runner()) removeAreasOfActor(actor.uuid);
+  });
+}
+
+/** Remove every kept area an actor's powers left, on every scene. */
+async function removeAreasOfActor(actorUuid) {
+  for (const scene of game.scenes) {
+    const ids = scene.regions.filter(region => String(region.getFlag(SYSTEM, SOURCE_FLAG) ?? "").startsWith(`${actorUuid}|`))
       .map(region => region.id);
     if (ids.length) await scene.deleteEmbeddedDocuments("Region", ids);
   }

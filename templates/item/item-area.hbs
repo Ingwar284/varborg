@@ -140,6 +140,12 @@
           <span>{{localize "VARBORG.Area.AffectsLabel"}}</span>
           <select data-lasting-field="affects">{{selectOptions @root.lastingPart.affects selected=affects localize=true}}</select>
         </label>
+        {{#if @root.lastingPart.options}}
+        <label>
+          <span>{{localize "VARBORG.Area.Lasting.OptionLabel"}}</span>
+          <select data-lasting-field="option">{{selectOptions @root.lastingPart.options selected=option localize=true}}</select>
+        </label>
+        {{/if}}
       </div>
       <div class="lasting-categories" data-tooltip="{{localize 'VARBORG.Area.Lasting.CategoriesHint'}}">
         <span>{{localize "VARBORG.Area.Lasting.Categories"}}</span>

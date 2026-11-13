@@ -39,6 +39,10 @@
  *
  * Version 10 (playtest feedback): every actor but a chest, and every token
  * placed on a scene, gets vision (range 0: it sees only lit areas).
+ *
+ * Version 11 (playtest feedback): Songs of power works through its area
+ * (each song given while inside, taken away on leaving). Copies in the
+ * world take the compendium's outcome entries and area.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -53,7 +57,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 10;
+export const DATA_VERSION = 11;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -85,6 +89,7 @@ export async function migrateWorld() {
   if (version < 8) await clearBloodlineChoices();
   if (version < 9) await cleanDescriptions();
   if (version < 10) await turnOnVision();
+  if (version < 11) await refreshSongsOfPower();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -116,6 +121,16 @@ async function updateItems(types, change) {
     const updates = updatesFor(actor.items);
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
   }
+}
+
+/** Version 11: Songs of power takes the compendium's outcome entries and area. */
+async function refreshSongsOfPower() {
+  const source = await fromUuid("Compendium.var-borg.powers.Item.vbCPBard00000000").catch(() => null);
+  if (!source) return;
+  const stored = source.toObject().system;
+  return updateItems(["power"], item => item.name === source.name
+    ? { "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.area": foundry.utils.deepClone(stored.area) }
+    : null);
 }
 
 /** Version 10: vision for actors' tokens and placed tokens, chests aside. */

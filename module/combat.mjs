@@ -39,6 +39,7 @@ import { withStat } from "./rules/item-effects.mjs";
 import { runItemHooks, initiativeKeep, endAdrenaline, DAMAGED_BY_FLAG } from "./effects.mjs";
 import { runAuras } from "./aura.mjs";
 import { restoreLoweredArmour } from "./outcomes.mjs";
+import { heldWhileInside } from "./lasting.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -103,8 +104,9 @@ export class VarBorgCombat extends foundry.documents.Combat {
     const base = minion ?? { actions: ACTIONS_PER_TURN, reactions: REACTIONS_PER_TURN };
     let { actions, reactions, ended: worked } = turnAllowance(conditions, base.actions, base.reactions);
     if (minion && !minion.commanded) actions = reactions = 0;
-    // Only the conditions the actor really has are taken off.
-    const ended = worked.filter(id => own.has(id));
+    // Only the conditions the actor really has are taken off, and not those
+    // it holds while inside a lasting area (Songs of power).
+    const ended = worked.filter(id => own.has(id) && !heldWhileInside(actor, id));
     await combatant.update({
       [`flags.${SYSTEM}`]: { actions, reactions, maxActions: actions, maxReactions: reactions, attacks: 0, moveLeft: 0 }
     });

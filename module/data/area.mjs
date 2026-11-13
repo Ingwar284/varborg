@@ -32,7 +32,9 @@ function lastingEffectField() {
     }),
     affects: new StringField({ required: true, choices: AREA_AFFECTS, initial: "all" }),
     // Only foes of these categories ("Undead, fiends and duskborn"); empty for any.
-    categories: new ArrayField(new StringField({ required: true, choices: FOE_CATEGORIES.filter(Boolean) }))
+    categories: new ArrayField(new StringField({ required: true, choices: FOE_CATEGORIES.filter(Boolean) })),
+    // Only when this option was chosen (Songs of power: Allegro); blank for always.
+    option: new StringField({ required: true, initial: "" })
   });
 }
 

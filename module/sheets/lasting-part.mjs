@@ -19,6 +19,7 @@ const labels = (keys, prefix) => Object.fromEntries(keys.map(key => [key, `VARBO
 export function lastingContext(system, damageTypes) {
   const lasting = system.area?.lasting;
   if (!lasting) return {};
+  const names = outcomeOptions(system.outcomeEffects ?? []);
   return {
     lastingPart: {
       durations: LASTING_DURATION_LABELS,
@@ -29,11 +30,13 @@ export function lastingContext(system, damageTypes) {
       conditions: labels(CONDITIONS, "Condition"),
       timers: { "": "VARBORG.Timer.None", ...labels(TIMER_KINDS, "Timer.Kind") },
       damageTypes,
+      // An effect can belong to one option (Songs of power: Allegro).
+      options: names.length ? { "": "VARBORG.Area.Lasting.AnyOption", ...Object.fromEntries(names.map(name => [name, name])) } : null,
       list: lasting.effects.map((effect, index) => ({
         ...effect,
         index,
         isCondition: effect.kind === "condition",
-        hasFormula: effect.kind !== "condition",
+        hasFormula: effect.kind === "damage" || effect.kind === "heal",
         isDamage: effect.kind === "damage",
         hasTimer: effect.kind === "condition" && effect.trigger !== "whileInside",
         isTimerRounds: ["rounds", "escapeStart", "escapeEnd"].includes(effect.duration?.kind),

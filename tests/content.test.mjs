@@ -632,6 +632,9 @@ test("what powers and spells give their targets has no problems (step 51c)", asy
   for (const item of items) {
     for (const entry of item.system.outcomeEffects ?? []) assert.deepEqual(outcomeProblems(entry), [], item.name);
     for (const effect of item.system.buffEffects ?? []) assert.deepEqual(effectProblems(effect), [], item.name);
-    if ((item.system.buffEffects ?? []).length) assert.ok(item.system.outcomeEffects.some(entry => entry.kind === "buff"), `${item.name}: buff effects but no buff`);
+    // A buff is given by an outcome, or while inside a lasting area (Songs of power).
+    const usesBuff = (item.system.outcomeEffects ?? []).some(entry => entry.kind === "buff")
+      || (item.system.area?.lasting?.effects ?? []).some(effect => effect.kind === "buff");
+    if ((item.system.buffEffects ?? []).length) assert.ok(usesBuff, `${item.name}: buff effects but no buff`);
   }
 });

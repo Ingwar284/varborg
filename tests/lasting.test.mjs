@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { areaStays, endsAtRound, lastingReaches, oncePerTurn, triggersFor } from "../module/rules/lasting.mjs";
+import { areaStays, endsAtRound, lastingReaches, oncePerTurn, triggersFor, effectsForOption } from "../module/rules/lasting.mjs";
 
 test("an area stays while sustained, or for its time on a Triumph or Success", () => {
   assert.equal(areaStays({ duration: "" }, true, "success"), true);
@@ -40,4 +40,10 @@ test("no more than once per turn; entering sets off enter-or-start effects", () 
   assert.deepEqual(triggersFor("enter"), ["enter", "enterOrStart"]);
   assert.deepEqual(triggersFor("turnStart"), ["turnStart", "enterOrStart"]);
   assert.deepEqual(triggersFor("userTurn"), ["userTurn"]);
+});
+
+test("an option's effects count only when that option was chosen", () => {
+  const effects = [{ kind: "condition", option: "Allegro" }, { kind: "condition", option: "Adagio" }, { kind: "damage", option: "" }];
+  assert.deepEqual(effectsForOption(effects, "Adagio").map(e => e.option), ["Adagio", ""]);
+  assert.deepEqual(effectsForOption(effects, "").map(e => e.option), [""]);
 });

@@ -26,15 +26,15 @@
     "usedOutside": false,
     "outcomeEffects": [
       {
-        "kind": "condition",
-        "who": "target",
+        "kind": "reminder",
+        "who": "self",
         "tiers": {
           "triumph": true,
           "success": true,
           "failure": false,
           "ruin": false
         },
-        "condition": "quickened",
+        "condition": "",
         "duration": {
           "kind": "",
           "rounds": "1"
@@ -45,18 +45,18 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "allies within 30': the extra action can only be used to move; again each turn while sustained"
+        "note": "Allegro: allies in the area are Quickened while inside, but the extra action can only be used to move"
       },
       {
-        "kind": "condition",
-        "who": "target",
+        "kind": "reminder",
+        "who": "self",
         "tiers": {
           "triumph": true,
           "success": true,
           "failure": false,
           "ruin": false
         },
-        "condition": "slowed",
+        "condition": "",
         "duration": {
           "kind": "",
           "rounds": "1"
@@ -67,11 +67,11 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "foes within 5'; again each turn while sustained"
+        "note": "Adagio: foes in the area are Slowed while inside"
       },
       {
-        "kind": "buff",
-        "who": "target",
+        "kind": "reminder",
+        "who": "self",
         "tiers": {
           "triumph": true,
           "success": true,
@@ -89,7 +89,7 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "allies within 15' defend with -2 DR"
+        "note": "Defying Hymn: allies in the area defend with -2 DR while inside"
       }
     ],
     "buffEffects": [
@@ -171,7 +171,50 @@
         "duration": "",
         "rounds": 1,
         "difficult": false,
-        "effects": []
+        "effects": [
+          {
+            "trigger": "whileInside",
+            "kind": "condition",
+            "formula": "",
+            "damageType": "",
+            "condition": "quickened",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "allies",
+            "categories": [],
+            "option": "Allegro"
+          },
+          {
+            "trigger": "whileInside",
+            "kind": "condition",
+            "formula": "",
+            "damageType": "",
+            "condition": "slowed",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "foes",
+            "categories": [],
+            "option": "Adagio"
+          },
+          {
+            "trigger": "whileInside",
+            "kind": "buff",
+            "formula": "",
+            "damageType": "",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "allies",
+            "categories": [],
+            "option": "Defying Hymn"
+          }
+        ]
       }
     }
   }

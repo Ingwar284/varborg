@@ -19,7 +19,13 @@
  * - userTurn: every creature inside, at the start of each of the user's
  *   turns ("at the start of each of your turns");
  * - roundStart: every creature inside, at the start of each round;
- * - whileInside: a condition a creature has while it is inside.
+ * - whileInside: a condition, or the power's buff, a creature has while it
+ *   is inside; it is given on entering (or when the area reaches it) and
+ *   taken away on leaving (or when the area leaves it). A Quickened or
+ *   Slowed held this way works at the start of each turn inside, instead
+ *   of ending after one turn.
+ * An effect can belong to one option (Songs of power: Allegro), and then
+ * only counts when that option was chosen.
  * Designer rulings (GAPS 284): a character takes lasting damage with a
  * Defend (Agility DR12); armour soaks lasting damage, for characters and
  * foes alike; it lasts on a Triumph or Success only (a Failure's shorter
@@ -35,14 +41,14 @@ export const LASTING_DURATIONS = ["", "rounds", "encounter"];
 export const LASTING_TRIGGERS = ["enterOrStart", "enter", "turnStart", "userTurn", "roundStart", "whileInside"];
 
 /** What a lasting effect does. */
-export const LASTING_KINDS = ["damage", "condition", "heal"];
+export const LASTING_KINDS = ["damage", "condition", "heal", "buff"];
 
 /** The results on which an area lasts. */
 export const LASTING_TIERS = ["triumph", "success"];
 
 /** A new effect row on the item sheet. */
 export function blankLastingEffect() {
-  return { trigger: "enterOrStart", kind: "damage", formula: "d6", damageType: "", condition: "", affects: "all", categories: [] };
+  return { trigger: "enterOrStart", kind: "damage", formula: "d6", damageType: "", condition: "", affects: "all", categories: [], option: "" };
 }
 
 /**
@@ -96,4 +102,14 @@ export function triggersFor(event) {
   if (event === "enter") return ["enter", "enterOrStart"];
   if (event === "turnStart") return ["turnStart", "enterOrStart"];
   return [event];
+}
+
+/**
+ * The effects that count for the option chosen: those of no option and
+ * those of that option.
+ * @param {object[]} effects
+ * @param {string} [option]
+ */
+export function effectsForOption(effects, option = "") {
+  return (effects ?? []).filter(effect => !effect.option || effect.option === option);
 }
