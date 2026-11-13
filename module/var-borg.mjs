@@ -4,6 +4,7 @@
  */
 
 import VarBorgActor from "./actor.mjs";
+import VarBorgRegion from "./canvas/region.mjs";
 import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
 import FoeData from "./data/foe.mjs";
@@ -180,6 +181,8 @@ Hooks.once("init", () => {
   registerPoisons();
   // Lasting areas: their Region behaviour and the hooks that end them (GAPS 284).
   registerLasting();
+  // Regions on the map: a fainter, etched look (module/canvas/region.mjs).
+  CONFIG.Region.objectClass = VarBorgRegion;
   // A deleted power or actor takes its kept areas with it.
   registerAreaCleanup();
   // The − and + buttons in roll dialogs.

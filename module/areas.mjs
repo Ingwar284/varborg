@@ -24,6 +24,7 @@ import { tokenDistance } from "./rules/movement.mjs";
 import { areaStays, endsAtRound, effectsForOption } from "./rules/lasting.mjs";
 import { buffEffectsFor } from "./rules/outcomes.mjs";
 import { LASTING_TYPE, ENDS_FLAG } from "./lasting.mjs";
+import { AREA_COLOUR } from "./canvas/region.mjs";
 
 const SYSTEM = "var-borg";
 /** The flag on a Region that a Sustained power left: "actorUuid|itemId". */
@@ -79,7 +80,7 @@ function regionData(area, token, name) {
   return {
     name,
     shapes: [shape],
-    color: game.user.color?.css ?? game.user.color,
+    color: AREA_COLOUR,
     levels: [doc.level ?? canvas.level?.id].filter(Boolean),
     highlightMode: "coverage",
     displayMeasurements: true,
