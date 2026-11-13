@@ -423,7 +423,22 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "partial"
+        "automation": "partial",
+        "area": {
+          "shape": "emanation",
+          "size": 60,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false,
+          "options": [],
+          "lasting": {
+            "duration": "",
+            "rounds": 1,
+            "difficult": false,
+            "effects": []
+          }
+        }
       }
     },
     {

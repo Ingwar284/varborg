@@ -244,6 +244,7 @@ export async function keepArea(actor, item, region, tier) {
       effects,
       userUuid: actor.uuid, userTokenId: _tokenId ?? "", name: item.name, damageType: item.system.damageType ?? "",
       option: _option,
+      includesUser: Boolean(area.includesUser),
       buffEffects: buffEffectsFor(foundry.utils.deepClone(item.toObject().system.buffEffects ?? []), _option)
     } });
   }

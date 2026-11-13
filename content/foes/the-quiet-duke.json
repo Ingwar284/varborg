@@ -162,7 +162,22 @@
         "sustaining": false,
         "kept": false,
         "usedOutside": false,
-        "automation": "auto"
+        "automation": "auto",
+        "area": {
+          "shape": "emanation",
+          "size": 30,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false,
+          "options": [],
+          "lasting": {
+            "duration": "",
+            "rounds": 1,
+            "difficult": false,
+            "effects": []
+          }
+        }
       }
     },
     {

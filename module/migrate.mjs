@@ -43,6 +43,10 @@
  * Version 11 (playtest feedback): Songs of power works through its area
  * (each song given while inside, taken away on leaving). Copies in the
  * world take the compendium's outcome entries and area.
+ *
+ * Version 12 (playtest feedback): Aura of the Incorruptible strikes through
+ * its area at the start of the caster's turns, not on casting: copies in
+ * the world take the compendium's damage, outcome entries and area.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -57,7 +61,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 11;
+export const DATA_VERSION = 12;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -90,6 +94,7 @@ export async function migrateWorld() {
   if (version < 9) await cleanDescriptions();
   if (version < 10) await turnOnVision();
   if (version < 11) await refreshSongsOfPower();
+  if (version < 12) await refreshAuraOfTheIncorruptible();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -130,6 +135,16 @@ async function refreshSongsOfPower() {
   const stored = source.toObject().system;
   return updateItems(["power"], item => item.name === source.name
     ? { "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.area": foundry.utils.deepClone(stored.area) }
+    : null);
+}
+
+/** Version 12: Aura of the Incorruptible takes the compendium's damage, outcome entries and area. */
+async function refreshAuraOfTheIncorruptible() {
+  const source = await fromUuid("Compendium.var-borg.spells.Item.vbSpDivi11000000").catch(() => null);
+  if (!source) return;
+  const stored = source.toObject().system;
+  return updateItems(["spell", "scroll"], item => item.name === source.name
+    ? { "system.damage": stored.damage, "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.area": foundry.utils.deepClone(stored.area) }
     : null);
 }
 

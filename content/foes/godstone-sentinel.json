@@ -310,7 +310,22 @@
             "whileSustained": false,
             "note": ""
           }
-        ]
+        ],
+        "area": {
+          "shape": "emanation",
+          "size": 20,
+          "range": 0,
+          "width": 5,
+          "affects": "all",
+          "includesUser": false,
+          "options": [],
+          "lasting": {
+            "duration": "",
+            "rounds": 1,
+            "difficult": false,
+            "effects": []
+          }
+        }
       }
     },
     {

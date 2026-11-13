@@ -58,6 +58,8 @@ export function registerLasting() {
         damageType: new fields.StringField({ required: true, blank: true, initial: "" }),
         // The option chosen (Songs of power: Allegro), and the power's buff for it.
         option: new fields.StringField({ required: true, blank: true, initial: "" }),
+        // The user is affected by their own area only when it says so ("you included").
+        includesUser: new fields.BooleanField({ initial: false }),
         buffEffects: new fields.ArrayField(new fields.ObjectField())
       };
     }
@@ -171,10 +173,19 @@ function relation(behavior, token) {
   return { isAlly, category: token.actor?.system?.category ?? "" };
 }
 
+/**
+ * Whether the area leaves this creature alone: its own user, unless the
+ * area says "you included" (rules: Emanation, "not the user unless the text
+ * says so").
+ */
+function sparesUser(behavior, token) {
+  return token.id === behavior.userTokenId && !behavior.includesUser;
+}
+
 /** Do one lasting effect to one creature. */
 async function applyEffect(behavior, token, effect) {
   const actor = token.actor;
-  if (!actor || !lastingReaches(effect, relation(behavior, token))) return;
+  if (!actor || sparesUser(behavior, token) || !lastingReaches(effect, relation(behavior, token))) return;
   const i18n = game.i18n;
   const esc = foundry.utils.escapeHTML;
   const name = behavior.name || behavior.parent?.region?.name || "";
@@ -220,7 +231,7 @@ async function applyEffect(behavior, token, effect) {
  */
 async function giveWhileInside(behavior, token) {
   const actor = token.actor;
-  if (!actor) return;
+  if (!actor || sparesUser(behavior, token)) return;
   const region = behavior.parent.region;
   const inside = behavior.effects
     .filter(effect => effect.trigger === "whileInside")

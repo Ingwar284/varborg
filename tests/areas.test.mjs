@@ -84,3 +84,10 @@ test("an option's own area counts when it is chosen (Songs of power)", () => {
   assert.equal(areaForOption(area, "Unused").shape, "");
   assert.equal(areaForOption(area, "").shape, "");
 });
+
+test("a radius with no point or distance spreads from the user; a cone can be 'N' long'", () => {
+  assert.deepEqual([read("A wave of aetheric force sweeps a 20' radius.").shape, read("A wave of aetheric force sweeps a 20' radius.").size], ["emanation", 20]);
+  assert.equal(read("Sanctify a 10' radius within 30'.").shape, "burst");
+  assert.equal(read("a 20' radius at a point within 60'").shape, "burst");
+  assert.deepEqual([read("The Wyrm exhales a cone of pure absence, 60' long.").shape, read("The Wyrm exhales a cone of pure absence, 60' long.").size], ["cone", 60]);
+});

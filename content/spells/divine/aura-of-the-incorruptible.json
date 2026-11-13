@@ -8,7 +8,7 @@
     "spellList": "divine",
     "cost": 7,
     "actions": 2,
-    "damage": "3d6",
+    "damage": "",
     "sustained": true,
     "reaction": false,
     "outcomes": {
@@ -44,7 +44,7 @@
         "nextOnly": false,
         "test": false,
         "whileSustained": false,
-        "note": "at the start of each of your turns while you sustain it, every foe within 30' takes the damage: target them and Inflict it (on a Triumph also now); you cannot move or lie"
+        "note": "the aura strikes every foe within 30' for 3d6 radiant at the start of each of your turns while you sustain it; on a Triumph the first pulse strikes now (Inflict it by hand); you cannot move or lie"
       },
       {
         "kind": "reminder",
@@ -95,6 +95,36 @@
         "note": "you cannot lie until your next Long Rest"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "emanation",
+      "size": 30,
+      "range": 0,
+      "width": 5,
+      "affects": "foes",
+      "includesUser": false,
+      "options": [],
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": [
+          {
+            "trigger": "userTurn",
+            "kind": "damage",
+            "formula": "3d6",
+            "damageType": "radiant",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "foes",
+            "categories": [],
+            "option": ""
+          }
+        ]
+      }
+    }
   }
 }

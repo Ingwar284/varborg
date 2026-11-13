@@ -48,6 +48,36 @@
         "note": "at the start of each round, all allies within 10' of the bloom regain d6 HP; it wilts when the power ends"
       }
     ],
-    "automation": "partial"
+    "automation": "partial",
+    "area": {
+      "shape": "burst",
+      "size": 10,
+      "range": 30,
+      "width": 5,
+      "affects": "allies",
+      "includesUser": false,
+      "options": [],
+      "lasting": {
+        "duration": "",
+        "rounds": 1,
+        "difficult": false,
+        "effects": [
+          {
+            "trigger": "roundStart",
+            "kind": "heal",
+            "formula": "d6",
+            "damageType": "",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "allies",
+            "categories": [],
+            "option": ""
+          }
+        ]
+      }
+    }
   }
 }

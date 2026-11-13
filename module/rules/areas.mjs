@@ -83,8 +83,13 @@ export function areaFromText(text) {
     // An emanation: "a 40' emanation", "a 20' radius around you", "a 40' radius around you".
     [new RegExp(`${FEET}\\s+emanation`, "i"), m => ({ shape: "emanation", size: +m[1] })],
     [new RegExp(`${FEET}\\s+radius\\s+around\\s+you`, "i"), m => ({ shape: "emanation", size: +m[1] })],
-    // A cone and a line.
+    // A radius with no point and no distance ("sweeps a 20' radius", "across a
+    // 40' radius") spreads from the user: an emanation, as the rules define it
+    // (a burst names its distance, "within 60'").
+    [new RegExp(`${FEET}\\s+radius(?!\\s+(?:at|around)\\s+a\\s+point|\\s+within|\\s+around\\s+you)`, "i"), m => ({ shape: "emanation", size: +m[1] })],
+    // A cone and a line ("a 30' cone", "a cone of pure absence, 60' long").
     [new RegExp(`${FEET}\\s+cone`, "i"), m => ({ shape: "cone", size: +m[1] })],
+    [new RegExp(`\\bcone\\b[^.]{0,40}?${FEET}\\s+long`, "i"), m => ({ shape: "cone", size: +m[1] })],
     [new RegExp(`${FEET}\\s+line(?:,\\s*${FEET}\\s+wide)?`, "i"),
       m => ({ shape: "line", size: +m[1], width: m[2] ? +m[2] : DEFAULT_AREA_WIDTH })],
     // A wall: "a wall, 10' by 10'" or "a 20' wall".
