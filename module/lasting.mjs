@@ -60,6 +60,7 @@ export function registerLasting() {
         option: new fields.StringField({ required: true, blank: true, initial: "" }),
         // The user is affected by their own area only when it says so ("you included").
         includesUser: new fields.BooleanField({ initial: false }),
+        buffNote: new fields.StringField({ required: true, blank: true, initial: "" }),
         buffEffects: new fields.ArrayField(new fields.ObjectField())
       };
     }
@@ -245,7 +246,10 @@ async function giveWhileInside(behavior, token) {
       name: i18n.format("VARBORG.Outcome.BuffName", { power: from }),
       type: "feat",
       img: "icons/svg/aura.svg",
-      system: { description: i18n.localize("VARBORG.Area.Lasting.WhileInsideNote"), source: "general", effects: foundry.utils.deepClone(behavior.buffEffects), automation: "auto" },
+      system: {
+        description: [behavior.buffNote, i18n.localize("VARBORG.Area.Lasting.WhileInsideNote")].filter(Boolean).join(". "),
+        source: "general", effects: foundry.utils.deepClone(behavior.buffEffects), automation: "auto"
+      },
       flags: { [SYSTEM]: { [INSIDE_FLAG]: region.uuid } }
     }]);
   }
@@ -261,7 +265,8 @@ async function giveWhileInside(behavior, token) {
       img: status?.img,
       statuses: [id],
       description: i18n.localize("VARBORG.Area.Lasting.WhileInsideNote"),
-      flags: { [SYSTEM]: { [INSIDE_FLAG]: region.uuid } }
+      // Named on the sheet and in the Ongoing panel: "From Songs of power: Allegro".
+      flags: { [SYSTEM]: { [INSIDE_FLAG]: region.uuid, source: { power: behavior.name, option: behavior.option ?? "", note: i18n.localize("VARBORG.Area.Lasting.WhileInsideShort") } } }
     };
   }));
 }

@@ -68,6 +68,11 @@ export function ongoingEffects(actor) {
       const shown = [detail, text].filter(Boolean).join(". ");
       add({ img: item.img, label: item.name, detail: shown, kind: "buff", ref: item.id, up: countsRounds(timer), down: true });
     }
+    // A buff held while standing in a lasting area (Songs of power: Defying
+    // Hymn): it ends on leaving the area, so it has no clicks of its own.
+    if (item.getFlag(SYSTEM, "lastingInside")) {
+      add({ img: item.img, label: item.name, detail: oneLine(item.system.description) });
+    }
     if (item.system?.sustaining) {
       add({ icon: "fa-hourglass-half", label: i18n.format("VARBORG.Ongoing.Sustaining", { name: item.name }) });
     }

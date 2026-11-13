@@ -245,6 +245,8 @@ export async function keepArea(actor, item, region, tier) {
       userUuid: actor.uuid, userTokenId: _tokenId ?? "", name: item.name, damageType: item.system.damageType ?? "",
       option: _option,
       includesUser: Boolean(area.includesUser),
+      // What the buff does, from the chosen option's note ("allies in the area defend with -2 DR").
+      buffNote: (item.system.outcomeEffects ?? []).find(entry => entry.note && (entry.option ?? "") === _option)?.note ?? "",
       buffEffects: buffEffectsFor(foundry.utils.deepClone(item.toObject().system.buffEffects ?? []), _option)
     } });
   }

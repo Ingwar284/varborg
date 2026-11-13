@@ -3376,6 +3376,7 @@
         "Damage": "{name} is caught in {area}: {formula} damage, {damage}. Defend (Agility DR12); armour soaks it.",
         "Healed": "{name} regains {amount} HP in {area} ({formula}).",
         "WhileInsideNote": "Lasts while the creature is inside the area.",
+        "WhileInsideShort": "while inside the area",
         "Behavior": {
           "FIELDS": {}
         }
