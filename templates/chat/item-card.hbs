@@ -11,4 +11,11 @@
   {{else}}
   <p class="hint">{{localize "VARBORG.Sheet.NoDescription"}}</p>
   {{/if}}
+  {{#if outcomes.length}}
+  <ul class="tier-outcomes item-outcomes">
+    {{#each outcomes}}
+    <li class="tier-outcome"><strong>{{label}}:</strong> {{text}}</li>
+    {{/each}}
+  </ul>
+  {{/if}}
 </div>

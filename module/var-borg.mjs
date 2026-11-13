@@ -65,6 +65,7 @@ import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
 import { registerMovement } from "./movement.mjs";
 import { registerChatRolls } from "./chat-rolls.mjs";
+import { registerItemChatHelpers } from "./item-chat.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -165,6 +166,7 @@ Hooks.once("init", () => {
   registerMovement();
   // Quick roll buttons above the chat message box.
   registerChatRolls();
+  registerItemChatHelpers();
   // The Dark Master's encounter builder (rules 2. Building Encounters).
   registerEncounters();
   // The Dark Master's treasure generator (rules 5. Treasure), also on chests.
@@ -179,10 +181,10 @@ Hooks.once("init", () => {
   // Inflict damage on an attack card, Morale on a foe damage card (rules 3.12).
   Hooks.on("renderChatMessageHTML", addMoraleCardListeners);
   registerPoisons();
-  // Lasting areas: their Region behaviour and the hooks that end them (GAPS 284).
-  registerLasting();
   // Regions on the map: a fainter, etched look (module/canvas/region.mjs).
   CONFIG.Region.objectClass = VarBorgRegion;
+  // Lasting areas: their Region behaviour and the hooks that end them (GAPS 284).
+  registerLasting();
   // A deleted power or actor takes its kept areas with it.
   registerAreaCleanup();
   // The − and + buttons in roll dialogs.

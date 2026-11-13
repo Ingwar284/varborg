@@ -380,6 +380,18 @@
   border-left: 2px solid var(--vb-rule-strong);
 }
 
+/* A power's or spell's own result texts, listed under its description. */
+.var-borg-sheet .item-list .item-description .item-outcomes {
+  list-style: none;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  white-space: normal;
+}
+
+.var-borg-sheet .item-list .item-description .item-outcomes li {
+  margin: 0.1rem 0;
+}
+
 .var-borg-sheet .item-list .item-description[hidden] {
   display: none;
 }
