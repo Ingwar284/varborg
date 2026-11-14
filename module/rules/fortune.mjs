@@ -15,8 +15,11 @@
 /** Fortune burned by one use. */
 export const FORTUNE_COST = 1;
 
-/** "Everyone has d3 Fortune." */
-export const STARTING_FORTUNE_FORMULA = "1d3";
+/** The Fortune die without effects: "Everyone has d3 Fortune" (rules 3.9). Written once here (REVIEW S10). */
+export const FORTUNE_DIE = 3;
+
+/** "Everyone has d3 Fortune." Also what a Long Rest regains (rules 3.9), so rest.mjs uses it. */
+export const STARTING_FORTUNE_FORMULA = `1d${FORTUNE_DIE}`;
 
 /** "Lower damage dealt to you by d6." */
 export const LOWER_DAMAGE_FORMULA = "1d6";

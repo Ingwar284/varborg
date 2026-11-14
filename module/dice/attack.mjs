@@ -35,7 +35,7 @@
  */
 
 import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
-import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
+import { DR_TABLE, tallyBoonsAndBanes, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
 import { needsReload, canFire } from "../rules/expendable.mjs";
@@ -114,10 +114,11 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const conditions = attackConditions(actor, target, mode, ability, item);
   conditions.own.push(...tickedMods(optional, options.data));
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
-  const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
-  const baneCount = [options.bane, paid.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin].filter(Boolean).length
-    + fromConditions.banes;
-  const diceRule = diceMode(boonCount, baneCount);
+  const { boons: boonCount, banes: baneCount, mode: diceRule } = tallyBoonsAndBanes({
+    boonFlags: [options.boon, paid.boon],
+    baneFlags: [options.bane, paid.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin],
+    counts: [fromConditions]
+  });
   const abilityScore = actor.system.abilities[ability];
   const extraDr = weaponDr(weapon, options.oneHanded);
   const dr = modifiedDr(options.dr, extraDr + automatic.armourDr + fromConditions.dr);

@@ -10,9 +10,15 @@ import {
   PERSISTENT_TYPES, PERSISTENT_DR, parseDamage, normaliseDamage, averageDamage,
   strongestPerType, testEndsPersistent, foeRollEndsPersistent
 } from "../module/rules/persistent.mjs";
+import { OUTCOME_PERSISTENT } from "../module/rules/outcomes.mjs";
 
 test("the four types in the rules: fire, bleeding, acid and poison", () => {
   assert.deepEqual(PERSISTENT_TYPES, ["fire", "bleeding", "acid", "poison"]);
+});
+
+test("the persistent types are written once: outcomes use the same list (REVIEW S10)", () => {
+  assert.deepEqual(OUTCOME_PERSISTENT, ["fire", "bleeding", "acid", "poison"]);
+  assert.equal(OUTCOME_PERSISTENT, PERSISTENT_TYPES);
 });
 
 test("damage formulas from the rules can be read", () => {

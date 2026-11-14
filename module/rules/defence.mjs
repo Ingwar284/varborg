@@ -34,6 +34,7 @@ import { isDestroyed } from "./test-modifiers.mjs";
 import { SHIELD_SIZES } from "./equipment.mjs";
 import { withStat } from "./item-effects.mjs";
 import { isRanged } from "./conditions.mjs";
+import { FOE_ARMOUR_DICE } from "./foe.mjs";
 
 /** Defence is an Agility test at DR12 (rules 3.4). */
 export const DEFENCE_DR = 12;
@@ -42,8 +43,8 @@ export const DEFENCE_ABILITY = "agility";
 /** Extra DR to defend for each original armour tier, t0 to t4 (rules 3.8). */
 export const ARMOUR_DEFENCE_DR = [0, 0, 0, 2, 2];
 
-/** The soak die for each current armour tier, t0 to t4. "" means none. */
-export const ARMOUR_SOAK_DICE = ["", "d2", "d4", "d6", "d8"];
+/** The soak die for each current armour tier, t0 to t4. "" means none. The same list as a foe's armour die (rules/foe.mjs), written once (REVIEW S10). */
+export const ARMOUR_SOAK_DICE = FOE_ARMOUR_DICE;
 
 /** How much a raised shield lowers the DR to defend (rules 3.8, Cover). */
 export const COVER_DR = { light: 2, heavy: 4 };

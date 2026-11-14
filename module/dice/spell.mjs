@@ -32,7 +32,7 @@ import {
   lifeForceLeft, lifeForceWounds, castingAbility, lifeForceFormula, lifeForceDr, scrollUse, scrollModifiers,
   ritualUse, ritualModifiers
 } from "../rules/spells.mjs";
-import { DR_TABLE, diceMode, diceFormula } from "../rules/test-roll.mjs";
+import { DR_TABLE, tallyBoonsAndBanes, diceFormula } from "../rules/test-roll.mjs";
 import { wornArmour } from "../rules/test-modifiers.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { CARD } from "../rules/fortune.mjs";
@@ -240,10 +240,11 @@ export async function castSpell(actor, spell) {
     severalCasters: Boolean(options.severalCasters)
   };
   const casting = scroll ? scrollModifiers(modifierOptions) : ritual ? ritualModifiers(modifierOptions) : spellModifiers(modifierOptions);
-  const boons = casting.boons + (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
-  const banes = casting.banes + (options.bane ? 1 : 0) + (paid.bane ? 1 : 0)
-    + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
-  const diceRule = diceMode(boons, banes);
+  const { boons, banes, mode: diceRule } = tallyBoonsAndBanes({
+    boonFlags: [options.boon, paid.boon],
+    baneFlags: [options.bane, paid.bane, automatic.encumberedBane],
+    counts: [casting, fromConditions]
+  });
   const abilityScore = actor.system.abilities[ability];
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const chosenDr = Number(options.dr);

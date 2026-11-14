@@ -38,6 +38,7 @@
  */
 
 import { carryingState, itemCount } from "./carrying.mjs";
+import { MINIMUM_DAMAGE } from "./defence.mjs";
 
 /** The three speeds, slowest first. */
 export const SPEEDS = ["safe", "normal", "fast"];
@@ -69,9 +70,6 @@ export const PRONE_TEST_DR = 12;
 
 /** How far someone not strapped in is thrown in a fast crash. */
 export const THROWN_FEET = 20;
-
-/** A hit always deals at least 1 (rules 3.8, GAPS 176). */
-export const MINIMUM_DAMAGE = 1;
 
 function checkSpeed(speed) {
   if (!SPEEDS.includes(speed)) throw new RangeError(`Unknown speed: ${speed}`);

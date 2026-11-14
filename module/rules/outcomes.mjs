@@ -18,6 +18,7 @@
  */
 
 import { CONDITIONS } from "./conditions.mjs";
+import { PERSISTENT_TYPES } from "./persistent.mjs";
 import { TIMER_KINDS, ESCAPE_KINDS, isRoundsFormula, isEscapeDr } from "./timers.mjs";
 
 /**
@@ -82,8 +83,8 @@ export const OUTCOME_WHO = ["target", "self", "partner",
 /** When: on the card's result, or when the Sustained power ends (Beast Unleashed's Fatigued). */
 export const OUTCOME_WHEN = ["result", "end"];
 
-/** The types of persistent damage an entry can give (rules 3.13). */
-export const OUTCOME_PERSISTENT = ["fire", "bleeding", "acid", "poison"];
+/** The types of persistent damage an entry can give (rules 3.13): the list in rules/persistent.mjs (REVIEW S10). */
+export const OUTCOME_PERSISTENT = PERSISTENT_TYPES;
 
 /** The results an entry can work on. */
 export const OUTCOME_TIERS = ["triumph", "success", "failure", "ruin"];

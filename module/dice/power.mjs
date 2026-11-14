@@ -26,7 +26,7 @@ import {
 } from "../rules/powers.mjs";
 import { damageFormula } from "../rules/attack.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
-import { DR_TABLE, diceMode, diceFormula } from "../rules/test-roll.mjs";
+import { DR_TABLE, tallyBoonsAndBanes, diceFormula } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { CARD, dialogCost } from "../rules/fortune.mjs";
@@ -372,9 +372,11 @@ async function rollPowerTest(actor, power) {
   // A Risky power gives Adrenaline before the roll (GAPS 206).
   if (isRiskyPower(power.system.description)) await runItemHooks(actor, "risky");
 
-  const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
-  const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
-  const diceRule = diceMode(boons, banes);
+  const { boons, banes, mode: diceRule } = tallyBoonsAndBanes({
+    boonFlags: [options.boon, paid.boon],
+    baneFlags: [options.bane, paid.bane, automatic.encumberedBane],
+    counts: [fromConditions]
+  });
   const abilityScore = actor.system.abilities[ability];
   const chosenDr = Number(options.dr);
   const dr = modifiedDr(chosenDr, automatic.armourDr + fromConditions.dr);

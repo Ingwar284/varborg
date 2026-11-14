@@ -27,6 +27,8 @@
  * levels and lost Sanity.
  */
 
+import { STARTING_FORTUNE_FORMULA } from "./fortune.mjs";
+
 /** The kinds of rest. */
 export const REST = { SHORT: "short", LONG: "long", DOWNTIME: "downtime" };
 
@@ -37,8 +39,8 @@ export const INTERRUPTION_DR = 12;
 /** Infected: d6 damage at the end of a rest (rules 3.16). */
 export const INFECTION_DAMAGE = "1d6";
 
-/** Fortune regained after a Long Rest at 0 Fortune (rules 3.9). */
-export const FORTUNE_REGAIN = "1d3";
+/** Fortune regained after a Long Rest at 0 Fortune (rules 3.9): the same d3 a new character starts with (REVIEW S10). */
+export const FORTUNE_REGAIN = STARTING_FORTUNE_FORMULA;
 
 /** Downtime is at least 3 days (rules 3.16, GAPS 146). */
 export const DOWNTIME_DAYS = 3;

@@ -11,7 +11,7 @@
  */
 
 import { ABILITIES } from "../rules/abilities.mjs";
-import { MODE, diceMode, diceFormula } from "../rules/test-roll.mjs";
+import { MODE, tallyBoonsAndBanes, diceFormula } from "../rules/test-roll.mjs";
 import { WINNER, resolveContest } from "../rules/contested.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
@@ -99,8 +99,11 @@ function characterSide(actor, abilityKey, boon, bane) {
   // A contested test is an ability test too: item effects on either count (PLAN step 49c).
   const conditionMods = [...testConditions(conditions, fatigue, abilityKey), ...itemRollMods(actor, { roll: ["contest", "test"], ability: abilityKey })];
   const fromConditions = totalModifiers(conditionMods);
-  const boons = (boon ? 1 : 0) + fromConditions.boons;
-  const banes = (bane ? 1 : 0) + (encumberedBane ? 1 : 0) + fromConditions.banes;
+  const { boons, banes, mode } = tallyBoonsAndBanes({
+    boonFlags: [boon],
+    baneFlags: [bane, encumberedBane],
+    counts: [fromConditions]
+  });
   return {
     name: actor.name,
     abilityKey,
@@ -109,7 +112,7 @@ function characterSide(actor, abilityKey, boon, bane) {
     armourDr,
     armourName,
     conditionMods,
-    mode: diceMode(boons, banes),
+    mode,
     boons,
     banes,
     encumbered: encumberedBane

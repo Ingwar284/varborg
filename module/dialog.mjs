@@ -1,4 +1,4 @@
-import { aidModifier, diceMode, MODE } from "./rules/test-roll.mjs";
+import { aidModifier, tallyBoonsAndBanes, MODE } from "./rules/test-roll.mjs";
 import { dialogCost } from "./rules/fortune.mjs";
 
 /**
@@ -72,9 +72,10 @@ function summaryText(form) {
   const i18n = game.i18n;
   const parts = [];
 
-  const boons = (ticked("boon") ? 1 : 0) + (ticked("fortuneBoon") ? 1 : 0);
-  const banes = (ticked("bane") ? 1 : 0) + (ticked("fortuneBane") ? 1 : 0);
-  const mode = diceMode(boons, banes);
+  const { boons, banes, mode } = tallyBoonsAndBanes({
+    boonFlags: [ticked("boon"), ticked("fortuneBoon")],
+    baneFlags: [ticked("bane"), ticked("fortuneBane")]
+  });
   if (boons && banes) parts.push(i18n.localize("VARBORG.Test.Cancelled"));
   else if (mode === MODE.BOON) parts.push(i18n.localize("VARBORG.Test.Boon"));
   else if (mode === MODE.BANE) parts.push(i18n.localize("VARBORG.Test.Bane"));

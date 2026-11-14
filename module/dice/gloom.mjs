@@ -19,7 +19,7 @@
 
 import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import { gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderConditions, gloomFoeConditions } from "../rules/gloom.mjs";
-import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
+import { DR_TABLE, tallyBoonsAndBanes, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
 import { testConditions, totalModifiers } from "../rules/conditions.mjs";
@@ -217,9 +217,11 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
   conditionMods.push(...ticked);
   notes.push(...conditionNotes(ticked));
   const fromConditions = totalModifiers([...conditionMods, ...foeMods]);
-  const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
-  const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
-  const diceRule = diceMode(boons, banes);
+  const { boons, banes, mode: diceRule } = tallyBoonsAndBanes({
+    boonFlags: [options.boon, paid.boon],
+    baneFlags: [options.bane, paid.bane, automatic.encumberedBane],
+    counts: [fromConditions]
+  });
   const abilityScore = actor.system.abilities[test.ability];
   const chosenDr = Number(options.dr);
   const dr = modifiedDr(chosenDr, automatic.armourDr + fromConditions.dr - automatic.cover);

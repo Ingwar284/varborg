@@ -11,6 +11,9 @@ import {
   DEFENCE_DR, DEFENCE_ABILITY, armourDefenceDr, soakDie, bestSoak, startingDefenceDr, strongestShield, shieldCover, takenCover,
   defenceOutcome, damageTaken, lowerArmourTier, coverStruck, damagedShield, raiseShieldCost
 } from "../module/rules/defence.mjs";
+import { ARMOUR_SOAK_DICE, MINIMUM_DAMAGE } from "../module/rules/defence.mjs";
+import { FOE_ARMOUR_DICE } from "../module/rules/foe.mjs";
+import { collisionDamage } from "../module/rules/vehicles.mjs";
 
 const example = name => ({ type: name.includes("shield") ? "shield" : "armour", ...JSON.parse(readFileSync(new URL(`../content/armour/${name}.json`, import.meta.url))).system });
 const breastplate = example("breastplate");
@@ -181,4 +184,12 @@ test("cover taken behind a table or a pillar: light 2, heavy 4 (rules 3.8, playe
   assert.equal(takenCover("heavy"), 4);
   assert.equal(takenCover(""), 0);
   assert.equal(takenCover(undefined), 0);
+});
+
+test("the armour die list and the minimum damage are written once (REVIEW S10)", () => {
+  assert.deepEqual(ARMOUR_SOAK_DICE, ["", "d2", "d4", "d6", "d8"]);
+  assert.equal(ARMOUR_SOAK_DICE, FOE_ARMOUR_DICE);
+  assert.equal(MINIMUM_DAMAGE, 1);
+  // A vehicle's collision uses the same floor: armour cannot soak a hit down to nothing.
+  assert.deepEqual(collisionDamage(1, { soak: 5 }), { before: 1, taken: MINIMUM_DAMAGE, minimum: true });
 });

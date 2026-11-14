@@ -5,9 +5,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  FORTUNE_COST, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD,
+  FORTUNE_COST, FORTUNE_DIE, STARTING_FORTUNE_FORMULA, LOWER_DAMAGE_FORMULA, SPEND, CARD,
   softenTier, canSpend, spend, dialogCost, lowerDamage, availableSpends
 } from "../module/rules/fortune.mjs";
+import { FORTUNE_REGAIN } from "../module/rules/rest.mjs";
+import { FORTUNE_DIE as EFFECTS_FORTUNE_DIE, fortuneFormula } from "../module/rules/item-effects.mjs";
 
 test("each use burns 1; start with d3; lower damage by d6", () => {
   assert.equal(FORTUNE_COST, 1);
@@ -83,4 +85,12 @@ test("a power offers reroll damage but not maximum damage (GAPS 119)", () => {
     [SPEND.REROLL, SPEND.REROLL_DAMAGE]);
   assert.deepEqual(availableSpends({ card: CARD.ATTACK, tier: "success", damage: true }),
     [SPEND.REROLL, SPEND.MAX_DAMAGE, SPEND.REROLL_DAMAGE]);
+});
+
+test("the Fortune die is written once: start, Long Rest and item-effect formula all agree (REVIEW S10)", () => {
+  assert.equal(FORTUNE_DIE, 3);
+  assert.equal(STARTING_FORTUNE_FORMULA, `1d${FORTUNE_DIE}`);
+  assert.equal(FORTUNE_REGAIN, STARTING_FORTUNE_FORMULA);
+  assert.equal(fortuneFormula(), STARTING_FORTUNE_FORMULA);
+  assert.equal(EFFECTS_FORTUNE_DIE, FORTUNE_DIE);
 });

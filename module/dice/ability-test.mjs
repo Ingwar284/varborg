@@ -18,7 +18,7 @@
 import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import {
   DR_TABLE, DR_DEFAULT, MODE,
-  diceMode, diceFormula, aidModifier, resolveTest
+  tallyBoonsAndBanes, diceFormula, aidModifier, resolveTest
 } from "../rules/test-roll.mjs";
 import { carrying } from "../rules/carrying.mjs";
 import { wornArmour, testModifiers, modifiedDr } from "../rules/test-modifiers.mjs";
@@ -70,9 +70,11 @@ export async function rollAbilityTest(actor, ability, { dr: startDr = DR_DEFAULT
   const paid = await payDialogFortune(actor, options.data);
   if (!paid) return null;
 
-  const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
-  const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
-  const mode = diceMode(boons, banes);
+  const { boons, banes, mode } = tallyBoonsAndBanes({
+    boonFlags: [options.boon, paid.boon],
+    baneFlags: [options.bane, paid.bane, automatic.encumberedBane],
+    counts: [fromConditions]
+  });
   const aid = aidModifier(options.aidSuccesses, options.aidFailures);
   const abilityScore = actor.system.abilities[ability];
   const dr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr);
@@ -134,9 +136,10 @@ export async function rollQuietTest(actor, ability, { dr: baseDr = DR_DEFAULT, k
   const effectContext = { roll: kind ? ["test", kind] : "test", ability };
   const mods = [...testConditions(conditions, fatigue, ability), ...itemRollMods(actor, effectContext)];
   const fromConditions = totalModifiers(mods);
-  const boons = fromConditions.boons;
-  const banes = (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
-  const mode = diceMode(boons, banes);
+  const { boons, banes, mode } = tallyBoonsAndBanes({
+    baneFlags: [automatic.encumberedBane],
+    counts: [fromConditions]
+  });
   const abilityScore = actor.system.abilities[ability];
   const dr = modifiedDr(baseDr, automatic.armourDr + fromConditions.dr);
   const roll = await new Roll(`${diceFormula(mode)} + @ability`, { ability: abilityScore }).evaluate();

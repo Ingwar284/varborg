@@ -26,7 +26,7 @@
  */
 
 import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
-import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
+import { DR_TABLE, tallyBoonsAndBanes, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr, wornArmour, isEncumbered } from "../rules/test-modifiers.mjs";
 import { carrying } from "../rules/carrying.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
@@ -123,9 +123,11 @@ export async function rollDefence(actor, attack) {
   if (!paid) return;
 
   const fromConditions = totalModifiers([...conditions.own, ...conditions.foe]);
-  const boonCount = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
-  const baneCount = [options.bane, paid.bane, automatic.encumberedBane].filter(Boolean).length + fromConditions.banes;
-  const diceRule = diceMode(boonCount, baneCount);
+  const { boons: boonCount, banes: baneCount, mode: diceRule } = tallyBoonsAndBanes({
+    boonFlags: [options.boon, paid.boon],
+    baneFlags: [options.bane, paid.bane, automatic.encumberedBane],
+    counts: [fromConditions]
+  });
   const abilityScore = actor.system.abilities[DEFENCE_ABILITY];
   const uncoveredDr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr);
   const dr = modifiedDr(options.dr, automatic.armourDr + fromConditions.dr - automatic.cover);

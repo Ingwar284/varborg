@@ -24,6 +24,8 @@ import { CONDITIONS } from "./conditions.mjs";
 import { DAMAGE_TYPES } from "./equipment.mjs";
 import { heldBackByDamage, parseDamageTypes } from "./foe-hooks.mjs";
 import { droppedContainerIds, isDropped } from "./dropped.mjs";
+import { FORTUNE_DIE } from "./fortune.mjs";
+import { PERSISTENT_TYPES } from "./persistent.mjs";
 
 /** Every kind of effect, in the order the sheet offers them. */
 export const EFFECT_KINDS = ["stat", "roll", "reminder", "hook", "use", "choice", "immune", "resist", "gift"];
@@ -678,8 +680,8 @@ export function withWeaponStats(weapon, bonuses = {}, unarmed = false, { pistol 
   return result;
 }
 
-/** The Fortune die without effects: "Everyone has d3 Fortune" (rules 3.9). */
-export const FORTUNE_DIE = 3;
+/** The Fortune die without effects lives in rules/fortune.mjs (REVIEW S10); exported again here for the files that already import it from this file. */
+export { FORTUNE_DIE };
 
 /**
  * The formula for starting or regained Fortune, such as "1d3".
@@ -1055,7 +1057,7 @@ export function effectProblems(effect) {
     if (effect.action === "reminder" && effect.amount && !isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     if (effect.action === "targetCondition") check("condition", CONDITIONS);
     if (effect.action === "targetPersistent") {
-      if (!["fire", "bleeding", "acid", "poison"].includes(effect.damageType)) problems.push(`persistent type: ${effect.damageType}`);
+      if (!PERSISTENT_TYPES.includes(effect.damageType)) problems.push(`persistent type: ${effect.damageType}`);
       if (!isDamagePart(effect.amount)) problems.push(`amount: ${effect.amount}`);
     }
     if (effect.action === "testButton") {

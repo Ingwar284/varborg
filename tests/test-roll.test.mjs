@@ -6,7 +6,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   TIERS, DR_MIN, DR_MAX, DR_TABLE, DR_DEFAULT, MODE,
-  tierFromTotal, shiftTier, diceMode, diceCount, diceFormula, keptDie, aidModifier, resolveTest, flippedDie
+  tierFromTotal, shiftTier, diceMode, diceCount, diceFormula, keptDie, aidModifier, resolveTest, flippedDie,
+  tallyBoonsAndBanes
 } from "../module/rules/test-roll.mjs";
 
 // --- Tiers against a DR -----------------------------------------------------
@@ -93,6 +94,84 @@ test("the wrong number of dice, or a die that is not a d20, is refused", () => {
   assert.throws(() => keptDie([21], MODE.NORMAL), RangeError);
   assert.throws(() => keptDie([5, 6], "advantage"), RangeError);
   assert.throws(() => diceMode(-1, 0), RangeError);
+});
+
+// --- Counting every Boon and Bane (REVIEW S5) ------------------------------
+
+test("counting: nothing ticked and nothing counted is a plain roll", () => {
+  const plain = { boons: 0, banes: 0, mode: MODE.NORMAL };
+  assert.deepEqual(tallyBoonsAndBanes(), plain);
+  assert.deepEqual(tallyBoonsAndBanes({}), plain);
+  assert.deepEqual(tallyBoonsAndBanes({
+    boonFlags: [false, false], baneFlags: [false, false, false], counts: [{ dr: 0, boons: 0, banes: 0 }]
+  }), plain);
+});
+
+test("counting: one ticked Boon rolls with Boon; one ticked Bane rolls with Bane", () => {
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: [true, false] }), { boons: 1, banes: 0, mode: MODE.BOON });
+  assert.deepEqual(tallyBoonsAndBanes({ baneFlags: [false, true, false] }), { boons: 0, banes: 1, mode: MODE.BANE });
+});
+
+test("counting: one Boon and one Bane cancel to a plain roll but are both still counted", () => {
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: [true], baneFlags: [true] }), { boons: 1, banes: 1, mode: MODE.NORMAL });
+});
+
+test("counting: two Boons are still just Boon, and two Boons with one Bane cancel", () => {
+  // The Boon box and a Fortune Boon.
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: [true, true] }), { boons: 2, banes: 0, mode: MODE.BOON });
+  // Two Boons and one Bane: the same plain roll diceMode(2, 1) gives.
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: [true, true], baneFlags: [true] }), { boons: 2, banes: 1, mode: MODE.NORMAL });
+  // Nothing is capped: a full set of attack Banes is six.
+  assert.deepEqual(tallyBoonsAndBanes({ baneFlags: [true, true, true, true, true, true] }), { boons: 0, banes: 6, mode: MODE.BANE });
+});
+
+test("counting: conditions and item effects add their own counts (the dr is ignored)", () => {
+  // Encumbered gives a Bane flag; Adrenaline Rush gives one Boon from conditions.
+  assert.deepEqual(tallyBoonsAndBanes({
+    baneFlags: [true], counts: [{ dr: 2, boons: 1, banes: 0 }]
+  }), { boons: 1, banes: 1, mode: MODE.NORMAL });
+  // Only conditions: two Banes, no Boon.
+  assert.deepEqual(tallyBoonsAndBanes({ counts: [{ dr: 0, boons: 0, banes: 2 }] }), { boons: 0, banes: 2, mode: MODE.BANE });
+});
+
+test("counting: a spell adds its casting modifiers as well as its conditions", () => {
+  const casting = { boons: 1, banes: 1, dr: 0 };
+  const fromConditions = { dr: 0, boons: 0, banes: 1 };
+  // Boon box ticked: 2 Boons and 2 Banes in all, so a plain roll.
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: [true, false], baneFlags: [false, false, false], counts: [casting, fromConditions] }),
+    { boons: 2, banes: 2, mode: MODE.NORMAL });
+  // One casting Boon and one condition Bane (nothing ticked): they cancel.
+  assert.deepEqual(tallyBoonsAndBanes({ counts: [{ boons: 1, banes: 0, dr: 0 }, fromConditions] }),
+    { boons: 1, banes: 1, mode: MODE.NORMAL });
+  assert.deepEqual(tallyBoonsAndBanes({ counts: [{ boons: 2, banes: 0, dr: 0 }, { boons: 0, banes: 0, dr: 0 }] }),
+    { boons: 2, banes: 0, mode: MODE.BOON });
+});
+
+test("counting: any true-ish value is one source, and missing or false-ish values are none", () => {
+  // contested-test gets undefined for an unticked box; a form can give 'on'.
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: [undefined, null, 0, ""], baneFlags: [undefined] }),
+    { boons: 0, banes: 0, mode: MODE.NORMAL });
+  assert.deepEqual(tallyBoonsAndBanes({ boonFlags: ["on", 1, true] }), { boons: 3, banes: 0, mode: MODE.BOON });
+});
+
+test("counting: the mode is always what diceMode gives for the two totals", () => {
+  for (let boons = 0; boons <= 3; boons += 1) {
+    for (let banes = 0; banes <= 3; banes += 1) {
+      const split = tallyBoonsAndBanes({
+        boonFlags: Array(boons).fill(true),
+        baneFlags: Array(banes).fill(true)
+      });
+      assert.deepEqual(split, { boons, banes, mode: diceMode(boons, banes) });
+      const counted = tallyBoonsAndBanes({ counts: [{ boons, banes }] });
+      assert.deepEqual(counted, split);
+    }
+  }
+});
+
+test("counting: a count that is missing, negative or not whole is refused, as diceMode refuses it", () => {
+  assert.throws(() => tallyBoonsAndBanes({ counts: [{}] }), RangeError);
+  assert.throws(() => tallyBoonsAndBanes({ counts: [{ boons: -1, banes: 0 }] }), RangeError);
+  assert.throws(() => tallyBoonsAndBanes({ counts: [{ boons: 0.5, banes: 0 }] }), RangeError);
 });
 
 // --- Aid --------------------------------------------------------------------

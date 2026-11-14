@@ -8,7 +8,7 @@
  * one tier down."
  * Boon: roll twice, keep the higher. Bane: roll twice, keep the lower. Any
  * Boon with any Bane gives a plain roll (GAPS 8). The kept die decides a
- * natural 20 or 1 (GAPS 9).
+ * natural 20 or 1 (GAPS 9). tallyBoonsAndBanes adds up all the sources.
  * Aid: +1 per ally who succeeds, -1 per ally who fails. The net total is
  * limited to -2 ... +2 (GAPS 45).
  *
@@ -79,6 +79,35 @@ export function diceMode(boons = 0, banes = 0) {
   if (boons > 0 && banes === 0) return MODE.BOON;
   if (banes > 0 && boons === 0) return MODE.BANE;
   return MODE.NORMAL;
+}
+
+/**
+ * Add up every Boon and Bane that applies to one roll, and say which way to
+ * roll (REVIEW S5). Every d20 roll in the game does this same sum: the Boon
+ * and Bane boxes the player ticked, a Boon or Bane bought with Fortune,
+ * Encumbered, situational Banes, and the Boons and Banes that conditions and
+ * item effects give. This is the one place that adds them, so a new source is
+ * a change in one place. The result is exactly what diceMode gives for the
+ * two totals (GAPS 8: any Boon with any Bane cancel out).
+ * @param {object} [sources]
+ * @param {Array} [sources.boonFlags]  Yes/no Boon sources, one entry each.
+ *   Any true-ish entry is one Boon; anything else is none.
+ * @param {Array} [sources.baneFlags]  Yes/no Bane sources, the same way.
+ * @param {{boons: number, banes: number}[]} [sources.counts]  Boons and Banes
+ *   already counted elsewhere, such as totalModifiers() of the conditions and
+ *   item effects, or a spell's casting modifiers. Each needs whole numbers of
+ *   0 or more in boons and banes (anything else is refused, as diceMode does).
+ * @returns {{boons: number, banes: number, mode: string}}
+ *   The two totals, and MODE.BOON, MODE.BANE or MODE.NORMAL.
+ */
+export function tallyBoonsAndBanes({ boonFlags = [], baneFlags = [], counts = [] } = {}) {
+  let boons = boonFlags.filter(Boolean).length;
+  let banes = baneFlags.filter(Boolean).length;
+  for (const count of counts) {
+    boons += count.boons;
+    banes += count.banes;
+  }
+  return { boons, banes, mode: diceMode(boons, banes) };
 }
 
 /** How many d20s to roll in each mode. */
