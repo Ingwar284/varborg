@@ -38,7 +38,7 @@ import { ownedMinions, minionCount, commandMinion } from "../minions.mjs";
 import { moveCargo } from "../vehicles.mjs";
 import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs";
 import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat, canImprove } from "../improving.mjs";
-import { openCreationHelper } from "../creation.mjs";
+import { openCreationHelper, applyClassWithStarting, postCard } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { ongoingEffects } from "../ongoing.mjs";
 import { rollDetail } from "../personality.mjs";
@@ -601,6 +601,13 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     if (!this.actor.isOwner || this.actor.uuid === item.parent?.uuid) return null;
     const data = item.inCompendium ? game.items.fromCompendium(item, { clearFolder: true }) : item.toObject();
     delete data._id;
+    // A class also gives its class feature and class power, as the Creation Helper does (REVIEW B10, GAPS 285).
+    if (item.type === "class") {
+      const lines = await applyClassWithStarting(this.actor, data, null, { rolls: [] });
+      const title = game.i18n.format("VARBORG.Origin.Title.class", { actor: this.actor.name, name: data.name });
+      await postCard(this.actor, title, lines);
+      return null;
+    }
     return addOrigin(this.actor, data);
   }
 
