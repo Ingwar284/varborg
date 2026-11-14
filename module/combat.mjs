@@ -27,6 +27,7 @@ import { tickPersistentDamage } from "./persistent.mjs";
 import { countDownPanic } from "./panic.mjs";
 import { countDownWaking } from "./deaths-door.mjs";
 import { statusName } from "./conditions.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 import { askForAmmoRolls } from "./ammunition.mjs";
 import { fillPools, drainPools } from "./pools.mjs";
 import { endOfTurnSustain, resetEmberAbilities } from "./dice/power.mjs";
@@ -358,12 +359,9 @@ async function postTurnStart(combatant, actions, reactions, conditions, hazard =
         condition: statusName(id), hazard: i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Name`)
       })
       : statusName(id));
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor: combatant.actor }),
-    content: `<div class="var-borg-card"><p>${i18n.format("VARBORG.Condition.TurnStart", {
-      name: combatant.name, actions, reactions, conditions: names.join(", ")
-    })}</p></div>`
-  });
+  await postSmallCard(combatant.actor, i18n.format("VARBORG.Condition.TurnStart", {
+    name: combatant.name, actions, reactions, conditions: names.join(", ")
+  }));
 }
 
 /**

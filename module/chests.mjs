@@ -25,6 +25,7 @@
 import { canHold, isNextTo } from "./rules/chests.mjs";
 import { splitSilver } from "./rules/treasure.mjs";
 import { movedItemData } from "./vehicles.mjs";
+import { oneAtATime, inOrder } from "./busy.mjs";
 
 const SOCKET = "system.var-borg";
 const SYSTEM = "var-borg";
@@ -200,7 +201,7 @@ export async function takeSilver(chest) {
 export async function splitChestSilver(chest) {
   const i18n = game.i18n;
   if (!(chest.system.silver > 0)) return;
-  if (game.user.isGM) return shareSilver(chest);
+  if (game.user.isGM) return oneAtATime(`silver:${chest.uuid}`, () => shareSilver(chest));
   const chestToken = chest.token ?? chest.getActiveTokens(false, true)[0];
   const near = chestToken && userTokens(chestToken.parent).some(token => tokensNextTo(token, chestToken));
   if (!near) {
@@ -368,11 +369,11 @@ async function droppedItemsActor() {
  */
 async function onSocketMessage(message) {
   if (game.user !== game.users.activeGM) return;
-  if (message?.action === "chestSilver") return moveSilver(message);
+  if (message?.action === "chestSilver") return inOrder(`silver:${message.chestUuid}`, () => moveSilver(message));
   if (message?.action === "dropItem") return dropItemChest(message);
   if (message?.action === "chestSplit") {
     const chest = await fromUuid(message.chestUuid);
-    if (game.users.get(message.userId) && isChest(chest)) await shareSilver(chest);
+    if (game.users.get(message.userId) && isChest(chest)) await inOrder(`silver:${message.chestUuid}`, () => shareSilver(chest));
     return;
   }
   if (message?.action !== "chestMove") return;

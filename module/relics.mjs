@@ -31,6 +31,7 @@ import { runningCombat, gainEmber } from "./pools.mjs";
 import { collectEffects, useEffects, CARD_ACTIONS } from "./rules/item-effects.mjs";
 import { doEffectAction } from "./effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -82,7 +83,12 @@ export function relicSummary(item) {
  * @param {Actor} actor
  * @param {Item} item  The relic.
  */
-export async function useRelic(actor, item) {
+export function useRelic(actor, item) {
+  return oneAtATime(`relic:${item.uuid}`, () => useRelicNow(actor, item));
+}
+
+/** The body of useRelic, run inside the guard (REVIEW.md S2, L25). */
+async function useRelicNow(actor, item) {
   if (!actor.isOwner || item.type !== "relic") return;
   const i18n = game.i18n;
   const esc = foundry.utils.escapeHTML;
@@ -146,7 +152,12 @@ export async function useRelic(actor, item) {
  * @param {Actor} actor
  * @param {Item} item  The relic.
  */
-export async function performLastRite(actor, item) {
+export function performLastRite(actor, item) {
+  return oneAtATime(`relic:${item.uuid}`, () => performLastRiteNow(actor, item));
+}
+
+/** The body of performLastRite, run inside the guard (REVIEW.md S2, L25). */
+async function performLastRiteNow(actor, item) {
   if (!actor.isOwner || item.type !== "relic") return;
   const i18n = game.i18n;
   const esc = foundry.utils.escapeHTML;

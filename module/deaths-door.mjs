@@ -39,6 +39,8 @@ import { markDefeated } from "./dice/morale.mjs";
 import { rollTwiceFor, escapeDeath } from "./effects.mjs";
 import { turnState } from "./combat.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { postSmallCard } from "./chat-card.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -274,9 +276,7 @@ export async function wake(actor, formula, post = true) {
   await actor.toggleStatusEffect("deathsDoor", { active: false });
   await actor.update({ "system.hp.value": roll.total });
   if (!post) return;
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.DeathsDoor.Wakes", { name: actor.name, hp: roll.total })}</p></div>`,
+  await postSmallCard(actor, game.i18n.format("VARBORG.DeathsDoor.Wakes", { name: actor.name, hp: roll.total }), {
     rolls: roll.isDeterministic ? [] : [roll]
   });
 }
@@ -290,12 +290,9 @@ export async function wake(actor, formula, post = true) {
 export async function healedAtDeathsDoor(actor) {
   if (!atDeathsDoor(actor) || isDead(actor)) return;
   await actor.toggleStatusEffect("deathsDoor", { active: false });
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.DeathsDoor.Healed", {
-      name: foundry.utils.escapeHTML(actor.name), hp: actor.system.hp.value
-    })}</p></div>`
-  });
+  await postSmallCard(actor, game.i18n.format("VARBORG.DeathsDoor.Healed", {
+    name: actor.name, hp: actor.system.hp.value
+  }));
 }
 
 /**
@@ -489,8 +486,11 @@ export function activateDeathsDoorControls(element, actor) {
     if (!await askAndRoll(actor)) event.currentTarget.disabled = false;
   });
   element.querySelector("[data-wake]")?.addEventListener("click", () => {
-    const state = stateOf(actor);
-    if (state?.stage === "waking") wake(actor, state.wakeHp);
+    oneAtATime(`wake:${actor.uuid}`, async () => {
+      // Read again inside the guard: an earlier click may already have woken them.
+      const now = stateOf(actor);
+      if (now?.stage === "waking") await wake(actor, now.wakeHp);
+    });
   });
   for (const button of element.querySelectorAll("[data-remove-part]")) {
     button.addEventListener("click", () => actor.effects.get(button.dataset.removePart)?.delete());

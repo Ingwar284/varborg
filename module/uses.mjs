@@ -24,6 +24,7 @@ import { rollExpendable } from "./dice/expendable.mjs";
 import { turnState } from "./combat.mjs";
 import { CONSUME_ACTIONS, isConsumableGear } from "./rules/expendable.mjs";
 import { poisonOf, askPoisonUse, applyPoisonUse } from "./poison.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -132,7 +133,12 @@ async function pickUseEffects(item) {
  * @param {Actor} actor
  * @param {Item} item
  */
-export async function useLimitedItem(actor, item) {
+export function useLimitedItem(actor, item) {
+  return oneAtATime(`use:${item.uuid}`, () => useLimitedItemNow(actor, item));
+}
+
+/** The body of useLimitedItem, run inside the guard (REVIEW.md S2, L25). */
+async function useLimitedItemNow(actor, item) {
   if (!actor.isOwner || !hasLimitedUse(item)) return;
   const i18n = game.i18n;
   if (!canUseItem(item)) {

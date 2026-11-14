@@ -31,6 +31,7 @@ import { addPersistentDamage } from "./persistent.mjs";
 import { enterDeathsDoor, killCharacter } from "./deaths-door.mjs";
 import { runItemHooks, agonyDeathsDoorInstead } from "./effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -174,10 +175,7 @@ async function woundTest(actor, agonyType) {
       + `<i class="fa-solid fa-bone"></i> ${i18n.localize("VARBORG.Agony.RollButton")}</button>`
       + `<p class="modifier">${i18n.localize("VARBORG.Agony.GmRolls")}</p>`
     : "";
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${text}</p>${button}</div>`
-  });
+  await postSmallCard(actor, text, { extraHtml: button });
   return rolls;
 }
 

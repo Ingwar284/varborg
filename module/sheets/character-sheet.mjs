@@ -15,6 +15,7 @@ import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { lightItem, canLightItem, actorLight, putOutActorLight, dimActorLight } from "../light.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton, isConsumable } from "../uses.mjs";
+import { inOrder } from "../busy.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { usePower, sustainPower, endPower } from "../dice/power.mjs";
 import { partnerOf, markOf } from "../outcomes.mjs";
@@ -40,6 +41,7 @@ import { relicRow, relicSummary, useRelic, performLastRite } from "../relics.mjs
 import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat, canImprove } from "../improving.mjs";
 import { openCreationHelper, applyClassWithStarting, postCard } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
+import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { ongoingEffects } from "../ongoing.mjs";
 import { rollDetail } from "../personality.mjs";
 import { randomCharacter, chosenRandomCharacter } from "../random-character.mjs";
@@ -69,7 +71,7 @@ function boosted(parts, total, base) {
   return { total, note: parts.join(", "), boxHint: game.i18n.format("VARBORG.Sheet.BoostedHint", { base }) };
 }
 
-const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { HandlebarsApplicationMixin, DialogV2 } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
 const TEMPLATES = "systems/var-borg/templates/actor";
@@ -603,6 +605,22 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     delete data._id;
     // A class also gives its class feature and class power, as the Creation Helper does (REVIEW B10, GAPS 285).
     if (item.type === "class") {
+      // A character who already has a class must confirm the replacement first (GAPS 286).
+      const current = this.actor.itemTypes.class ?? [];
+      if (current.length) {
+        const i18n = game.i18n;
+        const confirmed = await DialogV2.confirm({
+          classes: VB_DIALOG_CLASSES,
+          window: { title: i18n.localize("VARBORG.Origin.ReplaceTitle") },
+          content: `<p>${i18n.format("VARBORG.Origin.ReplaceBody", {
+            actor: foundry.utils.escapeHTML(this.actor.name),
+            old: foundry.utils.escapeHTML(current.map(item => item.name).join(", ")),
+            name: foundry.utils.escapeHTML(data.name)
+          })}</p>`,
+          rejectClose: false
+        });
+        if (!confirmed) return null;
+      }
       const lines = await applyClassWithStarting(this.actor, data, null, { rolls: [] });
       const title = game.i18n.format("VARBORG.Origin.Title.class", { actor: this.actor.name, name: data.name });
       await postCard(this.actor, title, lines);
@@ -626,7 +644,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
    * works like the "Stored in" menu: equipping takes the item out of any
    * container (or picks it up), and unequipping leaves it carried loose.
    */
-  static async #onToggleEquipped(event, button) {
+  static #onToggleEquipped(event, button) {
+    return inOrder(`toggle:${this.document.uuid}`, () => CharacterSheet.#toggleEquipped.call(this, event, button));
+  }
+
+  static async #toggleEquipped(event, button) {
     const item = this.#itemFor(button);
     if (!item || !EQUIPPABLE_TYPES.includes(item.type)) return;
     // A dropped item is picked up from its "Stored in" menu, not this tick (GAPS 254).
@@ -635,7 +657,11 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   }
 
   /** The weight button marks the item cumbersome, or not. */
-  static async #onToggleCumbersome(event, button) {
+  static #onToggleCumbersome(event, button) {
+    return inOrder(`toggle:${this.document.uuid}`, () => CharacterSheet.#toggleCumbersome.call(this, event, button));
+  }
+
+  static async #toggleCumbersome(event, button) {
     const item = this.#itemFor(button);
     await item?.update({ "system.cumbersome": !item.system.cumbersome });
   }
@@ -876,7 +902,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   }
 
   /** − or + under an ability: a temporary change by hand (Sanity: lost Sanity first). */
-  static async #onAdjustAbility(event, button) {
+  static #onAdjustAbility(event, button) {
+    // One step per click: fast clicks wait their turn, so a double click adds two (REVIEW.md S2, L41).
+    return inOrder(`adjust:${this.document.uuid}`, () => CharacterSheet.#adjustAbility.call(this, event, button));
+  }
+
+  static async #adjustAbility(event, button) {
     const key = button.dataset.ability;
     const system = this.document.system;
     const next = stepAbility(key, Number(button.dataset.step), {

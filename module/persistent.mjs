@@ -32,6 +32,7 @@ import { rollResists, resistLines, DAMAGED_BY_FLAG } from "./effects.mjs";
 import { withDamagedBy } from "./rules/foe-hooks.mjs";
 import { resistedDamage } from "./rules/item-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -141,12 +142,9 @@ async function removeWeaker(actor) {
   if (!remove.length) return;
   const names = remove.map(id => actor.effects.get(id)?.name).filter(Boolean);
   await actor.deleteEmbeddedDocuments("ActiveEffect", remove);
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Persistent.WeakerRemoved", {
-      name: actor.name, removed: names.join(", ")
-    })}</p></div>`
-  });
+  await postSmallCard(actor, game.i18n.format("VARBORG.Persistent.WeakerRemoved", {
+    name: actor.name, removed: names.join(", ")
+  }));
 }
 
 /**
@@ -236,10 +234,7 @@ async function testToEnd(effect) {
   const ends = testEndsPersistent(result.tier);
   const name = effect.name;
   if (ends) await effect.delete();
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${game.i18n.format(ends ? "VARBORG.Persistent.Ends" : "VARBORG.Persistent.GoesOn", { name })}</p></div>`
-  });
+  await postSmallCard(actor, game.i18n.format(ends ? "VARBORG.Persistent.Ends" : "VARBORG.Persistent.GoesOn", { name }));
   return ends;
 }
 

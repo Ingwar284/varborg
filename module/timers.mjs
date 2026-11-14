@@ -21,6 +21,7 @@ import {
   timerEndsWithNewDay, longerTimer, ESCAPE_KINDS, isEscapeDr, breaksFree } from "./rules/timers.mjs";
 import { turnState } from "./combat.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 
 const SYSTEM = "var-borg";
 const FLAG = "timer";
@@ -102,18 +103,12 @@ export async function addTimedCondition(actor, id, spec) {
 async function endCondition(actor, effect) {
   if (effect.documentName === "Item") {
     await effect.delete();
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor }),
-      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Outcome.BuffEnded", { name: actor.name, buff: effect.name }))}</p></div>`
-    });
+    await postSmallCard(actor, game.i18n.format("VARBORG.Outcome.BuffEnded", { name: actor.name, buff: effect.name }));
     return;
   }
   const names = [...effect.statuses].map(id => game.i18n.localize(`VARBORG.Condition.${id}`)).join(", ");
   await effect.delete();
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${game.i18n.format("VARBORG.Timer.Ended", { name: actor.name, condition: names })}</p></div>`
-  });
+  await postSmallCard(actor, game.i18n.format("VARBORG.Timer.Ended", { name: actor.name, condition: names }));
 }
 
 /**
@@ -146,19 +141,14 @@ async function escapeRoll(actor, effect, timer) {
   const i18n = game.i18n;
   const condition = [...effect.statuses].map(id => i18n.localize(`VARBORG.Condition.${id}`)).join(", ");
   if (actor.type === "character") {
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor }),
-      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(i18n.format("VARBORG.Timer.EscapeAsk", { name: actor.name, condition, dr: timer.dr }))}</p>`
-        + `<button type="button" data-action="escapeTest" data-actor-uuid="${actor.uuid}" data-effect-id="${effect.id}" data-dr="${timer.dr}">`
-        + `<i class="fa-solid fa-link-slash"></i> ${foundry.utils.escapeHTML(i18n.format("VARBORG.Timer.EscapeButton", { dr: timer.dr }))}</button></div>`
-    });
+    const button = `<button type="button" data-action="escapeTest" data-actor-uuid="${actor.uuid}" data-effect-id="${effect.id}" data-dr="${timer.dr}">`
+      + `<i class="fa-solid fa-link-slash"></i> ${foundry.utils.escapeHTML(i18n.format("VARBORG.Timer.EscapeButton", { dr: timer.dr }))}</button>`;
+    await postSmallCard(actor, i18n.format("VARBORG.Timer.EscapeAsk", { name: actor.name, condition, dr: timer.dr }), { extraHtml: button });
     return;
   }
   const roll = await new Roll("1d20").evaluate();
   const free = breaksFree(roll.total, timer.dr);
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(i18n.format(free ? "VARBORG.Timer.EscapeFree" : "VARBORG.Timer.EscapeHeld", { name: actor.name, condition, roll: roll.total, dr: timer.dr }))}</p></div>`,
+  await postSmallCard(actor, i18n.format(free ? "VARBORG.Timer.EscapeFree" : "VARBORG.Timer.EscapeHeld", { name: actor.name, condition, roll: roll.total, dr: timer.dr }), {
     rolls: [roll],
     sound: CONFIG.sounds.dice
   });

@@ -35,6 +35,8 @@ import { weatherForNewDay } from "./weather.mjs";
 import { miseryForNewDay } from "./misery.mjs";
 import { runItemHooks } from "./effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { postSmallCard } from "./chat-card.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -82,6 +84,12 @@ export function livingCharacters() {
  * @returns {Promise<boolean>}  Whether a new day began (false if the dialog was closed).
  */
 export async function newDay() {
+  // False when a new day is already being set up (REVIEW.md S2, L39), as when the dialog is closed.
+  return (await oneAtATime("newDay", newDayNow)) ?? false;
+}
+
+/** The body of newDay, run inside the guard. */
+async function newDayNow() {
   if (!game.user.isGM) return false;
   const i18n = game.i18n;
   const characters = livingCharacters();
@@ -158,8 +166,8 @@ async function dawnForEveryone() {
   const back = await resetLimitedUses(actors, "newDay");
   for (const [actor, names] of back) {
     await postLine(actor, game.i18n.format("VARBORG.Uses.BackToday", {
-      name: foundry.utils.escapeHTML(actor.name),
-      items: names.map(name => foundry.utils.escapeHTML(name)).join(", ")
+      name: actor.name,
+      items: names.join(", ")
     }));
   }
   await endNewDayTimers(actors);
@@ -201,11 +209,10 @@ async function starve(actor, days) {
     i18n.format("VARBORG.Day.Hp", { from, to, max: actor.system.hp.max })
   ];
   // The card first, so a wound card from reaching 0 HP follows it.
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    rolls: [roll],
-    content: `<div class="var-borg-card day-card"><h3>${i18n.format("VARBORG.Day.StarvingTitle", { name: actor.name })}</h3>`
-      + lines.map(line => `<p class="sum">${line}</p>`).join("") + `</div>`
+  await postSmallCard(actor, lines.map(text => ({ text, className: "sum" })), {
+    heading: i18n.format("VARBORG.Day.StarvingTitle", { name: actor.name }),
+    classes: "day-card",
+    rolls: [roll]
   });
   // At Death's Door any damage kills (module/deaths-door.mjs) instead.
   if (await killedByDamage(actor, damage)) return;
@@ -213,10 +220,7 @@ async function starve(actor, days) {
   await actor.update({ "system.hp.value": to });
 }
 
-/** A one-line card. */
+/** A one-line card. The text is plain: the card escapes it (REVIEW.md S4). */
 async function postLine(actor, text) {
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card day-card"><p>${text}</p></div>`
-  });
+  await postSmallCard(actor, text, { classes: "day-card" });
 }

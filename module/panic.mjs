@@ -33,6 +33,7 @@ import { AGONY_RESULTS } from "./rules/agony.mjs";
 import { endsAfterHours, hoursLeft, hasEnded } from "./rules/calendar.mjs";
 import { runItemHooks, itemHooks } from "./effects.mjs";
 import { isClaimed, claimOnce } from "./card-once.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -94,10 +95,7 @@ export async function rollPanicTest(actor) {
   // Dwarven Doughtiness: a Ruin counts as a Failure (step 50b2).
   const doughty = result.tier === "ruin" ? itemHooks(actor, "panicFailure").find(hook => hook.action === "ruinAsFailure") : null;
   if (doughty) {
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor }),
-      content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(game.i18n.format("VARBORG.Panic.RuinAsFailure", { item: doughty.item, name: actor.name }))}</p></div>`
-    });
+    await postSmallCard(actor, game.i18n.format("VARBORG.Panic.RuinAsFailure", { item: doughty.item, name: actor.name }));
   }
   const dice = panicDice(doughty ? "failure" : result.tier);
   // Steady nerves, while unspent: the player chooses first (GAPS 197).
@@ -118,10 +116,7 @@ export async function rollPanicTest(actor) {
     await actor.update({ "system.sanityLost": restoreSanity(from, lost).lost });
     lines.push(i18n.format("VARBORG.Panic.Restored", { from, to: actor.system.abilities.sanity }));
   }
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card">${lines.map(line => `<p>${line}</p>`).join("")}</div>`
-  });
+  await postSmallCard(actor, lines);
 }
 
 /**
@@ -135,20 +130,21 @@ export async function rollPanicTest(actor) {
 async function postNervesChoice(actor, nerves, dice) {
   const i18n = game.i18n;
   const escape = foundry.utils.escapeHTML;
-  const item = escape(nerves.item);
+  // The raw item name: the card escapes the lines once, the button labels are escaped once below (REVIEW.md S4, L5).
+  const item = nerves.item;
   const lines = [
     i18n.format("VARBORG.Panic.Nerves.Failed", { name: actor.name }),
     i18n.format("VARBORG.Panic.Nerves.Offer", { item })
   ];
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
+  const buttons = `<button type="button" class="text-button" data-action="steadyNerves" data-actor-uuid="${actor.uuid}" data-item-id="${nerves.itemId}">`
+    + `<i class="fa-solid fa-hand-fist"></i> ${escape(i18n.format("VARBORG.Panic.Nerves.Use", { item }))}</button>`
+    + `<button type="button" class="text-button" data-action="panicTable" data-actor-uuid="${actor.uuid}" data-formula="${dice}">`
+    + `<i class="fa-solid fa-dice-d20"></i> ${escape(i18n.format("VARBORG.Panic.Nerves.Roll", { formula: dice }))}</button>`;
+  await postSmallCard(actor, lines, {
+    heading: i18n.format("VARBORG.Panic.CardTitle", { name: actor.name }),
+    classes: "panic-card",
     flavor: i18n.localize("VARBORG.Panic.Title"),
-    content: `<div class="var-borg-card panic-card"><h3>${escape(i18n.format("VARBORG.Panic.CardTitle", { name: actor.name }))}</h3>`
-      + lines.map(line => `<p>${escape(line)}</p>`).join("")
-      + `<button type="button" class="text-button" data-action="steadyNerves" data-actor-uuid="${actor.uuid}" data-item-id="${nerves.itemId}">`
-      + `<i class="fa-solid fa-hand-fist"></i> ${escape(i18n.format("VARBORG.Panic.Nerves.Use", { item }))}</button>`
-      + `<button type="button" class="text-button" data-action="panicTable" data-actor-uuid="${actor.uuid}" data-formula="${dice}">`
-      + `<i class="fa-solid fa-dice-d20"></i> ${escape(i18n.format("VARBORG.Panic.Nerves.Roll", { formula: dice }))}</button></div>`,
+    extraHtml: buttons,
     flags: { [SYSTEM]: { panicChoice: true } }
   });
 }
@@ -349,11 +345,7 @@ async function useSteadyNerves(actor, itemId) {
     i18n.format("VARBORG.Panic.Nerves.Fatigued", { level: fatigue }),
     i18n.format("VARBORG.Effects.HookUsed", { item: item.name })
   ];
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    flavor: i18n.localize("VARBORG.Panic.Title"),
-    content: `<div class="var-borg-card">${lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")}</div>`
-  });
+  await postSmallCard(actor, lines, { flavor: i18n.localize("VARBORG.Panic.Title") });
   return true;
 }
 
@@ -530,11 +522,9 @@ export async function useUpNextTest(actor, { quiet = false } = {}) {
   return line;
 }
 
+/** A one-line card. The text is plain: the card escapes it (REVIEW.md S4). */
 async function postLine(actor, text) {
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<div class="var-borg-card"><p>${text}</p></div>`
-  });
+  await postSmallCard(actor, text);
 }
 
 /** "4 turns", "1 turn". */

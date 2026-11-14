@@ -43,6 +43,7 @@ import {
 } from "./rules/light.mjs";
 import { lightRateFor, lightRangeFor } from "./rules/weather-effects.mjs";
 import { currentWeather } from "./weather.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "light";
@@ -411,7 +412,12 @@ export function canLightItem(item) {
  * @param {Actor} actor
  * @param {Item} item
  */
-export async function lightItem(actor, item) {
+export function lightItem(actor, item) {
+  return oneAtATime(`light:${actor.uuid}`, () => lightItemNow(actor, item));
+}
+
+/** The body of lightItem, run inside the guard (REVIEW.md S2, B11). */
+async function lightItemNow(actor, item) {
   const i18n = game.i18n;
   if (!actor.isOwner || !canLightItem(item)) return;
   if (!game.users.activeGM) {

@@ -38,6 +38,7 @@ import { rollAbilityTest } from "./dice/ability-test.mjs";
 import { killedByDamage } from "./deaths-door.mjs";
 import { markDefeated } from "./dice/morale.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -417,7 +418,8 @@ function addVehicleCardListeners(message, html) {
         return;
       }
       if (usedButton(actor, id)) return;
-      const result = await rollAbilityTest(actor, DRIVING_ABILITY, {
+      const rollProne = options => oneAtATime(`vehicleProne:${actor.uuid}:${id}`, () => rollAbilityTest(actor, DRIVING_ABILITY, options));
+      const result = await rollProne({
         dr: PRONE_TEST_DR, purpose: i18n.localize("VARBORG.Vehicle.PronePurpose")
       });
       if (!result) return;

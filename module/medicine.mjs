@@ -28,6 +28,7 @@ import { persistentEffects } from "./persistent.mjs";
 import { turnState } from "./combat.mjs";
 import { isDead } from "./deaths-door.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { oneAtATime } from "./busy.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -82,7 +83,12 @@ function targetedPatient(actor) {
  * @param {Actor} actor  The character using the box.
  * @param {Item} item    The medicine box.
  */
-export async function useMedicineBox(actor, item) {
+export function useMedicineBox(actor, item) {
+  return oneAtATime(`medicine:${item.uuid}`, () => useMedicineBoxNow(actor, item));
+}
+
+/** The body of useMedicineBox, run inside the guard (REVIEW.md S2, L25). */
+async function useMedicineBoxNow(actor, item) {
   if (!canUseMedicine(item)) return;
   const i18n = game.i18n;
   const patient = findPatient(actor);

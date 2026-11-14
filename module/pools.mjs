@@ -16,6 +16,7 @@
 import { POOL, emptyPools, poolsForRound, canPay, pay, adjustPool, maySpend } from "./rules/pools.mjs";
 import { poolBonusFor } from "./rules/weather-effects.mjs";
 import { currentWeather } from "./weather.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "pools";
@@ -74,9 +75,9 @@ async function postWeatherBonus(pool, amount, hazard) {
     symbol: poolSymbol(pool),
     amount
   });
-  await ChatMessage.create({
+  await postSmallCard(null, text, {
     speaker: { alias: game.i18n.localize("VARBORG.Weather.CardTitle") },
-    content: `<div class="var-borg-card pool-card ${pool}"><p>${foundry.utils.escapeHTML(text)}</p></div>`
+    classes: `pool-card ${pool}`
   });
 }
 
@@ -211,12 +212,9 @@ async function applyChange({ pool, kind, amount, actorUuid, source = "" }, user)
     await game.settings.set(SYSTEM, SETTING, pools);
     const actor = actorUuid ? fromUuidSync(actorUuid) : null;
     const text = game.i18n.format("VARBORG.Pools.Lost", {
-      symbol: poolSymbol(pool), amount: left - pools[pool], pool: poolLabel(pool), left: pools[pool], source: foundry.utils.escapeHTML(String(source ?? ""))
+      symbol: poolSymbol(pool), amount: left - pools[pool], pool: poolLabel(pool), left: pools[pool], source: String(source ?? "")
     });
-    await ChatMessage.create({
-      speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },
-      content: `<div class="var-borg-card pool-card ${pool}"><p>${text}</p></div>`
-    });
+    await postSmallCard(actor, text, { classes: `pool-card ${pool}`, speaker: actor ? undefined : { alias: user.name } });
     return { ok: true, left: pools[pool] };
   }
   if (kind !== "spend" || amount < 1) return { error: "VARBORG.Pools.Bad" };
@@ -244,22 +242,15 @@ async function postSpend(pool, amount, left, user, actor) {
   const text = game.i18n.format("VARBORG.Pools.Spent", {
     name, symbol: poolSymbol(pool), amount, pool: poolLabel(pool), left
   });
-  await ChatMessage.create({
-    speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },
-    content: `<div class="var-borg-card pool-card ${pool}"><p>${text}</p></div>`
-  });
+  await postSmallCard(actor, text, { classes: `pool-card ${pool}`, speaker: actor ? undefined : { alias: user.name } });
 }
 
 /** A chat line: "Example Hero adds 🟒3 to the Ember pool with Shard of the Great Brazier (8 now)." */
 async function postGain(pool, amount, left, user, actor, source) {
-  const esc = foundry.utils.escapeHTML;
   const text = game.i18n.format("VARBORG.Pools.Gained", {
-    name: esc(actor?.name ?? user.name), symbol: poolSymbol(pool), amount, pool: poolLabel(pool), left, source: esc(source)
+    name: actor?.name ?? user.name, symbol: poolSymbol(pool), amount, pool: poolLabel(pool), left, source
   });
-  await ChatMessage.create({
-    speaker: actor ? ChatMessage.getSpeaker({ actor }) : { alias: user.name },
-    content: `<div class="var-borg-card pool-card ${pool}"><p>${text}</p></div>`
-  });
+  await postSmallCard(actor, text, { classes: `pool-card ${pool}`, speaker: actor ? undefined : { alias: user.name } });
 }
 
 export function poolLabel(pool) {

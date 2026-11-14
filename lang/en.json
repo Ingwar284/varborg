@@ -1611,6 +1611,8 @@
         "background": "{actor}'s background: {name}"
       },
       "Replaced": "Replaces {name}.",
+      "ReplaceTitle": "Replace class?",
+      "ReplaceBody": "{actor} is already a {old}. Changing to {name} removes the class feature and every class power on the sheet, including powers gained by Improving, and gives the {name}'s starting feature and power. Hit Points and Wounds are set again for the new class.",
       "Boost": "{ability} goes up 1, to {score}.",
       "BoostCapped": "{ability} is already +6 and cannot go higher.",
       "Hp": "HP {base} + Toughness {toughness} = {hp}, at full HP.",

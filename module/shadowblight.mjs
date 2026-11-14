@@ -15,6 +15,7 @@
 import { SHADOWBLIGHT_DICE, COMBUSTION, shadowblightResult, combustion } from "./rules/shadowblight.mjs";
 import { claimOnce } from "./card-once.mjs";
 import { nextSlot } from "./rules/card-once.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 
 /** The feat whose bearer rolls on the table twice and chooses (its own text). */
 const WILD_SURGE = "Wild surge";
@@ -88,14 +89,14 @@ export async function rollShadowblight(actor) {
   }
 
   const title = i18n.format("VARBORG.Shadowblight.Title", { name });
-  const content = `<div class="var-borg-card shadowblight-card"><h3>${title}</h3>`
-    + `<p class="modifier">${i18n.format("VARBORG.Shadowblight.Roll", { roll: roll.total })}</p>`
-    + lines.map(line => `<p>${line}</p>`).join("")
-    + `<p class="modifier">${i18n.localize("VARBORG.Shadowblight.DmApplies")}</p></div>`;
-  await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
+  await postSmallCard(actor, [
+    { text: i18n.format("VARBORG.Shadowblight.Roll", { roll: roll.total }), className: "modifier" },
+    ...lines,
+    { text: i18n.localize("VARBORG.Shadowblight.DmApplies"), className: "modifier" }
+  ], {
+    heading: title,
+    classes: "shadowblight-card",
     flavor: title,
-    content,
     rolls: [roll],
     sound: CONFIG.sounds.dice
   });
