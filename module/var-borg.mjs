@@ -26,6 +26,9 @@ import PowerData from "./data/power.mjs";
 import SpellData, { ScrollData } from "./data/spell.mjs";
 import { ClassData, AncestryData, BackgroundData } from "./data/origins.mjs";
 import RelicData from "./data/relic.mjs";
+import DocumentPageData from "./data/document-page.mjs";
+import DocumentPageSheet from "./sheets/document-page-sheet.mjs";
+import { registerFieldJournal } from "./field-journal.mjs";
 import {
   WeaponSheet, ArmourSheet, ShieldSheet, GearSheet, ContainerSheet, FeatSheet, PowerSheet, SpellSheet, ScrollSheet, ClassSheet, AncestrySheet, BackgroundSheet,
   RelicSheet
@@ -42,7 +45,7 @@ import { addMoraleCardListeners } from "./dice/morale.mjs";
 import { registerPoisons } from "./poison.mjs";
 import { registerLocalLinks } from "./local-links.mjs";
 import { registerLasting } from "./lasting.mjs";
-import { registerAreaCleanup } from "./areas.mjs";
+import { registerAreaCleanup, registerAreaQuery } from "./areas.mjs";
 import { registerConditions } from "./conditions.mjs";
 import { registerDarkness } from "./darkness.mjs";
 import { registerPersistentDamage } from "./persistent.mjs";
@@ -58,6 +61,7 @@ import { registerPanicButtons } from "./panic.mjs";
 import { registerPanels } from "./panels.mjs";
 import { registerOngoingPanel } from "./ongoing-panel.mjs";
 import { registerShadowblight } from "./shadowblight.mjs";
+import { registerCardOnce } from "./card-once.mjs";
 import { registerMedicine } from "./medicine.mjs";
 import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
@@ -66,6 +70,7 @@ import { registerSettings } from "./settings.mjs";
 import { registerMovement } from "./movement.mjs";
 import { registerChatRolls } from "./chat-rolls.mjs";
 import { registerItemChatHelpers } from "./item-chat.mjs";
+import { registerStage } from "./stage.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -121,6 +126,15 @@ Hooks.once("init", () => {
   Items.registerSheet("var-borg", BackgroundSheet, { types: ["background"], makeDefault: true, label: "VARBORG.Sheet.Background" });
   Items.registerSheet("var-borg", RelicSheet, { types: ["relic"], makeDefault: true, label: "VARBORG.Sheet.Relic" });
 
+  // Styled journal pages: field journal, letter, notice and scrap.
+  CONFIG.JournalEntryPage.dataModels.document = DocumentPageData;
+  CONFIG.JournalEntryPage.typeIcons.document = "fa-solid fa-scroll";
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(foundry.documents.JournalEntryPage, "var-borg", DocumentPageSheet, {
+    types: ["document"], makeDefault: true, label: "VARBORG.Sheet.DocumentPage"
+  });
+  // Field notes also write the Scholar's Field journal (GAPS 214).
+  registerFieldJournal();
+
   // Combat: initiative, turn order and action pips (rules 3.4).
   CONFIG.Combat.documentClass = VarBorgCombat;
   CONFIG.Combatant.documentClass = VarBorgCombatant;
@@ -167,6 +181,8 @@ Hooks.once("init", () => {
   // Quick roll buttons above the chat message box.
   registerChatRolls();
   registerItemChatHelpers();
+  // In-character chat as a visual novel dialogue box, and the Triumph splash.
+  registerStage();
   // The Dark Master's encounter builder (rules 2. Building Encounters).
   registerEncounters();
   // The Dark Master's treasure generator (rules 5. Treasure), also on chests.
@@ -187,6 +203,10 @@ Hooks.once("init", () => {
   registerLasting();
   // A deleted power or actor takes its kept areas with it.
   registerAreaCleanup();
+  // A player's kept area is created by the Dark Master (module/areas.mjs).
+  registerAreaQuery();
+  // Once-only card buttons: a player's claim is recorded by the Dark Master (module/card-once.mjs).
+  registerCardOnce();
   // The − and + buttons in roll dialogs.
   registerDialogControls();
   // Fortune buttons on test, attack, defence and gloom test cards (rules 3.9).

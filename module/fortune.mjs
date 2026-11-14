@@ -99,6 +99,21 @@ const ICONS = {
 const settlers = {};
 
 /**
+ * Fortune changes one at a time (REVIEW.md S2, B8), so two presses at once
+ * cannot both read the same Fortune and both spend it. Each job waits for
+ * the one before (as module/pools.mjs does); a job that fails does not hold
+ * up the next. A job must not wait on another queued job (it would never
+ * finish), so the queued entry points call the plain "Now" functions inside.
+ */
+let queue = Promise.resolve();
+
+function queued(job) {
+  const run = queue.then(job);
+  queue = run.catch(() => {});
+  return run;
+}
+
+/**
  * Hook up Fortune: the card buttons, the Dark Master's query, and the
  * starting d3 Fortune.
  * @param {Object<string, Function>} cards  For each card kind, the function
@@ -211,7 +226,12 @@ function addFortuneCardListeners(message, html) {
  * ask the Dark Master to.
  * @returns {Promise<boolean>} Whether the card changed.
  */
-async function spendOnCard(message, action) {
+function spendOnCard(message, action) {
+  return queued(() => spendOnCardNow(message, action));
+}
+
+/** The body of spendOnCard, run inside the queue. */
+async function spendOnCardNow(message, action) {
   const i18n = game.i18n;
   const data = message.getFlag(SYSTEM, FLAG);
   const actor = data ? await fromUuid(data.actorUuid) : null;
@@ -243,7 +263,7 @@ async function spendOnCard(message, action) {
   const here = game.user.isGM || (message.isOwner && actor.isOwner && spender.isOwner && (!foe || foe.isOwner));
   const request = { messageId: message.id, action, spenderUuid: spender.uuid };
   let result;
-  if (here) result = await applyFortune(request);
+  if (here) result = await applyFortuneNow(request);
   else {
     const gm = game.users.activeGM;
     if (!gm) {
@@ -270,7 +290,12 @@ async function spendOnCard(message, action) {
  * @param {{messageId: string, action: string, spenderUuid: string}} request
  * @returns {Promise<{ok: true}|{error: string}>}
  */
-async function applyFortune({ messageId, action, spenderUuid }) {
+function applyFortune(request) {
+  return queued(() => applyFortuneNow(request));
+}
+
+/** The body of applyFortune, run inside the queue. */
+async function applyFortuneNow({ messageId, action, spenderUuid }) {
   const message = game.messages.get(messageId);
   const data = foundry.utils.deepClone(message?.getFlag(SYSTEM, FLAG));
   if (!data || !settlers[data.card]) return { error: "VARBORG.Fortune.Gone" };
@@ -449,7 +474,12 @@ export function fortuneFields(actor, prefix) {
  * @returns {Promise<{boon: boolean, bane: boolean, note: string|null}|null>}
  *   null when there is not enough Fortune (the roll should not happen).
  */
-export async function payDialogFortune(actor, data) {
+export function payDialogFortune(actor, data) {
+  return queued(() => payDialogFortuneNow(actor, data));
+}
+
+/** The body of payDialogFortune, run inside the queue. */
+async function payDialogFortuneNow(actor, data) {
   const boon = Boolean(data.fortuneBoon);
   const bane = Boolean(data.fortuneBane);
   const cost = dialogCost(boon, bane);

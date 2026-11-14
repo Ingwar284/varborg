@@ -19,7 +19,7 @@
  */
 
 import {
-  DUNGEON_SIZES, REGIONS, rollTreasure, coinFormula, damagedTier, lootWeapons
+  DUNGEON_SIZES, REGIONS, rollTreasure, coinFormula, damagedTier, lootWeapons, relicId
 } from "./rules/treasure.mjs";
 import { ARMOUR_TABLE } from "./rules/creation.mjs";
 import { equipmentItem, itemData } from "./creation.mjs";
@@ -224,7 +224,7 @@ async function itemsFor(find, weapons) {
     case "tome":
       return spellItem(find.spell, find.kind === "tome");
     case "relic": {
-      const data = await itemData(`Compendium.var-borg.relics.Item.vbRelic${String(find.number).padStart(3, "0")}000000`);
+      const data = await itemData(`Compendium.var-borg.relics.Item.${relicId(find.number)}`);
       return data ? [data] : [];
     }
     default:

@@ -1,0 +1,846 @@
+/* VÅR BORG: the stage (module/stage.mjs).
+   1. The visual novel dialogue box for in-character chat.
+   2. The Triumph and Ruin splashes.
+   3. The Ember and Gloom orbs during combat (module/pool-orbs.mjs).
+   4. The turn strip under them (module/turn-strip.mjs).
+   5. The light orb, weather and time of day at the top right of the map (module/torch.mjs). */
+
+/* ================================================================
+   1. Dialogue box
+   ================================================================ */
+
+.vb-dialogue {
+  position: fixed;
+  left: calc(50% - 160px);           /* centred on the map, clear of the sidebar */
+  bottom: 120px;                     /* above the hotbar */
+  transform: translateX(-50%);
+  width: min(780px, calc(100vw - 480px));
+  min-width: 420px;
+  z-index: 70;                       /* over the map, under windows */
+  pointer-events: none;
+  display: none;
+}
+.vb-dialogue.is-open { display: block; }
+
+/* The speaker, standing behind the box. */
+.vb-dialogue__art {
+  position: absolute;
+  left: 8px;
+  bottom: 40px;
+  height: 300px;
+  max-width: 280px;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6));
+  mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
+  display: none;
+}
+.vb-dialogue.has-art .vb-dialogue__art { display: block; }
+.vb-dialogue.speaker-in .vb-dialogue__art {
+  animation: vb-speaker-in 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+/* The box itself: ink, with an orange rule inside and engraved corners. */
+.vb-dialogue__box {
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+  cursor: pointer;
+  min-height: 110px;
+  padding: 1.6rem 1.8rem 1.3rem;
+  background:
+    linear-gradient(rgba(20, 18, 16, 0.94), rgba(20, 18, 16, 0.97)),
+    var(--vb-ink);
+  color: var(--vb-paper);
+  border: 2px solid var(--vb-ink);
+  outline: 1px solid var(--vb-orange);
+  outline-offset: -7px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+  animation: vb-box-in 0.3s ease-out both;
+}
+.vb-dialogue.is-leaving .vb-dialogue__box,
+.vb-dialogue.is-leaving .vb-dialogue__art {
+  animation: vb-fade-out 0.35s ease-in both;
+}
+.vb-dialogue__box:focus-visible { outline: 2px solid var(--vb-yellow); }
+
+/* The name plate on the top edge, clear of the art. */
+.vb-dialogue__name {
+  position: absolute;
+  top: -1rem;
+  left: 1.5rem;
+  padding: 0.15rem 1.1rem 0.2rem;
+  background: var(--vb-orange);
+  color: var(--vb-ink);
+  border: 2px solid var(--vb-ink);
+  font-family: var(--vb-font-head);
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  transform: skewX(-8deg);
+  box-shadow: 3px 3px 0 var(--vb-ink);
+}
+.vb-dialogue.has-art .vb-dialogue__name { left: 250px; }
+.vb-dialogue.has-art .vb-dialogue__text { padding-left: 230px; }
+
+.vb-dialogue__text {
+  margin: 0;
+  font-family: var(--vb-font-body);
+  font-size: 1.2rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.vb-dialogue.is-emote .vb-dialogue__text {
+  font-style: italic;
+  color: var(--vb-paper-shade);
+}
+
+/* A blinking lozenge once the line is fully typed. */
+.vb-dialogue__next {
+  position: absolute;
+  right: 1.1rem;
+  bottom: 0.8rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--vb-orange);
+  transform: rotate(45deg);
+  opacity: 0;
+}
+.vb-dialogue.is-done .vb-dialogue__next { animation: vb-blink 0.9s steps(2, start) infinite; }
+
+@keyframes vb-speaker-in {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes vb-box-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes vb-fade-out {
+  to { opacity: 0; transform: translateY(10px); }
+}
+@keyframes vb-blink {
+  to { opacity: 1; }
+}
+
+/* ================================================================
+   2. Triumph and Ruin splashes
+   The band is turned, not skewed, so the words on it tilt with it.
+   Triumph rises (-4°), Ruin falls (+4°).
+   ================================================================ */
+
+.vb-splash {
+  --vb-splash-tilt: -4deg;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  overflow: hidden;
+}
+.vb-splash--ruin { --vb-splash-tilt: 4deg; }
+
+/* Triumph: a bright flash of paper. Ruin: the screen darkens and stays dark. */
+.vb-splash__flash {
+  position: absolute;
+  inset: 0;
+  background: var(--vb-paper);
+  animation: vb-flash 0.6s ease-out both;
+}
+.vb-splash--ruin .vb-splash__flash {
+  background: var(--vb-ink);
+  animation: vb-darken 0.5s ease-out both;
+}
+
+/* Triumph: etched rays of orange and yellow turning behind the band. */
+.vb-splash__rays {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 220vmax;
+  height: 220vmax;
+  margin: -110vmax 0 0 -110vmax;
+  background:
+    repeating-conic-gradient(from 0deg,
+      var(--vb-orange) 0deg 4deg,
+      transparent 4deg 11deg,
+      var(--vb-yellow) 11deg 13deg,
+      transparent 13deg 20deg);
+  mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.6) 18%, transparent 42%);
+  animation: vb-rays 3s linear both;
+}
+/* Ruin: a rust-red bruise closing in from the edges instead. */
+.vb-splash--ruin .vb-splash__rays {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(143, 50, 8, 0.45) 65%, rgba(20, 18, 16, 0.9) 100%);
+  mask-image: none;
+  animation: vb-fade-in 0.6s ease-out both;
+}
+
+/* The black band that slams across the screen, tilted. */
+.vb-splash__band {
+  position: absolute;
+  left: -10%;
+  top: 50%;
+  width: 120%;
+  height: 230px;
+  margin-top: -115px;
+  background: var(--vb-ink);
+  border-top: 5px solid var(--vb-orange);
+  border-bottom: 5px solid var(--vb-orange);
+  box-shadow: 0 0 0 3px var(--vb-ink), 0 20px 60px rgba(0, 0, 0, 0.7);
+  transform: rotate(var(--vb-splash-tilt));
+  animation: vb-band-in 0.45s 0.1s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+.vb-splash--ruin .vb-splash__band {
+  border-color: var(--vb-rust);
+  animation: vb-band-in-right 0.55s 0.1s cubic-bezier(0.5, 0, 0.3, 1.2) both;
+}
+
+/* The words sit on the band and turn with it. */
+.vb-splash__words {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 18%;
+}
+.vb-splash__name {
+  font-family: var(--vb-font-head);
+  font-size: 1.6rem;
+  color: var(--vb-paper);
+  letter-spacing: 0.15em;
+  animation: vb-rise 0.4s 0.5s ease-out both;
+}
+.vb-splash__word {
+  position: relative;
+  font-family: var(--vb-font-display);
+  font-size: 8.5rem;
+  line-height: 1;
+  color: var(--vb-yellow);
+  text-shadow:
+    3px 3px 0 var(--vb-rust),
+    0 0 30px rgba(236, 106, 31, 0.8);
+  animation: vb-slam 0.4s 0.3s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+}
+.vb-splash__title {
+  font-family: var(--vb-font-head);
+  font-size: 1.15rem;
+  color: var(--vb-orange);
+  letter-spacing: 0.1em;
+  animation: vb-rise 0.4s 0.6s ease-out both;
+}
+
+/* Ruin: the word drops in heavy, orange on black, and cracks across. */
+.vb-splash--ruin .vb-splash__name { color: var(--vb-paper-shade); }
+.vb-splash--ruin .vb-splash__word {
+  color: var(--vb-orange);
+  text-shadow: 4px 4px 0 var(--vb-ink), 0 0 24px rgba(143, 50, 8, 0.9);
+  animation: vb-drop 0.5s 0.35s cubic-bezier(0.5, 0, 0.7, 1.4) both;
+}
+.vb-splash--ruin .vb-splash__word::after {
+  content: "";
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  top: 48%;
+  height: 22px;
+  margin-top: -11px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 22' preserveAspectRatio='none'%3E%3Cpath d='M0 12 L18 8 L30 15 L47 6 L60 13 L78 9 L90 17 L108 7 L122 14 L138 5 L150 12 L168 9 L182 16 L200 10' fill='none' stroke='%23141210' stroke-width='4'/%3E%3Cpath d='M0 12 L18 8 L30 15 L47 6 L60 13 L78 9 L90 17 L108 7 L122 14 L138 5 L150 12 L168 9 L182 16 L200 10' fill='none' stroke='%23ece4d2' stroke-width='1.2'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  transform-origin: left center;
+  animation: vb-crack 0.3s 0.85s ease-out both;
+}
+
+/* Triumph: a ring of yellow bursting out as the word lands. */
+.vb-splash--triumph .vb-splash__band::after {
+  content: "";
+  position: absolute;
+  left: 59%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 6px solid var(--vb-yellow);
+  border-radius: 50%;
+  animation: vb-ring 0.7s 0.55s ease-out both;
+}
+
+/* The roller, breaking out of the band. Grey and sinking on a Ruin. */
+.vb-splash__art {
+  position: absolute;
+  left: 9%;
+  top: 50%;
+  height: 440px;
+  max-width: 40vw;
+  margin-top: -250px;
+  object-fit: contain;
+  object-position: bottom;
+  filter:
+    drop-shadow(3px 0 0 var(--vb-orange))
+    drop-shadow(-3px 0 0 var(--vb-orange))
+    drop-shadow(0 -3px 0 var(--vb-orange))
+    drop-shadow(0 16px 24px rgba(0, 0, 0, 0.7));
+  animation: vb-art-in 0.5s 0.2s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+}
+.vb-splash--ruin .vb-splash__art {
+  filter:
+    grayscale(1) contrast(1.2) brightness(0.8)
+    drop-shadow(3px 0 0 var(--vb-rust))
+    drop-shadow(-3px 0 0 var(--vb-rust))
+    drop-shadow(0 -3px 0 var(--vb-rust))
+    drop-shadow(0 16px 24px rgba(0, 0, 0, 0.8));
+  animation: vb-art-sink 0.7s 0.2s ease-out both;
+}
+
+/* Leaving: quick. Triumph sweeps on to the right, Ruin back to the left. */
+.vb-splash.is-leaving .vb-splash__band { animation: vb-band-out 0.3s ease-in both; }
+.vb-splash--ruin.is-leaving .vb-splash__band { animation: vb-band-out-left 0.3s ease-in both; }
+.vb-splash.is-leaving .vb-splash__art,
+.vb-splash.is-leaving .vb-splash__rays,
+.vb-splash.is-leaving .vb-splash__flash { animation: vb-fade 0.3s ease-in both; }
+
+/* The map jolts as the band lands. */
+#board.vb-shake--triumph { animation: vb-shake 0.45s linear; }
+#board.vb-shake--ruin { animation: vb-shake-hard 0.55s linear; }
+
+@keyframes vb-flash {
+  0%   { opacity: 0; }
+  12%  { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+@keyframes vb-darken {
+  from { opacity: 0; }
+  to   { opacity: 0.45; }
+}
+@keyframes vb-fade-in {
+  from { opacity: 0; }
+}
+@keyframes vb-rays {
+  0%   { opacity: 0; transform: rotate(0deg) scale(0.6); }
+  15%  { opacity: 0.7; }
+  85%  { opacity: 0.55; }
+  100% { opacity: 0.55; transform: rotate(40deg) scale(1); }
+}
+@keyframes vb-band-in {
+  from { transform: rotate(var(--vb-splash-tilt)) translateX(-110%); }
+  to   { transform: rotate(var(--vb-splash-tilt)) translateX(0); }
+}
+@keyframes vb-band-in-right {
+  from { transform: rotate(var(--vb-splash-tilt)) translateX(110%); }
+  to   { transform: rotate(var(--vb-splash-tilt)) translateX(0); }
+}
+@keyframes vb-band-out {
+  from { transform: rotate(var(--vb-splash-tilt)); }
+  to   { transform: rotate(var(--vb-splash-tilt)) translateX(110%); opacity: 0; }
+}
+@keyframes vb-band-out-left {
+  from { transform: rotate(var(--vb-splash-tilt)); }
+  to   { transform: rotate(var(--vb-splash-tilt)) translateX(-110%); opacity: 0; }
+}
+@keyframes vb-art-in {
+  from { opacity: 0; transform: translateX(-120px) scale(0.9); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes vb-art-sink {
+  from { opacity: 0; transform: translateY(-60px); }
+  to   { opacity: 1; transform: translateY(20px); }
+}
+@keyframes vb-slam {
+  from { opacity: 0; transform: scale(3); letter-spacing: 0.4em; }
+  to   { opacity: 1; transform: scale(1); letter-spacing: 0.02em; }
+}
+@keyframes vb-drop {
+  0%   { opacity: 0; transform: translateY(-160px); }
+  70%  { opacity: 1; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes vb-crack {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes vb-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes vb-ring {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(14); }
+}
+@keyframes vb-fade {
+  to { opacity: 0; }
+}
+@keyframes vb-shake {
+  0%, 100% { transform: none; }
+  20% { transform: translate(-8px, 4px); }
+  40% { transform: translate(7px, -5px); }
+  60% { transform: translate(-5px, 3px); }
+  80% { transform: translate(3px, -2px); }
+}
+@keyframes vb-shake-hard {
+  0%, 100% { transform: none; }
+  15% { transform: translate(0, 14px); }
+  30% { transform: translate(-10px, -6px); }
+  45% { transform: translate(9px, 6px); }
+  60% { transform: translate(-6px, -3px); }
+  80% { transform: translate(3px, 2px); }
+}
+
+/* Computers that ask for reduced motion: no flash, no screen shake. */
+@media (prefers-reduced-motion: reduce) {
+  .vb-splash--triumph .vb-splash__flash { animation: none; opacity: 0; }
+  #board.vb-shake--triumph,
+  #board.vb-shake--ruin { animation: none; }
+}
+
+/* ================================================================
+   3. Ember and Gloom orbs: a sun and a moon at the top of the map
+   ================================================================ */
+
+.vb-orbs {
+  position: fixed;
+  top: 6px;
+  left: 50%;                         /* the middle of the screen */
+  width: max-content;                /* not squeezed into the right half of the screen */
+  transform: translate(-50%, -140%);
+  z-index: 70;                       /* over the map, under windows */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;                         /* room between the orbs and the turn strip */
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 0.3s ease;
+}
+.vb-orbs.is-shown {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+/* The sun, the bar and the moon in a row. */
+.vb-orbs__row {
+  display: flex;
+  align-items: center;
+}
+
+/* One orb: the picture, the count on top, the name below. */
+.vb-orbs .vb-orb {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55));
+  transition: filter 0.4s ease, transform 0.2s ease;
+}
+.vb-orbs .vb-orb:hover { transform: scale(1.06); }
+.vb-orbs .vb-orb:focus-visible { outline: 2px solid var(--vb-yellow); outline-offset: 2px; border-radius: 50%; }
+
+.vb-orb__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.vb-orb--ember .vb-orb__rays {
+  transform-origin: 50px 50px;
+  animation: vb-orb-turn 60s linear infinite;
+}
+
+.vb-orb__count {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--vb-font-head);
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1;
+}
+/* Ink on the sun; paper with an ink halo on the moon (it crosses the crescent). */
+.vb-orb--ember .vb-orb__count {
+  color: var(--vb-ink);
+  text-shadow: 0 0 4px var(--vb-yellow), 0 0 2px var(--vb-yellow);
+}
+.vb-orb--gloom .vb-orb__count {
+  color: var(--vb-paper);
+  text-shadow: 0 0 3px var(--vb-ink), 0 0 3px var(--vb-ink), 0 0 6px var(--vb-ink);
+}
+
+.vb-orb__name {
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  transform: translateX(-50%);
+  padding: 0 6px;
+  background: var(--vb-ink);
+  color: var(--vb-yellow);
+  font-family: var(--vb-font-head);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 15px;
+  white-space: nowrap;
+  border: 1px solid var(--vb-orange);
+}
+
+/* An empty pool: the orb goes dim and grey. */
+.vb-orbs .vb-orb.is-empty {
+  filter: grayscale(0.85) brightness(0.7) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55));
+}
+.vb-orb.is-empty .vb-orb__rays { animation-play-state: paused; }
+
+/* The pool fills: the orb swells and glows. Charges spent: it flickers. */
+.vb-orb--ember.is-filling { animation: vb-orb-fill-ember 0.7s ease-out; }
+.vb-orb--gloom.is-filling { animation: vb-orb-fill-gloom 0.7s ease-out; }
+.vb-orb.is-spending { animation: vb-orb-spend 0.45s ease-out; }
+
+/* The bar between the two: a double rule with the round on an ink plate. */
+.vb-orbs__link {
+  display: flex;
+  align-items: center;
+  margin: 0 -6px;
+  z-index: -1;
+}
+.vb-orbs__rule {
+  width: 26px;
+  height: 6px;
+  border-top: 2px solid var(--vb-ink);
+  border-bottom: 2px solid var(--vb-ink);
+  background: var(--vb-orange);
+}
+.vb-orbs__link .vb-orbs__rule:last-child { background: var(--vb-paper-shade); }
+.vb-orbs__round {
+  padding: 3px 10px;
+  background: var(--vb-ink);
+  color: var(--vb-yellow);
+  border: 1px solid var(--vb-orange);
+  outline: 2px solid var(--vb-ink);
+  font-family: var(--vb-font-head);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.55);
+}
+
+/* ================================================================
+   4. Turn strip: round portraits in turn order under the orbs
+   ================================================================ */
+
+/* Three columns: acted | now | still to act. The two sides are always the
+   same width, so whoever acts now sits in the exact middle of the screen. */
+.vb-turns {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: 10px;
+}
+.vb-turns:empty { display: none; }
+.vb-turns__side {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding-top: 7px;                  /* level with the middle of the larger portrait */
+}
+.vb-turns__side--done { justify-content: flex-end; }
+.vb-turns__side--next { justify-content: flex-start; }
+.vb-turns__now { display: flex; justify-content: center; }
+
+/* Already acted this round (and who opens the next): faded and a little smaller. */
+.vb-turns .vb-turn.is-done {
+  width: 34px;
+  height: 34px;
+  margin-top: 3px;
+  opacity: 0.55;
+}
+.vb-turns .vb-turn.is-done:hover { opacity: 1; }
+
+.vb-turns .vb-turn {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: 2px solid var(--vb-ink);
+  outline: 2px solid var(--vb-paper-shade);
+  background: var(--vb-ink);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.2s ease, width 0.3s ease, height 0.3s ease;
+}
+.vb-turns .vb-turn--players { outline-color: var(--vb-orange); }
+.vb-turns .vb-turn--foes { outline-color: var(--vb-paper-shade); }
+.vb-turns .vb-turn:hover { transform: translateY(2px) scale(1.06); }
+.vb-turns .vb-turn:focus-visible { outline: 2px solid var(--vb-yellow); }
+
+.vb-turn img {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Whose turn it is now: larger, with a yellow ring. */
+.vb-turns .vb-turn.is-now {
+  width: 54px;
+  height: 54px;
+  outline: 3px solid var(--vb-yellow);
+  box-shadow: 0 0 10px var(--vb-yellow), 0 3px 6px rgba(0, 0, 0, 0.55);
+}
+
+/* Defeated: grey and dim. Hidden from players: faint (only the Dark Master sees them). */
+.vb-turn.is-defeated img { filter: grayscale(1) brightness(0.5); }
+.vb-turn.is-defeated::after {
+  content: "✕";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--vb-paper);
+  font-size: 22px;
+  text-shadow: 0 0 3px var(--vb-ink);
+}
+.vb-turns .vb-turn.is-hidden { opacity: 0.5; }
+
+/* The initiative, on a small ink plate at the top right. */
+.vb-turn__init {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 18px;
+  padding: 0 3px;
+  background: var(--vb-ink);
+  color: var(--vb-yellow);
+  border: 1px solid var(--vb-orange);
+  font-family: var(--vb-font-head);
+  font-size: 11px;
+  line-height: 14px;
+  text-align: center;
+}
+
+/* Actions left (◈) under the one acting now. */
+.vb-turn__actions {
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  padding: 0 4px;
+  background: var(--vb-ink);
+  border: 1px solid var(--vb-orange);
+  font-size: 10px;
+  line-height: 13px;
+  white-space: nowrap;
+}
+.vb-turn__actions .filled { color: var(--vb-yellow); }
+.vb-turn__actions .spent { color: var(--vb-ink-soft); }
+
+/* Where the next round begins, and how many more there are. */
+.vb-turns__round-mark,
+.vb-turns__more {
+  align-self: center;
+  color: var(--vb-paper);
+  font-family: var(--vb-font-head);
+  font-size: 18px;
+  text-shadow: 0 0 3px var(--vb-ink), 0 0 6px var(--vb-ink);
+  pointer-events: auto;
+}
+.vb-turns__more { font-size: 14px; }
+
+/* ================================================================
+   5. Light orb, with the weather and time-of-day orbs: top right of the map
+   ================================================================ */
+
+/* In the column left of the sidebar (#ui-right lets clicks through). */
+#ui-right-column-1 > .vb-light { order: -1; }
+
+.vb-light {
+  --vb-burn: 0;                      /* 1 full, 0 out: set every second */
+  align-self: flex-end;
+  display: flex;
+  align-items: flex-start;
+  margin: 6px 8px 12px 0;
+  pointer-events: none;
+}
+.vb-light button {
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* ---- The light orb ---- */
+.vb-light__main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vb-light .vb-light__orb {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
+  transition: transform 0.2s ease;
+}
+.vb-light .vb-light__orb:hover { transform: scale(1.06); }
+.vb-light .vb-light__orb:focus-visible { outline: 2px solid var(--vb-yellow); outline-offset: 2px; }
+.vb-light__svg { width: 100%; height: 100%; overflow: visible; }
+
+/* The ring round the edge: full when lit, empties as the light burns down. */
+.vb-light__track { stroke: var(--vb-ink-soft); }
+.vb-light__ring {
+  stroke: var(--vb-orange);
+  stroke-dasharray: calc(var(--vb-burn) * 100) 100;
+  transition: stroke-dasharray 1s linear;
+}
+
+/* The flame: smaller as the light burns down, never quite gone. */
+.vb-light__flame-size {
+  transform-origin: 50px 68px;
+  transform: scale(calc(0.5 + 0.5 * var(--vb-burn)));
+  transition: transform 1s linear;
+}
+.vb-light__flame {
+  transform-origin: 50px 68px;
+  animation: vb-torch-flicker 1.4s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 5px var(--vb-orange));
+}
+.vb-light__flame-outer { fill: var(--vb-orange); }
+.vb-light__flame-inner { fill: var(--vb-yellow); }
+
+/* The time left (or "Dark") on an ink plate under the orb. */
+.vb-light__plate {
+  margin-top: -10px;
+  padding: 1px 8px;
+  background: var(--vb-ink);
+  color: var(--vb-yellow);
+  border: 1px solid var(--vb-orange);
+  outline: 2px solid var(--vb-ink);
+  font-family: var(--vb-font-head);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+.vb-light__out { display: none; }
+.vb-light:not(.is-burning) .vb-light__clock { display: none; }
+.vb-light:not(.is-burning) .vb-light__out { display: inline; color: var(--vb-paper-shade); }
+
+/* No light: a cold grey ember, the ring empty. */
+.vb-light:not(.is-burning) .vb-light__flame { animation: none; filter: none; }
+.vb-light:not(.is-burning) .vb-light__flame-outer { fill: var(--vb-ink-soft); }
+.vb-light:not(.is-burning) .vb-light__flame-inner { fill: var(--vb-ink); }
+.vb-light:not(.is-burning) .vb-light__orb { filter: grayscale(0.6) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6)); }
+
+/* The last five minutes: the flame gutters, the ring and time turn yellow. */
+.vb-light.is-burning.is-low .vb-light__flame { animation: vb-torch-gutter 0.35s steps(2, jump-none) infinite alternate; }
+.vb-light.is-burning.is-low .vb-light__ring { stroke: var(--vb-yellow); }
+.vb-light.is-burning.is-low .vb-light__clock { color: var(--vb-orange); }
+
+/* Paused: the flame stands still and the orb dims. */
+.vb-light.is-waiting .vb-light__flame { animation-play-state: paused; }
+.vb-light.is-waiting .vb-light__orb { opacity: 0.75; }
+
+/* Blackburn: the flame burns dark with an orange edge. */
+.vb-light.is-burning.is-blackburn .vb-light__flame-outer { fill: var(--vb-ink); stroke: var(--vb-orange); }
+.vb-light.is-burning.is-blackburn .vb-light__flame-inner { fill: var(--vb-rust); }
+
+/* ---- The two small orbs, side by side to the left of the light orb ---- */
+.vb-light__small {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 84px;                      /* level with the middle of the light orb */
+  margin-right: 10px;
+}
+.vb-light .vb-light__mini {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid var(--vb-ink);
+  outline: 2px solid var(--vb-paper-shade);
+  font-size: 13px;
+  color: var(--vb-ink);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.55);
+  transition: transform 0.2s ease;
+}
+.vb-light .vb-light__mini[hidden] { display: none; }
+.vb-light .vb-light__mini:hover { transform: scale(1.12); }
+.vb-light .vb-light__mini:focus-visible { outline-color: var(--vb-yellow); }
+
+/* Weather: coloured as its hex on the weather flower. */
+.vb-light .vb-light__weather { background: var(--vb-weather-clouded); }
+.vb-light .vb-light__weather.kind-perfectDay { background: var(--vb-weather-perfect-day); }
+.vb-light .vb-light__weather.kind-clearSky { background: var(--vb-weather-clear-sky); }
+.vb-light .vb-light__weather.kind-clouded { background: var(--vb-weather-clouded); }
+.vb-light .vb-light__weather.kind-lightPrecipitation { background: var(--vb-weather-light-precipitation); }
+.vb-light .vb-light__weather.kind-heavyPrecipitation { background: var(--vb-weather-heavy-precipitation); color: var(--vb-paper); }
+.vb-light .vb-light__weather.kind-storm { background: var(--vb-weather-storm); color: var(--vb-yellow); }
+.vb-light .vb-light__weather.kind-minorHazard { background: var(--vb-weather-minor-hazard); }
+.vb-light .vb-light__weather.kind-majorHazard { background: var(--vb-weather-major-hazard); color: var(--vb-yellow); }
+
+/* Time of day: pale morning with a rust sun, orange afternoon, ink night. */
+.vb-light .vb-light__phase.phase-morning { background: var(--vb-paper); color: var(--vb-rust); }
+.vb-light .vb-light__phase.phase-afternoon { background: var(--vb-orange); }
+.vb-light .vb-light__phase.phase-night { background: var(--vb-ink); color: var(--vb-paper); }
+
+@keyframes vb-torch-flicker {
+  0%   { transform: scale(1, 1) skewX(0deg); }
+  30%  { transform: scale(0.95, 1.06) skewX(-3deg); }
+  60%  { transform: scale(1.04, 0.96) skewX(2deg); }
+  100% { transform: scale(0.97, 1.03) skewX(-1deg); }
+}
+@keyframes vb-torch-gutter {
+  from { transform: scale(0.8, 0.7) skewX(-6deg); opacity: 0.7; }
+  to   { transform: scale(1.05, 1.1) skewX(5deg); opacity: 1; }
+}
+
+@keyframes vb-orb-turn {
+  to { transform: rotate(360deg); }
+}
+@keyframes vb-orb-fill-ember {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18); filter: drop-shadow(0 0 16px var(--vb-yellow)); }
+  100% { transform: scale(1); }
+}
+@keyframes vb-orb-fill-gloom {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18); filter: drop-shadow(0 0 16px var(--vb-paper)); }
+  100% { transform: scale(1); }
+}
+@keyframes vb-orb-spend {
+  0%, 100% { transform: none; opacity: 1; }
+  20% { transform: translateX(-3px) scale(0.94); opacity: 0.6; }
+  45% { transform: translateX(3px) scale(0.97); opacity: 0.9; }
+  70% { transform: translateX(-1px); opacity: 0.75; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vb-orbs { transition: opacity 0.3s ease; }
+  .vb-turns .vb-turn { transition: none; }
+  .vb-light__flame,
+  .vb-light.is-burning.is-low .vb-light__flame { animation: none; }
+  .vb-orb--ember .vb-orb__rays,
+  .vb-orb.is-filling,
+  .vb-orb.is-spending { animation: none; }
+}

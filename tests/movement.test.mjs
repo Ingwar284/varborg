@@ -61,7 +61,14 @@ test("crawling, Prone and Encumbered make every step difficult", () => {
   assert.equal(alwaysDifficult("walk", ["prone"]), true);
   assert.equal(alwaysDifficult("fly", ["encumbered"]), true);
   assert.equal(alwaysDifficult("walk", [], "overloaded"), true);
-  assert.equal(alwaysDifficult("walk", ["blinded"]), false);
+});
+
+test("Blinded makes every step difficult (rules 3.13)", () => {
+  assert.equal(alwaysDifficult("walk", ["blinded"]), true);
+  assert.equal(alwaysDifficult("fly", ["blinded"]), true);
+  // Blinded with Prone is still just difficult: stepCost doubles once.
+  assert.equal(alwaysDifficult("walk", ["blinded", "prone"]), true);
+  assert.equal(alwaysDifficult("walk", ["deafened", "frightened"]), false);
 });
 
 test("Restrained cannot move", () => {

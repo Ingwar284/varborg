@@ -4,24 +4,45 @@
  * A spell's Ruin card (module/dice/attack.mjs) shows a "Roll on the
  * Shadowblight table" button for the caster's owner. It rolls d20 and posts
  * the result's name and text. The Dark Master applies the result by hand
- * (GAPS 138). The button stays on the card after a roll, for features such
- * as Wild surge that roll twice; a Fortune reroll that turns the Ruin into
- * another result takes the button away.
+ * (GAPS 138). Each roll is recorded on the card first (module/card-once.mjs,
+ * REVIEW.md B7): one roll, or two for Wild surge, which rolls twice. After
+ * that the button is off. A Fortune reroll that turns the Ruin into another
+ * result takes the button away.
  *
  * The table lives in module/rules/shadowblight.mjs, its text in lang/en.json.
  */
 
 import { SHADOWBLIGHT_DICE, COMBUSTION, shadowblightResult, combustion } from "./rules/shadowblight.mjs";
+import { claimOnce } from "./card-once.mjs";
+import { nextSlot } from "./rules/card-once.mjs";
+
+/** The feat whose bearer rolls on the table twice and chooses (its own text). */
+const WILD_SURGE = "Wild surge";
 
 /** Watch for the Shadowblight button on chat cards. */
 export function registerShadowblight() {
   Hooks.on("renderChatMessageHTML", addShadowblightListeners);
 }
 
+/** How many times the table may be rolled from one card: once, twice with Wild surge. */
+function rollsAllowed(actor) {
+  return actor.itemTypes.feat?.some(item => item.name === WILD_SURGE) ? 2 : 1;
+}
+
+/** The next unused roll number on this card ("1" or "2"), or null when all are used. */
+function freeRoll(message, actor) {
+  return nextSlot(message.getFlag("var-borg", "shadowblightRolled"), actor ? rollsAllowed(actor) : 1);
+}
+
 /** The button on a spell's Ruin card. */
 function addShadowblightListeners(message, html) {
   const button = html.querySelector("button[data-action='rollShadowblight']");
   if (!button) return;
+  // Used up already (the caster may not be loaded yet: then one roll is assumed).
+  if (freeRoll(message, fromUuidSync(button.dataset.actorUuid)) === null) {
+    button.disabled = true;
+    return;
+  }
   button.addEventListener("click", async () => {
     const actor = await fromUuid(button.dataset.actorUuid);
     if (!actor) return;
@@ -29,12 +50,20 @@ function addShadowblightListeners(message, html) {
       ui.notifications.warn(game.i18n.format("VARBORG.Shadowblight.NotYours", { name: actor.name }));
       return;
     }
-    button.disabled = true;
-    try {
-      await rollShadowblight(actor);
-    } finally {
-      button.disabled = false;
+    const roll = freeRoll(message, actor);
+    if (roll === null) {
+      button.disabled = true;
+      return;
     }
+    button.disabled = true;
+    // Record the roll first, so it cannot be repeated (REVIEW.md B7). Not re-enabled after this:
+    // the card redraws, with a button again only if Wild surge leaves a second roll.
+    const claim = await claimOnce(message, "shadowblightRolled", { actor, sub: roll });
+    if (!claim) {
+      button.disabled = freeRoll(message, actor) === null;
+      return;
+    }
+    await rollShadowblight(actor);
   });
 }
 

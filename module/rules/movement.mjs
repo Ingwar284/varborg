@@ -94,15 +94,16 @@ export function reachBudget(leftover, actionsLeft, perMove) {
 
 /**
  * Does every step count as difficult terrain for this creature, wherever it
- * is? Crawling does (designer ruling), and so do Prone (rules 3.13) and
- * Encumbered (rules 3.13: "all terrain counts as difficult").
+ * is? Crawling does (designer ruling), and so do Prone (rules 3.13), Blinded
+ * (rules 3.13: "All terrain is difficult terrain") and Encumbered (rules
+ * 3.13: "all terrain counts as difficult").
  * @param {string} action  The way it moves (one of MOVEMENT_TYPES).
  * @param {Iterable<string>} conditions  Its condition ids.
  * @param {string} [carryingState]  "normal", "encumbered" or "overloaded".
  */
 export function alwaysDifficult(action, conditions, carryingState = "normal") {
   const has = new Set(conditions);
-  return action === "crawl" || has.has("prone") || has.has("encumbered") || carryingState !== "normal";
+  return action === "crawl" || has.has("prone") || has.has("blinded") || has.has("encumbered") || carryingState !== "normal";
 }
 
 /**

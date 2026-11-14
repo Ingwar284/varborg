@@ -22,7 +22,9 @@
     "styles/sheets.css",
     "styles/items.css",
     "styles/cards.css",
-    "styles/apps.css"
+    "styles/apps.css",
+    "styles/journal.css",
+    "styles/stage.css"
   ],
   "languages": [
     {
@@ -56,6 +58,9 @@
     },
     "RegionBehavior": {
       "lasting": {}
+    },
+    "JournalEntryPage": {
+      "document": {}
     }
   },
   "packs": [

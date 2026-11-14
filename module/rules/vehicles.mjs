@@ -142,6 +142,22 @@ export function driverOf(occupants) {
 }
 
 /**
+ * At most one driver (GAPS 175). If several occupants have the driver role,
+ * the one at `keep` stays driver when it is one of them (the newest choice),
+ * otherwise the first one does. The others become crew. Returns a new list.
+ * @param {Array<{uuid: string, role: string, strapped: boolean}>} occupants
+ * @param {number} [keep]  Index of the occupant just made driver.
+ */
+export function settleDrivers(occupants, keep = -1) {
+  const list = (occupants ?? []).map(occupant => ({ ...occupant }));
+  const drivers = list.flatMap((occupant, index) => (occupant.role === "driver" ? [index] : []));
+  if (drivers.length <= 1) return list;
+  const winner = drivers.includes(keep) ? keep : drivers[0];
+  for (const index of drivers) if (index !== winner) list[index].role = "crew";
+  return list;
+}
+
+/**
  * The occupants after adding one: someone already aboard is not added
  * twice. The first one aboard drives; anyone after is a passenger.
  * @param {Array<{uuid: string, role: string, strapped: boolean}>} occupants

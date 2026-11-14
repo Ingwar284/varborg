@@ -162,6 +162,11 @@ export async function rollSpell(roll) {
   return { list, dr, name: SPELLS_BY_LIST[list][dr][index] };
 }
 
+/** The compendium id of relic number n: vbRelic + 3 digits + 000000 (16 characters). */
+export function relicId(number) {
+  return `vbRelic${String(number).padStart(3, "0")}000000`;
+}
+
 /** Roll a relic (d2, then d12 or d10 + 12). */
 export async function rollRelic(roll) {
   const half = await roll("1d2");

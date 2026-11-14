@@ -1,0 +1,269 @@
+/* VÅR BORG: styled journal pages (page type "document").
+   Four looks, drawn with CSS only: field journal, letter, notice, scrap.
+   Every look is a physical paper object, so it keeps paper and ink in both
+   Foundry themes. Colours and fonts come from tokens.css. */
+
+/* ---- The edit strip: the look and its extras ---- */
+.vb-document-page .vb-page-style {
+  gap: 0.75rem;
+  align-items: end;
+  padding: 0.25rem 0.5rem 0.5rem;
+  flex: 0 0 auto;
+}
+.vb-document-page .vb-page-style-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: var(--font-size-12, 12px);
+}
+.vb-document-page .vb-page-style-field.checkbox {
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+/* ---- Shared: the paper ---- */
+.vb-page {
+  padding: 1rem 0.75rem 1.5rem;
+}
+.vb-page .vb-page-sheet {
+  position: relative;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 2.25rem 2.25rem;
+  color: var(--vb-ink);
+  background: var(--vb-stipple), var(--vb-paper);
+  font-family: var(--vb-font-body);
+  font-size: 1.05rem;
+  line-height: 1.55;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+.vb-page .vb-page-sheet a.content-link,
+.vb-page .vb-page-sheet a.inline-roll {
+  color: var(--vb-ink);
+  background: var(--vb-paper-shade);
+  border-color: var(--vb-rule);
+}
+.vb-page .vb-page-head h1,
+.vb-page .vb-page-head h2,
+.vb-page .vb-page-head h3 {
+  margin: 0;
+  border: none;
+  color: var(--vb-ink);
+  font-family: var(--vb-font-head);
+  font-weight: 400;
+  text-align: center;
+}
+.vb-page .vb-page-subtitle {
+  margin: 0.2rem 0 0;
+  color: var(--vb-ink-soft);
+  font-style: italic;
+  text-align: center;
+}
+.vb-page .vb-page-body h1,
+.vb-page .vb-page-body h2,
+.vb-page .vb-page-body h3,
+.vb-page .vb-page-body h4 {
+  color: var(--vb-ink);
+  font-family: var(--vb-font-head);
+  font-weight: 400;
+  border-bottom: 1px solid var(--vb-rule);
+}
+.vb-page .vb-page-body blockquote {
+  color: var(--vb-ink-soft);
+  background: none;
+  border-left: 2px solid var(--vb-rule-strong);
+}
+.vb-page .vb-page-body img {
+  border: 1px solid var(--vb-ink);
+  filter: grayscale(0.6) sepia(0.25);
+}
+.vb-page section.secret {
+  background: var(--vb-paper-shade);
+  border-left: 3px solid var(--vb-rust);
+}
+
+/* ---- Field journal: ruled notebook paper with a margin line ---- */
+.vb-page-fieldJournal .vb-page-sheet {
+  padding-left: 4rem;
+  background:
+    linear-gradient(to right, transparent 3rem, var(--vb-rust) 3rem, var(--vb-rust) calc(3rem + 1px), transparent calc(3rem + 1px)),
+    var(--vb-stipple),
+    var(--vb-paper);
+  line-height: 1.6rem;
+  border-left: 6px double var(--vb-ink-soft);
+}
+/* The ruled lines start where the writing starts, one line per 1.6rem row,
+   nudged up so each line sits just under the letters, not between rows. */
+.vb-page-fieldJournal .vb-page-body {
+  margin: 0 -1.25rem 0 -1rem;
+  padding: 0 1.25rem 0 1rem;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.6rem - 1px), var(--vb-rule-faint) calc(1.6rem - 1px), var(--vb-rule-faint) 1.6rem);
+  background-position: 0 -0.35rem;
+  line-height: 1.6rem;
+}
+.vb-page-fieldJournal .vb-page-body h1,
+.vb-page-fieldJournal .vb-page-body h2,
+.vb-page-fieldJournal .vb-page-body h3,
+.vb-page-fieldJournal .vb-page-body h4 {
+  margin: 0 0 1.6rem;
+  font-size: 1.15rem;
+  line-height: 1.6rem;
+  border-bottom: none;
+}
+.vb-page-fieldJournal .vb-page-body ul,
+.vb-page-fieldJournal .vb-page-body ol {
+  margin: 0 0 1.6rem;
+}
+.vb-page-fieldJournal .vb-page-head {
+  margin-bottom: 1.6rem;
+}
+.vb-page-fieldJournal .vb-page-head h1,
+.vb-page-fieldJournal .vb-page-head h2,
+.vb-page-fieldJournal .vb-page-head h3 {
+  text-align: left;
+  border-bottom: 2px solid var(--vb-ink);
+}
+.vb-page-fieldJournal .vb-page-subtitle {
+  text-align: left;
+}
+.vb-page-fieldJournal .vb-page-body p,
+.vb-page-fieldJournal .vb-page-body li {
+  margin: 0 0 1.6rem;
+  font-size: 1.05rem;
+  line-height: 1.6rem;
+}
+.vb-page-fieldJournal .vb-page-body li {
+  margin-bottom: 0;
+}
+/* The specimen portrait from Field notes, pinned to the page. */
+.vb-page-fieldJournal .vb-field-specimen {
+  float: right;
+  width: 9rem;
+  margin: 0 0 0.5rem 1rem;
+  padding: 0.35rem 0.35rem 0.2rem;
+  background: var(--vb-paper);
+  border: 1px solid var(--vb-ink);
+  transform: rotate(2deg);
+  text-align: center;
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.2;
+}
+.vb-page-fieldJournal .vb-field-specimen img {
+  display: block;
+  width: 100%;
+  border: none;
+}
+
+/* ---- Letter: italic hand, signature, optional wax seal ---- */
+.vb-page-letter .vb-page-sheet {
+  font-style: italic;
+  font-size: 1.1rem;
+  padding-bottom: 3rem;
+  border: 1px solid var(--vb-rule);
+}
+.vb-page-letter .vb-page-head h1,
+.vb-page-letter .vb-page-head h2,
+.vb-page-letter .vb-page-head h3 {
+  text-align: left;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+}
+.vb-page-letter .vb-page-signature {
+  margin: 1.5rem 3rem 0 auto;
+  width: max-content;
+  max-width: 60%;
+  font-size: 1.3rem;
+  border-bottom: 1px solid var(--vb-ink-soft);
+  padding: 0 0.5rem;
+}
+.vb-page-letter .vb-page-seal {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1rem;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 46% 54% 50% 48% / 52% 46% 54% 48%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 1rem, rgba(0, 0, 0, 0.25) 1rem 1.1rem, transparent 1.1rem),
+    radial-gradient(circle at 38% 34%, #b8481a, var(--vb-rust) 55%, #5e2004);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+  transform: rotate(-12deg);
+}
+.vb-page-letter .vb-page-seal::after {
+  content: "";
+  position: absolute;
+  inset: 35%;
+  background: var(--vb-fleuron) center / contain no-repeat;
+  opacity: 0.5;
+  filter: invert(1);
+}
+
+/* ---- Notice / broadside: blackletter heading in an etched frame ---- */
+.vb-page-notice .vb-page-sheet {
+  border: 3px double var(--vb-ink);
+  outline: 1px solid var(--vb-ink);
+  outline-offset: -10px;
+  padding: 2.25rem 2.5rem;
+  text-align: center;
+}
+.vb-page-notice .vb-page-head {
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 3px double var(--vb-ink);
+}
+.vb-page-notice .vb-page-head h1,
+.vb-page-notice .vb-page-head h2,
+.vb-page-notice .vb-page-head h3 {
+  font-family: var(--vb-font-display);
+  font-size: 2.6rem;
+  line-height: 1.1;
+}
+.vb-page-notice .vb-page-subtitle {
+  font-family: var(--vb-font-head);
+  font-style: normal;
+  letter-spacing: 0.08em;
+}
+.vb-page-notice .vb-page-head::after {
+  content: "";
+  display: block;
+  height: 10px;
+  margin: 0.6rem auto 0;
+  width: 4rem;
+  background: var(--vb-fleuron) center / contain no-repeat;
+}
+.vb-page-notice .vb-page-body {
+  text-align: center;
+}
+
+/* ---- Torn page / scrap: ragged edges, smudged and tilted ---- */
+.vb-page.vb-page-scrap {
+  padding: 1.5rem;
+}
+.vb-page-scrap .vb-page-sheet {
+  max-width: 34rem;
+  transform: rotate(-1deg);
+  background:
+    radial-gradient(ellipse at 80% 15%, rgba(74, 67, 58, 0.18), transparent 40%),
+    radial-gradient(ellipse at 10% 90%, rgba(143, 50, 8, 0.12), transparent 35%),
+    var(--vb-stipple),
+    var(--vb-paper-shade);
+  clip-path: polygon(
+    0% 3%, 6% 0%, 13% 2%, 21% 0%, 30% 2.5%, 38% 0.5%, 47% 2%, 55% 0%, 63% 2.5%, 72% 0.5%, 80% 2%, 89% 0%, 95% 2%, 100% 0.5%,
+    99% 12%, 100% 25%, 98.5% 38%, 100% 50%, 98% 63%, 100% 76%, 98.5% 88%, 100% 99%,
+    93% 97%, 85% 100%, 76% 97.5%, 68% 100%, 59% 98%, 50% 100%, 41% 97%, 33% 99.5%, 24% 97.5%, 15% 100%, 7% 98%, 0% 100%,
+    1.5% 88%, 0% 75%, 2% 62%, 0% 50%, 1.5% 37%, 0% 24%, 2% 12%
+  );
+  box-shadow: none;
+}
+.vb-page-scrap .vb-page-head h1,
+.vb-page-scrap .vb-page-head h2,
+.vb-page-scrap .vb-page-head h3 {
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  .vb-page .vb-page-sheet { padding: 1.25rem 1rem 1.5rem; }
+  .vb-page-fieldJournal .vb-page-sheet { padding-left: 3rem; }
+  .vb-page-fieldJournal .vb-field-specimen { float: none; margin: 0 auto 1rem; }
+}

@@ -32,6 +32,7 @@ import { turnState } from "./combat.mjs";
 import { AGONY_RESULTS } from "./rules/agony.mjs";
 import { endsAfterHours, hoursLeft, hasEnded } from "./rules/calendar.mjs";
 import { runItemHooks, itemHooks } from "./effects.mjs";
+import { isClaimed, claimOnce } from "./card-once.mjs";
 
 const { renderTemplate } = foundry.applications.handlebars;
 
@@ -276,17 +277,22 @@ function activateGroupPanicButtons(message, html) {
   for (const button of html.querySelectorAll("button[data-action='groupNerves'], button[data-action='groupTable']")) {
     const actor = fromUuidSync(button.dataset.actorUuid);
     const key = actor?.id ?? "";
-    if (!actor?.isOwner || message.getFlag(SYSTEM, "groupPanicChosen")?.[key]) {
+    if (!actor?.isOwner || isClaimed(message, "groupPanicChosen", key)) {
       button.disabled = true;
       continue;
     }
     button.addEventListener("click", async () => {
-      for (const other of button.closest("[data-panic-row]")?.querySelectorAll("button") ?? [button]) other.disabled = true;
-      const chosen = message.getFlag(SYSTEM, "groupPanicChosen") ?? {};
-      if (chosen[key]) return;
-      if (message.canUserModify(game.user, "update")) await message.setFlag(SYSTEM, "groupPanicChosen", { ...chosen, [key]: true });
+      const row = [...(button.closest("[data-panic-row]")?.querySelectorAll("button") ?? [button])];
+      for (const other of row) other.disabled = true;
+      // Record this character's choice first, by the Dark Master's client when a player presses it (REVIEW.md B6).
+      const claim = await claimOnce(message, "groupPanicChosen", { actor, sub: key });
+      if (!claim) {
+        for (const other of row) other.disabled = isClaimed(message, "groupPanicChosen", key);
+        return;
+      }
       if (button.dataset.action === "groupTable") await rollPanicTable(actor, button.dataset.formula);
-      else await useSteadyNerves(actor, button.dataset.itemId);
+      // Steady nerves that turns out to be spent did nothing: give the choice back.
+      else if (!await useSteadyNerves(actor, button.dataset.itemId)) await claim.release();
     });
   }
 }
@@ -300,17 +306,22 @@ export function registerPanicButtons() {
     const buttons = [...html.querySelectorAll("button[data-action='steadyNerves'], button[data-action='panicTable']")];
     if (!buttons.length) return;
     const actor = fromUuidSync(buttons[0].dataset.actorUuid);
-    if (!actor?.isOwner || message.getFlag(SYSTEM, "panicChosen")) {
+    if (!actor?.isOwner || isClaimed(message, "panicChosen")) {
       for (const button of buttons) button.disabled = true;
       return;
     }
     for (const button of buttons) {
       button.addEventListener("click", async () => {
         for (const other of buttons) other.disabled = true;
-        if (message.getFlag(SYSTEM, "panicChosen")) return;
-        if (message.canUserModify(game.user, "update")) await message.setFlag(SYSTEM, "panicChosen", true);
+        // Record the choice first, by the Dark Master's client when a player presses it (REVIEW.md B6).
+        const claim = await claimOnce(message, "panicChosen", { actor });
+        if (!claim) {
+          for (const other of buttons) other.disabled = isClaimed(message, "panicChosen");
+          return;
+        }
         if (button.dataset.action === "panicTable") await rollPanicTable(actor, button.dataset.formula);
-        else await useSteadyNerves(actor, button.dataset.itemId);
+        // Steady nerves that turns out to be spent did nothing: give the choice back.
+        else if (!await useSteadyNerves(actor, button.dataset.itemId)) await claim.release();
       });
     }
   });
@@ -319,13 +330,15 @@ export function registerPanicButtons() {
 /**
  * Steady nerves: the failed Panic test counts as a Success, the character
  * gains 1 Fatigued and the feat is spent for the day (GAPS 197).
+ * @returns {Promise<boolean>}  false when the feat was already spent or is gone
+ *   and nothing happened, so the card's choice can be given back.
  */
 async function useSteadyNerves(actor, itemId) {
   const i18n = game.i18n;
   const item = actor.items.get(itemId);
   if (!item || item.system.frequencyUsed) {
     ui.notifications.warn(i18n.localize("VARBORG.Panic.Nerves.Spent"));
-    return;
+    return false;
   }
   await item.update({ "system.frequencyUsed": true });
   const fatigue = (actor.system.fatigue ?? 0) + 1;
@@ -341,6 +354,7 @@ async function useSteadyNerves(actor, itemId) {
     flavor: i18n.localize("VARBORG.Panic.Title"),
     content: `<div class="var-borg-card">${lines.map(line => `<p>${foundry.utils.escapeHTML(line)}</p>`).join("")}</div>`
   });
+  return true;
 }
 
 /**

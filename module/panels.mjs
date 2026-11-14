@@ -8,6 +8,11 @@
  * - Light: the light timer (module/light.mjs).
  * - Ember and Gloom: the pools and Reset ember abilities (module/pools.mjs).
  *
+ * During combat a sun and a moon at the top of the screen show the two
+ * pools too (module/pool-orbs.mjs). At the top right of the map, a light
+ * orb shows the light timer, with smaller orbs for the weather and the time
+ * of day (module/torch.mjs).
+ *
  * Everyone sees all three. Each user's open panels are remembered (a
  * client setting), and reopen when the world loads. All three start open.
  */
@@ -24,6 +29,8 @@ import { rest } from "./rest.mjs";
 import { registerWeather, weatherContext, setWeatherByHand, currentWeather } from "./weather.mjs";
 import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
 import { travel } from "./travel.mjs";
+import { registerPoolOrbs, refreshPoolOrbs } from "./pool-orbs.mjs";
+import { registerTorch, refreshTorch } from "./torch.mjs";
 import {
   registerLight, lightContext, setLightMinutes, changeLightMinutes, putOutLight, weatherChangedLight
 } from "./light.mjs";
@@ -32,6 +39,11 @@ const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
 
 const SYSTEM = "var-borg";
 const OPEN_SETTING = "openPanels";
+
+/** Where the panels sit: their top edge, the leftmost spot, and the gap between two. */
+const PANEL_TOP = 70;
+const PANEL_LEFT = 120;
+const PANEL_GAP = 10;
 
 /** Run a button's work with the button switched off meanwhile. */
 async function whileDisabled(button, work) {
@@ -54,7 +66,7 @@ class SharedPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "themed", "theme-light", "table-panel"],
     window: { resizable: false },
-    position: { width: 280 }
+    position: { width: 280, top: PANEL_TOP }
   };
 
   /** Closing with the window's ✕ (or the button) forgets the panel. */
@@ -71,7 +83,6 @@ export class CalendarPanel extends SharedPanel {
   static DEFAULT_OPTIONS = {
     id: "var-borg-calendar-panel",
     window: { title: "VARBORG.Calendar.Title", icon: "fa-solid fa-calendar-days" },
-    position: { top: 70, left: 120 },
     actions: {
       newDay: CalendarPanel.#onNewDay,
       rest: CalendarPanel.#onRest,
@@ -141,7 +152,6 @@ export class LightPanel extends SharedPanel {
   static DEFAULT_OPTIONS = {
     id: "var-borg-light-panel",
     window: { title: "VARBORG.Light.Title", icon: "fa-solid fa-fire-flame-curved" },
-    position: { top: 70, left: 410 },
     actions: {
       lightStart: LightPanel.#onLightStart,
       lightChange: LightPanel.#onLightChange,
@@ -188,7 +198,6 @@ export class PoolsPanel extends SharedPanel {
   static DEFAULT_OPTIONS = {
     id: "var-borg-pools-panel",
     window: { title: "VARBORG.Pools.Title", icon: "fa-solid fa-fire" },
-    position: { top: 70, left: 700 },
     actions: {
       spend: PoolsPanel.#onSpend,
       adjust: PoolsPanel.#onAdjust,
@@ -273,9 +282,26 @@ export function registerPanels() {
     type: Object,
     default: { calendar: true, light: true, pools: true }
   });
-  const refreshCalendar = () => refresh(CalendarPanel);
-  const refreshLight = () => refresh(LightPanel);
-  const refreshPools = () => refresh(PoolsPanel);
+  // The calendar panel, and the weather and time-of-day orbs beside the light orb.
+  const refreshCalendar = () => {
+    refresh(CalendarPanel);
+    refreshTorch();
+  };
+  // The panel and the light orb at the top right of the map (module/torch.mjs).
+  const refreshLight = () => {
+    refresh(LightPanel);
+    refreshTorch();
+  };
+  registerTorch({
+    openLight: () => openIfClosed("light"),
+    openCalendar: () => openIfClosed("calendar")
+  });
+  // The panel and the sun and moon orbs at the top of the screen (module/pool-orbs.mjs).
+  const refreshPools = () => {
+    refresh(PoolsPanel);
+    refreshPoolOrbs();
+  };
+  registerPoolOrbs(() => openIfClosed("pools"));
 
   // Ember and Gloom (module/pools.mjs), redrawn as combat changes too.
   registerPools(refreshPools);
@@ -316,12 +342,43 @@ function rememberOpen(key, open) {
   game.settings.set(SYSTEM, OPEN_SETTING, { ...openPanels(), [key]: open });
 }
 
-/** When the world loads: open the panels this user had open. */
-function openRemembered() {
+/**
+ * The first free spot in the row of panels along the top: from the left,
+ * past any panel already open there, so a panel opened on its own goes to
+ * the left rather than where it would sit beside the others.
+ */
+function freeLeft(Panel) {
+  const width = Panel.DEFAULT_OPTIONS.position?.width ?? SharedPanel.DEFAULT_OPTIONS.position.width;
+  const inRow = Object.values(PANELS)
+    .map(P => foundry.applications.instances.get(P.DEFAULT_OPTIONS.id))
+    .filter(app => app?.rendered && app.element)
+    .map(app => app.element.getBoundingClientRect())
+    .filter(pos => pos.top <= PANEL_TOP + 30 && pos.bottom >= PANEL_TOP)
+    .sort((a, b) => a.left - b.left);
+  let left = PANEL_LEFT;
+  for (const pos of inRow) {
+    if (left + width + PANEL_GAP <= pos.left) break;
+    left = Math.max(left, pos.left + pos.width + PANEL_GAP);
+  }
+  return left;
+}
+
+/** Open a panel in the first free spot along the top. */
+function openPanel(Panel) {
+  return new Panel({ position: { top: PANEL_TOP, left: freeLeft(Panel) } }).render({ force: true });
+}
+
+/** When the world loads: open the panels this user had open, side by side. */
+async function openRemembered() {
   const open = openPanels();
   for (const [key, Panel] of Object.entries(PANELS)) {
-    if (open[key]) new Panel().render({ force: true });
+    if (open[key]) await openPanel(Panel);
   }
+}
+
+/** Open a panel unless it is already open. */
+function openIfClosed(key) {
+  if (!foundry.applications.instances.get(PANELS[key].DEFAULT_OPTIONS.id)) togglePanel(key);
 }
 
 /** Open the panel, or close it if it is open. */
@@ -333,7 +390,7 @@ function togglePanel(key) {
     return;
   }
   rememberOpen(key, true);
-  new Panel().render({ force: true });
+  openPanel(Panel);
 }
 
 /** One button per panel in the token controls (left toolbar). */

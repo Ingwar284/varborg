@@ -15,6 +15,7 @@ import { wealthFormula } from "../module/rules/origins.mjs";
 import { nameTableIds } from "../module/rules/random.mjs";
 import { AUTOMATION, effectProblems } from "../module/rules/item-effects.mjs";
 import { automationEntries } from "../tools/automation.mjs";
+import { relicId, relicNumber } from "../module/rules/treasure.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const rules = readFileSync(join(root, "_reference", "AI BRIDGE - VÅR BORG.md"), "utf8");
@@ -61,6 +62,14 @@ test("each feat's name and text are word for word in the rules", () => {
   for (const f of ancestryFeats) {
     assert.ok(flat.includes(`${f.name} ${f.system.description}`), `${f.name} does not match the rules`);
   }
+});
+
+test("Dragon’s Shadow makes foes break: an optional Bane on their Morale roll (GAPS 182)", () => {
+  const shadow = ancestryFeats.find(f => f.name === "Dragon’s Shadow");
+  const [effect] = shadow.system.effects;
+  assert.equal(shadow.system.effects.length, 1);
+  assert.deepEqual([effect.kind, effect.roll, effect.grant, effect.mode], ["roll", "morale", "bane", "optional"]);
+  assert.ok(shadow.system.description.endsWith("with Bane."));
 });
 
 const backgrounds = readAll(join(root, "content", "backgrounds")).map(({ data }) => data);
@@ -404,6 +413,20 @@ test("all 22 relics of the table in 4.2 are there, each matching its row", () =>
     const s = r.system;
     const tail = `| ${r.name} | ${s.description} | ${s.lastRite} | ${s.drawback} | ${s.saleValue} s / ${s.factionValue} s (${s.faction}) |`;
     assert.ok(rows.some(l => /^\| \d+ \| /.test(l) && l.endsWith(tail)), `${r.name} does not match its row`);
+  }
+});
+
+test("every relic the treasure rules can roll (1–22) resolves to exactly one relic file (REVIEW B9, S12)", () => {
+  const numbers = [];
+  for (let half = 1; half <= 2; half++) {
+    for (let n = 1; n <= (half === 1 ? 12 : 10); n++) numbers.push(relicNumber(half, n));
+  }
+  assert.deepEqual(numbers, Array.from({ length: 22 }, (_, i) => i + 1));
+  for (const number of numbers) {
+    const id = relicId(number);
+    assert.match(id, /^[a-zA-Z0-9]{16}$/, `relic ${number} id`);
+    const matches = relics.filter(r => r._id === id);
+    assert.equal(matches.length, 1, `relic ${number} (${id}) matches ${matches.length} files`);
   }
 });
 

@@ -23,6 +23,7 @@ import { inflictDamage } from "./dice/morale.mjs";
 import { addPersistentDamage } from "./persistent.mjs";
 import { rollResists, takenWithResists } from "./effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { isClaimed, claimOnce } from "./card-once.mjs";
 
 const SYSTEM = "var-borg";
 const COAT_FLAG = "poisonCoat";
@@ -136,7 +137,7 @@ function activateResistButtons(message, html) {
   if (!message.getFlag(SYSTEM, "poisonCard")) return;
   for (const button of html.querySelectorAll("button[data-action='resistPoison']")) {
     const uuid = button.dataset.actorUuid;
-    const done = (message.getFlag(SYSTEM, "poisonResisted") ?? []).includes(uuid);
+    const done = isClaimed(message, "poisonResisted", uuid);
     const target = fromUuidSync(uuid);
     if (done || !target?.isOwner) {
       button.disabled = true;
@@ -144,10 +145,13 @@ function activateResistButtons(message, html) {
     }
     button.addEventListener("click", async () => {
       button.disabled = true;
-      const list = message.getFlag(SYSTEM, "poisonResisted") ?? [];
-      if (list.includes(uuid)) return;
-      if (message.canUserModify(game.user, "update")) await message.setFlag(SYSTEM, "poisonResisted", [...list, uuid]);
-      await resistPoison(await fromUuid(uuid), button.dataset.poison, button.dataset.name);
+      // Record the use first, by the Dark Master's client when a player presses it (REVIEW.md B6).
+      const claim = await claimOnce(message, "poisonResisted", { actor: target, sub: uuid });
+      if (!claim) {
+        button.disabled = isClaimed(message, "poisonResisted", uuid);
+        return;
+      }
+      await resistPoison(target, button.dataset.poison, button.dataset.name);
     });
   }
 }

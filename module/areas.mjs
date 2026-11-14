@@ -29,6 +29,8 @@ import { AREA_COLOUR } from "./canvas/region.mjs";
 const SYSTEM = "var-borg";
 /** The flag on a Region that a Sustained power left: "actorUuid|itemId". */
 const SOURCE_FLAG = "areaSource";
+/** The query a player's client sends the Dark Master to keep an area. */
+const KEEP_QUERY = "var-borg.keepArea";
 
 /** The user's token on the scene being viewed, or null. */
 function userToken(actor) {
@@ -253,10 +255,59 @@ export async function keepArea(actor, item, region, tier) {
   }
   data.behaviors = behaviors;
   try {
-    await canvas.scene.createEmbeddedDocuments("Region", [data]);
+    await keepRegion(canvas.scene.id, data);
   } catch (error) {
     console.error("VÅR BORG | Could not keep the area on the map", error);
   }
+}
+
+/**
+ * Foundry lets only a Dark Master create a Region with behaviours, so a
+ * player's client asks the active Dark Master to create it (the query
+ * registered in registerAreaQuery). A Dark Master creates it directly.
+ * @param {string} sceneId
+ * @param {object} data  Plain Region data, behaviours included.
+ * @returns {Promise<string|null>} The new Region's uuid, or null when no Dark Master could make it.
+ */
+async function keepRegion(sceneId, data) {
+  if (game.user.isGM) return createKeptRegion(sceneId, data);
+  const gm = game.users.activeGM;
+  if (!gm) {
+    ui.notifications.warn("VARBORG.Area.NoGM", { localize: true });
+    return null;
+  }
+  try {
+    return await gm.query(KEEP_QUERY, { sceneId, data }, { timeout: 30000 });
+  } catch (error) {
+    console.error("VÅR BORG | Area query failed", error);
+    ui.notifications.warn("VARBORG.Area.KeepFailed", { localize: true });
+    return null;
+  }
+}
+
+/**
+ * Create a kept area's Region. Runs on the Dark Master's client.
+ * @param {string} sceneId
+ * @param {object} data  Plain Region data.
+ * @param {User} [user]  Who asked, when a player's request came through the query.
+ * @returns {Promise<string>} The new Region's uuid.
+ */
+async function createKeptRegion(sceneId, data, user) {
+  const scene = game.scenes.get(sceneId);
+  if (!scene) throw new Error(`VÅR BORG | No scene ${sceneId} for a kept area`);
+  if (!data || typeof data !== "object" || !Array.isArray(data.shapes)) throw new Error("VÅR BORG | Not Region data");
+  // keepArea only ever puts these two behaviour types on a kept area.
+  const allowed = new Set(["modifyMovementCost", LASTING_TYPE]);
+  if ((data.behaviors ?? []).some(behaviour => !allowed.has(behaviour?.type))) throw new Error("VÅR BORG | Behaviour not allowed");
+  // A player's area belongs to that player only.
+  const created = user && !user.isGM ? { ...data, ownership: { [user.id]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER } } : data;
+  const [region] = await scene.createEmbeddedDocuments("Region", [created]);
+  return region.uuid;
+}
+
+/** Register the query a player's client uses to keep an area. Called once at init. */
+export function registerAreaQuery() {
+  CONFIG.queries[KEEP_QUERY] = (request, { user }) => createKeptRegion(request?.sceneId, request?.data, user);
 }
 
 /**

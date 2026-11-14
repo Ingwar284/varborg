@@ -17,6 +17,7 @@ import { testConditions, totalModifiers } from "../rules/conditions.mjs";
 import { signed, modeLabel, actorTestModifiers } from "./ability-test.mjs";
 import { conditionsOf, conditionNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
+import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
 import { itemRollMods } from "../effects.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
@@ -78,7 +79,13 @@ export async function rollContestedTest(actor) {
     sound: CONFIG.sounds.dice
   });
   await useUpNextTest(actor);
-  if (opponentActor) await useUpNextTest(opponentActor);
+  // "Next roll only" buffs are used up for each side that rolled with them (GAPS 235).
+  await useUpNextRollBuffs(actor, ["contest", "test"]);
+  // The opponent's are used up here only when this user may change that character.
+  if (opponentActor?.isOwner) {
+    await useUpNextTest(opponentActor);
+    await useUpNextRollBuffs(opponentActor, ["contest", "test"]);
+  }
 }
 
 /**

@@ -1,0 +1,23 @@
+{{!-- Foundry keeps only the children of this outer div, so the look's
+     classes go on the div inside it. --}}
+<div>
+  <div class="vb-page {{styleClass}}">
+    <article class="vb-page-sheet">
+      {{#if title.show}}
+      <header class="journal-page-header vb-page-head">
+        <h{{ title.level }}>{{ name }}</h{{ title.level }}>
+        {{#if system.subtitle}}{{#unless isLetter}}<p class="vb-page-subtitle">{{system.subtitle}}</p>{{/unless}}{{/if}}
+      </header>
+      {{/if}}
+
+      <section class="journal-page-content vb-page-body">
+        {{{ text.enriched }}}
+      </section>
+
+      {{#if isLetter}}
+      {{#if system.signature}}<p class="vb-page-signature">{{system.signature}}</p>{{/if}}
+      {{#if system.sealed}}<div class="vb-page-seal" aria-label="{{localize "VARBORG.Journal.Sealed"}}"></div>{{/if}}
+      {{/if}}
+    </article>
+  </div>
+</div>

@@ -14,7 +14,7 @@ import {
   resistsFor, resistedDamage, isGiftUuid, minionTierFor, featLoweredDamage, immuneConditions,
   betterMode, chosenWeaponTraits, changedSpeeds, isOn, lifeForceDie, masteredArmourDr, drivingDrWith, triumphDamage,
   hasAdrenaline, isRiskyPower, auraReaches, chosenSpellList,
-  notedKinds, withNotedKind, isActorUuid, useChoices, immunityTo
+  notedKinds, withNotedKind, withStudied, withoutStudied, isActorUuid, useChoices, immunityTo
 } from "../module/rules/item-effects.mjs";
 
 const stat = (target, value, op = "add") => ({ ...blankEffect("stat"), target, op, value });
@@ -732,4 +732,15 @@ test("guarding a rest is a Use effect (Hearth-tallow of Anashe)", () => {
   const effect = { ...blankEffect("use"), action: "guardRest" };
   assert.deepEqual(effectProblems(effect), []);
   assert.equal(useEffects([effect]).length, 1);
+});
+
+test("Field notes: creatures studied in a combat are listed once, and a new combat starts again", () => {
+  const ox = { uuid: "Actor.ox", name: "Wax Ox" };
+  const lice = { uuid: "Actor.lice", name: "Gloamlice" };
+  let studied = withStudied(undefined, "c1", ox);
+  studied = withStudied(studied, "c1", lice);
+  studied = withStudied(studied, "c1", ox);
+  assert.deepEqual(studied, { combat: "c1", kinds: [ox, lice] });
+  assert.deepEqual(withStudied(studied, "c2", lice), { combat: "c2", kinds: [lice] });
+  assert.deepEqual(withoutStudied(studied, "Actor.ox"), { combat: "c1", kinds: [lice] });
 });

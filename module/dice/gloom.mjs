@@ -18,7 +18,7 @@
  */
 
 import { useUpNextRoll as useUpNextRollBuffs } from "../outcomes.mjs";
-import { gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderConditions } from "../rules/gloom.mjs";
+import { gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderConditions, gloomFoeConditions } from "../rules/gloom.mjs";
 import { DR_TABLE, diceMode, diceFormula, resolveTest } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
@@ -171,6 +171,9 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
   }
   // Marks on the foe from powers (GAPS 223).
   if (foe?.type === "foe") conditionMods.push(...itemRollMods(foe, { roll: "defendAgainst" }));
+  // The foe's Stupefied Boon on a defence against its gloom ability (rules 3.13,
+  // Foe line). Not on an ability's own test: the Foe line says "defend".
+  const foeMods = !test.own && foe?.type === "foe" ? gloomFoeConditions(conditionsOf(foe).conditions) : [];
   // Item effects for the player to tick when they apply (PLAN step 49d).
   const optional = itemOptionalMods(actor, effectContext);
   // Armour soaks the damage either way (GAPS 123); natural armour too (GAPS 188).
@@ -179,7 +182,8 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
     automatic.armourDr ? i18n.format("VARBORG.Defence.ArmourNote", { dr: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.cover ? i18n.format("VARBORG.Defence.CoverNote", { dr: signed(-automatic.cover), name: automatic.shieldName }) : null,
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
-    ...conditionNotes(conditionMods)
+    ...conditionNotes(conditionMods),
+    ...conditionNotes(foeMods, foe?.name)
   ].filter(Boolean);
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
@@ -212,7 +216,7 @@ export async function rollGloomTest(actor, power, { shared = null } = {}) {
   const ticked = tickedMods(optional, options);
   conditionMods.push(...ticked);
   notes.push(...conditionNotes(ticked));
-  const fromConditions = totalModifiers(conditionMods);
+  const fromConditions = totalModifiers([...conditionMods, ...foeMods]);
   const boons = (options.boon ? 1 : 0) + (paid.boon ? 1 : 0) + fromConditions.boons;
   const banes = (options.bane ? 1 : 0) + (paid.bane ? 1 : 0) + (automatic.encumberedBane ? 1 : 0) + fromConditions.banes;
   const diceRule = diceMode(boons, banes);

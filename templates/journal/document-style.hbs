@@ -1,0 +1,24 @@
+<section class="vb-page-style flexrow">
+  <label class="vb-page-style-field">
+    <span>{{localize "VARBORG.Journal.Look"}}</span>
+    <select name="system.style">
+      {{selectOptions styleChoices selected=system.style localize=true}}
+    </select>
+  </label>
+  {{#if isLetter}}
+  <label class="vb-page-style-field">
+    <span>{{localize "VARBORG.Journal.Signature"}}</span>
+    <input type="text" name="system.signature" value="{{system.signature}}">
+  </label>
+  <label class="vb-page-style-field checkbox">
+    <span>{{localize "VARBORG.Journal.Sealed"}}</span>
+    <input type="checkbox" name="system.sealed" {{checked system.sealed}}>
+  </label>
+  {{else}}
+  <label class="vb-page-style-field">
+    <span>{{localize "VARBORG.Journal.Subtitle"}}</span>
+    <input type="text" name="system.subtitle" value="{{system.subtitle}}"
+           placeholder="{{localize "VARBORG.Journal.SubtitleHint"}}">
+  </label>
+  {{/if}}
+</section>

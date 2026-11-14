@@ -1462,5 +1462,11 @@ regeneration.
       thrown area items and grenades (area targets of 51b), the
       blunderbuss's damage by range, lockpicks with a die per result (GAPS
       55).
+    - ~~53c. Styled journal pages.~~ Done: a "Document (VÅR BORG)" page
+      type with four looks (field journal, letter with signature and wax
+      seal, notice, torn scrap), CSS only. Field notes' Record button also
+      writes a page per kind into the Scholar's "Field notes" journal
+      (GAPS 214); the Dark Master's Foundry makes the journal the first
+      time.
 
 **Final review:** the automation report shows no item without a status.

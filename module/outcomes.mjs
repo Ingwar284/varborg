@@ -23,6 +23,7 @@ import { addTimedCondition, rollTimer, conditionEffect } from "./timers.mjs";
 import { addPersistentDamage, persistentEffects } from "./persistent.mjs";
 import { stepDownArmourDie } from "./rules/attack.mjs";
 import { removeSustainedAreas } from "./areas.mjs";
+import { withStudied, withoutStudied } from "./rules/item-effects.mjs";
 
 const SYSTEM = "var-borg";
 const QUERY = "var-borg.outcome";
@@ -295,7 +296,16 @@ async function runOp51d(actor, op) {
       const from = hp.value;
       const to = Math.max(0, from - amount);
       await actor.update({ "system.hp.value": to });
-      return { dealt: from - to, line: noted(i18n.format("VARBORG.Outcome.Damaged", { name: actor.name, amount, from, to }), entry.note) };
+      // As saved: a foe's own rule (Abandon Shell) can leave it at 1 HP.
+      const saved = actor.system.hp.value;
+      // A foe brought to 0 HP is defeated, as a weapon attack does it (GAPS 71; the step vehicles.mjs also uses).
+      let defeatedCombatants = null;
+      if (actor.type === "foe" && saved === 0 && from > 0) {
+        defeatedCombatants = (game.combat?.combatants ?? []).filter(c => c.actor?.uuid === actor.uuid && !c.defeated).map(c => c.id);
+        const { markDefeated } = await import("./dice/morale.mjs");
+        await markDefeated(actor);
+      }
+      return { dealt: from - saved, defeated: defeatedCombatants !== null, defeatedCombatants: defeatedCombatants ?? [], line: noted(i18n.format("VARBORG.Outcome.Damaged", { name: actor.name, amount, from, to: saved }), entry.note) };
     }
     case "lowerArmour": {
       if (actor.type !== "foe" || !actor.system.armour) return { line: "" };
@@ -335,6 +345,8 @@ async function runOp51d(actor, op) {
       // The rig the user is aboard (GAPS 228).
       const rig = game.actors.find(other => other.type === "vehicle" && (other.system.occupants ?? []).some(occupant => occupant.uuid === actor.uuid));
       if (!rig) return { line: i18n.format("VARBORG.Outcome.NoRig", { name: actor.name }) };
+      // Not this user's rig: the Dark Master's client does the damage (REVIEW B5). No GM: nothing, as other outcomes.
+      if (!rig.isOwner && !game.user.isGM) return (await askGM(op)) ?? { line: "" };
       let amount = (await new Roll(String(entry.amount || "0")).evaluate()).total;
       if (entry.soaked && rig.system.armour) amount = Math.max(1, amount - (await new Roll(rig.system.armour).evaluate()).total);
       const from = rig.system.hp.value;
@@ -356,6 +368,11 @@ async function runOp51d(actor, op) {
       const user = op.user ? await fromUuid(op.user) : null;
       if (!user || user === actor) return { line: "" };
       if (user.isOwner) await user.setFlag(SYSTEM, entry.kind, { uuid: actor.uuid, name: actor.name, combat: combatKey() });
+      // Studied in a combat: Field notes records it when the combat ends.
+      if (entry.kind === "subject" && user.isOwner && combatKey()) {
+        const studied = withStudied(user.getFlag(SYSTEM, "studied"), combatKey(), { uuid: actor.uuid, name: actor.name, img: actor.img, actorId: actor.id });
+        await user.setFlag(SYSTEM, "studied", studied);
+      }
       return { markedBy: user.uuid, mark: entry.kind, line: noted(i18n.format(`VARBORG.Outcome.${entry.kind === "quarry" ? "Quarry" : "Subject"}`, { name: actor.name, user: user.name }), entry.note) };
     }
     case "ember": {
@@ -370,8 +387,9 @@ async function runOp51d(actor, op) {
         await loseEmber(amount, actor, op.name);
         return { line: noted(i18n.format("VARBORG.Outcome.EmberLost", { item: op.name, amount }), entry.note) };
       }
-      await gainEmber(amount, actor, op.name);
-      return { line: noted(i18n.format("VARBORG.Effects.HookEmber", { item: op.name, amount }), entry.note) };
+      // Ember is not capped, so the whole amount is added when the change succeeds; the record keeps that.
+      const added = await gainEmber(amount, actor, op.name);
+      return { emberGained: added ? amount : 0, emberSource: op.name, line: noted(i18n.format("VARBORG.Effects.HookEmber", { item: op.name, amount }), entry.note) };
     }
     case "wound": {
       // A wound: HP does not change; with the test it is like life force (GAPS 232).
@@ -420,6 +438,17 @@ async function undoOutcome(done) {
   // Step 51d.
   if (done.kind === "persistent" && done.effectId) await actor.effects.get(done.effectId)?.delete();
   if (done.kind === "damage" && done.dealt) await actor.update({ "system.hp.value": Math.min(actor.system.hp.max ?? Infinity, actor.system.hp.value + done.dealt) });
+  // The defeat this damage set is taken off again, as the HP comes back.
+  if (done.kind === "damage" && done.defeated) {
+    for (const id of done.defeatedCombatants ?? []) await game.combat?.combatants.get(id)?.update({ defeated: false });
+    if (actor.statuses.has(CONFIG.specialStatusEffects.DEFEATED)) await actor.toggleStatusEffect(CONFIG.specialStatusEffects.DEFEATED, { active: false });
+  }
+  // Ember the gain added is taken back, as far as the pool still has it (Ember spent since is not taken twice).
+  if (done.kind === "ember" && done.emberGained) {
+    const { getPools, loseEmber } = await import("./pools.mjs");
+    const take = Math.min(done.emberGained, getPools().ember ?? 0);
+    if (take > 0) await loseEmber(take, actor, done.emberSource ?? "");
+  }
   if (done.kind === "lowerArmour" && done.armourFrom !== undefined) await actor.update({ "system.armour": done.armourFrom });
   if (done.kind === "thralls" && done.thrallIds?.length) {
     const { deleteThralls } = await import("./minions.mjs");
@@ -428,10 +457,13 @@ async function undoOutcome(done) {
   if (done.kind === "rigDamage" && done.rigDealt) {
     const rig = await fromUuid(done.rigUuid);
     if (rig?.isOwner) await rig.update({ "system.hp.value": Math.min(rig.system.hp.max, rig.system.hp.value + done.rigDealt) });
+    // Not this user's rig: the Dark Master's client takes the damage back (REVIEW B5).
+    else if (rig && !game.user.isGM) await askGM({ op: "undo", done });
   }
   if (["quarry", "subject"].includes(done.kind) && done.markedBy) {
     const user = await fromUuid(done.markedBy);
     if (user?.isOwner && user.getFlag(SYSTEM, done.mark)?.uuid === actor.uuid) await user.unsetFlag(SYSTEM, done.mark);
+    if (user?.isOwner && done.mark === "subject" && user.getFlag(SYSTEM, "studied")) await user.setFlag(SYSTEM, "studied", withoutStudied(user.getFlag(SYSTEM, "studied"), actor.uuid));
   }
   if (done.kind === "wound" && done.wounded) await actor.update({ "system.wounds.value": Math.max(0, actor.system.wounds.value - 1) });
   if (done.kind === "cure" && done.cured && !actor.statuses.has(done.cured)) await actor.toggleStatusEffect(done.cured, { active: true });

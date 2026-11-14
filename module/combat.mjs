@@ -40,6 +40,7 @@ import { runItemHooks, initiativeKeep, endAdrenaline, DAMAGED_BY_FLAG } from "./
 import { runAuras } from "./aura.mjs";
 import { restoreLoweredArmour } from "./outcomes.mjs";
 import { heldWhileInside } from "./lasting.mjs";
+import { recordStudied } from "./field-journal.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -218,6 +219,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     if (this.started) removeThralls(this);
     // Armour a power lowered "until the end of the encounter" comes back (step 51d).
     restoreLoweredArmour(this);
+    // Field notes: what the Scholars studied is recorded (GAPS 214).
+    if (this.started) recordStudied(this);
     // Items that act when a fight ends (Doomsworn, step 50a2).
     if (this.started) {
       const actors = new Set(this.combatants.map(combatant => combatant.actor).filter(Boolean));

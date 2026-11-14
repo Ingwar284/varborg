@@ -130,6 +130,25 @@ export function withNotedKind(text, name) {
   return [String(text ?? "").trim(), kind].filter(Boolean).join(", ");
 }
 
+/**
+ * The creatures a Scholar studied in one combat (Field notes, automatic
+ * recording): the list for this combat with one more, unless that creature
+ * is in it already. A list from another combat starts again.
+ * @param {{combat: string, kinds: object[]}|undefined} studied
+ * @param {string} combat  The combat id.
+ * @param {{uuid: string, name: string}} entry
+ */
+export function withStudied(studied, combat, entry) {
+  const kinds = studied?.combat === combat ? [...(studied.kinds ?? [])] : [];
+  if (!kinds.some(kind => kind.uuid === entry.uuid)) kinds.push(entry);
+  return { combat, kinds };
+}
+
+/** The studied list without one creature (an undone Study the specimen). */
+export function withoutStudied(studied, uuid) {
+  return { combat: studied?.combat ?? "", kinds: (studied?.kinds ?? []).filter(kind => kind.uuid !== uuid) };
+}
+
 /** Is an Actor UUID from a compendium (a companion or thrall to make, step 51a3)? */
 export function isActorUuid(text) {
   return /^Compendium\.[\w-]+\.[\w-]+\.Actor\.\w{16}$/.test(String(text ?? ""));

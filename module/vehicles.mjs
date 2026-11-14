@@ -27,7 +27,7 @@
 
 import {
   SPEEDS, MANOEUVRES, DRIVING_ABILITY, COLLISION_DICE, PRONE_TEST_DR, THROWN_FEET,
-  drivingDr, drivingOutcome, collisionDamage, driverOf, addOccupant,
+  drivingDr, drivingOutcome, collisionDamage, driverOf, addOccupant, settleDrivers,
   CARGO_TYPES, cargoLoad, allowedSpeeds, drivingBane
 } from "./rules/vehicles.mjs";
 import { bestSoak } from "./rules/defence.mjs";
@@ -56,6 +56,23 @@ const ROLLERS = ["character", "minion"];
 /** Hook up the buttons on driving cards. */
 export function registerVehicles() {
   Hooks.on("renderChatMessageHTML", addVehicleCardListeners);
+  Hooks.on("deleteCombat", clearDriveBoons);
+}
+
+/**
+ * When an encounter ends, a Triumph's Boon for the next driving test "this
+ * encounter" ends with it (rules: Subsystem: Vehicles; GAPS 130). Only the
+ * active GM clears them, once, and only vehicles that still hold one.
+ * Mirrors the encounter clean-up in module/lasting.mjs (onCombatEnd) and
+ * module/combat.mjs (_onDelete).
+ */
+async function clearDriveBoons(combat) {
+  if (!game.users.activeGM?.isSelf || !combat.started) return;
+  const vehicles = new Set([
+    ...game.actors,
+    ...combat.combatants.map(combatant => combatant.actor)
+  ].filter(actor => actor?.type === "vehicle" && actor.system.driveBoon));
+  for (const vehicle of vehicles) await vehicle.update({ "system.driveBoon": false });
 }
 
 /**
@@ -81,13 +98,17 @@ export async function boardVehicle(vehicle, actor) {
   return actor;
 }
 
-/** Change one occupant's role or strapped-in box, or take them off (remove: true). */
+/**
+ * Change one occupant's role or strapped-in box, or take them off (remove: true).
+ * A new driver demotes the old one to crew, so there is only one (GAPS 175).
+ */
 export async function changeOccupant(vehicle, index, change) {
   const occupants = foundry.utils.deepClone(vehicle.system.occupants);
   if (!occupants[index]) return;
   if (change.remove) occupants.splice(index, 1);
   else Object.assign(occupants[index], change);
-  await vehicle.update({ "system.occupants": occupants });
+  const settled = change.role ? settleDrivers(occupants, index) : occupants;
+  await vehicle.update({ "system.occupants": settled });
 }
 
 /**

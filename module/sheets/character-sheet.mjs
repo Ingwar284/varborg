@@ -622,6 +622,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onToggleEquipped(event, button) {
     const item = this.#itemFor(button);
     if (!item || !EQUIPPABLE_TYPES.includes(item.type)) return;
+    // A dropped item is picked up from its "Stored in" menu, not this tick (GAPS 254).
+    if (isDropped(item, droppedContainerIds(this.actor.items))) return;
     await item.update({ "system.equipped": !item.system.equipped, "system.storedIn": "" });
   }
 

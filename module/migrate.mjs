@@ -47,6 +47,10 @@
  * Version 12 (playtest feedback): Aura of the Incorruptible strikes through
  * its area at the start of the caster's turns, not on casting: copies in
  * the world take the compendium's damage, outcome entries and area.
+ *
+ * Version 13 (playtest feedback): Study the specimen deals no damage when
+ * used. Its d6 is only the ally bonus (an item effect), so copies in the
+ * world lose the power damage they had.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -61,7 +65,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 12;
+export const DATA_VERSION = 13;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -95,6 +99,7 @@ export async function migrateWorld() {
   if (version < 10) await turnOnVision();
   if (version < 11) await refreshSongsOfPower();
   if (version < 12) await refreshAuraOfTheIncorruptible();
+  if (version < 13) await clearStudyTheSpecimenDamage();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -145,6 +150,13 @@ async function refreshAuraOfTheIncorruptible() {
   const stored = source.toObject().system;
   return updateItems(["spell", "scroll"], item => item.name === source.name
     ? { "system.damage": stored.damage, "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.area": foundry.utils.deepClone(stored.area) }
+    : null);
+}
+
+/** Version 13: Study the specimen loses its power damage (the d6 is the ally bonus). */
+function clearStudyTheSpecimenDamage() {
+  return updateItems(["power"], item => item.name === "Study the specimen" && item.system.damage === "d6"
+    ? { "system.damage": "" }
     : null);
 }
 

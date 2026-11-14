@@ -3,7 +3,8 @@
  * GAPS 31, 40, 150–154).
  *
  * One timer for the whole table, kept in a world setting and shown on the
- * Light panel (module/panels.mjs). It counts real time and pauses while the
+ * Light panel (module/panels.mjs) and as a torch at the top right of the
+ * map (module/torch.mjs). It counts real time and pauses while the
  * game is paused. Only the Dark Master's client changes it; a player's
  * light is sent there as a Foundry query.
  *
@@ -115,9 +116,21 @@ export function lightContext() {
   return {
     burning,
     clock: clock(left),
+    ...burnLevel(state, left),
     waiting: burning && !isCounting(state),
     blackburn: currentWeather().hazard === "blackburn",
     defaultMinutes: DEFAULT_LIGHT_MINUTES
+  };
+}
+
+/** In the last five minutes the torch on screen burns low (module/torch.mjs). */
+const LOW_MS = 5 * 60 * 1000;
+
+/** How much of the light is left (1 full, 0 out), and whether it is nearly out. */
+function burnLevel(state, left) {
+  return {
+    fraction: state.total > 0 ? Math.min(1, left / state.total) : 0,
+    low: left > 0 && left <= LOW_MS
   };
 }
 
@@ -133,6 +146,12 @@ function tick() {
   const state = getLight();
   const text = clock(timeLeft(state, now()));
   for (const el of document.querySelectorAll("[data-light-clock]")) el.textContent = text;
+  // The torch at the top of the screen burns down (module/torch.mjs).
+  const { fraction, low } = burnLevel(state, timeLeft(state, now()));
+  for (const el of document.querySelectorAll("[data-light-burn]")) {
+    el.style.setProperty("--vb-burn", fraction.toFixed(4));
+    el.classList.toggle("is-low", low);
+  }
   if (!game.user.isActiveGM || !state.running) return;
   if (isBurntOut(state, now())) {
     burnOut();

@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/creatures/reptiles/dragon-horned-blue.webp",
   "system": {
-    "description": "Your presence is heavy. Enemies within 10' of you roll their Morale tests with Boon.",
+    "description": "Your presence is heavy. Enemies within 10' of you roll their Morale tests with Bane.",
     "source": "ancestry",
     "belongsTo": "Dragonkin",
     "improving": false,
@@ -22,7 +22,7 @@
         "weapon": "",
         "vs": "",
         "mode": "optional",
-        "grant": "boon",
+        "grant": "bane",
         "dr": 0,
         "damage": "",
         "per": "",

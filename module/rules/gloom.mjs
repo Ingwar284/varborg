@@ -134,3 +134,19 @@ export function gloomUse({ inCombat = false, onOwnTurn = false, defeated = false
 export function gloomDefenderConditions(conditions, fatigue = 0) {
   return defenderConditions(conditions, fatigue, "melee").filter(mod => mod.condition !== "prone");
 }
+
+/**
+ * The attacking foe's conditions on a defence against its gloom ability.
+ * Rules 3.13, Stupefied, Foe line: "No reaction. Creatures defend against
+ * its gloom abilities with Boon." This is the only Foe line that names gloom
+ * abilities, so it is the only one here. The other conditions' Foe lines
+ * speak of attacks (Blinded, Restrained, Encumbered, Prone) and are
+ * deliberately not included. Fatigued's Foe line ("defend against it at -2
+ * DR") is not included either: only the Stupefied line is applied here.
+ * @param {Set<string>|string[]} conditions  The foe's condition ids.
+ * @returns {{condition: string, boon: true}[]}  One Boon, or nothing.
+ */
+export function gloomFoeConditions(conditions) {
+  const has = conditions instanceof Set ? conditions : new Set(conditions ?? []);
+  return has.has("stupefied") ? [{ condition: "stupefied", boon: true }] : [];
+}

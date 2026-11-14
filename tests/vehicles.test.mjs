@@ -7,7 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   SPEEDS, MANOEUVRES, DRIVING_ABILITY, COLLISION_DICE, MOVING_ATTACK_DR, PRONE_TEST_DR, THROWN_FEET,
-  drivingDr, drivingOutcome, collisionDamage, driverOf, addOccupant,
+  drivingDr, drivingOutcome, collisionDamage, driverOf, addOccupant, settleDrivers,
   CARGO_TYPES, roomPerPassenger, heavyCargo, cargoLoad, allowedSpeeds, drivingBane
 } from "../module/rules/vehicles.mjs";
 
@@ -79,6 +79,37 @@ test("the driver is the occupant with the driver role", () => {
   assert.equal(driverOf(occupants).uuid, "b");
   assert.equal(driverOf([{ uuid: "a", role: "crew" }]), null);
   assert.equal(driverOf([]), null);
+});
+
+test("making someone the driver demotes the old driver to crew, so there is one driver", () => {
+  // b was a passenger; the sheet has just made them the driver.
+  const occupants = [
+    { uuid: "a", role: "driver", strapped: false },
+    { uuid: "b", role: "driver", strapped: true }
+  ];
+  const settled = settleDrivers(occupants, 1);
+  assert.deepEqual(settled, [
+    { uuid: "a", role: "crew", strapped: false },
+    { uuid: "b", role: "driver", strapped: true }
+  ]);
+  assert.equal(driverOf(settled).uuid, "b");
+});
+
+test("the newest choice wins; a single driver or none is left alone", () => {
+  const occupants = [{ uuid: "a", role: "driver" }, { uuid: "b", role: "driver" }];
+  const chosen = settleDrivers(occupants, 1);
+  assert.deepEqual(chosen.map(occupant => occupant.role), ["crew", "driver"]);
+  assert.deepEqual(settleDrivers([{ uuid: "a", role: "crew" }, { uuid: "b", role: "driver" }], 1),
+    [{ uuid: "a", role: "crew" }, { uuid: "b", role: "driver" }]);
+  assert.deepEqual(settleDrivers([{ uuid: "a", role: "crew" }], 0), [{ uuid: "a", role: "crew" }]);
+});
+
+test("settling two drivers without a choice keeps the first, and never changes the input", () => {
+  const occupants = [{ uuid: "a", role: "driver" }, { uuid: "b", role: "driver" }, { uuid: "c", role: "driver" }];
+  const settled = settleDrivers(occupants);
+  assert.deepEqual(settled.map(occupant => occupant.role), ["driver", "crew", "crew"]);
+  assert.deepEqual(occupants.map(occupant => occupant.role), ["driver", "driver", "driver"]);
+  assert.deepEqual(settleDrivers([]), []);
 });
 
 test("the first one aboard drives, the rest are passengers, nobody twice", () => {

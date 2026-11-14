@@ -21,6 +21,8 @@ import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
 import { makeItemMinion, makeCompanion, raiseThrall, ownedThralls } from "./minions.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { isClaimed, claimOnce } from "./card-once.mjs";
+import { addFieldJournalEntry, writeKindOnFeat } from "./field-journal.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -488,15 +490,13 @@ export async function doEffectAction(actor, effect, context = {}) {
       ui.notifications.warn(i18n.localize("VARBORG.Effects.RecordNoTarget"));
       return { lines: [], rolls: [], acted: false };
     }
-    const owned = actor.items.get(effect.itemId);
-    const effects = foundry.utils.deepClone(owned.toObject().system.effects);
-    const index = effects.findIndex(entry => entry.kind === "choice" && entry.choose === "text");
-    if (index < 0) return { lines: [], rolls: [], acted: false };
-    const list = withNotedKind(effects[index].chosen, target.name);
-    effects[index].chosen = list;
-    effects[index].chosenName = list;
-    await owned.update({ "system.effects": effects });
-    return { lines: [i18n.format("VARBORG.Effects.Recorded", { item, kind: target.name, list })], rolls: [], acted: true };
+    const list = await writeKindOnFeat(actor.items.get(effect.itemId), target.name);
+    if (list === null) return { lines: [], rolls: [], acted: false };
+    const lines = [i18n.format("VARBORG.Effects.Recorded", { item, kind: target.name, list })];
+    // The same kind written into the character's Field journal, for flavour.
+    const journalLine = await addFieldJournalEntry(actor, target);
+    if (journalLine) lines.push(journalLine);
+    return { lines, rolls: [], acted: true };
   }
   if (["upgradeCompanion", "healCompanion", "hurtCompanion"].includes(effect.action)) return companionAction(actor, effect);
   if (effect.action === "takeDamage") {
@@ -644,12 +644,14 @@ function addTestListeners(message, html) {
 /**
  * Not the face! (GAPS 227): the character's player keeps them at 1 HP
  * instead of 0, paying the power's ember and reaction; a wound gained at
- * this 0 HP is taken back. Once per card.
+ * this 0 HP is taken back. Once per card: the use is recorded first, by
+ * the Dark Master's client when a player presses it (module/card-once.mjs,
+ * REVIEW.md B6), and given back if the power could not be paid for.
  */
 function addStayListeners(message, html) {
   const button = html.querySelector("button[data-action='stayAtOne']");
   if (!button) return;
-  if (message.getFlag("var-borg", "stayed")) {
+  if (isClaimed(message, "stayed")) {
     button.disabled = true;
     return;
   }
@@ -658,14 +660,21 @@ function addStayListeners(message, html) {
     const power = actor?.items.get(button.dataset.itemId);
     if (!actor?.isOwner || !power) return;
     button.disabled = true;
+    // Record the use first, so two presses cannot both pay (REVIEW.md B6).
+    const claim = await claimOnce(message, "stayed", { actor });
+    if (!claim) {
+      button.disabled = isClaimed(message, "stayed");
+      return;
+    }
     const { payReactionPower } = await import("./dice/power.mjs");
     const error = await payReactionPower(actor, power);
     if (error) {
       ui.notifications.warn(game.i18n.format(error, { name: power.name }));
+      // Nothing was paid or changed: give the use back so it can be tried again.
+      await claim.release();
       button.disabled = false;
       return;
     }
-    if (message.canUserModify(game.user, "update")) await message.setFlag("var-borg", "stayed", true);
     const wounds = actor.system.wounds?.value ?? 0;
     await actor.update({ "system.hp.value": 1, "system.wounds.value": Math.max(0, wounds - 1) });
     await ChatMessage.create({

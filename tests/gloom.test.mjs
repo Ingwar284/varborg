@@ -8,8 +8,25 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   GLOOM_DEFENCE_ABILITY, GLOOM_DEFENCE_DR, GLOOM_ACTIONS, GLOOM_CONDITIONS, POWER_RESOURCES,
-  gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderConditions
+  gloomTest, gloomOutcome, gloomDamageTaken, gloomUse, gloomDefenderConditions, gloomFoeConditions
 } from "../module/rules/gloom.mjs";
+
+test("a Stupefied foe gives the defender exactly one Boon against its gloom abilities (rules 3.13)", () => {
+  assert.deepEqual(gloomFoeConditions(["stupefied"]), [{ condition: "stupefied", boon: true }]);
+  assert.deepEqual(gloomFoeConditions(new Set(["stupefied", "blinded"])), [{ condition: "stupefied", boon: true }]);
+});
+
+test("no conditions on the foe give nothing", () => {
+  assert.deepEqual(gloomFoeConditions([]), []);
+  assert.deepEqual(gloomFoeConditions(new Set()), []);
+  assert.deepEqual(gloomFoeConditions(), []);
+});
+
+test("Blinded, Restrained, Encumbered and Prone foes give nothing to gloom defence (their Foe lines speak of attacks)", () => {
+  for (const condition of ["blinded", "restrained", "encumbered", "prone", "fatigued"]) {
+    assert.deepEqual(gloomFoeConditions([condition]), [], condition);
+  }
+});
 
 test("the usual test is the Agility DR12 defence, two actions", () => {
   assert.equal(GLOOM_DEFENCE_ABILITY, "agility");

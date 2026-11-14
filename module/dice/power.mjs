@@ -267,6 +267,11 @@ async function rollPowerTest(actor, power) {
   const turn = turnState(actor);
   const use = checkPowerUse(actor, power, turn);
   if (!use) return;
+  // Thralls the power needs must be there (GAPS 225). Checked before the dialog, so no Fortune or Ember is paid first.
+  if (["one", "all"].includes(power.system.thrallDestroy) && !ownedThralls(actor).length) {
+    ui.notifications.warn(i18n.format("VARBORG.Outcome.ThrallsNone", { name: actor.name, power: power.name }));
+    return;
+  }
   // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
   let aimed = await aimArea(actor, power);
   if (!aimed.go) return;
@@ -336,6 +341,11 @@ async function rollPowerTest(actor, power) {
     rejectClose: false
   });
   if (!options) return;
+  // Checked again: the last thrall may have gone while the dialog was open. Still before any payment.
+  if (["one", "all"].includes(power.system.thrallDestroy) && !ownedThralls(actor).length) {
+    ui.notifications.warn(i18n.format("VARBORG.Outcome.ThrallsNone", { name: actor.name, power: power.name }));
+    return;
+  }
   // An option with its own area (Songs of power) is aimed now it is chosen.
   if (options.option !== undefined) {
     const optionAim = await aimArea(actor, power, { option: options.option ?? "" });
@@ -348,14 +358,9 @@ async function rollPowerTest(actor, power) {
 
   const paid = await payDialogFortune(actor, options);
   if (!paid) return;
-  // Thralls the power needs must be there (GAPS 225).
   const notesAfter = [];
   const thralls = ownedThralls(actor);
   const destroying = { "": 0, one: 1, all: thralls.length, ask: Math.min(thralls.length, Math.max(0, Math.trunc(Number(options.thralls) || 0))) }[power.system.thrallDestroy ?? ""] ?? 0;
-  if (["one", "all"].includes(power.system.thrallDestroy) && !thralls.length) {
-    ui.notifications.warn(i18n.format("VARBORG.Outcome.ThrallsNone", { name: actor.name, power: power.name }));
-    return;
-  }
   if (!(await payPowerEmber(actor, use, paid))) return;
   if (destroying) {
     await deleteThralls(thralls.slice(0, destroying));

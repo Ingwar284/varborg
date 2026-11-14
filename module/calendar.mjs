@@ -63,6 +63,7 @@ export function calendarContext() {
     date: formatDate(shown),
     weekday: weekdayName(shown),
     phase: game.i18n.localize(`VARBORG.Calendar.Phase.${phase}`),
+    phaseKey: phase,
     phaseIcon: PHASE_ICONS[phase],
     clock: clockText(now),
     waiting: newDaysBefore(day, now),

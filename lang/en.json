@@ -24,6 +24,9 @@
       "spell": "Spell",
       "scroll": "Scroll",
       "relic": "Relic"
+    },
+    "JournalEntryPage": {
+      "document": "Document (VÅR BORG)"
     }
   },
   "VARBORG": {
@@ -119,7 +122,8 @@
       "Minion": "VÅR BORG minion sheet",
       "Relic": "VÅR BORG relic sheet",
       "Vehicle": "VÅR BORG vehicle sheet",
-      "Chest": "VÅR BORG chest sheet"
+      "Chest": "VÅR BORG chest sheet",
+      "DocumentPage": "VÅR BORG document page"
     },
     "Item": {
       "Price": "Price (s)",
@@ -231,6 +235,9 @@
       "22": "Unbelievable",
       "24": "Impossible",
       "26": "Godly"
+    },
+    "Stage": {
+      "ClickToContinue": "Click to continue"
     },
     "Tier": {
       "triumph": "Triumph",
@@ -397,6 +404,18 @@
       "TableMissing": "The personality table was not found in the Roll Tables compendium."
     },
     "Settings": {
+      "DialogueStage": {
+        "Name": "In-character dialogue box",
+        "Hint": "Show in-character chat and emotes at the bottom of the screen, visual novel style, with the speaker's art. Click the box to finish a line or dismiss it. Only on your own screen."
+      },
+      "SplashesForAll": {
+        "Name": "Triumph and Ruin splashes",
+        "Hint": "When a roll shows a Triumph or a Ruin, a banner with the roller's art and the result sweeps across every player's screen. Untick to switch it off for everyone."
+      },
+      "TriumphSplash": {
+        "Name": "Show Triumph and Ruin splashes on my screen",
+        "Hint": "Untick to hide the Triumph and Ruin splashes on your own screen only. Other players still see them."
+      },
       "MovementAnimations": {
         "Name": "Movement animations",
         "Hint": "Tokens hop when they walk, lift off when they fly, sway when they swim, and so on. Off by default if your computer asks for reduced motion."
@@ -590,7 +609,12 @@
     "Combat": {
       "Actions": "Actions",
       "Reactions": "Reactions",
-      "PipsLeft": "{label}: {left} of {max} left. Click a filled pip to spend it, an empty one to give it back."
+      "PipsLeft": "{label}: {left} of {max} left. Click a filled pip to spend it, an empty one to give it back.",
+      "Strip": {
+        "Tooltip": "{name} (initiative {initiative}). Click to find them on the map.",
+        "NextRound": "The next round begins here.",
+        "More": "+{count}"
+      }
     },
     "Pools": {
       "Title": "Ember and Gloom",
@@ -611,7 +635,11 @@
       "NoGM": "The Dark Master must be connected to spend from the {pool} pool.",
       "Bad": "That is not a valid change to the {pool} pool.",
       "Gained": "{name} adds {symbol}{amount} to the {pool} pool with {source} ({left} now).",
-      "Lost": "{source}: the {pool} pool loses {symbol}{amount} ({left} now)."
+      "Lost": "{source}: the {pool} pool loses {symbol}{amount} ({left} now).",
+      "Orbs": {
+        "Round": "Round {round}",
+        "Tooltip": "{pool}: {left} left. Click to open the Ember and Gloom panel."
+      }
     },
     "Day": {
       "Label": "Day {day}",
@@ -989,6 +1017,11 @@
       "NoneBurning": "No light burning.",
       "PausedHint": "The game is paused: the light timer waits.",
       "BlackburnHint": "Blackburn: lights burn twice as fast and shine half as far today.",
+      "TorchTooltip": "The light timer. Click to open the Light panel.",
+      "TorchOutTooltip": "No light burning. Click to open the Light panel.",
+      "NoLight": "Dark",
+      "WeatherOrb": "Weather: {weather}. Click to open the Calendar panel.",
+      "PhaseOrb": "{phase}, {clock} ({date}). Click to open the Calendar panel.",
       "MinutesLabel": "Minutes of light",
       "Start": "Light",
       "StartTooltip": "Start the light timer for this many minutes of real time.",
@@ -3384,6 +3417,8 @@
       "NoToken": "{name} has no token on this scene: target the creatures in the area by hand.",
       "Aim": "{name}: place the area and left-click. Right-click or Escape cancels.",
       "NoneCaught": "The area catches no one.",
+      "NoGM": "A Dark Master must be connected for this area to stay on the map.",
+      "KeepFailed": "The area could not be placed on the map. Ask the Dark Master to check the console.",
       "TooFar": "Too far: {feet} ft, and the range is {range} ft.",
       "SheetHint": "When it is used, the area is placed on the map and every creature it covers at least half of becomes a target (rules: Areas of Effect).",
       "ShapeLabel": "Shape",
@@ -3743,6 +3778,29 @@
       "PickTitle": "{name}: which ability?",
       "PickHint": "Choose the ability to test. You set the DR, Boon and Bane next.",
       "NoCharacter": "Select your character's token, or choose a character for yourself in User Configuration."
+    },
+    "Journal": {
+      "Look": "Look",
+      "Style": {
+        "fieldJournal": "Field journal",
+        "letter": "Letter",
+        "notice": "Notice",
+        "scrap": "Torn scrap"
+      },
+      "Subtitle": "Subtitle",
+      "SubtitleHint": "A line under the heading, such as a date",
+      "Signature": "Signed",
+      "Sealed": "Wax seal"
+    },
+    "FieldJournal": {
+      "Name": "Field notes: {name}",
+      "Notes": "Notes",
+      "RecordedOn": "Recorded {date}",
+      "Written": "Written into the field journal: {link}.",
+      "WrittenNew": "Written into the journal “{name}”.",
+      "Already": "Already in the field journal: {link}.",
+      "NeedGM": "The Dark Master must be logged in to start the field journal. The kind is still recorded on the feat.",
+      "AutoRecorded": "{item}: studied this encounter, now recorded: {kinds}. Notes: {list}."
     }
   }
 }
