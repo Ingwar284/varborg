@@ -16,6 +16,7 @@
     "lightMinutes": 60,
     "lightRange": 40,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "wornAs": "worn"
   }
 }

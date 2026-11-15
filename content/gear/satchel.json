@@ -8,6 +8,7 @@
     "price": 8,
     "cumbersome": false,
     "storedIn": "",
-    "capacity": 10
+    "capacity": 10,
+    "wornAs": "worn"
   }
 }

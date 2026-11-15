@@ -19,6 +19,7 @@ import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rule
 import { frequencyFields, presetFrequency } from "./uses.mjs";
 import { effectFields } from "./effects.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
+import { WORN_AS_CHOICES, PLACES, defaultSlot, placeFor } from "../rules/slots.mjs";
 
 const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
@@ -48,7 +49,13 @@ export class CarriedData extends foundry.abstract.TypeDataModel {
       cumbersome: new BooleanField({ initial: false }),
       // The id of the container item (on the same character) this is kept in.
       // Blank means carried loose.
-      storedIn: new StringField({ required: true, blank: true, initial: "" })
+      storedIn: new StringField({ required: true, blank: true, initial: "" }),
+      // How it is worn (GAPS 287): "" not wearable, "worn" anywhere (rings,
+      // necklaces), or a tag such as "cloak" (one item per tag).
+      wornAs: choice(WORN_AS_CHOICES, ""),
+      // Where it is now: "" just carried, "left"/"right"/"both" hands, or
+      // "worn". Weapons, armour and shields keep "equipped" in step with it.
+      place: choice(PLACES, "")
     };
   }
 
@@ -62,6 +69,11 @@ export class CarriedData extends foundry.abstract.TypeDataModel {
     if (data.system?.cumbersome === undefined) {
       this.parent.updateSource({ "system.cumbersome": isCumbersomeByDefault(this.parent.type, this) });
     }
+    // An item arriving on a character starts in the pack, not in a hand or
+    // on the body, so it never shares a slot with what is already there.
+    if (this.parent.actor?.type === "character" && (this.place || this.equipped)) {
+      this.parent.updateSource({ "system.place": "", ...("equipped" in this ? { "system.equipped": false } : {}) });
+    }
   }
 
   /**
@@ -73,10 +85,35 @@ export class CarriedData extends foundry.abstract.TypeDataModel {
     const allowed = await super._preUpdate(changes, options, user);
     if (allowed === false) return false;
     const system = changes.system;
-    if (!system || "cumbersome" in system) return;
+    if (!system) return;
+    this.#keepPlaceInStep(system);
+    if ("cumbersome" in system) return;
     const type = this.parent.type;
     const after = foundry.utils.mergeObject(this.toObject(), system, { inplace: false });
     if (!isCumbersomeByDefault(type, this) && isCumbersomeByDefault(type, after)) system.cumbersome = true;
+  }
+
+  /**
+   * Keep the place and the "equipped" tick in step (GAPS 287): putting an
+   * item in a container or dropping it takes it off; taking it off clears
+   * "equipped"; ticking "equipped" without a place puts it in its usual
+   * slot (taking off whatever was there is done by module/equip.mjs).
+   */
+  #keepPlaceInStep(system) {
+    const hasEquipped = "equipped" in this;
+    if (system.storedIn) system.place = "";
+    if ("place" in system) {
+      if (hasEquipped) system.equipped = Boolean(system.place);
+      return;
+    }
+    if (!hasEquipped || !("equipped" in system) || system.equipped === Boolean(this.place)) return;
+    if (!system.equipped) {
+      system.place = "";
+      return;
+    }
+    const items = (this.parent.actor?.items ?? []).map(item => ({ id: item.id, place: item.system.place ?? "" }));
+    const plain = { id: this.parent.id, type: this.parent.type, wornAs: this.wornAs, twoHanded: this.twoHanded, versatile: this.versatile };
+    system.place = placeFor(plain, defaultSlot(items, plain));
   }
 }
 
@@ -147,6 +184,8 @@ export class ArmourData extends EquipmentData {
     if (allowed === false) return false;
     const changes = { "system.tier": capArmourTier(this.tier, this.originalTier) };
     if (data.system?.metal === undefined) changes["system.metal"] = isMetalByDefault(this.originalTier);
+    // Armour is worn as armour unless the item says otherwise (clothes, robes).
+    if (data.system?.wornAs === undefined) changes["system.wornAs"] = "armour";
     this.parent.updateSource(changes);
   }
 

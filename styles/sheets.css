@@ -934,6 +934,16 @@
   color: var(--vb-text-soft);
 }
 
+/* Where the item is worn or held (GAPS 287): filled, so it stands out. */
+.application.var-borg .var-borg-sheet .item-row .item-state.placed {
+  border-color: var(--vb-text);
+  background: var(--vb-text);
+  color: var(--vb-surface);
+  white-space: nowrap;
+}
+
+.application.var-borg .var-borg-sheet .item-row .item-state.placed i { font-size: 0.75em; }
+
 /* The opened description under a row: an accent bar down the left. */
 .application.var-borg .var-borg-sheet .item-list .item-description {
   border-left: 3px solid var(--vb-accent);
@@ -1181,37 +1191,6 @@
   outline-offset: 1px;
 }
 
-/* The equip tick box: the button itself is the box. Empty paper square when
-   not equipped; solid text colour with a surface-coloured tick (and the stamped
-   shadow of the ability boxes) when equipped. */
-.application.var-borg .var-borg-sheet .item-row .equip-toggle {
-  --vb-btn-bg: var(--vb-surface);
-  --vb-btn-fg: var(--vb-surface);
-  --vb-btn-border: var(--vb-line);
-  --vb-btn-hover-bg: var(--vb-surface-raised);
-  --vb-btn-hover-fg: var(--vb-text);
-  --vb-btn-hover-border: var(--vb-line);
-  width: 1.15rem;
-  height: 1.15rem;
-  margin: 0 0.35rem 0 0.15rem;
-  border-width: 2px;
-  box-shadow: none;
-  font-size: 0.7rem;
-  opacity: 1;
-}
-
-.application.var-borg .var-borg-sheet .item-row .equip-toggle.active {
-  --vb-btn-bg: var(--vb-text);
-  --vb-btn-hover-bg: var(--vb-text);
-  --vb-btn-hover-fg: var(--vb-surface);
-  box-shadow: 2px 2px 0 var(--vb-accent);
-}
-
-.application.var-borg .var-borg-sheet .item-row .equip-toggle:focus-visible {
-  outline: 2px solid var(--vb-focus);
-  outline-offset: 1px;
-}
-
 /* Items stored in a container sit under it, indented, with a line down the
    left like the strap of the pack they are in. */
 .var-borg-sheet .item-row.stored,
@@ -1353,4 +1332,289 @@
 
 .var-borg-sheet .foe-stats.speeds {
   margin-top: 0.5rem;
+}
+
+/* ---------- Equipment tab (GAPS 287) ---------- */
+/* Slots in two columns around a skeleton, the hands in a row under it.
+   The skeleton is a stencil (mask) filled with the line colour, so it
+   follows the mood. Slots are ruled lines, like a ledger, not boxes. */
+.var-borg.character .tab.var-borg-sheet[data-tab="equipment"] {
+  flex-direction: column;
+  gap: var(--vb-space-3);
+  container-type: inline-size;
+}
+
+.var-borg-sheet .equipment-doll {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(9rem, 1.15fr) minmax(0, 1fr);
+  column-gap: var(--vb-space-2);
+  row-gap: var(--vb-space-3);
+  align-items: stretch;
+}
+
+.var-borg-sheet .equipment-figure {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  min-height: 24rem;
+}
+
+.var-borg-sheet .equipment-figure .figure-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.var-borg-sheet .equipment-figure .skeleton {
+  background-color: var(--vb-line-soft);
+  -webkit-mask: url("../assets/equipment-skeleton.webp") center / contain no-repeat;
+  mask: url("../assets/equipment-skeleton.webp") center / contain no-repeat;
+}
+
+/* A picture the player chose: shown as it is, whole. */
+.var-borg-sheet .equipment-figure img.figure-art {
+  object-fit: contain;
+  border: none;
+}
+
+/* The picture buttons show when the pointer is over the figure. */
+.var-borg-sheet .equipment-figure .figure-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.var-borg-sheet .equipment-figure:hover .figure-controls,
+.var-borg-sheet .equipment-figure:focus-within .figure-controls { opacity: 1; }
+
+.var-borg-sheet .equipment-figure .figure-controls .icon-button {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.75rem;
+  background: var(--vb-surface-raised);
+}
+
+.var-borg-sheet .equipment-column,
+.var-borg-sheet .equipment-hands {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The slots spread out to the skeleton's height. */
+.var-borg-sheet .equipment-column {
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.var-borg-sheet .equipment-column.left { grid-column: 1; }
+.var-borg-sheet .equipment-column.right { grid-column: 3; }
+
+.var-borg-sheet .equipment-hands {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--vb-space-3);
+  padding-top: var(--vb-space-2);
+  border-top: 1px solid var(--vb-line-soft);
+}
+
+.var-borg-sheet .equipment-slot {
+  display: flex;
+  align-items: center;
+  gap: var(--vb-space-2);
+  padding: 3px 2px;
+  border-bottom: 1px solid var(--vb-line-faint);
+}
+
+.var-borg-sheet .equipment-slot:hover { background: var(--vb-surface-wash); }
+
+/* Each slot faces the skeleton: the left column and the right hand
+   (on the viewer's left) are mirrored. */
+.var-borg-sheet .equipment-column.left .equipment-slot,
+.var-borg-sheet .equipment-hands .equipment-slot:first-child {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* While an item is dragged: the slots it fits are marked, the rest fade. */
+.var-borg-sheet .dragging-item .equipment-slot { opacity: 0.35; transition: opacity 0.15s; }
+.var-borg-sheet .dragging-item .equipment-slot.can-fit { opacity: 1; background: var(--vb-surface-wash); }
+.var-borg-sheet .dragging-item .equipment-slot.can-fit .slot-img { border: 2px solid var(--vb-accent); }
+.var-borg-sheet .dragging-item .equipment-slot.can-fit .slot-label { color: var(--vb-text); }
+.var-borg-sheet .dragging-item .equipment-worn.can-fit { outline: 1px dashed var(--vb-accent); }
+
+.var-borg-sheet .equipment-slot.dragover,
+.var-borg-sheet .dragover.equipment-worn,
+.var-borg-sheet .dragover.equipment-carried { outline: 2px solid var(--vb-accent); background: var(--vb-surface-wash); }
+
+.var-borg-sheet .equipment-slot .slot-img {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--vb-line);
+  border-radius: 2px;
+  background: var(--vb-surface-raised);
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.var-borg-sheet .equipment-slot .slot-img.empty {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--vb-line-soft);
+  background: transparent;
+  color: var(--vb-text-faint);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.var-borg-sheet .equipment-slot .slot-img.empty i { opacity: 0; transition: opacity 0.15s; }
+.var-borg-sheet .equipment-slot:hover .slot-img.empty i,
+.var-borg-sheet .equipment-slot .slot-img.empty:focus-visible i { opacity: 1; }
+.var-borg-sheet .equipment-slot .slot-img.empty:hover { border-style: solid; color: var(--vb-text); }
+
+.var-borg-sheet .equipment-slot .slot-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.var-borg-sheet .equipment-slot .slot-label {
+  font-family: var(--vb-font-head);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vb-text-soft);
+}
+
+.var-borg-sheet .equipment-slot .slot-name {
+  font-weight: bold;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.var-borg-sheet .equipment-slot button.slot-name,
+.var-borg-sheet .equipment-chip .chip-name {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  line-height: inherit;
+  text-align: inherit;
+  color: var(--vb-text);
+  cursor: pointer;
+}
+
+/* An empty slot just shows its label; "Empty" would repeat on every line. */
+.var-borg-sheet .equipment-slot .slot-name.empty { display: none; }
+.var-borg-sheet .equipment-slot:not(.filled) .slot-label { color: var(--vb-text-faint); }
+
+/* The hands are the slots used most: larger. */
+.var-borg-sheet .equipment-hands .equipment-slot { border-bottom: none; padding: var(--vb-space-1) 2px; }
+.var-borg-sheet .equipment-hands .slot-img { width: 44px; height: 44px; border-width: 2px; border-color: var(--vb-line-strong); }
+.var-borg-sheet .equipment-hands .slot-img.empty { border-width: 2px; border-color: var(--vb-line); }
+.var-borg-sheet .equipment-hands .slot-label { font-size: 0.75rem; color: var(--vb-text-soft); }
+.var-borg-sheet .equipment-hands .slot-name { font-size: 0.95rem; }
+.var-borg-sheet .equipment-hands .slot-name.empty { display: block; font-weight: normal; font-style: italic; color: var(--vb-text-faint); }
+
+.var-borg-sheet .equipment-slot .slot-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.var-borg-sheet .equipment-column .equipment-slot .slot-controls { flex-direction: column; }
+
+.var-borg-sheet .equipment-slot .slot-controls .icon-button {
+  width: 1.3rem;
+  height: 1.3rem;
+  font-size: 0.7rem;
+}
+
+.var-borg-sheet .equipment-hands .slot-controls .icon-button {
+  width: 1.7rem;
+  height: 1.7rem;
+  font-size: 0.8rem;
+}
+
+.var-borg-sheet .equipment-worn h2,
+.var-borg-sheet .equipment-carried h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--vb-space-1);
+}
+
+.var-borg-sheet .equipment-worn h2 .icon-button {
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 0.7rem;
+}
+
+.var-borg-sheet .equipment-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vb-space-1);
+}
+
+.var-borg-sheet .equipment-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--vb-space-1);
+  padding: 2px var(--vb-space-1) 2px 2px;
+  border: 1px solid var(--vb-line-faint);
+  border-radius: 2px;
+  background: var(--vb-surface-raised);
+}
+
+.var-borg-sheet .equipment-chip img {
+  width: 22px;
+  height: 22px;
+  border: none;
+}
+
+/* A carried item's picture is a button: click to put it on. */
+.var-borg-sheet .equipment-chip .chip-img {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  background: none;
+  line-height: 0;
+  cursor: pointer;
+}
+
+.var-borg-sheet .equipment-chip .chip-img:hover,
+.var-borg-sheet .equipment-chip .chip-img:focus-visible { border-color: var(--vb-accent); }
+
+.var-borg-sheet .equipment-chip .icon-button {
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.7rem;
+}
+
+/* A narrow sheet: no room for the skeleton, so the slots sit side by side. */
+@container (max-width: 520px) {
+  .var-borg-sheet .equipment-doll { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .var-borg-sheet .equipment-figure { display: none; }
+  .var-borg-sheet .equipment-column.right { grid-column: 2; }
 }

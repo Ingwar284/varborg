@@ -11,6 +11,7 @@
     "equipped": false,
     "tier": 1,
     "originalTier": 1,
-    "metal": false
+    "metal": false,
+    "wornAs": "armour"
   }
 }

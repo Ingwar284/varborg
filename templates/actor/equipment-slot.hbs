@@ -1,0 +1,48 @@
+{{!-- One slot on the Equipment tab (GAPS 287): a hand or a worn tag.
+     Click an empty slot to choose an item; drag an item onto it to put it there. --}}
+<li class="equipment-slot{{#if hand}} hand{{/if}}{{#if item}} filled{{#if both}} both{{/if}}{{/if}}" data-slot="{{key}}"{{#if item}} data-item-id="{{item.id}}"{{/if}}>
+  {{#if item}}
+  <img class="slot-img draggable" src="{{item.img}}" alt="" data-item-id="{{item.id}}" data-action="editItem"
+       data-tooltip="{{item.name}}">
+  {{else}}
+  <button type="button" class="slot-img empty" data-action="pickSlot"
+          data-tooltip="{{localize hint}}" aria-label="{{localize 'VARBORG.Equipment.Pick'}}: {{localize label}}">
+    <i class="fa-solid fa-plus"></i>
+  </button>
+  {{/if}}
+  <div class="slot-text">
+    <span class="slot-label">{{localize label}}{{#if both}} · {{localize "VARBORG.Equipment.BothHandsTag"}}{{/if}}</span>
+    {{#if item}}
+    <button type="button" class="slot-name" data-action="pickSlot" data-tooltip="{{localize hint}}">{{item.name}}</button>
+    {{else}}
+    <span class="slot-name empty">{{localize "VARBORG.Equipment.Empty"}}</span>
+    {{/if}}
+  </div>
+  {{#if item}}
+  <div class="slot-controls">
+    {{#if canAttack}}
+    <button type="button" class="icon-button" data-action="attack"
+            data-tooltip="{{localize 'VARBORG.Attack.Tooltip'}}" aria-label="{{localize 'VARBORG.Attack.Tooltip'}}">
+      <i class="fa-solid fa-khanda"></i>
+    </button>
+    {{/if}}
+    {{#if canRaise}}
+    <button type="button" class="icon-button" data-action="raiseShield"
+            data-tooltip="{{localize 'VARBORG.Defence.RaiseTooltip'}}" aria-label="{{localize 'VARBORG.Defence.RaiseTooltip'}}">
+      <i class="fa-solid fa-shield-halved"></i>
+    </button>
+    {{/if}}
+    {{#if canSwitch}}
+    <button type="button" class="icon-button" data-action="switchHands"
+            data-tooltip="{{localize (ifThen both 'VARBORG.Equipment.SwitchToOne' 'VARBORG.Equipment.SwitchToBoth')}}"
+            aria-label="{{localize (ifThen both 'VARBORG.Equipment.SwitchToOne' 'VARBORG.Equipment.SwitchToBoth')}}">
+      <i class="fa-solid {{#if both}}fa-hand{{else}}fa-hands{{/if}}"></i>
+    </button>
+    {{/if}}
+    <button type="button" class="icon-button" data-action="takeOffItem"
+            data-tooltip="{{localize 'VARBORG.Equipment.TakeOff'}}" aria-label="{{localize 'VARBORG.Equipment.TakeOff'}}">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+  {{/if}}
+</li>

@@ -12,10 +12,14 @@
       </label>
       {{#if canEquip}}
       <label>
-        <input type="checkbox" name="system.equipped" {{checked system.equipped}}>
+        <input type="checkbox" data-equip-toggle {{checked system.equipped}}>
         <span>{{localize "VARBORG.Item.Equipped"}}</span>
       </label>
       {{/if}}
+      <label data-tooltip="{{localize 'VARBORG.Equipment.WornAsHint'}}">
+        <span>{{localize "VARBORG.Equipment.WornAsLabel"}}</span>
+        <select name="system.wornAs">{{selectOptions wornAsChoices selected=system.wornAs localize=true}}</select>
+      </label>
       <label data-tooltip="{{localize 'VARBORG.Item.CumbersomeHint'}}">
         <input type="checkbox" name="system.cumbersome" {{checked system.cumbersome}}>
         <span>{{localize "VARBORG.Item.Cumbersome"}}</span>

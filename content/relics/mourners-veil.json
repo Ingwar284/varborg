@@ -18,6 +18,7 @@
     "price": 0,
     "cumbersome": false,
     "storedIn": "",
-    "automation": "text"
+    "automation": "text",
+    "wornAs": "mask"
   }
 }

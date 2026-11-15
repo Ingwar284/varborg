@@ -1,0 +1,80 @@
+{{!-- The Equipment tab (GAPS 287): what the character wears and holds,
+     in slots around a skeleton. Items worn anywhere are listed under it,
+     and the carried items not worn or held can be dragged onto a slot. --}}
+<section class="tab var-borg-sheet {{tabs.equipment.cssClass}}" data-group="primary" data-tab="equipment">
+  <div class="equipment-doll">
+    <ul class="equipment-column left">
+      {{#each equipment.columns.[0]}}{{> "systems/var-borg/templates/actor/equipment-slot.hbs" this}}{{/each}}
+    </ul>
+    <div class="equipment-figure{{#if system.equipmentImage}} custom{{/if}}">
+      {{#if system.equipmentImage}}
+      <img class="figure-art" src="{{system.equipmentImage}}" alt="">
+      {{else}}
+      <div class="figure-art skeleton" aria-hidden="true"></div>
+      {{/if}}
+      {{#if editable}}
+      <div class="figure-controls">
+        <button type="button" class="icon-button" data-action="chooseFigure"
+                data-tooltip="{{localize 'VARBORG.Equipment.ChooseFigure'}}" aria-label="{{localize 'VARBORG.Equipment.ChooseFigure'}}">
+          <i class="fa-solid fa-image"></i>
+        </button>
+        {{#if system.equipmentImage}}
+        <button type="button" class="icon-button" data-action="resetFigure"
+                data-tooltip="{{localize 'VARBORG.Equipment.ResetFigure'}}" aria-label="{{localize 'VARBORG.Equipment.ResetFigure'}}">
+          <i class="fa-solid fa-skull"></i>
+        </button>
+        {{/if}}
+      </div>
+      {{/if}}
+    </div>
+    <ul class="equipment-column right">
+      {{#each equipment.columns.[1]}}{{> "systems/var-borg/templates/actor/equipment-slot.hbs" this}}{{/each}}
+    </ul>
+    <ul class="equipment-hands">
+      {{#each equipment.hands}}{{> "systems/var-borg/templates/actor/equipment-slot.hbs" this}}{{/each}}
+    </ul>
+  </div>
+
+  <section class="equipment-worn" data-slot="worn">
+    <h2>
+      {{localize "VARBORG.Equipment.Slot.worn"}}
+      <button type="button" class="icon-button" data-action="pickSlot"
+              data-tooltip="{{localize 'VARBORG.Equipment.SlotHint.worn'}}" aria-label="{{localize 'VARBORG.Equipment.Pick'}}">
+        <i class="fa-solid fa-plus"></i>
+      </button>
+    </h2>
+    <ul class="equipment-chips">
+      {{#each equipment.worn}}
+      <li class="equipment-chip draggable" data-item-id="{{id}}">
+        <img src="{{img}}" alt="">
+        <button type="button" class="chip-name" data-action="editItem">{{name}}</button>
+        <button type="button" class="icon-button" data-action="takeOffItem"
+                data-tooltip="{{localize 'VARBORG.Equipment.TakeOff'}}" aria-label="{{localize 'VARBORG.Equipment.TakeOff'}}">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="hint">{{localize "VARBORG.Equipment.SlotHint.worn"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+
+  <section class="equipment-carried" data-slot="">
+    <h2>{{localize "VARBORG.Equipment.Carried"}}</h2>
+    <p class="hint">{{localize "VARBORG.Equipment.CarriedHint"}}</p>
+    <ul class="equipment-chips">
+      {{#each equipment.carried}}
+      <li class="equipment-chip draggable" data-item-id="{{id}}"
+          {{#if system.wornAs}}data-tooltip="{{localize (concat 'VARBORG.Equipment.WornAs.' system.wornAs)}}"{{/if}}>
+        <button type="button" class="chip-img" data-action="putOnItem"
+                data-tooltip="{{localize 'VARBORG.Equipment.PutOn'}}" aria-label="{{localize 'VARBORG.Equipment.PutOn'}}: {{name}}">
+          <img src="{{img}}" alt="">
+        </button>
+        <button type="button" class="chip-name" data-action="editItem">{{name}}</button>
+      </li>
+      {{else}}
+      <li class="hint">{{localize "VARBORG.Equipment.NoneCarried"}}</li>
+      {{/each}}
+    </ul>
+  </section>
+</section>

@@ -26,7 +26,7 @@
   {{#if versatile}}
   <div class="form-group">
     <label for="var-borg-attack-one-handed">{{localize "VARBORG.Attack.OneHanded"}}</label>
-    <input id="var-borg-attack-one-handed" type="checkbox" name="oneHanded">
+    <input id="var-borg-attack-one-handed" type="checkbox" name="oneHanded" {{checked oneHandedHeld}}>
     <p class="hint">{{localize "VARBORG.Trait.versatileHint"}}</p>
   </div>
   {{/if}}

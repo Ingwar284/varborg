@@ -51,9 +51,15 @@
  * Version 13 (playtest feedback): Study the specimen deals no damage when
  * used. Its d6 is only the ally bonus (an item effect), so copies in the
  * world lose the power damage they had.
+ *
+ * Version 14 (equipment slots, GAPS 287): armour items are worn as armour,
+ * clothing (clothes) or a garment (robes). On each character the equipped
+ * armour (strongest first), shields and weapons move into their slots;
+ * any that no longer fit stay carried but unequipped.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
+import { armourWornAs, placesForEquipped } from "./rules/slots.mjs";
 import { frequencyFromText } from "./rules/uses.mjs";
 import { hasHtml, descriptionText } from "./rules/random.mjs";
 import { MIGRATION_OPTION } from "./data/character.mjs";
@@ -65,7 +71,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 13;
+export const DATA_VERSION = 14;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -100,6 +106,7 @@ export async function migrateWorld() {
   if (version < 11) await refreshSongsOfPower();
   if (version < 12) await refreshAuraOfTheIncorruptible();
   if (version < 13) await clearStudyTheSpecimenDamage();
+  if (version < 14) await placeEquippedItems();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -266,4 +273,23 @@ function markMedicineBoxes() {
   return updateGear(item => !item.system.medicine && item.name.trim().toLowerCase() === MEDICINE_BOX_NAME
     ? { "system.medicine": true }
     : null);
+}
+
+/** Version 14: armour gets its "Worn as" tag; equipped items move into slots. */
+async function placeEquippedItems() {
+  await updateItems(["armour"], item => item.system.wornAs ? null : { "system.wornAs": armourWornAs(item.name) });
+  const order = { armour: 0, shield: 1, weapon: 2 };
+  for (const actor of game.actors.filter(actor => actor.type === "character")) {
+    const items = actor.items
+      .filter(item => item.type in order && item.system.equipped)
+      .toSorted((a, b) => order[a.type] - order[b.type]
+        || (b.system.tier ?? 0) - (a.system.tier ?? 0) || a.sort - b.sort)
+      .map(item => ({
+        id: item.id, type: item.type, equipped: true, wornAs: item.system.wornAs,
+        twoHanded: Boolean(item.system.twoHanded), versatile: Boolean(item.system.versatile)
+      }));
+    const places = placesForEquipped(items);
+    const updates = [...places].map(([id, place]) => ({ _id: id, "system.place": place }));
+    if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  }
 }

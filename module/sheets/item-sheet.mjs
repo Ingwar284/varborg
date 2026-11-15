@@ -22,6 +22,8 @@ import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { EFFECTS_TEMPLATE, EFFECT_ACTIONS, effectsContext, listenToEffects } from "./item-effects-part.mjs";
+import { WORN_AS_CHOICES } from "../rules/slots.mjs";
+import { putOnUsual, takeOff } from "../equip.mjs";
 import { OUTCOMES_TEMPLATE, OUTCOME_ACTIONS, outcomesContext, listenToOutcomes } from "./outcomes-part.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -62,6 +64,8 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.canEquip = "equipped" in this.document.system;
     // A foe's or minion's attack has no price, traits or expendable die, and is not carried.
     context.forFoe = ["foe", "minion"].includes(this.document.actor?.type);
+    // How the item is worn (GAPS 287): the Equipment tab's slots.
+    context.wornAsChoices = Object.fromEntries(WORN_AS_CHOICES.map(key => [key, `VARBORG.Equipment.WornAs.${key || "none"}`]));
     return Object.assign(context, effectsContext(this.document));
   }
 
@@ -69,6 +73,12 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
     listenToEffects(this);
+    // The Equipped box puts the item where it usually goes, taking off
+    // what is in the way, like the Inventory tab's tick (GAPS 287).
+    this.element.querySelector("input[data-equip-toggle]")?.addEventListener("change", event => {
+      if (event.currentTarget.checked) putOnUsual(this.document);
+      else takeOff(this.document);
+    });
   }
 }
 

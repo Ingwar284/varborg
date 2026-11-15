@@ -31,7 +31,7 @@ export const MIGRATION_OPTION = "varBorgMigration";
 /** Passes a new character's rolled Fortune from _preCreate to _onCreate. */
 const STARTING_FORTUNE_OPTION = "varBorgStartingFortune";
 
-const { SchemaField, NumberField, StringField, BooleanField } = foundry.data.fields;
+const { SchemaField, NumberField, StringField, BooleanField, FilePathField } = foundry.data.fields;
 
 /** A whole number that can never go below `min`. */
 function wholeNumber({ min = 0, max, initial = 0 } = {}) {
@@ -99,6 +99,9 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
         swim: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null }),
         climb: new NumberField({ required: true, nullable: true, integer: true, min: 0, initial: null })
       }),
+      // A picture chosen by the player for the Equipment tab, shown in place
+      // of the skeleton. Blank shows the skeleton. Not a rule.
+      equipmentImage: new FilePathField({ required: true, blank: true, initial: "", categories: ["IMAGE"] }),
       // Phobias from the Panic table, written by hand (GAPS 82).
       phobias: new StringField({ required: true, initial: "" }),
       // Rules 2.1, Step 6: Details.

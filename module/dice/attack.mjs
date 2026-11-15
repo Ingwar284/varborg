@@ -527,6 +527,8 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
       list: modes.map(mode => `${i18n.localize(`VARBORG.Weapon.Kind.${mode}`)} ${i18n.localize(`VARBORG.Ability.${attackAbilities(weapon, mode)[0]}`)}`).join(", ")
     }) : null,
     versatile: weapon.versatile,
+    // Held in one hand on the Equipment tab: ticked to start with (GAPS 287).
+    oneHandedHeld: weapon.versatile && ["left", "right"].includes(item.system.place),
     distance: distances.length ? distances.join(", ") : null,
     drs: DR_TABLE.map(dr => ({
       value: dr,

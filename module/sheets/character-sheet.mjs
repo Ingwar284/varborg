@@ -48,6 +48,8 @@ import { rollDetail } from "../personality.mjs";
 import { randomCharacter, chosenRandomCharacter } from "../random-character.mjs";
 import { onPostItem } from "../item-chat.mjs";
 import { MANUAL_ACTIONS, runManualAction } from "../manual-actions.mjs";
+import { putOn, putOnUsual, takeOff, switchHands, slotView, carriedItems, SLOT_ITEM_TYPES } from "../equip.mjs";
+import { slotContents, fits, HANDS, WORN_TAGS } from "../rules/slots.mjs";
 
 /**
  * The item effects on one sheet number, as text parts such as
@@ -85,6 +87,40 @@ const INVENTORY_TYPES = ["weapon", "armour", "shield", "gear", "container", "scr
 
 /** Item types that can be equipped. */
 const EQUIPPABLE_TYPES = ["weapon", "armour", "shield"];
+
+/**
+ * The Equipment tab's two columns of slots, top to bottom, around the
+ * skeleton (GAPS 287). The skeleton faces the viewer, so its right hand is
+ * in the column on the viewer's left.
+ */
+const EQUIPMENT_COLUMNS = {
+  left: ["headwear", "eyepiece", "shoulders", "cloak", "clothing", "bracers", "handwraps", "feet"],
+  right: ["mask", "back", "armour", "garment", "bandoleer", "gloves", "belt"]
+};
+
+/** The hands, under the skeleton. Its right hand is on the viewer's left. */
+const EQUIPMENT_HANDS = ["right", "left"];
+
+/**
+ * Can this item be equipped from the Inventory tab? Weapons, armour and
+ * shields always; other items when they have a "Worn as" tag (GAPS 287).
+ * Anything can still be put in a hand on the Equipment tab.
+ */
+function canEquip(item) {
+  return EQUIPPABLE_TYPES.includes(item.type) || Boolean(item.system.wornAs || item.system.place);
+}
+
+/**
+ * Where an item is worn or held, as a label key for the Inventory tab
+ * ("Right hand", "Cloak", "Worn"), or "" when it is not (GAPS 287).
+ */
+function placeLabel(item) {
+  const { place, wornAs } = item.system;
+  if (!place) return "";
+  if (place === "both") return "VARBORG.Equipment.BothHandsTag";
+  if (place === "worn") return `VARBORG.Equipment.Slot.${WORN_TAGS.includes(wornAs) ? wornAs : "worn"}`;
+  return `VARBORG.Equipment.Slot.${place}`;
+}
 
 /**
  * One short line about an item, such as "d4 · Melee · Agile, Thrown (20')".
@@ -241,7 +277,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       editItem: CharacterSheet.#onEditItem,
       deleteItem: CharacterSheet.#onDeleteItem,
       toggleCumbersome: CharacterSheet.#onToggleCumbersome,
-      toggleEquipped: CharacterSheet.#onToggleEquipped,
+      putOnItem: CharacterSheet.#onPutOnItem,
+      pickSlot: CharacterSheet.#onPickSlot,
+      takeOffItem: CharacterSheet.#onTakeOffItem,
+      switchHands: CharacterSheet.#onSwitchHands,
+      chooseFigure: CharacterSheet.#onChooseFigure,
+      resetFigure: CharacterSheet.#onResetFigure,
       rollExpendable: CharacterSheet.#onRollExpendable,
       useMedicine: CharacterSheet.#onUseMedicine,
       lightItem: CharacterSheet.#onLightItem,
@@ -282,6 +323,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     conditions: { template: `${TEMPLATES}/character-conditions.hbs`, scrollable: [""] },
     feats: { template: `${TEMPLATES}/character-feats.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
     powers: { template: `${TEMPLATES}/character-powers.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] },
+    equipment: { template: `${TEMPLATES}/character-equipment.hbs`, templates: [`${TEMPLATES}/equipment-slot.hbs`], scrollable: [""] },
     inventory: { template: `${TEMPLATES}/character-inventory.hbs`, templates: [`${TEMPLATES}/inventory-row.hbs`, DESCRIPTION_ROW], scrollable: [""] },
     details: { template: `${TEMPLATES}/character-details.hbs`, templates: [DESCRIPTION_ROW], scrollable: [""] }
   };
@@ -293,6 +335,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         { id: "conditions", icon: "fa-solid fa-heart-crack" },
         { id: "feats", icon: "fa-solid fa-star" },
         { id: "powers", icon: "fa-solid fa-fire" },
+        { id: "equipment", icon: "fa-solid fa-shirt" },
         { id: "inventory", icon: "fa-solid fa-sack" },
         { id: "details", icon: "fa-solid fa-feather" }
       ],
@@ -372,8 +415,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const menuOptions = {
       equip: { equipped: i18n.localize("VARBORG.Item.Equipped"), ...storeOptions },
       store: storeOptions,
-      container: { ...loose, ...dropped }
+      container: { ...loose, ...dropped },
+      wornContainer: { equipped: i18n.localize("VARBORG.Item.Equipped"), ...loose, ...dropped }
     };
+    const menuFor = item => item.type === "container"
+      ? (canEquip(item) ? menuOptions.wornContainer : menuOptions.container)
+      : (canEquip(item) ? menuOptions.equip : menuOptions.store);
     const droppedIds = droppedContainerIds(actor.items);
 
     const sections = INVENTORY_TYPES.map(type => ({
@@ -385,11 +432,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           item,
           // Each row carries its own type's controls, because a row can also
           // be shown under its container (inventory-row.hbs).
-          canEquip: EQUIPPABLE_TYPES.includes(type),
+          placeLabel: placeLabel(item),
           hasQuantity: type === "gear",
-          menuOptions: EQUIPPABLE_TYPES.includes(type) ? menuOptions.equip : type === "container" ? menuOptions.container : menuOptions.store,
+          menuOptions: menuFor(item),
           summary: itemSummary(item, stored),
-          storedIn: EQUIPPABLE_TYPES.includes(type) && item.system.equipped ? "equipped"
+          // Worn or held (GAPS 287): shown as "Equipped" in the menu.
+          storedIn: item.system.place ? "equipped"
             : item.system.storedIn === DROPPED ? DROPPED
             : containerIds.has(item.system.storedIn) ? item.system.storedIn : "",
           // Dropped, or in a dropped container: greyed out, no buttons (GAPS 254).
@@ -422,6 +470,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       items: section.items.filter(row => !inContainer(row)),
       allStored: section.items.length > 0 && section.items.every(inContainer)
     }));
+    context.equipment = this.#equipmentContext();
 
     // Class, ancestry and background, one row each, with a short line such
     // as "Strength · 10 + Toughness HP · 3 wounds · No spell list · d10".
@@ -574,10 +623,36 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
         const item = this.#itemFor(event.currentTarget);
         if (!item) return;
         const value = event.currentTarget.value;
-        if (!EQUIPPABLE_TYPES.includes(item.type)) return item.update({ "system.storedIn": value });
-        if (value === "equipped") return item.update({ "system.equipped": true, "system.storedIn": "" });
-        return item.update({ "system.equipped": false, "system.storedIn": value });
+        // "Equipped" puts it where it usually goes, taking off what is in the way (GAPS 287).
+        if (value === "equipped") return putOnUsual(item);
+        return item.update({ "system.place": "", "system.storedIn": value });
       });
+    }
+    // Equipment tab: light up the slot an item is dragged over (GAPS 287).
+    // While an item of this character is dragged, the slots it fits are
+    // marked and the others fade.
+    const tab = this.element.querySelector('[data-tab="equipment"].tab');
+    if (tab && !tab.dataset.vbDragLight) {
+      tab.dataset.vbDragLight = "true";
+      const light = (event, on) => event.target.closest?.(".equipment-slot, .equipment-worn, .equipment-carried")?.classList.toggle("dragover", on);
+      const clearFits = () => {
+        tab.classList.remove("dragging-item");
+        tab.querySelectorAll(".can-fit, .dragover").forEach(el => el.classList.remove("can-fit", "dragover"));
+      };
+      tab.addEventListener("dragstart", event => {
+        const id = event.target.closest?.("[data-item-id]")?.dataset.itemId;
+        const item = id ? this.actor.items.get(id) : null;
+        if (!item || !SLOT_ITEM_TYPES.includes(item.type)) return;
+        const view = slotView(item);
+        for (const slot of tab.querySelectorAll("[data-slot]")) {
+          if (slot.dataset.slot && fits(view, slot.dataset.slot)) slot.classList.add("can-fit");
+        }
+        tab.classList.add("dragging-item");
+      });
+      tab.addEventListener("dragend", clearFits);
+      tab.addEventListener("dragover", event => light(event, true));
+      tab.addEventListener("dragleave", event => light(event, false));
+      tab.addEventListener("drop", clearFits);
     }
     for (const input of this.element.querySelectorAll("input[data-quantity]")) {
       input.addEventListener("change", event => {
@@ -597,6 +672,18 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     // Cargo dragged off a vehicle moves onto the character (GAPS 178).
     const moved = await moveCargo(this.actor, item);
     if (moved !== undefined) return moved;
+    // Dropped on an Equipment tab slot: put it there (GAPS 287). From
+    // elsewhere it is added first. Dropped on the carried list: taken off.
+    const slot = event.target?.closest?.("[data-slot]")?.dataset.slot;
+    if (slot !== undefined && SLOT_ITEM_TYPES.includes(item.type) && this.actor.isOwner) {
+      const own = item.parent?.uuid === this.actor.uuid;
+      const added = own ? item : await super._onDropItem(event, item);
+      const placed = Array.isArray(added) ? added[0] : added;
+      if (placed?.parent?.uuid !== this.actor.uuid) return added;
+      if (slot) await putOn(placed, slot);
+      else if (placed.system.place) await takeOff(placed);
+      return added;
+    }
     // A spell dropped on the Inventory tab becomes a scroll of that spell.
     if (item.type === "spell" && event.target?.closest?.('[data-tab="inventory"]')) {
       if (!this.actor.isOwner) return null;
@@ -643,20 +730,13 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   }
 
   /**
-   * The tick box on a weapon, armour or shield row equips it or not. It
-   * works like the "Stored in" menu: equipping takes the item out of any
-   * container (or picks it up), and unequipping leaves it carried loose.
+   * Clicking a carried item's picture on the Equipment tab puts it where it
+   * usually goes: its own worn slot, or a free hand (GAPS 287).
    */
-  static #onToggleEquipped(event, button) {
-    return inOrder(`toggle:${this.document.uuid}`, () => CharacterSheet.#toggleEquipped.call(this, event, button));
-  }
-
-  static async #toggleEquipped(event, button) {
+  static #onPutOnItem(event, button) {
     const item = this.#itemFor(button);
-    if (!item || !EQUIPPABLE_TYPES.includes(item.type)) return;
-    // A dropped item is picked up from its "Stored in" menu, not this tick (GAPS 254).
-    if (isDropped(item, droppedContainerIds(this.actor.items))) return;
-    await item.update({ "system.equipped": !item.system.equipped, "system.storedIn": "" });
+    if (!item || !this.isEditable) return;
+    return inOrder(`toggle:${this.document.uuid}`, () => putOnUsual(item));
   }
 
   /** The weight button marks the item cumbersome, or not. */
@@ -873,6 +953,91 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   /** A minion's name opens its sheet. */
   static #onOpenMinion(event, button) {
     game.actors.get(button.closest("[data-minion-id]")?.dataset.minionId)?.sheet.render(true);
+  }
+
+  /**
+   * The Equipment tab (GAPS 287): each slot with what is in it, the items
+   * worn anywhere, and the carried items not worn or held, to drag from.
+   */
+  #equipmentContext() {
+    const docs = carriedItems(this.actor);
+    const byId = new Map(docs.map(item => [item.id, item]));
+    const slots = slotContents(docs.map(slotView));
+    const shieldRaised = this.actor.system.shieldRaised;
+    const entry = key => {
+      const view = slots[key];
+      const item = view ? byId.get(view.id) : null;
+      const hand = HANDS.includes(key);
+      return {
+        key,
+        label: `VARBORG.Equipment.Slot.${key}`,
+        hint: `VARBORG.Equipment.SlotHint.${key}`,
+        hand,
+        item,
+        both: view?.place === "both",
+        canSwitch: Boolean(hand && view?.versatile),
+        canAttack: item?.type === "weapon",
+        canRaise: item?.type === "shield" && !item.system.destroyed && !shieldRaised
+      };
+    };
+    const byName = (a, b) => a.name.localeCompare(b.name);
+    return {
+      columns: [EQUIPMENT_COLUMNS.left.map(entry), EQUIPMENT_COLUMNS.right.map(entry)],
+      hands: EQUIPMENT_HANDS.map(entry),
+      worn: slots.worn.map(view => byId.get(view.id)).sort(byName),
+      carried: docs.filter(item => !item.system.place).sort(byName)
+    };
+  }
+
+  /** Clicking a slot: choose a carried item that fits it. */
+  static async #onPickSlot(event, button) {
+    const slot = button.closest("[data-slot]")?.dataset.slot;
+    if (!slot || !this.actor.isOwner) return;
+    const i18n = game.i18n;
+    const current = button.closest("[data-item-id]")?.dataset.itemId;
+    const choices = carriedItems(this.actor)
+      .filter(item => item.id !== current && fits(slotView(item), slot)
+        && !(HANDS.includes(slot) && [slot, "both"].includes(item.system.place)))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    if (!choices.length) return ui.notifications.info(i18n.localize("VARBORG.Equipment.NothingFits"));
+    const picked = await DialogV2.wait({
+      classes: [...VB_DIALOG_CLASSES, "var-borg-slot-picker"],
+      window: { title: i18n.localize(`VARBORG.Equipment.Slot.${slot}`) },
+      content: `<p>${i18n.localize(`VARBORG.Equipment.SlotHint.${slot}`)}</p>`,
+      buttons: choices.map(item => ({ action: item.id, label: item.name, icon: "fa-solid fa-hand" })),
+      rejectClose: false
+    });
+    const item = this.actor.items.get(picked);
+    if (item) await inOrder(`toggle:${this.document.uuid}`, () => putOn(item, slot));
+  }
+
+  /** The cross on a slot takes the item off; it stays carried. */
+  static #onTakeOffItem(event, button) {
+    const item = this.#itemFor(button);
+    if (item) return inOrder(`toggle:${this.document.uuid}`, () => takeOff(item));
+  }
+
+  /** The hands button on a versatile weapon: one hand or both. */
+  static #onSwitchHands(event, button) {
+    const item = this.#itemFor(button);
+    if (item) return inOrder(`toggle:${this.document.uuid}`, () => switchHands(item));
+  }
+
+  /** The picture button on the Equipment tab: choose a picture to show instead of the skeleton. */
+  static #onChooseFigure() {
+    if (!this.isEditable) return;
+    const picker = new foundry.applications.apps.FilePicker.implementation({
+      type: "image",
+      current: this.actor.system.equipmentImage,
+      callback: path => this.actor.update({ "system.equipmentImage": path })
+    });
+    return picker.browse();
+  }
+
+  /** Back to the skeleton. */
+  static #onResetFigure() {
+    if (!this.isEditable) return;
+    return this.actor.update({ "system.equipmentImage": "" });
   }
 
   /** The item a button in the inventory belongs to. */

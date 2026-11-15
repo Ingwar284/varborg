@@ -1,16 +1,6 @@
 {{!-- One row in the Inventory tab. Used for the items in each section, and
      again for the items stored in a container, listed under it (stored=true). --}}
-<li class="item-row draggable{{#if stored}} stored{{/if}}{{#if item.system.equipped}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}{{#if relicDestroyed}} used-up{{/if}}{{#if dropped}} dropped{{/if}}" data-item-id="{{item.id}}">
-  {{#if canEquip}}
-  {{#if dropped}}<span class="icon-button" aria-hidden="true"></span>{{else}}
-  <button type="button" class="icon-button equip-toggle{{#if item.system.equipped}} active{{/if}}" data-action="toggleEquipped"
-          data-tooltip="{{localize (ifThen item.system.equipped 'VARBORG.Item.Unequip' 'VARBORG.Item.Equip')}}"
-          aria-label="{{localize (ifThen item.system.equipped 'VARBORG.Item.Unequip' 'VARBORG.Item.Equip')}}"
-          aria-pressed="{{#if item.system.equipped}}true{{else}}false{{/if}}">
-    {{#if item.system.equipped}}<i class="fa-solid fa-check"></i>{{/if}}
-  </button>
-  {{/if}}
-  {{/if}}
+<li class="item-row draggable{{#if stored}} stored{{/if}}{{#if item.system.place}} equipped{{/if}}{{#if overCapacity}} over-capacity{{/if}}{{#if item.system.usedUp}} used-up{{/if}}{{#if relicDestroyed}} used-up{{/if}}{{#if dropped}} dropped{{/if}}" data-item-id="{{item.id}}">
   <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
   {{#if hasQuantity}}
   <input type="number" class="quantity" data-quantity value="{{item.system.quantity}}" min="0" step="1"
@@ -19,6 +9,11 @@
   <button type="button" class="link-button item-name" data-action="toggleDescription">{{item.name}}</button>
   <span class="item-summary">{{summary}}</span>
   {{#if drawback}}<span class="relic-drawback" data-tooltip="{{localize 'VARBORG.Relic.DrawbackHint'}}">{{drawback}}</span>{{/if}}
+  {{#if placeLabel}}
+  <span class="item-state placed" data-tooltip="{{localize 'VARBORG.Equipment.PlacedHint'}}">
+    <i class="fa-solid fa-shirt" aria-hidden="true"></i> {{localize placeLabel}}
+  </span>
+  {{/if}}
   {{#each states}}
   <span class="item-state {{key}}">{{localize label}}</span>
   {{/each}}
