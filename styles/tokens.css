@@ -1,64 +1,42 @@
-/* VÅR BORG: colour and font tokens. Every system colour is named here and
-   used elsewhere as var(--vb-…). Change a value here and it changes everywhere.
+/* VÅR BORG: colour, texture and spacing tokens.
 
-   Legibility rule: on paper, text is ink, soft ink or rust only. Orange and
-   yellow are fills (with ink text on them) or text on black. */
+   This file has three blocks, in this order:
+
+   1. :root holds the palette constants (the fixed inks, papers and oranges),
+      the three font stacks, the weather hex tokens, and the fixed shades,
+      art tints and paper-prop rules and textures. These never change with
+      the mood.
+
+   2. body holds the role tokens for the LIGHT mood ("the last sun"), every
+      alias, the light textures, the spacing tokens, and the seal and flourish
+      tokens. Any token that points at another token with var() lives here,
+      not on :root, so that the dark block can change what it points at.
+
+   3. body[data-vb-mood="dark"] holds only the role tokens whose value changes
+      in the DARK mood ("Lun's cold eye"), plus the dark textures.
+
+   Other stylesheets use role tokens such as var(--vb-text), never a colour
+   written out. Contrast figures in the comments come from styles/DESIGN.md.
+   The mood itself is set by module/mood.mjs on the body element. */
 
 :root {
-  /* ---- The palette ---- */
-  --vb-ink: #141210;          /* primary: near-black. 14.8 : 1 on paper */
-  --vb-ink-soft: #4a433a;     /* muted text. 7.7 : 1 on paper */
-  --vb-paper: #ece4d2;        /* bone print paper */
-  --vb-paper-shade: #d9cfb8;  /* shaded paper: hover, panels */
-  --vb-orange: #ec6a1f;       /* secondary: fills, and text on black only. 5.9 : 1 with ink */
-  --vb-yellow: #f2c230;       /* tertiary: fills, and text on black only */
-  --vb-rust: #8f3208;         /* text-safe orange for warnings on paper. 6.3 : 1 */
+  /* ---- Palette constants (fixed; the same in both moods) ---- */
+  --vb-ink: #141210;          /* near-black ink. 14.8 : 1 on paper */
+  --vb-ink-soft: #4a433a;     /* soft ink. 7.7 : 1 on paper */
+  --vb-paper: #ece4d2;        /* bone paper */
+  --vb-paper-shade: #d9cfb8;  /* shaded paper */
+  --vb-orange: #ec6a1f;       /* ember orange. Fills, and text on black only. 5.9 : 1 with ink */
+  --vb-yellow: #f2c230;       /* sun yellow. Fills, and text on black only */
+  --vb-rust: #8f3208;         /* text-safe rust. 6.3 : 1 on paper */
 
-  /* ---- Fonts ---- */
+  /* ---- Fonts (unchanged) ---- */
   --vb-font-display: "VB UnifrakturMaguntia", "Old English Text MT", serif;
   --vb-font-head: "VB IM Fell English SC", Georgia, serif;
   --vb-font-body: "VB Alegreya", Georgia, "Times New Roman", serif;
 
-  /* ---- Etching textures (drawn in SVG, ink on transparent) ---- */
-  --vb-stipple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%23141210' fill-opacity='.08'%3E%3Ccircle cx='3' cy='5' r='.6'/%3E%3Ccircle cx='17' cy='2' r='.5'/%3E%3Ccircle cx='29' cy='11' r='.7'/%3E%3Ccircle cx='9' cy='21' r='.5'/%3E%3Ccircle cx='35' cy='27' r='.6'/%3E%3Ccircle cx='22' cy='33' r='.5'/%3E%3Ccircle cx='5' cy='36' r='.7'/%3E%3Ccircle cx='26' cy='19' r='.4'/%3E%3C/g%3E%3C/svg%3E");
-  --vb-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 6l6-6M-1 1l2-2M5 7l2-2M0 0l6 6M-1 5l2 2M5 -1l2 2' stroke='%23141210' stroke-width='.6'/%3E%3C/svg%3E");
-
-  /* ---- Printer's ornaments (ink, drawn in SVG) ---- */
-  /* A lozenge between two dots: sits on a heading's double rule. */
-  --vb-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 10'%3E%3Cpath d='M13 0l5 5-5 5-5-5z' fill='%23141210'/%3E%3Ccircle cx='3.5' cy='5' r='1.6' fill='%23141210'/%3E%3Ccircle cx='22.5' cy='5' r='1.6' fill='%23141210'/%3E%3C/svg%3E");
-  /* Engraved corner marks for the bottom of a window. */
-  --vb-corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 0v10.5H12' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='4' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
-  --vb-corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M10.5 0v10.5H0' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='5.5' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
-
-  /* ---- Lines ---- */
-  --vb-rule: rgba(20, 18, 16, 0.35);
-  --vb-rule-faint: rgba(20, 18, 16, 0.2);
-  --vb-rule-strong: rgba(20, 18, 16, 0.5);
-
-  /* ---- Meanings (what each colour is for) ---- */
-  --vb-bad: var(--vb-rust);          /* destroyed, used up, over capacity, drawbacks */
-  --vb-hazard: var(--vb-rust);       /* weather hazards, starving, waiting, sunless */
-  --vb-warning: var(--vb-rust);      /* encumbered, sustaining */
-  --vb-good: var(--vb-ink);          /* remains, improved, contest winner */
-  --vb-shield: var(--vb-ink);
-  --vb-muted: var(--vb-ink-soft);
-  --vb-magic-strong: var(--vb-ink);
-  --vb-ember: var(--vb-rust);        /* Ember count on paper */
-  --vb-gloom: var(--vb-ink);         /* Gloom count on paper */
-  --vb-light: var(--vb-rust);        /* light timer */
-
-  /* ---- Test results (chat cards). The fills are set in cards.css. ---- */
-  --vb-tier-triumph: var(--vb-ink);
-  --vb-tier-success: var(--vb-ink);
-  --vb-tier-failure: var(--vb-ink);
-  --vb-tier-ruin: var(--vb-orange);  /* orange text on a black block */
-
-  /* ---- Misery: the end ---- */
-  --vb-misery-end-bg: var(--vb-ink);
-  --vb-misery-end-text: var(--vb-paper);
-
   /* ---- Weather hex flower: light to dark as the weather worsens, hazards
-     in orange and rust. Each hex has an ink outline (apps.css). ---- */
+     in orange and rust. Each hex has an ink outline (apps.css). These only
+     point at palette constants, so they stay here. ---- */
   --vb-hex-text: var(--vb-ink);
   --vb-hex-text-light: var(--vb-paper);
   --vb-hex-token: var(--vb-orange);
@@ -71,4 +49,189 @@
   --vb-weather-storm: var(--vb-ink);
   --vb-weather-minor-hazard: var(--vb-orange);
   --vb-weather-major-hazard: var(--vb-rust);
+
+  /* ---- Fixed shades and art tints (the same in both moods). Used for
+     shadows, masks and glows on art that must not change with the mood:
+     orbs, torch, splash, journal papers. ---- */
+  --vb-black: #000000;
+  --vb-black-25: rgba(0, 0, 0, .25);
+  --vb-black-35: rgba(0, 0, 0, .35);
+  --vb-black-45: rgba(0, 0, 0, .45);
+  --vb-black-55: rgba(0, 0, 0, .55);
+  --vb-black-60: rgba(0, 0, 0, .6);
+  --vb-black-70: rgba(0, 0, 0, .7);
+  --vb-black-80: rgba(0, 0, 0, .8);
+  --vb-glow-orange: rgba(236, 106, 31, .8);     /* Triumph word glow */
+  --vb-glow-rust: rgba(143, 50, 8, .9);         /* Ruin word glow */
+  --vb-bruise-rust: rgba(143, 50, 8, .45);      /* Ruin splash: the bruise at the edges */
+  --vb-vignette-ink: rgba(20, 18, 16, .9);      /* Ruin splash: the dark corners */
+  --vb-smudge-ink: rgba(74, 67, 58, .18);       /* torn-page smudge */
+  --vb-smudge-rust: rgba(143, 50, 8, .12);      /* torn-page stain */
+
+  /* ---- Paper props (journal letters, notices, scraps, the field journal).
+     They stay paper in both moods, so they have their own fixed rules and
+     textures (the ink version of the stipple and fleuron). ---- */
+  --vb-paper-rule: rgba(20, 18, 16, .35);
+  --vb-paper-rule-faint: rgba(20, 18, 16, .2);
+  --vb-paper-rule-strong: rgba(20, 18, 16, .5);
+  --vb-paper-stipple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%23141210' fill-opacity='.08'%3E%3Ccircle cx='3' cy='5' r='.6'/%3E%3Ccircle cx='17' cy='2' r='.5'/%3E%3Ccircle cx='29' cy='11' r='.7'/%3E%3Ccircle cx='9' cy='21' r='.5'/%3E%3Ccircle cx='35' cy='27' r='.6'/%3E%3Ccircle cx='22' cy='33' r='.5'/%3E%3Ccircle cx='5' cy='36' r='.7'/%3E%3Ccircle cx='26' cy='19' r='.4'/%3E%3C/g%3E%3C/svg%3E");
+  --vb-paper-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 10'%3E%3Cpath d='M13 0l5 5-5 5-5-5z' fill='%23141210'/%3E%3Ccircle cx='3.5' cy='5' r='1.6' fill='%23141210'/%3E%3Ccircle cx='22.5' cy='5' r='1.6' fill='%23141210'/%3E%3C/svg%3E");
+}
+
+body {
+  /* ---- Surfaces, text and lines (light mood) ---- */
+  --vb-surface: #ece4d2;               /* page background. Contrast: n/a */
+  --vb-surface-raised: #d9cfb8;        /* panels, hover rows, dropped dice, roll summary. Contrast: n/a */
+  --vb-surface-wash: rgba(217, 207, 184, .5);  /* a half-strength raised panel, such as an opened item description */
+  --vb-field-focus: #f2c230;           /* background of a focused text field. Text on it 11.15 */
+  --vb-text: #141210;                  /* body text. On page 14.77; on raised 12.07 */
+  --vb-text-soft: #4a433a;             /* hints, secondary text, the minus and plus steps. On page 7.70; on raised 6.30 */
+  --vb-text-faint: #5e5647;            /* placeholders and small notes only. On page 5.73; on raised 4.68 */
+  --vb-alert: #8f3208;                 /* warning text: destroyed, over capacity, hazards. On page 6.32; on raised 5.16 */
+  --vb-line: #141210;                  /* frames, borders, field underlines. On page 14.77 */
+  --vb-line-soft: rgba(20, 18, 16, .35);   /* medium rules, dashed borders. 2.19 on page */
+  --vb-line-faint: rgba(20, 18, 16, .2);   /* row separators, hover tints. 1.53 on page */
+  --vb-line-strong: rgba(20, 18, 16, .5);  /* emphasised rules. 3.33 on page */
+
+  /* ---- Bands: title bar, character header, tab bar, card headline, black plates ---- */
+  --vb-band: #141210;                  /* band background. Contrast: n/a */
+  --vb-band-text: #ece4d2;             /* text on a band. 14.77 */
+  --vb-band-hover: #f2c230;            /* link or control text on a band when hovered. 11.15 */
+  --vb-band-accent: #ec6a1f;           /* the line under a band, active-tab top line, decorative marks. 5.92 */
+  --vb-focus-on-band: #f2c230;         /* focus ring on a band. 11.15 */
+
+  /* ---- Accent, highlight, focus, buttons ---- */
+  --vb-accent: #ec6a1f;                /* fill for hover and emphasis. Contrast: n/a */
+  --vb-on-accent: #141210;             /* text on an accent fill. 5.92 */
+  --vb-highlight: #f2c230;             /* fill for Triumph and a ticked Boon. Contrast: n/a */
+  --vb-on-highlight: #141210;          /* text on a highlight fill. 11.15 */
+  --vb-focus: #141210;                 /* focus ring on a surface. 14.77 on page */
+  --vb-btn-bg: #141210;                /* button fill. Contrast: n/a */
+  --vb-btn-fg: #ece4d2;                /* button text. 14.77 */
+  --vb-btn-border: #141210;            /* button border. 14.77 on page */
+  --vb-btn-hover-bg: var(--vb-accent);       /* button hover fill (alias) */
+  --vb-btn-hover-fg: var(--vb-on-accent);    /* button hover text (alias). 5.92 */
+  --vb-btn-hover-border: var(--vb-accent);   /* button hover border (alias) */
+
+  /* ---- Game meanings ---- */
+  --vb-ember: #8f3208;                 /* Ember count and symbol, as text. 6.32 on page */
+  --vb-gloom: #141210;                 /* Gloom count and crescent, as text. 14.77 on page */
+  --vb-bane-bg: #141210;               /* fill of a ticked Bane toggle. Contrast: n/a */
+  --vb-bane-fg: #ece4d2;               /* text on a ticked Bane toggle. 14.77 */
+  --vb-ruler-far: #f08a5d;             /* token ruler "too far" label. Not the alert colour: it sits on Foundry's own dark ruler label, so it is the same in both moods. See DESIGN.md section 11 */
+
+  /* ---- Shadows, overlay HUD, atmosphere, seal ---- */
+  --vb-shadow-hard: 3px 3px 0 #141210;     /* stamped objects only. A whole box-shadow value */
+  --vb-shadow-soft: 0 3px 6px rgba(0, 0, 0, .55);  /* overlays over the map only. Also valid inside drop-shadow() */
+  --vb-hud-bg: rgba(20, 18, 16, .85);      /* panels over the map. Contrast: n/a */
+  --vb-hud-text: #ece4d2;                  /* text on a HUD panel. 12.52 over a mid-grey map */
+  --vb-hud-line: rgba(236, 228, 210, .35); /* border of a HUD panel */
+  --vb-hud-hover: rgba(236, 228, 210, .14); /* hovered row or control on a HUD panel */
+  --vb-atmosphere: radial-gradient(ellipse at 50% -10%, rgba(242, 194, 48, .12), transparent 60%);  /* window background: warm glow from the top */
+  --vb-seal-hi: #b8481a;                   /* journal wax seal, highlight (same in both moods) */
+  --vb-seal-lo: #5e2004;                   /* journal wax seal, shadow (same in both moods) */
+
+  /* ---- Mood flourish backgrounds (same in both moods) ---- */
+  --vb-atmosphere-dark-flourish: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0, 0, 0, .6) 100%);       /* edge vignette, played when moving to dark */
+  --vb-atmosphere-light-flourish: radial-gradient(ellipse at 50% -10%, rgba(242, 194, 48, .35), transparent 55%);    /* warm top flare, played when moving to light */
+
+  /* ---- Result tiers ---- */
+  --vb-tier-triumph-bg: var(--vb-highlight);        /* alias: Triumph fill */
+  --vb-tier-triumph-fg: var(--vb-on-highlight);     /* alias: Triumph text. 11.15 */
+  --vb-tier-success-fg: var(--vb-text);             /* alias: Success text. 14.77 on page */
+  --vb-tier-failure-bar: #8f3208;                   /* Failure bar. 6.32 against the page */
+  --vb-tier-failure-fg: var(--vb-text);             /* alias: Failure text. 14.77 on page */
+  --vb-tier-ruin-bg: #141210;                       /* Ruin fill. Contrast: n/a */
+  --vb-tier-ruin-fg: #ec6a1f;                       /* Ruin text on the fill. 5.92 */
+  --vb-tier-ruin-border: #141210;                   /* Ruin border against the page. 14.77 */
+
+  /* ---- Spacing (the same in both moods) ---- */
+  --vb-space-1: .25rem;
+  --vb-space-2: .5rem;
+  --vb-space-3: .75rem;
+  --vb-space-4: 1rem;
+  --vb-space-5: 1.5rem;
+
+  /* ---- Aliases kept for existing code. Each points at a role token. ---- */
+  --vb-bad: var(--vb-alert);             /* destroyed, used up, over capacity, drawbacks */
+  --vb-hazard: var(--vb-alert);          /* weather hazards, starving, waiting, sunless */
+  --vb-warning: var(--vb-alert);         /* encumbered, sustaining */
+  --vb-good: var(--vb-text);             /* remains, improved, contest winner */
+  --vb-shield: var(--vb-text);
+  --vb-magic-strong: var(--vb-text);
+  --vb-muted: var(--vb-text-soft);
+  --vb-light: var(--vb-ember);           /* light timer */
+  --vb-rule: var(--vb-line-soft);
+  --vb-rule-faint: var(--vb-line-faint);
+  --vb-rule-strong: var(--vb-line-strong);
+  --vb-misery-end-bg: var(--vb-band);
+  --vb-misery-end-text: var(--vb-band-text);
+  --vb-tier-triumph: var(--vb-tier-triumph-fg);
+  --vb-tier-success: var(--vb-tier-success-fg);
+  --vb-tier-failure: var(--vb-tier-failure-fg);
+  --vb-tier-ruin: var(--vb-tier-ruin-fg);
+
+  /* ---- Etching textures, light mood (ink on transparent) ---- */
+  --vb-stipple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%23141210' fill-opacity='.08'%3E%3Ccircle cx='3' cy='5' r='.6'/%3E%3Ccircle cx='17' cy='2' r='.5'/%3E%3Ccircle cx='29' cy='11' r='.7'/%3E%3Ccircle cx='9' cy='21' r='.5'/%3E%3Ccircle cx='35' cy='27' r='.6'/%3E%3Ccircle cx='22' cy='33' r='.5'/%3E%3Ccircle cx='5' cy='36' r='.7'/%3E%3Ccircle cx='26' cy='19' r='.4'/%3E%3C/g%3E%3C/svg%3E");
+  --vb-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 6l6-6M-1 1l2-2M5 7l2-2M0 0l6 6M-1 5l2 2M5 -1l2 2' stroke='%23141210' stroke-width='.6'/%3E%3C/svg%3E");
+
+  /* ---- Printer's ornaments, light mood (ink, drawn in SVG) ---- */
+  /* A lozenge between two dots: sits on a heading's double rule. */
+  --vb-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 10'%3E%3Cpath d='M13 0l5 5-5 5-5-5z' fill='%23141210'/%3E%3Ccircle cx='3.5' cy='5' r='1.6' fill='%23141210'/%3E%3Ccircle cx='22.5' cy='5' r='1.6' fill='%23141210'/%3E%3C/svg%3E");
+  /* Engraved corner marks for the bottom of a window. */
+  --vb-corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 0v10.5H12' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='4' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
+  --vb-corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M10.5 0v10.5H0' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='5.5' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
+}
+
+body[data-vb-mood="dark"] {
+  /* ---- Dark mood: role tokens whose value changes ---- */
+  --vb-surface: #161412;
+  --vb-surface-raised: #25211d;
+  --vb-surface-wash: rgba(37, 33, 29, .5);
+  --vb-field-focus: #3a3226;
+  --vb-text: #e8dfcb;
+  --vb-text-soft: #ada38d;
+  --vb-text-faint: #958b76;
+  --vb-alert: #f08a5d;
+  --vb-line: #8f979c;
+  --vb-line-soft: rgba(195, 204, 210, .30);
+  --vb-line-faint: rgba(195, 204, 210, .16);
+  --vb-line-strong: rgba(195, 204, 210, .45);
+
+  --vb-band: #0b0a09;
+  --vb-band-text: #c3ccd2;
+  --vb-band-hover: #e8dfcb;
+  --vb-band-accent: #8f979c;
+  --vb-focus-on-band: #e3b93a;
+
+  --vb-accent: #e0742e;
+  --vb-highlight: #e3b93a;
+  --vb-focus: #e3b93a;
+  --vb-btn-bg: #2e2924;
+  --vb-btn-fg: #e8dfcb;
+  --vb-btn-border: #8f979c;
+
+  --vb-ember: #e0742e;
+  --vb-gloom: #c3ccd2;
+  --vb-bane-bg: #7d2a08;
+  --vb-bane-fg: #f1e7d0;
+
+  --vb-shadow-hard: 3px 3px 0 #000000;
+  --vb-hud-bg: rgba(8, 8, 10, .9);
+  --vb-hud-text: #c3ccd2;
+  --vb-hud-line: rgba(195, 204, 210, .35);
+  --vb-hud-hover: rgba(195, 204, 210, .14);
+  --vb-atmosphere: radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0, 0, 0, .45) 100%);
+
+  --vb-tier-failure-bar: #e0742e;
+  --vb-tier-ruin-bg: #7d2a08;
+  --vb-tier-ruin-fg: #f1e7d0;
+  --vb-tier-ruin-border: #f1e7d0;
+
+  /* ---- Etching textures, dark mood (bone flecks, moon-silver lines) ---- */
+  --vb-stipple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%23e8dfcb' fill-opacity='.06'%3E%3Ccircle cx='3' cy='5' r='.6'/%3E%3Ccircle cx='17' cy='2' r='.5'/%3E%3Ccircle cx='29' cy='11' r='.7'/%3E%3Ccircle cx='9' cy='21' r='.5'/%3E%3Ccircle cx='35' cy='27' r='.6'/%3E%3Ccircle cx='22' cy='33' r='.5'/%3E%3Ccircle cx='5' cy='36' r='.7'/%3E%3Ccircle cx='26' cy='19' r='.4'/%3E%3C/g%3E%3C/svg%3E");
+  --vb-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 6l6-6M-1 1l2-2M5 7l2-2M0 0l6 6M-1 5l2 2M5 -1l2 2' stroke='%23c3ccd2' stroke-width='.6'/%3E%3C/svg%3E");
+  --vb-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 10'%3E%3Cpath d='M15.5 1.8A4 4 0 1 0 15.5 8.2A3.4 3.4 0 0 1 15.5 1.8Z' fill='%23c3ccd2'/%3E%3Ccircle cx='3.5' cy='5' r='1.6' fill='%23c3ccd2'/%3E%3Ccircle cx='22.5' cy='5' r='1.6' fill='%23c3ccd2'/%3E%3C/svg%3E");
+  --vb-corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 0v10.5H12' fill='none' stroke='%238f979c' stroke-width='1.5'/%3E%3Crect x='4' y='5' width='2.5' height='2.5' fill='%238f979c'/%3E%3C/svg%3E");
+  --vb-corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M10.5 0v10.5H0' fill='none' stroke='%238f979c' stroke-width='1.5'/%3E%3Crect x='5.5' y='5' width='2.5' height='2.5' fill='%238f979c'/%3E%3C/svg%3E");
 }

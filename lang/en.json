@@ -445,6 +445,13 @@
         "Hint": "When improving, either roll a d3 for a general, ancestry or class feat, or let whoever improves choose the group. The feat within the group is still rolled.",
         "roll": "Roll the group (d3)",
         "choose": "Choose the group"
+      },
+      "UiMood": {
+        "Name": "Interface mood",
+        "Hint": "VÅR BORG windows, chat cards and orbs look hopeful in light and threatening in darkness. Follow my character: they change when your character's token is In Darkness. Always light or Always dark keeps one look, for comfort or legibility. Only on your own screen.",
+        "Follow": "Follow my character",
+        "Light": "Always light",
+        "Dark": "Always dark"
       }
     },
     "Examples": {

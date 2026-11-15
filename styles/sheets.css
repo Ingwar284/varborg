@@ -1,4 +1,10 @@
-/* VÅR BORG: actor sheets (character, foe, minion, vehicle). */
+/* VÅR BORG: actor sheets (character, foe, minion, vehicle).
+   This file covers the character header band and its In Darkness stamp, the
+   tab bar, the abilities, resources, inventory, condition, power and vehicle
+   lists, the foe, minion and vehicle sheets, and the etched contents shared by
+   every actor sheet. Colours come from the role tokens in tokens.css (text,
+   line, band, surface, accent), never from palette names or literal colours,
+   so both the light and the dark mood work. */
 
 /* ---------- Character sheet ---------- */
 /* The black header band and tab bar run edge to edge; the tabs below get the padding. */
@@ -31,10 +37,11 @@
 
 /* Header band: portrait in an engraved frame, name in blackletter. */
 .var-borg.character header.var-borg-sheet {
+  position: relative;
   flex: 0 0 auto;
   padding: 0.6rem 0.9rem 0.7rem;
-  background: var(--vb-ink);
-  color: var(--vb-paper);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
 }
 
 .var-borg.character .sheet-header .portrait {
@@ -42,10 +49,10 @@
   width: 84px;
   height: 84px;
   margin: 4px;
-  border: 2px solid var(--vb-paper);
-  outline: 1px solid var(--vb-paper);
+  border: 2px solid var(--vb-band-text);
+  outline: 1px solid var(--vb-band-text);
   outline-offset: 3px;
-  background: var(--vb-paper-shade) var(--vb-crosshatch);
+  background: var(--vb-surface-raised) var(--vb-crosshatch);
 }
 
 .application.var-borg.character .sheet-header .actor-name {
@@ -56,31 +63,53 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
   font-size: 2.3rem;
   font-weight: 400;
   line-height: 1.15;
-  text-shadow: 3px 2px 0 var(--vb-orange);
+  text-shadow: 3px 2px 0 var(--vb-band-accent);
 }
 
 .application.var-borg.character .sheet-header .actor-name::placeholder {
-  color: var(--vb-paper-shade);
+  color: var(--vb-band-text);
   opacity: 0.6;
 }
 
 .application.var-borg.character .sheet-header .actor-name:hover {
-  border-bottom-color: var(--vb-ink-soft);
+  border-bottom-color: var(--vb-band-accent);
 }
 
 .application.var-borg.character .sheet-header .actor-name:focus {
   outline: none;
   box-shadow: none;
   background: transparent;
-  border-bottom-color: var(--vb-yellow);
+  border-bottom-color: var(--vb-band-hover);
 }
 
-/* Tab bar: black, the open tab in orange, sitting on a thin orange line.
-   Each name stays on one line, and the row wraps on a narrow sheet. */
+/* The In Darkness stamp: a small boxed label at the top right of the header band.
+   It is placed on the band itself (not in the row of portrait and name), so it
+   takes no width from the name field. It sits in the strip above the name's
+   letters, so a long name does not run under it. */
+.var-borg.character header.var-borg-sheet .vb-dark-stamp {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.9rem;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--vb-band-accent);
+  color: var(--vb-band-text);
+  font-family: var(--vb-font-head);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.var-borg.character header.var-borg-sheet .vb-dark-stamp::before {
+  content: "☾ ";
+}
+
+/* Tab bar: a black band. The open tab is page-coloured and joins the page
+   over the thin accent line under the bar. Each name stays on one line, and
+   the row wraps on a narrow sheet. */
 .var-borg.character nav.sheet-tabs {
   flex: 0 0 auto;
   flex-wrap: wrap;
@@ -89,8 +118,8 @@
   margin: 0;
   padding: 0 0.5rem;
   border: none;
-  border-bottom: 3px solid var(--vb-orange);
-  background: var(--vb-ink);
+  border-bottom: 3px solid var(--vb-band-accent);
+  background: var(--vb-band);
   font-size: 0.95rem;
   line-height: 2;
 }
@@ -98,7 +127,7 @@
 .var-borg.character nav.sheet-tabs > a {
   white-space: nowrap;
   padding: 0 0.65rem;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
   text-shadow: none;
 }
 
@@ -108,18 +137,28 @@
 }
 
 .var-borg.character nav.sheet-tabs > a:hover {
-  color: var(--vb-yellow);
+  color: var(--vb-band-hover);
+  text-decoration: underline;
   text-shadow: none;
 }
 
 .var-borg.character nav.sheet-tabs > a.active {
-  background: var(--vb-orange);
-  color: var(--vb-ink);
+  position: relative;
+  background: var(--vb-surface);
+  color: var(--vb-text);
+  border-top: 3px solid var(--vb-band-accent);
+  margin-bottom: -3px;
   text-shadow: none;
 }
 
 .var-borg.character nav.sheet-tabs > a:focus-visible {
-  outline: 2px solid var(--vb-yellow);
+  outline: 2px solid var(--vb-focus-on-band);
+  outline-offset: -2px;
+}
+
+/* The open tab sits on the page, so its ring is the page-coloured one. */
+.var-borg.character nav.sheet-tabs > a.active:focus-visible {
+  outline: 2px solid var(--vb-focus);
   outline-offset: -2px;
 }
 
@@ -131,8 +170,6 @@
 
 .var-borg-sheet h2 {
   margin: 0 0 0.4rem;
-  font-size: 1.1rem;
-  border-bottom: 1px solid currentColor;
 }
 
 .var-borg-sheet .sheet-header {
@@ -151,10 +188,12 @@
 
 .var-borg-sheet .actor-name {
   flex: 1;
-  font-size: 1.5rem;
   height: auto;
 }
 
+/* Five boxes across. Each column has to hold a 3.6rem box and a - and + of
+   1.2rem each, so the gaps are kept small (the sheet is 600px wide and its
+   tab can show a scrollbar). */
 .var-borg-sheet .ability-row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -171,10 +210,7 @@
 }
 
 .var-borg-sheet .ability input {
-  width: 3.5rem;
   text-align: center;
-  font-size: 1.25rem;
-  height: auto;
 }
 
 .var-borg-sheet .resources {
@@ -241,7 +277,6 @@
 /* Bonuses under a box. They wrap onto more lines rather than widening the box. */
 .var-borg-sheet .ability-in-use {
   font-size: 0.8rem;
-  opacity: 0.8;
   max-width: 100%;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -260,11 +295,6 @@
 }
 
 /* Carrying and movement */
-.var-borg-sheet .movement-value {
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-
 .var-borg-sheet .carrying-line {
   display: flex;
   flex-wrap: wrap;
@@ -288,20 +318,15 @@
   gap: 0.5rem;
   margin: 0.4rem 0;
   padding: 0.3rem 0.5rem;
-  border: 1px solid var(--vb-bad);
-  border-radius: 4px;
 }
 
 .var-borg-sheet .attack-ruin p { flex: 1; margin: 0; }
-
-.var-borg-sheet .attack-ruin strong { color: var(--vb-bad); }
 
 .var-borg-sheet .attack-ruin button { flex: 0 0 auto; width: auto; }
 
 /* Inventory list */
 .var-borg-sheet h3 {
   margin: 0.4rem 0 0.2rem;
-  font-size: 1rem;
 }
 
 .var-borg-sheet .item-list {
@@ -314,8 +339,6 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.15rem 0;
-  border-bottom: 1px solid var(--vb-rule-faint);
 }
 
 .var-borg-sheet .item-row img {
@@ -331,7 +354,6 @@
 .var-borg-sheet .item-row .item-summary {
   flex: 1;
   font-size: 0.875rem;
-  opacity: 0.8;
 }
 
 .var-borg-sheet .icon-button {
@@ -349,35 +371,18 @@
   opacity: 1;
 }
 
-/* The tick box that equips a weapon, armour or shield. */
-.var-borg-sheet .equip-toggle {
-  opacity: 0.5;
-}
-
-.var-borg-sheet .equip-toggle.active {
-  opacity: 1;
-}
-
 .var-borg-sheet .item-row .stored-in {
   flex: 0 0 8rem;
   width: 8rem;
-}
-
-.var-borg-sheet .item-row.over-capacity .item-summary {
-  color: var(--vb-bad);
-  font-weight: bold;
-  opacity: 1;
 }
 
 /* The description under an item row, opened by clicking the name. */
 .var-borg-sheet .item-list .item-description {
   /* Keeps the description's own line breaks, but not stray spaces. */
   white-space: pre-line;
-  font-size: 0.875rem;
   line-height: 1.35;
   margin: 0.1rem 0 0.35rem 1.9rem;
   padding: 0.2rem 0.5rem;
-  border-left: 2px solid var(--vb-rule-strong);
 }
 
 /* A power's or spell's own result texts, listed under its description. */
@@ -398,28 +403,27 @@
 
 .var-borg-sheet .item-list .empty {
   font-style: italic;
-  opacity: 0.6;
 }
 
 .var-borg-sheet .hint,
 .var-borg.item .hint {
   font-size: 0.875rem;
-  opacity: 0.75;
   margin: 0.3rem 0 0;
 }
 
 /* Inventory: used-up items and the loaded/empty tag */
 .var-borg-sheet .item-row.used-up img,
 .var-borg-sheet .item-row.used-up .item-name {
-  opacity: 0.6;
+  opacity: 0.7;
   text-decoration: line-through;
 }
 
-/* Dropped items: greyed out, not struck through (GAPS 254). */
+/* Dropped items: greyed out, not struck through (GAPS 254). The summary is
+   already the soft text colour, so it is not dimmed again (it would fall under
+   4.5 : 1). */
 .var-borg-sheet .item-row.dropped img,
-.var-borg-sheet .item-row.dropped .item-name,
-.var-borg-sheet .item-row.dropped .item-summary {
-  opacity: 0.6;
+.var-borg-sheet .item-row.dropped .item-name {
+  opacity: 0.7;
 }
 
 .var-borg-sheet .item-row .item-state {
@@ -506,8 +510,6 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.15rem 0;
-  border-bottom: 1px solid var(--vb-rule-faint);
 }
 
 .var-borg-sheet .condition-row img {
@@ -523,7 +525,6 @@
 
 .var-borg-sheet .condition-list .empty {
   font-style: italic;
-  opacity: 0.6;
 }
 
 .var-borg-sheet .condition-controls {
@@ -564,13 +565,9 @@
   gap: 0.5rem;
   margin: 0.4rem 0;
   padding: 0.3rem 0.5rem;
-  border: 1px solid var(--vb-shield);
-  border-radius: 4px;
 }
 
 .var-borg-sheet .shield-raised p { flex: 1; margin: 0; }
-
-.var-borg-sheet .shield-raised strong { color: var(--vb-shield); }
 
 .var-borg-sheet .shield-raised button { flex: 0 0 auto; width: auto; }
 
@@ -593,7 +590,7 @@
 .var-borg-sheet .conditions-section .condition-group + .condition-group {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px solid var(--vb-rule);
+  border-top: 1px solid var(--vb-line-soft);
 }
 
 .var-borg-sheet .deaths-door-panel h3 {
@@ -674,14 +671,18 @@
 
 .var-borg-sheet .link-button:hover { text-decoration: underline; }
 
-.var-borg-sheet .over-limit,
-.var-borg-sheet h2.over-limit {
-  color: var(--vb-bad);
+/* The heading turns alert-coloured; the minion button (a button) takes its
+   colour from the --vb-btn-fg variable instead, so its hover still works. */
+.var-borg-sheet .over-limit {
   font-weight: bold;
 }
 
+.var-borg-sheet h2.over-limit {
+  color: var(--vb-bad);
+}
+
 .var-borg-sheet .item-row.used-up .feat-text strong {
-  opacity: 0.6;
+  opacity: 0.7;
   text-decoration: line-through;
 }
 
@@ -733,8 +734,6 @@
   gap: 0.5rem;
   margin: 0.25rem 0;
   padding: 0.3rem 0.5rem;
-  border: 1px dashed currentColor;
-  border-radius: 4px;
 }
 
 .var-borg-sheet .improving-choice span { flex: 1; }
@@ -742,7 +741,7 @@
 /* =====================================================================
    Etched contents (V4). Applies inside every actor sheet's body
    (character, foe, minion, vehicle) and the creation helper.
-   Rule: ink on paper for reading; orange and yellow only as fills.
+   Rule: text and lines in the role colours; accent and highlight only as fills.
    ===================================================================== */
 
 /* Shared buttons, fields and headings are in base.css. */
@@ -750,20 +749,29 @@
 /* Small icon buttons on rows: outlined, so a long list is not a wall of black. */
 .application.var-borg .var-borg-sheet .icon-button {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-fg: var(--vb-text);
   border-width: 1px;
 }
 
-/* Text that acts as a link (item names): plain ink, underlined on hover. */
+/* The other rolls (Contest, Chance, Panic): quiet outlined buttons, so they look
+   lighter than the black ability buttons. The hover comes from the hover tokens. */
+.application.var-borg .var-borg-sheet .other-rolls button {
+  --vb-btn-bg: transparent;
+  --vb-btn-fg: var(--vb-text);
+  --vb-btn-border: var(--vb-line);
+  border-width: 1px;
+}
+
+/* Text that acts as a link (item names): plain text colour, underlined on hover. */
 .application.var-borg .var-borg-sheet .link-button {
-  color: var(--vb-ink);
+  color: var(--vb-text);
   font-family: inherit;
   letter-spacing: normal;
 }
 
 .application.var-borg .var-borg-sheet .link-button:hover {
   background: none;
-  color: var(--vb-ink);
+  color: var(--vb-text);
 }
 
 .application.var-borg .var-borg-sheet .condition-strip {
@@ -771,18 +779,17 @@
 }
 
 .application.var-borg .var-borg-sheet .condition-strip:hover {
-  background: var(--vb-paper-shade);
-  border-color: var(--vb-ink);
+  background: var(--vb-surface-raised);
+  border-color: var(--vb-line);
 }
 
-/* Over the minion limit, on a black button: orange text reads; rust would not. */
+/* Over the minion limit, on a black button: the light-band text reads; rust would not. */
 .application.var-borg .var-borg-sheet .text-button.over-limit {
-  color: var(--vb-orange);
+  --vb-btn-fg: var(--vb-band-hover);
 }
 
 /* ---- Abilities: big numerals in stamped boxes ---- */
 .application.var-borg .var-borg-sheet .ability-row {
-  gap: 0.6rem;
   align-items: start;
 }
 
@@ -799,21 +806,21 @@
   width: 3.6rem;
   height: 3.6rem;
   margin: 0 4px 4px 0;
-  border: 2px solid var(--vb-ink);
-  background: var(--vb-paper);
-  box-shadow: 4px 4px 0 var(--vb-ink);
-  font-size: 1.9rem;
+  border: 2px solid var(--vb-line);
+  background: var(--vb-surface);
+  box-shadow: var(--vb-shadow-hard);
+  font-size: 1.8rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
 .application.var-borg .var-borg-sheet .ability input[type="number"]:focus {
-  background: var(--vb-yellow);
+  background: var(--vb-field-focus);
 }
 
 .application.var-borg .var-borg-sheet .ability-in-use {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   opacity: 1;
 }
 
@@ -842,28 +849,24 @@
   display: none;
 }
 
-.var-borg-sheet .ability .boosted-total {
-  font-size: 1.25rem;
-}
-
 .application.var-borg .var-borg-sheet .ability .boosted-total {
   inset: 0 4px 4px 0; /* clear of the input's margin and shadow */
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   font-weight: 800;
   line-height: 1;
-  color: var(--vb-ink);
+  color: var(--vb-text);
 }
 
 .application.var-borg .var-borg-sheet .resource .boosted-total {
-  font-size: 1.15rem;
-  color: var(--vb-ink);
+  font-size: 1.4rem;
+  color: var(--vb-text);
 }
 
 /* ---- Resources (HP, Wounds, Fortune, Sanity lost, Movement) ---- */
 .application.var-borg .var-borg-sheet .resources:not(.silver-footer) {
   padding: 0.5rem 0;
-  border-top: 3px double var(--vb-ink);
-  border-bottom: 3px double var(--vb-ink);
+  border-top: 3px double var(--vb-line);
+  border-bottom: 3px double var(--vb-line);
 }
 
 .application.var-borg .var-borg-sheet .resource > span:first-child {
@@ -871,33 +874,50 @@
   letter-spacing: 0.04em;
 }
 
+/* Fortune and the other plain numbers: no frame, just the field's ruled line. */
 .application.var-borg .var-borg-sheet .resource input[type="number"] {
-  font-size: 1.15rem;
+  font-size: 1rem;
+}
+
+/* HP and Wounds: large numerals in a frame, the same size as a boxed ability. */
+.application.var-borg .var-borg-sheet .resource .pair input[type="number"] {
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  border: 2px solid var(--vb-line);
+  background: var(--vb-surface);
 }
 
 .application.var-borg .var-borg-sheet .movement-value {
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: 800;
 }
 
 /* ---- Rows: items, feats, powers, minions, conditions ---- */
 .application.var-borg .var-borg-sheet :is(.item-row, .condition-row) {
   padding: 0.25rem 0.2rem;
-  border-bottom: 1px solid var(--vb-rule);
+  border-bottom: 1px solid var(--vb-line-soft);
 }
 
 .application.var-borg .var-borg-sheet :is(.item-row, .condition-row):hover {
-  background: var(--vb-paper-shade);
+  background: var(--vb-surface-raised);
 }
 
 .application.var-borg .var-borg-sheet .item-row img {
-  border: 1px solid var(--vb-ink);
-  background: var(--vb-paper-shade);
+  border: 1px solid var(--vb-line);
+  background: var(--vb-surface-raised);
 }
 
 .application.var-borg .var-borg-sheet .item-row .item-summary {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   opacity: 1;
+}
+
+/* An item over its container's capacity keeps its alert colour (this rule has to
+   be as specific as the one above, or the soft colour would win). */
+.application.var-borg .var-borg-sheet .item-row.over-capacity .item-summary {
+  color: var(--vb-bad);
+  font-weight: bold;
 }
 
 /* States (loaded, used, sustaining, destroyed…): outlined tags in their colour. */
@@ -911,55 +931,56 @@
 
 .application.var-borg .var-borg-sheet .item-row .item-state.used-outside,
 .application.var-borg .var-borg-sheet .item-row .item-state.used {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
 }
 
-/* The opened description under a row: an orange bar down the left. */
+/* The opened description under a row: an accent bar down the left. */
 .application.var-borg .var-borg-sheet .item-list .item-description {
-  border-left: 3px solid var(--vb-orange);
-  background: rgba(217, 207, 184, 0.5);
-  color: var(--vb-ink);
+  border-left: 3px solid var(--vb-accent);
+  background: var(--vb-surface-wash);
+  color: var(--vb-text);
   font-size: 0.9rem;
 }
 
 .application.var-borg .var-borg-sheet :is(.item-list, .condition-list) .empty,
 .application.var-borg .var-borg-sheet .hint {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   opacity: 1;
 }
 
 /* ---- Warning panels ---- */
 
-/* Attack Ruin: a black block, the title in orange. */
+/* Attack Ruin: a black band, the title in the band's hover colour. */
 .application.var-borg .var-borg-sheet .attack-ruin {
-  border: 2px solid var(--vb-ink);
+  border: 2px solid var(--vb-band);
   border-radius: 0;
-  background: var(--vb-ink);
-  color: var(--vb-paper);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
 }
 
-.application.var-borg .var-borg-sheet .attack-ruin strong { color: var(--vb-orange); }
+.application.var-borg .var-borg-sheet .attack-ruin strong { color: var(--vb-band-hover); }
 
+/* A button on a black band: bone stamp with a black label. */
 .application.var-borg .var-borg-sheet .attack-ruin button {
-  --vb-btn-bg: var(--vb-paper);
-  --vb-btn-fg: var(--vb-ink);
-  --vb-btn-border: var(--vb-paper);
+  --vb-btn-bg: var(--vb-band-text);
+  --vb-btn-fg: var(--vb-band);
+  --vb-btn-border: var(--vb-band-text);
 }
 
-/* Raised shield: shaded paper with a thick ink bar. */
+/* Raised shield: raised paper with a thick line bar. */
 .application.var-borg .var-borg-sheet .shield-raised {
   border: none;
-  border-left: 6px solid var(--vb-ink);
+  border-left: 6px solid var(--vb-line);
   border-radius: 0;
-  background: var(--vb-paper-shade);
+  background: var(--vb-surface-raised);
 }
 
-.application.var-borg .var-borg-sheet .shield-raised strong { color: var(--vb-ink); }
+.application.var-borg .var-borg-sheet .shield-raised strong { color: var(--vb-text); }
 
 .application.var-borg .var-borg-sheet .improving-choice {
-  border: 1px dashed var(--vb-ink);
+  border: 1px dashed var(--vb-line);
   border-radius: 0;
-  background: var(--vb-paper-shade);
+  background: var(--vb-surface-raised);
 }
 
 /* =====================================================================
@@ -970,16 +991,13 @@
 .application.var-borg.foe .foe-sheet > .sheet-header {
   margin: -0.75rem -0.75rem 0;
   padding: 0.6rem 0.9rem 0.7rem;
-  background: var(--vb-ink);
-  color: var(--vb-paper);
-  border-bottom: 3px solid var(--vb-orange);
-  /* Buttons on the band: bone stamps that turn orange. */
-  --vb-btn-bg: var(--vb-paper);
-  --vb-btn-fg: var(--vb-ink);
-  --vb-btn-border: var(--vb-paper);
-  --vb-btn-hover-bg: var(--vb-orange);
-  --vb-btn-hover-fg: var(--vb-ink);
-  --vb-btn-hover-border: var(--vb-orange);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
+  border-bottom: 3px solid var(--vb-band-accent);
+  /* Buttons on the band: bone stamps that turn accent on hover (the hover tokens are the defaults). */
+  --vb-btn-bg: var(--vb-band-text);
+  --vb-btn-fg: var(--vb-band);
+  --vb-btn-border: var(--vb-band-text);
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header .portrait {
@@ -987,10 +1005,10 @@
   width: 84px;
   height: 84px;
   margin: 4px;
-  border: 2px solid var(--vb-paper);
-  outline: 1px solid var(--vb-paper);
+  border: 2px solid var(--vb-band-text);
+  outline: 1px solid var(--vb-band-text);
   outline-offset: 3px;
-  background: var(--vb-paper-shade) var(--vb-crosshatch);
+  background: var(--vb-surface-raised) var(--vb-crosshatch);
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header input.actor-name {
@@ -1001,26 +1019,26 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
   font-size: 2.1rem;
   font-weight: 400;
   line-height: 1.15;
-  text-shadow: 3px 2px 0 var(--vb-orange);
+  text-shadow: 3px 2px 0 var(--vb-band-accent);
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header input.actor-name::placeholder {
-  color: var(--vb-paper-shade);
+  color: var(--vb-band-text);
   opacity: 0.6;
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header input.actor-name:hover {
-  border-bottom-color: var(--vb-ink-soft);
+  border-bottom-color: var(--vb-band-accent);
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header input.actor-name:focus {
   outline: none;
   background: transparent;
-  border-bottom-color: var(--vb-yellow);
+  border-bottom-color: var(--vb-band-hover);
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header .foe-meta {
@@ -1030,62 +1048,62 @@
 
 .application.var-borg.foe .foe-sheet > .sheet-header select {
   border: none;
-  background: var(--vb-paper);
-  color: var(--vb-ink);
+  background: var(--vb-surface);
+  color: var(--vb-text);
   font-family: var(--vb-font-body);
 }
 
 .application.var-borg.foe .foe-sheet > .sheet-header input[type="checkbox"] {
-  accent-color: var(--vb-orange);
+  accent-color: var(--vb-accent);
 }
 
-/* Tags on the band (such as Boon ready): yellow on black. */
+/* Tags on the band (such as Boon ready): a light tag on black. */
 .application.var-borg.foe .foe-sheet > .sheet-header .item-state {
   padding: 0 0.3em;
-  border: 1px solid var(--vb-yellow);
-  color: var(--vb-yellow);
+  border: 1px solid var(--vb-band-hover);
+  color: var(--vb-band-hover);
   font-family: var(--vb-font-head);
   font-weight: 400;
 }
 
-/* A minion over its owner's limit: orange on black, since orange on bone would not read. */
+/* A minion over its owner's limit: a highlight text on black, since accent on bone would not read. */
 .application.var-borg.foe .foe-sheet > .sheet-header .text-button.over-limit {
-  --vb-btn-bg: var(--vb-ink);
-  --vb-btn-border: var(--vb-orange);
-  color: var(--vb-orange);
+  --vb-btn-bg: var(--vb-band);
+  --vb-btn-fg: var(--vb-band-hover);
+  --vb-btn-border: var(--vb-band-accent);
 }
 
-/* ---- The stat block: a framed box on shaded paper ---- */
+/* ---- The stat block: a framed box on raised paper ---- */
 .application.var-borg.foe .var-borg-sheet .foe-stats {
   padding: 0.5rem 0.6rem;
-  border: 2px solid var(--vb-ink);
-  outline: 1px solid var(--vb-ink);
+  border: 2px solid var(--vb-line);
+  outline: 1px solid var(--vb-line);
   outline-offset: 2px;
   margin: 2px;
-  background: var(--vb-paper-shade);
+  background: var(--vb-surface-raised);
 }
 
-/* ---- Row marks: ⚔ attacks in bone on black, ☾ Gloom in yellow on black ---- */
+/* ---- Row marks: attacks in light text on black, Gloom in the band hover colour on black ---- */
 .application.var-borg.foe .var-borg-sheet .attack-mark {
   display: inline-grid;
   place-items: center;
   width: 1.7rem;
   height: 1.7rem;
-  background: var(--vb-ink);
-  color: var(--vb-paper);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
   font-size: 1rem;
 }
 
 .application.var-borg.foe .var-borg-sheet .gloom-abilities .attack-mark {
-  color: var(--vb-yellow);
+  color: var(--vb-band-hover);
 }
 
-/* The Gloom heading: yellow on a black strip, the foe's resource set apart. */
+/* The Gloom heading: a light heading on a black strip, the foe's resource set apart. */
 .application.var-borg.foe .var-borg-sheet .gloom-abilities h2 {
   padding: 0.05rem 0.45rem;
   border-bottom: none;
-  background: var(--vb-ink);
-  color: var(--vb-yellow);
+  background: var(--vb-band);
+  color: var(--vb-band-hover);
 }
 
 /* No rule under this heading, so no ornament on it. */
@@ -1096,7 +1114,7 @@
 /* Add buttons at the foot of each list: outlined. */
 .application.var-borg.foe .var-borg-sheet .add-item {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-fg: var(--vb-text);
   border-width: 1px;
   border-style: dashed;
 }
@@ -1106,21 +1124,21 @@
 }
 
 /* − and + on either side of each ability box: temporary changes by hand.
-   Plain ink marks, no frame, so the box stays the centre of attention.
+   Plain text marks, no frame, so the box stays the centre of attention.
    Faint until the ability is hovered or a button has keyboard focus. */
 .var-borg-sheet .ability-score {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .application.var-borg .var-borg-sheet .ability-step {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-fg: var(--vb-text-soft);
   --vb-btn-border: transparent;
-  --vb-btn-hover-bg: transparent;
-  --vb-btn-hover-fg: var(--vb-orange);
+  --vb-btn-hover-bg: var(--vb-accent);
+  --vb-btn-hover-fg: var(--vb-on-accent);
   --vb-btn-hover-border: transparent;
   flex: 0 0 auto;
   width: 1.2rem;
@@ -1159,20 +1177,20 @@
 
 .application.var-borg .var-borg-sheet .item-row .item-icon:hover img,
 .application.var-borg .var-borg-sheet .item-row .item-icon:focus-visible img {
-  outline: 2px solid var(--vb-orange);
+  outline: 2px solid var(--vb-accent);
   outline-offset: 1px;
 }
 
 /* The equip tick box: the button itself is the box. Empty paper square when
-   not equipped; solid ink with a bone tick (and the stamped shadow of the
-   ability boxes) when equipped. */
+   not equipped; solid text colour with a surface-coloured tick (and the stamped
+   shadow of the ability boxes) when equipped. */
 .application.var-borg .var-borg-sheet .item-row .equip-toggle {
-  --vb-btn-bg: var(--vb-paper);
-  --vb-btn-fg: var(--vb-paper);
-  --vb-btn-border: var(--vb-ink);
-  --vb-btn-hover-bg: var(--vb-paper-shade);
-  --vb-btn-hover-fg: var(--vb-ink);
-  --vb-btn-hover-border: var(--vb-ink);
+  --vb-btn-bg: var(--vb-surface);
+  --vb-btn-fg: var(--vb-surface);
+  --vb-btn-border: var(--vb-line);
+  --vb-btn-hover-bg: var(--vb-surface-raised);
+  --vb-btn-hover-fg: var(--vb-text);
+  --vb-btn-hover-border: var(--vb-line);
   width: 1.15rem;
   height: 1.15rem;
   margin: 0 0.35rem 0 0.15rem;
@@ -1183,24 +1201,24 @@
 }
 
 .application.var-borg .var-borg-sheet .item-row .equip-toggle.active {
-  --vb-btn-bg: var(--vb-ink);
-  --vb-btn-hover-bg: var(--vb-ink);
-  --vb-btn-hover-fg: var(--vb-orange);
-  box-shadow: 2px 2px 0 var(--vb-orange);
+  --vb-btn-bg: var(--vb-text);
+  --vb-btn-hover-bg: var(--vb-text);
+  --vb-btn-hover-fg: var(--vb-surface);
+  box-shadow: 2px 2px 0 var(--vb-accent);
 }
 
 .application.var-borg .var-borg-sheet .item-row .equip-toggle:focus-visible {
-  outline: 2px solid var(--vb-orange);
+  outline: 2px solid var(--vb-focus);
   outline-offset: 1px;
 }
 
-/* Items stored in a container sit under it, indented, with an ink rule down
-   the left like the strap of the pack they are in. */
+/* Items stored in a container sit under it, indented, with a line down the
+   left like the strap of the pack they are in. */
 .var-borg-sheet .item-row.stored,
 .var-borg-sheet .item-row.stored + .item-description {
   margin-left: 1.5rem;
   padding-left: 0.5rem;
-  border-left: 2px solid var(--vb-ink);
+  border-left: 2px solid var(--vb-line);
 }
 
 /* ---- A character's lit light: dim a lantern, put it out (player feedback) ---- */
@@ -1234,11 +1252,10 @@
 
 .application.var-borg .var-borg-sheet .manual-action {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
-  --vb-btn-border: var(--vb-ink);
-  --vb-btn-hover-bg: var(--vb-ink);
-  --vb-btn-hover-fg: var(--vb-paper);
-  --vb-btn-hover-border: var(--vb-ink);
+  --vb-btn-fg: var(--vb-text);
+  --vb-btn-border: var(--vb-line);
+  --vb-btn-hover-bg: var(--vb-band);
+  --vb-btn-hover-fg: var(--vb-band-text);
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto;
@@ -1287,10 +1304,10 @@
 
 .application.var-borg .var-borg-sheet .section-header .header-add {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
-  --vb-btn-border: var(--vb-ink);
-  --vb-btn-hover-bg: var(--vb-ink);
-  --vb-btn-hover-fg: var(--vb-paper);
+  --vb-btn-fg: var(--vb-text);
+  --vb-btn-border: var(--vb-line);
+  --vb-btn-hover-bg: var(--vb-band);
+  --vb-btn-hover-fg: var(--vb-band-text);
   position: absolute;
   top: 0;
   right: 0;

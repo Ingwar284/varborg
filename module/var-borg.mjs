@@ -71,6 +71,7 @@ import { registerMovement } from "./movement.mjs";
 import { registerChatRolls } from "./chat-rolls.mjs";
 import { registerItemChatHelpers } from "./item-chat.mjs";
 import { registerStage } from "./stage.mjs";
+import { registerMood } from "./mood.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -146,6 +147,7 @@ Hooks.once("init", () => {
   registerPersistentDamage();
   // In Darkness: a marker from the scene's lighting, Bane on all tests (rules 3.15).
   registerDarkness();
+  registerMood();
   // Wounds at 0 HP: the wound test and the Table of Agony (rules 3.5).
   registerAgony();
   // Death's Door and Dark Vessel (rules 3.6).

@@ -1,7 +1,12 @@
 /* VÅR BORG: styled journal pages (page type "document").
    Four looks, drawn with CSS only: field journal, letter, notice, scrap.
-   Every look is a physical paper object, so it keeps paper and ink in both
-   Foundry themes. Colours and fonts come from tokens.css. */
+   These pages are in-world paper objects, so they STAY PAPER in both Foundry
+   moods, like a real letter held up in the dark. They use the fixed palette
+   constants (ink, paper, rust) and the fixed paper tokens (the --vb-paper-rule
+   family, --vb-paper-stipple, --vb-paper-fleuron), never the role tokens that
+   change with the mood, which would make the rules and grain fade out on paper.
+   The edit strip is Foundry interface, but it has no colours of its own here.
+   Colours and fonts come from tokens.css. British spelling. */
 
 /* ---- The edit strip: the look and its extras ---- */
 .vb-document-page .vb-page-style {
@@ -31,17 +36,61 @@
   margin: 0 auto;
   padding: 2rem 2.25rem 2.25rem;
   color: var(--vb-ink);
-  background: var(--vb-stipple), var(--vb-paper);
+  background: var(--vb-paper-stipple), var(--vb-paper);
   font-family: var(--vb-font-body);
   font-size: 1.05rem;
   line-height: 1.55;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  text-shadow: none;
+  box-shadow: 0 2px 10px var(--vb-black-35);
 }
 .vb-page .vb-page-sheet a.content-link,
 .vb-page .vb-page-sheet a.inline-roll {
   color: var(--vb-ink);
   background: var(--vb-paper-shade);
-  border-color: var(--vb-rule);
+  border-color: var(--vb-paper-rule);
+}
+.vb-page .vb-page-sheet a.content-link > i,
+.vb-page .vb-page-sheet a.inline-roll > i {
+  color: var(--vb-ink-soft);
+}
+
+/* Everything else Foundry colours by its interface theme is set here to paper
+   colours, so a page held up in the dark mood is still ink on paper: plain
+   links, definition lists, tables, code, rules and the small text styles. */
+.vb-page .vb-page-sheet a[href] {
+  color: var(--vb-rust);
+  text-decoration: underline;
+  text-shadow: none;
+}
+.vb-page .vb-page-sheet :is(dt, dd, p.inactive, span.highlight, figcaption, th, td) {
+  color: var(--vb-ink);
+  text-shadow: none;
+}
+.vb-page .vb-page-sheet table {
+  background: transparent;
+  color: var(--vb-ink);
+}
+.vb-page .vb-page-sheet table tbody tr:nth-child(even),
+.vb-page .vb-page-sheet table tbody tr:nth-child(odd) {
+  background: transparent;
+}
+.vb-page .vb-page-sheet table :is(th, td) {
+  border-bottom: 1px solid var(--vb-paper-rule-faint);
+}
+.vb-page .vb-page-sheet table :is(thead, tfoot) {
+  color: var(--vb-ink);
+  background: var(--vb-paper-shade);
+  border-color: var(--vb-paper-rule);
+}
+.vb-page .vb-page-sheet code {
+  color: var(--vb-ink);
+  background: var(--vb-paper-shade);
+  border: 1px solid var(--vb-paper-rule);
+}
+.vb-page .vb-page-sheet hr {
+  color: var(--vb-paper-rule);
+  background: none;
+  border-top: 1px solid var(--vb-paper-rule);
 }
 .vb-page .vb-page-head h1,
 .vb-page .vb-page-head h2,
@@ -66,12 +115,12 @@
   color: var(--vb-ink);
   font-family: var(--vb-font-head);
   font-weight: 400;
-  border-bottom: 1px solid var(--vb-rule);
+  border-bottom: 1px solid var(--vb-paper-rule);
 }
 .vb-page .vb-page-body blockquote {
   color: var(--vb-ink-soft);
   background: none;
-  border-left: 2px solid var(--vb-rule-strong);
+  border-left: 2px solid var(--vb-paper-rule-strong);
 }
 .vb-page .vb-page-body img {
   border: 1px solid var(--vb-ink);
@@ -87,7 +136,7 @@
   padding-left: 4rem;
   background:
     linear-gradient(to right, transparent 3rem, var(--vb-rust) 3rem, var(--vb-rust) calc(3rem + 1px), transparent calc(3rem + 1px)),
-    var(--vb-stipple),
+    var(--vb-paper-stipple),
     var(--vb-paper);
   line-height: 1.6rem;
   border-left: 6px double var(--vb-ink-soft);
@@ -97,7 +146,7 @@
 .vb-page-fieldJournal .vb-page-body {
   margin: 0 -1.25rem 0 -1rem;
   padding: 0 1.25rem 0 1rem;
-  background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.6rem - 1px), var(--vb-rule-faint) calc(1.6rem - 1px), var(--vb-rule-faint) 1.6rem);
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(1.6rem - 1px), var(--vb-paper-rule-faint) calc(1.6rem - 1px), var(--vb-paper-rule-faint) 1.6rem);
   background-position: 0 -0.35rem;
   line-height: 1.6rem;
 }
@@ -160,7 +209,7 @@
   font-style: italic;
   font-size: 1.1rem;
   padding-bottom: 3rem;
-  border: 1px solid var(--vb-rule);
+  border: 1px solid var(--vb-paper-rule);
 }
 .vb-page-letter .vb-page-head h1,
 .vb-page-letter .vb-page-head h2,
@@ -185,16 +234,16 @@
   height: 3.4rem;
   border-radius: 46% 54% 50% 48% / 52% 46% 54% 48%;
   background:
-    radial-gradient(circle at 50% 50%, transparent 0 1rem, rgba(0, 0, 0, 0.25) 1rem 1.1rem, transparent 1.1rem),
-    radial-gradient(circle at 38% 34%, #b8481a, var(--vb-rust) 55%, #5e2004);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+    radial-gradient(circle at 50% 50%, transparent 0 1rem, var(--vb-black-25) 1rem 1.1rem, transparent 1.1rem),
+    radial-gradient(circle at 38% 34%, var(--vb-seal-hi), var(--vb-rust) 55%, var(--vb-seal-lo));
+  box-shadow: 0 2px 4px var(--vb-black-45);
   transform: rotate(-12deg);
 }
 .vb-page-letter .vb-page-seal::after {
   content: "";
   position: absolute;
   inset: 35%;
-  background: var(--vb-fleuron) center / contain no-repeat;
+  background: var(--vb-paper-fleuron) center / contain no-repeat;
   opacity: 0.5;
   filter: invert(1);
 }
@@ -230,7 +279,7 @@
   height: 10px;
   margin: 0.6rem auto 0;
   width: 4rem;
-  background: var(--vb-fleuron) center / contain no-repeat;
+  background: var(--vb-paper-fleuron) center / contain no-repeat;
 }
 .vb-page-notice .vb-page-body {
   text-align: center;
@@ -244,9 +293,9 @@
   max-width: 34rem;
   transform: rotate(-1deg);
   background:
-    radial-gradient(ellipse at 80% 15%, rgba(74, 67, 58, 0.18), transparent 40%),
-    radial-gradient(ellipse at 10% 90%, rgba(143, 50, 8, 0.12), transparent 35%),
-    var(--vb-stipple),
+    radial-gradient(ellipse at 80% 15%, var(--vb-smudge-ink), transparent 40%),
+    radial-gradient(ellipse at 10% 90%, var(--vb-smudge-rust), transparent 35%),
+    var(--vb-paper-stipple),
     var(--vb-paper-shade);
   clip-path: polygon(
     0% 3%, 6% 0%, 13% 2%, 21% 0%, 30% 2.5%, 38% 0.5%, 47% 2%, 55% 0%, 63% 2.5%, 72% 0.5%, 80% 2%, 89% 0%, 95% 2%, 100% 0.5%,

@@ -3,9 +3,10 @@ import { dialogCost } from "./rules/fortune.mjs";
 
 /**
  * Classes for every VÅR BORG dialog window (roll dialogs, confirmations, pickers).
- * "var-borg" gives the system look (styles/base.css); "themed theme-light" makes
- * Foundry draw its fields and buttons light, whatever the user's interface theme,
- * so they sit well on the paper background.
+ * "var-borg" gives the system look (styles/base.css). The windows start in
+ * Foundry's light theme ("themed theme-light"), so their fields and buttons sit
+ * well on the paper background. module/mood.mjs switches them to the dark theme
+ * when the interface mood is dark.
  */
 export const VB_DIALOG_CLASSES = ["var-borg", "themed", "theme-light", "var-borg-dialog"];
 

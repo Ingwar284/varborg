@@ -32,6 +32,7 @@ import { otherSpeedsLine, editCharacterSpeeds } from "../movement.mjs";
 import { DROPPED, droppedContainerIds, isDropped } from "../rules/dropped.mjs";
 import { canRollExpendable, needsReload, canFire, canReload } from "../rules/expendable.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
+import { IN_DARKNESS } from "../rules/conditions.mjs";
 import { rollPanicTest } from "../panic.mjs";
 import { addOrigin, isOrigin } from "../origins.mjs";
 import { ORIGIN_TYPES, currentAbilities, stepAbility } from "../rules/origins.mjs";
@@ -312,6 +313,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     const system = actor.system;
     context.actor = actor;
     context.system = system;
+    // True when the character has the In Darkness marker, so the header shows a stamp.
+    context.inDarkness = this.actor.statuses.has(IN_DARKNESS);
     // The box shows the score in use, such as "+3", with what is added on top
     // under it, such as "+1 Warrior" (GAPS 111). Clicking the box edits the
     // score as rolled, which is what is stored.

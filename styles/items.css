@@ -1,4 +1,6 @@
-/* VÅR BORG: item sheets and the item effects editor. */
+/* VÅR BORG: item sheets, the item header band, the item effects editor and
+   lasting areas. Colours come from the role tokens in tokens.css, never from
+   palette names or literal colours, so both the light and dark moods work. */
 
 /* ---------- Item sheets ---------- */
 .application.var-borg.item .window-content {
@@ -36,11 +38,6 @@
   gap: 0.3rem;
 }
 
-.var-borg-item-header .item-name {
-  font-size: 1.3rem;
-  height: auto;
-}
-
 .var-borg-item-header .item-meta {
   display: flex;
   gap: 1rem;
@@ -59,7 +56,6 @@
 
 .var-borg-item-details h3 {
   margin: 0.6rem 0 0.3rem;
-  border-bottom: 1px solid currentColor;
 }
 
 .var-borg-item-details .field-grid {
@@ -139,8 +135,6 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.3rem;
-  border: 1px solid var(--vb-ink);
-  border-radius: 3px;
 }
 
 .var-borg-item-effects .effect-row select {
@@ -189,7 +183,6 @@
 
 .var-borg-item-effects .effect-chosen {
   font-style: italic;
-  opacity: 0.85;
 }
 
 /* =====================================================================
@@ -200,18 +193,18 @@
 .application.var-borg.item .var-borg-item-header {
   margin: -0.75rem -0.75rem 0;
   padding: 0.6rem 0.9rem 0.7rem;
-  background: var(--vb-ink);
-  color: var(--vb-paper);
-  border-bottom: 3px solid var(--vb-orange);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
+  border-bottom: 3px solid var(--vb-band-accent);
 }
 
 .application.var-borg.item .var-borg-item-header .item-img {
   flex: 0 0 auto;
   margin: 4px;
-  border: 2px solid var(--vb-paper);
-  outline: 1px solid var(--vb-paper);
+  border: 2px solid var(--vb-band-text);
+  outline: 1px solid var(--vb-band-text);
   outline-offset: 3px;
-  background: var(--vb-paper-shade) var(--vb-crosshatch);
+  background: var(--vb-surface-raised) var(--vb-crosshatch);
 }
 
 .application.var-borg.item .var-borg-item-header input.item-name {
@@ -222,25 +215,25 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
   font-size: 1.9rem;
   font-weight: 400;
   line-height: 1.15;
-  text-shadow: 2px 2px 0 var(--vb-orange);
+  text-shadow: 2px 2px 0 var(--vb-band-accent);
 }
 
 .application.var-borg.item .var-borg-item-header input.item-name::placeholder {
-  color: var(--vb-paper-shade);
+  color: var(--vb-band-text);
   opacity: 0.6;
 }
 
 .application.var-borg.item .var-borg-item-header input.item-name:hover {
-  border-bottom-color: var(--vb-ink-soft);
+  border-bottom-color: var(--vb-band-accent);
 }
 
 .application.var-borg.item .var-borg-item-header input.item-name:focus {
   outline: none;
-  border-bottom-color: var(--vb-yellow);
+  border-bottom-color: var(--vb-band-hover);
 }
 
 .application.var-borg.item .var-borg-item-header .item-meta {
@@ -251,43 +244,49 @@
 }
 
 .application.var-borg.item .var-borg-item-header .hint {
-  color: var(--vb-paper-shade);
-  opacity: 1;
+  color: var(--vb-band-text);
+  opacity: 0.8;
 }
 
-/* Fields on the black band: bone lines, yellow while typing. */
+/* Fields on the header band: light lines, and a pale field while you type. */
 .application.var-borg.item .var-borg-item-header .item-meta :is(input[type="number"], input[type="text"]) {
   border: none;
-  border-bottom: 1px solid var(--vb-paper);
+  border-bottom: 1px solid var(--vb-band-text);
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
   font-family: var(--vb-font-body);
   font-weight: 600;
 }
 
 .application.var-borg.item .var-borg-item-header .item-meta :is(input[type="number"], input[type="text"]):focus {
   outline: none;
-  background: var(--vb-yellow);
-  color: var(--vb-ink);
+  background: var(--vb-field-focus);
+  color: var(--vb-text);
 }
 
 .application.var-borg.item .var-borg-item-header .item-meta select {
   border: none;
   border-radius: 0;
-  background: var(--vb-paper);
-  color: var(--vb-ink);
+  background: var(--vb-surface);
+  color: var(--vb-text);
   font-family: var(--vb-font-body);
 }
 
+/* A boxed field on the band keeps a ring, in the band's focus colour. */
+.application.var-borg.item .var-borg-item-header .item-meta select:focus-visible {
+  outline: 2px solid var(--vb-focus-on-band);
+  outline-offset: -2px;
+}
+
 .application.var-borg.item .var-borg-item-header input[type="checkbox"] {
-  accent-color: var(--vb-orange);
+  accent-color: var(--vb-accent);
 }
 
 /* ---- Body ---- */
 .application.var-borg.item .window-content input[type="checkbox"] {
-  accent-color: var(--vb-ink);
+  accent-color: var(--vb-accent);
 }
 
 /* Field names over their boxes, in print capitals. */
@@ -304,7 +303,7 @@
 }
 
 .application.var-borg.item .var-borg-item-details fieldset {
-  border: 1px solid var(--vb-ink);
+  border: 1px solid var(--vb-line);
   border-radius: 0;
 }
 
@@ -315,26 +314,26 @@
 }
 
 .application.var-borg.item .hint {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   opacity: 1;
 }
 
-/* ---- Effects editor: each effect is a ruled card on shaded paper ---- */
+/* ---- Effects editor: each effect is a ruled card on raised paper ---- */
 .application.var-borg.item .var-borg-item-effects .effect-row {
-  border: 1px solid var(--vb-ink);
-  border-left: 4px solid var(--vb-ink);
+  border: 1px solid var(--vb-line);
+  border-left: 4px solid var(--vb-line);
   border-radius: 0;
-  background: var(--vb-paper-shade);
+  background: var(--vb-surface-raised);
 }
 
 .application.var-borg.item .var-borg-item-effects .effects-header h3 {
-  border-bottom: 3px double var(--vb-ink);
+  border-bottom: 3px double var(--vb-line);
 }
 
 /* Remove: outlined, so it does not shout. */
 .application.var-borg.item .var-borg-item-effects .effect-remove {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-fg: var(--vb-text-soft);
   border-width: 1px;
 }
 
@@ -344,14 +343,14 @@
 }
 
 .application.var-borg.item .var-borg-item-effects .effect-chosen {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   opacity: 1;
 }
 
 /* Lasting areas (GAPS 284): each effect row with its own border. */
 .var-borg.item .lasting-effect {
   position: relative;
-  border: 1px solid var(--vb-ink-soft);
+  border: 1px solid var(--vb-line-soft);
   padding: 0.3rem 2rem 0.3rem 0.4rem;
   margin: 0.3rem 0;
 }

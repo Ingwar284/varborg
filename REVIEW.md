@@ -173,9 +173,9 @@ Unsettled (needs a running Foundry, see Q22 and Q24): the reach search per token
 | `restOutcome` returns a `days` field nobody reads; unused import `withNotedKind`; unused parameter `old`; unread `context.isGM` | rules/rest.mjs:127, effects.mjs:17, creation.mjs:426, character-sheet.mjs:444 | V |
 | Relic `saleValue`, `factionValue`, `faction` are typed in but never read (record-keeping; confirm intent) | data/relic | V |
 | Lang keys never used: `SystemTitle`, `Panic.LostSanity`, `Panic.LostSanityHint`, `Effects.RerollSpent`, `Improving.Button`, `Creation.Button` | [en.json:33](lang/en.json:33), :1147, :1148, :3178, :2597, :2657 | V (Q31) |
-| Stylesheet: rule for `.heading-with-button` has no user | [sheets.css:730](styles/sheets.css:730) | V |
-| Stylesheet: custom properties `--vb-hatch`, `--vb-neutral`, `--vb-magic` unused | [tokens.css:24](styles/tokens.css:24), :44, :47 | L (grep-checked by the auditor, not re-read) |
-| Stylesheet: overridden declarations that never apply (pool-count colours and width, misery-icon opacity, attack-ruin colour) | apps.css:92-105, :412-415; [sheets.css:297](styles/sheets.css:297) | L |
+| Stylesheet: rule for `.heading-with-button` has no user — Fixed in the UI redesign (see styles/DESIGN.md). | [sheets.css:730](styles/sheets.css:730) | V |
+| Stylesheet: custom properties `--vb-hatch`, `--vb-neutral`, `--vb-magic` unused — Fixed in the UI redesign (see styles/DESIGN.md). | [tokens.css:24](styles/tokens.css:24), :44, :47 | L (grep-checked by the auditor, not re-read) |
+| Stylesheet: overridden declarations that never apply (pool-count colours and width, misery-icon opacity, attack-ruin colour) — Fixed in the UI redesign (see styles/DESIGN.md). | apps.css:92-105, :412-415; [sheets.css:297](styles/sheets.css:297) | L |
 | Dead default value `"loseArmour": false` in Hollow Prior | content/foes/hollow-prior.json | L |
 | Other dead leads not re-checked: `CATEGORIES` filter in the encounter builder, unused `all` parameter, effect actions on sheets without effects, several unread sheet context fields (partly wrong: `reloadTooltip` is read), dead custom properties | various | L |
 
@@ -191,7 +191,7 @@ Unsettled (needs a running Foundry, see Q22 and Q24): the reach search per token
 | Persistent damage types in 3 places; effect amount lists disagree; mook rule in two places; "var-borg" typed 17 times in effects.mjs | rules/persistent.mjs:21, rules/item-effects.mjs:1058, item-effects-part.mjs:75; effects.mjs | V |
 | Chat-card wiring repeated in 22 places; pools/chat card boilerplate; item sheet DEFAULT_OPTIONS blocks; PowerSheet/SpellSheet; outcome boxes; "Fortune label by five item kinds" | hook files, item-sheet.mjs | V for the 22 and DEFAULT_OPTIONS; L for the rest |
 | Same heal line under three lang keys; two other triple-key groups (leave alone) | en.json (Effects.AuraHeal, HookHeal, CompanionHealed) | V (by script) |
-| 17 repeated selectors in the stylesheets (the media-query pairs are intended); literal colours bypassing tokens.css (the two shadows used 8 and 4 times; `#ff6b5b` is not a palette colour) | apps.css, stage.css | L |
+| 17 repeated selectors in the stylesheets (the media-query pairs are intended); literal colours bypassing tokens.css (the two shadows used 8 and 4 times; `#ff6b5b` is not a palette colour) — Partly fixed in the UI redesign (see styles/DESIGN.md). The literal colours are gone (only tokens.css holds literals). Still repeated: `.var-borg-table-panel .pool-count` (apps.css lines 97 and 599), `.var-borg-table-panel .misery-icon` (apps.css lines 408 and 635) and `.var-borg-table-panel button.adjust` (apps.css lines 101 and 621). The full count of 17 was not rechecked. | apps.css, stage.css | L |
 
 ### Hard-coded text, wording, stale comments
 

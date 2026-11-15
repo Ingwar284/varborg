@@ -1,4 +1,8 @@
-/* VÅR BORG: chat cards. */
+/* VÅR BORG: chat cards.
+   This file styles the cards posted to the chat log, except the base card
+   (base.css). Colours come from the role tokens in tokens.css, never from
+   palette names or literal colours, so the cards follow both the light and
+   the dark mood. Result shapes follow DESIGN.md section 7. */
 
 /* ---------- Chat cards ---------- */
 .var-borg-card h3 {
@@ -6,14 +10,14 @@
   border-bottom: 1px solid currentColor;
 }
 
-/* Headline band: the card's title in bone on black, over a thin orange line.
+/* Headline band: the card's title in band text on a band, over a thin accent line.
    It reaches the card's edges (the card has 0.3rem / 0.4rem padding, base.css). */
 .var-borg-card > h3:first-child {
   margin: -0.3rem -0.4rem 0.45rem;
   padding: 0.2rem 0.5rem;
-  border-bottom: 3px solid var(--vb-orange);
-  background: var(--vb-ink);
-  color: var(--vb-paper);
+  border-bottom: 3px solid var(--vb-band-accent);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
   font-size: 1.1rem;
   line-height: 1.35;
 }
@@ -22,7 +26,7 @@
   margin: 0.25rem 0;
 }
 
-/* Dice: engraved squares with a hard ink shadow. */
+/* Dice: square stamps with a hard shadow. */
 .var-borg-card .dice {
   display: flex;
   flex-wrap: wrap;
@@ -34,34 +38,34 @@
 .var-borg-card .die {
   min-width: 2.2rem;
   padding: 0.15rem 0.4rem;
-  border: 2px solid var(--vb-ink);
+  border: 2px solid var(--vb-line);
   border-radius: 0;
-  background: var(--vb-paper);
-  box-shadow: 3px 3px 0 var(--vb-ink);
-  color: var(--vb-ink);
+  background: var(--vb-surface);
+  box-shadow: var(--vb-shadow-hard);
+  color: var(--vb-text);
   text-align: center;
   font-size: 1.25rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
-/* The die not kept (boon or bane): struck through on shaded paper. */
+/* The die not kept (boon or bane): struck through on a raised panel. */
 .var-borg-card .die.dropped {
-  border-style: dashed;
-  background: var(--vb-paper-shade);
+  border: 1px dashed var(--vb-line-soft);
+  background: var(--vb-surface-raised);
   box-shadow: none;
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   text-decoration: line-through;
 }
 
 .var-borg-card .mode {
   font-style: italic;
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
 }
 
 /* The sum line, then the total against the DR in large type. */
 .var-borg-card .sum {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   font-size: 0.9em;
 }
 
@@ -75,48 +79,77 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ---------- Result tiers (DESIGN.md section 7.1) ----------
+   The tier word is the largest text on the card. Each result has its own
+   shape as well as its colour, so it reads without colour. The rolled
+   outcome of a power or spell (.tier-outcome.rolled) gets the same shapes;
+   its own selectors are written out in full so that the outcome's border
+   rule, which comes later, does not overwrite them. */
 .var-borg-card .tier {
+  margin: 0.4rem 0 0.3rem;
+  padding: 0.15rem 0.4rem;
+  border: 2px solid transparent;
   text-align: center;
   font-family: var(--vb-font-head);
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.06em;
 }
 
-/* Each result has its own fill or rule as well as its word, so it reads without colour. */
-.var-borg-card .tier {
-  margin: 0.3rem 0;
-  padding: 0.15rem 0.4rem;
-  border: 2px solid transparent;
-}
-
+/* Triumph and a positive chance die: a full fill inside a double frame. */
 .var-borg-card .tier-triumph,
-.var-borg-card .chance-positive {
-  color: var(--vb-tier-triumph);
-  background: var(--vb-yellow);
-  border-color: var(--vb-ink);
+.var-borg-card .chance-positive,
+.var-borg-card .tier-outcome.rolled.tier-triumph {
+  color: var(--vb-tier-triumph-fg);
+  background: var(--vb-tier-triumph-bg);
+  border: 2px solid var(--vb-tier-triumph-fg);
+  box-shadow: inset 0 0 0 2px var(--vb-tier-triumph-bg), inset 0 0 0 3px var(--vb-tier-triumph-fg);
 }
 
+/* Success and a neutral chance die: no fill, a rule above and below. */
 .var-borg-card .tier-success,
-.var-borg-card .chance-neutral {
-  color: var(--vb-tier-success);
-  border-top: 3px solid var(--vb-ink);
-  border-bottom: 3px solid var(--vb-ink);
+.var-borg-card .chance-neutral,
+.var-borg-card .tier-outcome.rolled.tier-success {
+  color: var(--vb-tier-success-fg);
+  border-top: 3px solid var(--vb-tier-success-fg);
+  border-bottom: 3px solid var(--vb-tier-success-fg);
 }
 
-.var-borg-card .tier-failure {
-  color: var(--vb-tier-failure);
-  border-left: 8px solid var(--vb-orange);
+/* Failure: no fill, a thick bar down the left. */
+.var-borg-card .tier-failure,
+.var-borg-card .tier-outcome.rolled.tier-failure {
+  color: var(--vb-tier-failure-fg);
+  border-left: 8px solid var(--vb-tier-failure-bar);
 }
 
+/* Ruin and a negative chance die: a full dark fill with a faint crosshatch.
+   The block makes its own stacking layer (z-index 0), and the crosshatch is
+   pushed behind the word (z-index -1), so it shows on the fill but can never
+   lie over the letters. */
 .var-borg-card .tier-ruin,
-.var-borg-card .chance-negative {
-  color: var(--vb-tier-ruin);
-  background: var(--vb-ink);
+.var-borg-card .chance-negative,
+.var-borg-card .tier-outcome.rolled.tier-ruin {
+  position: relative;
+  z-index: 0;
+  color: var(--vb-tier-ruin-fg);
+  background: var(--vb-tier-ruin-bg);
+  border: 2px solid var(--vb-tier-ruin-border);
+}
+
+.var-borg-card .tier-ruin::before,
+.var-borg-card .chance-negative::before,
+.var-borg-card .tier-outcome.rolled.tier-ruin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--vb-crosshatch);
+  opacity: 0.15;
+  pointer-events: none;
 }
 
 /* All four outcomes of a power or spell (playtest feedback): the rolled one
-   takes its result's fill, the others are faded. */
+   takes its result's shape, the others are faded. */
 .var-borg-card .tier-outcomes {
   list-style: none;
   margin: 0.3rem 0;
@@ -128,7 +161,7 @@
   padding: 0.1rem 0.4rem;
   border: 2px solid transparent;
   font-size: 0.9em;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .var-borg-card .tier-outcome.rolled {
@@ -137,7 +170,7 @@
 
 /* The group Panic card (playtest feedback): one row per character. */
 .var-borg-card .group-panic-row {
-  border-top: 1px solid var(--vb-ink);
+  border-top: 1px solid var(--vb-line-soft);
   padding-top: 0.3rem;
   margin-top: 0.3rem;
 }
@@ -175,10 +208,10 @@
   border-left: 3px solid transparent;
 }
 
-/* The winner's side: shaded, with a thick ink bar. */
+/* The winner's side: a raised panel, with a thick line on the left. */
 .var-borg-card.contested-card .side.winner {
-  border-left: 6px solid var(--vb-good);
-  background: var(--vb-paper-shade);
+  border-left: 6px solid var(--vb-line);
+  background: var(--vb-surface-raised);
 }
 
 .var-borg-card .verdict {
@@ -187,27 +220,35 @@
   font-size: 1.25rem;
   font-weight: 400;
   letter-spacing: 0.05em;
-  border-top: 3px double var(--vb-ink);
+  border-top: 3px double var(--vb-line);
   padding-top: 0.2rem;
 }
 
 /* Chance Die card: positive, neutral and negative share the tier blocks above. */
 
 /* Expendable and reload cards */
-.var-borg-card .expendable-remains { color: var(--vb-good); }
+.var-borg-card .expendable-remains { color: var(--vb-text); }
 
-.var-borg-card .expendable-used-up { color: var(--vb-bad); }
+.var-borg-card .expendable-used-up { color: var(--vb-alert); }
 
-/* Action symbols (◈ ↻ ◇ 🟒 ☾): bone on a black strip, like the symbol tiles. */
+/* Action symbols (◈ ↻ ◇ 🟒 ☾): a band-coloured plate in light mood. In dark
+   mood the plate is an outline on the page, so it is set again below. */
 .var-borg-card .action-symbols {
   width: fit-content;
   margin: 0.3rem auto;
   padding: 0.05rem 0.6rem;
-  background: var(--vb-ink);
-  color: var(--vb-paper);
+  border: 1px solid transparent;
+  background: var(--vb-band);
+  color: var(--vb-band-text);
   text-align: center;
   font-size: 1.35rem;
   letter-spacing: 0.15em;
+}
+
+body[data-vb-mood="dark"] .var-borg-card .action-symbols {
+  border: 1px solid var(--vb-line);
+  background: transparent;
+  color: var(--vb-band-text);
 }
 
 /* ---------- Attack card ---------- */
@@ -225,24 +266,16 @@
   display: inline-block;
   min-width: 2rem;
   padding: 0 0.35rem;
-  border: 2px solid var(--vb-ink);
-  box-shadow: 3px 3px 0 var(--vb-ink);
+  border: 2px solid var(--vb-line);
+  box-shadow: var(--vb-shadow-hard);
   font-size: 1.4rem;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
-/* Buttons on cards: black stamps that turn orange. Foundry's own disabled
-   colours are kept out by our --vb-btn-* names (as on sheets, base.css). */
-.var-borg-card {
-  --vb-btn-bg: var(--vb-ink);
-  --vb-btn-fg: var(--vb-paper);
-  --vb-btn-border: var(--vb-ink);
-  --vb-btn-hover-bg: var(--vb-orange);
-  --vb-btn-hover-fg: var(--vb-ink);
-  --vb-btn-hover-border: var(--vb-ink);
-}
-
+/* Buttons on cards. The colours come from the --vb-btn-* tokens (tokens.css),
+   so a card button is a dark stamp that fills with the accent on hover. Here
+   only the wiring to Foundry's own button variables is set. */
 .var-borg-card button {
   --button-background-color: var(--vb-btn-bg);
   --button-text-color: var(--vb-btn-fg);
@@ -250,6 +283,7 @@
   --button-hover-background-color: var(--vb-btn-hover-bg);
   --button-hover-text-color: var(--vb-btn-hover-fg);
   --button-hover-border-color: var(--vb-btn-hover-border);
+  --button-focus-outline-color: var(--vb-focus);
   border-width: 2px;
   border-radius: 0;
   font-family: var(--vb-font-head);
@@ -276,20 +310,22 @@
 .var-borg-card button:focus { box-shadow: none; }
 
 .var-borg-card button:focus-visible {
-  outline: 2px solid var(--vb-ink);
+  outline: 2px solid var(--vb-focus);
   outline-offset: 2px;
 }
 
+/* A disabled button keeps its normal colours, faded. Its hover variables are
+   set to the same values, so it does not change when the pointer is over it. */
 .var-borg-card button:disabled,
 .var-borg-card button:disabled:hover {
-  background: var(--vb-btn-bg);
-  color: var(--vb-btn-fg);
-  border-color: var(--vb-btn-border);
+  --button-hover-background-color: var(--vb-btn-bg);
+  --button-hover-text-color: var(--vb-btn-fg);
+  --button-hover-border-color: var(--vb-btn-border);
   opacity: 0.45;
 }
 
 .var-borg-card .hint {
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   font-size: 0.9em;
 }
 
@@ -313,13 +349,13 @@
 
 /* Fortune on chat cards (step 25): what was burned, and the buttons. */
 .var-borg-card .fortune {
-  border-top: 1px dashed var(--vb-ink);
+  border-top: 1px dashed var(--vb-line-soft);
   margin-top: 0.4rem;
   padding-top: 0.3rem;
 }
 
 .var-borg-card .fortune-spent {
-  color: var(--vb-magic-strong);
+  color: var(--vb-text);
   font-style: italic;
 }
 
@@ -332,13 +368,13 @@
 /* Fortune buttons: outlined, so they sit below the result instead of shouting over it. */
 .var-borg-card .fortune-buttons button {
   --vb-btn-bg: transparent;
-  --vb-btn-fg: var(--vb-ink);
+  --vb-btn-fg: var(--vb-text);
   border-width: 1px;
 }
 
 .var-borg-card .power-description {
   font-style: italic;
-  color: var(--vb-ink-soft);
+  color: var(--vb-text-soft);
   white-space: pre-line;
 }
 
@@ -346,7 +382,7 @@
    text, and the Take button below the damage lines. */
 .var-borg-card.gloom-card .gloom-cost {
   font-weight: normal;
-  color: var(--vb-yellow);
+  color: var(--vb-band-hover);
 }
 
 .var-borg-card.gloom-card .gloom-description {
@@ -359,16 +395,16 @@
   margin-top: 0.3rem;
 }
 
-/* The light has gone out: the headline turns orange on black. */
+/* The light has gone out: the headline text takes the band's highlight colour. */
 .var-borg-card.light-card.out > h3:first-child {
-  color: var(--vb-orange);
-  border-bottom-color: var(--vb-ink-soft);
+  color: var(--vb-band-hover);
+  border-bottom-color: var(--vb-band-accent);
 }
 
 .var-borg-card.weather-card .weather-hazard {
   margin-top: 0.3rem;
   padding-top: 0.3rem;
-  border-top: 1px solid var(--vb-rule);
+  border-top: 1px solid var(--vb-line-soft);
 }
 
 .var-borg-card.weather-card .hazard-table {
@@ -377,7 +413,7 @@
 }
 
 .var-borg-card.weather-card .hazard-name {
-  color: var(--vb-hazard);
+  color: var(--vb-alert);
   margin: 0.1rem 0;
 }
 
@@ -389,22 +425,22 @@
 .var-borg-card.travel-card .travel-hardship {
   margin-top: 0.3rem;
   padding-top: 0.3rem;
-  border-top: 1px solid var(--vb-rule);
+  border-top: 1px solid var(--vb-line-soft);
 }
 
 .var-borg-card.travel-card .hardship-name {
-  color: var(--vb-hazard);
+  color: var(--vb-alert);
   margin: 0.1rem 0;
 }
 
 .var-borg-card.misery-card .misery-omen {
   margin: 0.3rem 0;
   padding-top: 0.3rem;
-  border-top: 1px solid var(--vb-rule);
+  border-top: 1px solid var(--vb-line-soft);
 }
 
 .var-borg-card.misery-card .misery-sun.sunless {
-  color: var(--vb-hazard);
+  color: var(--vb-alert);
   font-weight: bold;
 }
 
@@ -416,7 +452,7 @@
   text-align: center;
 }
 
-.var-borg-card.relic-card .relic-drawback { color: var(--vb-bad); }
+.var-borg-card.relic-card .relic-drawback { color: var(--vb-alert); }
 
 .var-borg-card.vehicle-card .collision-list {
   list-style: none;
@@ -434,7 +470,7 @@
 .var-borg-card.improving-card h4,
 .var-borg-card.random-card h4 {
   margin: 0.5rem 0 0.2rem;
-  border-bottom: 1px solid var(--vb-ink);
+  border-bottom: 1px solid var(--vb-line);
 }
 
 .var-borg-card.improving-card .improving-abilities {
@@ -456,45 +492,46 @@
   font-size: 1rem;
   padding: 0 0.3rem;
   display: inline-block;
-  box-shadow: 2px 2px 0 var(--vb-ink);
+  box-shadow: var(--vb-shadow-hard);
 }
 
-.var-borg-card.improving-card .improving-up { color: var(--vb-good); }
+.var-borg-card.improving-card .improving-up { color: var(--vb-text); }
 
-.var-borg-card.improving-card .improving-down { color: var(--vb-bad); }
+.var-borg-card.improving-card .improving-down { color: var(--vb-alert); }
 
 /* ---------- Item card: an item's picture, name and description ---------- */
-/* The same black headline band as other cards, with the picture in it. */
+/* The same band headline as other cards, with the picture in it. */
 .var-borg-card .item-card-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin: -0.3rem -0.4rem 0.45rem;
   padding: 0.25rem 0.5rem;
-  border-bottom: 3px solid var(--vb-orange);
-  background: var(--vb-ink);
-  color: var(--vb-paper);
+  border-bottom: 3px solid var(--vb-band-accent);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
 }
 
 .var-borg-card .item-card-header img {
   flex: 0 0 auto;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--vb-paper);
-  background: var(--vb-paper-shade);
+  border: 1px solid var(--vb-band-text);
+  background: var(--vb-surface-raised);
 }
 
 .var-borg-card .item-card-header h3 {
   margin: 0;
   border: none;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
   font-size: 1.1rem;
   line-height: 1.2;
 }
 
 .var-borg-card .item-card-type {
   font-size: 0.8rem;
-  color: var(--vb-paper-shade);
+  color: var(--vb-band-text);
+  opacity: 0.8;
 }
 
 /* Descriptions are plain text: keep their line breaks. */

@@ -1,4 +1,8 @@
-/* VÅR BORG: fonts and the shared base look (ink on bone paper).
+/* VÅR BORG: fonts and the shared base look.
+   This file covers the window frame and title bar, the window background,
+   headings, buttons, text fields, the base chat card and the mood transitions.
+   Colours come from the role tokens in tokens.css, never from palette names
+   or literal colours, so both the light and the dark mood work.
    Fonts are SIL Open Font Licence; see fonts/ and THIRD_PARTY_NOTICES.md. */
 
 @font-face {
@@ -34,8 +38,10 @@
 }
 
 /* ---------- VÅR BORG windows: sheets, panels, creation helper ----------
-   The windows always use Foundry's light theme (set in each window's
-   classes), so inputs and buttons stay dark-on-light on our paper. */
+   The windows start in Foundry's light theme and then follow the interface
+   mood (light or dark), which module/mood.mjs sets on the body element.
+   Our colours come from role tokens, so Foundry's own controls inside our
+   windows (inputs, buttons) follow the mood too. */
 
 .application.var-borg,
 .var-borg-card {
@@ -44,9 +50,9 @@
   --font-primary: var(--vb-font-body);
 }
 
-/* Square corners and an ink frame, like a printed plate. */
+/* Square corners and a 2px frame, like a printed plate. */
 .application.var-borg {
-  border: 2px solid var(--vb-ink);
+  border: 2px solid var(--vb-line);
   border-radius: 0;
 }
 
@@ -54,9 +60,9 @@
   border-radius: 0;
 }
 
-/* The title bar is solid ink, so it joins the black header band below it. */
+/* The title bar is a band, so it joins the black header band below it. */
 .application.var-borg .window-header {
-  --color-header-background: var(--vb-ink);
+  --color-header-background: var(--vb-band);
   border-bottom: none;
 }
 
@@ -64,30 +70,43 @@
   font-family: var(--vb-font-head);
   font-size: 0.95rem;
   letter-spacing: 0.04em;
-  color: var(--vb-paper);
+  color: var(--vb-band-text);
 }
 
+/* Foundry colours a hovered button from its "hover" variables, so those are
+   set here too; the bar keeps its colour and only the symbol changes. */
 .application.var-borg .window-header button.header-control {
-  --button-text-color: var(--vb-paper);
+  --button-text-color: var(--vb-band-text);
+  --button-hover-text-color: var(--vb-band-hover);
+  --button-hover-background-color: transparent;
 }
 
-.application.var-borg .window-header button.header-control:hover {
-  --button-text-color: var(--vb-yellow);
+/* Keyboard focus on a title bar control. The bar is dark, so the ring is light. */
+.application.var-borg .window-header button.header-control:focus-visible {
+  outline: 2px solid var(--vb-focus-on-band);
+  outline-offset: -2px;
 }
 
-/* Stippled paper, with small engraved corner marks in the bottom corners.
-   The marks sit in the outer 2–12px, inside the window's padding, so they
-   never cover text. They stay put while the content scrolls. */
+/* Paper with a faint warm glow (light mood) or an edge vignette (dark mood),
+   and small engraved corner marks in the bottom corners. The layers run from
+   the top: corner marks, then the atmosphere, then the stipple, then the page
+   colour. The marks sit in the outer 2–12px, inside the window's padding, so
+   they never cover text. They stay put while the content scrolls. */
 .application.var-borg .window-content {
   background:
     var(--vb-corner-bl) left 2px bottom 2px / 10px 10px no-repeat,
     var(--vb-corner-br) right 2px bottom 2px / 10px 10px no-repeat,
+    var(--vb-atmosphere) 0 0 / 100% 100% no-repeat,
     var(--vb-stipple),
-    var(--vb-paper);
-  color: var(--vb-ink);
+    var(--vb-surface);
+  color: var(--vb-text);
   font-family: var(--vb-font-body);
   font-size: 0.95rem;
   line-height: 1.4;
+  /* Foundry's dark theme blurs what is behind a window. The page colour is
+     solid, so there is nothing to see; switch it off to save work. */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .application.var-borg .window-content :is(input, select, textarea, button) {
@@ -102,53 +121,60 @@
   letter-spacing: 0.04em;
 }
 
-/* The name at the top of a sheet uses the blackletter. Names in lists do not. */
+/* The name at the top of a sheet uses the blackletter, large. Names in lists do not.
+   An item name is a little smaller (1.9rem), so a long name still fits beside the
+   picture in the narrow (480px) item window. */
 .application.var-borg .window-content :is(input.actor-name, input.item-name) {
   font-family: var(--vb-font-display);
+  font-size: 2.3rem;
+  font-weight: 400;
+}
+
+.application.var-borg .window-content input.item-name {
+  font-size: 1.9rem;
 }
 
 /* ---------- Chat cards ---------- */
 
 .var-borg-card {
   font-family: var(--vb-font-body);
-  color: var(--vb-ink);
-  background: var(--vb-paper);
+  color: var(--vb-text);
+  background: var(--vb-surface);
   padding: 0.3rem 0.4rem;
-  border: 1px solid var(--vb-ink);
-  /* A hard ink shadow, like a woodcut block; the margin leaves room for it. */
-  box-shadow: 3px 3px 0 var(--vb-ink);
+  border: 1px solid var(--vb-line);
+  /* A hard shadow, like a woodcut block; the margin leaves room for it. */
+  box-shadow: var(--vb-shadow-hard);
   margin: 0 3px 3px 0;
 }
+
+/* The card headline band belongs to cards.css. */
 
 /* =====================================================================
    Etched controls: headings, buttons and fields inside actor sheets,
    the creation helper, item sheet bodies, table panels and system dialogs.
-   Orange and yellow are fills only.
+   Accent and highlight are fills only.
    ===================================================================== */
 
-/* Button colours use our own --vb-btn-* names. A place that wants different
-   buttons (the black header band, row icons) changes these. Foundry gives
-   disabled buttons dark colours of its own; our names keep them out. */
+/* Button colours come from the --vb-btn-* role tokens, which change with the
+   mood. A hovered button takes the accent for fill and border (the tokens
+   --vb-btn-hover-*). A place that wants different buttons (the black header
+   band, row icons) changes these --vb-btn-* names on its own selector.
+   Note: Foundry sets its own --input-* names on each field itself, so the
+   --input-* lines below do not reach the fields. The dark mood sets them on
+   the fields directly, further down. */
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) {
-  --vb-btn-bg: var(--vb-ink);
-  --vb-btn-fg: var(--vb-paper);
-  --vb-btn-border: var(--vb-ink);
-  --vb-btn-hover-bg: var(--vb-orange);
-  --vb-btn-hover-fg: var(--vb-ink);
-  --vb-btn-hover-border: var(--vb-ink);
-  --button-focus-outline-color: var(--vb-ink);
   --input-background-color: transparent;
-  --input-border-color: var(--vb-ink);
-  --input-text-color: var(--vb-ink);
-  --input-focus-outline-color: var(--vb-ink);
-  --input-placeholder-color: var(--vb-ink-soft);
+  --input-border-color: var(--vb-line);
+  --input-text-color: var(--vb-text);
+  --input-focus-outline-color: var(--vb-focus);
+  --input-placeholder-color: var(--vb-text-faint);
 }
 
 /* ---- Headings: print capitals over a double rule ---- */
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) h2 {
   position: relative;
   font-size: 1.2rem;
-  border-bottom: 3px double var(--vb-ink);
+  border-bottom: 3px double var(--vb-line);
 }
 
 /* A printer's ornament breaks the double rule near its right end. It sits
@@ -161,17 +187,20 @@
   width: 26px;
   height: 10px;
   padding: 0 4px;
-  background: var(--vb-fleuron) center / 26px 10px no-repeat content-box, var(--vb-paper);
+  background: var(--vb-fleuron) center / 26px 10px no-repeat content-box, var(--vb-surface);
   background-origin: content-box;
   pointer-events: none;
 }
 
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) h3 {
   font-size: 1.05rem;
-  border-bottom: 1px solid var(--vb-ink);
+  border-bottom: 1px solid var(--vb-line);
 }
 
-/* ---- Buttons: black stamps that turn orange; a disabled one keeps its colours, faded ---- */
+/* ---- Buttons: dark stamps that turn accent on hover; a disabled one keeps its colours, faded.
+   (Foundry itself makes a disabled button's hover colours equal to its normal
+   ones; the disabled rule below does the same through the same variables, and
+   cards.css does it the same way.) ---- */
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button {
   --button-background-color: var(--vb-btn-bg);
   --button-text-color: var(--vb-btn-fg);
@@ -179,6 +208,7 @@
   --button-hover-background-color: var(--vb-btn-hover-bg);
   --button-hover-text-color: var(--vb-btn-hover-fg);
   --button-hover-border-color: var(--vb-btn-hover-border);
+  --button-focus-outline-color: var(--vb-focus);
   border-width: 2px;
   border-radius: 0;
   font-family: var(--vb-font-head);
@@ -189,22 +219,22 @@
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:focus { box-shadow: none; }
 
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:focus-visible {
-  outline: 2px solid var(--vb-ink);
+  outline: 2px solid var(--vb-focus);
   outline-offset: 2px;
 }
 
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:disabled,
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) button:disabled:hover {
-  background: var(--vb-btn-bg);
-  color: var(--vb-btn-fg);
-  border-color: var(--vb-btn-border);
+  --button-hover-background-color: var(--vb-btn-bg);
+  --button-hover-text-color: var(--vb-btn-fg);
+  --button-hover-border-color: var(--vb-btn-border);
   opacity: 0.45;
 }
 
-/* ---- Fields: a ruled line to write on; yellow while you type ---- */
+/* ---- Fields: a ruled line to write on; a light field while you type ---- */
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]) {
   border: none;
-  border-bottom: 2px solid var(--vb-ink);
+  border-bottom: 2px solid var(--vb-line);
   border-radius: 0;
   box-shadow: none;
   font-weight: 600;
@@ -212,17 +242,85 @@
 
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(input[type="number"], input[type="text"]):focus {
   outline: none;
-  background: var(--vb-yellow);
+  background: var(--vb-field-focus);
 }
 
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(select, textarea) {
-  border: 1px solid var(--vb-ink);
+  border: 1px solid var(--vb-line);
   border-radius: 0;
-  background: var(--vb-paper);
-  color: var(--vb-ink);
+  background: var(--vb-surface);
+  color: var(--vb-text);
 }
 
+/* Kept at the existing inset offset (-2px), so the ring sits inside the field's border. */
 .application.var-borg :is(.var-borg-sheet, .var-borg-item-details, .var-borg-item-description, .var-borg-item-effects, .var-borg-table-panel, .var-borg-import, .var-borg-encounter, .dialog-content, .form-footer) :is(select, textarea):focus {
-  outline: 2px solid var(--vb-ink);
+  outline: 2px solid var(--vb-focus);
   outline-offset: -2px;
+}
+
+/* ---------- Foundry's own controls in the dark mood ----------
+   In the dark mood module/mood.mjs gives each window Foundry's dark theme, so
+   its fields, tick boxes and drop-down lists are made for a dark page. Foundry
+   tints its dark fields purple-grey and draws its tick boxes nearly black, so
+   they are set to our colours here. Foundry sets these names on each control
+   itself, so they must be set on the control itself too (not on the window).
+   The light mood is left exactly as Foundry draws it. Sliders are left alone:
+   their track is drawn from the field colour. */
+body[data-vb-mood="dark"] .application.var-borg {
+  --color-select-option-bg: var(--vb-surface-raised);
+}
+
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea) {
+  --input-background-color: transparent;
+  --input-border-color: var(--vb-line);
+  --input-text-color: var(--vb-text);
+  --input-focus-outline-color: var(--vb-focus);
+  --input-placeholder-color: var(--vb-text-faint);
+}
+
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea):is(:disabled, [readonly]) {
+  --input-background-color: var(--vb-surface-raised);
+  --input-border-color: var(--vb-line-soft);
+  --input-text-color: var(--vb-text-soft);
+}
+
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="checkbox"], input[type="radio"]) {
+  --checkbox-background-color: var(--vb-line);
+  --checkbox-checked-color: var(--vb-accent);
+  --checkbox-checkmark-color: var(--vb-on-accent);
+  --input-focus-outline-color: var(--vb-focus);
+}
+
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="checkbox"], input[type="radio"]):is(:disabled, [readonly]) {
+  --checkbox-background-color: var(--vb-line-strong);
+  --checkbox-checked-color: var(--vb-line-strong);
+  --checkbox-checkmark-color: var(--vb-surface);
+}
+
+/* ---------- Mood transitions ----------
+   When the interface mood changes, these surfaces fade their colours over
+   450 ms. They fade only once Foundry is ready (body[data-vb-mood-ready]), so
+   the first paint does not fade in. Nothing else fades for the mood. */
+body[data-vb-mood-ready] .application.var-borg .window-content,
+body[data-vb-mood-ready] .application.var-borg .window-header,
+body[data-vb-mood-ready] header.var-borg-sheet,
+body[data-vb-mood-ready] nav.sheet-tabs,
+body[data-vb-mood-ready] .var-borg-card,
+body[data-vb-mood-ready] .var-borg-card > h3:first-child,
+body[data-vb-mood-ready] #var-borg-ongoing .ongoing-inner {
+  transition: background-color 450ms ease, color 450ms ease, border-color 450ms ease;
+}
+
+/* People who ask their system for less motion get no mood fades. (The Gloom
+   glow and the mood flourish are in stage.css, which switches them off too.) */
+@media (prefers-reduced-motion: reduce) {
+  body[data-vb-mood-ready] .application.var-borg .window-content,
+  body[data-vb-mood-ready] .application.var-borg .window-header,
+  body[data-vb-mood-ready] header.var-borg-sheet,
+  body[data-vb-mood-ready] nav.sheet-tabs,
+  body[data-vb-mood-ready] .var-borg-card,
+  body[data-vb-mood-ready] .var-borg-card > h3:first-child,
+  body[data-vb-mood-ready] #var-borg-ongoing .ongoing-inner {
+    transition: none;
+  }
 }
