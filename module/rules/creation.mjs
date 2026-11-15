@@ -93,27 +93,27 @@ export const ARMOUR_TABLE = [
  */
 export const WEAPONRY_TABLE = [
   [weapon("dagger", "icons/weapons/daggers/dagger-straight-thin-black.webp",
-    { damage: "d4", price: 10, agile: true, finesse: true, thrown: 20, damageType: "bleeding" })],
+    { damage: "d4", price: 10, agile: true, finesse: true, thrown: 20, damageType: "piercing" })],
   [weapon("shortsword", "icons/weapons/swords/shortsword-guard-brass.webp",
-    { damage: "d6", price: 20, agile: true, damageType: "bleeding" }),
+    { damage: "d6", price: 20, agile: true, damageType: "slashing" }),
   shield("lightShield", "icons/equipment/shield/buckler-wooden-boss.webp", "light", 20)],
   [weapon("sling", "icons/weapons/slings/slingshot-wood.webp",
-    { damage: "d4", price: 5, kind: "shoot", ranged: 40, reload: 1, damageType: "blunt" })],
+    { damage: "d4", price: 5, kind: "shoot", ranged: 40, reload: 1, damageType: "bludgeoning" })],
   [weapon("hatchet", "icons/weapons/axes/axe-broad-black.webp",
-    { damage: "d6", price: 20, thrown: 20, damageType: "bleeding" })],
+    { damage: "d6", price: 20, thrown: 20, damageType: "slashing" })],
   [weapon("spear", "icons/weapons/polearms/spear-simple-engraved.webp",
-    { damage: "d6", price: 10, thrown: 20, damageType: "bleeding" })],
+    { damage: "d6", price: 10, thrown: 20, damageType: "piercing" })],
   [weapon("shortbow", "icons/weapons/bows/shortbow-recurve.webp",
-    { damage: "d4", price: 20, kind: "shoot", ranged: 60, reload: 1, expendable: "d6", damageType: "shot" })],
+    { damage: "d4", price: 20, kind: "shoot", ranged: 60, reload: 1, expendable: "d6", damageType: "piercing" })],
   [weapon("rapier", "icons/weapons/swords/sword-guard-flanged.webp",
-    { damage: "d6", price: 25, finesse: true, damageType: "bleeding" })],
+    { damage: "d6", price: 25, finesse: true, damageType: "piercing" })],
   [weapon("warhammer", "icons/weapons/hammers/hammer-war-spiked.webp",
-    { damage: "d6", price: 35, damageType: "blunt" }),
+    { damage: "d6", price: 35, damageType: "bludgeoning" }),
   shield("heavyShield", "icons/equipment/shield/heater-steel-boss-red.webp", "heavy", 40)],
   [weapon("flintlockPistol", "icons/weapons/guns/gun-pistol-flintlock.webp",
-    { damage: "2d4", price: 65, kind: "shoot", ranged: 60, reload: 2, expendable: "d4", damageType: "shot" })],
+    { damage: "2d4", price: 65, kind: "shoot", ranged: 60, reload: 2, expendable: "d4", damageType: "piercing" })],
   [weapon("greatsword", "icons/weapons/swords/greatsword-crossguard-steel.webp",
-    { damage: "d8", price: 40, twoHanded: true, damageType: "bleeding" })]
+    { damage: "d8", price: 40, twoHanded: true, damageType: "slashing" })]
 ];
 
 /**

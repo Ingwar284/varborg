@@ -3,19 +3,39 @@
  * data needs. Plain JavaScript, no Foundry, so it can be tested on its own.
  *
  * Rules: 4.1 Gear (weapon tables, weapon traits, armour, shields, repair),
- * 3.8 Armour and cover, 3.5 Table of Agony (damage types), GAPS 15 and 27.
+ * 3.8 Armour and cover, damage types (GAPS 289), GAPS 15 and 27.
  */
 
 /** How a weapon is used to attack: melee, shoot or throw (rules 3.4). */
 export const WEAPON_KINDS = ["melee", "shoot", "throw"];
 
-/** The twelve damage types (rules 3.5, GAPS 15; the last three from GAPS 237). */
-export const DAMAGE_TYPES = ["blunt", "bleeding", "shot", "fire", "gore", "poison", "acid", "lightning", "radiant",
-  // Step 52c (GAPS 237): named by foes' immunities and vulnerabilities.
-  "cold", "necrotic", "sonic"];
+/**
+ * The fifteen damage types (GAPS 289, which replaced the older list of
+ * GAPS 15, 202 and 237). Physical, then energy, then other.
+ */
+export const DAMAGE_TYPES = [
+  "bludgeoning", "piercing", "slashing",
+  "acid", "cold", "electricity", "fire", "sonic", "force", "light", "dark",
+  "spirit", "mental", "poison", "bleed"
+];
 
-/** The elements a feature can name (Ancestral Resonance, GAPS 202). */
-export const ELEMENTS = ["fire", "poison", "acid", "lightning", "radiant"];
+/**
+ * Old damage type ids and what they became (GAPS 289). An attack that was
+ * "bleeding" (a cut) becomes slashing; persistent bleeding becomes bleed
+ * (see OLD_PERSISTENT_TYPES in persistent.mjs).
+ */
+export const OLD_DAMAGE_TYPES = {
+  blunt: "bludgeoning", shot: "piercing", gore: "slashing", bleeding: "slashing",
+  lightning: "electricity", radiant: "light", necrotic: "dark"
+};
+
+/** A damage type id brought up to date; unknown and current ids pass through. */
+export function currentDamageType(type) {
+  return OLD_DAMAGE_TYPES[type] ?? type;
+}
+
+/** The elements a feature can name (Ancestral Resonance, GAPS 202, 288). */
+export const ELEMENTS = ["acid", "cold", "electricity", "fire", "sonic", "force", "light", "dark", "poison"];
 
 /** Dice an item can name as its expendable die. "" means none. */
 export const EXPENDABLE_DICE = ["", "d2", "d4", "d6", "d8", "d10", "d12", "d20"];
@@ -73,4 +93,42 @@ export function weaponTraits(weapon) {
   if (weapon.reload > 0) traits.push({ key: "reload", value: weapon.reload });
   if (weapon.expendable) traits.push({ key: "expendable", value: weapon.expendable });
   return traits;
+}
+
+/**
+ * Bring the damage types in an item's system data up to date (GAPS 289),
+ * in place, wherever they sit: the weapon, power or spell itself, area
+ * damage, item effects, outcome entries and buff effects. Also a chosen
+ * element, and the words in an "unless it took … damage" box.
+ * Persistent bleeding (an outcome or hook that gives persistent damage)
+ * becomes bleed; anything else that was bleeding (a cut) becomes slashing.
+ * @param {object} system  An item's system source data.
+ * @returns {boolean}  Whether anything changed.
+ */
+export function migrateDamageTypes(system) {
+  let changed = false;
+  const visit = node => {
+    if (Array.isArray(node)) return node.forEach(visit);
+    if (!node || typeof node !== "object") return;
+    if (typeof node.damageType === "string" && node.damageType) {
+      const persistent = node.kind === "persistent" || node.action === "targetPersistent";
+      const type = persistent && node.damageType === "bleeding" ? "bleed" : currentDamageType(node.damageType);
+      if (type !== node.damageType) { node.damageType = type; changed = true; }
+    }
+    if (node.kind === "choice" && node.choose === "damageType" && typeof node.chosen === "string" && node.chosen) {
+      const type = currentDamageType(node.chosen);
+      if (type !== node.chosen) {
+        node.chosen = type;
+        node.chosenName = type.charAt(0).toUpperCase() + type.slice(1);
+        changed = true;
+      }
+    }
+    if (typeof node.unlessDamaged === "string" && node.unlessDamaged) {
+      const text = node.unlessDamaged.replace(/[a-z]+/gi, word => OLD_DAMAGE_TYPES[word.toLowerCase()] ?? word);
+      if (text !== node.unlessDamaged) { node.unlessDamaged = text; changed = true; }
+    }
+    for (const value of Object.values(node)) if (value && typeof value === "object") visit(value);
+  };
+  visit(system);
+  return changed;
 }

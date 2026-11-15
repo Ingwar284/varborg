@@ -15,6 +15,7 @@ import { makeChoice } from "../choices.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 import { DAMAGE_TYPES } from "../rules/equipment.mjs";
+import { PERSISTENT_TYPES } from "../rules/persistent.mjs";
 
 export const EFFECTS_TEMPLATE = "systems/var-borg/templates/item/item-effects.hbs";
 
@@ -72,7 +73,7 @@ export function effectsContext(document, path = "effects") {
       damageTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.AnyDamageType"),
       resistTypes: labels(["", ...DAMAGE_TYPES], "DamageType", "VARBORG.Effects.ChosenDamageType"),
       resistModes: labels(RESIST_MODES, "Effects.Resist"),
-      persistentTypes: labels(["fire", "bleeding", "acid", "poison"], "DamageType"),
+      persistentTypes: labels(PERSISTENT_TYPES, "DamageType"),
       // Whose Morale a Morale effect changes (step 52b).
       moraleWho: { "": "VARBORG.Effects.MoraleWho.own", allies: "VARBORG.Effects.MoraleWho.allies" },
       companions: labels(COMPANIONS, "Effects.Companion"),

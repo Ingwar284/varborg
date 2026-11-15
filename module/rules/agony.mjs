@@ -26,8 +26,18 @@ export const WOUND_DR = 12;
 /** "Roll d10 on the Table of Agony." */
 export const AGONY_DICE = "1d10";
 
-/** The columns of the table, the same ids as a weapon's damage type (GAPS 15). */
+/**
+ * The columns of the table: Blunt force, Bleeding, (Gun)shot, Fire &
+ * explosives, Gore & massive. Since GAPS 289 these are no longer damage
+ * types; a damage type only suggests a column (agonyColumnFor).
+ */
 export const AGONY_TYPES = ["blunt", "bleeding", "shot", "fire", "gore"];
+
+/** The column each damage type suggests (GAPS 289). Others suggest none. */
+const DAMAGE_TO_AGONY = { bludgeoning: "blunt", slashing: "bleeding", bleed: "bleeding", piercing: "shot", fire: "fire" };
+
+/** A piercing or slashing hit with a die this big or bigger suggests Gore & massive. */
+export const GORE_DIE = 10;
 
 /** Severity bands by d10 roll (GAPS 14). */
 export const AGONY_SEVERITY = [
@@ -77,7 +87,7 @@ export const AGONY_RESULTS = {
 
   winded: { lasting: true, bane: "all" },
   lotsOfBlood: {},
-  piercedSkin: { persistent: { type: "bleeding", formula: "d4" } },
+  piercedSkin: { persistent: { type: "bleed", formula: "d4" } },
   awesomeScar: { fortune: 1 },
 
   sprainedAnkle: { lasting: true, reminder: true },
@@ -87,40 +97,40 @@ export const AGONY_RESULTS = {
   digitMangled: { lasting: true },
 
   concussion: { lasting: true, reminder: true },
-  laceration: { persistent: { type: "bleeding", formula: "d4" } },
+  laceration: { persistent: { type: "bleed", formula: "d4" } },
   fracturedExtremity: { lasting: true },
   largeBurn: { lasting: true },
   eyeGouged: { lasting: true },
 
   legBruised: { lasting: true, reminder: true },
-  majorCut: { persistent: { type: "bleeding", formula: "d4" } },
-  internalBleeding: { persistent: { type: "bleeding", formula: "d4" } },
+  majorCut: { persistent: { type: "bleed", formula: "d4" } },
+  internalBleeding: { persistent: { type: "bleed", formula: "d4" } },
   thirdDegreeBurns: { lasting: true },
   rippedFlesh: { lasting: true, bane: "strength" },
 
   armBruised: { lasting: true, reminder: true },
-  fingersSevered: { lasting: true, persistent: { type: "bleeding", formula: "d6" } },
+  fingersSevered: { lasting: true, persistent: { type: "bleed", formula: "d6" } },
   lodgedProjectile: { lasting: true },
   majorBurn: { lasting: true, defenceDr: 2 },
   paralysed: { lasting: true },
 
   snappedCollarbone: { lasting: true, bane: "strength" },
-  handSevered: { lasting: true, persistent: { type: "bleeding", formula: "d6" } },
+  handSevered: { lasting: true, persistent: { type: "bleed", formula: "d6" } },
   shotInNeck: { lasting: true },
   skinGrafts: { lasting: true, defenceDr: 2 },
-  limbSeveredGore: { lasting: true, persistent: { type: "bleeding", formula: "2d6" } },
+  limbSeveredGore: { lasting: true, persistent: { type: "bleed", formula: "2d6" } },
 
   backBroken: { lasting: true, bane: "all" },
-  limbSevered: { lasting: true, persistent: { type: "bleeding", formula: "2d4" } },
-  majorBloodLoss: { persistent: { type: "bleeding", formula: "d8" } },
+  limbSevered: { lasting: true, persistent: { type: "bleed", formula: "2d4" } },
+  majorBloodLoss: { persistent: { type: "bleed", formula: "d8" } },
   limbOnFire: { persistent: { type: "fire", formula: "1d10" } },
-  impaled: { lasting: true, persistent: { type: "bleeding", formula: "2d8" } },
+  impaled: { lasting: true, persistent: { type: "bleed", formula: "2d8" } },
 
   skullFracture: { lasting: true, bane: "all" },
-  arteryCut: { persistent: { type: "bleeding", formula: "2d6" } },
-  suckingChestWound: { persistent: { type: "bleeding", formula: "d8" } },
+  arteryCut: { persistent: { type: "bleed", formula: "2d6" } },
+  suckingChestWound: { persistent: { type: "bleed", formula: "d8" } },
   bodyOnFire: { persistent: { type: "fire", formula: "2d10" } },
-  gutsSpooled: { persistent: { type: "bleeding", formula: "7" } },
+  gutsSpooled: { persistent: { type: "bleed", formula: "7" } },
 
   spineBroken: { deathsDoor: true },
   throatSlit: { deathsDoor: true },
@@ -134,9 +144,6 @@ export const AGONY_EFFECTS = Object.keys(AGONY_RESULTS).filter(id => {
   const result = AGONY_RESULTS[id];
   return result.lasting || result.next;
 });
-
-/** Persistent damage from a weapon-less source suggests this column. */
-const PERSISTENT_TO_AGONY = { fire: "fire", bleeding: "bleeding" };
 
 /**
  * What happens when a character's HP drops to 0.
@@ -182,13 +189,30 @@ export function agonyResult(type, roll) {
 }
 
 /**
- * The column the system suggests for persistent damage: fire and bleeding
- * have their own; acid and poison have none, so the Dark Master picks.
- * @param {string} persistentType
+ * The column the system suggests for damage of a type (GAPS 289):
+ * bludgeoning Blunt force, slashing and bleed Bleeding, piercing (Gun)shot,
+ * fire Fire & explosives. A piercing or slashing hit whose damage has a d10
+ * or bigger die suggests Gore & massive. Any other type suggests none, and
+ * the Dark Master picks.
+ * @param {string} damageType
+ * @param {string} [damage]  The damage dice, such as "d10" or "2d6".
  * @returns {string|null}
  */
+export function agonyColumnFor(damageType, damage = "") {
+  const column = DAMAGE_TO_AGONY[damageType] ?? null;
+  if ((damageType === "piercing" || damageType === "slashing") && biggestDie(damage) >= GORE_DIE) return "gore";
+  return column;
+}
+
+/** The most faces on any die in a damage text: "d10/d4" is 10, "7" is 0. */
+function biggestDie(damage) {
+  const faces = [...String(damage ?? "").matchAll(/d(\d+)/gi)].map(match => Number(match[1]));
+  return faces.length ? Math.max(...faces) : 0;
+}
+
+/** The column the system suggests for persistent damage: bleed and fire have one. */
 export function agonyTypeForPersistent(persistentType) {
-  return PERSISTENT_TO_AGONY[persistentType] ?? null;
+  return agonyColumnFor(persistentType);
 }
 
 /**

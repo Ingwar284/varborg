@@ -232,7 +232,7 @@ export async function rollThrallAttack(actor) {
   const { ownedThralls } = await import("../minions.mjs");
   const thrall = ownedThralls(actor)[0];
   const weapon = thrall?.items.find(item => item.type === "weapon") ?? null;
-  const system = weapon ? weapon.toObject().system : { kind: "melee", damage: "d4", damageType: "bleeding" };
+  const system = weapon ? weapon.toObject().system : { kind: "melee", damage: "d4", damageType: "slashing" };
   const item = {
     id: weapon?.id ?? "thrallAttack",
     name: `${thrall?.name ?? game.i18n.localize("VARBORG.Thrall.Name")}: ${weapon?.name ?? game.i18n.localize("VARBORG.Thrall.Attack")}`,

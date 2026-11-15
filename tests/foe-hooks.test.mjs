@@ -95,15 +95,39 @@ test("weapon tags: shooting and thrown attacks are ranged; 'any weapon' needs a 
   assert.equal(fitsRoll(anyWeapon, { roll: "attackAgainst" }), false);
 });
 
-test("the new damage types exist (GAPS 237)", async () => {
+test("the fifteen damage types (GAPS 289)", async () => {
   const { DAMAGE_TYPES } = await import("../module/rules/equipment.mjs");
-  for (const type of ["cold", "necrotic", "sonic"]) assert.ok(DAMAGE_TYPES.includes(type));
+  assert.deepEqual(DAMAGE_TYPES, ["bludgeoning", "piercing", "slashing", "acid", "cold", "electricity", "fire", "sonic",
+    "force", "light", "dark", "spirit", "mental", "poison", "bleed"]);
+});
+
+test("old damage type ids are brought up to date (GAPS 289)", async () => {
+  const { migrateDamageTypes } = await import("../module/rules/equipment.mjs");
+  const system = {
+    damageType: "shot",
+    effects: [
+      { kind: "hook", action: "targetPersistent", damageType: "bleeding" },
+      { kind: "resist", damageType: "bleeding", unlessDamaged: "radiant, acid" },
+      { kind: "choice", choose: "damageType", chosen: "lightning", chosenName: "Lightning" }
+    ],
+    outcomeEffects: [{ kind: "persistent", damageType: "bleeding" }],
+    area: { lasting: { effects: [{ kind: "damage", damageType: "necrotic" }] } }
+  };
+  assert.equal(migrateDamageTypes(system), true);
+  assert.equal(system.damageType, "piercing");
+  assert.equal(system.effects[0].damageType, "bleed");
+  assert.equal(system.effects[1].damageType, "slashing");
+  assert.equal(system.effects[1].unlessDamaged, "light, acid");
+  assert.equal(system.effects[2].chosen, "electricity");
+  assert.equal(system.outcomeEffects[0].damageType, "bleed");
+  assert.equal(system.area.lasting.effects[0].damageType, "dark");
+  assert.equal(migrateDamageTypes(system), false);
 });
 
 test("the content checks know 'when its attack hits' and 'stay at 1 HP' (step 52f)", async () => {
   const { effectProblems, blankEffect } = await import("../module/rules/item-effects.mjs");
   const base = blankEffect("hook");
-  assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetPersistent", amount: "d2", damageType: "bleeding" }), []);
+  assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetPersistent", amount: "d2", damageType: "bleed" }), []);
   assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetPersistent", amount: "d2", damageType: "cold" }), ["persistent type: cold"]);
   assert.deepEqual(effectProblems({ ...base, event: "attackHits", action: "targetCondition", condition: "restrained" }), []);
   assert.deepEqual(effectProblems({ ...base, event: "turnStart", action: "targetCondition", condition: "restrained" }), ["targetCondition at turnStart"]);

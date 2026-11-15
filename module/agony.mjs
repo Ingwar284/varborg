@@ -40,7 +40,7 @@ const SYSTEM = "var-borg";
 const WOUND_TEMPLATE = "systems/var-borg/templates/chat/wound-card.hbs";
 const AGONY_TEMPLATE = "systems/var-borg/templates/chat/agony-card.hbs";
 
-/** The update option that carries the suggested damage type, such as { agonyType: "blunt" }. */
+/** The update option that carries the suggested damage type, the Table of Agony column such as "blunt". */
 export const AGONY_TYPE_OPTION = "varBorgAgonyType";
 
 /** The update option the character data sets when HP struck zero. */
@@ -180,16 +180,16 @@ async function woundTest(actor, agonyType) {
 }
 
 /**
- * The Table of Agony button: the Dark Master picks the damage type (the
+ * The Table of Agony button: the Dark Master picks the column (the
  * suggestion is selected) and rolls d10.
  * @returns {Promise<boolean>}  Whether it was rolled.
  */
 async function askAndRollAgony(actor, type) {
   const i18n = game.i18n;
-  // Poison, acid, lightning and radiant have no column (GAPS 202): no suggestion.
+  // Damage types without a column suggest none (GAPS 289).
   const suggested = AGONY_TYPES.includes(type) ? type : null;
   const options = AGONY_TYPES.map(id => {
-    const label = i18n.localize(`VARBORG.DamageType.${id}`);
+    const label = i18n.localize(`VARBORG.Agony.Column.${id}`);
     const selected = id === suggested ? " selected" : "";
     return `<option value="${id}"${selected}>${id === suggested ? i18n.format("VARBORG.Agony.Suggested", { type: label }) : label}</option>`;
   }).join("");
@@ -220,7 +220,7 @@ async function rollAgony(actor, type) {
   const lines = await applyAgonyResult(actor, id);
   const content = await renderTemplate(AGONY_TEMPLATE, {
     title: i18n.format("VARBORG.Agony.CardTitle", { name: actor.name }),
-    rolled: i18n.format("VARBORG.Agony.Rolled", { type: i18n.localize(`VARBORG.DamageType.${type}`), roll: roll.total }),
+    rolled: i18n.format("VARBORG.Agony.Rolled", { type: i18n.localize(`VARBORG.Agony.Column.${type}`), roll: roll.total }),
     severity: i18n.localize(`VARBORG.Agony.Severity.${severity}`),
     result: agonyName(id),
     text: i18n.localize(`VARBORG.Agony.Result.${id}.text`),

@@ -20,7 +20,7 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "lightning",
+    "damageType": "electricity",
     "outcomeEffects": [
       {
         "kind": "reminder",

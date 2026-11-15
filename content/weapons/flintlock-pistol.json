@@ -11,7 +11,7 @@
     "equipped": false,
     "damage": "2d4",
     "kind": "shoot",
-    "damageType": "shot",
+    "damageType": "piercing",
     "agile": false,
     "finesse": false,
     "heavy": false,

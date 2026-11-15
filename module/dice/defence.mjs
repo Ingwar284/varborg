@@ -45,6 +45,7 @@ import { defenderConditions, attackingFoeConditions, totalModifiers, carryingWit
 import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { useUpNextTest } from "../panic.mjs";
 import { AGONY_TYPE_OPTION } from "../agony.mjs";
+import { agonyColumnFor } from "../rules/agony.mjs";
 import { addTimedCondition } from "../timers.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods } from "../effects.mjs";
 import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mjs";
@@ -161,6 +162,8 @@ export async function rollDefence(actor, attack) {
     diceRule, abilityScore, dr, uncoveredDr,
     damageFormula: fixed || isDamageFormula(formula) ? formula : null,
     attackDamage: attack.system.damage,
+    // The attack's damage type, for resistances and immunities (GAPS 289).
+    damageType: attack.system.damageType ?? "",
     // The attacking foe, for its "when its attack hits" passives (step 52f),
     // and the attack's name (Needle Teeth: only that weapon, step 52h).
     foeUuid: foe?.type === "foe" ? foe.uuid : "",
@@ -183,8 +186,8 @@ export async function rollDefence(actor, attack) {
       drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
       notes,
       actorUuid: actor.uuid,
-      // The weapon's damage type, suggested for the Table of Agony (GAPS 15).
-      agonyType: attack.system.damageType ?? ""
+      // The Table of Agony column the attack's damage type suggests (GAPS 289).
+      agonyType: agonyColumnFor(attack.system.damageType, attack.system.damage) ?? ""
     }
   };
 
@@ -246,7 +249,7 @@ export async function settleDefenceCard(actor, data) {
     }
     const { before, taken: usual } = damageTaken(state.damage, tier, state.soak);
     // Resists by damage type, before armour (step 50b3b).
-    const resist = await rollResists(actor, inputs.agonyType, state.resist);
+    const resist = await rollResists(actor, inputs.damageType ?? "", state.resist);
     state.resist = resist.kept;
     rolls.push(...resist.rolls);
     const { taken: resistedTaken, resisted } = takenWithResists(before, usual, state.soak, state.resist);

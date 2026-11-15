@@ -65,7 +65,7 @@
           {
             "kind": "resist",
             "resist": "double",
-            "damageType": "bleeding"
+            "damageType": "slashing"
           }
         ],
         "automation": "auto"

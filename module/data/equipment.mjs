@@ -11,7 +11,7 @@
 
 import {
   WEAPON_KINDS, DAMAGE_TYPES, EXPENDABLE_DICE, SHIELD_SIZES,
-  ARMOUR_TIER_MIN, ARMOUR_TIER_MAX, isMetalByDefault, capArmourTier
+  ARMOUR_TIER_MIN, ARMOUR_TIER_MAX, isMetalByDefault, capArmourTier, migrateDamageTypes
 } from "../rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../rules/carrying.mjs";
 import { usedUpForQuantity } from "../rules/expendable.mjs";
@@ -40,6 +40,12 @@ function labels(keys, prefix) {
 
 /** Fields every item a character carries has. Scrolls use them too. */
 export class CarriedData extends foundry.abstract.TypeDataModel {
+  /** Old damage type ids become the new ones when loaded (GAPS 289). */
+  static migrateData(source) {
+    migrateDamageTypes(source);
+    return super.migrateData(source);
+  }
+
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),
@@ -136,7 +142,7 @@ export class WeaponData extends EquipmentData {
       damage: new StringField({ required: true, initial: "d4" }),
       kind: choice(WEAPON_KINDS),
       // The damage type the system suggests for the Table of Agony (GAPS 15).
-      damageType: choice(DAMAGE_TYPES, "blunt"),
+      damageType: choice(DAMAGE_TYPES, "bludgeoning"),
       agile: new BooleanField({ initial: false }),
       finesse: new BooleanField({ initial: false }),
       heavy: new BooleanField({ initial: false }),

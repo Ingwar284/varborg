@@ -54,7 +54,7 @@
         "price": 0,
         "damage": "d4",
         "kind": "melee",
-        "damageType": "blunt",
+        "damageType": "dark",
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,

@@ -13,7 +13,7 @@ import { SPELL_LISTS_OF_SPELLS, RITUAL_DRS } from "../rules/spells.mjs";
 import { CarriedData } from "./equipment.mjs";
 import { effectFields } from "./effects.mjs";
 import { outcomeFields } from "./outcomes.mjs";
-import { DAMAGE_TYPES } from "../rules/equipment.mjs";
+import { DAMAGE_TYPES, migrateDamageTypes } from "../rules/equipment.mjs";
 import { areaField } from "./area.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
@@ -50,6 +50,12 @@ function spellFields() {
 }
 
 export default class SpellData extends foundry.abstract.TypeDataModel {
+  /** Old damage type ids become the new ones when loaded (GAPS 289). */
+  static migrateData(source) {
+    migrateDamageTypes(source);
+    return super.migrateData(source);
+  }
+
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),

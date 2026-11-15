@@ -251,7 +251,7 @@ export const HOOK_ACTIONS = [
   // Step 52b (foes): Cold Heart; Adhesive Hide.
   "gainGloom", "testButton",
   // Step 52f (foes, attackHits): the creature it hit gains `condition`
-  // or `amount` persistent damage of `damageType` (Burrow: d2 bleeding).
+  // or `amount` persistent damage of `damageType` (Burrow: d2 bleed).
   // At zeroHp: the first time, stay at 1 HP instead (Abandon Shell), and
   // lose the armour when `loseArmour` is ticked.
   "targetCondition", "targetPersistent", "dropToOne"
@@ -1209,7 +1209,7 @@ export function resistsFor(effects, damageType, { persistent = false, weaponTags
     if (effect.kind !== "resist") return false;
     // Only from weapon attacks of a kind (step 52c, GAPS 237): Charnel Flesh
     // halves shooting and thrown weapons of any type; the Grave Skeleton
-    // doubles blunt weapons.
+    // doubles bludgeoning weapons.
     if (effect.weapon) {
       if (persistent || !fitsWeaponTag(effect.weapon, weaponTags)) return false;
       return !effect.damageType || effect.damageType === damageType;

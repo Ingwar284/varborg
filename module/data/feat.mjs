@@ -11,10 +11,17 @@ import { FEAT_SOURCES } from "../rules/feats.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
 import { markImprovingFeat, endChoiceWith } from "../improving.mjs";
 import { effectFields } from "./effects.mjs";
+import { migrateDamageTypes } from "../rules/equipment.mjs";
 
 const { StringField, BooleanField } = foundry.data.fields;
 
 export default class FeatData extends foundry.abstract.TypeDataModel {
+  /** Old damage type ids become the new ones when loaded (GAPS 289). */
+  static migrateData(source) {
+    migrateDamageTypes(source);
+    return super.migrateData(source);
+  }
+
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),

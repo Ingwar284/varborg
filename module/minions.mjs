@@ -146,7 +146,7 @@ export async function makeItemMinion(owner, effect) {
       name: i18n.localize("VARBORG.Minion.BeastAttack"),
       type: "weapon",
       img: "icons/svg/sword.svg",
-      system: { damage: stats.attack, kind: "melee", damageType: "bleeding", equipped: true }
+      system: { damage: stats.attack, kind: "melee", damageType: "piercing", equipped: true }
     }]
   });
   if (!minion) return nothing;

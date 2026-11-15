@@ -14,7 +14,7 @@
  * Plain maths, no Foundry.
  */
 
-import { DAMAGE_TYPES } from "./equipment.mjs";
+import { DAMAGE_TYPES, currentDamageType } from "./equipment.mjs";
 import { MORALE_MIN, MORALE_MAX } from "./foe.mjs";
 
 /**
@@ -25,7 +25,8 @@ import { MORALE_MIN, MORALE_MAX } from "./foe.mjs";
  * @returns {{types: string[], unknown: string[]}}
  */
 export function parseDamageTypes(text) {
-  const words = String(text ?? "").split(/[,;]/).map(word => word.trim().toLowerCase()).filter(Boolean);
+  // Old type names (before GAPS 289) still count: "radiant" is light.
+  const words = String(text ?? "").split(/[,;]/).map(word => currentDamageType(word.trim().toLowerCase())).filter(Boolean);
   return {
     types: [...new Set(words.filter(word => DAMAGE_TYPES.includes(word)))],
     unknown: words.filter(word => !DAMAGE_TYPES.includes(word))

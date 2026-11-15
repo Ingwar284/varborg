@@ -18,7 +18,12 @@
  */
 
 /** "Catching fire, bleeding, acid and poison are all Persistent Damage." */
-export const PERSISTENT_TYPES = ["fire", "bleeding", "acid", "poison"];
+export const PERSISTENT_TYPES = ["fire", "bleed", "acid", "poison"];
+
+/** Persistent damage stored before GAPS 289 named bleeding "bleeding". */
+export function currentPersistentType(type) {
+  return type === "bleeding" ? "bleed" : type;
+}
 
 /** A character tests Toughness DR12 to end it. */
 export const PERSISTENT_DR = 12;

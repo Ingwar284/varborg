@@ -11,6 +11,7 @@ import { ABILITIES } from "../rules/abilities.mjs";
 import { SPELL_LISTS, STARTING_DICE } from "../rules/origins.mjs";
 import { WEAPONRY_KEYS } from "../rules/creation.mjs";
 import { effectFields } from "./effects.mjs";
+import { migrateDamageTypes } from "../rules/equipment.mjs";
 
 const { ArrayField, NumberField, StringField } = foundry.data.fields;
 
@@ -31,6 +32,12 @@ function labels(keys, prefix) {
 
 /** The class table (rules 2.5): boosted ability, HP, max wounds, spell list, starting die. */
 export class ClassData extends foundry.abstract.TypeDataModel {
+  /** Old damage type ids become the new ones when loaded (GAPS 289). */
+  static migrateData(source) {
+    migrateDamageTypes(source);
+    return super.migrateData(source);
+  }
+
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),
@@ -59,6 +66,12 @@ export class ClassData extends foundry.abstract.TypeDataModel {
 
 /** An ancestry is its text plus the effect fields every item has (effects.mjs); its feats are separate feat items (rules 2.1, Step 2). */
 export class AncestryData extends foundry.abstract.TypeDataModel {
+  /** Old damage type ids become the new ones when loaded (GAPS 289). */
+  static migrateData(source) {
+    migrateDamageTypes(source);
+    return super.migrateData(source);
+  }
+
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),

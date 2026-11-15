@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   WOUND_ABILITY, WOUND_DR, AGONY_TYPES, AGONY_TABLE, AGONY_RESULTS, AGONY_EFFECTS,
-  atZeroHp, strikesZero, rollsOnAgony, agonyResult, agonyTypeForPersistent,
+  atZeroHp, strikesZero, rollsOnAgony, agonyResult, agonyTypeForPersistent, agonyColumnFor,
   injuryModifiers, injuryReminders
 } from "../module/rules/agony.mjs";
 import { normaliseDamage, PERSISTENT_TYPES } from "../module/rules/persistent.mjs";
@@ -46,9 +46,24 @@ test("a Failure or Ruin on the wound test rolls on the table", () => {
   assert.equal(rollsOnAgony("triumph"), false);
 });
 
-test("the columns are the first five damage types; the elements of GAPS 202 have none", () => {
-  assert.deepEqual(AGONY_TYPES, DAMAGE_TYPES.slice(0, 5));
-  for (const type of ["poison", "acid", "lightning", "radiant"]) assert.ok(DAMAGE_TYPES.includes(type) && !AGONY_TYPES.includes(type));
+test("the five columns are their own ids, not damage types (GAPS 289)", () => {
+  assert.deepEqual(AGONY_TYPES, ["blunt", "bleeding", "shot", "fire", "gore"]);
+  for (const type of ["blunt", "bleeding", "shot", "gore"]) assert.ok(!DAMAGE_TYPES.includes(type));
+});
+
+test("damage types suggest a column; big piercing and slashing hits suggest Gore (GAPS 289)", () => {
+  assert.equal(agonyColumnFor("bludgeoning", "d6"), "blunt");
+  assert.equal(agonyColumnFor("slashing", "d8"), "bleeding");
+  assert.equal(agonyColumnFor("bleed"), "bleeding");
+  assert.equal(agonyColumnFor("piercing", "2d4"), "shot");
+  assert.equal(agonyColumnFor("fire", "3d6"), "fire");
+  assert.equal(agonyColumnFor("piercing", "d10"), "gore");
+  assert.equal(agonyColumnFor("slashing", "2d12"), "gore");
+  assert.equal(agonyColumnFor("piercing", "d10/d4"), "gore");
+  assert.equal(agonyColumnFor("bludgeoning", "2d10"), "blunt");
+  for (const type of ["acid", "cold", "electricity", "sonic", "force", "light", "dark", "spirit", "mental", "poison", ""]) {
+    assert.equal(agonyColumnFor(type, "d12"), null);
+  }
 });
 
 test("severity bands: 1 flesh, 2-5 minor, 6-7 major, 8-9 lethal, 10 fatal", () => {
@@ -93,9 +108,9 @@ test("injuries that give Bane name a real ability or all tests", () => {
   }
 });
 
-test("persistent fire and bleeding suggest their own column; acid and poison none", () => {
+test("persistent fire and bleed suggest their own column; acid and poison none", () => {
   assert.equal(agonyTypeForPersistent("fire"), "fire");
-  assert.equal(agonyTypeForPersistent("bleeding"), "bleeding");
+  assert.equal(agonyTypeForPersistent("bleed"), "bleeding");
   assert.equal(agonyTypeForPersistent("acid"), null);
   assert.equal(agonyTypeForPersistent("poison"), null);
 });

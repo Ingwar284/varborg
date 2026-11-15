@@ -16,6 +16,8 @@ import {
   collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits, changedSpeeds,
   hasAdrenaline, SURGE_ON
 } from "./rules/item-effects.mjs";
+import { currentDamageType } from "./rules/equipment.mjs";
+import { currentPersistentType } from "./rules/persistent.mjs";
 import { gainEmber, adjustPoolBy, runningCombat } from "./pools.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";
 import { rollChanceDie } from "./dice/chance-die.mjs";
@@ -222,6 +224,8 @@ export function effectiveWeapon(item) {
  */
 export async function rollResists(actor, damageType, kept = null, { persistent = false, weaponTags = null, confirmOptional = null } = {}) {
   if (kept) return { kept, rolls: [] };
+  // A card posted before GAPS 289 may still carry an old type id.
+  damageType = persistent ? currentPersistentType(damageType) : currentDamageType(damageType);
   // weaponTags: the weapon attack's tags, for resists by weapon (step 52c); null for no weapon.
   const resists = actor?.items ? resistsFor(collectEffects(actor.items), damageType, { persistent, weaponTags }) : [];
   const rolls = [];

@@ -11,7 +11,7 @@
     "equipped": true,
     "damage": "d12",
     "kind": "melee",
-    "damageType": "bleeding",
+    "damageType": "slashing",
     "agile": false,
     "finesse": false,
     "heavy": false,

@@ -23,8 +23,8 @@ import { TIMER_KINDS, ESCAPE_KINDS, isRoundsFormula, isEscapeDr } from "./timers
 
 /**
  * What an entry gives. Step 51d adds:
- * persistent: persistent damage of `damageType` (fire, bleeding, acid,
- *   poison) and `amount`, such as d4 bleeding;
+ * persistent: persistent damage of `damageType` (fire, bleed, acid,
+ *   poison) and `amount`, such as d4 bleed;
  * damage: `amount` damage, soaked by armour only when `soaked` is ticked
  *   (Wounds Are Weapons: "d6 damage that cannot be reduced");
  * lowerArmour: a foe's armour die one step down until the encounter ends;

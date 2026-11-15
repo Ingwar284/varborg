@@ -24,7 +24,7 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant",
+    "damageType": "light",
     "outcomeEffects": [
       {
         "kind": "buff",

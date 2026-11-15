@@ -64,7 +64,7 @@
         "amount": "d4",
         "option": "",
         "when": "result",
-        "damageType": "bleeding",
+        "damageType": "bleed",
         "soaked": false,
         "nextOnly": false,
         "note": ""

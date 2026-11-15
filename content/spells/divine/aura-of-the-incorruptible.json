@@ -20,7 +20,7 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant",
+    "damageType": "light",
     "outcomeEffects": [
       {
         "kind": "reminder",
@@ -113,7 +113,7 @@
             "trigger": "userTurn",
             "kind": "damage",
             "formula": "3d6",
-            "damageType": "radiant",
+            "damageType": "light",
             "condition": "",
             "duration": {
               "kind": "",

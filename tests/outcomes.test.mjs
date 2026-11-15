@@ -61,8 +61,8 @@ test("partner entries go to the dance partner; end entries wait for the power to
   assert.deepEqual(wantedOutcomes([heal], "success", { user: "me" }), []);
   assert.deepEqual(outcomeProblems(tired), []);
   assert.deepEqual(outcomeProblems({ ...tired, who: "target" }), ["when the power ends: only the user"]);
-  assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "bleeding" }), []);
-  assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "blunt" }), ["damageType: blunt"]);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "bleed" }), []);
+  assert.deepEqual(outcomeProblems({ ...blankOutcome("persistent"), amount: "d4", damageType: "slashing" }), ["damageType: slashing"]);
 });
 
 test("healing can be full; quarry, subject and Ember entries (step 51e)", () => {

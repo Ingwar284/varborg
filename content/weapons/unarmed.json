@@ -11,7 +11,7 @@
     "equipped": false,
     "damage": "d2",
     "kind": "melee",
-    "damageType": "blunt",
+    "damageType": "bludgeoning",
     "agile": true,
     "finesse": false,
     "heavy": false,

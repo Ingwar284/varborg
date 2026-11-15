@@ -24,7 +24,7 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "damageType": "radiant",
+    "damageType": "light",
     "outcomeEffects": [
       {
         "kind": "reminder",
@@ -66,7 +66,7 @@
             "trigger": "enterOrStart",
             "kind": "damage",
             "formula": "d6",
-            "damageType": "radiant",
+            "damageType": "light",
             "condition": "",
             "duration": {
               "kind": "",

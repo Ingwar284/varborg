@@ -46,7 +46,7 @@ export function canUseMedicine(item) {
 
 /** The persistent bleeding effects on an actor. */
 function bleedingEffects(actor) {
-  return persistentEffects(actor).filter(({ type }) => type === "bleeding");
+  return persistentEffects(actor).filter(({ type }) => type === "bleed");
 }
 
 /**

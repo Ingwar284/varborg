@@ -12,12 +12,12 @@ import {
 } from "../module/rules/persistent.mjs";
 import { OUTCOME_PERSISTENT } from "../module/rules/outcomes.mjs";
 
-test("the four types in the rules: fire, bleeding, acid and poison", () => {
-  assert.deepEqual(PERSISTENT_TYPES, ["fire", "bleeding", "acid", "poison"]);
+test("the four types in the rules: fire, bleed, acid and poison (GAPS 289)", () => {
+  assert.deepEqual(PERSISTENT_TYPES, ["fire", "bleed", "acid", "poison"]);
 });
 
 test("the persistent types are written once: outcomes use the same list (REVIEW S10)", () => {
-  assert.deepEqual(OUTCOME_PERSISTENT, ["fire", "bleeding", "acid", "poison"]);
+  assert.deepEqual(OUTCOME_PERSISTENT, ["fire", "bleed", "acid", "poison"]);
   assert.equal(OUTCOME_PERSISTENT, PERSISTENT_TYPES);
 });
 

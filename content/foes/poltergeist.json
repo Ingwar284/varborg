@@ -54,7 +54,7 @@
         "price": 0,
         "damage": "d4",
         "kind": "shoot",
-        "damageType": "blunt",
+        "damageType": "bludgeoning",
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,

@@ -11,7 +11,7 @@
     "equipped": false,
     "damage": "d6",
     "kind": "shoot",
-    "damageType": "shot",
+    "damageType": "piercing",
     "agile": false,
     "finesse": false,
     "heavy": false,

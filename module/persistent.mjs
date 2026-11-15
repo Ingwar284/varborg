@@ -20,7 +20,7 @@
 
 import {
   PERSISTENT_TYPES, PERSISTENT_DR, normaliseDamage, strongestPerType,
-  testEndsPersistent, foeRollEndsPersistent
+  testEndsPersistent, foeRollEndsPersistent, currentPersistentType
 } from "./rules/persistent.mjs";
 import { hpAfterDamage } from "./rules/health.mjs";
 import { killedByDamage } from "./deaths-door.mjs";
@@ -47,7 +47,7 @@ export const PERSISTENT_STATUS = "persistentDamage";
 /** The token icon for each type (Foundry's own icons). */
 export const PERSISTENT_ICONS = {
   fire: "icons/svg/fire.svg",
-  bleeding: "icons/svg/blood.svg",
+  bleed: "icons/svg/blood.svg",
   acid: "icons/svg/acid.svg",
   poison: "icons/svg/poison.svg"
 };
@@ -77,7 +77,10 @@ function persistentName(type, formula) {
 export function persistentEffects(actor) {
   return (actor?.effects ?? [])
     .filter(effect => effect.getFlag(SYSTEM, "persistent"))
-    .map(effect => ({ id: effect.id, ...effect.getFlag(SYSTEM, "persistent"), effect }));
+    .map(effect => {
+      const stored = effect.getFlag(SYSTEM, "persistent");
+      return { id: effect.id, ...stored, type: currentPersistentType(stored.type), effect };
+    });
 }
 
 /**

@@ -56,6 +56,14 @@
  * clothing (clothes) or a garment (robes). On each character the equipped
  * armour (strongest first), shields and weapons move into their slots;
  * any that no longer fit stay carried but unequipped.
+ *
+ * Version 15 (new damage types, GAPS 289): old type ids are already
+ * renamed whenever an item loads (the item data's migrateData). Here
+ * weapons, powers and spells that match a compendium item by name, and the
+ * attacks of foes and minions that match a compendium actor by name, take
+ * the compendium's new damage type (so a spear that was "bleeding" becomes
+ * piercing, not the slashing guess), and persistent bleeding on actors
+ * becomes bleed.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -71,7 +79,7 @@ const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 14;
+export const DATA_VERSION = 15;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -107,6 +115,7 @@ export async function migrateWorld() {
   if (version < 12) await refreshAuraOfTheIncorruptible();
   if (version < 13) await clearStudyTheSpecimenDamage();
   if (version < 14) await placeEquippedItems();
+  if (version < 15) await takeNewDamageTypes();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -291,5 +300,53 @@ async function placeEquippedItems() {
     const places = placesForEquipped(items);
     const updates = [...places].map(([id, place]) => ({ _id: id, "system.place": place }));
     if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+  }
+}
+
+/**
+ * Version 15: damage types from the compendiums by name, and persistent
+ * bleeding renamed (GAPS 289).
+ */
+async function takeNewDamageTypes() {
+  const typesByName = async (packName, types) => {
+    const pack = game.packs.get(`${SYSTEM}.${packName}`);
+    const map = new Map();
+    if (!pack) return map;
+    for (const item of await pack.getDocuments()) {
+      if (types.includes(item.type)) map.set(item.name, item.system.damageType ?? "");
+    }
+    return map;
+  };
+  const items = new Map([
+    ...await typesByName("weapons", ["weapon"]),
+    ...await typesByName("powers", ["power"]),
+    ...await typesByName("spells", ["spell"])
+  ]);
+  await updateItems(["weapon", "power", "spell"], item => {
+    const type = items.get(item.name);
+    return type !== undefined && type !== item.system.damageType ? { "system.damageType": type } : null;
+  });
+
+  // Foe and minion attacks: the weapon of the same name on the compendium actor of the same name.
+  const attacks = new Map();
+  for (const packName of ["foes", "minions"]) {
+    const pack = game.packs.get(`${SYSTEM}.${packName}`);
+    if (!pack) continue;
+    for (const actor of await pack.getDocuments()) {
+      attacks.set(actor.name, new Map(actor.items.filter(item => item.type === "weapon").map(item => [item.name, item.system.damageType])));
+    }
+  }
+  for (const actor of game.actors) {
+    const known = attacks.get(actor.name);
+    if (known) {
+      const updates = actor.items
+        .filter(item => item.type === "weapon" && known.has(item.name) && known.get(item.name) !== item.system.damageType)
+        .map(item => ({ _id: item.id, "system.damageType": known.get(item.name) }));
+      if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
+    }
+    const bleeding = actor.effects
+      .filter(effect => effect.getFlag(SYSTEM, "persistent")?.type === "bleeding")
+      .map(effect => ({ _id: effect.id, [`flags.${SYSTEM}.persistent.type`]: "bleed" }));
+    if (bleeding.length) await actor.updateEmbeddedDocuments("ActiveEffect", bleeding);
   }
 }

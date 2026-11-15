@@ -53,7 +53,7 @@
         "price": 0,
         "damage": "d4",
         "kind": "melee",
-        "damageType": "gore",
+        "damageType": "piercing",
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,

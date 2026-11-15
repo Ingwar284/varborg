@@ -54,7 +54,7 @@
         "price": 0,
         "damage": "d8",
         "kind": "melee",
-        "damageType": "blunt",
+        "damageType": "piercing",
         "cumbersome": false,
         "storedIn": "",
         "loaded": true,
