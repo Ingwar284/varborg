@@ -1,15 +1,21 @@
 # GAPS
 
 Rules that were missing or unclear for the system to apply, and the
-designer's ruling. The rules document (_reference/AI_BRIDGE_-_VÅR_BORG.md)
-stays the authority; these rulings fill its gaps.
+designer's ruling. The rules document (_reference/AI BRIDGE - VÅR BORG.md)
+is the authority for everything not ruled on here. Where a ruling here and
+the rules document disagree, the ruling wins, and the rules document is
+brought in line with it (its "House rulings (from the Foundry system)"
+section sums these rulings up).
 
-Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
+Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling;
+a "Provisional" ruling is what the system does until then.
+**To confirm** = built, waiting for the designer to confirm.
 
 ## Open questions
 
 | # | Question | Ruling | Status |
 |---|---|---|---|
+| 290 | Moving the clock several days ahead (+1 day, Go to): should a "skip days" shortcut start them all at once, or should each day ask who ate and slept? (Found while building the Calendar & Time panel.) | Provisional: each dawn passed opens the New day dialog, one day at a time, as before (food, sleep, starvation and Doomed wounds happen day by day). Closing a dialog stops the clock at that dawn. | Open |
 | 258 | The rules have no name tables, but the random character generator rolls a name (step 54g). Where do names come from? | Provisional (step 54g): for each of the eight ancestries, a d20 table of given names and a d20 table of family names ("Names: Dwarf (given)" and so on) in the Roll Tables compendium, drafted for the system in the setting's style, not taken from the rules. The name is the given name and the family name. An ancestry without tables uses the human ones. The generator wipes the old name and rolls a new one, also used for the prototype token. Waiting for the designer to review or replace the names. | Open |
 | 288 | Can a shield be slung on the back (the Back slot) instead of held? (Found while building the Equipment tab.) | Provisional: no. Shields are held in a hand; only an item whose "Worn as" is Back goes on the back. | Open |
 | 280 | When does dragging a token spend Move actions? | Designer (playtest feedback): a drag or arrow-key move in combat, on that token's own turn, costs Move actions whoever makes it, so foes the Dark Master moves on their turn spend their action pips. Moves on another creature's turn (pushes, reactions such as Lead the Waltz), moves outside combat and Foundry's other ways of moving a token (such as displacing it) are free. A move that needs more actions than are left is refused. | Resolved |
@@ -179,7 +185,7 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 276 | Is crawling slower than walking? The rules only say Prone "moves as if difficult terrain". | Designer's ruling (token movement): crawling counts as difficult terrain, every step costs double. A Prone creature that would walk crawls instead. | Resolved |
 | 14 | The Table of Agony rows look broken. | Merged tables. Severity bands: 1 flesh wound, 2–5 minor injury, 6–7 major injury, 8–9 lethal injury, 10 fatal injury. Rows without a severity cell read as: d10, Blunt force, Bleeding, (Gun)shot, Fire & explosives, Gore & massive. | Resolved |
 | 15 | Weapons have no damage type for the Agony column. | The Dark Master chooses. The system suggests the obvious type for each weapon. | Resolved |
-| 16 | Death's Door row 2: what counts as a feat? | Only feats gained through Improving. Confirmed again at step 22, although rules 3.6 now says every feat counts. | Resolved |
+| 16 | Death's Door row 2: what counts as a feat? | Only feats gained through Improving. Confirmed again at step 22, and again on 16 November 2026 (REVIEW.md Q1); rules 3.6 and its summaries now say the same. | Resolved |
 | 17 | Attack Ruin: "spend an action to recover". | Add a Recover button. | Resolved |
 | 18 | Do reactions count towards the multiple-attack Bane? | Only when the reaction happens on the PC's own turn. | Resolved |
 | 19 | Persistent damage from several sources? | Exception to "Multiple Effects": different types all apply. Of the same type, only the strongest applies. Each one has its own Toughness test to end it. | Resolved |
@@ -305,6 +311,8 @@ Status: **Resolved** = ruled by the designer. **Open** = still needs a ruling.
 | 159 | Overland travel speed: Trek x1, Gallop x2, Cruise x3, but there is no base distance per phase. Should the system only record the method (and the steed's Fatigued after a Gallop), leaving distance to the Dark Master's map? Steeds are not in the system yet (Milestone 7). | The system records the method and its speed (×1, ×2, ×3) only; distance stays on the Dark Master's map. No steed note after a Gallop. Built in step 40. | Resolved |
 | 160 | Travel encounter results: should the system only name the result of the d20 encounter table (Scenery, Omen of a random or the nearest misery, Easy, Standard or Hard encounter) on a card, or also roll the follow-up tables (encounter type, type of creature, Travel Hardship)? What does "Omen (nearest misery)" mean in play? | Encounters are named with their threat points (Easy 3, Standard 4, Hard 6); the Dark Master rolls the Combat Tables. A Travel hardship is rolled on its d20 table; entries marked Hinterlands or mountains show their tag and, in the Heartlands, a note to roll again or pick the nearest fit. Omens: the optional Omens of Misery subsystem is not used, so both Omen results show the omen of the current Misery (rules 1.5); "random" and "nearest" misery stay apart in the code for when that subsystem is set up. Built in step 40. | Resolved |
 | 168 | Weather effects (step 41). Blackburn: "Light sources burn twice as fast and shed light in half their radius", but the light timer runs in real time: is a light lit in a Blackburn given half its time, or does the timer run faster? Energy void and Energy font: PLAN step 41 automated only their travel half; should Slowed and Quickened at the start of each turn be applied too? | Blackburn: while it is today's weather the light timer counts down at double speed, and every token lit by a light shines to half that light's range; when the weather changes, the timer goes back to normal speed from that moment and the tokens to full range. Only lights lit through the system are halved, not a token's own light. Energy void and Energy font: every combatant starts each turn as if Slowed (void) or Quickened (font), on top of its own conditions (they do not stack with themselves); the turn-start chat line names the weather. Their travel speed is ×½ or ×1½ of the method's speed, using the weather the party set out in. Day of ember and Day of gloom: that pool fills to round × 5 + 5 at the start of each round, with a chat line. Built in step 41. | Resolved |
+| 291 | Should the Dark Master be able to set the date and time directly, without a new day happening? (Asked for while building the Calendar & Time panel.) | Designer's request: a Set date button puts the calendar and clock straight on a date and time, forwards or back. No new day happens (no food, sleep, starvation, Doomed wounds, uses back, weather or Misery). It is the one exception to GAPS 165. Built as asked; recorded here so the exception is on file. | Resolved |
+| 292 | The rules say the Dusklands count "months by the moon", but give no moon. When is the moon full? | Designer: every month is one moon, full on the 15th. Built as: new moon on the 30th; waxing crescent 1st–7th, first quarter 8th, waxing gibbous 9th–14th, full 15th, waning gibbous 16th–22nd, last quarter 23rd, waning crescent 24th–29th (the quarter days are the system's choice, halfway between). The Calendar & Time panel shows today's moon, marks the four principal phases in the month grid, and shows the moon of a chosen day. Display only: no rule uses the moon yet. | Resolved |
 
 ## Foes, minions and vehicles
 

@@ -2,14 +2,19 @@
 
 Foundry VTT v14 only. TypeDataModel for data, ApplicationV2 for every sheet
 and dialog, all visible text in `lang/en.json`. Rules authority:
-`_reference/AI_BRIDGE_-_VÅR_BORG.md`, with the rulings in `GAPS.md`.
+`_reference/AI BRIDGE - VÅR BORG.md`, with the rulings in `GAPS.md`, which
+win where the two disagree (see CLAUDE.md).
 
 Each step is small and ends with a test you can do in Foundry. After each
 working step, commit with Git.
 
+Milestones 1 to 13 below are the original plan. Work done after it, mostly
+from playtest feedback, is listed at the end under "Built after the plan".
+
 ## Design summary
 
-- **Actor types:** character, foe, minion, vehicle.
+- **Actor types:** character, foe, minion, vehicle, chest (treasure that
+  holds items and silver on the scene).
 - **Tokens** (`module/rules/tokens.mjs`): every name shows on hover to
   anyone. Characters are friendly and linked to their actor (damage on the
   token reaches the sheet), with HP and Wounds bars always shown to
@@ -17,10 +22,18 @@ working step, commit with Git.
   with an HP bar shown to everyone on hover.
 - **Item types:** weapon, armour, shield, gear, container, ancestry,
   background, class, feat, power, spell, scroll, relic.
-- **Shared state (world settings, one table panel):** Ember pool, Gloom pool,
-  day counter, light timer, GM reset button for ember abilities.
-- **Conditions:** Foundry status effects (only those in rules 3.13).
-  Persistent damage is one effect per damage type.
+- **Shared state (world settings, five side panels):** Calendar & Time
+  (date, clock, moon, day notes and day log), Weather, Misery, Light (the
+  shared light timer) and Ember & Gloom (both pools, GM reset button for
+  ember abilities). An Ongoing panel beside the sidebar lists each
+  character's running effects.
+- **Conditions:** Foundry status effects (only those in rules 3.13), plus
+  the In Darkness marker from scene lighting (GAPS 274), which is not a
+  3.13 condition. Persistent damage is one effect per damage type.
+- **Damage types:** fifteen (GAPS 289); the Table of Agony keeps its five
+  columns and the type only suggests one.
+- **Mood:** the interface switches between a light and a dark mood
+  (`module/mood.mjs`, spec in `styles/DESIGN.md`).
 - **From Pirate Borg (code ideas only, credited in THIRD_PARTY_NOTICES.md):**
   defence rolled by players, armour soak dice, DR modifiers from gear,
   reloading, morale, initiative, rest dialog, chat-card buttons, sockets,
@@ -1461,7 +1474,10 @@ regeneration.
     - 53b. Gear and weapons: poisons (a Toughness button and a condition),
       thrown area items and grenades (area targets of 51b), the
       blunderbuss's damage by range, lockpicks with a die per result (GAPS
-      55).
+      55). Partly done: red poison is used on targets or coats a weapon
+      (GAPS 283); weapon attacks can hit several targets; the blunderbuss
+      deals d10 in range and d4 beyond. Still open: lockpicks' two dice
+      (GAPS 55).
     - ~~53c. Styled journal pages.~~ Done: a "Document (VÅR BORG)" page
       type with four looks (field journal, letter with signature and wax
       seal, notice, torn scrap), CSS only. Field notes' Record button also
@@ -1470,3 +1486,42 @@ regeneration.
       time.
 
 **Final review:** the automation report shows no item without a status.
+
+---
+
+## Built after the plan
+
+Work done after step 53, mostly from playtest and player feedback. Each
+item names its GAPS ruling where there is one.
+
+54. **Random generation** (done). 54a Creation Helper world setting, off by
+    default. 54b personality tables and Details dice (GAPS 255). 54c random
+    character generator (GAPS 256). 54d random Improving feat and finds
+    (GAPS 257). 54e one chat card. 54f–g the randomiser wipes the old
+    character and rolls a name (GAPS 256, 258).
+55. **Player feedback** (done). Optional Weather subsystem setting (GAPS
+    261); Ancient One picks a general feat (GAPS 262); players can improve
+    and choose the feat group (GAPS 263); one Interact button for every
+    consumable (GAPS 260); Take cover as a basic action (GAPS 264);
+    flickering token light, putting out a light, dimming a lantern to 5
+    feet; retargeting an attack card; the Ongoing panel of running
+    effects; a quick-roll bar above the chat box.
+56. **Treasure and encounters** (done). Chests with items and silver;
+    spell scrolls made from spells (GAPS 266); the encounter builder
+    (GAPS 267–269); the treasure generator (GAPS 270–273).
+57. **The map** (done). In Darkness marker from scene lighting (GAPS 274);
+    token movement with speeds, Move actions, leftover feet and difficult
+    terrain (GAPS 275–282); token vision by default.
+58. **Areas of effect** (done). Spell, power and gloom areas as Foundry
+    Regions: aim, target everyone caught, keep sustained and lasting areas
+    (GAPS 284); weapon attacks on several targets; red poison (GAPS 283).
+59. **Code review** (done; REVIEW.md, 14 November 2026). Fixes from
+    REVIEW.md steps 1–9; class drops give the class feature and power, with
+    a confirmation (GAPS 285, 286); one shared Boon and Bane count;
+    double-click guards; a tidy-up pass.
+60. **Look and equipment** (done). Light and dark moods (styles/DESIGN.md);
+    the Equipment tab with worn and held slots (GAPS 287, 288); fifteen
+    damage types (GAPS 289, DAMAGE_TYPES_REVIEW.md).
+61. **Calendar & Time panel** (in progress, not yet committed). Month grid,
+    moon phases (GAPS 292), Set date (GAPS 291), day notes and a day log;
+    moving the clock several days opens each New day in turn (GAPS 290).

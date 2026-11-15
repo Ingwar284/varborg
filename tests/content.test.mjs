@@ -622,8 +622,8 @@ test("the mule and handcart are vehicles with the stats agreed in GAPS 259", () 
   const stats = v => [v.system.hp.max, v.system.armour, v.system.speed.safe, v.system.speed.normal, v.system.speed.fast, v.system.passengerSeats, v.system.cargoLimit, v.system.price];
   assert.deepEqual(stats(vehicles.find(v => v.name === "Mule")), [12, "d2", 20, 30, 40, 0, 8, 30]);
   assert.deepEqual(stats(vehicles.find(v => v.name === "Handcart")), [10, "", 10, 20, 0, 0, 6, 40]);
-  // Their prices are the rules' (4.1): "Mule 30 s", "Small wagon 40 s".
-  assert.ok(flatRules.includes("Mule 30 s") && flatRules.includes("Small wagon 40 s"));
+  // Their prices are the rules' (4.1): "Mule 30 s", "Handcart 40 s" (the small wagon, GAPS 259).
+  assert.ok(flatRules.includes("Mule 30 s") && flatRules.includes("Handcart 40 s"));
 });
 
 test("no foe comes from an adventure page (Operation:, Exeunt: or the Entities appendix), for now", () => {

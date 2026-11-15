@@ -239,7 +239,7 @@ Unsettled (needs a running Foundry, see Q22 and Q24): the reach search per token
 
 Answerable in a sentence each. "In Foundry" means it needs a look in a running Foundry.
 
-1. **Death's Door feat count.** The rule document (3.6) says every feat adds 1 to the Sanity DR; code and GAPS 16 count only feats gained through Improving ("confirmed again at step 22"). Keep GAPS 16, or change to every feat? (If every feat counted, a new character starts at DR 12 or 13.)
+1. **Death's Door feat count.** The rule document (3.6) says every feat adds 1 to the Sanity DR; code and GAPS 16 count only feats gained through Improving ("confirmed again at step 22"). Keep GAPS 16, or change to every feat? (If every feat counted, a new character starts at DR 12 or 13.) **Decided 16 November 2026: keep GAPS 16.** The rule document now matches.
 2. **Boon on a Morale roll.** After R1, Boon on Morale rolls 3d6 keeping the two lowest (foe braver). Is that what you want for a Boon from other sources, or should Boon and Bane on Morale be left to the Dark Master?
 3. **Medicine box test (GAPS 41/43/149).** The rule document says the box heals d6 or removes Infected with no test; the system asks a Toughness DR12 test. Keep, or follow the document?
 4. **Fortune below 1 damage (GAPS 109, Open).** Fortune's "lower damage dealt to you by d6" can take a hit to 0, while the rule document says hits deal at least 1 despite shield or armour. Keep, or minimum 1?
