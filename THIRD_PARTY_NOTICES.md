@@ -22,6 +22,11 @@ full licence as `OFL.txt`. They are loaded in `styles/base.css`.
   Alegreya Project Authors. The files are renamed from `Alegreya[wght].ttf`
   and `Alegreya-Italic[wght].ttf`; their contents are unchanged.
 
+## Art
+
+- **Skeleton figure** (`assets/equipment-skeleton.webp`): a public-domain
+  engraving, supplied by the designer. Shown on the Equipment tab of the character sheet.
+
 ## Pirate Borg Foundry system (code only)
 
 Some code in this system is adapted from the Pirate Borg Foundry VTT system
