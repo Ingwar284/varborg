@@ -727,13 +727,6 @@
 .var-borg-sheet .vehicle-sheet .vehicle-capacity input { width: 4rem; }
 
 /* Improving (step 45) */
-.var-borg-sheet .heading-with-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
 .var-borg-sheet .improving-choice {
   display: flex;
   align-items: center;

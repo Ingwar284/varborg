@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/environment/people/cleric-grey.webp",
   "system": {
-    "description": "You radiate a calming presence. As long as you haven’t taken a hostile action, a foe must succeed on a Sanity test (DR12) to attack you. On a failure, it attacks another target or does nothing.",
+    "description": "You radiate a calming presence. As long as you haven't taken a hostile action, a foe must succeed on a Sanity test (DR12) to attack you. On a failure, it attacks another target or does nothing.",
     "source": "class",
     "belongsTo": "Priest",
     "improving": false,

@@ -212,7 +212,7 @@ async function askAndRollAgony(actor, type) {
  * @param {Actor} actor
  * @param {string} type  One of AGONY_TYPES.
  */
-export async function rollAgony(actor, type) {
+async function rollAgony(actor, type) {
   const i18n = game.i18n;
   const roll = new Roll(AGONY_DICE);
   await roll.evaluate();

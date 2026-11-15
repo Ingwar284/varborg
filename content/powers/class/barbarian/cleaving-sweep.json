@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/weapons/axes/axe-battle-black.webp",
   "system": {
-    "description": "You swing your weapon in a wide, ruinous arc. Make one melee attack against every foe within reach, dealing d8 damage to each regardless of your weapon’s damage.",
+    "description": "You swing your weapon in a wide, ruinous arc. Make one melee attack against every foe within reach, dealing d8 damage to each regardless of your weapon's damage.",
     "source": "class",
     "belongsTo": "Barbarian",
     "resource": "ember",

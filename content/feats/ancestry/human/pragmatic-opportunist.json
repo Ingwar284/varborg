@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/environment/people/commoner.webp",
   "system": {
-    "description": "You possess the human instinct to turn another’s misfortune into your own advancement. When an ally fails a test in your presence, you may immediately attempt the same test at -2 DR.",
+    "description": "You possess the human instinct to turn another's misfortune into your own advancement. When an ally fails a test in your presence, you may immediately attempt the same test at -2 DR.",
     "source": "ancestry",
     "belongsTo": "Human",
     "improving": false,

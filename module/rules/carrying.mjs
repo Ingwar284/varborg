@@ -17,9 +17,6 @@ import { droppedContainerIds, isDropped } from "./dropped.mjs";
 /** A creature moves 20' in one Move action unless told otherwise (rules 3.7). */
 export const BASE_MOVEMENT = 20;
 
-/** The three carrying states, from lightest to heaviest. */
-export const CARRYING_STATES = ["normal", "encumbered", "overloaded"];
-
 /** How many cumbersome items a character can carry: Toughness, minimum 1. */
 export function cumbersomeLimit(toughness) {
   return Math.max(1, toughness);

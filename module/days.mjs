@@ -3,7 +3,7 @@
  * GAPS 30, 142–143).
  *
  * The day number is a world setting, shown to everyone on the Calendar panel
- * (module/pools.mjs). The Dark Master's New day button asks who ate and
+ * (module/panels.mjs). The Dark Master's New day button asks who ate and
  * drank the day before, then, for every living character:
  * - days without food go to 0 (ate) or up by 1 (did not);
  * - a Doomed character gains a wound (HP unchanged) with the usual

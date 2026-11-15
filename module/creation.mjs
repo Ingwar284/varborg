@@ -424,7 +424,7 @@ export default class CreationHelper extends HandlebarsApplicationMixin(Applicati
       if (key in data) state[key] = data[key] ?? "";
     }
     if (data.array) {
-      state.array = state.array.map((old, index) => {
+      state.array = state.array.map((_, index) => {
         const value = data.array[index];
         return value === null || value === undefined || value === "" ? "" : Number(value);
       });

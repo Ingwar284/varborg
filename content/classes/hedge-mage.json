@@ -4,7 +4,7 @@
   "type": "class",
   "img": "icons/magic/symbols/runes-star-orange.webp",
   "system": {
-    "description": "The Hedge Mage is no master of the arcane. At best, they are a scrappy, self-taught survivor who treats magic like a temperamental stray dog. You don’t have a library, a tower, or an orb to ponder, but you get by just fine with your collection of weird rocks, a stained notebook, and a gut feeling.\n\nClass feature: Autodidactism\nYou don't really know how this magic thing works, but that's never stopped you. Upon character creation, select a spell list. You can swap this spell list during downtime; spells you learned from your old list stay known, but you cast them at Bane until you swap back. Whenever you cast a spell or use a magic-themed power, roll a d6: on a 1 you trigger a Photonic Surge.\n\nClass power: Improvised Cantrip 🟒1 ◈◈",
+    "description": "The Hedge Mage is no master of the arcane. At best, they are a scrappy, self-taught survivor who treats magic like a temperamental stray dog. You don't have a library, a tower, or an orb to ponder, but you get by just fine with your collection of weird rocks, a stained notebook, and a gut feeling.\n\nClass feature: Autodidactism\nYou don't really know how this magic thing works, but that's never stopped you. Upon character creation, select a spell list. You can swap this spell list during downtime; spells you learned from your old list stay known, but you cast them at Bane until you swap back. Whenever you cast a spell or use a magic-themed power, roll a d6: on a 1 you trigger a Photonic Surge.\n\nClass power: Improvised Cantrip 🟒1 ◈◈",
     "boostedAbility": "sanity",
     "hpBase": 6,
     "maxWounds": 1,

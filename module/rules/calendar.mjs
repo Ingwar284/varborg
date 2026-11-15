@@ -49,9 +49,6 @@ export const DAYS_PER_YEAR = DAYS_PER_MONTH * MONTHS.length;
 /** The year a new world starts in. */
 export const FIRST_YEAR = 1;
 
-/** The three phases of a day, in order from dawn. */
-export const PHASES = ["morning", "afternoon", "night"];
-
 function assertTime(time) {
   if (!Number.isFinite(time) || time < 0) throw new RangeError(`Not a world time: ${time}`);
 }

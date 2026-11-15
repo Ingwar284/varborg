@@ -9,7 +9,7 @@
 /** How a weapon is used to attack: melee, shoot or throw (rules 3.4). */
 export const WEAPON_KINDS = ["melee", "shoot", "throw"];
 
-/** The five damage types of the Table of Agony (rules 3.5, GAPS 15). */
+/** The twelve damage types (rules 3.5, GAPS 15; the last three from GAPS 237). */
 export const DAMAGE_TYPES = ["blunt", "bleeding", "shot", "fire", "gore", "poison", "acid", "lightning", "radiant",
   // Step 52c (GAPS 237): named by foes' immunities and vulnerabilities.
   "cold", "necrotic", "sonic"];

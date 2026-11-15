@@ -57,7 +57,7 @@ export class ClassData extends foundry.abstract.TypeDataModel {
   static STARTING_DICE = Object.fromEntries(STARTING_DICE.map(die => [die, die]));
 }
 
-/** An ancestry is text only; its feats are separate feat items (rules 2.1, Step 2). */
+/** An ancestry is its text plus the effect fields every item has (effects.mjs); its feats are separate feat items (rules 2.1, Step 2). */
 export class AncestryData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {

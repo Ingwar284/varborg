@@ -124,11 +124,6 @@ export function ongoingEffects(actor) {
   return list;
 }
 
-/**
- * Conditions, persistent damage, Panic and injuries, then the other
- * ongoing effects: the whole list for the Ongoing panel.
- * @param {Actor} actor  A character, foe or minion.
- */
 /** An Active Effect's own description, as plain text. */
 function effectText(actor, id) {
   return oneLine(actor.effects.get(id)?.description);
@@ -139,6 +134,11 @@ function oneLine(text) {
   return descriptionText(text ?? "").split("\n").filter(Boolean).join(" ");
 }
 
+/**
+ * Conditions, persistent damage, Panic and injuries, then the other
+ * ongoing effects: the whole list for the Ongoing panel.
+ * @param {Actor} actor  A character, foe or minion.
+ */
 export function allOngoing(actor) {
   const conditions = sheetConditions(actor);
   const fromConditions = [

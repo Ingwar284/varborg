@@ -23,13 +23,6 @@ export const CARRYING_DIE = 6;
 export const TOOLS_DIE = 8;
 export const ODDS_DIE = 10;
 
-/** The number of faces of "d6", "d8" or "d10". */
-export function dieFaces(die) {
-  const match = String(die ?? "").match(/^d(\d+)$/);
-  if (!match) throw new RangeError(`Not a die: ${die}`);
-  return Number(match[1]);
-}
-
 /**
  * Roll individually: each ability gets its own 3d6.
  * @param {Record<string, number>} sums  A roll sum for each ability.

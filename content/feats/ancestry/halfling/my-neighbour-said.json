@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/consumables/grains/bread-loaf-boule-rustic-brown.webp",
   "system": {
-    "description": "Your mind is a cluttered pantry of old wives’ tales, regional gossip, and practical survival wisdom. Once per encounter, test Presence as a free action to recall a piece of gossip about anything.",
+    "description": "Your mind is a cluttered pantry of old wives' tales, regional gossip, and practical survival wisdom. Once per encounter, test Presence as a free action to recall a piece of gossip about anything.",
     "source": "ancestry",
     "belongsTo": "Halfling",
     "improving": false,

@@ -65,7 +65,7 @@ test("each feat's name and text are word for word in the rules", () => {
 });
 
 test("Dragon’s Shadow makes foes break: an optional Bane on their Morale roll (GAPS 182)", () => {
-  const shadow = ancestryFeats.find(f => f.name === "Dragon’s Shadow");
+  const shadow = ancestryFeats.find(f => f.name === "Dragon's Shadow");
   const [effect] = shadow.system.effects;
   assert.equal(shadow.system.effects.length, 1);
   assert.deepEqual([effect.kind, effect.roll, effect.grant, effect.mode], ["roll", "morale", "bane", "optional"]);

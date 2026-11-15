@@ -27,12 +27,6 @@
  * is (0, 0), Major hazard (0, −2), Perfect day (0, 2).
  */
 
-/** The kinds of weather on the flower. */
-export const KINDS = [
-  "perfectDay", "clearSky", "clouded", "lightPrecipitation",
-  "heavyPrecipitation", "storm", "minorHazard", "majorHazard"
-];
-
 /** The 19 hexes of the flower: id "q,r" and the weather kind. */
 export const HEXES = [
   { q: 0, r: -2, kind: "majorHazard" },

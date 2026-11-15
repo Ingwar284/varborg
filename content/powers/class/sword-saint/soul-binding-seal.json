@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/weapons/swords/sword-flanged-lightning.webp",
   "system": {
-    "description": "You pin the enemy’s shadow to the world. The target takes 2d8 damage and is Restrained by your sword for d4 rounds. While it is pinned, all attacks against it have Boon.",
+    "description": "You pin the enemy's shadow to the world. The target takes 2d8 damage and is Restrained by your sword for d4 rounds. While it is pinned, all attacks against it have Boon.",
     "source": "class",
     "belongsTo": "Sword Saint",
     "resource": "ember",

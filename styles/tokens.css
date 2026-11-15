@@ -21,7 +21,6 @@
 
   /* ---- Etching textures (drawn in SVG, ink on transparent) ---- */
   --vb-stipple: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='%23141210' fill-opacity='.08'%3E%3Ccircle cx='3' cy='5' r='.6'/%3E%3Ccircle cx='17' cy='2' r='.5'/%3E%3Ccircle cx='29' cy='11' r='.7'/%3E%3Ccircle cx='9' cy='21' r='.5'/%3E%3Ccircle cx='35' cy='27' r='.6'/%3E%3Ccircle cx='22' cy='33' r='.5'/%3E%3Ccircle cx='5' cy='36' r='.7'/%3E%3Ccircle cx='26' cy='19' r='.4'/%3E%3C/g%3E%3C/svg%3E");
-  --vb-hatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M-1 1l2-2M0 6l6-6M5 7l2-2' stroke='%23141210' stroke-width='.7'/%3E%3C/svg%3E");
   --vb-crosshatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Cpath d='M0 6l6-6M-1 1l2-2M5 7l2-2M0 0l6 6M-1 5l2 2M5 -1l2 2' stroke='%23141210' stroke-width='.6'/%3E%3C/svg%3E");
 
   /* ---- Printer's ornaments (ink, drawn in SVG) ---- */
@@ -41,10 +40,8 @@
   --vb-hazard: var(--vb-rust);       /* weather hazards, starving, waiting, sunless */
   --vb-warning: var(--vb-rust);      /* encumbered, sustaining */
   --vb-good: var(--vb-ink);          /* remains, improved, contest winner */
-  --vb-neutral: var(--vb-ink-soft);
   --vb-shield: var(--vb-ink);
   --vb-muted: var(--vb-ink-soft);
-  --vb-magic: var(--vb-ink-soft);    /* Fortune lines, light gone out */
   --vb-magic-strong: var(--vb-ink);
   --vb-ember: var(--vb-rust);        /* Ember count on paper */
   --vb-gloom: var(--vb-ink);         /* Gloom count on paper */

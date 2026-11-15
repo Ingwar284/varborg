@@ -21,7 +21,6 @@
 
 /** Threat points by tier (rules 2, "Threat points"). Mooks cost 1. */
 export const TIER_POINTS = { pitiful: 1, weak: 2, moderate: 3, strong: 6, mighty: 8 };
-export const MOOK_POINTS = 1;
 
 export const DIFFICULTIES = ["easy", "standard", "hard", "deadly"];
 

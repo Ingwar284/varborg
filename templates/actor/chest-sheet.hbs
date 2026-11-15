@@ -30,7 +30,7 @@
       <input type="number" name="system.silver" value="{{silver}}" min="0" step="1">
     </label>
     {{else}}
-    <span>{{localize "VARBORG.Chest.Silver"}}: {{silver}} s</span>
+    <span>{{localize "VARBORG.Chest.Silver"}}: {{localize "VARBORG.Chest.SilverAmount" silver=silver}}</span>
     {{/if}}
     {{#if silver}}
     <div class="chest-silver-buttons">

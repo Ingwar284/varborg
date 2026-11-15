@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/magic/nature/leaf-elm-sparkle-glow-green.webp",
   "system": {
-    "description": "You were born from the arcane’s womb, your heartbeat synced to the rhythm of the weave. Choose one spell that costs 3 ember or less (DR14); you learn and can cast this spell regardless of its spell list.",
+    "description": "You were born from the arcane's womb, your heartbeat synced to the rhythm of the weave. Choose one spell that costs 3 ember or less (DR14); you learn and can cast this spell regardless of its spell list.",
     "source": "ancestry",
     "belongsTo": "Elf",
     "improving": false,

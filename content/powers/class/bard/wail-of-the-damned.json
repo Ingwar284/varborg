@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/tools/instruments/lute-gold-brown.webp",
   "system": {
-    "description": "You release a sound that shouldn’t exist. All foes within 30' take d6 damage and are Deafened for d6 rounds.",
+    "description": "You release a sound that shouldn't exist. All foes within 30' take d6 damage and are Deafened for d6 rounds.",
     "source": "class",
     "belongsTo": "Bard",
     "resource": "ember",

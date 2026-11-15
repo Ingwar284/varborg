@@ -165,13 +165,13 @@ function originSummary(item) {
   return "";
 }
 
-/** One short line about a power: cost, actions, DR, source, Sustained. */
 /** The action symbols of a power or spell: ◈◈, ◇ for a free action, ↻ for a reaction. */
 function actionSymbols(system) {
   if (system.reaction) return "↻";
   return system.actions ? "◈".repeat(system.actions) : "◇";
 }
 
+/** One short line about a power: cost, actions, DR, source, Sustained. */
 function powerSummary(item) {
   const i18n = game.i18n;
   const system = item.system;

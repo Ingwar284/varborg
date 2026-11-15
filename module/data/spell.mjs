@@ -78,7 +78,7 @@ export default class SpellData extends foundry.abstract.TypeDataModel {
   }
 
   static SPELL_LISTS = Object.fromEntries(SPELL_LISTS_OF_SPELLS.map(key => [key, `VARBORG.Class.SpellList.${key}`]));
-  static RITUAL_DRS = Object.fromEntries(RITUAL_DRS.map(dr => [dr, `DR${dr}`]));
+  static RITUAL_DRS = Object.fromEntries(RITUAL_DRS.map(dr => [dr, `VARBORG.Spell.RitualDr.${dr}`]));
 }
 
 /**

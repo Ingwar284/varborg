@@ -311,7 +311,7 @@ function findLine(find, items) {
       what = names ? label : i18n.format("VARBORG.Treasure.Missing", { name: label });
       break;
     }
-    default: what = names || i18n.format("VARBORG.Treasure.Missing", { name: find.kind });
+    default: what = names || i18n.format("VARBORG.Treasure.Missing", { name: i18n.has(`VARBORG.Creation.Item.${find.kind}`) ? i18n.localize(`VARBORG.Creation.Item.${find.kind}`) : find.kind });
   }
   if (find.source === "spoils") return i18n.format("VARBORG.Treasure.SpoilsLine", { d20: find.d20, what });
   if (find.kind === "relic" && find.d6) return i18n.format("VARBORG.Treasure.RelicRolled", { d6: find.d6, what });

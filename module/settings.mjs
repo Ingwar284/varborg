@@ -63,7 +63,6 @@ export function registerSettings() {
     default: "roll"
   });
 
-  // The Ongoing panel beside the sidebar: names shown or icons only, for this user.
   // The encounter builder's party size, remembered between sessions for this user.
   game.settings.register(SYSTEM, ENCOUNTER_PARTY, {
     scope: "client",
@@ -72,6 +71,7 @@ export function registerSettings() {
     default: 4
   });
 
+  // The Ongoing panel beside the sidebar: names shown or icons only, for this user.
   game.settings.register(SYSTEM, ONGOING_OPEN, {
     scope: "client",
     config: false,
@@ -119,7 +119,6 @@ export function playersImproveOn() {
   return Boolean(game.settings.get(SYSTEM, PLAYERS_IMPROVE));
 }
 
-/** Whether the Ongoing panel shows names as well as icons, for this user. */
 /** The party size the encounter builder last used. */
 export function encounterParty() {
   return Number(game.settings.get(SYSTEM, ENCOUNTER_PARTY));
@@ -130,6 +129,7 @@ export function setEncounterParty(players) {
   return game.settings.set(SYSTEM, ENCOUNTER_PARTY, Number(players));
 }
 
+/** Whether the Ongoing panel shows names as well as icons, for this user. */
 export function ongoingOpen() {
   return Boolean(game.settings.get(SYSTEM, ONGOING_OPEN));
 }

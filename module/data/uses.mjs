@@ -8,7 +8,7 @@ import { FREQUENCIES, frequencyFromText } from "../rules/uses.mjs";
 
 const { StringField, BooleanField } = foundry.data.fields;
 
-/** frequency: "", "round", "encounter" or "day"; frequencyUsed: used until it comes back. */
+/** frequency: "" (none) or one of FREQUENCIES in rules/uses.mjs; frequencyUsed: used until it comes back. */
 export function frequencyFields() {
   return {
     frequency: new StringField({ required: true, blank: true, choices: FREQUENCIES, initial: "" }),

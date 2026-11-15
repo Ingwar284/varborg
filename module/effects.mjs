@@ -14,7 +14,7 @@
 
 import {
   collectEffects, rollEffects, withEffect, hookEffects, rollTwiceKeep, keptRoll, withWeaponStats, resistsFor, resistedDamage, chosenWeaponTraits, changedSpeeds,
-  hasAdrenaline, SURGE_ON, withNotedKind
+  hasAdrenaline, SURGE_ON
 } from "./rules/item-effects.mjs";
 import { gainEmber, adjustPoolBy, runningCombat } from "./pools.mjs";
 import { isDead, killedByDamage } from "./deaths-door.mjs";

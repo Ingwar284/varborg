@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/weapons/swords/sword-flanged-lightning.webp",
   "system": {
-    "description": "You can see through your sword’s eyes. You can strike targets behind cover without penalty as long as there is a path for the blade to fly.",
+    "description": "You can see through your sword's eyes. You can strike targets behind cover without penalty as long as there is a path for the blade to fly.",
     "source": "class",
     "belongsTo": "Sword Saint",
     "improving": false,

@@ -252,7 +252,7 @@ export async function randomCharacter(actor, { ancestryUuid = null, classUuid = 
   const detailLines = section("details");
   for (const [field, key] of [["personality", "Personality"], ["physicalMark", "PhysicalMark"],
     ["idiosyncrasy", "Idiosyncrasy"], ["callToAdventure", "CallToAdventure"]]) {
-    if (details[field]) detailLines.push(`${i18n.localize(`VARBORG.Sheet.${key}`)}: ${details[field]}`);
+    if (details[field]) detailLines.push(i18n.format("VARBORG.Random.DetailLine", { label: i18n.localize(`VARBORG.Sheet.${key}`), value: details[field] }));
   }
 
   const title = i18n.format("VARBORG.Random.CardTitle", { name: actor.name });

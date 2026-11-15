@@ -30,7 +30,6 @@
     }
   },
   "VARBORG": {
-    "SystemTitle": "VÅR BORG",
     "Dialog": {
       "Less": "One fewer",
       "More": "One more",
@@ -392,6 +391,7 @@
       },
       "Nameless": "Nameless",
       "NameLine": "Name: {name}.",
+      "DetailLine": "{label}: {value}",
       "FortuneLine": "The old character is wiped. Starting Fortune (d3): {fortune}.",
       "MinionGone": "{minion} no longer serves this character.",
       "MinionKept": "{minion} still serves this character: only its owner or the Dark Master can let it go.",
@@ -1144,8 +1144,6 @@
       "None": "No Panic results.",
       "Add": "Add a Panic result…",
       "AddHint": "Dark Master only. Gives the character a lasting Panic result, with its 1d10 duration rolled.",
-      "LostSanity": "Lost Sanity",
-      "LostSanityHint": "Sanity lost for a while, such as from Teetering. A Triumph on a Panic test gives it all back.",
       "PhobiasHint": "Test Panic whenever you encounter a phobia. A phobia is resolved on a Triumph on its Panic test.",
       "Result": {
         "strokeOfLuck": {
@@ -1263,7 +1261,7 @@
       "Fortune": "Fortune {from} → {to}.",
       "NextTest": "It counts for your next ability test, contest, attack or defence, and then ends.",
       "Lasting": "A lasting injury, shown in Conditions. The Dark Master removes it when it heals or ends.",
-      "ReminderOnly": "The system cannot judge which tests this covers: the test dialog reminds you to tick Bane.",
+      "ReminderOnly": "The system cannot judge which tests this covers: the test dialogue reminds you to tick Bane.",
       "Dies": "The character dies.",
       "DeathsDoorInstead": "{item}: {name} does not die, but goes to Death's Door instead.",
       "Spared": "{name} does not die (see the card above).",
@@ -1722,6 +1720,13 @@
       "Ritual": "Ritual",
       "RitualHint": "A ritual is cast over minutes or hours, outside combat, with no ember and no actions, at the DR of its tier (rules 4.7).",
       "RitualDrHint": "The DR of the ritual's tier heading: 14, 16, 18 or 20.",
+      "RitualDr": {
+        "14": "DR14",
+        "16": "DR16",
+        "18": "DR18",
+        "20": "DR20"
+      },
+      "RitualTimeExample": "10 minutes",
       "RitualTime": "Casting time",
       "RitualTimeHint": "How long the ritual takes, as the rules write it, such as 10 minutes.",
       "RitualSheetDrHint": "A ritual: Sanity against DR{dr}, outside combat, with no ember and no actions.",
@@ -2011,8 +2016,10 @@
         "night": "Night"
       },
       "NextPhase": "Next phase",
-      "NextPhaseTooltip": "Move the clock on to the next noon, dusk or dawn. At dawn the New day dialog opens first.",
-      "HourOnTooltip": "Move the clock one hour on. Passing dawn opens the New day dialog first.",
+      "NextPhaseTooltip": "Move the clock on to the next noon, dusk or dawn. At dawn the New day dialogue opens first.",
+      "HourOn": "+1 h",
+      "HourOnTooltip": "Move the clock one hour on. Passing dawn opens the New day dialogue first.",
+      "HourBack": "−1 h",
       "HourBackTooltip": "Move the clock one hour back. It cannot go back before this day's dawn.",
       "NotBeforeDawn": "The clock cannot go back before the dawn of the day that has begun: what the new day did cannot be undone.",
       "Waiting": "The clock has passed dawn, but the new day has not begun. Press New day.",
@@ -2419,7 +2426,7 @@
       "RulesHint": "A minion has 2 actions and 0 reactions, and acts only when commanded (◈). It tests, attacks and defends at +0, has no Fortune and no wounds, and dies at 0 HP. In combat it acts right after its owner.",
       "MoraleHint": "Roll 2d6: above its Morale, the minion is demoralised. Morale – never rolls.",
       "ArmourHint": "Subtracted from damage that hits the minion. A defence Ruin steps it down one.",
-      "AttackTooltip": "Attack at +0: opens the attack dialog",
+      "AttackTooltip": "Attack at +0: opens the attack dialogue",
       "Abilities": "Passives and active abilities",
       "AddAbility": "Add ability",
       "NewAbility": "New ability",
@@ -2494,6 +2501,7 @@
       "NeedGM": "The Dark Master must be logged in to move items in or out of a chest.",
       "OnlyGMAdds": "Only the Dark Master can put new items in a chest. Drag one from your character sheet instead.",
       "Silver": "Silver",
+      "SilverAmount": "{silver} s",
       "TakeSilver": "Take the silver",
       "NoSilverTaker": "Stand next to {name} with your token to take the silver.",
       "TookSilver": "{who} takes {silver} s from {chest}.",
@@ -2532,7 +2540,7 @@
       "Crew": "Crew",
       "Passengers": "Passengers",
       "Fuel": "Fuel",
-      "MovingAttack": "Attacking from it while it moves: +{normal} DR at normal speed, +{fast} DR at fast speed, not possible at safe speed. Add it in the attack dialog.",
+      "MovingAttack": "Attacking from it while it moves: +{normal} DR at normal speed, +{fast} DR at fast speed, not possible at safe speed. Add it in the attack dialogue.",
       "Aboard": "Aboard",
       "AboardHint": "Drag characters, minions or foes from the Actors sidebar onto this sheet. The driver rolls the driving tests; everyone aboard takes collision damage.",
       "NobodyAboard": "Nobody. Drag characters, minions or foes here from the Actors sidebar.",
@@ -2596,7 +2604,6 @@
       "CannotMove": "You must own both {from} and where {item} is going to move it."
     },
     "Improving": {
-      "Button": "Improve",
       "Tooltip": "Improving (rules 2.8): roll for each ability, a feat, more HP and a find. The Dark Master decides when.",
       "AskTitle": "Improve {name}",
       "Ask": "Improve {name} now? Each ability rolls a d6, then 6d10 for more HP and a d6 on the find table. Afterwards the player chooses a feat or power.",
@@ -2656,7 +2663,6 @@
       "PowerChosen": "{name} gains the power {item} through Improving."
     },
     "Creation": {
-      "Button": "Creation helper",
       "Tooltip": "Make this character step by step (rules 2.1). Optional: dragging items onto the sheet works too.",
       "Title": "Create {name}",
       "Intro": "Follow the steps in order, or skip between them: there is no wrong way. Each step posts a card to chat.",
@@ -2938,7 +2944,7 @@
       "DamageLabel": "Damage",
       "DamageHint": "Extra damage on attacks, powers and spells that deal damage: a number such as 2, or dice such as d4 or 2d6. Per wound repeats it for each wound the character has.",
       "ModeLabel": "Applied",
-      "ModeHint": "Always: the system applies it by itself. Optional: the dialog shows an unticked box, for situations only the Dark Master can judge.",
+      "ModeHint": "Always: the system applies it by itself. Optional: the dialogue shows an unticked box, for situations only the Dark Master can judge.",
       "Mode": {
         "auto": "Always",
         "optional": "Optional tick"
@@ -3177,7 +3183,6 @@
       "FailedAgain": "{item} fails again: {note}",
       "ChanceRolled": "{item}: the Chance Die is rolled ({note}).",
       "RerollLog": "{name} uses {item}: reroll",
-      "RerollSpent": "{item} is already used.",
       "VersusLabel": "Against",
       "DamageTypeLabel": "Damage type",
       "ResistLabel": "What it does",
@@ -3369,7 +3374,7 @@
       "Legend": "Area of effect",
       "Options": {
         "Legend": "Area for each option",
-        "Hint": "An option with its own area is aimed once it is chosen in the dialog, in place of the area above. Leave an option on None to use the area above."
+        "Hint": "An option with its own area is aimed once it is chosen in the dialogue, in place of the area above. Leave an option on None to use the area above."
       },
       "Lasting": {
         "Legend": "Lasting area",
@@ -3508,7 +3513,7 @@
       "NextOnly": "Next roll only",
       "NextOnlyHint": "On a foe: ends after its next attack has been defended against. On a character: ends after the first roll it helps.",
       "OptionPlaceholder": "Option",
-      "OptionHint": "The option this belongs to, such as Allegro. Leave empty for always. The power dialog asks which option.",
+      "OptionHint": "The option this belongs to, such as Allegro. Leave empty for always. The power dialogue asks which option.",
       "TriumphPicks": "Options on a Triumph",
       "TriumphPicksHint": "How many options a Triumph lets the user choose (Daring Stunt: 2).",
       "Persistent": "{name} takes {amount} persistent {type} damage.",

@@ -78,8 +78,8 @@ function combatKey() {
 }
 
 /**
- * The user's dance partner, named with Dance Partner in this encounter
- * (GAPS 222), or null.
+ * The mark of this kind on the actor (its flag), or null when there is none
+ * or it was made in an earlier combat.
  * @param {Actor} actor
  * @returns {{uuid: string, name: string}|null}
  */

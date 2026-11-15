@@ -12,7 +12,8 @@
  *   maxReactions  reactions gained at the start of this turn
  *   moveLeft      feet left over from the last Move this turn; gone when
  *                 another action is spent or the turn starts again
- * A combatant without these flags has a full turn. Conditions change what
+ * A combatant without these flags has a full turn, except a minion, which
+ * has none until its owner commands it. Conditions change what
  * a turn starts with (rules 3.13, module/rules/conditions.mjs).
  *
  * Minions (rules 3.14, module/minions.mjs) come right after their owner in

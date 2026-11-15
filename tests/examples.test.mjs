@@ -14,7 +14,7 @@ import {
   isDamageFormula, isMetalByDefault, capArmourTier
 } from "../module/rules/equipment.mjs";
 import { isCumbersomeByDefault } from "../module/rules/carrying.mjs";
-import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, isMorale } from "../module/rules/foe.mjs";
+import { FOE_TIERS, FOE_CATEGORIES, FOE_ARMOUR_DICE, MORALE_MIN, MORALE_MAX } from "../module/rules/foe.mjs";
 import { FEAT_SOURCES } from "../module/rules/feats.mjs";
 import { POWER_SOURCES, POWER_TEST_ABILITIES, MAX_POWER_ACTIONS, powerDr, powerAbility } from "../module/rules/powers.mjs";
 import { TOKEN_DEFAULTS } from "../module/rules/tokens.mjs";
@@ -166,7 +166,7 @@ test("example foes follow the foe rules", () => {
     assert.ok(FOE_TIERS.includes(system.tier), `${file}: unknown tier`);
     assert.ok(FOE_CATEGORIES.includes(system.category), `${file}: unknown category`);
     assert.ok(FOE_ARMOUR_DICE.includes(system.armour), `${file}: unknown armour die`);
-    assert.ok(isMorale(system.morale), `${file}: Morale must be 2 … 11 or null`);
+    assert.ok(system.morale === null || (Number.isInteger(system.morale) && system.morale >= MORALE_MIN && system.morale <= MORALE_MAX), `${file}: Morale must be 2 … 11 or null`);
     assert.equal(capHp(system.hp.value, system.hp.max), system.hp.value, `${file}: HP above max HP`);
     for (const item of data.items ?? []) {
       assert.match(item._id, /^[a-zA-Z0-9]{16}$/, `${file}: ${item.name} needs a 16-letter-or-digit _id`);

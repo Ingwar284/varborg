@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/environment/people/cleric-grey.webp",
   "system": {
-    "description": "Trigger: An ally within 30' is hit by an attack.\nTake on your ally’s pain. They take no damage, and you take half (rounded down).",
+    "description": "Trigger: An ally within 30' is hit by an attack.\nTake on your ally's pain. They take no damage, and you take half (rounded down).",
     "source": "class",
     "belongsTo": "Priest",
     "resource": "ember",

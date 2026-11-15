@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/environment/people/infantry-armored.webp",
   "system": {
-    "description": "Slam your shield (or pommel) into your foe’s face. Make a melee attack. On a hit, deal d6 damage and the target is Stupefied until the end of its next turn.",
+    "description": "Slam your shield (or pommel) into your foe's face. Make a melee attack. On a hit, deal d6 damage and the target is Stupefied until the end of its next turn.",
     "source": "class",
     "belongsTo": "Warrior",
     "resource": "ember",

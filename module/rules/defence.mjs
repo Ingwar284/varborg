@@ -129,10 +129,10 @@ export function shieldCover(shield, raised) {
  */
 export function defenceOutcome(tier) {
   switch (tier) {
-    case "triumph": return { hit: false, multiplier: 0, lowerArmour: false, counterAttack: true };
-    case "success": return { hit: false, multiplier: 0, lowerArmour: false, counterAttack: false };
-    case "failure": return { hit: true, multiplier: 1, lowerArmour: false, counterAttack: false };
-    case "ruin": return { hit: true, multiplier: 2, lowerArmour: true, counterAttack: false };
+    case "triumph": return { hit: false, multiplier: 0, lowerArmour: false };
+    case "success": return { hit: false, multiplier: 0, lowerArmour: false };
+    case "failure": return { hit: true, multiplier: 1, lowerArmour: false };
+    case "ruin": return { hit: true, multiplier: 2, lowerArmour: true };
   }
   throw new RangeError(`Unknown tier ${tier}`);
 }

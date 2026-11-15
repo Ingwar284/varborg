@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import {
   ABILITY_METHODS, ROLL_SUM_FORMULA, CARRYING_DIE, TOOLS_DIE, ODDS_DIE, DOG,
   ARMOUR_TABLE, WEAPONRY_TABLE, CARRYING_TABLE, TOOLS_TABLE, ODDS_TABLE,
-  dieFaces, scoresFromSums, scoresFromArray, zeroScores, sanityPlusFour,
+  scoresFromSums, scoresFromArray, zeroScores, sanityPlusFour,
   startingEquipment, learnableSpells, WEAPONRY_KEYS, fixedWeaponry
 } from "../module/rules/creation.mjs";
 
@@ -18,9 +18,6 @@ test("the three methods and dice of rules 2.2 and 2.6", () => {
   assert.equal(CARRYING_DIE, 6);
   assert.equal(TOOLS_DIE, 8);
   assert.equal(ODDS_DIE, 10);
-  assert.equal(dieFaces("d6"), 6);
-  assert.equal(dieFaces("d10"), 10);
-  assert.throws(() => dieFaces("2d6"), RangeError);
 });
 
 test("the tables have a row for every face", () => {

@@ -1,7 +1,7 @@
 /**
  * Data for a feat (item type "feat"): ancestry, class and general feats for
- * characters, and passives for foes. For now a feat is text only; the
- * system does not apply its effect.
+ * characters, and passives for foes. A feat is its text plus the effect
+ * fields every item has (effects.mjs).
  *
  * Rules: 3.10 Feats and powers, 4.6 Feats, 6. Designing Foes (passives),
  * 2.8 Improving, GAPS 16 and 57.

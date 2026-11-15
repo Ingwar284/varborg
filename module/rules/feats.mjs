@@ -44,15 +44,6 @@ export function classStarting(description) {
 }
 
 /**
- * The text of a class's feature in its description: the lines after
- * "Class feature: …" up to the class power.
- */
-export function classFeatureText(description) {
-  const match = /Class feature: .+\n([\s\S]*?)\n\nClass power:/.exec(String(description ?? ""));
-  return match ? match[1].trim() : "";
-}
-
-/**
  * Does a feat or power belong to the ancestry or class named `name`?
  * "Belongs to" holds the ancestry's or class's name, matched without
  * caring about capitals or spaces at the ends. A blank "belongs to" is not

@@ -56,14 +56,14 @@ test("reasons for no benefit", () => {
 test("Short rest heals to full HP, nothing else", () => {
   assert.deepEqual(restOutcome(REST.SHORT, hurt, true), {
     hp: 10, wounds: 2, fatigue: 2, sanityLost: 1,
-    regainFortune: false, clearConditions: false, fixHp: false, resetDarkVessels: false, days: 0
+    regainFortune: false, clearConditions: false, fixHp: false, resetDarkVessels: false
   });
 });
 
 test("Long rest heals HP, one wound and one Fatigued level, regains Fortune at 0", () => {
   assert.deepEqual(restOutcome(REST.LONG, hurt, true), {
     hp: 10, wounds: 1, fatigue: 1, sanityLost: 1,
-    regainFortune: true, clearConditions: false, fixHp: true, resetDarkVessels: true, days: 1
+    regainFortune: true, clearConditions: false, fixHp: true, resetDarkVessels: true
   });
   const unhurt = { hp: { value: 10, max: 10 }, wounds: 0, fatigue: 0, fortune: 2, sanityLost: 0 };
   const outcome = restOutcome(REST.LONG, unhurt, true);
@@ -75,17 +75,16 @@ test("Long rest heals HP, one wound and one Fatigued level, regains Fortune at 0
 test("Downtime heals everything and counts as a Long Rest", () => {
   assert.deepEqual(restOutcome(REST.DOWNTIME, hurt, true), {
     hp: 10, wounds: 0, fatigue: 0, sanityLost: 0,
-    regainFortune: true, clearConditions: true, fixHp: true, resetDarkVessels: true, days: 3
+    regainFortune: true, clearConditions: true, fixHp: true, resetDarkVessels: true
   });
 });
 
 test("no benefit: no healing, but time still passes", () => {
   assert.deepEqual(restOutcome(REST.LONG, hurt, false), {
     hp: 3, wounds: 2, fatigue: 2, sanityLost: 1,
-    regainFortune: false, clearConditions: false, fixHp: true, resetDarkVessels: true, days: 1
+    regainFortune: false, clearConditions: false, fixHp: true, resetDarkVessels: true
   });
   assert.deepEqual(restOutcome(REST.SHORT, hurt, false).hp, 3);
-  assert.deepEqual(restOutcome(REST.DOWNTIME, hurt, false).days, 3);
 });
 
 test("bad numbers are refused", () => {

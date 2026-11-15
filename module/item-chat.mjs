@@ -1,7 +1,7 @@
 /**
  * Clicking an item's icon on a sheet (item, feat, power, spell, gloom
  * ability…) posts a chat card with its picture, name and description.
- * Used by the character, foe, minion and vehicle sheets as the "postItem"
+ * Used by the character, foe, minion, vehicle and chest sheets as the "postItem"
  * action.
  */
 

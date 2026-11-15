@@ -49,8 +49,6 @@ export const SUNRISE_DICE = { 1: "1d12", 2: "1d10", 3: "1d8", 4: "1d6", 5: "1d4"
 
 export const OMEN_DIE = "1d6";
 
-export const START_MISERY = Object.freeze({ level: 0, omen: null, light: DEFAULT_LIGHT, sunless: false });
-
 /** "I" to "VII", or "" for no Misery. */
 export function numeral(level) {
   return NUMERALS[level] ?? "";

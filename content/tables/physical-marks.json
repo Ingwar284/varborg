@@ -506,7 +506,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>fingers webbed like a frog’s</p>",
+      "description": "<p>fingers webbed like a frog's</p>",
       "weight": 1,
       "range": [
         39,
@@ -688,7 +688,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>jawline that’s unnaturally sharp</p>",
+      "description": "<p>jawline that's unnaturally sharp</p>",
       "weight": 1,
       "range": [
         53,
@@ -1182,7 +1182,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>split tongue (like a snake’s)</p>",
+      "description": "<p>split tongue (like a snake's)</p>",
       "weight": 1,
       "range": [
         91,

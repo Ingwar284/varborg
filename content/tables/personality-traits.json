@@ -168,7 +168,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>Callous, insensitive to others’ feelings</p>",
+      "description": "<p>Callous, insensitive to others' feelings</p>",
       "weight": 1,
       "range": [
         13,
@@ -519,7 +519,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>Encouraging, lifts others’ spirits</p>",
+      "description": "<p>Encouraging, lifts others' spirits</p>",
       "weight": 1,
       "range": [
         40,
@@ -1104,7 +1104,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>Resourceful, uses what’s available</p>",
+      "description": "<p>Resourceful, uses what's available</p>",
       "weight": 1,
       "range": [
         85,
@@ -1156,7 +1156,7 @@
       "type": "text",
       "name": "",
       "img": "icons/svg/d20-black.svg",
-      "description": "<p>Selfless, puts others’ needs before own</p>",
+      "description": "<p>Selfless, puts others' needs before own</p>",
       "weight": 1,
       "range": [
         89,

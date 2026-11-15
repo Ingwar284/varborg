@@ -15,9 +15,6 @@
 
 import { BASE_MOVEMENT } from "./carrying.mjs";
 
-/** The ways a token can move, in the order the token HUD lists them. */
-export const MOVEMENT_TYPES = ["walk", "fly", "swim", "climb", "crawl"];
-
 /** The speeds stored on an actor (crawl has none of its own). */
 export const SPEED_TYPES = ["walk", "fly", "swim", "climb"];
 
@@ -59,7 +56,7 @@ export function creatureSpeeds(stored = {}) {
  * cannot move that way. Crawling uses the walk speed (its double cost is
  * part of the cost of each step, not of the speed).
  * @param {{walk: number, fly: number|null, swim: number|null, climb: number|null}} speeds
- * @param {string} type  One of MOVEMENT_TYPES.
+ * @param {string} type  One of walk, fly, swim, climb or crawl.
  */
 export function speedFor(speeds, type) {
   if (type === "walk" || type === "crawl") return speeds.walk;
@@ -97,7 +94,7 @@ export function reachBudget(leftover, actionsLeft, perMove) {
  * is? Crawling does (designer ruling), and so do Prone (rules 3.13), Blinded
  * (rules 3.13: "All terrain is difficult terrain") and Encumbered (rules
  * 3.13: "all terrain counts as difficult").
- * @param {string} action  The way it moves (one of MOVEMENT_TYPES).
+ * @param {string} action  The way it moves (walk, fly, swim, climb or crawl).
  * @param {Iterable<string>} conditions  Its condition ids.
  * @param {string} [carryingState]  "normal", "encumbered" or "overloaded".
  */

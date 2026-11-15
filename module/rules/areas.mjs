@@ -172,7 +172,3 @@ export function areaForOption(area, option) {
   return { ...area, ...fields };
 }
 
-/** "a 20' radius within 60'": the area in words, for cards and sheets. */
-export function areaKey(area) {
-  return area?.shape ? `VARBORG.Area.Shape.${area.shape}` : "";
-}

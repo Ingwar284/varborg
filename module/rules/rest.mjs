@@ -108,7 +108,7 @@ export function noBenefitReasons(kind, { infected = false, doomed = false, ate =
  * @param {{hp: {value: number, max: number}, wounds: number, fatigue: number, fortune: number, sanityLost: number}} character
  * @param {boolean} benefit  Whether the character gains the rest's benefit.
  * @returns {{hp: number, wounds: number, fatigue: number, sanityLost: number,
- *   regainFortune: boolean, clearConditions: boolean, fixHp: boolean, resetDarkVessels: boolean, days: number}}
+ *   regainFortune: boolean, clearConditions: boolean, fixHp: boolean, resetDarkVessels: boolean}}
  */
 export function restOutcome(kind, { hp, wounds, fatigue, fortune, sanityLost }, benefit) {
   assertKind(kind);
@@ -125,8 +125,7 @@ export function restOutcome(kind, { hp, wounds, fatigue, fortune, sanityLost }, 
     regainFortune: false,
     clearConditions: false,
     fixHp: long,
-    resetDarkVessels: long,
-    days: daysPassed(kind)
+    resetDarkVessels: long
   };
   if (!benefit) return outcome;
 

@@ -84,10 +84,10 @@ test("unequipped and destroyed shields do not count", () => {
 });
 
 test("defence outcomes follow rules 3.4", () => {
-  assert.deepEqual(defenceOutcome("triumph"), { hit: false, multiplier: 0, lowerArmour: false, counterAttack: true });
-  assert.deepEqual(defenceOutcome("success"), { hit: false, multiplier: 0, lowerArmour: false, counterAttack: false });
-  assert.deepEqual(defenceOutcome("failure"), { hit: true, multiplier: 1, lowerArmour: false, counterAttack: false });
-  assert.deepEqual(defenceOutcome("ruin"), { hit: true, multiplier: 2, lowerArmour: true, counterAttack: false });
+  assert.deepEqual(defenceOutcome("triumph"), { hit: false, multiplier: 0, lowerArmour: false });
+  assert.deepEqual(defenceOutcome("success"), { hit: false, multiplier: 0, lowerArmour: false });
+  assert.deepEqual(defenceOutcome("failure"), { hit: true, multiplier: 1, lowerArmour: false });
+  assert.deepEqual(defenceOutcome("ruin"), { hit: true, multiplier: 2, lowerArmour: true });
   assert.throws(() => defenceOutcome("great"), RangeError);
 });
 

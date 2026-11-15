@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/environment/people/commoner.webp",
   "system": {
-    "description": "You understand that humanity’s true power lies in cooperation and the shared shield. Once per round, when you hit a foe that an ally within 5' of you has attacked this round, you deal +2 damage.",
+    "description": "You understand that humanity's true power lies in cooperation and the shared shield. Once per round, when you hit a foe that an ally within 5' of you has attacked this round, you deal +2 damage.",
     "source": "ancestry",
     "belongsTo": "Human",
     "improving": false,

@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  NUMERALS, LIGHT_DICE, SUNRISE_DICE, START_MISERY, END_LEVEL, numeral, sunriseDie, isEnd,
+  NUMERALS, LIGHT_DICE, SUNRISE_DICE, END_LEVEL, numeral, sunriseDie, isEnd,
   cleanMisery, afterLightDie, miseryAfterDawn
 } from "../module/rules/misery.mjs";
 
@@ -28,8 +28,7 @@ test("numerals run I to VII", () => {
 });
 
 test("a new world has no Misery and the slowest die", () => {
-  assert.deepEqual(cleanMisery(undefined), { ...START_MISERY });
-  assert.equal(START_MISERY.light, "yearsOfPain");
+  assert.deepEqual(cleanMisery(undefined), { level: 0, omen: null, light: "yearsOfPain", sunless: false });
 });
 
 test("cleanMisery drops bad values", () => {

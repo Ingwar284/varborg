@@ -77,7 +77,7 @@ class SharedPanel extends HandlebarsApplicationMixin(ApplicationV2) {
 }
 
 /** The calendar: date, time of day, weather, Misery, New day and Rest (steps 37 to 39). */
-export class CalendarPanel extends SharedPanel {
+class CalendarPanel extends SharedPanel {
   static KEY = "calendar";
 
   static DEFAULT_OPTIONS = {

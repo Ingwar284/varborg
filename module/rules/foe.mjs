@@ -38,26 +38,10 @@ export function moraleChoices() {
 }
 
 /**
- * Is this a Morale the rules allow? A whole number from 2 to 11, or null for
- * "–" (unintelligent, fights to the death, or compelled by force).
- */
-export function isMorale(value) {
-  return value === null || (Number.isInteger(value) && value >= MORALE_MIN && value <= MORALE_MAX);
-}
-
-/**
  * A foe's max HP: a mook has 1 HP whatever its Bestiary entry says.
  * @param {number} max     The max HP written for the foe.
  * @param {boolean} mook   Whether this foe is a mook.
  */
 export function foeMaxHp(max, mook) {
   return mook ? MOOK_HP : max;
-}
-
-/**
- * How a foe's armour is written: "−d2", or "" for no armour. Foe armour is
- * subtracted from damage, hence the minus sign (rules 6, "Write it up").
- */
-export function formatFoeArmour(die) {
-  return die ? `−${die}` : "";
 }

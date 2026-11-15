@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/environment/people/infantry-armored.webp",
   "system": {
-    "description": "You strike with all the strength you have left. Make a melee attack. On a hit, deal an additional 2d10 damage and destroy the target’s armour, reducing it to none for the rest of the encounter. If the target is Prone or Restrained, the blow also deals maximum damage.",
+    "description": "You strike with all the strength you have left. Make a melee attack. On a hit, deal an additional 2d10 damage and destroy the target's armour, reducing it to none for the rest of the encounter. If the target is Prone or Restrained, the blow also deals maximum damage.",
     "source": "class",
     "belongsTo": "Warrior",
     "resource": "ember",

@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/environment/people/commoner.webp",
   "system": {
-    "description": "Compared to your companions’ exotic appearances, you hardly stand out. In a crowd or during the chaos of combat, foes will prioritise more exotic threats over you.",
+    "description": "Compared to your companions' exotic appearances, you hardly stand out. In a crowd or during the chaos of combat, foes will prioritise more exotic threats over you.",
     "source": "ancestry",
     "belongsTo": "Human",
     "improving": false,

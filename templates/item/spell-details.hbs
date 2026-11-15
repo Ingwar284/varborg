@@ -20,11 +20,11 @@
     {{#if isRitual}}
     <label data-tooltip="{{localize 'VARBORG.Spell.RitualDrHint'}}">
       <span>{{localize "VARBORG.Test.DR"}}</span>
-      <select name="system.ritualDr">{{selectOptions ritualDrs selected=system.ritualDr}}</select>
+      <select name="system.ritualDr">{{selectOptions ritualDrs selected=system.ritualDr localize=true}}</select>
     </label>
     <label data-tooltip="{{localize 'VARBORG.Spell.RitualTimeHint'}}">
       <span>{{localize "VARBORG.Spell.RitualTime"}}</span>
-      <input type="text" name="system.castingTime" value="{{system.castingTime}}" placeholder="10 minutes">
+      <input type="text" name="system.castingTime" value="{{system.castingTime}}" placeholder="{{localize 'VARBORG.Spell.RitualTimeExample'}}">
     </label>
     {{else}}
     <label data-tooltip="{{localize 'VARBORG.Power.CostHint'}}">
