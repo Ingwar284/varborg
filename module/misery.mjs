@@ -10,7 +10,7 @@
  * rises. One card shows it all. At VII the end card is posted and nothing
  * is rolled any more.
  *
- * The Calendar panel shows the Misery to everyone. The Dark Master's Set
+ * The Misery panel shows the Misery to everyone. The Dark Master's Set
  * Misery button picks the level, the omen (or rolls it), the light die,
  * and whether the sun rose.
  *
@@ -27,7 +27,7 @@ const { DialogV2 } = foundry.applications.api;
 const SYSTEM = "var-borg";
 const SETTING = "misery";
 
-/** The Misery setting. Changing it redraws the Calendar panel. */
+/** The Misery setting. Changing it redraws the Misery panel. */
 export function registerMisery(onChange) {
   game.settings.register(SYSTEM, SETTING, {
     scope: "world",
@@ -52,7 +52,7 @@ async function saveMisery(state) {
 /* -------------------------------------------- */
 
 /** "Misery II" or "No Misery yet". */
-function miseryName(level) {
+export function miseryName(level) {
   return level ? game.i18n.format("VARBORG.Misery.Name", { numeral: numeral(level) })
     : game.i18n.localize("VARBORG.Misery.None");
 }
@@ -74,7 +74,7 @@ function lightName(key) {
   });
 }
 
-/** The Misery part of the Calendar panel. */
+/** The Misery panel. */
 export function miseryContext() {
   const { level, omen, light, sunless } = currentMisery();
   return {

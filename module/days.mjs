@@ -80,6 +80,16 @@ export function livingCharacters() {
 }
 
 /**
+ * Dark Master only: set the day counter directly (Set date, GAPS 291).
+ * No new day happens: no food, sleep, wounds, weather or Misery.
+ * @param {number} day
+ */
+export async function setDayCounter(day) {
+  if (!game.user.isGM || !Number.isInteger(day) || day < FIRST_DAY) return;
+  await game.settings.set(SYSTEM, SETTING, day);
+}
+
+/**
  * Dark Master only: ask who ate and who slept, then start the next day.
  * @returns {Promise<boolean>}  Whether a new day began (false if the dialog was closed).
  */

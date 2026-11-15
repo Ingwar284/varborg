@@ -1,60 +1,125 @@
 <section class="var-borg-table-panel var-borg-calendar-panel">
   <div class="calendar-row">
-    <div class="calendar-date">
-      <span class="date-name">{{calendar.weekday}}, {{calendar.date}}</span>
-      <span class="day-number">{{localize "VARBORG.Day.Label" day=calendar.day}}</span>
-    </div>
-    <div class="calendar-time">
-      <span class="phase-name"><i class="{{calendar.phaseIcon}}"></i> {{calendar.phase}}</span>
-      <span class="clock">{{calendar.clock}}</span>
-    </div>
-    {{#if isGM}}
-      {{#if calendar.waiting}}
-        <p class="hint waiting">{{localize "VARBORG.Calendar.Waiting"}}</p>
-      {{/if}}
-      <div class="calendar-controls">
-        <button type="button" data-action="moveHours" data-hours="-1" {{#if calendar.atDawn}}disabled{{/if}}
-          data-tooltip="{{localize 'VARBORG.Calendar.HourBackTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.HourBackTooltip'}}">{{localize "VARBORG.Calendar.HourBack"}}</button>
-        <button type="button" data-action="moveHours" data-hours="1"
-          data-tooltip="{{localize 'VARBORG.Calendar.HourOnTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.HourOnTooltip'}}">{{localize "VARBORG.Calendar.HourOn"}}</button>
-        <button type="button" class="next-phase" data-action="nextPhase"
-          data-tooltip="{{localize 'VARBORG.Calendar.NextPhaseTooltip'}}"><i class="fa-solid fa-forward"></i> {{localize "VARBORG.Calendar.NextPhase"}}</button>
+    <div class="day-dial phase-{{calendar.phaseKey}}" style="--dial-turn: {{calendar.dialTurn}}"
+      role="img" aria-label="{{calendar.phase}}, {{calendar.clock}}">
+      <div class="dial-ring"></div>
+      <i class="fa-solid fa-sun dial-sun" aria-hidden="true"></i>
+      <i class="fa-solid fa-moon dial-moon" aria-hidden="true"></i>
+      {{#each calendar.dialMarks}}
+        <span class="dial-mark" style="--mark-turn: {{turn}}"></span>
+      {{/each}}
+      <span class="dial-hand"></span>
+      <div class="dial-face">
+        <span class="clock">{{calendar.clock}}</span>
+        <span class="phase-name"><i class="{{calendar.phaseIcon}}"></i> {{calendar.phase}}</span>
       </div>
+    </div>
+    <div class="calendar-side">
+      <div class="calendar-date">
+        <span class="date-name">{{calendar.weekday}}, {{calendar.date}}</span>
+        <span class="day-number">{{localize "VARBORG.Day.Label" day=calendar.day}}</span>
+        <span class="moon-line moon-{{calendar.moon.key}}">{{{calendar.moon.svg}}} {{calendar.moon.name}}</span>
+      </div>
+      {{#if isGM}}
+        {{#if calendar.waiting}}
+          <p class="hint waiting">{{localize "VARBORG.Calendar.Waiting"}}</p>
+        {{/if}}
+        <div class="calendar-controls">
+          <button type="button" data-action="moveMinutes" data-minutes="-60" {{#if calendar.atDawn}}disabled{{/if}}
+            data-tooltip="{{localize 'VARBORG.Calendar.HourBackTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.HourBackTooltip'}}">{{localize "VARBORG.Calendar.HourBack"}}</button>
+          <button type="button" data-action="moveMinutes" data-minutes="10"
+            data-tooltip="{{localize 'VARBORG.Calendar.TenMinutesTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.TenMinutesTooltip'}}">{{localize "VARBORG.Calendar.TenMinutes"}}</button>
+          <button type="button" data-action="moveMinutes" data-minutes="60"
+            data-tooltip="{{localize 'VARBORG.Calendar.HourOnTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.HourOnTooltip'}}">{{localize "VARBORG.Calendar.HourOn"}}</button>
+          <button type="button" data-action="nextDawn"
+            data-tooltip="{{localize 'VARBORG.Calendar.DayOnTooltip'}}" aria-label="{{localize 'VARBORG.Calendar.DayOnTooltip'}}">{{localize "VARBORG.Calendar.DayOn"}}</button>
+        </div>
+        <div class="calendar-controls">
+          <button type="button" class="next-phase" data-action="nextPhase"
+            data-tooltip="{{localize 'VARBORG.Calendar.NextPhaseTooltip'}}"><i class="fa-solid fa-forward"></i> {{localize "VARBORG.Calendar.NextPhase"}}</button>
+          <button type="button" class="next-phase" data-action="goTo"
+            data-tooltip="{{localize 'VARBORG.Calendar.GoToTooltip'}}"><i class="fa-solid fa-calendar-check"></i> {{localize "VARBORG.Calendar.GoToButton"}}</button>
+          <button type="button" class="next-phase" data-action="setDate"
+            data-tooltip="{{localize 'VARBORG.Calendar.SetDateTooltip'}}"><i class="fa-solid fa-calendar-day"></i> {{localize "VARBORG.Calendar.SetDateButton"}}</button>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+  <div class="month-grid">
+    <div class="month-head">
+      <button type="button" class="month-step" data-action="monthBack" {{#if month.atFirst}}disabled{{/if}}
+        data-tooltip="{{localize 'VARBORG.Calendar.MonthBack'}}" aria-label="{{localize 'VARBORG.Calendar.MonthBack'}}"><i class="fa-solid fa-chevron-left"></i></button>
+      <span class="month-title" aria-label="{{month.title}}">
+        <span class="month-name">{{month.monthName}}</span>
+        <span class="month-year">{{month.yearText}}</span>
+      </span>
+      <button type="button" class="month-step" data-action="monthOn"
+        data-tooltip="{{localize 'VARBORG.Calendar.MonthOn'}}" aria-label="{{localize 'VARBORG.Calendar.MonthOn'}}"><i class="fa-solid fa-chevron-right"></i></button>
+      <button type="button" class="month-today" data-action="showToday" {{#if month.onToday}}disabled{{/if}}
+        data-tooltip="{{localize 'VARBORG.Calendar.ShowTodayTooltip'}}">{{localize "VARBORG.Calendar.ShowToday"}}</button>
+    </div>
+    <div class="month-days" role="grid" aria-label="{{month.title}}">
+      <div class="month-week weekday-names" role="row">
+        {{#each month.weekdays}}
+          <span class="weekday-name" role="columnheader" data-tooltip="{{name}}" aria-label="{{name}}">{{short}}</span>
+        {{/each}}
+      </div>
+      {{#each month.weeks}}
+        <div class="month-week" role="row">
+          {{#each this}}
+            <button type="button" role="gridcell" class="month-day {{when}}{{#if selected}} selected{{/if}}"
+              data-action="selectDay" data-day="{{day}}" aria-label="{{label}}"
+              {{#if selected}}aria-selected="true"{{/if}}><span class="day-number-text">{{dayOfMonth}}</span>{{#if moon}}<span class="day-moon" data-tooltip="{{moon.name}}">{{{moon.svg}}}</span>{{/if}}{{#if weatherIcon}}<i class="{{weatherIcon}} day-weather" aria-hidden="true"></i>{{/if}}{{#if hasNote}}<span class="note-dot" aria-hidden="true"></span>{{/if}}</button>
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
+    <div class="month-selected">
+      <span class="selected-date">{{month.selected.date}}</span>
+      <span class="selected-when">{{month.selected.when}}</span>
+      <span class="selected-moon" data-tooltip="{{month.selected.moon.name}}">{{{month.selected.moon.svg}}}</span>
+      {{#if isGM}}
+        <button type="button" class="add-note" data-action="addNote"
+          data-tooltip="{{localize 'VARBORG.Calendar.NoteAddTooltip'}}"><i class="fa-solid fa-plus"></i> {{localize "VARBORG.Calendar.NoteAdd"}}</button>
+      {{/if}}
+    </div>
+    {{#if month.selected.log}}
+      <div class="day-log">
+        {{#if month.selected.log.weather}}
+          <span class="log-weather kind-{{month.selected.log.kind}}"><i class="fa-solid fa-cloud-sun-rain" aria-hidden="true"></i>
+            {{month.selected.log.weather}}{{#if month.selected.log.hazard}}: <strong>{{month.selected.log.hazard}}</strong>{{/if}}</span>
+        {{/if}}
+        <span class="log-misery"><i class="fa-solid fa-skull" aria-hidden="true"></i> {{month.selected.log.misery}}</span>
+      </div>
+    {{else}}
+      {{#unless month.selected.future}}
+        <p class="hint no-log">{{localize "VARBORG.Calendar.NoLog"}}</p>
+      {{/unless}}
     {{/if}}
-  </div>
-  {{#if weather.on}}
-  <div class="weather-row kind-{{weather.kind}}">
-    {{{weather.flower}}}
-    <div class="weather-text">
-      <span class="weather-label">{{localize "VARBORG.Weather.Label"}}</span>
-      <span class="weather-name">{{weather.name}}</span>
-      {{#if weather.hazard}}
-        <span class="weather-hazard" data-tooltip="{{weather.hazardEffect}}">
-          <i class="fa-solid fa-triangle-exclamation"></i> {{weather.hazard}}</span>
-      {{/if}}
-      {{#if isGM}}
-        <button type="button" class="set-weather" data-action="setWeather"
-          data-tooltip="{{localize 'VARBORG.Weather.SetTooltip'}}"><i class="fa-solid fa-cloud-sun-rain"></i> {{localize "VARBORG.Weather.Set"}}</button>
-      {{/if}}
-    </div>
-  </div>
-  {{/if}}
-  <div class="misery-row{{#if misery.end}} end{{/if}}">
-    <i class="fa-solid fa-skull misery-icon" aria-hidden="true"></i>
-    <div class="misery-text">
-      <span class="misery-label">{{localize "VARBORG.Misery.Label"}}</span>
-      <span class="misery-name">{{misery.name}}</span>
-      {{#if misery.omen}}<span class="misery-omen">{{misery.omen}}</span>{{/if}}
-      {{#if misery.sunless}}
-        <span class="misery-sunless"><i class="fa-solid fa-moon"></i> {{localize "VARBORG.Misery.NoSunToday"}}</span>
-      {{/if}}
-      {{#if misery.end}}<span class="misery-sunless">{{localize "VARBORG.Misery.EndTitle"}}</span>{{/if}}
-      {{#if isGM}}
-        <span class="misery-light">{{localize "VARBORG.Misery.LightIs" light=misery.light}}</span>
-        <button type="button" class="set-misery" data-action="setMisery"
-          data-tooltip="{{localize 'VARBORG.Misery.SetTooltip'}}"><i class="fa-solid fa-skull"></i> {{localize "VARBORG.Misery.Set"}}</button>
-      {{/if}}
-    </div>
+    {{#if month.selected.notes.length}}
+      <ul class="day-notes">
+        {{#each month.selected.notes}}
+          <li class="day-note{{#unless shown}} hidden-note{{/unless}}" data-note-id="{{id}}" data-note-day="{{day}}">
+            {{#if recurring}}<i class="fa-solid fa-repeat note-recurring" data-tooltip="{{localize 'VARBORG.Calendar.NoteRecurringTooltip'}}"
+              aria-label="{{localize 'VARBORG.Calendar.NoteRecurringTooltip'}}"></i>{{/if}}
+            <span class="note-text">{{text}}</span>
+            {{#if @root.isGM}}
+              <span class="note-controls">
+                <button type="button" data-action="toggleNote"
+                  data-tooltip="{{#if shown}}{{localize 'VARBORG.Calendar.NoteHide'}}{{else}}{{localize 'VARBORG.Calendar.NoteShow'}}{{/if}}"
+                  aria-label="{{#if shown}}{{localize 'VARBORG.Calendar.NoteHide'}}{{else}}{{localize 'VARBORG.Calendar.NoteShow'}}{{/if}}"><i class="fa-solid {{#if shown}}fa-eye{{else}}fa-eye-slash{{/if}}"></i></button>
+                <button type="button" data-action="editNote"
+                  data-tooltip="{{localize 'VARBORG.Calendar.NoteEdit'}}" aria-label="{{localize 'VARBORG.Calendar.NoteEdit'}}"><i class="fa-solid fa-pen"></i></button>
+                <button type="button" data-action="deleteNote"
+                  data-tooltip="{{localize 'VARBORG.Calendar.NoteDelete'}}" aria-label="{{localize 'VARBORG.Calendar.NoteDelete'}}"><i class="fa-solid fa-trash"></i></button>
+              </span>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p class="hint no-notes">{{localize "VARBORG.Calendar.NoNotes"}}</p>
+    {{/if}}
   </div>
   {{#if isGM}}
     <div class="day-row">
@@ -62,8 +127,6 @@
         data-tooltip="{{localize 'VARBORG.Day.NewDayTooltip'}}"><i class="fa-solid fa-sun"></i> {{localize "VARBORG.Day.NewDay"}}</button>
       <button type="button" class="new-day rest" data-action="rest"
         data-tooltip="{{localize 'VARBORG.Rest.Tooltip'}}"><i class="fa-solid fa-bed"></i> {{localize "VARBORG.Rest.Button"}}</button>
-      <button type="button" class="new-day travel" data-action="travel"
-        data-tooltip="{{localize 'VARBORG.Travel.Tooltip'}}"><i class="fa-solid fa-route"></i> {{localize "VARBORG.Travel.Button"}}</button>
     </div>
   {{/if}}
 </section>

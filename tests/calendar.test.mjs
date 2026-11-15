@@ -8,7 +8,8 @@ import assert from "node:assert/strict";
 import {
   SECONDS_PER_HOUR, SECONDS_PER_DAY, DAWN, NOON, DUSK, MONTHS, WEEKDAYS, DAYS_PER_MONTH, DAYS_PER_YEAR,
   dawnOf, dayAt, dateOfDay, clockAt, clockText, phaseAt, nextPhaseStart, clampToDay, newDaysBefore,
-  endsAfterHours, hoursLeft, hasEnded, CALENDAR_CONFIG
+  endsAfterHours, hoursLeft, hasEnded, CALENDAR_CONFIG, dayFraction, dayOfDate, timeOfDay, dateTimeAt, nextDawn,
+  monthGrid, shiftMonth, moonOn, moonPath, FULL_MOON_DAY
 } from "../module/rules/calendar.mjs";
 
 const H = SECONDS_PER_HOUR;
@@ -127,4 +128,103 @@ test("Foundry's calendar matches the rulings", () => {
   assert.equal(CALENDAR_CONFIG.days.hoursPerDay, 24);
   assert.equal(CALENDAR_CONFIG.years.firstWeekday, 0);
   assert.equal(CALENDAR_CONFIG.years.leapYear, null);
+});
+
+test("the day dial: how far through the clock's day", () => {
+  assert.equal(dayFraction(0), 0);
+  assert.equal(dayFraction(12 * H), 0.5);
+  assert.equal(dayFraction(3 * D + 18 * H), 0.75);
+  assert.throws(() => dayFraction(-1), RangeError);
+});
+
+test("the day number of a date", () => {
+  assert.equal(dayOfDate(1, 0, 1), 1);
+  assert.equal(dayOfDate(1, 1, 1), 31);
+  assert.equal(dayOfDate(1, 9, 30), 300);
+  assert.equal(dayOfDate(2, 0, 1), 301);
+  assert.throws(() => dayOfDate(0, 0, 1), RangeError);
+  assert.throws(() => dayOfDate(1, 10, 1), RangeError);
+  assert.throws(() => dayOfDate(1, 0, 31), RangeError);
+});
+
+test("a day and a time on the clock: hours before dawn end that day", () => {
+  assert.equal(timeOfDay(1, 6), dawnOf(1));
+  assert.equal(timeOfDay(1, 18, 30), 18 * H + 30 * 60);
+  // 03:00 of day 1 is the night after day 1, still day 1.
+  assert.equal(timeOfDay(1, 3), D + 3 * H);
+  assert.equal(dayAt(timeOfDay(1, 3)), 1);
+  assert.equal(dayAt(timeOfDay(5, 5, 59)), 5);
+  assert.throws(() => timeOfDay(1, 24), RangeError);
+  assert.throws(() => timeOfDay(1, 6, 60), RangeError);
+});
+
+test("the date and clock at a time is the reverse of timeOfDay", () => {
+  for (const [day, hour, minute] of [[1, 6, 0], [1, 2, 15], [301, 23, 59], [42, 0, 0]]) {
+    const at = dateTimeAt(timeOfDay(day, hour, minute));
+    assert.deepEqual([at.day, at.hour, at.minute], [day, hour, minute]);
+  }
+  const at = dateTimeAt(timeOfDay(31, 9));
+  assert.equal(at.month, "thawing");
+  assert.equal(at.dayOfMonth, 1);
+  // Before the first dawn it is still day 1.
+  assert.equal(dateTimeAt(0).day, 1);
+});
+
+test("+1 day goes on to the next dawn", () => {
+  assert.equal(nextDawn(0), dawnOf(1));
+  assert.equal(nextDawn(dawnOf(1)), dawnOf(2));
+  assert.equal(nextDawn(D + 3 * H), dawnOf(2));
+  assert.equal(nextDawn(dawnOf(2)), dawnOf(3));
+});
+
+test("the month grid: three weeks of ten days", () => {
+  const grid = monthGrid(1, 1, 35);
+  assert.equal(grid.length, 3);
+  assert.ok(grid.every(week => week.length === 10));
+  assert.deepEqual(grid[0][0], { day: 31, dayOfMonth: 1, when: "past" });
+  assert.equal(grid[0][4].when, "today");
+  assert.equal(grid[0][4].dayOfMonth, 5);
+  assert.equal(grid[2][9].day, 60);
+  assert.equal(grid[2][9].when, "future");
+  // Year 2 Dawning starts at day 301.
+  assert.equal(monthGrid(2, 0, 1)[0][0].day, 301);
+});
+
+test("browsing months rolls over the year, never before the first month", () => {
+  assert.deepEqual(shiftMonth({ year: 1, monthIndex: 9 }, 1), { year: 2, monthIndex: 0 });
+  assert.deepEqual(shiftMonth({ year: 2, monthIndex: 0 }, -1), { year: 1, monthIndex: 9 });
+  assert.deepEqual(shiftMonth({ year: 1, monthIndex: 0 }, -1), { year: 1, monthIndex: 0 });
+  assert.deepEqual(shiftMonth({ year: 1, monthIndex: 3 }, 10), { year: 2, monthIndex: 3 });
+});
+
+test("the moon: full on the 15th, new on the 30th, every month (GAPS 292)", () => {
+  assert.equal(FULL_MOON_DAY, 15);
+  assert.equal(moonOn(15).key, "full");
+  assert.equal(moonOn(15).lit, 1);
+  assert.equal(moonOn(30).key, "new");
+  assert.equal(moonOn(30).lit, 0);
+  assert.equal(moonOn(8).key, "firstQuarter");
+  assert.equal(moonOn(23).key, "lastQuarter");
+  assert.equal(moonOn(3).key, "waxingCrescent");
+  assert.equal(moonOn(12).key, "waxingGibbous");
+  assert.equal(moonOn(18).key, "waningGibbous");
+  assert.equal(moonOn(27).key, "waningCrescent");
+  assert.ok(moonOn(3).waxing && !moonOn(18).waxing && !moonOn(30).waxing);
+  // Every month the same, in every year.
+  assert.deepEqual(moonOn(45), moonOn(15));
+  assert.deepEqual(moonOn(315), moonOn(15));
+  assert.deepEqual(["new", "firstQuarter", "full", "lastQuarter"].map(key =>
+    Array.from({ length: 30 }, (_, i) => i + 1).filter(day => moonOn(day).key === key)), [[30], [8], [15], [23]]);
+  assert.ok(moonOn(15).principal && moonOn(8).principal && !moonOn(9).principal);
+});
+
+test("the moon's lit part: none at new moon, a crescent bulges the dark way", () => {
+  assert.equal(moonPath(moonOn(30)), "");
+  assert.match(moonPath(moonOn(15)), /^M0,-1A1,1 0 1 1/);
+  // Waxing crescent: lit edge on the right (sweep 1), back the same side (sweep 0).
+  assert.match(moonPath(moonOn(3)), /^M0,-1A1,1 0 0 1 0,1A[\d.]+,1 0 0 0 0,-1Z$/);
+  // Waning gibbous: lit edge on the left (sweep 0), bulge to the right (sweep 0).
+  assert.match(moonPath(moonOn(18)), /^M0,-1A1,1 0 0 0 0,1A[\d.]+,1 0 0 0 0,-1Z$/);
+  // Waning crescent: lit edge on the left, back the other way.
+  assert.match(moonPath(moonOn(27)), /^M0,-1A1,1 0 0 0 0,1A[\d.]+,1 0 0 1 0,-1Z$/);
 });

@@ -358,6 +358,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     context.system = system;
     // True when the character has the In Darkness marker, so the header shows a stamp.
     context.inDarkness = this.actor.statuses.has(IN_DARKNESS);
+    // Under the name in the header: ancestry, background and class,
+    // such as "Human · Soldier · Warrior".
+    context.lineage = ["ancestry", "background", "class"]
+      .map(type => actor.itemTypes[type]?.[0]?.name)
+      .filter(Boolean)
+      .join(" · ");
     // The box shows the score in use, such as "+3", with what is added on top
     // under it, such as "+1 Warrior" (GAPS 111). Clicking the box edits the
     // score as rolled, which is what is stored.

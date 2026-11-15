@@ -2,7 +2,7 @@
  * Overland travel in Foundry (step 40; Subsystem: Overland Travel;
  * GAPS 159, 160).
  *
- * The Dark Master's Travel button on the Calendar panel asks for the method
+ * The Dark Master's Travel button on the Misery panel asks for the method
  * (Trek, Gallop, Cruise) and the region (Heartlands, Hinterlands). The
  * party spends the rest of the current phase on the road: the clock moves
  * on to the next noon, dusk or dawn (at dawn the New day dialog opens

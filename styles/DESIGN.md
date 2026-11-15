@@ -21,7 +21,8 @@ No green anywhere, in either mood.
 ## 2. How the mood is expressed in CSS
 
 - `document.body` carries `data-vb-mood="light"` or `data-vb-mood="dark"`. It is set by `module/mood.mjs`; never write it in CSS or templates.
-- `document.body` also gets the attribute `data-vb-mood-ready` once Foundry is ready. Transitions are allowed only under `body[data-vb-mood-ready]`.
+- `document.body` also gets the attribute `data-vb-mood-ready` once Foundry is ready. Transitions are allowed only under `body[data-vb-mood-ready]`, except the mood's colour fade, which runs under `body.vb-mood-changing` (section 6.4).
+- For 1000 ms after a change, `document.body` carries the class `vb-mood-changing` (the colour fade, section 6.4), with or without reduced motion.
 - For 900 ms after a change, `document.body` carries the class `vb-mood-to-dark` or `vb-mood-to-light` (used by the flourish, section 8).
 - `tokens.css` has exactly three blocks, in this order:
   1. `:root { palette constants, font stacks, hex-flower and weather tokens, fixed shades and art tints, paper-prop rules and textures }`
@@ -34,6 +35,7 @@ No green anywhere, in either mood.
 - **Buttons: use the variables, not raw properties.** To restyle a button, set `--vb-btn-bg`, `--vb-btn-fg`, `--vb-btn-border` and, only if it must differ, `--vb-btn-hover-bg`, `--vb-btn-hover-fg`, `--vb-btn-hover-border` on the button's selector (base.css and cards.css pass them on to Foundry's `--button-*` variables, and Foundry applies the hover). Do not write a raw `background`, `color` or `border-color` on a button: it would beat Foundry's hover rule and the button would never react. Do not add a `button:hover` rule.
 - **Disabled buttons.** Foundry makes a disabled button's hover colours equal to its normal colours (it sets the `--button-hover-*` variables to the normal ones). base.css (sheets, dialogs, panels) and cards.css do exactly the same through the same variables: in the `:disabled` rule they set `--button-hover-background-color`, `--button-hover-text-color` and `--button-hover-border-color` to `--vb-btn-bg`, `--vb-btn-fg` and `--vb-btn-border`, plus `opacity: .45`. No raw colour is written on a disabled button. For the same reason a button whose text colour must differ (the minion "over the limit" button) sets `--vb-btn-fg`, never a raw `color`.
 - **Mood on windows.** `module/mood.mjs` swaps `theme-light` and `theme-dark` on every `.var-borg` window so Foundry's own controls match. Never write `.theme-dark` or `.theme-light` in our CSS; use `body[data-vb-mood="dark"]`.
+- **Night on the side panels.** From dusk to dawn on the world clock, `module/mood.mjs` gives the five table panels the class `vb-night` (and Foundry's `theme-dark`), whatever the screen's mood; "Always light" in the settings keeps them light. `tokens.css` declares the body block and the dark block on `.application.var-borg.vb-night` too, so that window alone takes every dark token, aliases included. A dark-only rule that must reach the panels at night is written for both: `body[data-vb-mood="dark"] .x, .application.var-borg.vb-night .x` (as the dark field rules in `base.css` are).
 
 ---
 
@@ -302,19 +304,11 @@ Colour hex values inside these data URIs are allowed only in `tokens.css`.
 
 ### 6.4 Mood transition
 
-Only under `body[data-vb-mood-ready]`, `transition: background-color 450ms ease, color 450ms ease, border-color 450ms ease;` on exactly these selectors:
+For 1000 ms after a real change (never at start-up), `module/mood.mjs` puts the class `vb-mood-changing` on `document.body`. While it is there, `base.css` gives every element (and its `::before` and `::after`) inside `.application.var-borg`, `.var-borg-card` and `#var-borg-ongoing` a 900 ms `!important` transition of its colours: background, text, border, outline, text decoration, box and text shadows, fill and stroke. The portrait sun (`.portrait-sun` and everything in it) is left out; it has its own longer fade in `sheets.css`.
 
-- `.application.var-borg .window-content`
-- `.application.var-borg .window-header`
-- `header.var-borg-sheet`
-- `nav.sheet-tabs`
-- `.var-borg-card`
-- `.var-borg-card > h3:first-child`
-- `#var-borg-ongoing .ongoing-inner`
+Write it once, in `base.css`. It is already there; do not copy it into another file, and do not add transitions anywhere else for the mood's colours.
 
-Write it once, in `base.css`, with the selectors prefixed by `body[data-vb-mood-ready]`. It is already there; do not copy it into another file, and do not add transitions anywhere else for the mood.
-
-Under `@media (prefers-reduced-motion: reduce)`, base.css sets `transition: none` on all of those selectors (already done). **The Gloom glow and the flourish are reduced-motion matters of `stage.css` only** (8.12); `base.css` does not mention them. Keep both existing reduced-motion queries in `stage.css` and add to them, do not replace them.
+A colour fade is not movement, so it runs even under `prefers-reduced-motion: reduce` (the designer's decision, 15 November 2026). **The Gloom glow and the flourish are reduced-motion matters of `stage.css` only** (8.12); `base.css` does not mention them. Keep both existing reduced-motion queries in `stage.css` and add to them, do not replace them.
 
 ---
 
@@ -511,7 +505,7 @@ The chat log is Foundry's sidebar, which has its own light or dark interface the
 5. The file still parses: braces and parentheses balanced, every declaration ends in `;`.
 6. Every dark-only rule is written `body[data-vb-mood="dark"] <selector>`.
 7. Every control you touched has a visible `:focus-visible` rule (6.3).
-8. Any new transition sits under `body[data-vb-mood-ready]` and has a `prefers-reduced-motion` off switch.
+8. Any new transition sits under `body[data-vb-mood-ready]` and has a `prefers-reduced-motion` off switch. (The mood's colour fade in section 6.4 is the one exception.)
 9. The comment header at the top of the file is updated, in British spelling, to say what the file now covers and that colours come from role tokens.
 10. You edited only the files your task names.
 11. You wrote no `button:hover` rule and no raw `background`, `color` or `border-color` on a button (section 2). Tick boxes use `accent-color: var(--vb-accent)`.

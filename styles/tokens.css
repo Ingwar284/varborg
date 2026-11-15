@@ -17,7 +17,12 @@
 
    Other stylesheets use role tokens such as var(--vb-text), never a colour
    written out. Contrast figures in the comments come from styles/DESIGN.md.
-   The mood itself is set by module/mood.mjs on the body element. */
+   The mood itself is set by module/mood.mjs on the body element.
+
+   Night on the side panels: a table panel at night carries the class
+   "vb-night" (module/mood.mjs). Blocks 2 and 3 are also declared on it, in
+   the same order, so that window alone takes the dark tokens, aliases
+   included, while the rest of the screen keeps its mood. */
 
 :root {
   /* ---- Palette constants (fixed; the same in both moods) ---- */
@@ -78,6 +83,7 @@
   --vb-paper-fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 10'%3E%3Cpath d='M13 0l5 5-5 5-5-5z' fill='%23141210'/%3E%3Ccircle cx='3.5' cy='5' r='1.6' fill='%23141210'/%3E%3Ccircle cx='22.5' cy='5' r='1.6' fill='%23141210'/%3E%3C/svg%3E");
 }
 
+.application.var-borg.vb-night,
 body {
   /* ---- Surfaces, text and lines (light mood) ---- */
   --vb-surface: #ece4d2;               /* page background. Contrast: n/a */
@@ -183,6 +189,7 @@ body {
   --vb-corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M10.5 0v10.5H0' fill='none' stroke='%23141210' stroke-width='1.5'/%3E%3Crect x='5.5' y='5' width='2.5' height='2.5' fill='%23141210'/%3E%3C/svg%3E");
 }
 
+.application.var-borg.vb-night,
 body[data-vb-mood="dark"] {
   /* ---- Dark mood: role tokens whose value changes ---- */
   --vb-surface: #161412;

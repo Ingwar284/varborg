@@ -8,7 +8,7 @@
  *
  * Weather: the Weather subsystem is optional (Dark Master's guide,
  * "Subsystems and optional rules"). With it off, no weather is rolled at a
- * new day or by travel, the Calendar panel shows no weather, and no hazard
+ * new day or by travel, the Weather panel shows no weather, and no hazard
  * has any effect (module/weather.mjs). The saved weather is kept, so
  * switching it back on carries on where it left off.
  *

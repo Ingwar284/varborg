@@ -1,10 +1,12 @@
 /**
- * The three shared table panels, each with its own button in the token
+ * The five shared table panels, each with its own button in the token
  * controls (the toolbar on the left):
- * - Calendar: the date, weekday, phase and hour, today's weather, the
- *   Misery, and the Dark Master's clock, New day, Rest, Travel, Set
- *   weather and Set Misery buttons (module/calendar.mjs, days.mjs,
- *   rest.mjs, travel.mjs, weather.mjs, misery.mjs).
+ * - Calendar & Time: the date, weekday, phase and hour, and the Dark
+ *   Master's clock, New day and Rest buttons (module/calendar.mjs,
+ *   days.mjs, rest.mjs).
+ * - Weather: today's weather and Set weather (module/weather.mjs).
+ * - Misery: the Misery, Set Misery and Travel (module/misery.mjs,
+ *   travel.mjs).
  * - Light: the light timer (module/light.mjs).
  * - Ember and Gloom: the pools and Reset ember abilities (module/pools.mjs).
  *
@@ -13,8 +15,7 @@
  * orb shows the light timer, with smaller orbs for the weather and the time
  * of day (module/torch.mjs).
  *
- * Everyone sees all three. Each user's open panels are remembered (a
- * client setting), and reopen when the world loads. All three start open.
+ * Everyone sees all five. They open only from their buttons and orbs.
  */
 
 import { POOL, COSTS, fillForRound, canPay, maySpend } from "./rules/pools.mjs";
@@ -24,8 +25,12 @@ import {
 import { resetEmberAbilities } from "./dice/power.mjs";
 import { resetVisitUses } from "./uses.mjs";
 import { registerDays, newDay } from "./days.mjs";
-import { registerCalendar, calendarContext, nextPhase, moveHours } from "./calendar.mjs";
+import {
+  registerCalendar, calendarContext, monthContext, otherMonth, nextPhase, moveMinutes, toNextDawn, goToDate, setDate
+} from "./calendar.mjs";
 import { rest } from "./rest.mjs";
+import { registerCalendarNotes, editNote, toggleNoteShown, deleteNote } from "./calendar-notes.mjs";
+import { registerDayLog, recordToday } from "./day-log.mjs";
 import { registerWeather, weatherContext, setWeatherByHand, currentWeather } from "./weather.mjs";
 import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
 import { travel } from "./travel.mjs";
@@ -36,9 +41,6 @@ import {
 } from "./light.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
-
-const SYSTEM = "var-borg";
-const OPEN_SETTING = "openPanels";
 
 /** Where the panels sit: their top edge, the leftmost spot, and the gap between two. */
 const PANEL_TOP = 70;
@@ -56,41 +58,46 @@ async function whileDisabled(button, work) {
 }
 
 /**
- * What the three panels share: the look, and remembering whether the
- * panel is open.
+ * What the three panels share: the look. The panels never open by
+ * themselves; only their buttons and orbs open them.
  */
 class SharedPanel extends HandlebarsApplicationMixin(ApplicationV2) {
-  /** The key in the openPanels setting. */
-  static KEY = "";
-
   static DEFAULT_OPTIONS = {
     classes: ["var-borg", "themed", "theme-light", "table-panel"],
     window: { resizable: false },
     position: { width: 280, top: PANEL_TOP }
   };
-
-  /** Closing with the window's ✕ (or the button) forgets the panel. */
-  _onClose(options) {
-    super._onClose(options);
-    rememberOpen(this.constructor.KEY, false);
-  }
 }
 
-/** The calendar: date, time of day, weather, Misery, New day and Rest (steps 37 to 39). */
+/** The calendar and the time of day, the month grid, New day and Rest (steps 32, 37). */
 class CalendarPanel extends SharedPanel {
-  static KEY = "calendar";
+
+  /** The month shown in the grid, or null for today's month. Each user browses on their own. */
+  #view = null;
+
+  /** The day chosen in the grid, or null for today. */
+  #selected = null;
 
   static DEFAULT_OPTIONS = {
     id: "var-borg-calendar-panel",
     window: { title: "VARBORG.Calendar.Title", icon: "fa-solid fa-calendar-days" },
+    position: { width: 470 },
     actions: {
+      monthBack: CalendarPanel.#onMonthBack,
+      monthOn: CalendarPanel.#onMonthOn,
+      showToday: CalendarPanel.#onShowToday,
+      selectDay: CalendarPanel.#onSelectDay,
+      addNote: CalendarPanel.#onAddNote,
+      editNote: CalendarPanel.#onEditNote,
+      toggleNote: CalendarPanel.#onToggleNote,
+      deleteNote: CalendarPanel.#onDeleteNote,
       newDay: CalendarPanel.#onNewDay,
       rest: CalendarPanel.#onRest,
       nextPhase: CalendarPanel.#onNextPhase,
-      moveHours: CalendarPanel.#onMoveHours,
-      setWeather: CalendarPanel.#onSetWeather,
-      setMisery: CalendarPanel.#onSetMisery,
-      travel: CalendarPanel.#onTravel
+      moveMinutes: CalendarPanel.#onMoveMinutes,
+      nextDawn: CalendarPanel.#onNextDawn,
+      goTo: CalendarPanel.#onGoTo,
+      setDate: CalendarPanel.#onSetDate
     }
   };
 
@@ -99,7 +106,77 @@ class CalendarPanel extends SharedPanel {
   };
 
   async _prepareContext(options) {
-    return { calendar: calendarContext(), weather: weatherContext(), misery: miseryContext(), isGM: game.user.isGM };
+    return { calendar: calendarContext(), month: monthContext(this.#view, this.#selected), isGM: game.user.isGM };
+  }
+
+  /** The month grid: the month before. */
+  static #onMonthBack() {
+    this.#view = otherMonth(this.#view, -1);
+    this.render();
+  }
+
+  /** The month grid: the month after. */
+  static #onMonthOn() {
+    this.#view = otherMonth(this.#view, 1);
+    this.render();
+  }
+
+  /** The month grid: back to today. */
+  static #onShowToday() {
+    this.#view = null;
+    this.#selected = null;
+    this.render();
+  }
+
+  /** The month grid: choose a day to see what it holds. */
+  static #onSelectDay(event, target) {
+    const day = Number(target.dataset.day);
+    this.#selected = day;
+    // Keep the grid on the chosen day's month.
+    const { selected } = monthContext(this.#view, day);
+    this.#view = { year: selected.year, monthIndex: selected.monthIndex };
+    this.render();
+  }
+
+  /** The day chosen in the grid (today if none). */
+  get #pickedDay() {
+    return monthContext(this.#view, this.#selected).selected.day;
+  }
+
+  /**
+   * The note a button belongs to: its id, and the day it is kept under (a
+   * recurring note seen in a later year is kept under the day it was written).
+   */
+  static #noteOf(button) {
+    const row = button.closest("[data-note-id]");
+    return { day: Number(row?.dataset.noteDay), id: row?.dataset.noteId };
+  }
+
+  /** Dark Master only: write a note on the chosen day. */
+  static async #onAddNote(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, () => editNote(this.#pickedDay));
+  }
+
+  /** Dark Master only: change a note. */
+  static async #onEditNote(event, button) {
+    if (!game.user.isGM) return;
+    const { day, id } = CalendarPanel.#noteOf(button);
+    await editNote(day, id);
+  }
+
+  /** Dark Master only: show a note to players, or hide it. */
+  static async #onToggleNote(event, button) {
+    if (!game.user.isGM) return;
+    const { day, id } = CalendarPanel.#noteOf(button);
+    await toggleNoteShown(day, id);
+  }
+
+  /** Dark Master only: delete a note. */
+  static async #onDeleteNote(event, button) {
+    if (!game.user.isGM) return;
+    const { day, id } = CalendarPanel.#noteOf(button);
+    await deleteNote(day, id);
   }
 
   /** Dark Master only: ask who ate, then start the next day (rules 3.16). */
@@ -120,25 +197,84 @@ class CalendarPanel extends SharedPanel {
     await whileDisabled(button, nextPhase);
   }
 
-  /** Dark Master only: the clock one hour on or back. */
-  static async #onMoveHours(event, button) {
+  /** Dark Master only: the clock some minutes on or back (−1 h, +10 min, +1 h). */
+  static async #onMoveMinutes(event, button) {
     if (!game.user.isGM) return;
-    await whileDisabled(button, () => moveHours(Number(button.dataset.hours)));
+    await whileDisabled(button, () => moveMinutes(Number(button.dataset.minutes)));
   }
 
-  /** Dark Master only: pick today's weather on the hex flower (step 38). */
+  /** Dark Master only: +1 day, on to the next dawn. */
+  static async #onNextDawn(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, toNextDawn);
+  }
+
+  /** Dark Master only: set the date and time straight, with no new day. */
+  static async #onSetDate(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, setDate);
+  }
+
+  /** Dark Master only: go to a date and time typed in. */
+  static async #onGoTo(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, goToDate);
+  }
+}
+
+/** Today's weather on the hex flower (step 38). */
+class WeatherPanel extends SharedPanel {
+
+  static DEFAULT_OPTIONS = {
+    id: "var-borg-weather-panel",
+    window: { title: "VARBORG.Weather.Title", icon: "fa-solid fa-cloud-sun-rain" },
+    actions: {
+      setWeather: WeatherPanel.#onSetWeather
+    }
+  };
+
+  static PARTS = {
+    main: { template: "systems/var-borg/templates/apps/weather-panel.hbs" }
+  };
+
+  async _prepareContext(options) {
+    return { weather: weatherContext(), isGM: game.user.isGM };
+  }
+
+  /** Dark Master only: pick today's weather on the hex flower. */
   static async #onSetWeather(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, setWeatherByHand);
   }
+}
 
-  /** Dark Master only: set the Misery by hand (step 39). */
+/** The Misery and overland travel (steps 39, 40). */
+class MiseryPanel extends SharedPanel {
+
+  static DEFAULT_OPTIONS = {
+    id: "var-borg-misery-panel",
+    window: { title: "VARBORG.Misery.Title", icon: "fa-solid fa-skull" },
+    actions: {
+      setMisery: MiseryPanel.#onSetMisery,
+      travel: MiseryPanel.#onTravel
+    }
+  };
+
+  static PARTS = {
+    main: { template: "systems/var-borg/templates/apps/misery-panel.hbs" }
+  };
+
+  async _prepareContext(options) {
+    return { misery: miseryContext(), isGM: game.user.isGM };
+  }
+
+  /** Dark Master only: set the Misery by hand. */
   static async #onSetMisery(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, setMiseryByHand);
   }
 
-  /** Dark Master only: travel for a phase and roll the encounter table (step 40). */
+  /** Dark Master only: travel for a phase and roll the encounter table. */
   static async #onTravel(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, travel);
@@ -147,7 +283,6 @@ class CalendarPanel extends SharedPanel {
 
 /** The light timer (rules 3.15, step 35). */
 export class LightPanel extends SharedPanel {
-  static KEY = "light";
 
   static DEFAULT_OPTIONS = {
     id: "var-borg-light-panel",
@@ -193,7 +328,6 @@ export class LightPanel extends SharedPanel {
 
 /** The Ember and Gloom pools (rules 3.10, step 26). */
 export class PoolsPanel extends SharedPanel {
-  static KEY = "pools";
 
   static DEFAULT_OPTIONS = {
     id: "var-borg-pools-panel",
@@ -264,25 +398,23 @@ export class PoolsPanel extends SharedPanel {
   }
 }
 
-/** The three panels, by key. */
-const PANELS = { calendar: CalendarPanel, light: LightPanel, pools: PoolsPanel };
+/** The five panels, by key. */
+const PANELS = {
+  calendar: CalendarPanel, weather: WeatherPanel, misery: MiseryPanel, light: LightPanel, pools: PoolsPanel
+};
 
 /** The toolbar buttons: name, tooltip and icon. */
 const BUTTONS = [
   { key: "calendar", name: "varBorgCalendar", title: "VARBORG.Calendar.Open", icon: "fa-solid fa-calendar-days" },
+  { key: "weather", name: "varBorgWeather", title: "VARBORG.Weather.Open", icon: "fa-solid fa-cloud-sun-rain" },
+  { key: "misery", name: "varBorgMisery", title: "VARBORG.Misery.Open", icon: "fa-solid fa-skull" },
   { key: "light", name: "varBorgLight", title: "VARBORG.Light.Open", icon: "fa-solid fa-fire-flame-curved" },
   { key: "pools", name: "varBorgTable", title: "VARBORG.Pools.Open", icon: "fa-solid fa-fire" }
 ];
 
 /** Hook up the panels, the settings they show and their buttons. */
 export function registerPanels() {
-  game.settings.register(SYSTEM, OPEN_SETTING, {
-    scope: "client",
-    config: false,
-    type: Object,
-    default: { calendar: true, light: true, pools: true }
-  });
-  // The calendar panel, and the weather and time-of-day orbs beside the light orb.
+  // The calendar panel, and the time-of-day orb beside the light orb.
   const refreshCalendar = () => {
     refresh(CalendarPanel);
     refreshTorch();
@@ -294,7 +426,8 @@ export function registerPanels() {
   };
   registerTorch({
     openLight: () => openIfClosed("light"),
-    openCalendar: () => openIfClosed("calendar")
+    openCalendar: () => openIfClosed("calendar"),
+    openWeather: () => openIfClosed("weather")
   });
   // The panel and the sun and moon orbs at the top of the screen (module/pool-orbs.mjs).
   const refreshPools = () => {
@@ -307,39 +440,40 @@ export function registerPanels() {
   registerPools(refreshPools);
   for (const hook of ["createCombat", "updateCombat", "deleteCombat"]) Hooks.on(hook, refreshPools);
   // The day counter (module/days.mjs) and the world clock (module/calendar.mjs).
-  registerDays(refreshCalendar);
+  // A new day also starts its entry in the day log (module/day-log.mjs).
+  registerDays(() => {
+    refreshCalendar();
+    recordToday();
+  });
   registerCalendar(refreshCalendar);
-  // Today's weather on the hex flower (module/weather.mjs).
+  registerDayLog(() => refresh(CalendarPanel));
+  // Notes on calendar days (module/calendar-notes.mjs).
+  registerCalendarNotes(() => refresh(CalendarPanel));
+  // Today's weather on the hex flower (module/weather.mjs), and the weather orb.
   // A change of weather can change the pools (Day of ember, Day of gloom)
   // and the light (Blackburn) too (step 41).
   registerWeather(() => {
-    refreshCalendar();
+    refresh(WeatherPanel);
+    recordToday();
+    refreshTorch();
     refreshPools();
     refreshLight();
     weatherChangedLight();
   });
   // The Misery (module/misery.mjs).
-  registerMisery(refreshCalendar);
+  registerMisery(() => {
+    refresh(MiseryPanel);
+    recordToday();
+  });
   // The light timer (module/light.mjs).
   registerLight(refreshLight);
 
   Hooks.on("getSceneControlButtons", addPanelButtons);
-  Hooks.once("ready", openRemembered);
 }
 
 /** Redraw a panel if it is open. */
 function refresh(Panel) {
   foundry.applications.instances.get(Panel.DEFAULT_OPTIONS.id)?.render();
-}
-
-/** Which panels this user has open. */
-function openPanels() {
-  return { calendar: true, light: true, pools: true, ...game.settings.get(SYSTEM, OPEN_SETTING) };
-}
-
-function rememberOpen(key, open) {
-  if (!game.ready || openPanels()[key] === open) return;
-  game.settings.set(SYSTEM, OPEN_SETTING, { ...openPanels(), [key]: open });
 }
 
 /**
@@ -368,14 +502,6 @@ function openPanel(Panel) {
   return new Panel({ position: { top: PANEL_TOP, left: freeLeft(Panel) } }).render({ force: true });
 }
 
-/** When the world loads: open the panels this user had open, side by side. */
-async function openRemembered() {
-  const open = openPanels();
-  for (const [key, Panel] of Object.entries(PANELS)) {
-    if (open[key]) await openPanel(Panel);
-  }
-}
-
 /** Open a panel unless it is already open. */
 function openIfClosed(key) {
   if (!foundry.applications.instances.get(PANELS[key].DEFAULT_OPTIONS.id)) togglePanel(key);
@@ -389,7 +515,6 @@ function togglePanel(key) {
     app.close();
     return;
   }
-  rememberOpen(key, true);
   openPanel(Panel);
 }
 

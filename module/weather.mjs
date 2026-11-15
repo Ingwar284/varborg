@@ -9,7 +9,7 @@
  * d10 and the card shows the event. The event lasts until the next day
  * begins, when the next move replaces it.
  *
- * The Calendar panel shows today's weather and a small hex flower to
+ * The Weather panel shows today's weather and a small hex flower to
  * everyone. The Dark Master's Set weather button picks a hex (and a hazard
  * event, or rolls one) by hand.
  *
@@ -42,7 +42,7 @@ const { DialogV2 } = foundry.applications.api;
 const SYSTEM = "var-borg";
 const SETTING = "weather";
 
-/** The weather setting. Changing it redraws the Calendar panel. */
+/** The weather setting. Changing it redraws the Weather panel. */
 export function registerWeather(onChange) {
   game.settings.register(SYSTEM, SETTING, {
     scope: "world",
@@ -73,11 +73,11 @@ async function saveWeather(hex, hazard) {
 /* -------------------------------------------- */
 
 /** "Clear sky": the weather of a hex. */
-function hexName(id) {
+export function hexName(id) {
   return game.i18n.localize(`VARBORG.Weather.Kind.${hexById(id).kind}`);
 }
 
-function hazardName(hazard) {
+export function hazardName(hazard) {
   return game.i18n.localize(`VARBORG.Weather.Hazard.${hazard}.Name`);
 }
 
@@ -119,7 +119,7 @@ export function flowerHTML(current, { pick = false, labels = false } = {}) {
   return `<div class="var-borg-hex-flower${pick ? " pick" : ""}">${hexes}</div>`;
 }
 
-/** The weather part of the Calendar panel. */
+/** The Weather panel. */
 export function weatherContext() {
   const { hex, hazard } = currentWeather();
   return {

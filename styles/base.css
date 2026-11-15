@@ -266,11 +266,13 @@
    itself, so they must be set on the control itself too (not on the window).
    The light mood is left exactly as Foundry draws it. Sliders are left alone:
    their track is drawn from the field colour. */
-body[data-vb-mood="dark"] .application.var-borg {
+body[data-vb-mood="dark"] .application.var-borg,
+.application.var-borg.vb-night {
   --color-select-option-bg: var(--vb-surface-raised);
 }
 
-body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea) {
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea),
+.application.var-borg.vb-night :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea) {
   --input-background-color: transparent;
   --input-border-color: var(--vb-line);
   --input-text-color: var(--vb-text);
@@ -278,49 +280,52 @@ body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[ty
   --input-placeholder-color: var(--vb-text-faint);
 }
 
-body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea):is(:disabled, [readonly]) {
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea):is(:disabled, [readonly]),
+.application.var-borg.vb-night :is(input[type="text"], input[type="number"], input[type="search"], input[type="password"], select, textarea):is(:disabled, [readonly]) {
   --input-background-color: var(--vb-surface-raised);
   --input-border-color: var(--vb-line-soft);
   --input-text-color: var(--vb-text-soft);
 }
 
-body[data-vb-mood="dark"] .application.var-borg :is(input[type="checkbox"], input[type="radio"]) {
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="checkbox"], input[type="radio"]),
+.application.var-borg.vb-night :is(input[type="checkbox"], input[type="radio"]) {
   --checkbox-background-color: var(--vb-line);
   --checkbox-checked-color: var(--vb-accent);
   --checkbox-checkmark-color: var(--vb-on-accent);
   --input-focus-outline-color: var(--vb-focus);
 }
 
-body[data-vb-mood="dark"] .application.var-borg :is(input[type="checkbox"], input[type="radio"]):is(:disabled, [readonly]) {
+body[data-vb-mood="dark"] .application.var-borg :is(input[type="checkbox"], input[type="radio"]):is(:disabled, [readonly]),
+.application.var-borg.vb-night :is(input[type="checkbox"], input[type="radio"]):is(:disabled, [readonly]) {
   --checkbox-background-color: var(--vb-line-strong);
   --checkbox-checked-color: var(--vb-line-strong);
   --checkbox-checkmark-color: var(--vb-surface);
 }
 
 /* ---------- Mood transitions ----------
-   When the interface mood changes, these surfaces fade their colours over
-   450 ms. They fade only once Foundry is ready (body[data-vb-mood-ready]), so
-   the first paint does not fade in. Nothing else fades for the mood. */
-body[data-vb-mood-ready] .application.var-borg .window-content,
-body[data-vb-mood-ready] .application.var-borg .window-header,
-body[data-vb-mood-ready] header.var-borg-sheet,
-body[data-vb-mood-ready] nav.sheet-tabs,
-body[data-vb-mood-ready] .var-borg-card,
-body[data-vb-mood-ready] .var-borg-card > h3:first-child,
-body[data-vb-mood-ready] #var-borg-ongoing .ongoing-inner {
-  transition: background-color 450ms ease, color 450ms ease, border-color 450ms ease;
-}
-
-/* People who ask their system for less motion get no mood fades. (The Gloom
-   glow and the mood flourish are in stage.css, which switches them off too.) */
-@media (prefers-reduced-motion: reduce) {
-  body[data-vb-mood-ready] .application.var-borg .window-content,
-  body[data-vb-mood-ready] .application.var-borg .window-header,
-  body[data-vb-mood-ready] header.var-borg-sheet,
-  body[data-vb-mood-ready] nav.sheet-tabs,
-  body[data-vb-mood-ready] .var-borg-card,
-  body[data-vb-mood-ready] .var-borg-card > h3:first-child,
-  body[data-vb-mood-ready] #var-borg-ongoing .ongoing-inner {
-    transition: none;
-  }
+   When the interface mood changes, every colour in the VÅR BORG windows, chat
+   cards and the ongoing panel fades over 900 ms: backgrounds, text, borders,
+   lines, shadows and drawn shapes. module/mood.mjs puts the class
+   vb-mood-changing on the body for the length of the fade only (never at
+   start-up), so hovers and other small transitions are untouched the rest of
+   the time. !important lets the fade win over those small transitions while
+   it runs. The portrait sun has its own, longer fade (sheets.css), so it is
+   left out.
+   A colour fade is not movement, so it also runs for people who ask their
+   system for less motion. (The flourish is a different matter: stage.css
+   switches it off for them.) */
+body.vb-mood-changing :is(.application.var-borg, .var-borg-card, #var-borg-ongoing),
+body.vb-mood-changing :is(.application.var-borg, .var-borg-card, #var-borg-ongoing) *:not(.portrait-sun *),
+body.vb-mood-changing :is(.application.var-borg, .var-borg-card, #var-borg-ongoing) *:not(.portrait-sun *)::before,
+body.vb-mood-changing :is(.application.var-borg, .var-borg-card, #var-borg-ongoing) *:not(.portrait-sun *)::after {
+  transition:
+    background-color 900ms ease,
+    color 900ms ease,
+    border-color 900ms ease,
+    outline-color 900ms ease,
+    text-decoration-color 900ms ease,
+    box-shadow 900ms ease,
+    text-shadow 900ms ease,
+    fill 900ms ease,
+    stroke 900ms ease !important;
 }

@@ -44,15 +44,91 @@
   color: var(--vb-band-text);
 }
 
-.var-borg.character .sheet-header .portrait {
+/* The portrait is the disc of a sun, like the Ember orb: twelve etched rays
+   turn slowly behind a round portrait. In the dark mood the sun becomes a
+   crescent moon with stars. The turn is so slow that it runs even when the
+   computer asks for reduced motion (the user asked for it). */
+.var-borg.character .sheet-header .portrait-sun {
+  position: relative;
   flex: 0 0 auto;
-  width: 84px;
-  height: 84px;
-  margin: 4px;
-  border: 2px solid var(--vb-band-text);
-  outline: 1px solid var(--vb-band-text);
-  outline-offset: 3px;
+  width: 128px;
+  height: 128px;
+  margin: -10px 0;                   /* the rays may reach into the band's padding */
+  filter: drop-shadow(var(--vb-shadow-soft));
+}
+.var-borg.character .sheet-header .portrait-sun__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.var-borg.character .sheet-header .portrait-sun__rays {
+  fill: var(--vb-orange);
+  stroke: var(--vb-ink);
+  transform-origin: 50px 50px;
+  animation: vb-portrait-sun-turn 60s linear infinite;
+  transition: opacity 1.2s ease;
+}
+.var-borg.character .sheet-header .portrait-sun .portrait {
+  transition: border-color 1.2s ease, box-shadow 1.2s ease;
+  position: absolute;
+  inset: 19px;                       /* a 90px disc in the middle of the rays */
+  width: 90px;
+  height: 90px;
+  margin: 0;
+  object-fit: cover;
+  border: 3px solid var(--vb-orange);
+  border-radius: 50%;
+  outline: 2px solid var(--vb-ink);
+  outline-offset: 0;
   background: var(--vb-surface-raised) var(--vb-crosshatch);
+  box-shadow: inset 0 0 0 1px var(--vb-yellow);
+}
+/* The moon: in the light mood it is faded out and tipped back below the
+   left edge, so a change of mood lets it rise into place as the rays fade. */
+.var-borg.character .sheet-header .portrait-sun__moon {
+  opacity: 0;
+  transform-origin: 50px 50px;
+  transform: rotate(-35deg);
+  transition: opacity 1.2s ease, transform 1.4s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+.var-borg.character .sheet-header .portrait-sun__crescent {
+  fill: var(--vb-paper);
+  stroke: var(--vb-ink);
+}
+.var-borg.character .sheet-header .portrait-sun__crescent-line { stroke: var(--vb-ink); }
+.var-borg.character .sheet-header .portrait-sun__stars {
+  fill: var(--vb-yellow);
+  transform-box: fill-box;
+}
+/* Dark mood: rays out, moon in, a pale rim on the portrait, and a slow breath
+   of moonlight like the Gloom orb. */
+body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__rays { opacity: 0; }
+body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__moon {
+  opacity: 1;
+  transform: none;
+}
+body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun .portrait {
+  border-color: var(--vb-paper-shade);
+  box-shadow: inset 0 0 0 1px var(--vb-paper);
+}
+body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__moon {
+  animation: vb-portrait-moon-glow 6s ease-in-out infinite;
+}
+body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__stars {
+  animation: vb-portrait-star-twinkle 3.5s ease-in-out infinite;
+}
+@keyframes vb-portrait-sun-turn {
+  to { transform: rotate(360deg); }
+}
+@keyframes vb-portrait-moon-glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.15) drop-shadow(0 0 3px var(--vb-paper)); }
+}
+@keyframes vb-portrait-star-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
 }
 
 .application.var-borg.character .sheet-header .actor-name {
@@ -84,6 +160,41 @@
   box-shadow: none;
   background: transparent;
   border-bottom-color: var(--vb-band-hover);
+}
+
+/* The name stays centred beside the portrait; ancestry, background and class
+   sit in small capitals along the bottom edge of the portrait. */
+.var-borg.character .sheet-header .name-block {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.application.var-borg.character .sheet-header .name-block .actor-name {
+  flex: none;
+  width: 100%;
+}
+
+.var-borg.character .sheet-header .actor-lineage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  padding: 0 0.2rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1;
+  color: var(--vb-band-text);
+  font-family: var(--vb-font-head);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  font-variant: small-caps;
+  opacity: 0.85;
 }
 
 /* The In Darkness stamp: a small boxed label at the top right of the header band.

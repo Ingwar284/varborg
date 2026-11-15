@@ -1,7 +1,39 @@
 <header class="var-borg-sheet">
   <div class="sheet-header">
-    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
-    <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+    <div class="portrait-sun">
+      <svg class="portrait-sun__art" viewBox="0 0 100 100" aria-hidden="true">
+        {{!-- Light mood: twelve etched rays, long and short, that turn slowly. --}}
+        <g class="portrait-sun__rays" stroke-width="1.2">
+          <path d="M50 2 L54.5 17 L45.5 17 Z"/>
+          <path d="M50 8 L54.5 17 L45.5 17 Z" transform="rotate(30 50 50)"/>
+          <path d="M50 2 L54.5 17 L45.5 17 Z" transform="rotate(60 50 50)"/>
+          <path d="M50 8 L54.5 17 L45.5 17 Z" transform="rotate(90 50 50)"/>
+          <path d="M50 2 L54.5 17 L45.5 17 Z" transform="rotate(120 50 50)"/>
+          <path d="M50 8 L54.5 17 L45.5 17 Z" transform="rotate(150 50 50)"/>
+          <path d="M50 2 L54.5 17 L45.5 17 Z" transform="rotate(180 50 50)"/>
+          <path d="M50 8 L54.5 17 L45.5 17 Z" transform="rotate(210 50 50)"/>
+          <path d="M50 2 L54.5 17 L45.5 17 Z" transform="rotate(240 50 50)"/>
+          <path d="M50 8 L54.5 17 L45.5 17 Z" transform="rotate(270 50 50)"/>
+          <path d="M50 2 L54.5 17 L45.5 17 Z" transform="rotate(300 50 50)"/>
+          <path d="M50 8 L54.5 17 L45.5 17 Z" transform="rotate(330 50 50)"/>
+        </g>
+        {{!-- Dark mood: a crescent moon hugging the portrait, and three stars. --}}
+        <g class="portrait-sun__moon">
+          <path class="portrait-sun__crescent" d="M50 3 A47 47 0 0 0 50 97 A30 47 0 0 1 50 3 Z" stroke-width="1.2"/>
+          <path class="portrait-sun__crescent-line" d="M42 8 A40 42 0 0 0 42 92" fill="none" stroke-width="0.6" stroke-dasharray="1.5 2.5"/>
+          <g class="portrait-sun__stars">
+            <path d="M86 10l1.6 3.9 3.9 1.6-3.9 1.6-1.6 3.9-1.6-3.9-3.9-1.6 3.9-1.6z"/>
+            <path d="M93 70l1.1 2.7 2.7 1.1-2.7 1.1-1.1 2.7-1.1-2.7-2.7-1.1 2.7-1.1z"/>
+            <circle cx="82" cy="92" r="1.4"/>
+          </g>
+        </g>
+      </svg>
+      <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img">
+    </div>
+    <div class="name-block">
+      <input class="actor-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'VARBORG.Sheet.Name'}}">
+      {{#if lineage}}<div class="actor-lineage">{{lineage}}</div>{{/if}}
+    </div>
     {{#if inDarkness}}<span class="vb-dark-stamp">{{localize "VARBORG.Condition.inDarkness"}}</span>{{/if}}
   </div>
 </header>

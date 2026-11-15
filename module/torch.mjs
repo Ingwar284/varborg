@@ -26,7 +26,7 @@ import { weatherContext } from "./weather.mjs";
 const ID = "var-borg-torch";
 
 /** A Font Awesome icon for each kind of hex on the weather flower. */
-const WEATHER_ICONS = {
+export const WEATHER_ICONS = {
   perfectDay: "fa-solid fa-sun",
   clearSky: "fa-solid fa-cloud-sun",
   clouded: "fa-solid fa-cloud",
@@ -73,7 +73,7 @@ function lightSvg() {
 }
 
 /** Make the orbs once. */
-function build({ openLight, openCalendar }) {
+function build({ openLight, openCalendar, openWeather }) {
   const root = document.createElement("div");
   root.id = ID;
   root.className = "vb-light";
@@ -91,7 +91,7 @@ function build({ openLight, openCalendar }) {
       </span>
     </div>`;
   root.querySelector(".vb-light__orb").addEventListener("click", openLight);
-  root.querySelector(".vb-light__weather").addEventListener("click", openCalendar);
+  root.querySelector(".vb-light__weather").addEventListener("click", openWeather);
   root.querySelector(".vb-light__phase").addEventListener("click", openCalendar);
   // In the column left of Foundry's sidebar, so it moves with the sidebar.
   const column = document.getElementById("ui-right-column-1");
@@ -144,7 +144,7 @@ export function refreshTorch() {
 
 /**
  * Hook up the orbs.
- * @param {{openLight: Function, openCalendar: Function}} open  Open the Light and Calendar panels.
+ * @param {{openLight: Function, openCalendar: Function, openWeather: Function}} open  Open the Light, Calendar and Weather panels.
  */
 export function registerTorch(open) {
   Hooks.once("ready", () => {
