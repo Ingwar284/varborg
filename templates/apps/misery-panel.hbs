@@ -5,14 +5,28 @@
       <span class="misery-label">{{localize "VARBORG.Misery.Label"}}</span>
       <span class="misery-name">{{misery.name}}</span>
       {{#if misery.omen}}<span class="misery-omen">{{misery.omen}}</span>{{/if}}
+      {{#if misery.omensMode}}
+        {{#if misery.tracks.length}}
+          <ul class="misery-tracks">
+            {{#each misery.tracks}}
+              <li class="{{#if done}}done{{/if}}"><span>{{title}}</span><span class="misery-count">{{count}}</span></li>
+            {{/each}}
+          </ul>
+        {{/if}}
+        {{#if misery.next}}<span class="misery-omen">{{misery.next}}</span>{{/if}}
+      {{/if}}
       {{#if misery.sunless}}
         <span class="misery-sunless"><i class="fa-solid fa-moon"></i> {{localize "VARBORG.Misery.NoSunToday"}}</span>
       {{/if}}
       {{#if misery.end}}<span class="misery-sunless">{{localize "VARBORG.Misery.EndTitle"}}</span>{{/if}}
       {{#if isGM}}
-        <span class="misery-light">{{localize "VARBORG.Misery.LightIs" light=misery.light}}</span>
+        {{#if misery.omensMode}}
+          <span class="misery-light">{{misery.mode}}</span>
+        {{else}}
+          <span class="misery-light">{{localize "VARBORG.Misery.LightIs" light=misery.light}}</span>
+        {{/if}}
         <button type="button" class="set-misery" data-action="setMisery"
-          data-tooltip="{{localize 'VARBORG.Misery.SetTooltip'}}"><i class="fa-solid fa-skull"></i> {{localize "VARBORG.Misery.Set"}}</button>
+          data-tooltip="{{#if misery.omensMode}}{{localize 'VARBORG.Misery.Omens.SetTooltip'}}{{else}}{{localize 'VARBORG.Misery.SetTooltip'}}{{/if}}"><i class="fa-solid fa-skull"></i> {{localize "VARBORG.Misery.Set"}}</button>
       {{/if}}
     </div>
   </div>

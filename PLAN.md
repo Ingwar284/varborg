@@ -1522,6 +1522,12 @@ item names its GAPS ruling where there is one.
 60. **Look and equipment** (done). Light and dark moods (styles/DESIGN.md);
     the Equipment tab with worn and held slots (GAPS 287, 288); fifteen
     damage types (GAPS 289, DAMAGE_TYPES_REVIEW.md).
-61. **Calendar & Time panel** (in progress, not yet committed). Month grid,
+61. **Calendar & Time panel** (done). Month grid,
     moon phases (GAPS 292), Set date (GAPS 291), day notes and a day log;
     moving the clock several days opens each New day in turn (GAPS 290).
+62. **Omens of Misery** (done; GAPS 307). A world setting, Dying of the
+    light, swaps the light die for the Omens of Misery: each Misery keeps a
+    track of six omens, the travel Omen results move them on (random by a
+    roll, nearest by the Dark Master), and the next Misery comes on the
+    next Omen once the newest has had the set number (1 to 6). The full
+    omen text of all 36 results is in lang/en.json.

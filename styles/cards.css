@@ -433,7 +433,7 @@ body[data-vb-mood="dark"] .var-borg-card .action-symbols {
   margin: 0.1rem 0;
 }
 
-.var-borg-card.misery-card .misery-omen {
+.var-borg-card:is(.misery-card, .travel-card) .misery-omen {
   margin: 0.3rem 0;
   padding-top: 0.3rem;
   border-top: 1px solid var(--vb-line-soft);
@@ -444,7 +444,7 @@ body[data-vb-mood="dark"] .var-borg-card .action-symbols {
   font-weight: bold;
 }
 
-.var-borg-card.misery-card .misery-end {
+.var-borg-card:is(.misery-card, .travel-card) .misery-end {
   margin-top: 0.3rem;
   padding: 0.3rem;
   background: var(--vb-misery-end-bg);
