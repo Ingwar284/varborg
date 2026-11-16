@@ -20,9 +20,10 @@ language. Work in small steps and tell me how to test each one in Foundry.
 3. Never invent a mechanic. If a rule is missing or unclear, ask me and
    add it to GAPS.md (Open until I rule; Provisional rulings are what the
    system does meanwhile).
-- Code reference: _reference/pirateborg (MIT licence). You may adapt its
-  code; keep its licence notice in THIRD_PARTY_NOTICES.md and note adapted
-  files. Never copy its game text, compendium content, art, fonts or name.
+- Pirate Borg (MIT licence) was a code reference; its copy was removed on
+  16 November 2026. Keep its licence notice in THIRD_PARTY_NOTICES.md for
+  the code already adapted from it. Never copy its game text, compendium
+  content, art, fonts or name.
 
 ## Project documents
 - PLAN.md: the build plan, milestones and what was built after them.
