@@ -680,6 +680,41 @@ body[data-vb-mood="dark"] .vb-orb--gloom:not(.is-empty, .is-filling, .is-spendin
 }
 .vb-turns__more { font-size: 14px; }
 
+/* End turn (and, for the Dark Master, previous and next turn): a row of ink
+   plates under the strip, clear of the actions plate below the portrait. */
+.vb-turns__controls {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+.vb-turns .vb-turns__control {
+  flex: 0 0 auto;
+  width: auto;
+  height: 22px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 10px;
+  background: var(--vb-band);
+  color: var(--vb-band-hover);
+  border: 1px solid var(--vb-band-accent);
+  border-radius: 0;
+  box-shadow: var(--vb-shadow-soft);
+  font-family: var(--vb-font-head);
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.vb-turns .vb-turns__control--previous,
+.vb-turns .vb-turns__control--next { padding: 0 7px; }
+.vb-turns .vb-turns__control:hover { border-color: var(--vb-highlight); }
+.vb-turns .vb-turns__control:focus-visible { outline: 2px solid var(--vb-focus-on-band); outline-offset: 2px; }
+.vb-turns .vb-turns__control:disabled { opacity: 0.5; cursor: default; }
+
 /* ================================================================
    5. Light orb, with the weather and time-of-day orbs: top right of the map
    ================================================================ */

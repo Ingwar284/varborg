@@ -718,7 +718,10 @@
       "Strip": {
         "Tooltip": "{name} (initiative {initiative}). Click to find them on the map.",
         "NextRound": "The next round begins here.",
-        "More": "+{count}"
+        "More": "+{count}",
+        "EndTurn": "End turn",
+        "PreviousTurn": "Previous turn",
+        "NextTurn": "Next turn"
       }
     },
     "Pools": {
