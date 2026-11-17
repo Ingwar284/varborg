@@ -7,7 +7,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   NUMERALS, LIGHT_DICE, SUNRISE_DICE, END_LEVEL, numeral, sunriseDie, isEnd,
-  cleanMisery, afterLightDie, miseryAfterDawn
+  cleanMisery, afterLightDie, miseryAfterDawn,
+  cleanPerMisery, cleanTrack, newestLevel, liveLevels, isDue, omenOutcome, bringNext, advance, miseryFromTrack
 } from "../module/rules/misery.mjs";
 
 test("the dice match rules 1.5", () => {
@@ -70,4 +71,67 @@ test("at VI a 1 on the light die ends the world; nothing is rolled after", () =>
   const end = miseryAfterDawn({ level: 6, omen: 1, light: "endIsNigh" }, { light: 1, omen: 3, sunrise: 1 });
   assert.deepEqual(end, { level: 7, omen: null, light: "endIsNigh", sunless: false });
   assert.deepEqual(miseryAfterDawn(end, { light: 1 }), end);
+});
+
+/* Omens of Misery (GAPS 307) */
+
+test("omens before the next Misery: 1 to 6, else 4", () => {
+  assert.equal(cleanPerMisery(1), 1);
+  assert.equal(cleanPerMisery("6"), 6);
+  assert.equal(cleanPerMisery(0), 4);
+  assert.equal(cleanPerMisery(7), 4);
+  assert.equal(cleanPerMisery("x"), 4);
+});
+
+test("a new world's track has no Misery, and the first Omen brings Misery I", () => {
+  const track = cleanTrack(undefined);
+  assert.deepEqual(track, { miseries: [], ended: false });
+  assert.equal(newestLevel(track), 0);
+  assert.deepEqual(omenOutcome(track, 4), { kind: "comes", level: 1 });
+  const after = bringNext(track, 3);
+  assert.deepEqual(after, { miseries: [{ result: 3, omens: 1 }], ended: false });
+  assert.deepEqual(miseryFromTrack(after), { level: 1, omen: 3 });
+});
+
+test("cleanTrack stops at the first bad Misery and keeps omens 0 to 6", () => {
+  const track = cleanTrack({ miseries: [{ result: 2, omens: 9 }, { result: 8, omens: 1 }, { result: 1, omens: 1 }], ended: true });
+  assert.deepEqual(track, { miseries: [{ result: 2, omens: 0 }], ended: false });
+});
+
+test("the next Misery is due after the set number of omens of the newest", () => {
+  for (const per of [1, 4, 6]) {
+    let track = bringNext(undefined, 1);
+    for (let n = 1; n < per; n++) {
+      assert.equal(isDue(track, per), false, `per ${per}, omen ${n}`);
+      assert.deepEqual(omenOutcome(track, per), { kind: "advance", choices: [1] });
+      track = advance(track, 1);
+    }
+    assert.equal(isDue(track, per), true);
+    assert.deepEqual(omenOutcome(track, per), { kind: "comes", level: 2 });
+  }
+});
+
+test("earlier Miseries stay live until omen 6, and only the newest makes the next due", () => {
+  let track = { miseries: [{ result: 1, omens: 2 }, { result: 4, omens: 1 }] };
+  assert.deepEqual(liveLevels(track), [1, 2]);
+  assert.deepEqual(omenOutcome(track, 2), { kind: "advance", choices: [1, 2] });
+  track = advance(track, 1);
+  assert.deepEqual(track.miseries[0], { result: 1, omens: 3 });
+  assert.equal(isDue(track, 2), false);
+  track = { miseries: [{ result: 1, omens: 6 }, { result: 4, omens: 1 }] };
+  assert.deepEqual(liveLevels(track), [2]);
+  assert.deepEqual(advance(track, 1).miseries[0], { result: 1, omens: 6 });
+});
+
+test("after VI the next due Misery is VII: the world ends and nothing moves after", () => {
+  const six = { miseries: [1, 2, 3, 4, 5, 6].map(result => ({ result, omens: 2 })) };
+  assert.deepEqual(omenOutcome(six, 2), { kind: "ends" });
+  const end = bringNext(six);
+  assert.equal(end.ended, true);
+  assert.equal(newestLevel(end), 7);
+  assert.deepEqual(miseryFromTrack(end), { level: 7, omen: null });
+  assert.deepEqual(liveLevels(end), []);
+  assert.deepEqual(omenOutcome(end, 2), { kind: "none" });
+  assert.deepEqual(advance(end, 1), end);
+  assert.deepEqual(bringNext(end, 3), end);
 });

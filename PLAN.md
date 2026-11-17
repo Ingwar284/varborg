@@ -1522,6 +1522,20 @@ item names its GAPS ruling where there is one.
 60. **Look and equipment** (done). Light and dark moods (styles/DESIGN.md);
     the Equipment tab with worn and held slots (GAPS 287, 288); fifteen
     damage types (GAPS 289, DAMAGE_TYPES_REVIEW.md).
-61. **Calendar & Time panel** (in progress, not yet committed). Month grid,
+61. **Calendar & Time panel** (done). Month grid,
     moon phases (GAPS 292), Set date (GAPS 291), day notes and a day log;
     moving the clock several days opens each New day in turn (GAPS 290).
+62. **Omens of Misery** (done; GAPS 307). A world setting, Dying of the
+    light, swaps the light die for the Omens of Misery: each Misery keeps a
+    track of six omens, the travel Omen results move them on (random by a
+    roll, nearest by the Dark Master), and the next Misery comes on the
+    next Omen once the newest has had the set number (1 to 6). The full
+    omen text of all 36 results is in lang/en.json.
+63. **Scene weather effects** (in progress; GAPS 308). A VÅR BORG effect
+    for every weather kind and hazard in Scene Configuration → Basics →
+    Weather (module/weather-fx/), built in tiers: Foundry’s shaders
+    re-tuned, new particle shapes (assets/particles/), and two shaders of
+    our own (a veil and lightning flashes; Storm (rain) has rarer
+    lightning than Lightstrike). Scenes can follow today’s weather, with
+    rain or snow (module/scene-weather.mjs). A playlist named after the
+    active scene’s weather effect plays, and other weather playlists stop.

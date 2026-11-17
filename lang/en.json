@@ -524,6 +524,16 @@
         "Name": "Use the Weather subsystem",
         "Hint": "Weather is an optional subsystem. Switch this off and no weather is rolled at a new day or while travelling, the Calendar panel shows no weather, and weather hazards have no effect. Today's weather is kept for when you switch it back on."
       },
+      "MiseryMode": {
+        "Name": "Dying of the light",
+        "Hint": "How the Miseries come. Light die: the base rules (1.5); each dawn the group's light die is rolled, and on a 1 the next Misery comes. Omens of Misery: no light die; the Omen results on the road move each Misery through its six omens, and the next Misery comes once the newest has had the number of omens set below. Each mode keeps its own Miseries, so you can switch back.",
+        "lightDie": "Light die (rules 1.5)",
+        "omens": "Omens of Misery"
+      },
+      "OmensPerMisery": {
+        "Name": "Omens before the next Misery",
+        "Hint": "Omens of Misery only: how many omens of the newest Misery must happen before the next Misery is due (1 to 6). The next Omen result on the road then brings it."
+      },
       "PlayersImprove": {
         "Name": "Players can improve",
         "Hint": "Show the Improve button to players on their own characters, not only to the Dark Master. The Dark Master still decides when a character improves."
@@ -2332,6 +2342,43 @@
         }
       }
     },
+    "WeatherFx": {
+      "Label": {
+        "clouded": "VÅR BORG: Clouded",
+        "lightRain": "VÅR BORG: Light rain",
+        "lightSnow": "VÅR BORG: Light snow",
+        "heavyRain": "VÅR BORG: Heavy rain",
+        "heavySnow": "VÅR BORG: Heavy snow",
+        "rainStorm": "VÅR BORG: Storm (rain)",
+        "blizzard": "VÅR BORG: Storm (snow)",
+        "siltRain": "VÅR BORG: Silt rain",
+        "whistling": "VÅR BORG: Whistling from the Spine",
+        "creepfrost": "VÅR BORG: Creepfrost",
+        "tamefire": "VÅR BORG: Tamefire",
+        "lightstrike": "VÅR BORG: Lightstrike",
+        "hazefall": "VÅR BORG: Hazefall",
+        "shadowstretch": "VÅR BORG: Shadowstretch",
+        "strongGales": "VÅR BORG: Strong gales",
+        "blightPollen": "VÅR BORG: Blight-pollen",
+        "loomingDark": "VÅR BORG: Looming dark",
+        "dayOfGloom": "VÅR BORG: Day of gloom",
+        "energyVoid": "VÅR BORG: Energy void",
+        "heavyGravity": "VÅR BORG: Heavy gravity",
+        "photonStorm": "VÅR BORG: Photon storm",
+        "blackburn": "VÅR BORG: Blackburn",
+        "oilmist": "VÅR BORG: Oilmist",
+        "shadowblightOutbreak": "VÅR BORG: Shadowblight outbreak",
+        "lightGravity": "VÅR BORG: Light gravity",
+        "energyFont": "VÅR BORG: Energy font",
+        "dayOfEmber": "VÅR BORG: Day of ember"
+      },
+      "Follow": "Follows today’s weather",
+      "FollowHint": "Each time the weather changes, this scene shows the VÅR BORG effect for it. You can still pick another effect by hand; it lasts until the next change of weather.",
+      "Precipitation": "Precipitation falls as",
+      "PrecipitationHint": "Whether light precipitation, heavy precipitation and storms show as rain or snow on this scene.",
+      "Rain": "Rain",
+      "Snow": "Snow"
+    },
     "Misery": {
       "Title": "The Misery",
       "Open": "The Misery: the dying of the light, and overland travel",
@@ -2368,6 +2415,32 @@
       "SetCard": "The Dark Master sets the Misery: {name}.",
       "EndTitle": "VII. The world finally dies.",
       "EndText": "All is lost. Nothing remains. The game and your lives end here. Burn your character sheets.",
+      "Omens": {
+        "Mode": "Omens of Misery: {count} omens before the next Misery.",
+        "ResultTitle": "{numeral}:{result} {name}",
+        "Step": "Omen {step} of 6",
+        "Track": "{step}/6",
+        "Comes": "{name} comes.",
+        "ResultRolled": "Its d6 result: {result}.",
+        "Random": "Random misery: d{die} among the live Miseries: {result}.",
+        "Nearest": "Nearest misery: the Dark Master picks {name}.",
+        "Due": "{name} is due: the next omen brings it.",
+        "EndDue": "VII is due: the next omen brings the end.",
+        "NextAfterOne": "{name} comes after 1 more omen of {current}.",
+        "NextAfterMany": "{name} comes after {count} more omens of {current}.",
+        "NoneYet": "No Misery yet. The first omen on the road brings Misery I.",
+        "Over": "The world has ended. No more omens come.",
+        "EndDay": "All six omens of VII happen today, from dawn to dusk, and nothing can stop them. The game ends with the sixth.",
+        "PickTitle": "The nearest Misery",
+        "PickHint": "Omen (nearest misery): which live Misery is nearest the company?",
+        "PickLabel": "Misery",
+        "SetHint": "Omens of Misery: each Misery's d6 result and how many of its omens have happened. Miseries come in order, so the list stops at the first one set to None.",
+        "ResultLabel": "Result",
+        "NoResult": "None",
+        "OmensLabel": "Omens done",
+        "EndedLabel": "VII has come: the world has ended",
+        "SetTooltip": "Set the Miseries by hand: each one's result and omens done, and whether the sun rose today."
+      },
       "Omen": {
         "I1": "The clouds turn the colour of bone, and ash rains down leaving a mark.",
         "I2": "The eyes of infants glow like the moon, as they babble only in dreams.",
@@ -2405,6 +2478,334 @@
         "VI4": "The stars shall turn to dust, falling as grey snow upon a shadowed world.",
         "VI5": "Every young heart shall beat once more, then stop in unison. These empty vessels shall not remain empty for long.",
         "VI6": "The moon is swallowed by a great shadow, leaving only a faint, blood-red ring in the sky."
+      },
+      "ResultName": {
+        "I1": "Rains of ash",
+        "I2": "Dreaming children",
+        "I3": "Bounty of the sea",
+        "I4": "Midnight bloom",
+        "I5": "Weeping stone",
+        "I6": "Funeral dirge",
+        "II1": "Hollow wolves",
+        "II2": "The masterless shadow",
+        "II3": "Shattered mirrors",
+        "II4": "Bleeding forest",
+        "II5": "The serpent of birds",
+        "II6": "Unknown tongues",
+        "III1": "Crimson veil",
+        "III2": "Rivers of silver",
+        "III3": "Iron roots",
+        "III4": "The hourglasses",
+        "III5": "Flickering sky",
+        "III6": "Burning honey",
+        "IV1": "Starbleed",
+        "IV2": "Fading words",
+        "IV3": "The voice in the deep",
+        "IV4": "The guttering sun",
+        "IV5": "Singing flowers",
+        "IV6": "Black harvest",
+        "V1": "Falling stars",
+        "V2": "Hungry shadows",
+        "V3": "The screaming moon",
+        "V4": "Shivering stars",
+        "V5": "Smiling skulls",
+        "V6": "The seven-headed beast",
+        "VI1": "No flame shall kindle",
+        "VI2": "IT awakens",
+        "VI3": "The great silence",
+        "VI4": "Grey snow",
+        "VI5": "Empty vessels",
+        "VI6": "The swallowed moon"
+      },
+      "OmenStep": {
+        "I1": {
+          "1": "The clouds bleach to bone-white and the sun becomes a pale disc. A fine ash begins to fall from the bone-white clouds, leaving faint grey smudges on anything it touches.",
+          "2": "An Ashmarked herald accosts the party, raving about fever dreams of an angel made of ash born from a great flame.",
+          "3": "Ashmarked are gathering fuel for a great pyre, be it wood, cloth, or man. They rave about the coming of the Ash Angel.",
+          "4": "Ashen and Cinder set ablaze a massive pyre, claiming it will beckon the Ash Angel fully into this world.",
+          "5": "Black smoke can be seen from across the land as a pyre burns. The Ash Angel comes forth and starts moving to the nearest settlement.",
+          "6": "The Ash Angel razes the nearest settlement before dissolving and staining the land in ash."
+        },
+        "I2": {
+          "1": "The party finds a roadside shrine filled with rattles and toys. Nearby believers are frantic, stitching heavy leather eye-masks for their children and claiming the \"silver-glare\" is spread through sight.",
+          "2": "A nursery where no one speaks above a whisper is tended to by Sister Vora. Inside a dozen infants sit in perfect, upright rows. Their eyes emit a cold, pale light that casts long, distorted shadows, and though their mouths don't move, you hear a rhythmic, wet babbling at the edge of your senses.",
+          "3": "The babbling is constant, and sleep becomes difficult. Until the misery is complete, test DR12 when resting and gain no benefits on a failure. Any PC who rests dreams of a vast, white desert under a cracked moon. In this dream, the infants are giants, babbling their cryptic prophecies.",
+          "4": "The Moon-Broker is chased by a group of Hollow-eyed parents. He seeks protection with the party.",
+          "5": "The babbling is incessant, and sleep becomes near impossible. Until the misery is complete, test DR14 when resting and gain no benefits on a failure.",
+          "6": "The babbling reaches a crescendo. The infants' voices synchronise into one, delivering a thundering prophecy across the realm (see Babbling Prophecy table). Then all infants cry and awaken."
+        },
+        "I3": {
+          "1": "A river flows uphill for an hour at dawn. Fish lie gasping on the banks, all facing upstream. On the shingle the company finds things that do not belong there: a wedding ring, a child's shoe, a ship's lantern still burning.",
+          "2": "Mudlarks crowd the banks, picking through what the river has carried inland. Two gangs are fighting over a barnacled sea-chest that knocks from the inside.",
+          "3": "A Drowned Returner knocks on its family's door at dusk, dripping and cold, asking for its old bed. The village is split: half want to take it in, half want to burn it.",
+          "4": "The river runs fully backwards from dawn to dusk. No boat can sail downstream and every ford is a torrent. Upriver comes a silent procession of the drowned, each carrying a lantern of green sea-glass.",
+          "5": "The Brine-Mother rises at the river mouth, a drowned giantess in a gown of kelp and lost wedding lace. She walks upstream calling the names of everyone the sea has taken, and the drowned gather behind her.",
+          "6": "The Brine-Mother reaches the nearest river settlement and the river breaks its banks in reverse. Salt water floods the streets, the drowned walk into the homes they lost, and when the river turns back at dusk the land around the settlement has become salt-marsh for good."
+        },
+        "I4": {
+          "1": "A roadside meadow opens at midnight in a field of black blossom and closes again at dawn. Heaps of dead bees lie among the stems. The air smells of grave-lilies.",
+          "2": "In a churchyard a Night Gardener waters a bed of black bloom with blood from a cut palm. She offers the company a petal to eat \"so you may see in the dark, as the flowers do\".",
+          "3": "Black pollen drifts on the night wind. Anyone who sleeps under the open sky during this Misery wakes with it in their lungs and tests Toughness DR12. Failure gains a level of Fatigued. Ruin gains two levels of Fatigued.",
+          "4": "The bloom reaches the villages. The Bloom-choked walk at night: the bodies of those who slept in the fields, black flowers growing out of their mouths and eyes, carrying armfuls of seed to scatter.",
+          "5": "A barrow on a hill splits open, and from it rises the Nightbloom Mother, a flower as tall as a chapel whose heart is a sleeping saint wrapped in roots. The Night Gardeners carry black-wax candles to her and kneel.",
+          "6": "At midnight the Nightbloom Mother opens fully. A storm of black pollen rolls over the land. From now on, every flower in the realm blooms black and only at night, and the fields around the nearest settlement are choked with black bloom. It will be a hungry year. By dawn the Mother has withered into a single seed the size of a skull."
+        },
+        "I5": {
+          "1": "A roadside statue of a saint weeps rust-red tears that stain the plinth. Pilgrims kneel and fill vials with them, calling it a blessing.",
+          "2": "Iron left near statues rusts away overnight: hinges, horseshoes, a sentry's sword. A travelling Rust-Pilgrim sells \"saint's tears\" in stoppered phials that eat through a lock in a minute.",
+          "3": "The statues crack. Inside each is a brittle iron skeleton that no sculptor ever put there. The Fabricators of the Sacred Gear claim they are relics of Khael and want every one. The Rust-Pilgrims want them too, to feed them more iron.",
+          "4": "The iron skeletons climb out of their stone at night. Rust Armatures stalk the roads and farmsteads, tearing nails from doors and blades from hands, and carry the metal away towards the largest statue in the realm.",
+          "5": "The Weeping Colossus, the great stone saint over the gate or bridge of the nearest town, sheds its stone in a rain of rubble. A rusted iron giant stands up underneath and walks towards the forge, the iron and the people.",
+          "6": "The Colossus falls apart in a storm of rust over the nearest town. Every iron gate, lock, nail and tool there crumbles to red powder. Every statue in the realm is now a brittle skeleton, and none will ever be carved again without weeping."
+        },
+        "I6": {
+          "1": "At noon one great toll rolls down from Spine's Fang. Every church bell in the realm answers once, though no one is at the ropes. Dogs howl. In the nearest village the people put on black without knowing why.",
+          "2": "The bells ring a little longer every noon. A funeral procession passes the company with an empty coffin. The mourners ask for the company's names, to write them on the lid.",
+          "3": "The bell-ringers cannot let go. In every tower, Ash-Choked Bellmen ring with bloody hands and turn on anyone who tries to stop them. Sleep is thin: everyone dreams of a bell the size of a mountain.",
+          "4": "At noon the dead rise in the churchyards. The Dirge-Mourners, in their grave-shrouds, walk slowly towards Spine's Fang, and they try to take the living with them.",
+          "5": "The Knell-Warden comes down from Spine's Fang, a bronze-skinned sexton as tall as a house, ringing a hand-bell. Everyone who hears the hand-bell hears their own name in it. He is gathering the mourners for a funeral.",
+          "6": "At noon every bell in the realm rings as one for a full hour. The church bell of the nearest settlement cracks and falls. Every person who died in the realm during this Misery rises and walks to Spine's Fang, and none of them comes back. From now on, the bells ring on their own at every funeral."
+        },
+        "II1": {
+          "1": "At night the howling begins, and it sounds like people screaming. In the morning a shepherd finds his flock unharmed except for their eyes, which are gone. Nothing else has been touched.",
+          "2": "A single hollow wolf trails the company at dusk, always at the edge of the lamplight. It never comes closer. It sniffs at their tracks and at the places they slept.",
+          "3": "On the road the company meets the Eyeless: villagers whose eyes were taken in the night. They walk blind towards the howling, smiling, and they do not want to be led home.",
+          "4": "The pack falls on a camp on the lamp-route. Wolves with empty sockets pour out of the dark, and the screams of their howling are worse than the bites.",
+          "5": "The Socket-Mother leads the pack to the edge of the nearest settlement, a wolf as large as a horse, her face a crown of empty sockets. She howls the names of the village dead, and from the houses, people answer.",
+          "6": "The pack hunts through the settlement for one long night. Those it kills rise at dawn as hollow wolves and run with it. When the howling fades, every wolf in the realm has empty eyes, and the screams are heard every full moon."
+        },
+        "II2": {
+          "1": "Frost rimes the walls of a village in high summer, only on the side facing the road. A line of frozen footprints runs down the main street. No one made them.",
+          "2": "At noon, a shadow crosses the road ahead of the company with no one to cast it. The company's own shadows flinch, then lean towards it, as if they want to follow.",
+          "3": "In the next village half the people have no shadow. The Shadowless are cold to the touch, listless and frightened, and they remember nothing of the night. Their crops are black with frost.",
+          "4": "The stolen shadows follow the masterless one as Frost Shades. They come for the company's shadows next, slipping along the ground at dusk with cold fingers.",
+          "5": "The Masterless Shadow stands as tall as a church tower, trailing a thousand stolen shadows like a cloak. It walks towards the brightest window in the nearest settlement, looking for a body to wear.",
+          "6": "The Masterless Shadow chooses its master: the most powerful person in the nearest settlement (a lord, a priest, a guild master) steps into it and is never quite themself again. That settlement is frozen solid for a night, and its frost never fully melts. If no one is there to take, it freezes the settlement and walks on."
+        },
+        "II3": {
+          "1": "At dusk every mirror in the village breaks with a single sound, like a held breath let go. In every shard is a stranger's face. The faces blink.",
+          "2": "A glazier is buying up shards by the sackful. The faces whisper to whoever holds them, telling small secrets about the people nearby. Some of the secrets are true.",
+          "3": "The faces begin calling people by name. A farmer's wife knocks on her own door and is let in. The woman already inside screams that she is the real one, and no one can tell them apart.",
+          "4": "The Glass-Born step out of windows, puddles and polished blades: people of shards and borrowed faces. Each wears the face of someone who looked too long into a broken mirror.",
+          "5": "The Thousand-Faced assembles in the square of the nearest town, a giant of every shard in the realm, each one a different face. It searches every passer-by. It is looking for the one face it is missing.",
+          "6": "The Thousand-Faced finds its face and shatters back into the world. From now on every reflection in the realm shows the stranger's face first, then yours. In the nearest settlement, d6 people have been replaced by their reflections, and no one knows who."
+        },
+        "II4": {
+          "1": "The trees along the road weep red sap. The woodcutters' axes come away bloody, and they will not go back into the trees.",
+          "2": "The leaves whisper names. A woodsman hears his dead wife among them and walks into the forest after her, and his family begs the company to bring him back.",
+          "3": "A Warden of the Flow pleads with the company to stop the cutting; the forest is grieving, she says. Meanwhile Sapsuckers are tapping the trees and selling the red sap in town as blood-wine.",
+          "4": "Those who drank the blood-wine wake without their names. The Nameless walk into the forest at night, and the whispering grows louder each time one of them is lost.",
+          "5": "The Bleeding Elder, the oldest oak in the forest, pulls its roots from the soil and walks. Its bark is a carpet of faces, and its leaves whisper every name the realm has forgotten.",
+          "6": "The forest swallows the nearest woodland village in a single night. Its people's names are forgotten by everyone, and no map will show the village again. Their faces can be found in the bark of the trees, whispering."
+        },
+        "II5": {
+          "1": "At sunset every bird in the sky takes wing at once. The flocks join into the shape of a great serpent, coil once across the sky and fly into the setting sun.",
+          "2": "Fields are covered in fallen feathers. A preacher of the Solar Conclave calls it a sacrifice: the sun is hungry, and the birds have gone to feed her. Augurs read the shape of the serpent and argue about what it means.",
+          "3": "A deep silence. No birdsong, and the insects swarm. A bird-catcher has the last songbird of the realm in a wicker cage, and Solar Zealots are hunting him to give it to the sun.",
+          "4": "The serpent comes down. A living storm of wings and beaks sweeps along the road and strips everything in its path. Every bird still in the realm is part of it.",
+          "5": "The Wing-Serpent coils around the bell tower of the nearest settlement, a hurricane of birds with burning eyes. It is waiting, and the Solar Zealots will do anything to give it what it is waiting for: the last bird, or a sacrifice of their choosing.",
+          "6": "The Wing-Serpent rises into the sun and does not come down. The sun flares, then dims. No bird will ever sing in the realm again. Their eggs hatch into nothing."
+        },
+        "II6": {
+          "1": "A child at the roadside stares at the company without blinking and speaks to them all day long in a tongue no one knows. At dusk the child blinks, falls asleep and remembers nothing.",
+          "2": "Every child in the village is doing it, and in the next village too. A clerk of the Grand Archivist is going from village to village with a notebook, and he swears the words are the same everywhere.",
+          "3": "The clerk has worked it out: it is a list of places. The first place on the list unravelled into mist last night, and the second is a day's ride from here.",
+          "4": "Frightened parents have joined the Hushers, who go from house to house with gags and shears to stop the children speaking, whatever it takes. The children must be protected from the Hushers, and the Hushers from themselves.",
+          "5": "The children walk, unblinking, to a crossroads stone and stand in a ring around it. Under the stone, something answers them. It is the Answer, and it has been waiting for the list to be read.",
+          "6": "At dusk every child speaks the last word on the list in one voice: the name of the nearest settlement or landmark. It unravels into mist and is gone, and the children blink and begin to weep. The list is finished. For now."
+        },
+        "III1": {
+          "1": "The moon rises the colour of a fresh wound. The Moon-Watchers ring their alarm-bells all night. In lamplight, every shadow moves a heartbeat late.",
+          "2": "In a crowded tavern a shadow walks across the lamp-lit wall with no one to cast it. It stops, turns, and looks at the company.",
+          "3": "A Moon-Watcher astronomer begs for help: the veil is thickening every night, and her ledgers say it will cover the moon entirely. The company's lamp-lit camp is attacked by Lampwalkers that night.",
+          "4": "The Crimson Veiled, a cult in red gauze, go from village to village snuffing the Wickguard's lamps and leaving the doors open \"so the shadows may come in and be warm\".",
+          "5": "The Red-Veiled Bride comes down a moonbeam, her face hidden, a train of shadows behind her. She walks towards the brightest light in the realm: a lighthouse, a temple brazier or the lamp-tower of the nearest settlement.",
+          "6": "The Bride lays her veil over the light, and it goes out. The great lamp of the nearest settlement will never burn again. From now on, every full moon wears the crimson veil, and on those nights the shadows walk."
+        },
+        "III2": {
+          "1": "The mountains groan all night like old timbers. Small tremors rattle the crockery, and the dogs will not stop barking at the peaks.",
+          "2": "A vein of bright silver has opened on a scree slope, glittering in the dawn. By noon, the first Silver-Fevered prospectors are scrambling uphill with picks and sacks.",
+          "3": "Molten silver trickles from the peaks in thin bright streams. It cools on the stones into silver lace. The prospectors fight over it with knives, and the claim-jumpers set up camp along the road.",
+          "4": "The streams become rivers. Silver pours down the valleys, cooling into mirror-flats. Things move in the hot silver, shaped like people: Silverlings, born from the flow.",
+          "5": "The peak of the Groaning Mountain splits open. The Argent Flow pours down from it, a vast shape of living molten silver, heading for the valley below and anything warm.",
+          "6": "The Argent Flow buries the nearest valley settlement in silver. Those who survive are rich beyond counting and can never sleep again for the groaning in the earth. Where the settlement stood there is now a lake of silver mirror, with roofs and spires beneath it."
+        },
+        "III3": {
+          "1": "Black iron roots break the road, thick as a man's arm. A farmer's plough has snapped on one, and his oxen will not cross the field.",
+          "2": "Trees are strangled by the roots, crushed until their bark splits. The wells taste of rust and blood. Livestock sicken and die with black tongues.",
+          "3": "Smiths of the Brotherhood of the Forge-Heart are mining the roots for \"god-iron\" and singing Brask's praises. The roots bleed black when cut, and the smiths are coughing it up.",
+          "4": "Those who slept on the open ground near the roots are Rootbound: black iron has grown through them while they slept. They walk slowly towards the source, their roots dragging behind them.",
+          "5": "The Iron Heart rises from the earth, a tree of black iron as tall as a keep, pulsing with heat like a forge. Its roots spread a mile in every direction, and the ground around it rings like an anvil.",
+          "6": "The Iron Heart's roots reach the nearest settlement. Its soil is poisoned and its wells run black. Nothing will grow there for a generation, and the iron roots remain, still slowly growing."
+        },
+        "III4": {
+          "1": "A small hourglass of dark glass appears on the mantel of every house in the village, and one in the company's packs. The sand flows upward.",
+          "2": "Villagers smash their hourglasses. By morning a new one stands in the same place. A dying woman's glass is almost empty, and its sand runs faster as she weakens.",
+          "3": "A clerk of the Iron Ledger Society is recording every hourglass in the realm, house by house. One of the company's glasses has very little sand left, and the clerk wants to know why.",
+          "4": "Those whose sand runs out do not die. They become Hourless: frozen mid-step for an hour, then moving again, wrong, sometimes backwards, their clothes greying with years in a minute.",
+          "5": "The Sandwright comes down the road, a figure of brass and blown glass filled with drifting sand. It goes from door to door turning hourglasses over, and where it passes, time stutters.",
+          "6": "The last grain falls in the nearest settlement. Everyone there ages ten years in a heartbeat. The children are grown, the old are dust, and the hourglasses are gone, all except one, which nobody can find."
+        },
+        "III5": {
+          "1": "At midday the sky blinks out for a heartbeat. In that heartbeat there is only blackness, and in it the company glimpses stars they have never seen.",
+          "2": "The flickers grow longer, a count of three. Anyone who looks up during a flicker tests Sanity DR12. Failure Frightened of the sky until the end of the day. Ruin Panics.",
+          "3": "Things fall through the gaps. Black snow that does not melt, birds frozen solid, a cold that bites to the bone. Void-motes drift down and settle on the warmest things they can find.",
+          "4": "During a long flicker, Voidlings drop out of the sky like hailstones, long-limbed things of starless black. They hunt light, and they put it out.",
+          "5": "The flicker over a hill does not close. A hole in the sky hangs there, a wound in the day, and from it the Thing Beyond the Sky lowers itself down on threads of nothing.",
+          "6": "The hole moves over the nearest settlement and stays. From now on there is no day there. Under the hole it is always night, and the void looks down."
+        },
+        "III6": {
+          "1": "The wind smells of burnt honey, sweet and thick. Every beehive along the road is empty, its wax melted down the sides like candle-drippings.",
+          "2": "A child weeps tears of fire. Anyone who comes close enough to breathe the scent tests Toughness DR12. Failure Its own eyes run with fire: d4 fire damage. Ruin d4 persistent fire damage.",
+          "3": "The Flame-Weepers gather in a chapel, led by a Honey-Priest of a Solar Conclave splinter sect. He says these are the tears of Sol, and that the weepers are blessed. He is gathering them for something.",
+          "4": "Ember-Swarms come out of the east: bees of burning gold, leaving a trail of burnt grass and smoke. Barns and haystacks catch fire in their wake.",
+          "5": "The Golden Hive stands on a hill where none stood yesterday, a hive as large as a church, dripping burning honey. Inside it, something vast is waking: the Cinder Queen.",
+          "6": "The Cinder Queen takes wing. Burning honey rains on the nearest settlement and it burns for a full day. When the smoke clears, the scent of burnt honey never fully leaves the realm, and those who smell it weep a little fire."
+        },
+        "IV1": {
+          "1": "A hairline crack runs across the night sky from horizon to horizon, glowing faintly. The Moon-Watchers stop their work and stare at it, and some of them weep.",
+          "2": "Starlight drips from the crack like wax from a candle. Where it lands, it pools on the ground, bright and warm. Animals will not go near it. People will.",
+          "3": "Those who drink the star-blood glow from within. The Starblooded are strong and joyful, and they will not let anyone else near the pools.",
+          "4": "The Moon-Watchers try to seal the pools in lead and silver. The Starblooded fight them for it, and the light burns both sides.",
+          "5": "A star pushes its arm through the crack. The Bleeding Star squeezes into the world, an enormous wounded thing of white fire, and falls slowly towards the ground, leaking light.",
+          "6": "The Bleeding Star dies on the nearest settlement. It leaves a crater of glass, and in the crater its blood still glows. The crack in the sky stays open, a little wider every year."
+        },
+        "IV2": {
+          "1": "The company's own notes, maps and letters are fainter in the morning. The signposts at the crossroads are blank. A merchant is screaming at an empty ledger.",
+          "2": "Clerks of the Iron Ledger Society are recopying records night and day, and by morning the copies have faded too. Contracts, deeds and debts are vanishing, and people are taking advantage.",
+          "3": "Memory fades with the ink. People forget recent things: a meeting, a promise, a face. A clerk of the Grand Archivist begs the company to guard a single book that has not yet faded, and to get it to Emberglow.",
+          "4": "Ink-mites swarm out of libraries and chapels, eating pages from the edges. The Blank wander the roads: people who forgot themselves completely, empty-eyed and looking for something to fill them.",
+          "5": "The Palimpsest crawls towards the nearest library or chapel, a thing the size of a cart made of scraped vellum and old ink. It has eaten every word in the realm, and it is still hungry.",
+          "6": "Nothing written survives in the realm. The nearest settlement forgets its name, its laws and its debts. The book the clerk asked for, if it still exists, is the only thing in the realm with writing in it."
+        },
+        "IV3": {
+          "1": "Miners come up from the deepest shafts white-faced. Far below, they say, a voice is crying out. The stone there sweats like a frightened animal.",
+          "2": "Tremors run through the hills. Cave-ins close old mines and open new caves. In the tunnels that remain, the stone pulls away from lanterns, as if flinching.",
+          "3": "The monks of the Silent Fraternity of the Cairn break their vows of silence for the first time in living memory. They go from village to village warning everyone to seal the deep places, and they will not say why.",
+          "4": "Everything that lives in the deep is fleeing upward. Delvers, blind pale things, swarm out of the mines in terror, and they will kill anything between them and the surface.",
+          "5": "The Trembling Stone crawls to the surface, a giant of living rock, cracked and weeping grit, running from what is below. It does not care what it crushes as it runs.",
+          "6": "The nearest mine or cave-town collapses into a chasm. Far down in it, the voice stops crying out. Something is listening."
+        },
+        "IV4": {
+          "1": "At noon the sun gutters like a candle in a draught, and for one breath the world is in shadow. Then it is back, and nobody will speak of it.",
+          "2": "It gutters again, longer. The Solar Conclave holds vigils day and night. Their preachers say the sun will be reborn, brighter than ever, and that the faithful should go outside and stand in her light.",
+          "3": "The sun burns twice as bright for an hour. Everyone outdoors at noon tests Toughness DR12. Failure Blinded until the end of the hour. Ruin Blinded until dusk, and d6 fire damage from the burn.",
+          "4": "The Sunburnt walk the roads: pilgrims with blistered faces and blind eyes, chanting. Mirror-Bearers walk with them, focusing the sun's light on anyone who speaks against her.",
+          "5": "Out of the glare at noon walks Ara's Tear, a figure of white fire, burning with the last of the sun's strength. Everything she touches bursts into flame, and she walks towards the nearest temple of the Conclave.",
+          "6": "A full day of doubled sun. Rivers in the realm run low, the crops of the nearest settlement scorch in the field, and whatever is left of Ara's Tear sinks into the earth. The next day the sun is dimmer than she has ever been."
+        },
+        "IV5": {
+          "1": "The ground shivers. In every new crack, pale flowers push up, white and trembling. When the wind passes over them, they hum.",
+          "2": "At dusk the flowers sing hymns of mourning, in voices like a far-off choir. Mourners come from miles around to sit and listen. They weep, and they feel better.",
+          "3": "Some of the listeners will not leave. The Lamenters sit in the flower-fields day and night, singing along, thin and grey, and they become angry if anyone tries to move them.",
+          "4": "The Lamenters drag others to the fields to listen. The fields spread along every crack. Hymnroots, flowering things the size of a man, uproot themselves and sing to anyone they meet.",
+          "5": "The Sorrow-Bloom rises from the largest crack, a choir of flowers as tall as a spire. Its hymn carries for miles, and everyone who hears it wants to lie down.",
+          "6": "The Sorrow-Bloom sings the full Lament over the nearest settlement. Its people lie down among the flowers and never rise again, and the field sings over them forever."
+        },
+        "IV6": {
+          "1": "A field of wheat turns black overnight, the ears twisted like burnt fingers. The bread made from it tastes of ash, and the miller swears it is clean flour.",
+          "2": "Every field in the region is the same. Grain prices climb by the day. Agents of the Iron-Hand Cartel are buying up every sack of clean grain left in the realm and locking it in warehouses.",
+          "3": "The hungry eat the black grain anyway. The Ash-Eaters grow gaunt and grey and are hungry all the time, for bread, for meat, for anything.",
+          "4": "Riots break out at the Cartel's warehouses. The Cartel's enforcers beat back the Ash-Eaters, and a convoy of clean grain needs an escort to a starving village. Both sides will pay. Both sides will kill.",
+          "5": "The Black Reaper walks the fields at harvest, a scarecrow of black stalks with a scythe of burnt iron. Where it walks, the black grain grows tall, and where it reaps, people fall.",
+          "6": "The harvest of the nearest settlement is lost. There will be famine there before the next Misery, and the Iron-Hand Cartel will be very rich. The black grain grows back every year, whatever is sown."
+        },
+        "V1": {
+          "1": "A shower of falling stars streaks across the night, more than anyone can count. Children are woken to watch. Nobody is smiling.",
+          "2": "A star strikes a hill a mile from the road with a sound like a forge-hammer on the world's anvil. The ground shakes. By dawn the crater is still glowing.",
+          "3": "Star-scavengers flock to the craters for star-iron, which sells in Emberglow for its weight in silver. The craters are hot and the scavengers are armed, and they do not like company.",
+          "4": "Something crawls out of a crater. Craterborn, things of slag and starlight, born in the fall. They are confused, angry and very strong, and they head for the nearest light.",
+          "5": "A great star falls, larger than any before it, and the sky turns white. It lands in the hills. What climbs out of the crater is the Fallen Star, and it is still burning.",
+          "6": "The Fallen Star walks to the nearest settlement and strikes the earth once. The settlement is a crater, and in the night sky there is a hole where a constellation used to be."
+        },
+        "V2": {
+          "1": "In the evening lamplight the company's shadows move a moment late, and for a breath each shadow's head turns to look at its owner.",
+          "2": "A man's shadow bites him in the night. In the morning he has a bruise in the shape of teeth, and he will not go near a lamp.",
+          "3": "The first Empty Shells wander the roads: people whose shadows ate them from the inside, leaving only skin and clothes, walking without purpose. Their shadows are gone.",
+          "4": "Ravenous Shadows hunt at dusk, swollen and dark, peeling away from their owners to feed on others. Everyone stays in the full light of noon or behind locked shutters in the dark.",
+          "5": "Every eaten shadow has gone to the same place. The Shadow Sovereign stands in a crossroads, a darkness as tall as a church, wearing a thousand stolen shapes, and it is calling every shadow in the realm home.",
+          "6": "The Sovereign calls, and every shadow in the nearest settlement answers. Its people are Empty Shells by morning. The shadows of the realm are hungry now, all of them, and they are patient."
+        },
+        "V3": {
+          "1": "The moon hums all night, a low note at the edge of hearing. The Moon-Watchers come out of their towers with blood running from their ears and cannot hear their own words.",
+          "2": "A fine crack runs across the face of the moon. Dogs howl at it until their throats give out. People sleep with wool in their ears.",
+          "3": "Shards of the moon fall. Where they land, they keen, a thin, endless shriek. The Moon-Watchers are gathering them in lead boxes, and they will not let anyone else touch them.",
+          "4": "The shards gather themselves into Moonshard Shriekers, things of silver glass and sound. They scream at anything that moves, and the screaming shatters glass and bones.",
+          "5": "The Moon-Watchers say the scream is coming. On the night of the full moon the Echo of the Scream comes down to the ground first, a shape of white sound like a howl made solid, and wherever it goes there is no other noise.",
+          "6": "The moon screams. Everyone in the nearest settlement who is awake to hear it is deafened forever. The moon has a scar across its face from now on, and it screams again, softer, every full moon."
+        },
+        "V4": {
+          "1": "The stars shiver in the night sky. The few that are left tremble like candle-flames, and the animals of the realm will not leave their burrows or their stalls.",
+          "2": "The star charts are wrong. A Moon-Watcher shows the company a whole constellation that has crept across the sky in a week, huddled close to the moon as if for shelter.",
+          "3": "The dark between the stars is closer. Lamps throw light half as far as they should. In the space beyond the lamplight, things move.",
+          "4": "The Dark-creepers come out of the gaps between the light, long and low and fond of the edges of lamplight. They take people from the back of a group, one at a time, and nobody hears it happen.",
+          "5": "The Creeping Dark itself rolls over the land like a tide, a darkness with weight, swallowing hillsides. The stars above it go out one by one.",
+          "6": "The Creeping Dark swallows a constellation and the nearest settlement both. The constellation never comes back. The settlement is still there, people say, under the dark. No one who goes to look has returned."
+        },
+        "V5": {
+          "1": "In the ossuary of the village chapel every skull is smiling, though it was not yesterday. Their teeth glow faintly, like coals.",
+          "2": "Grave-robbers are digging up the dead for their teeth. A glowing tooth gives as much light as a candle and never goes out, and they sell well in the poor quarters of every town.",
+          "3": "The skulls chatter. In every graveyard at night there is a sound like rain, which is the dead laughing. The Silent Fraternity of the Cairn come out of their crypts, frightened, and ask the company to keep the robbers away.",
+          "4": "The Grinning Dead rise from their graves and walk, smiling, towards the oldest crypt in the realm. They do not attack unless stopped. They will not be stopped.",
+          "5": "In the oldest crypt of the Silent Fraternity, the Grinning King sits up. He was buried before the Gloaming with a crown of teeth. His smile lights the crypt like a lamp. He says it is almost time.",
+          "6": "Every grave in the nearest settlement empties. The dead walk out of it in their thousands, smiling, towards the dark at the edge of the world, and they do not come back. The living who saw them go smile in their sleep from then on."
+        },
+        "V6": {
+          "1": "A shape on the horizon at dusk, too large to be a hill. It has seven heads. By morning it is gone, but the ground where it stood is scorched in seven places.",
+          "2": "On the wind, voices speak. Each one tells a different doom, and each traveller hears a different voice. No one can agree what they heard, and everyone is sure.",
+          "3": "The Doomsayers come. Each wears a mask of one of the seven heads, and each preaches that their head's doom is the true one. They fight each other in the streets, and they want converts.",
+          "4": "The beast is closer every day, always at dusk, always on the horizon. A Herald of the Seventh Head walks ahead of it, ringing a bell, demanding that the settlements prepare.",
+          "5": "The Beast of Seven Heads stands at the edge of the nearest settlement. Six of its heads speak their dooms. The seventh is silent, and looks at the company.",
+          "6": "The Beast walks into the settlement and one doom comes true there (roll on the doom table). Then it walks on. The seventh head still has not spoken. It is waiting for VII."
+        },
+        "VI1": {
+          "1": "The sky turns black at noon, a darkness like a lid. Lamps burn low and blue. The Gasmen report that the street-lamps of every town are guttering, and no one can say why.",
+          "2": "Fires will not light. Flint sparks and dies; matches flare and go out. Hearths die in the night, and in the morning the families huddle together for warmth.",
+          "3": "The Cult of the Last Flame guards a single ember in an iron lantern, carried from village to village. They light one candle in each village from it, for a price. They are willing to kill to keep it burning.",
+          "4": "The Cold Hungerers come out of the black sky, gaunt shapes that feed on warmth. Where they pass, people are found frozen in their beds.",
+          "5": "The Snuffer descends, a figure of cold smoke as tall as a steeple, with a great bell-shaped hood. It moves from fire to fire, from lamp to lamp, and puts them out. It is going towards the Cult's ember, and after that, towards Emberglow.",
+          "6": "The Snuffer reaches the nearest settlement. Every fire there goes out and cannot be lit again. Only the Great Brazier of Emberglow, and the Cult's ember if it was saved, still burn in the realm."
+        },
+        "VI2": {
+          "1": "The ground trembles all day without stopping. The cracks in the roads are warm to the touch, and they breathe, slowly, in and out.",
+          "2": "Everyone dreams the same dream: falling forever in warm darkness, with something vast turning over below. The dream is the same every night, and every night it is a little closer.",
+          "3": "The Abyss-Pilgrims walk towards the cracks, singing, to throw themselves in. They are happy and they want to share it. They will pull others in with them.",
+          "4": "Things climb out of the cracks: Abyssal Crawlers, pale and many-legged, which lived on IT the way lice live on a dog. They are fleeing, and they are hungry.",
+          "5": "A Limb of IT rises out of the largest crack, a thing the size of a river, that ends in something like a hand. It feels across the land, blindly, the way a sleeper reaches for a blanket.",
+          "6": "The ground opens beneath the nearest settlement, and it falls into the abyss. The abyss does not close. At the bottom, very far down, something is opening its eyes."
+        },
+        "VI3": {
+          "1": "The wind stops. Every flag hangs still and every mill stops turning. Without the wind, the smell of the towns grows thick in the still air.",
+          "2": "Sounds are shorter. A bell rings and stops at once. Voices fall flat a few yards away. People shout to be heard, and stop shouting, because it does not help.",
+          "3": "Pockets of perfect silence drift across the land. Inside them, no sound can be made: the company is Silenced while within one. The Hushed, people who stood in one too long, wander with their mouths open, unable to remember sound.",
+          "4": "The Stillwraiths walk in the silence, long and pale and soundless, and strangle the breath out of anyone who speaks. Villages communicate with chalk and gestures.",
+          "5": "The Great Silence settles over the nearest town like snow, a vast shape of nothing at its heart. Sound goes into it and does not come out.",
+          "6": "The Great Silence swallows every sound in the nearest settlement forever. Nobody there will speak, sing or hear again. The wind does not come back, anywhere in the realm."
+        },
+        "VI4": {
+          "1": "A fine grey snow falls from the night sky. It does not melt. In the morning there are fewer stars, and the snow lies in drifts over the roads.",
+          "2": "Every night it snows and every morning there are fewer stars. The Moon-Watchers sit in their towers in silence, counting the ones that are left. It does not take long.",
+          "3": "Dust-Gleaners sweep up the grey snow in sacks, and sell it as star-dust: a pinch in a lamp, they say, burns like a little star. It does not, but it sells.",
+          "4": "The drifts move. Greysnow Wights rise out of them, shapes of packed dust with hollow eyes, cold and very slow and very patient. They walk towards anything that still glows.",
+          "5": "The Dust Colossus rises from the deepest drift, a shape of grey snow as high as a hill, made of every star that ever fell. It walks across the land, and the snow follows it.",
+          "6": "The Dust Colossus lies down over the nearest settlement and becomes a hill of grey snow. The last stars in the sky above the realm go out. The night has no stars from now on, and the grey snow never melts."
+        },
+        "VI5": {
+          "1": "At dusk, every young heart in the village beats once, hard enough to be heard across the room. Mothers look up. Then nothing more. Everyone sleeps badly.",
+          "2": "The young sleep long and deep and are difficult to wake. They murmur about a visitor who stands at the end of the bed and asks politely if it may come in.",
+          "3": "A Vessel-Keeper of the Order of the Seamless Shroud arrives with her wagon of shrouds and charms of iron and salt. She says the young must be watched every night, and that whatever happens, no one must answer the visitor's question.",
+          "4": "At midnight, across the realm, the young hearts stop in unison, in one breath. It is quiet and painless. The houses are full of grief.",
+          "5": "On the third night, the Filled sit up. They are not the young who died. Something else is wearing them, and the Tenant, the thing that sent them, walks the road to the nearest settlement to collect its household.",
+          "6": "The Tenant moves into the nearest settlement. From now on, every house there has one more occupant than it should, and nobody speaks of it."
+        },
+        "VI6": {
+          "1": "A bite is missing from the edge of the full moon. It is not an eclipse. The Moon-Watchers say the shape is wrong, and the bite has teeth-marks.",
+          "2": "Every night the bite is bigger. The Moon-Watchers go up into their towers and do not come down. The nights grow so dark that a lamp will barely show your own hand.",
+          "3": "The last Moon-Watchers come out of their towers mad with grief. They try to sacrifice themselves to the moon to fill the gap. They want company.",
+          "4": "Eclipse-spawn drop from the dark side of the moon on threads of shadow, small, sleek and black, with mouths of red light. They hunt by moonlight and eat what little is left of it.",
+          "5": "The Moon-Eater shows itself, a vast shape of shadow wrapped around the moon, its mouth a ring of red. It reaches down one long arm to the earth to feed on the lamps of the nearest settlement as it finishes the moon.",
+          "6": "The moon is gone. Only a faint, blood-red ring is left where it was. In the nearest settlement every lamp has been eaten too. The nights in the realm are total darkness from now on, and the Eclipse-spawn hunt in them."
+        }
       }
     },
     "Travel": {

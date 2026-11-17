@@ -16,10 +16,10 @@
  *   rolled on its d20 table. Results marked Hinterlands or mountains are
  *   shown with their tag; in the Heartlands the Dark Master rolls again or
  *   picks the nearest fit.
- * - Omens: the basic rules (1.5) are used, not the optional Omens of Misery
- *   subsystem. Both Omen results show the omen of the current Misery. The
- *   two results keep their own keys (omenRandom, omenNearest) for the day
- *   the Omens of Misery subsystem is set up.
+ * - Omens: with the light die (basic rules 1.5), both Omen results show
+ *   the omen of the current Misery. With Omens of Misery (GAPS 307),
+ *   omenRandom moves a live Misery picked by a roll and omenNearest one
+ *   picked by the Dark Master (module/misery.mjs).
  */
 
 import { MODE, diceFormula } from "./test-roll.mjs";

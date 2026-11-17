@@ -15,6 +15,11 @@
  * Players improve (player feedback): with it on, a player sees the Improve
  * button on their own character too. The Dark Master still says when.
  *
+ * Dying of the light (GAPS 307): the Miseries come by the light die of
+ * rules 1.5 (the default), or by the Omens of Misery, where the Omen
+ * results on the road move each Misery through its six omens. With Omens,
+ * "Omens before the next Misery" (1 to 6) sets when the next one is due.
+ *
  * Improving feat group (player feedback; rules 2.8 "choose or roll"):
  * "roll" rolls the d3 for general / ancestry / class; "choose" lets whoever
  * improves pick the group, and the feat inside it is still rolled.
@@ -27,6 +32,8 @@ const PLAYERS_IMPROVE = "playersImprove";
 const IMPROVING_GROUP = "improvingGroup";
 const ONGOING_OPEN = "ongoingOpen";
 const ENCOUNTER_PARTY = "encounterParty";
+const MISERY_MODE = "miseryMode";
+const OMENS_PER_MISERY = "omensPerMisery";
 
 /** Called from the init hook. */
 export function registerSettings() {
@@ -88,6 +95,41 @@ export function registerSettings() {
     default: true,
     onChange: redrawTablePanels
   });
+
+  game.settings.register(SYSTEM, MISERY_MODE, {
+    name: "VARBORG.Settings.MiseryMode.Name",
+    hint: "VARBORG.Settings.MiseryMode.Hint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: {
+      lightDie: "VARBORG.Settings.MiseryMode.lightDie",
+      omens: "VARBORG.Settings.MiseryMode.omens"
+    },
+    default: "lightDie",
+    onChange: redrawTablePanels
+  });
+
+  game.settings.register(SYSTEM, OMENS_PER_MISERY, {
+    name: "VARBORG.Settings.OmensPerMisery.Name",
+    hint: "VARBORG.Settings.OmensPerMisery.Hint",
+    scope: "world",
+    config: true,
+    type: Number,
+    range: { min: 1, max: 6, step: 1 },
+    default: 4,
+    onChange: redrawTablePanels
+  });
+}
+
+/** Whether the Miseries come by the Omens of Misery (GAPS 307), not the light die. */
+export function omensMode() {
+  return game.settings.get(SYSTEM, MISERY_MODE) === "omens";
+}
+
+/** How many omens of the newest Misery bring the next one (1 to 6). */
+export function omensPerMisery() {
+  return Number(game.settings.get(SYSTEM, OMENS_PER_MISERY));
 }
 
 /** Redraw open character sheets, so their title-bar buttons change at once. */

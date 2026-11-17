@@ -32,6 +32,7 @@ import { rest } from "./rest.mjs";
 import { registerCalendarNotes, editNote, toggleNoteShown, deleteNote } from "./calendar-notes.mjs";
 import { registerDayLog, recordToday } from "./day-log.mjs";
 import { registerWeather, weatherContext, setWeatherByHand, currentWeather } from "./weather.mjs";
+import { followTodaysWeather } from "./scene-weather.mjs";
 import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
 import { travel } from "./travel.mjs";
 import { registerPoolOrbs, refreshPoolOrbs } from "./pool-orbs.mjs";
@@ -459,6 +460,8 @@ export function registerPanels() {
     refreshPools();
     refreshLight();
     weatherChangedLight();
+    // Scenes that follow today's weather show its effect (step 63).
+    followTodaysWeather();
   });
   // The Misery (module/misery.mjs).
   registerMisery(() => {

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="64" viewBox="0 0 32 64">
+  <!-- VÅR BORG particle: a glowing ember, hot at the head, fading down its tail. -->
+  <defs>
+    <radialGradient id="g" cx="0.5" cy="0.25" r="0.6"><stop offset="0" stop-color="#fff"/><stop offset="0.4" stop-color="#fff" stop-opacity="0.6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <path d="M16 4 C24 10 24 22 16 60 C8 22 8 10 16 4 Z" fill="url(#g)"/>
+</svg>

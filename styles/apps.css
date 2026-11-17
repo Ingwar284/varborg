@@ -893,6 +893,38 @@
   font-weight: bold;
 }
 
+/* Omens of Misery (GAPS 307): one line per Misery that has come. */
+.var-borg-table-panel .misery-tracks {
+  list-style: none;
+  margin: 0.1rem 0;
+  padding: 0;
+}
+
+.var-borg-table-panel .misery-tracks li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 0.9em;
+}
+
+.var-borg-table-panel .misery-tracks li.done {
+  opacity: 0.6;
+}
+
+.var-borg-table-panel .misery-tracks .misery-count {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.var-borg-dialog .misery-set-table {
+  width: 100%;
+  margin: 0.4rem 0;
+}
+
+.var-borg-dialog .misery-set-table th {
+  text-align: left;
+}
+
 .var-borg-table-panel button.set-misery {
   margin-top: 0.2rem;
   line-height: 1.6rem;

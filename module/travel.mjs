@@ -14,7 +14,10 @@
  *   (module/settings.mjs), this result is re-rolled instead (GAPS 261).
  * - Travel hardship: its d20 table is rolled and the hardship shown, with
  *   its place tag and, in the Heartlands, a note for misfits.
- * - Omen: the omen of the current Misery (basic rules 1.5).
+ * - Omen: with the light die (basic rules 1.5), the current Misery's omen.
+ *   With Omens of Misery (GAPS 307), the next Misery comes if it is due,
+ *   or a live Misery moves on to its next omen (random misery: a roll;
+ *   nearest misery: the Dark Master picks), and its omen is shown.
  * - Encounters are named with their threat points; the Dark Master rolls
  *   the Combat Tables.
  *
@@ -32,11 +35,11 @@ import {
 import { phaseAt } from "./rules/calendar.mjs";
 import { nextPhase } from "./calendar.mjs";
 import { shiftWeather } from "./weather.mjs";
-import { miseryContext } from "./misery.mjs";
+import { miseryContext, omenForTravel } from "./misery.mjs";
 import { currentWeather } from "./weather.mjs";
 import { travelFactorFor, travelSpeed } from "./rules/weather-effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
-import { weatherOn } from "./settings.mjs";
+import { weatherOn, omensMode } from "./settings.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -156,7 +159,14 @@ export async function travel() {
     hardship = { roll: d20.total, ...hardshipFor(d20.total) };
   }
 
-  await postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard, rerolled });
+  // Omens of Misery: the omen moves a Misery on (GAPS 307).
+  let omen = null;
+  if (isOmen(key) && omensMode()) {
+    omen = await omenForTravel(key === "omenRandom" ? "random" : "nearest");
+    rolls.push(...omen.rolls);
+  }
+
+  await postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard, rerolled, omen });
   if (key === "weather") await shiftWeather();
   return true;
 }
@@ -200,7 +210,7 @@ function resultLines(key, hardship) {
   return [i18n.localize(`VARBORG.Travel.Result.${key}.Text`)];
 }
 
-async function postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard, rerolled = [] }) {
+async function postTravelCard({ method, region, phase, roll, key, hardship, rolls, hazard, rerolled = [], omen = null }) {
   const i18n = game.i18n;
   const escape = foundry.utils.escapeHTML;
   const trip = { phase, region };
@@ -224,7 +234,13 @@ async function postTravelCard({ method, region, phase, roll, key, hardship, roll
   let html = `<div class="var-borg-card travel-card"><h3>${escape(title)}</h3>`
     + lines.filter(Boolean).map(line => `<p>${escape(line)}</p>`).join("")
     + `<p class="travel-result"><strong>${escape(resultName)}</strong></p>`
-    + resultLines(key, hardship).map(line => `<p>${escape(line)}</p>`).join("");
+    + (omen
+      ? omen.lines.map(line => `<p${line.cls ? ` class="${line.cls}"` : ""}>${escape(line.text)}</p>`).join("")
+      : resultLines(key, hardship).map(line => `<p>${escape(line)}</p>`).join(""));
+  if (omen?.end) {
+    html += `<div class="misery-end"><p><strong>${i18n.localize("VARBORG.Misery.EndTitle")}</strong></p>`
+      + `<p>${i18n.localize("VARBORG.Misery.EndText")}</p></div>`;
+  }
 
   if (hardship) {
     const name = i18n.localize(`VARBORG.Travel.Hardship.${hardship.key}.Name`);
