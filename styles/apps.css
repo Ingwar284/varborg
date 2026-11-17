@@ -720,8 +720,8 @@
   padding: 0.35rem 0;
 }
 
-/* At the top of their own panels (Weather, Misery), no line above. */
-.var-borg-table-panel > :is(.weather-row, .misery-row):first-child {
+/* At the top of its own panel, no line above. */
+.var-borg-table-panel > .weather-row:first-child {
   border-top: none;
 }
 
@@ -842,33 +842,205 @@
 
 .var-borg-hex-flower .kind-majorHazard { --hex-fill: var(--vb-weather-major-hazard); color: var(--vb-hex-text-light); }
 
-.var-borg-travel-dialog fieldset {
+/* ---------- The Overland panel: weather and travel (steps 38, 40; GAPS 309) ---------- */
+.var-borg-overland-panel h2 {
+  margin: 0 0 0.4rem;
+}
+
+.var-borg-overland-panel h2:not(:first-child) {
+  margin-top: 0.7rem;
+}
+
+.var-borg-overland-panel .weather-row {
+  border-top: none;
+  padding-top: 0;
+}
+
+.var-borg-table-panel .overland-label {
+  display: block;
+  margin: 0.3rem 0 0.2rem;
+  font-style: italic;
+}
+
+/* Region tiles (two by two) and method cards (three across): outlined stamps;
+   the chosen one is a band with a hard shadow and an accent line under it. */
+.var-borg-table-panel .region-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+}
+
+.var-borg-table-panel .method-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+}
+
+.var-borg-table-panel :is(button.region-tile, button.method-card) {
+  --vb-btn-bg: var(--vb-surface);
+  --vb-btn-fg: var(--vb-text);
+  --vb-btn-border: var(--vb-line);
+  --vb-btn-hover-bg: var(--vb-surface-raised);
+  --vb-btn-hover-fg: var(--vb-text);
+  --vb-btn-hover-border: var(--vb-line);
+  position: relative;
+  height: auto;
+  margin: 0;
+  border-width: 2px;
+  line-height: 1.2;
+}
+
+.var-borg-table-panel :is(button.region-tile, button.method-card).active {
+  --vb-btn-bg: var(--vb-band);
+  --vb-btn-fg: var(--vb-band-text);
+  --vb-btn-hover-bg: var(--vb-band);
+  --vb-btn-hover-fg: var(--vb-band-hover);
+  box-shadow: inset 0 -3px 0 var(--vb-band-accent), var(--vb-shadow-hard);
+}
+
+/* Players see the choices but cannot change them. */
+.var-borg-table-panel .overland-travel.readonly :is(button.region-tile, button.method-card) {
+  --vb-btn-hover-bg: var(--vb-btn-bg);
+  --vb-btn-hover-fg: var(--vb-btn-fg);
+  cursor: default;
+}
+
+.var-borg-table-panel button.region-tile {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  column-gap: 0.35rem;
+  align-items: center;
+  padding: 0.3rem 1.3rem 0.3rem 0.35rem;
+  text-align: left;
+}
+
+.var-borg-table-panel .region-icon {
+  grid-row: 1 / 3;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.var-borg-table-panel :is(.region-name, .method-name) {
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.04em;
+}
+
+.var-borg-table-panel :is(.region-mood, .method-hexes, .method-need) {
+  font-size: 0.78em;
+  color: var(--vb-text-soft);
+}
+
+.var-borg-table-panel :is(button.region-tile, button.method-card).active :is(.region-mood, .method-hexes, .method-need) {
+  color: var(--vb-band-text);
+}
+
+.var-borg-table-panel .region-boon {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.35rem;
+  font-size: 0.8em;
+}
+
+.var-borg-table-panel button.method-card {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-}
-
-/* ---------- The Miseries (step 39) ---------- */
-.var-borg-table-panel .misery-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  border-top: 1px solid var(--vb-line-soft);
-  padding: 0.35rem 0;
-}
-
-.var-borg-table-panel .misery-icon {
-  font-size: 1.4rem;
-  width: 1.6rem;
+  align-items: center;
+  gap: 0.05rem;
+  padding: 0.3rem 0.2rem 0.4rem;
   text-align: center;
+}
+
+.var-borg-table-panel .method-speed {
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.var-borg-table-panel .method-need {
+  margin-top: 0.15rem;
+  line-height: 1.15;
+}
+
+.var-borg-table-panel button.method-card.spent .method-need {
+  color: var(--vb-alert);
+  font-weight: bold;
+}
+
+.var-borg-table-panel button.gallop-ready {
+  --vb-btn-bg: transparent;
+  --vb-btn-fg: var(--vb-text);
+  width: 100%;
+  margin-top: 0.35rem;
+  border-width: 1px;
+  line-height: 1.5rem;
+}
+
+.var-borg-table-panel .travel-plan {
+  margin: 0.5rem 0 0.45rem;
+  padding: 0.35rem 0.45rem;
+  border-left: 3px solid var(--vb-line);
+  background: var(--vb-surface-raised);
+}
+
+.var-borg-table-panel .travel-plan p {
+  margin: 0;
+}
+
+.var-borg-table-panel .travel-plan p + p {
   margin-top: 0.2rem;
+}
+
+.var-borg-table-panel .travel-boon {
+  color: var(--vb-alert);
+  font-weight: bold;
+}
+
+.var-borg-table-panel button.travel-go {
+  width: 100%;
+  font-family: var(--vb-font-head);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  line-height: 2.1rem;
+  box-shadow: var(--vb-shadow-hard);
+}
+
+/* ---------- The Miseries (step 39; GAPS 307, 309) ---------- */
+.var-borg-table-panel .misery-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0.45rem;
+  margin-bottom: 0.2rem;
+  border-bottom: 3px double var(--vb-line);
+}
+
+/* The current Misery's numeral: a stamped band tile, like the pool counts. */
+.var-borg-table-panel .misery-numeral {
+  min-width: 3rem;
+  padding: 0 0.35rem;
+  border: 2px solid var(--vb-line);
+  box-shadow: var(--vb-shadow-hard);
+  background: var(--vb-band);
+  color: var(--vb-band-text);
+  font-family: var(--vb-font-head);
+  font-size: 1.9rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.var-borg-table-panel .misery-numeral.none {
+  background: var(--vb-surface);
+  color: var(--vb-text);
+  font-size: 1.4rem;
+  line-height: 1.85;
 }
 
 .var-borg-table-panel .misery-text {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .var-borg-table-panel .misery-label,
@@ -876,12 +1048,9 @@
   font-style: italic;
 }
 
-.var-borg-table-panel .misery-name {
-  font-weight: bold;
-}
-
-.var-borg-table-panel .misery-omen {
+.var-borg-table-panel .misery-sun {
   font-size: 0.9em;
+  color: var(--vb-text-soft);
 }
 
 .var-borg-table-panel .misery-sunless {
@@ -889,31 +1058,174 @@
   font-weight: bold;
 }
 
-.var-borg-table-panel .misery-row.end .misery-name {
+/* One block per Misery that has come, newest first and open. */
+.var-borg-table-panel .misery-block {
+  padding: 0.3rem 0;
+}
+
+.var-borg-table-panel .misery-block + .misery-block {
+  border-top: 1px solid var(--vb-line-soft);
+}
+
+.var-borg-table-panel .misery-block > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.var-borg-table-panel .misery-block > summary::-webkit-details-marker {
+  display: none;
+}
+
+.var-borg-table-panel .misery-badge {
+  min-width: 2rem;
+  padding: 0 0.2rem;
+  border: 2px solid var(--vb-line);
+  font-family: var(--vb-font-head);
+  text-align: center;
+}
+
+.var-borg-table-panel .misery-block.newest .misery-badge {
+  background: var(--vb-band);
+  color: var(--vb-band-text);
+}
+
+.var-borg-table-panel .misery-block-name {
+  flex: 1;
+  font-family: var(--vb-font-head);
+  letter-spacing: 0.04em;
+}
+
+.var-borg-table-panel .misery-block.done .misery-block-name,
+.var-borg-table-panel .misery-block-count {
+  color: var(--vb-text-soft);
+}
+
+.var-borg-table-panel .misery-block-count {
+  font-size: 0.85em;
+}
+
+.var-borg-table-panel .misery-chevron {
+  font-size: 0.75em;
+  color: var(--vb-text-soft);
+}
+
+.var-borg-table-panel .misery-block:not([open]) .misery-chevron {
+  transform: rotate(-90deg);
+}
+
+.var-borg-table-panel .omen-list {
+  list-style: none;
+  margin: 0.3rem 0 0 0.9rem;
+  padding: 0 0 0 0.5rem;
+  border-left: 2px solid var(--vb-line-strong);
+}
+
+.var-borg-table-panel .omen {
+  padding: 0.25rem 0;
+}
+
+.var-borg-table-panel .omen + .omen {
+  border-top: 1px solid var(--vb-line-soft);
+}
+
+.var-borg-table-panel .omen-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.var-borg-table-panel .omen-name {
+  flex: 1;
   font-weight: bold;
 }
 
-/* Omens of Misery (GAPS 307): one line per Misery that has come. */
-.var-borg-table-panel .misery-tracks {
-  list-style: none;
-  margin: 0.1rem 0;
-  padding: 0;
+.var-borg-table-panel .omen.done .omen-name {
+  color: var(--vb-text-soft);
 }
 
-.var-borg-table-panel .misery-tracks li {
+.var-borg-table-panel .omen-die {
+  display: inline-block;
+  min-width: 1.15rem;
+  margin-right: 0.15rem;
+  border: 1px solid var(--vb-line);
+  font-size: 0.8em;
+  line-height: 1.1rem;
+  text-align: center;
+}
+
+/* Six lozenges, one per stage: past ones filled, the current one in the accent, those to come hollow. */
+.var-borg-table-panel .omen-pips {
   display: flex;
-  justify-content: space-between;
-  gap: 0.6rem;
+  gap: 3px;
+  cursor: help;
+}
+
+.var-borg-table-panel .omen-pip {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1px solid var(--vb-line-strong);
+  transform: rotate(45deg);
+}
+
+.var-borg-table-panel .omen-pip.past {
+  background: var(--vb-text-soft);
+  border-color: var(--vb-text-soft);
+}
+
+.var-borg-table-panel .omen-pip.current {
+  background: var(--vb-accent);
+  border-color: var(--vb-line);
+}
+
+.var-borg-table-panel .omen-now {
+  margin: 0.2rem 0 0;
   font-size: 0.9em;
 }
 
-.var-borg-table-panel .misery-tracks li.done {
-  opacity: 0.6;
+.var-borg-table-panel .omen-before > summary {
+  margin-top: 0.15rem;
+  font-size: 0.8em;
+  font-style: italic;
+  color: var(--vb-text-soft);
+  cursor: pointer;
 }
 
-.var-borg-table-panel .misery-tracks .misery-count {
-  font-weight: bold;
-  white-space: nowrap;
+.var-borg-table-panel .omen-stages {
+  margin: 0.15rem 0 0 1.1rem;
+  padding: 0;
+  font-size: 0.85em;
+  color: var(--vb-text-soft);
+}
+
+.var-borg-table-panel .omen-stages li + li {
+  margin-top: 0.15rem;
+}
+
+.var-borg-table-panel :is(.misery-next, .misery-current-omen) {
+  margin: 0.4rem 0 0;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--vb-line-soft);
+}
+
+.var-borg-table-panel .misery-next {
+  font-style: italic;
+}
+
+.var-borg-table-panel .misery-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+  padding-top: 0.4rem;
+  border-top: 3px double var(--vb-line);
+}
+
+.var-borg-table-panel .misery-foot .misery-light {
+  flex: 1;
+  font-size: 0.85em;
 }
 
 .var-borg-dialog .misery-set-table {
@@ -925,8 +1237,12 @@
   text-align: left;
 }
 
+.var-borg-dialog .misery-set-table td select {
+  width: 100%;
+  min-width: 2.6rem;
+}
+
 .var-borg-table-panel button.set-misery {
-  margin-top: 0.2rem;
   line-height: 1.6rem;
   white-space: nowrap;
 }
@@ -1071,7 +1387,7 @@
   letter-spacing: 0.04em;
 }
 
-.var-borg-table-panel :is(.round, .hint, .weather-label, .misery-label, .misery-light, .day-number) {
+.var-borg-table-panel :is(.round, .hint, .weather-label, .misery-label, .misery-light, .day-number, .overland-label) {
   color: var(--vb-text-soft);
   opacity: 1;
 }
@@ -1116,30 +1432,24 @@
   color: var(--vb-light);
 }
 
-.var-borg-table-panel .misery-icon {
-  color: var(--vb-text);
-}
-
-/* The end of the Miseries: a band (black in light, moon-silver in dark). */
-.var-borg-table-panel .misery-row.end {
-  padding: 0.35rem 0.4rem;
+/* The end of the Miseries: the header becomes a band (black in light, moon-silver in dark). */
+.var-borg-table-panel .misery-head.end {
+  padding: 0.4rem;
   background: var(--vb-band);
   color: var(--vb-band-text);
 }
 
-.var-borg-table-panel .misery-row.end :is(.misery-name, .misery-sunless, .misery-icon) {
+.var-borg-table-panel .misery-head.end .misery-numeral {
+  background: var(--vb-band-text);
+  color: var(--vb-band);
+}
+
+.var-borg-table-panel .misery-head.end :is(.misery-name, .misery-sunless) {
   color: var(--vb-band-hover);
 }
 
-.var-borg-table-panel .misery-row.end :is(.misery-label, .misery-light, .misery-omen) {
+.var-borg-table-panel .misery-head.end .misery-label {
   color: var(--vb-band-text);
-  opacity: 0.8;
-}
-
-.var-borg-table-panel .misery-row.end button {
-  --vb-btn-bg: var(--vb-band-text);
-  --vb-btn-fg: var(--vb-band);
-  --vb-btn-border: var(--vb-band-text);
 }
 
 /* ---- Weather hex flower: each hex outlined in ink ---- */

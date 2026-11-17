@@ -8,7 +8,7 @@
  *   the scene is In Darkness.
  * - Each person can override it in the settings: always light, or always dark.
  * - Night on the side panels: from dusk to dawn (the Night phase on the
- *   world clock) the five table panels (Calendar & Time, Weather, Misery,
+ *   world clock) the five table panels (Calendar & Time, Overland, Misery,
  *   Light, Ember and Gloom) take the dark mood, whatever the rest of the
  *   screen shows. They carry the class "vb-night", which switches on the
  *   dark tokens for that window alone (styles/tokens.css). "Always light"

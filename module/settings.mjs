@@ -15,10 +15,11 @@
  * Players improve (player feedback): with it on, a player sees the Improve
  * button on their own character too. The Dark Master still says when.
  *
- * Dying of the light (GAPS 307): the Miseries come by the light die of
- * rules 1.5 (the default), or by the Omens of Misery, where the Omen
- * results on the road move each Misery through its six omens. With Omens,
- * "Omens before the next Misery" (1 to 6) sets when the next one is due.
+ * Dying of the light (GAPS 307, 309): the Miseries come by the light die
+ * of rules 1.5 (the default), or by the Omens of Misery, where the Omen
+ * results on the road start each Misery's omens and move them through
+ * their six stages. With Omens, "Omens before the next Misery" (1 to 6) is
+ * the stage an omen of the newest Misery must reach before the next is due.
  *
  * Improving feat group (player feedback; rules 2.8 "choose or roll"):
  * "roll" rolls the d3 for general / ancestry / class; "choose" lets whoever

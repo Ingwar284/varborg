@@ -1541,3 +1541,12 @@ item names its GAPS ruling where there is one.
     active scene’s weather effect plays, and other weather playlists stop.
     A “Create weather playlists” button in Configure Settings makes an
     empty playlist for each effect that has none, in a folder “Weather”.
+64. **Overland panel and omen stages** (built, to be tested; GAPS 309, 310).
+    The Weather panel becomes the Overland panel: weather on top, and
+    below it the party's region (Emberglow, Heartlands, Hinterlands,
+    Darklands) and method (Trek, Gallop, Cruise, in hexes per phase), with
+    the Travel button; Gallop is spent until a Long rest. The encounter
+    table's Omen results become Omen (new) and Omen (ongoing); a Misery
+    can hold several omens, each with six stages. Scenery rolls a d100
+    read-aloud line, 100 per region. The Misery panel shows every Misery,
+    its omens and their past and current stages.

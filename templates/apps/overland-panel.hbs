@@ -1,0 +1,72 @@
+<section class="var-borg-table-panel var-borg-overland-panel">
+  <h2>{{localize "VARBORG.Weather.Heading"}}</h2>
+  {{#if weather.on}}
+  <div class="weather-row kind-{{weather.kind}}">
+    {{{weather.flower}}}
+    <div class="weather-text">
+      <span class="weather-label">{{localize "VARBORG.Weather.Label"}}</span>
+      <span class="weather-name">{{weather.name}}</span>
+      {{#if weather.hazard}}
+        <span class="weather-hazard" data-tooltip="{{weather.hazardEffect}}">
+          <i class="fa-solid fa-triangle-exclamation"></i> {{weather.hazard}}</span>
+      {{/if}}
+      {{#if isGM}}
+        <button type="button" class="set-weather" data-action="setWeather"
+          data-tooltip="{{localize 'VARBORG.Weather.SetTooltip'}}"><i class="fa-solid fa-cloud-sun-rain"></i> {{localize "VARBORG.Weather.Set"}}</button>
+      {{/if}}
+    </div>
+  </div>
+  {{else}}
+  <p class="hint">{{localize "VARBORG.Weather.Off"}}</p>
+  {{/if}}
+
+  <h2>{{localize "VARBORG.Travel.Heading"}}</h2>
+  <div class="overland-travel{{#unless isGM}} readonly{{/unless}}">
+    <span class="overland-label">{{localize "VARBORG.Travel.RegionLabel"}}</span>
+    <div class="region-tiles">
+      {{#each travel.regions}}
+        <button type="button" class="region-tile region-{{id}}{{#if active}} active{{/if}}"
+          data-action="setRegion" data-region="{{id}}" aria-pressed="{{#if active}}true{{else}}false{{/if}}">
+          <i class="{{icon}} region-icon" aria-hidden="true"></i>
+          <span class="region-name">{{name}}</span>
+          <span class="region-mood">{{mood}}</span>
+          {{#if boon}}<i class="fa-solid fa-dice-d20 region-boon" data-tooltip="{{localize 'VARBORG.Travel.BoonTile'}}"
+            aria-label="{{localize 'VARBORG.Travel.BoonTile'}}"></i>{{/if}}
+        </button>
+      {{/each}}
+    </div>
+
+    <span class="overland-label">{{localize "VARBORG.Travel.MethodLabel"}}</span>
+    <div class="method-cards">
+      {{#each travel.methods}}
+        <button type="button" class="method-card{{#if active}} active{{/if}}{{#if spent}} spent{{/if}}"
+          data-action="setMethod" data-method="{{id}}" aria-pressed="{{#if active}}true{{else}}false{{/if}}"
+          data-tooltip="{{need}}" {{#if spent}}disabled{{/if}}>
+          <span class="method-speed">{{localize "VARBORG.Travel.MethodHexes" speed=speed}}</span>
+          <span class="method-name">{{name}}</span>
+          <span class="method-hexes">{{localize "VARBORG.Travel.PerPhase" hexes=hexes}}</span>
+          <span class="method-need">{{#if spent}}{{localize "VARBORG.Travel.GallopSpent"}}{{else}}{{need}}{{/if}}</span>
+        </button>
+      {{/each}}
+    </div>
+    {{#if isGM}}
+      {{#each travel.methods}}
+        {{#if spent}}
+          <button type="button" class="gallop-ready" data-action="gallopReady">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> {{localize "VARBORG.Travel.GallopReadyTooltip"}}</button>
+        {{/if}}
+      {{/each}}
+    {{/if}}
+
+    <div class="travel-plan">
+      <p class="travel-plan-line"><i class="fa-solid fa-route" aria-hidden="true"></i> {{travel.plan}}</p>
+      {{#if travel.weatherLine}}<p class="hint">{{travel.weatherLine}}</p>{{/if}}
+      {{#if travel.boonLine}}<p class="travel-boon"><i class="fa-solid fa-dice-d20" aria-hidden="true"></i> {{travel.boonLine}}</p>{{/if}}
+    </div>
+
+    {{#if isGM}}
+      <button type="button" class="travel-go" data-action="travel"
+        data-tooltip="{{localize 'VARBORG.Travel.Tooltip'}}"><i class="fa-solid fa-route"></i> {{localize "VARBORG.Travel.Button"}}</button>
+    {{/if}}
+  </div>
+</section>

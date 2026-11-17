@@ -114,56 +114,84 @@ export function miseryAfterDawn(state, results) {
 }
 
 /* -------------------------------------------- */
-/*  Omens of Misery (alternative mode, GAPS 307) */
+/*  Omens of Misery (alternative mode, GAPS 307, 309) */
 /* -------------------------------------------- */
 
 /*
- * Designer rulings (GAPS 307), when the world setting "Dying of the light"
- * is Omens of Misery instead of the light die:
- * - Each Misery that has come keeps its own track of omens, 1 to 6, in
- *   order. Every Misery stays live until its omen 6.
- * - The Omen results of the travel table move a track on: "random misery"
- *   picks a live Misery by a roll, "nearest misery" by the Dark Master.
- * - No Misery at first: the first Omen result brings Misery I (its d6
- *   result is rolled) with its omen 1.
- * - When the newest Misery has had the set number of omens (1 to 6), the
- *   next Misery is due: the next Omen result brings it with its omen 1,
- *   instead of moving a live Misery on.
- * - When VI has had the set number, VII is due; the next Omen result
- *   brings it and the world ends (GAPS 167, 306).
+ * Designer rulings, when the world setting "Dying of the light" is Omens
+ * of Misery instead of the light die (GAPS 307, changed by GAPS 309):
+ * - Each Misery that has come can hold several omens: its six d6 results.
+ *   Each omen has six stages, in order, and stays live until its stage 6.
+ * - Omen (new), travel 11-12: roll the newest Misery's d6 (a result
+ *   already started is rolled again) and start that omen at stage 1. If
+ *   all six have started, a live omen picked by a roll moves one stage on.
+ * - The next Misery is due once any omen of the newest Misery has reached
+ *   the stage set by "Omens before the next Misery" (1 to 6). The next
+ *   Omen (new) then brings it, with its first omen (rolled) at stage 1.
+ *   With no Misery yet, the first Omen (new) brings Misery I.
+ * - When VI is due, the next Omen (new) brings VII and the world ends
+ *   (GAPS 167, 306).
+ * - Omen (ongoing), travel 13-16: a live omen of any Misery, picked by a
+ *   roll, moves one stage on. Provisional (GAPS 310): with no live omen it
+ *   works as Omen (new).
  * - The light die is not rolled; the sunrise die of the newest Misery is.
  *
- * The track: { miseries: [{result, omens}, …], ended }, where miseries[0]
- * is Misery I, result is its d6 table result and omens how many of its
- * omens have happened (0 to 6; 0 only when set by hand).
+ * The track: { miseries: [{ omens: [{result, stage}, ...] }, ...], ended },
+ * where miseries[0] is Misery I, its omens are listed in the order they
+ * started, result is the d6 table result (1 to 6) and stage 1 to 6.
+ * A track saved before GAPS 309 ({result, omens} per Misery) is read as
+ * one omen per Misery.
  */
 
-/** Every Misery has six omens. */
-export const OMENS_PER_RESULT = 6;
+/** Every omen has six stages. */
+export const STAGES = 6;
 
-/** The number of omens before the next Misery when none is set. */
+/** Every Misery has six omens (its d6 table). */
+export const OMENS_PER_MISERY = 6;
+
+/** The stage that makes the next Misery due when none is set. */
 export const DEFAULT_PER_MISERY = 4;
 
 /** The setting "Omens before the next Misery" made safe: 1 to 6. */
 export function cleanPerMisery(value) {
   const n = Number(value);
-  return Number.isInteger(n) && n >= 1 && n <= OMENS_PER_RESULT ? n : DEFAULT_PER_MISERY;
+  return Number.isInteger(n) && n >= 1 && n <= STAGES ? n : DEFAULT_PER_MISERY;
+}
+
+function isDie(n, max) {
+  return Number.isInteger(n) && n >= 1 && n <= max;
+}
+
+/** One stored Misery's omens made safe: no repeats, stages 1 to 6. */
+function cleanOmens(entry) {
+  // The shape saved before GAPS 309: one result and its omen count.
+  const list = Array.isArray(entry?.omens) ? entry.omens
+    : entry?.result !== undefined ? [{ result: entry.result, stage: Math.max(Number(entry.omens) || 0, 1) }]
+      : [];
+  const omens = [];
+  for (const omen of list) {
+    const result = Number(omen?.result);
+    const stage = Number(omen?.stage);
+    if (!isDie(result, OMENS_PER_MISERY) || !isDie(stage, STAGES)) continue;
+    if (omens.some(o => o.result === result)) continue;
+    omens.push({ result, stage });
+  }
+  return omens;
 }
 
 /**
  * A stored track made safe. Miseries come in order, so the list stops at
- * the first bad entry. Only a world past VI can have ended.
+ * the first Misery with no omen. Only a world past VI can have ended.
  * @param {*} track
- * @returns {{miseries: Array<{result: number, omens: number}>, ended: boolean}}
+ * @returns {{miseries: Array<{omens: Array<{result: number, stage: number}>}>, ended: boolean}}
  */
 export function cleanTrack(track) {
   const miseries = [];
   for (const entry of Array.isArray(track?.miseries) ? track.miseries : []) {
     if (miseries.length >= 6) break;
-    const result = Number(entry?.result);
-    const omens = Number(entry?.omens);
-    if (!Number.isInteger(result) || result < 1 || result > 6) break;
-    miseries.push({ result, omens: Number.isInteger(omens) && omens >= 0 && omens <= OMENS_PER_RESULT ? omens : 0 });
+    const omens = cleanOmens(entry);
+    if (!omens.length) break;
+    miseries.push({ omens });
   }
   return { miseries, ended: miseries.length === 6 && track?.ended === true };
 }
@@ -174,67 +202,108 @@ export function newestLevel(track) {
   return clean.ended ? END_LEVEL : clean.miseries.length;
 }
 
-/** The levels whose omens are not all done yet; none once the world has ended. */
-export function liveLevels(track) {
-  const clean = cleanTrack(track);
-  if (clean.ended) return [];
-  return clean.miseries.flatMap((misery, index) => misery.omens < OMENS_PER_RESULT ? [index + 1] : []);
-}
-
-/** Whether the next Misery is due: none yet, or the newest has had enough omens. */
+/** Whether the next Misery is due: none yet, or an omen of the newest has reached the set stage. */
 export function isDue(track, perMisery) {
   const clean = cleanTrack(track);
   if (clean.ended) return false;
   const newest = clean.miseries.at(-1);
-  return !newest || newest.omens >= cleanPerMisery(perMisery);
+  return !newest || newest.omens.some(omen => omen.stage >= cleanPerMisery(perMisery));
+}
+
+/** The d6 results of the newest Misery not started yet. */
+export function unstartedResults(track) {
+  const clean = cleanTrack(track);
+  const newest = clean.miseries.at(-1);
+  if (clean.ended || !newest) return [];
+  return [1, 2, 3, 4, 5, 6].filter(result => !newest.omens.some(omen => omen.result === result));
+}
+
+/** An omen's stage, or 0 if it has not started. */
+export function stageOf(track, level, result) {
+  return cleanTrack(track).miseries[level - 1]?.omens.find(omen => omen.result === result)?.stage ?? 0;
+}
+
+/** The omens still live (below stage 6), Misery by Misery: [{level, result}]; none once the world has ended. */
+export function liveOmens(track) {
+  const clean = cleanTrack(track);
+  if (clean.ended) return [];
+  return clean.miseries.flatMap((misery, index) => misery.omens
+    .filter(omen => omen.stage < STAGES)
+    .map(omen => ({ level: index + 1, result: omen.result })));
 }
 
 /**
- * What an Omen result does.
+ * What an Omen (new) result does.
  * @returns {{kind: "none"} | {kind: "comes", level: number} | {kind: "ends"}
- *   | {kind: "advance", choices: number[]}}
+ *   | {kind: "start", level: number, results: number[]}
+ *   | {kind: "advance", choices: Array<{level: number, result: number}>}}
  *   comes: roll the next Misery's d6 and bring it (bringNext);
  *   ends: VII comes (bringNext with no result);
- *   advance: move one of the choices on (advance).
+ *   start: roll the d6 until one of results comes up and start it (startOmen);
+ *   advance: move one of the choices on (advanceOmen).
  */
-export function omenOutcome(track, perMisery) {
+export function newOmenOutcome(track, perMisery) {
   const clean = cleanTrack(track);
   if (clean.ended) return { kind: "none" };
   if (isDue(clean, perMisery)) {
     return clean.miseries.length >= 6 ? { kind: "ends" } : { kind: "comes", level: clean.miseries.length + 1 };
   }
-  const choices = liveLevels(clean);
+  const results = unstartedResults(clean);
+  if (results.length) return { kind: "start", level: clean.miseries.length, results };
+  const choices = liveOmens(clean);
   return choices.length ? { kind: "advance", choices } : { kind: "none" };
 }
 
+/** What an Omen (ongoing) result does: a live omen moves on or, with none, as Omen (new). */
+export function ongoingOutcome(track, perMisery) {
+  const clean = cleanTrack(track);
+  if (clean.ended) return { kind: "none" };
+  const choices = liveOmens(clean);
+  return choices.length ? { kind: "advance", choices } : newOmenOutcome(clean, perMisery);
+}
+
 /**
- * The next Misery comes with its omen 1, or, after VI, the world ends.
+ * The next Misery comes with its first omen at stage 1 or, after VI, the
+ * world ends.
  * @param {object} track
- * @param {number} [result]  The new Misery's d6 result (not needed for VII).
+ * @param {number} [result]  The first omen's d6 result (not needed for VII).
  */
 export function bringNext(track, result) {
   const clean = cleanTrack(track);
   if (clean.ended) return clean;
   if (clean.miseries.length >= 6) return { miseries: clean.miseries, ended: true };
-  return cleanTrack({ miseries: [...clean.miseries, { result, omens: 1 }], ended: false });
+  return cleanTrack({ miseries: [...clean.miseries, { omens: [{ result, stage: 1 }] }], ended: false });
 }
 
-/** A live Misery's next omen happens (never past omen 6). */
-export function advance(track, level) {
+/** A new omen of the newest Misery starts at stage 1 (nothing if it has started). */
+export function startOmen(track, result) {
+  const clean = cleanTrack(track);
+  const level = clean.miseries.length;
+  if (clean.ended || !level || stageOf(clean, level, result)) return clean;
+  const miseries = clean.miseries.map((misery, index) => index + 1 === level
+    ? { omens: [...misery.omens, { result, stage: 1 }] }
+    : misery);
+  return cleanTrack({ miseries, ended: false });
+}
+
+/** A live omen moves one stage on (never past stage 6). */
+export function advanceOmen(track, level, result) {
   const clean = cleanTrack(track);
   if (clean.ended) return clean;
-  const miseries = clean.miseries.map((misery, index) => index + 1 === level
-    ? { result: misery.result, omens: Math.min(misery.omens + 1, OMENS_PER_RESULT) }
-    : misery);
+  const miseries = clean.miseries.map((misery, index) => index + 1 !== level ? misery : {
+    omens: misery.omens.map(omen => omen.result === result
+      ? { result, stage: Math.min(omen.stage + 1, STAGES) }
+      : omen)
+  });
   return { miseries, ended: false };
 }
 
 /**
- * The Misery as rules 1.5 sees it, from a track: the newest level and its
- * d6 result (the "omen" of the light-die mode).
+ * The Misery as rules 1.5 sees it, from a track: the newest level and the
+ * result of its newest omen (the "omen" of the light-die mode).
  */
 export function miseryFromTrack(track) {
   const clean = cleanTrack(track);
   const newest = clean.ended ? null : clean.miseries.at(-1);
-  return { level: newestLevel(clean), omen: newest?.result ?? null };
+  return { level: newestLevel(clean), omen: newest?.omens.at(-1)?.result ?? null };
 }
