@@ -4,6 +4,8 @@
  */
 
 import VarBorgActor from "./actor.mjs";
+import VarBorgActiveEffect from "./active-effect.mjs";
+import { EFFECT_DATA_MODELS } from "./data/active-effects.mjs";
 import VarBorgRegion from "./canvas/region.mjs";
 import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
@@ -114,6 +116,11 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.ancestry = AncestryData;
   CONFIG.Item.dataModels.background = BackgroundData;
   CONFIG.Item.dataModels.relic = RelicData;
+
+  // Active Effects: each lasting state has a type (conditions, persistent
+  // damage, Panic, injuries, lost body parts) with its own data.
+  CONFIG.ActiveEffect.documentClass = VarBorgActiveEffect;
+  Object.assign(CONFIG.ActiveEffect.dataModels, EFFECT_DATA_MODELS);
 
   const Items = foundry.documents.collections.Items;
   Items.registerSheet("var-borg", WeaponSheet, { types: ["weapon"], makeDefault: true, label: "VARBORG.Sheet.Weapon" });

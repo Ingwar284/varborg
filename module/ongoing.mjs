@@ -1,28 +1,39 @@
 /**
- * Everything going on with a creature right now (player feedback): shown
- * in the Ongoing panel beside Foundry's sidebar (module/ongoing-panel.mjs),
- * and the non-condition part at the top of the character's Conditions tab.
+ * Everything going on with a creature right now, as one list of effects
+ * (unified effects, step 4): the Ongoing panel beside Foundry's sidebar
+ * (module/ongoing-panel.mjs), and in step 5 the Effects tab and the icon
+ * strip on the sheet.
  *
- * Conditions, persistent damage, Panic and injuries already have their own
- * place in the Conditions tab; ongoingEffects() adds the rest:
+ * actorEffects() gives one row per thing, each with a kind and its type
+ * tag (module/rules/effect-kinds.mjs):
+ * - conditions, one row per condition effect, with their timer and the
+ *   power that gave them; Fatigued with its level; Death's Door with its
+ *   stage; the In Darkness marker (GAPS 274: a marker, not a condition);
+ * - persistent damage, Panic results, injuries and lost body parts;
+ * - days without food (characters);
  * - buffs given by powers and spells, with their timer, "next roll only"
- *   or "while sustained";
- * - powers and spells being Sustained;
- * - items switched on (Barbaric Rage…) or mounted;
- * - a raised shield, cover taken, a lit or dimmed light;
- * - an attack Ruin (Bane on attacks until Recover);
+ *   or "while sustained", and buffs held inside a lasting area;
+ * - powers and spells being Sustained, items switched on or mounted;
+ * - a raised shield, cover taken, an attack Ruin, a lit or dimmed light;
  * - temporary ability changes made with the − and + beside the boxes.
  *
- * In the panel, a left click raises an entry by one and a right click
- * lowers it by one, removing it at 0 (changeOngoing). Each entry says what
- * it allows: `kind` and `ref` name it, `up` and `down` whether the clicks
- * do anything. An entry with no number of its own is removed by a right
- * click. Sustaining, Mounted and an attack Ruin are left alone: ending them
- * has its own button and cost.
+ * A left click raises a row by one and a right click lowers it by one,
+ * removing it at 0 (changeOngoing). Each row says what it allows: `kind`
+ * and `ref` name it, `up` and `down` whether the clicks do anything. A row
+ * with no number of its own is removed by a right click. Sustaining,
+ * Mounted, an attack Ruin, an area's buff, Death's Door and In Darkness
+ * are left alone: they end their own way.
  */
 
-import { timerText } from "./timers.mjs";
-import { sheetConditions } from "./conditions.mjs";
+import { timerText, timerOf, setTimer, askConditionTimer } from "./timers.mjs";
+import { conditionDetails } from "./conditions.mjs";
+import { sheetDeathsDoor } from "./deaths-door.mjs";
+import { panicLabel, panicName, addPanicResult } from "./panic.mjs";
+import { askPersistentDamage, tickPersistentDamage } from "./persistent.mjs";
+import { PANIC_EFFECTS } from "./rules/panic.mjs";
+import { CONDITIONS, IN_DARKNESS } from "./rules/conditions.mjs";
+import { isStarving } from "./rules/days.mjs";
+import { effectTag, sortEffects, steppedCount, rowButtons } from "./rules/effect-kinds.mjs";
 import { actorLight, putOutActorLight, dimActorLight } from "./light.mjs";
 import { takenCover } from "./rules/defence.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
@@ -32,21 +43,16 @@ import { descriptionText } from "./rules/random.mjs";
 import { lowerShield } from "./dice/defence.mjs";
 
 const SYSTEM = "var-borg";
-const TIMER_FLAG = "timer";
 
 /** Whether a timer counts rounds, so it can go up and down by one. */
 function countsRounds(timer) {
   return timer?.kind === "rounds" && Number.isFinite(timer.rounds);
 }
 
-/** The status effect that gives a condition, with its timer flag if any. */
-function conditionDoc(actor, id) {
-  return actor.effects.find(effect => effect.statuses.has(id) && !effect.getFlag(SYSTEM, "panic") && !effect.getFlag(SYSTEM, "agony")) ?? null;
-}
-
 /**
- * The ongoing effects that are not conditions.
- * @param {Actor} actor  A character.
+ * The ongoing effects that are not Active Effects: buffs, items in use,
+ * shield, cover, light, attack Ruin and ability changes.
+ * @param {Actor} actor  A character, foe or minion.
  * @returns {{img?: string, icon?: string, label: string, detail: string, kind?: string, ref?: string, up?: boolean, down?: boolean}[]}
  */
 export function ongoingEffects(actor) {
@@ -57,7 +63,7 @@ export function ongoingEffects(actor) {
   for (const item of actor.items) {
     const buff = item.getFlag(SYSTEM, "buff");
     if (buff) {
-      const timer = item.getFlag(SYSTEM, TIMER_FLAG);
+      const timer = timerOf(item);
       const detail = [
         timerText(timer),
         buff.nextOnly ? i18n.localize("VARBORG.Ongoing.NextOnly") : "",
@@ -71,10 +77,10 @@ export function ongoingEffects(actor) {
     // A buff held while standing in a lasting area (Songs of power: Defying
     // Hymn): it ends on leaving the area, so it has no clicks of its own.
     if (item.getFlag(SYSTEM, "lastingInside")) {
-      add({ img: item.img, label: item.name, detail: oneLine(item.system.description) });
+      add({ img: item.img, label: item.name, detail: oneLine(item.system.description), kind: "area" });
     }
     if (item.system?.sustaining) {
-      add({ icon: "fa-hourglass-half", label: i18n.format("VARBORG.Ongoing.Sustaining", { name: item.name }) });
+      add({ icon: "fa-hourglass-half", label: i18n.format("VARBORG.Ongoing.Sustaining", { name: item.name }), kind: "sustaining" });
     }
     // Switched on: the combat's id, or "" outside combat (step 50c).
     const on = item.getFlag(SYSTEM, "on");
@@ -82,7 +88,7 @@ export function ongoingEffects(actor) {
       add({ icon: "fa-toggle-on", label: i18n.format("VARBORG.Ongoing.SwitchedOn", { name: item.name }), kind: "switchedOn", ref: item.id, down: true });
     }
     if (item.getFlag(SYSTEM, "mounted") === true) {
-      add({ icon: "fa-horse", label: i18n.format("VARBORG.Ongoing.Mounted", { name: item.name }) });
+      add({ icon: "fa-horse", label: i18n.format("VARBORG.Ongoing.Mounted", { name: item.name }), kind: "mounted" });
     }
   }
 
@@ -110,7 +116,7 @@ export function ongoingEffects(actor) {
     });
   }
   if (system.attackRuin) {
-    add({ icon: "fa-heart-crack", label: i18n.localize("VARBORG.Ongoing.AttackRuin"), detail: i18n.localize("VARBORG.Attack.RuinedNow") });
+    add({ icon: "fa-heart-crack", label: i18n.localize("VARBORG.Ongoing.AttackRuin"), detail: i18n.localize("VARBORG.Attack.RuinedNow"), kind: "attackRuin" });
   }
   for (const key of ABILITIES) {
     const change = system.abilityAdjust?.[key] ?? 0;
@@ -124,47 +130,158 @@ export function ongoingEffects(actor) {
   return list;
 }
 
-/** An Active Effect's own description, as plain text. */
-function effectText(actor, id) {
-  return oneLine(actor.effects.get(id)?.description);
-}
-
 /** A description as one line of plain text, for a tooltip. */
 function oneLine(text) {
   return descriptionText(text ?? "").split("\n").filter(Boolean).join(" ");
 }
 
+/** The rows that come from the creature's Active Effects, and its days without food. */
+function effectRows(actor) {
+  const i18n = game.i18n;
+  const rows = [];
+  const conditionIds = new Set(CONDITIONS);
+  const deathsDoor = sheetDeathsDoor(actor);
+  let fatigueShown = false;
+
+  for (const effect of actor.effects) {
+    if (effect.disabled) continue;
+    switch (effect.type) {
+      case "condition": {
+        const id = [...effect.statuses][0] ?? "";
+        if (id === IN_DARKNESS) {
+          rows.push({ img: effect.img, label: i18n.localize(`VARBORG.Condition.${IN_DARKNESS}`), detail: i18n.localize("VARBORG.Ongoing.InDarknessText"), kind: "marker" });
+          break;
+        }
+        if (!conditionIds.has(id)) break;
+        // Fatigued has levels: one row for the level, however many effects give it.
+        if (id === "fatigued") {
+          if (fatigueShown) break;
+          fatigueShown = true;
+          const { img, label, text } = conditionDetails(actor, id, effect);
+          rows.push({ img, label, detail: text, kind: "fatigue", up: true, down: true });
+          break;
+        }
+        const { img, label, text, source } = conditionDetails(actor, id, effect);
+        const timer = effect.system.timer;
+        const stage = id === "deathsDoor" ? deathsDoor?.status ?? "" : "";
+        rows.push({
+          img, label, detail: [timerText(timer), stage, text, source].filter(Boolean).join(" "),
+          kind: "condition", ref: effect.id,
+          // The condition, for the sheet's timer button (Fatigued and Death's Door have none).
+          timerFor: id === "deathsDoor" ? "" : id,
+          // Death's Door ends through its own buttons and rolls.
+          up: id !== "deathsDoor" && countsRounds(timer), down: id !== "deathsDoor"
+        });
+        break;
+      }
+      case "persistent":
+        rows.push({ img: effect.img, label: effect.name, detail: i18n.localize(`VARBORG.Condition.${actor.type === "foe" ? "FoeText" : "Text"}.persistentDamage`), kind: "persistent", ref: effect.id, down: true });
+        break;
+      case "panic":
+        // A Panic result and an injury: their rules text, as on the card (hover, playtest feedback).
+        rows.push({
+          img: effect.img, label: panicLabel(effect), detail: oneLine(effect.description), kind: "panic", ref: effect.id,
+          up: Number.isFinite(effect.system.turns), down: true
+        });
+        break;
+      case "injury":
+        rows.push({ img: effect.img, label: effect.name, detail: oneLine(effect.description), kind: "injury", ref: effect.id, down: true });
+        break;
+      case "bodyPart":
+        rows.push({ img: effect.img, label: effect.name, detail: oneLine(effect.description), kind: "bodyPart", ref: effect.id, down: true });
+        break;
+    }
+  }
+
+  // A Fatigue level with no icon yet (the icon follows the level, module/conditions.mjs).
+  if (!fatigueShown && actor.system.fatigue > 0) {
+    const { img, label, text } = conditionDetails(actor, "fatigued");
+    rows.push({ img, label, detail: text, kind: "fatigue", up: true, down: true });
+  }
+
+  // Days without food: characters only (rules 3.16, module/days.mjs).
+  const days = actor.type === "character" ? actor.system.daysWithoutFood ?? 0 : 0;
+  if (days > 0) {
+    rows.push({
+      icon: "fa-utensils",
+      label: i18n.format(isStarving(days) ? "VARBORG.Ongoing.Starving" : days === 1 ? "VARBORG.Ongoing.HungryOne" : "VARBORG.Ongoing.Hungry", { days }),
+      detail: i18n.localize("VARBORG.Day.WithoutFoodHint"),
+      kind: "hunger", up: true, down: true
+    });
+  }
+  return rows;
+}
+
 /**
- * Conditions, persistent damage, Panic and injuries, then the other
- * ongoing effects: the whole list for the Ongoing panel.
+ * The whole list of effects for one creature, in list order, each row
+ * with its kind's type tag.
+ * @param {Actor} actor  A character, foe or minion.
+ * @returns {{img?: string, icon?: string, label: string, detail: string, kind: string, tag: string, ref: string, up: boolean, down: boolean}[]}
+ */
+export function actorEffects(actor) {
+  const rows = [...effectRows(actor), ...ongoingEffects(actor)]
+    .map(entry => ({ detail: "", ref: "", up: false, down: false, ...entry, tag: effectTag(entry.kind) }));
+  return sortEffects(rows);
+}
+
+/**
+ * The Effects tab of a sheet: every row with its tag and buttons, and what
+ * the Add menu offers. Conditions are for everyone; Panic results only for
+ * characters, added by the Dark Master; persistent damage opens its dialog.
  * @param {Actor} actor  A character, foe or minion.
  */
-export function allOngoing(actor) {
-  const conditions = sheetConditions(actor);
-  const fromConditions = [
-    ...conditions.list.map(({ id, img, label, timer, text, source }) => ({
-      img, label, detail: [timer, text, source].filter(Boolean).join(" "),
-      kind: "condition", ref: id,
-      // Fatigued has levels; a condition with a rounds timer counts rounds.
-      up: id === "fatigued" || countsRounds(conditionDoc(actor, id)?.getFlag(SYSTEM, TIMER_FLAG)), down: true
-    })),
-    ...(conditions.persistent?.list ?? []).map(({ id, img, label, text }) => ({ img, label, detail: text ?? "", kind: "effect", ref: id, up: false, down: true })),
-    // A Panic result and an injury: their rules text, as on the card (hover, playtest feedback).
-    ...(conditions.panic?.list ?? []).map(({ id, img, label }) => ({
-      img, label, detail: effectText(actor, id), kind: "panic", ref: id,
-      up: Number.isFinite(actor.effects.get(id)?.getFlag(SYSTEM, "panic")?.turns), down: true
-    })),
-    ...(conditions.injuries ?? []).map(({ id, img, label }) => ({ img, label, detail: effectText(actor, id), kind: "effect", ref: id, up: false, down: true }))
-  ];
-  return [...fromConditions, ...ongoingEffects(actor)].map(entry => ({ kind: "", ref: "", up: false, down: false, ...entry }));
+export function sheetEffects(actor) {
+  const i18n = game.i18n;
+  const rows = actorEffects(actor).map(row => ({
+    ...row,
+    tagLabel: row.tag ? i18n.localize(`VARBORG.Ongoing.Tag.${row.tag}`) : "",
+    buttons: rowButtons(row)
+  }));
+  return {
+    rows,
+    canChange: actor.isOwner,
+    conditions: CONDITIONS.filter(id => !actor.statuses.has(id))
+      .map(id => ({ id, label: i18n.localize(`VARBORG.Condition.${id}`) })),
+    panic: actor.type === "character" && game.user.isGM
+      ? PANIC_EFFECTS.map(id => ({ id, label: panicName(id) }))
+      : null,
+    canTick: game.user.isGM
+  };
+}
+
+/**
+ * The Effects tab's controls: each row's −, + and × (the same as the
+ * Ongoing panel's clicks), a condition's timer button, the Add menu and
+ * the Dark Master's Tick button. Called from the sheets' _onRender.
+ */
+export function activateEffectControls(element, actor) {
+  for (const button of element.querySelectorAll("[data-effect-step]")) {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      const { kind, ref, effectStep } = button.dataset;
+      changeOngoing(actor, kind, ref, Number(effectStep));
+    });
+  }
+  for (const button of element.querySelectorAll("[data-time-condition]")) {
+    button.addEventListener("click", () => askConditionTimer(actor, button.dataset.timeCondition));
+  }
+  element.querySelector("select[data-add-effect]")?.addEventListener("change", event => {
+    const value = event.currentTarget.value;
+    event.currentTarget.value = "";
+    const [type, id] = value.split(":");
+    if (type === "condition" && CONDITIONS.includes(id)) actor.toggleStatusEffect(id, { active: true });
+    else if (type === "persistent") askPersistentDamage(actor);
+    else if (type === "panic") addPanicResult(actor, id);
+  });
+  element.querySelector("[data-tick-persistent]")?.addEventListener("click", () => tickPersistentDamage(actor));
 }
 
 /**
  * Raise (+1) or lower (−1) one entry of the Ongoing panel; at 0, or with
  * no number of its own, lowering removes it.
  * @param {Actor} actor
- * @param {string} kind  The entry's kind (see allOngoing).
- * @param {string} ref   Which one: a status id, an effect or item id, an ability.
+ * @param {string} kind  The entry's kind (see actorEffects).
+ * @param {string} ref   Which one: an effect or item id, an ability.
  * @param {1|-1} step
  */
 export async function changeOngoing(actor, kind, ref, step) {
@@ -174,41 +291,45 @@ export async function changeOngoing(actor, kind, ref, step) {
   }
   const up = step > 0;
   switch (kind) {
+    case "fatigue":
+      // The Fatigued icon follows the level (module/conditions.mjs).
+      await actor.update({ "system.fatigue": steppedCount(actor.system.fatigue, step) });
+      return;
+    case "hunger":
+      await actor.update({ "system.daysWithoutFood": steppedCount(actor.system.daysWithoutFood, step) });
+      return;
     case "condition": {
-      if (ref === "fatigued") {
-        // The Fatigued icon follows the level (module/conditions.mjs).
-        await actor.update({ "system.fatigue": Math.max(0, (actor.system.fatigue ?? 0) + step) });
-        return;
-      }
-      const effect = conditionDoc(actor, ref);
-      const timer = effect?.getFlag(SYSTEM, TIMER_FLAG);
+      const effect = actor.effects.get(ref);
+      if (effect?.type !== "condition" || effect.statuses.has("deathsDoor")) return;
+      const timer = timerOf(effect);
       if (countsRounds(timer)) {
         const rounds = timer.rounds + step;
-        if (rounds > 0) return effect.setFlag(SYSTEM, TIMER_FLAG, { ...timer, rounds });
-      } else if (up) return;
-      return actor.toggleStatusEffect(ref, { active: false });
-    }
-    case "panic": {
-      const effect = actor.effects.get(ref);
-      const panic = effect?.getFlag(SYSTEM, "panic");
-      if (!effect) return;
-      if (Number.isFinite(panic?.turns)) {
-        const turns = panic.turns + step;
-        if (turns > 0) return effect.setFlag(SYSTEM, "panic", { ...panic, turns });
+        if (rounds > 0) return setTimer(effect, { ...timer, rounds });
       } else if (up) return;
       return effect.delete();
     }
-    case "effect":
-      // Persistent damage and injuries: no number, so only removed.
+    case "panic": {
+      const effect = actor.effects.get(ref);
+      if (effect?.type !== "panic") return;
+      if (Number.isFinite(effect.system.turns)) {
+        const turns = effect.system.turns + step;
+        if (turns > 0) return effect.update({ "system.turns": turns });
+      } else if (up) return;
+      return effect.delete();
+    }
+    case "persistent":
+    case "injury":
+    case "bodyPart":
+      // No number of their own, so only removed.
       if (!up) await actor.effects.get(ref)?.delete();
       return;
     case "buff": {
       const item = actor.items.get(ref);
-      const timer = item?.getFlag(SYSTEM, TIMER_FLAG);
       if (!item) return;
+      const timer = timerOf(item);
       if (countsRounds(timer)) {
         const rounds = timer.rounds + step;
-        if (rounds > 0) return item.setFlag(SYSTEM, TIMER_FLAG, { ...timer, rounds });
+        if (rounds > 0) return setTimer(item, { ...timer, rounds });
       } else if (up) return;
       return item.delete();
     }

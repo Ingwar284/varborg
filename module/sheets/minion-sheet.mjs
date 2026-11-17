@@ -16,6 +16,7 @@ import { tierStats } from "../rules/minions.mjs";
 import { rollMorale } from "../dice/morale.mjs";
 import { rollAttack, recoverFromRuin } from "../dice/attack.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
+import { sheetEffects, activateEffectControls } from "../ongoing.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { minionCount } from "../minions.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
@@ -105,6 +106,7 @@ export default class MinionSheet extends HandlebarsApplicationMixin(ActorSheetV2
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, frequency: hasLimitedUse(item) ? frequencyLabel(item) : "", ...useButton(item) }));
     context.conditions = sheetConditions(actor);
+    context.effects = sheetEffects(actor);
     return context;
   }
 
@@ -112,6 +114,7 @@ export default class MinionSheet extends HandlebarsApplicationMixin(ActorSheetV2
   async _onRender(context, options) {
     await super._onRender(context, options);
     activateConditionControls(this.element, this.document);
+    activateEffectControls(this.element, this.document);
   }
 
   /** Morale "–" comes from the menu as "", which is saved as nothing (null). */

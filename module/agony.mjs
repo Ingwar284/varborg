@@ -16,7 +16,7 @@
  * A lasting injury, and Singed and Vomit ("bane on next action"), is an
  * Active Effect on the character with its result id as a status (so
  * "backBroken" counts in module/rules/conditions.mjs) and its details in
- * flags.var-borg.agony ({ result }). Singed and Vomit are used up by the
+ * an injury-type effect ({ result } in its system data). Singed and Vomit are used up by the
  * next test, like Rattled (module/panic.mjs useUpNextTest).
  * All the maths lives in module/rules/agony.mjs; this file only rolls and
  * shows.
@@ -66,8 +66,8 @@ export function registerAgony() {
  */
 export function injuryEffects(actor) {
   return (actor?.effects ?? [])
-    .filter(effect => effect.getFlag(SYSTEM, "agony"))
-    .map(effect => ({ id: effect.id, ...effect.getFlag(SYSTEM, "agony"), effect }));
+    .filter(effect => effect.type === "injury")
+    .map(effect => ({ id: effect.id, result: effect.system.result, effect }));
 }
 
 /**
@@ -292,11 +292,12 @@ async function applyAgonyResult(actor, id) {
 /** Add an injury's effect. */
 async function createInjuryEffect(actor, id, img) {
   await actor.createEmbeddedDocuments("ActiveEffect", [{
+    type: "injury",
     name: agonyName(id),
     img,
     statuses: [id],
     description: game.i18n.localize(`VARBORG.Agony.Result.${id}.text`),
-    flags: { [SYSTEM]: { agony: { result: id } } }
+    system: { result: id }
   }]);
 }
 
@@ -357,20 +358,3 @@ function addAgonyCardListeners(message, html) {
   });
 }
 
-/** The injury rows of a character's Conditions section, or null for a foe. */
-export function sheetInjuries(actor) {
-  if (actor.type !== "character") return null;
-  return injuryEffects(actor).map(({ id, result, effect }) => ({
-    id,
-    img: effect.img,
-    label: effect.name,
-    text: game.i18n.localize(`VARBORG.Agony.Result.${result}.text`)
-  }));
-}
-
-/** Each injury row's remove button. Called from activateConditionControls. */
-export function activateInjuryControls(element, actor) {
-  for (const button of element.querySelectorAll("[data-remove-injury]")) {
-    button.addEventListener("click", () => actor.effects.get(button.dataset.removeInjury)?.delete());
-  }
-}

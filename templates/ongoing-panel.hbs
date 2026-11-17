@@ -10,7 +10,7 @@
   <ul class="ongoing-list">
     {{#each entries}}
     <li class="ongoing-entry{{#if clickable}} clickable{{/if}}" {{#if clickable}}data-kind="{{kind}}" data-ref="{{ref}}"{{/if}}
-        data-tooltip="{{label}}{{#if detail}}: {{detail}}{{/if}}" data-tooltip-direction="LEFT">
+        data-tooltip="{{#if tagLabel}}{{tagLabel}} · {{/if}}{{label}}{{#if detail}}: {{detail}}{{/if}}{{#if hint}} ({{hint}}){{/if}}" data-tooltip-direction="LEFT">
       {{#if ../open}}<span class="ongoing-label">{{label}}</span>{{/if}}
       {{#if img}}<img src="{{img}}" alt="{{label}}">{{else}}<i class="fa-solid {{icon}}" aria-label="{{label}}"></i>{{/if}}
     </li>

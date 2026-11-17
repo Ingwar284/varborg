@@ -2,7 +2,7 @@
  * Persistent Damage in Foundry (rules 3.13, GAPS 19, 37 and 76-78).
  *
  * Each persistent damage is its own Active Effect on the actor, with its
- * type and damage in flags.var-borg.persistent ({ type, formula }), so a
+ * type and damage in a persistent-type effect's system data ({ damageType, formula }), so a
  * character can burn and be poisoned at once. When a second one of the
  * same type arrives, only the stronger stays (GAPS 76).
  *
@@ -58,7 +58,7 @@ export const PERSISTENT_ICONS = {
  * registerConditions, which sets up the rest of the list.
  */
 export function registerPersistentDamage() {
-  CONFIG.statusEffects.push({ id: PERSISTENT_STATUS, name: "VARBORG.Condition.persistentDamage", img: PERSISTENT_ICONS.fire });
+  CONFIG.statusEffects.push({ id: PERSISTENT_STATUS, name: "VARBORG.Condition.persistentDamage", img: PERSISTENT_ICONS.fire, type: "persistent" });
   Hooks.on("createActiveEffect", onPersistentAdded);
   Hooks.on("renderChatMessageHTML", addPersistentCardListeners);
 }
@@ -76,11 +76,10 @@ function persistentName(type, formula) {
  */
 export function persistentEffects(actor) {
   return (actor?.effects ?? [])
-    .filter(effect => effect.getFlag(SYSTEM, "persistent"))
-    .map(effect => {
-      const stored = effect.getFlag(SYSTEM, "persistent");
-      return { id: effect.id, ...stored, type: currentPersistentType(stored.type), effect };
-    });
+    .filter(effect => effect.type === "persistent")
+    .map(effect => ({
+      id: effect.id, type: currentPersistentType(effect.system.damageType), formula: effect.system.formula, effect
+    }));
 }
 
 /**
@@ -97,10 +96,11 @@ export async function addPersistentDamage(actor, type, formula) {
     return false;
   }
   await actor.createEmbeddedDocuments("ActiveEffect", [{
+    type: "persistent",
     name: persistentName(type, damage),
     img: PERSISTENT_ICONS[type],
     statuses: [PERSISTENT_STATUS],
-    flags: { [SYSTEM]: { persistent: { type, formula: damage } } }
+    system: { damageType: type, formula: damage }
   }]);
   return true;
 }
@@ -134,7 +134,7 @@ export async function askPersistentDamage(actor) {
 async function onPersistentAdded(effect, options, userId) {
   const actor = effect.parent;
   if (userId !== game.user.id || !(actor instanceof foundry.documents.Actor)) return;
-  if (!effect.getFlag(SYSTEM, "persistent")) return;
+  if (effect.type !== "persistent") return;
   await removeWeaker(actor);
 }
 
@@ -250,7 +250,7 @@ function addPersistentCardListeners(message, html) {
   const button = html.querySelector("button[data-action='persistentTest']");
   if (!button) return;
   const effect = fromUuidSync(button.dataset.effectUuid);
-  if (!effect || effect.getFlag(SYSTEM, "testedOn") === message.id) {
+  if (!effect || effect.system.testedOn === message.id) {
     button.disabled = true;
     return;
   }
@@ -266,40 +266,13 @@ function addPersistentCardListeners(message, html) {
       return;
     }
     button.disabled = true;
-    await current.setFlag(SYSTEM, "testedOn", message.id);
+    await current.update({ "system.testedOn": message.id });
     const ended = await testToEnd(current);
     // Dialog closed without rolling: the test can still be made.
     if (ended === null) {
-      await current.unsetFlag(SYSTEM, "testedOn");
+      await current.update({ "system.testedOn": null });
       button.disabled = false;
     }
   });
 }
 
-/** The persistent damage rows of a sheet's Conditions section. */
-export function sheetPersistent(actor) {
-  const i18n = game.i18n;
-  const text = i18n.localize(`VARBORG.Condition.${actor.type === "foe" ? "FoeText" : "Text"}.persistentDamage`);
-  return {
-    list: persistentEffects(actor).map(({ id, effect }) => ({ id, img: effect.img, label: effect.name, text })),
-    types: PERSISTENT_TYPES.map(id => ({ id, label: i18n.localize(`VARBORG.Persistent.Type.${id}`) })),
-    canTick: game.user.isGM
-  };
-}
-
-/**
- * The sheet's persistent damage controls: Add, each row's remove button,
- * and the Dark Master's Tick button. Called from activateConditionControls.
- */
-export function activatePersistentControls(element, actor) {
-  const add = element.querySelector("[data-add-persistent]");
-  add?.addEventListener("click", () => {
-    const type = element.querySelector("select[data-persistent-type]")?.value;
-    const formula = element.querySelector("input[data-persistent-formula]")?.value;
-    addPersistentDamage(actor, type, formula);
-  });
-  for (const button of element.querySelectorAll("[data-remove-persistent]")) {
-    button.addEventListener("click", () => actor.effects.get(button.dataset.removePersistent)?.delete());
-  }
-  element.querySelector("[data-tick-persistent]")?.addEventListener("click", () => tickPersistentDamage(actor));
-}

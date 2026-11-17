@@ -33,7 +33,7 @@ const SETTLE_MS = 300;
 
 /** Add In Darkness to the status effects and hook up the checks. Called on init. */
 export function registerDarkness() {
-  CONFIG.statusEffects.push({ id: IN_DARKNESS, name: `VARBORG.Condition.${IN_DARKNESS}`, img: "icons/svg/eye.svg" });
+  CONFIG.statusEffects.push({ id: IN_DARKNESS, name: `VARBORG.Condition.${IN_DARKNESS}`, img: "icons/svg/eye.svg", type: "condition" });
   const check = foundry.utils.debounce(checkScene, SETTLE_MS);
   Hooks.on("canvasReady", check);
   Hooks.on("lightingRefresh", check);

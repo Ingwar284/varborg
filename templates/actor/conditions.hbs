@@ -1,127 +1,13 @@
 <section class="conditions-section">
-  {{!-- Conditions: the ones from the rules list, fatigue and days without food. --}}
+  {{!-- Every effect on the creature as one list (module/ongoing.mjs): conditions,
+       persistent damage, Panic, injuries, lost body parts, hunger, buffs and
+       the rest, each with its type tag; then the Add menu and Tick button. --}}
   <section class="condition-group">
-    <h2>{{localize "VARBORG.Condition.Title"}}</h2>
-    <ul class="condition-list">
-      {{#each conditions.list}}
-      <li class="condition-row">
-        <img src="{{img}}" alt="">
-        <span class="condition-text"><strong>{{label}}</strong>{{#if timer}} <span class="condition-timer">({{timer}})</span>{{/if}} {{text}}{{#if source}} <em class="condition-source">{{source}}</em>{{/if}}</span>
-        {{#if canTime}}
-        <button type="button" class="icon-button" data-time-condition="{{id}}"
-                data-tooltip="{{localize 'VARBORG.Timer.Button'}}" aria-label="{{localize 'VARBORG.Timer.Button'}}">
-          <i class="fa-solid fa-hourglass-half"></i>
-        </button>
-        {{/if}}
-        <button type="button" class="icon-button" data-remove-condition="{{id}}"
-                data-tooltip="{{localize 'VARBORG.Condition.Remove'}}" aria-label="{{localize 'VARBORG.Condition.Remove'}}">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Condition.None"}}</li>
-      {{/each}}
-    </ul>
-    <div class="condition-controls">
-      <select data-add-condition aria-label="{{localize 'VARBORG.Condition.Add'}}">
-        <option value="">{{localize "VARBORG.Condition.Add"}}</option>
-        {{#each conditions.choices}}<option value="{{id}}">{{label}}</option>{{/each}}
-      </select>
-      <label data-tooltip="{{localize 'VARBORG.Condition.FatigueHint'}}">
-        <span>{{localize "VARBORG.Condition.FatigueLevel"}}</span>
-        <input type="number" name="system.fatigue" value="{{conditions.fatigue}}" min="0" step="1">
-      </label>
-      {{#if conditions.food}}
-      <label data-tooltip="{{localize 'VARBORG.Day.WithoutFoodHint'}}">
-        <span>{{localize "VARBORG.Day.WithoutFood"}}</span>
-        <input type="number" name="system.daysWithoutFood" value="{{conditions.food.days}}" min="0" step="1">
-      </label>
-      {{#if conditions.food.starving}}<span class="starving">{{localize "VARBORG.Day.StarvingTag"}}</span>{{/if}}
-      {{/if}}
-    </div>
+    <h2>{{localize "VARBORG.Ongoing.EffectsTitle"}}</h2>
+    {{> "systems/var-borg/templates/actor/effects-list.hbs"}}
   </section>
 
-  {{!-- Persistent damage. --}}
-  <section class="condition-group">
-    <h2>{{localize "VARBORG.Persistent.Label"}}</h2>
-    <ul class="condition-list">
-      {{#each conditions.persistent.list}}
-      <li class="condition-row">
-        <img src="{{img}}" alt="">
-        <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
-        <button type="button" class="icon-button" data-remove-persistent="{{id}}"
-                data-tooltip="{{localize 'VARBORG.Condition.Remove'}}" aria-label="{{localize 'VARBORG.Condition.Remove'}}">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Persistent.None"}}</li>
-      {{/each}}
-    </ul>
-    <div class="condition-controls persistent-controls">
-      <select data-persistent-type aria-label="{{localize 'VARBORG.Persistent.TypeLabel'}}">
-        {{#each conditions.persistent.types}}<option value="{{id}}">{{label}}</option>{{/each}}
-      </select>
-      <input type="text" data-persistent-formula value="d4" placeholder="d4"
-             aria-label="{{localize 'VARBORG.Persistent.FormulaLabel'}}" data-tooltip="{{localize 'VARBORG.Persistent.FormulaHint'}}">
-      <button type="button" data-add-persistent>{{localize "VARBORG.Persistent.Add"}}</button>
-      {{#if conditions.persistent.canTick}}
-      <button type="button" data-tick-persistent data-tooltip="{{localize 'VARBORG.Persistent.TickHint'}}">{{localize "VARBORG.Persistent.Tick"}}</button>
-      {{/if}}
-    </div>
-  </section>
-
-  {{!-- Panic results (characters only). --}}
-  {{#if conditions.panic}}
-  <section class="condition-group">
-    <h2>{{localize "VARBORG.Panic.Title"}}</h2>
-    <ul class="condition-list">
-      {{#each conditions.panic.list}}
-      <li class="condition-row panic-row">
-        <img src="{{img}}" alt="">
-        <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
-        <button type="button" class="icon-button" data-remove-panic="{{id}}"
-                data-tooltip="{{localize 'VARBORG.Panic.Remove'}}" aria-label="{{localize 'VARBORG.Panic.Remove'}}">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Panic.None"}}</li>
-      {{/each}}
-    </ul>
-    {{#if conditions.panic.choices}}
-    <div class="condition-controls">
-      <select data-add-panic aria-label="{{localize 'VARBORG.Panic.Add'}}" data-tooltip="{{localize 'VARBORG.Panic.AddHint'}}">
-        <option value="">{{localize "VARBORG.Panic.Add"}}</option>
-        {{#each conditions.panic.choices}}<option value="{{id}}">{{label}}</option>{{/each}}
-      </select>
-    </div>
-    {{/if}}
-  </section>
-  {{/if}}
-
-  {{!-- Injuries from the Table of Agony (characters only). --}}
-  {{#if conditions.isCharacter}}
-  <section class="condition-group">
-    <h2>{{localize "VARBORG.Agony.InjuriesTitle"}}</h2>
-    <ul class="condition-list">
-      {{#each conditions.injuries}}
-      <li class="condition-row injury-row">
-        <img src="{{img}}" alt="">
-        <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
-        <button type="button" class="icon-button" data-remove-injury="{{id}}"
-                data-tooltip="{{localize 'VARBORG.Agony.Remove'}}" aria-label="{{localize 'VARBORG.Agony.Remove'}}">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </li>
-      {{else}}
-      <li class="empty">{{localize "VARBORG.Agony.None"}}</li>
-      {{/each}}
-    </ul>
-  </section>
-  {{/if}}
-
-  {{!-- Death's Door (characters only). --}}
+  {{!-- Death's Door (characters only): its own rolls and buttons. --}}
   {{#with conditions.deathsDoor}}
   <section class="condition-group deaths-door-panel">
     <h2>{{localize "VARBORG.DeathsDoor.Title"}}</h2>
@@ -134,20 +20,6 @@
         <input type="number" name="system.darkVessels" value="{{darkVessels}}" min="0" step="1" {{#unless isGM}}disabled{{/unless}}>
       </label>
     </div>
-    {{#if lostParts.length}}
-    <ul class="condition-list">
-      {{#each lostParts}}
-      <li class="condition-row injury-row">
-        <img src="{{img}}" alt="">
-        <span class="condition-text"><strong>{{label}}</strong> {{text}}</span>
-        <button type="button" class="icon-button" data-remove-part="{{id}}"
-                data-tooltip="{{localize 'VARBORG.DeathsDoor.RemovePart'}}" aria-label="{{localize 'VARBORG.DeathsDoor.RemovePart'}}">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </li>
-      {{/each}}
-    </ul>
-    {{/if}}
   </section>
   {{/with}}
 </section>

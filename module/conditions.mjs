@@ -15,14 +15,12 @@
 
 import { CONDITIONS, FOE_LINE_CONDITIONS, reminders, lossOnArrival } from "./rules/conditions.mjs";
 import { signed } from "./dice/ability-test.mjs";
-import { sheetPersistent, activatePersistentControls } from "./persistent.mjs";
 import { PANIC_EFFECTS } from "./rules/panic.mjs";
-import { panicName, sheetPanic, activatePanicControls } from "./panic.mjs";
+import { panicName } from "./panic.mjs";
 import { AGONY_EFFECTS } from "./rules/agony.mjs";
-import { agonyName, sheetInjuries, activateInjuryControls } from "./agony.mjs";
+import { agonyName } from "./agony.mjs";
 import { sheetDeathsDoor, activateDeathsDoorControls } from "./deaths-door.mjs";
-import { conditionTimer, conditionEffect, timerText, askConditionTimer } from "./timers.mjs";
-import { isStarving } from "./rules/days.mjs";
+import { conditionEffect } from "./timers.mjs";
 import { collectEffects, immuneConditions, immunityTo } from "./rules/item-effects.mjs";
 import { fatigueBlocked } from "./rules/resistance.mjs";
 
@@ -56,7 +54,8 @@ const ICONS = {
 export function registerConditions() {
   const defeated = CONFIG.statusEffects.find(effect => effect.id === CONFIG.specialStatusEffects.DEFEATED);
   CONFIG.statusEffects = [
-    ...CONDITIONS.map(id => ({ id, name: `VARBORG.Condition.${id}`, img: ICONS[id] })),
+    // type: the effect a token icon creates is a condition effect (module/data/active-effects.mjs).
+    ...CONDITIONS.map(id => ({ id, name: `VARBORG.Condition.${id}`, img: ICONS[id], type: "condition" })),
     ...(defeated ? [defeated] : [])
   ];
   CONFIG.specialStatusEffects.BLIND = "blinded";
@@ -66,7 +65,10 @@ export function registerConditions() {
   Hooks.on("preCreateActiveEffect", keepOffImmune);
   Hooks.on("createActiveEffect", onConditionAdded);
   Hooks.on("deleteActiveEffect", onConditionRemoved);
-  foundry.applications.handlebars.loadTemplates(["systems/var-borg/templates/actor/conditions.hbs"]);
+  foundry.applications.handlebars.loadTemplates([
+    "systems/var-borg/templates/actor/conditions.hbs",
+    "systems/var-borg/templates/actor/effects-list.hbs"
+  ]);
 }
 
 /**
@@ -189,9 +191,8 @@ export function reminderNotes(actor, where) {
     .map(condition => game.i18n.localize(`VARBORG.Condition.Reminder.${where}.${condition}`));
 }
 
-/** "From Songs of power: Allegro (…)": the power that gave a condition, or "". */
-function conditionSource(actor, id) {
-  const source = conditionEffect(actor, id)?.getFlag("var-borg", "source");
+/** "From Songs of power: Allegro (…)" for a condition effect's source, or "". */
+function sourceLine(source) {
   if (!source?.power) return "";
   const i18n = game.i18n;
   const from = source.option
@@ -201,61 +202,40 @@ function conditionSource(actor, id) {
 }
 
 /**
- * The Conditions section of a sheet: each condition the actor has with its
- * rules text (a foe's Foe line where it has one), and the ones it can get.
+ * A condition's icon, name ("Fatigued 2" with its level) and rules text (a
+ * foe's Foe line where it has one), for the sheet and the list of effects.
+ * @param {Actor} actor
+ * @param {string} id  The condition.
+ * @param {ActiveEffect} [effect]  The effect that gives it, for its source line.
  */
-export function sheetConditions(actor) {
+export function conditionDetails(actor, id, effect = null) {
   const i18n = game.i18n;
   const isFoe = actor.type === "foe";
-  const active = CONDITIONS.filter(id => actor.statuses.has(id));
+  const textKey = `VARBORG.Condition.${isFoe && FOE_LINE_CONDITIONS.includes(id) ? "FoeText" : "Text"}.${id}`;
   return {
-    // Panic, injuries and Death's Door are for characters only.
-    isCharacter: actor.type === "character",
-    fatigue: actor.system.fatigue,
-    // Characters only: days without food (rules 3.16, module/days.mjs).
-    food: actor.type !== "character" ? null : { days: actor.system.daysWithoutFood, starving: isStarving(actor.system.daysWithoutFood) },
-    persistent: sheetPersistent(actor),
-    panic: sheetPanic(actor),
-    injuries: sheetInjuries(actor),
-    deathsDoor: sheetDeathsDoor(actor),
-    list: active.map(id => ({
-      id,
-      img: ICONS[id],
-      label: id === "fatigued"
-        ? i18n.format("VARBORG.Condition.WithLevel", { name: i18n.localize("VARBORG.Condition.fatigued"), level: Math.max(1, actor.system.fatigue) })
-        : i18n.localize(`VARBORG.Condition.${id}`),
-      text: i18n.localize(`VARBORG.Condition.${isFoe && FOE_LINE_CONDITIONS.includes(id) ? "FoeText" : "Text"}.${id}`),
-      // Fatigued is ended by levels, not time; the rest can have a timer (GAPS 129).
-      canTime: id !== "fatigued",
-      timer: timerText(conditionTimer(actor, id)),
-      // The power and option that gave it (Songs of power: Allegro), playtest feedback.
-      source: conditionSource(actor, id)
-    })),
-    choices: CONDITIONS.filter(id => !actor.statuses.has(id))
-      .map(id => ({ id, label: i18n.localize(`VARBORG.Condition.${id}`) }))
+    img: ICONS[id] ?? effect?.img ?? "",
+    label: id === "fatigued"
+      ? i18n.format("VARBORG.Condition.WithLevel", { name: i18n.localize("VARBORG.Condition.fatigued"), level: Math.max(1, actor.system.fatigue ?? 0) })
+      : i18n.localize(`VARBORG.Condition.${id}`),
+    text: i18n.has(textKey) ? i18n.localize(textKey) : "",
+    source: effect ? sourceLine(effect.system?.source) : ""
   };
 }
 
 /**
- * The sheet's condition controls: the "Add a condition" menu, each
- * condition's timer and remove buttons, and the persistent damage, Panic, injury and
- * Death's Door controls.
+ * The Death's Door part of the Effects tab (characters only). The list of
+ * effects itself comes from module/ongoing.mjs (sheetEffects).
+ */
+export function sheetConditions(actor) {
+  return { deathsDoor: sheetDeathsDoor(actor) };
+}
+
+/**
+ * The Effects tab's Death's Door controls. The rows, the Add menu and the
+ * Tick button are wired by activateEffectControls (module/ongoing.mjs).
  * Called from the sheet's _onRender.
  */
 export function activateConditionControls(element, actor) {
-  element.querySelector("select[data-add-condition]")?.addEventListener("change", event => {
-    const id = event.currentTarget.value;
-    if (id) actor.toggleStatusEffect(id, { active: true });
-  });
-  for (const button of element.querySelectorAll("[data-remove-condition]")) {
-    button.addEventListener("click", () => actor.toggleStatusEffect(button.dataset.removeCondition, { active: false }));
-  }
-  for (const button of element.querySelectorAll("[data-time-condition]")) {
-    button.addEventListener("click", () => askConditionTimer(actor, button.dataset.timeCondition));
-  }
-  activatePersistentControls(element, actor);
-  activatePanicControls(element, actor);
-  activateInjuryControls(element, actor);
   activateDeathsDoorControls(element, actor);
 }
 

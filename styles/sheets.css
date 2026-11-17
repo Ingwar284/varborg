@@ -16,8 +16,8 @@
   overflow: hidden;
 }
 
-/* In the Conditions tab: a Font Awesome icon in place of a condition image. */
-.var-borg-sheet .ongoing-group .ongoing-icon {
+/* In the Effects tab: a Font Awesome icon in place of an effect's image. */
+.var-borg-sheet .condition-row .ongoing-icon {
   width: 24px;
   text-align: center;
   flex: 0 0 auto;
@@ -366,6 +366,13 @@ body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__stars
   border: none;
 }
 
+/* An effect with no image (cover, light, hunger…): its Font Awesome icon. */
+.var-borg-sheet .condition-strip i {
+  width: 24px;
+  line-height: 24px;
+  text-align: center;
+}
+
 .var-borg-sheet .details label {
   display: flex;
   flex-direction: column;
@@ -632,6 +639,20 @@ body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__stars
 .var-borg-sheet .condition-row .condition-text {
   flex: 1;
   font-size: 0.9rem;
+}
+
+/* The type tag beside an effect's name (Condition, Panic, Buff…), unified effects. */
+.var-borg-sheet .effect-tag {
+  display: inline-block;
+  margin: 0 0.25rem;
+  padding: 0 0.3rem;
+  border: 1px solid var(--vb-line-soft);
+  border-radius: 2px;
+  color: var(--vb-text-soft);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
 }
 
 .var-borg-sheet .condition-list .empty {

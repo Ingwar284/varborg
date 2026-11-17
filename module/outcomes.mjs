@@ -541,7 +541,7 @@ async function markConditionSource(actor, entry, power) {
   await effect.update({
     name: i18n.format("VARBORG.Outcome.ConditionFrom", { condition: i18n.localize(`VARBORG.Condition.${entry.condition}`), from }),
     description: entry.note || "",
-    [`flags.${SYSTEM}.source`]: { power, option: entry.option || "", note: entry.note || "" }
+    "system.source": { power, option: entry.option || "", note: entry.note || "" }
   });
 }
 

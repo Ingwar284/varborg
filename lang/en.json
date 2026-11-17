@@ -27,6 +27,13 @@
     },
     "JournalEntryPage": {
       "document": "Document (VÅR BORG)"
+    },
+    "ActiveEffect": {
+      "condition": "Condition",
+      "persistent": "Persistent damage",
+      "panic": "Panic",
+      "injury": "Injury",
+      "bodyPart": "Lost body part"
     }
   },
   "VARBORG": {
@@ -66,7 +73,7 @@
       "Fortune": "Fortune",
       "Silver": "Silver (s)",
       "Details": "Details",
-      "ConditionStripHint": "Active conditions. Click to open the Conditions tab.",
+      "ConditionStripHint": "Ongoing effects. Click to open the Effects tab.",
       "History": "History",
       "NoDescription": "No description.",
       "Actions": "Actions",
@@ -91,8 +98,8 @@
       "Container": "VÅR BORG container sheet",
       "Tab": {
         "main": "Character",
-        "conditions": "Conditions",
-        "ConditionsCount": "Conditions ({count})",
+        "conditions": "Effects",
+        "ConditionsCount": "Effects ({count})",
         "feats": "Feats",
         "powers": "Powers & spells",
         "equipment": "Equipment",
@@ -4610,7 +4617,32 @@
       "ShieldRaised": "Shield raised",
       "Cover": "In {size} cover ({dr} DR to defend)",
       "AttackRuin": "Ruined: Bane on attacks",
-      "Adjust": "{ability} {change} for now"
+      "Adjust": "{ability} {change} for now",
+      "InDarknessText": "No light reaches you: Bane on all tests, attacks and defences. Ends when a light reaches you.",
+      "Hungry": "{days} days without food",
+      "HungryOne": "1 day without food",
+      "EffectsTitle": "Ongoing effects",
+      "Add": "Add an effect…",
+      "AddPersistent": "Persistent damage…",
+      "PanicGroup": "Panic result (Dark Master)",
+      "Raise": "Raise by one",
+      "Lower": "Lower by one (removed at 0)",
+      "Remove": "Remove",
+      "Starving": "Starving: {days} days without food",
+      "Tag": {
+        "condition": "Condition",
+        "marker": "Marker",
+        "persistent": "Persistent damage",
+        "panic": "Panic",
+        "injury": "Injury",
+        "bodyPart": "Lost body part",
+        "hunger": "Hunger",
+        "buff": "Buff",
+        "inUse": "In use",
+        "combat": "Combat",
+        "light": "Light",
+        "ability": "Ability"
+      }
     },
     "Cover": {
       "Title": "{name} takes cover",

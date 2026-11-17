@@ -43,7 +43,7 @@ import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat, canI
 import { openCreationHelper, applyClassWithStarting, postCard } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
-import { ongoingEffects } from "../ongoing.mjs";
+import { sheetEffects, activateEffectControls } from "../ongoing.mjs";
 import { rollDetail } from "../personality.mjs";
 import { randomCharacter, chosenRandomCharacter } from "../random-character.mjs";
 import { onPostItem } from "../item-chat.mjs";
@@ -590,19 +590,16 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       }))
     };
     context.conditions = sheetConditions(actor);
-    // The Conditions tab shows how many are active, such as "Conditions (2)".
-    // The Character tab shows a small icon for each one, as a reminder.
-    context.conditionIcons = [
-      ...context.conditions.list,
-      ...context.conditions.persistent.list,
-      ...context.conditions.panic.list,
-      ...context.conditions.injuries
-    ].map(({ img, label }) => ({ img, label }));
-    // Ongoing effects that are not conditions: buffs, cover, light… (player feedback).
-    context.ongoing = ongoingEffects(actor);
-    const conditionCount = context.conditionIcons.length;
-    if (conditionCount && context.tabs?.conditions) {
-      context.tabs.conditions.label = i18n.format("VARBORG.Sheet.Tab.ConditionsCount", { count: conditionCount });
+    // One list of everything ongoing (unified effects): the Effects tab shows
+    // it in full and how many, such as "Effects (2)"; the Character tab shows
+    // a small icon for each one, as a reminder.
+    context.effects = sheetEffects(actor);
+    context.conditionIcons = context.effects.rows.map(({ img, icon, label, tagLabel }) => ({
+      img, icon, label: tagLabel ? `${tagLabel} · ${label}` : label
+    }));
+    const effectCount = context.effects.rows.length;
+    if (effectCount && context.tabs?.conditions) {
+      context.tabs.conditions.label = i18n.format("VARBORG.Sheet.Tab.ConditionsCount", { count: effectCount });
     }
 
     // A raised shield: which one counts, and its cover (GAPS 46).
@@ -620,6 +617,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   async _onRender(context, options) {
     await super._onRender(context, options);
     activateConditionControls(this.element, this.document);
+    activateEffectControls(this.element, this.document);
     // The "Stored in" menus and quantity boxes have no form name, so they
     // change the item, not the character. For weapons, armour and shields
     // the menu also equips: "Equipped" takes the item out of any container,

@@ -64,6 +64,13 @@
     },
     "JournalEntryPage": {
       "document": {}
+    },
+    "ActiveEffect": {
+      "condition": {},
+      "persistent": {},
+      "panic": {},
+      "injury": {},
+      "bodyPart": {}
     }
   },
   "packs": [

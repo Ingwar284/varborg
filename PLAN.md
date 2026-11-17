@@ -1556,3 +1556,13 @@ item names its GAPS ruling where there is one.
     night 1, with a one-hour twilight round dawn and dusk
     (module/scene-darkness.mjs). Global Illumination decides whether night
     counts as darkness for the rules.
+66. **One list of effects** (done; GAPS 312). Conditions,
+    persistent damage, Panic results, injuries and lost body parts are
+    Active Effects with a type of their own (module/data/active-effects.mjs,
+    module/rules/effect-types.mjs); world data version 16 converts old
+    worlds. The Conditions tab becomes the Effects tab: one list with a
+    type tag on each row, − / + / × buttons and one Add menu, the same
+    list as the Ongoing panel and the icon strip (module/ongoing.mjs,
+    module/rules/effect-kinds.mjs, templates/actor/effects-list.hbs).
+    Fatigue level, days without food, lost body parts, Death's Door stage
+    and In Darkness are rows too.

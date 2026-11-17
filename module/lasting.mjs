@@ -261,12 +261,14 @@ async function giveWhileInside(behavior, token) {
   await actor.createEmbeddedDocuments("ActiveEffect", [...new Set(ids)].map(id => {
     const status = CONFIG.statusEffects.find(entry => entry.id === id);
     return {
+      type: "condition",
       name: i18n.format("VARBORG.Outcome.ConditionFrom", { condition: i18n.localize(`VARBORG.Condition.${id}`), from: from || region.name }),
       img: status?.img,
       statuses: [id],
       description: i18n.localize("VARBORG.Area.Lasting.WhileInsideNote"),
       // Named on the sheet and in the Ongoing panel: "From Songs of power: Allegro".
-      flags: { [SYSTEM]: { [INSIDE_FLAG]: region.uuid, source: { power: behavior.name, option: behavior.option ?? "", note: i18n.localize("VARBORG.Area.Lasting.WhileInsideShort") } } }
+      system: { source: { power: behavior.name, option: behavior.option ?? "", note: i18n.localize("VARBORG.Area.Lasting.WhileInsideShort") } },
+      flags: { [SYSTEM]: { [INSIDE_FLAG]: region.uuid } }
     };
   }));
 }

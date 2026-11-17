@@ -89,7 +89,7 @@
   {{#if conditionIcons.length}}
   <button type="button" class="condition-strip" data-action="showConditions"
           data-tooltip="{{localize 'VARBORG.Sheet.ConditionStripHint'}}" aria-label="{{localize 'VARBORG.Sheet.ConditionStripHint'}}">
-    {{#each conditionIcons}}<img src="{{img}}" alt="{{label}}" data-tooltip="{{label}}">{{/each}}
+    {{#each conditionIcons}}{{#if img}}<img src="{{img}}" alt="{{label}}" data-tooltip="{{label}}">{{else}}<i class="fa-solid {{icon}}" aria-label="{{label}}" data-tooltip="{{label}}"></i>{{/if}}{{/each}}
   </button>
   {{/if}}
 
