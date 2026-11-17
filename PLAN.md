@@ -1550,3 +1550,9 @@ item names its GAPS ruling where there is one.
     can hold several omens, each with six stages. Scenery rolls a d100
     read-aloud line, 100 per region. The Misery panel shows every Misery,
     its omens and their past and current stages.
+65. **Scene darkness by the time of day** (built, to be tested; GAPS 311).
+    A checkbox under Scene Configuration's Darkness Level slider, for
+    outdoor maps: the scene's darkness follows the world clock, day 0,
+    night 1, with a one-hour twilight round dawn and dusk
+    (module/scene-darkness.mjs). Global Illumination decides whether night
+    counts as darkness for the rules.

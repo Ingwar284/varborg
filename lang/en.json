@@ -2388,6 +2388,10 @@
       "PlaylistsDone": "Created {count} weather playlists in the folder {folder}.",
       "PlaylistsFolder": "Weather"
     },
+    "SceneDarkness": {
+      "Follow": "Darkness follows the time of day",
+      "FollowHint": "For outdoor maps. Each time the clock moves, this scene’s darkness is set for the hour: daylight from 6:30 to 17:30, night from 18:30 to 5:30, fading over an hour round dawn and dusk. Moving the slider by hand lasts until the clock moves again. Whether night counts as darkness for the rules is set by Global Illumination’s darkness threshold."
+    },
     "Misery": {
       "Title": "The Misery",
       "Open": "The Misery: the dying of the light, and overland travel",
