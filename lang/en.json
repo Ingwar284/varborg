@@ -2377,7 +2377,15 @@
       "Precipitation": "Precipitation falls as",
       "PrecipitationHint": "Whether light precipitation, heavy precipitation and storms show as rain or snow on this scene.",
       "Rain": "Rain",
-      "Snow": "Snow"
+      "Snow": "Snow",
+      "PlaylistsMenuName": "Weather playlists",
+      "PlaylistsLabel": "Create weather playlists",
+      "PlaylistsHint": "Makes an empty playlist, in a playlist folder called Weather, for every weather effect that has none yet. Add your sounds to them: when the active scene's weather changes, its playlist plays and the other weather playlists stop.",
+      "PlaylistsTitle": "Create weather playlists",
+      "PlaylistsConfirm": "Create {count} empty playlists, one for each weather effect that has none, in the playlist folder {folder}?",
+      "PlaylistsNone": "Every weather effect already has a playlist.",
+      "PlaylistsDone": "Created {count} weather playlists in the folder {folder}.",
+      "PlaylistsFolder": "Weather"
     },
     "Misery": {
       "Title": "The Misery",

@@ -1539,3 +1539,5 @@ item names its GAPS ruling where there is one.
     lightning than Lightstrike). Scenes can follow today’s weather, with
     rain or snow (module/scene-weather.mjs). A playlist named after the
     active scene’s weather effect plays, and other weather playlists stop.
+    A “Create weather playlists” button in Configure Settings makes an
+    empty playlist for each effect that has none, in a folder “Weather”.

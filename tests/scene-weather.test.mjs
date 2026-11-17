@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   PREFIX, ALL_HAZARDS, effectId, effectNames, cleanPrecipitation, sceneEffectFor,
-  sameName, playlistNamesFor, weatherPlaylistPlan
+  sameName, playlistNamesFor, weatherPlaylistPlan, missingWeatherPlaylists
 } from "../module/rules/scene-weather.mjs";
 import { HEXES } from "../module/rules/weather.mjs";
 
@@ -92,4 +92,20 @@ test("weather without a playlist, or no weather, only stops the weather playlist
     { play: null, stop: ["b"] });
   assert.deepEqual(weatherPlaylistPlan({ labels: LABELS, weather: "", playlists }),
     { play: null, stop: ["b"] });
+});
+
+test("the button creates a playlist for each weather effect that has none", () => {
+  assert.deepEqual(missingWeatherPlaylists({ labels: LABELS, playlistNames: [] }),
+    ["Rain", "Silt rain", "Storm (rain)"]);
+});
+
+test("the button skips effects that already have a playlist, by either name", () => {
+  assert.deepEqual(missingWeatherPlaylists({
+    labels: LABELS,
+    playlistNames: ["rain", "VÅR BORG: Silt Rain", "Tavern songs"]
+  }), ["Storm (rain)"]);
+  assert.deepEqual(missingWeatherPlaylists({
+    labels: LABELS,
+    playlistNames: ["Rain", "Silt rain", "Storm (rain)"]
+  }), []);
 });

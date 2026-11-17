@@ -20,13 +20,17 @@
  * named after a weather effect stops. Other playlists are left alone. This
  * works whether or not the Weather subsystem is in use.
  *
+ * The Dark Master's "Create weather playlists" button in Configure Settings
+ * makes an empty playlist for every weather effect that has none yet, in a
+ * playlist folder called "Weather". The Dark Master then adds the sounds.
+ *
  * The effects are looks only; they never change a rule. Which effect goes
  * with which weather, and the playlist names, are in
  * module/rules/scene-weather.mjs.
  */
 
 import {
-  sceneEffectFor, cleanPrecipitation, PRECIPITATION, weatherPlaylistPlan
+  sceneEffectFor, cleanPrecipitation, PRECIPITATION, weatherPlaylistPlan, missingWeatherPlaylists
 } from "./rules/scene-weather.mjs";
 import { hexById } from "./rules/weather.mjs";
 import { currentWeather } from "./weather.mjs";
@@ -42,6 +46,23 @@ export function registerSceneWeather() {
   Hooks.on("updateScene", onSceneUpdated);
   Hooks.on("updateSetting", setting => {
     if (setting.key === `${SYSTEM}.useWeather` && weatherOn()) followTodaysWeather();
+  });
+
+  /** The menu "window": it asks, creates the playlists and opens nothing else. */
+  class CreateWeatherPlaylists extends foundry.applications.api.ApplicationV2 {
+    /** @override */
+    async render() {
+      await createWeatherPlaylists();
+      return this;
+    }
+  }
+  game.settings.registerMenu(SYSTEM, "weatherPlaylists", {
+    name: "VARBORG.WeatherFx.PlaylistsMenuName",
+    label: "VARBORG.WeatherFx.PlaylistsLabel",
+    hint: "VARBORG.WeatherFx.PlaylistsHint",
+    icon: "fa-solid fa-music",
+    type: CreateWeatherPlaylists,
+    restricted: true
   });
 }
 
@@ -102,8 +123,7 @@ function onSceneUpdated(scene, changes) {
  */
 async function playWeatherPlaylist(weather) {
   if (!game.user.isActiveGM) return;
-  const labels = {};
-  for (const [id, effect] of Object.entries(CONFIG.weatherEffects)) labels[id] = game.i18n.localize(effect.label);
+  const labels = weatherLabels();
   const playlists = game.playlists.contents;
   const { play, stop } = weatherPlaylistPlan({
     labels,
@@ -112,6 +132,43 @@ async function playWeatherPlaylist(weather) {
   });
   for (const id of stop) await game.playlists.get(id)?.stopAll();
   if (play) await game.playlists.get(play)?.playAll();
+}
+
+/** Every weather effect: id → its name in the Weather menu. */
+function weatherLabels() {
+  const labels = {};
+  for (const [id, effect] of Object.entries(CONFIG.weatherEffects)) labels[id] = game.i18n.localize(effect.label);
+  return labels;
+}
+
+/**
+ * Make an empty playlist for every weather effect that has none, in the
+ * "Weather" playlist folder (made if missing), after asking the Dark Master.
+ * @returns {Promise<number>} How many playlists were made.
+ */
+export async function createWeatherPlaylists() {
+  if (!game.user.isGM) return 0;
+  const i18n = game.i18n;
+  const names = missingWeatherPlaylists({
+    labels: weatherLabels(),
+    playlistNames: game.playlists.contents.map(p => p.name)
+  });
+  if (!names.length) {
+    ui.notifications.info(i18n.localize("VARBORG.WeatherFx.PlaylistsNone"));
+    return 0;
+  }
+  const folderName = i18n.localize("VARBORG.WeatherFx.PlaylistsFolder");
+  const sure = await foundry.applications.api.DialogV2.confirm({
+    window: { title: "VARBORG.WeatherFx.PlaylistsTitle", icon: "fa-solid fa-music" },
+    content: `<p>${foundry.utils.escapeHTML(i18n.format("VARBORG.WeatherFx.PlaylistsConfirm",
+      { count: names.length, folder: folderName }))}</p>`
+  });
+  if (!sure) return 0;
+  let folder = game.folders.find(f => f.type === "Playlist" && f.name === folderName && !f.folder);
+  folder ??= await Folder.create({ name: folderName, type: "Playlist" });
+  await Playlist.createDocuments(names.map(name => ({ name, folder: folder.id })));
+  ui.notifications.info(i18n.format("VARBORG.WeatherFx.PlaylistsDone", { count: names.length, folder: folderName }));
+  return names.length;
 }
 
 /* -------------------------------------------- */
