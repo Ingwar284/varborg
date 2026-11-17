@@ -1,0 +1,52 @@
+# Packs the system for Foundry whenever a release is published on GitHub.
+#
+# Make a release with a tag such as v0.2.0. This workflow then:
+# - writes that version (without the "v") into system.json,
+# - points system.json's download link at this release's zip,
+# - zips the folders Foundry needs, and
+# - adds system.json and var-borg.zip to the release.
+#
+# Foundry installs from the manifest link
+#   https://github.com/Ingwar284/varborg/releases/latest/download/system.json
+# which always gives the newest release.
+
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run the tests
+        run: node --test tests/
+
+      - name: Fill in the version and download link
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          VERSION="${TAG#v}"
+          jq --arg v "$VERSION" \
+             --arg d "https://github.com/$REPO/releases/download/$TAG/var-borg.zip" \
+             '.version = $v | .download = $d' system.json > system.tmp
+          mv system.tmp system.json
+
+      - name: Zip the system
+        run: |
+          zip -r var-borg.zip system.json module templates styles lang packs assets fonts content \
+            THIRD_PARTY_NOTICES.md \
+            -x "packs/**/LOCK" "packs/**/LOG" "packs/**/LOG.old"
+
+      - name: Add the files to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" system.json var-borg.zip --clobber

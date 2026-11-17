@@ -12,6 +12,9 @@
       "name": "Ingwar284"
     }
   ],
+  "url": "https://github.com/Ingwar284/varborg",
+  "manifest": "https://github.com/Ingwar284/varborg/releases/latest/download/system.json",
+  "download": "https://github.com/Ingwar284/varborg/releases/latest/download/var-borg.zip",
   "socket": true,
   "esmodules": [
     "module/var-borg.mjs"
