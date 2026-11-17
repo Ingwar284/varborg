@@ -2342,6 +2342,43 @@
         }
       }
     },
+    "WeatherFx": {
+      "Label": {
+        "clouded": "VÅR BORG: Clouded",
+        "lightRain": "VÅR BORG: Light rain",
+        "lightSnow": "VÅR BORG: Light snow",
+        "heavyRain": "VÅR BORG: Heavy rain",
+        "heavySnow": "VÅR BORG: Heavy snow",
+        "rainStorm": "VÅR BORG: Storm (rain)",
+        "blizzard": "VÅR BORG: Storm (snow)",
+        "siltRain": "VÅR BORG: Silt rain",
+        "whistling": "VÅR BORG: Whistling from the Spine",
+        "creepfrost": "VÅR BORG: Creepfrost",
+        "tamefire": "VÅR BORG: Tamefire",
+        "lightstrike": "VÅR BORG: Lightstrike",
+        "hazefall": "VÅR BORG: Hazefall",
+        "shadowstretch": "VÅR BORG: Shadowstretch",
+        "strongGales": "VÅR BORG: Strong gales",
+        "blightPollen": "VÅR BORG: Blight-pollen",
+        "loomingDark": "VÅR BORG: Looming dark",
+        "dayOfGloom": "VÅR BORG: Day of gloom",
+        "energyVoid": "VÅR BORG: Energy void",
+        "heavyGravity": "VÅR BORG: Heavy gravity",
+        "photonStorm": "VÅR BORG: Photon storm",
+        "blackburn": "VÅR BORG: Blackburn",
+        "oilmist": "VÅR BORG: Oilmist",
+        "shadowblightOutbreak": "VÅR BORG: Shadowblight outbreak",
+        "lightGravity": "VÅR BORG: Light gravity",
+        "energyFont": "VÅR BORG: Energy font",
+        "dayOfEmber": "VÅR BORG: Day of ember"
+      },
+      "Follow": "Follows today’s weather",
+      "FollowHint": "Each time the weather changes, this scene shows the VÅR BORG effect for it. You can still pick another effect by hand; it lasts until the next change of weather.",
+      "Precipitation": "Precipitation falls as",
+      "PrecipitationHint": "Whether light precipitation, heavy precipitation and storms show as rain or snow on this scene.",
+      "Rain": "Rain",
+      "Snow": "Snow"
+    },
     "Misery": {
       "Title": "The Misery",
       "Open": "The Misery: the dying of the light, and overland travel",

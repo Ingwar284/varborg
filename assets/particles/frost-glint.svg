@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- VÅR BORG particle: a six-armed glint of frost. -->
+  <g stroke="#fff" stroke-linecap="round">
+    <path d="M32 2 L32 62 M6 17 L58 47 M6 47 L58 17" stroke-width="2.5"/>
+    <path d="M32 12 L26 6 M32 12 L38 6 M32 52 L26 58 M32 52 L38 58" stroke-width="1.5"/>
+  </g>
+  <circle cx="32" cy="32" r="4" fill="#fff"/>
+</svg>

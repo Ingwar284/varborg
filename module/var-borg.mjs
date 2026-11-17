@@ -72,6 +72,8 @@ import { registerChatRolls } from "./chat-rolls.mjs";
 import { registerItemChatHelpers } from "./item-chat.mjs";
 import { registerStage } from "./stage.mjs";
 import { registerMood } from "./mood.mjs";
+import { registerWeatherFx } from "./weather-fx/config.mjs";
+import { registerSceneWeather } from "./scene-weather.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -148,6 +150,10 @@ Hooks.once("init", () => {
   // In Darkness: a marker from the scene's lighting, Bane on all tests (rules 3.15).
   registerDarkness();
   registerMood();
+  // Scene weather effects for every weather kind and hazard, and scenes
+  // that follow today's weather (step 63).
+  registerWeatherFx();
+  registerSceneWeather();
   // Wounds at 0 HP: the wound test and the Table of Agony (rules 3.5).
   registerAgony();
   // Death's Door and Dark Vessel (rules 3.6).

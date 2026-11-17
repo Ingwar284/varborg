@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="96" viewBox="0 0 64 96">
+  <!-- VÅR BORG particle: a soft tongue of flame, tip at the top. -->
+  <defs><radialGradient id="g" cx="0.5" cy="0.7" r="0.6"><stop offset="0" stop-color="#fff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#fff" stop-opacity="0.5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+  <path d="M32 4 C40 24 58 40 52 66 C48 84 40 92 32 92 C24 92 16 84 12 66 C6 40 26 30 32 4 Z" fill="url(#g)"/>
+</svg>
