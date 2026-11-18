@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  pickRandom, uniqueByName, nameTableIds, joinName, plainText, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult, hasHtml, descriptionText
+  pickRandom, pickWeighted, chanceWeight, RANDOM_CHANCES, uniqueByName, nameTableIds, joinName, plainText, IMPROVING_GROUPS, improvingCandidates, groupForRoll, DETAIL_FIELDS, DETAIL_DRAWS, detailText, keepResult, hasHtml, descriptionText
 } from "../module/rules/random.mjs";
 
 test("pickRandom picks by the random number", () => {
@@ -115,6 +115,8 @@ test("groupForRoll maps the die to a group", () => {
 test("each ancestry has its own name tables, others the human ones", () => {
   assert.deepEqual(nameTableIds("Dwarf"), { given: "vbNameDwarG00000", family: "vbNameDwarF00000" });
   assert.deepEqual(nameTableIds(" orc "), { given: "vbNameOrc0G00000", family: "vbNameOrc0F00000" });
+  assert.deepEqual(nameTableIds("Dusk-touched"), { given: "vbNameDuskG00000", family: "vbNameDuskF00000" });
+  assert.deepEqual(nameTableIds("Beastfolk"), { given: "vbNameBeasG00000", family: "vbNameBeasF00000" });
   assert.deepEqual(nameTableIds("Lizardfolk"), nameTableIds("Human"));
   assert.deepEqual(nameTableIds(""), nameTableIds("Human"));
 });
@@ -146,4 +148,44 @@ test("descriptionText keeps paragraphs and list items as lines", () => {
     "Choose one:\n\n• Allegro\n• Adagio");
   assert.equal(descriptionText("<p>salt &amp; pepper</p>"), "salt & pepper");
   assert.equal(descriptionText("Already plain\ntext"), "Already plain\ntext");
+});
+
+test("an ancestry's random chance: normal 1, half 0.5, unknown counts as normal (GAPS 327)", () => {
+  assert.deepEqual(RANDOM_CHANCES, { normal: 1, half: 0.5 });
+  assert.equal(chanceWeight("normal"), 1);
+  assert.equal(chanceWeight("half"), 0.5);
+  assert.equal(chanceWeight(undefined), 1);
+  assert.equal(chanceWeight("rare"), 1);
+});
+
+test("pickWeighted gives a half-weight entry half the room", () => {
+  // Weights 1, 1, 0.5: the line is 2.5 long; a covers 0-1, b 1-2, c 2-2.5.
+  const list = [{ n: "a", w: 1 }, { n: "b", w: 1 }, { n: "c", w: 0.5 }];
+  const pick = r => pickWeighted(list, e => e.w, () => r).n;
+  assert.equal(pick(0), "a");
+  assert.equal(pick(0.39), "a");
+  assert.equal(pick(0.41), "b");
+  assert.equal(pick(0.79), "b");
+  assert.equal(pick(0.81), "c");
+  assert.equal(pick(0.9999), "c");
+});
+
+test("pickWeighted over many rolls: a half entry comes up about half as often", () => {
+  const list = [{ n: "normal", w: 1 }, { n: "half", w: 0.5 }];
+  const counts = { normal: 0, half: 0 };
+  for (let i = 0; i < 3000; i++) counts[pickWeighted(list, e => e.w, () => (i + 0.5) / 3000).n]++;
+  assert.equal(counts.normal, 2000);
+  assert.equal(counts.half, 1000);
+});
+
+test("pickWeighted with equal weights is pickRandom", () => {
+  const list = ["a", "b", "c", "d"];
+  for (const r of [0, 0.3, 0.5, 0.9999]) assert.equal(pickWeighted(list, () => 1, () => r), pickRandom(list, () => r));
+});
+
+test("pickWeighted skips weight 0 and gives null for nothing", () => {
+  assert.equal(pickWeighted([{ n: "a", w: 0 }, { n: "b", w: 1 }], e => e.w, () => 0).n, "b");
+  assert.equal(pickWeighted([{ n: "a", w: 0 }], e => e.w), null);
+  assert.equal(pickWeighted([], () => 1), null);
+  assert.equal(pickWeighted(null, () => 1), null);
 });

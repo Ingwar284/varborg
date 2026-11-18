@@ -6,6 +6,7 @@
    4. The turn strip under them (module/turn-strip.mjs).
    5. The light orb, weather and time of day at the top right of the map (module/torch.mjs).
    6. The mood flourish: a short wash of light or dark when the mood changes (module/mood.mjs).
+   7. The cards strip above the hotbar: readings and last drawn cards (module/cards-strip.mjs).
 
    Artwork (the orbs, the torch, the splash and its words) keeps the palette
    constants, so it looks the same in both moods. Interface (the dialogue box,
@@ -930,4 +931,149 @@ body.vb-mood-to-light::after { background: var(--vb-atmosphere-light-flourish); 
   body[data-vb-mood="dark"] .vb-orb--gloom:not(.is-empty, .is-filling, .is-spending) { animation: none; }
   body.vb-mood-to-dark::after,
   body.vb-mood-to-light::after { display: none; }
+}
+
+/* ================================================================
+   7. Cards strip: at the top-left corner of the hotbar, with Foundry Cards
+      (module/cards-strip.mjs). A toggle button, then each Cartomancer's
+      reading and each Card Slinger's last drawn card on a HUD plate per
+      character, as the turn strip is. Minimised, only the toggle shows.
+      module/cards-strip.mjs sets left and bottom to follow the hotbar.
+   ================================================================ */
+
+.vb-cards {
+  position: fixed;
+  left: 16px;
+  bottom: 80px;
+  z-index: 70;                       /* over the map, under windows */
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  max-width: calc(100vw - 340px);    /* clear of the sidebar */
+  pointer-events: none;              /* only the toggle and the plates take the mouse */
+}
+.vb-cards.is-empty { display: none; }
+
+.vb-cards__plates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.vb-cards .vb-cards__toggle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: var(--vb-hud-bg);
+  color: var(--vb-hud-text);
+  border: 1px solid var(--vb-hud-line);
+  border-radius: 0;
+  box-shadow: var(--vb-shadow-soft);
+  font-size: 12px;
+  line-height: 26px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.vb-cards .vb-cards__toggle:hover { background: var(--vb-hud-hover); }
+.vb-cards .vb-cards__toggle:focus-visible { outline: 2px solid var(--vb-focus-on-band); outline-offset: 2px; }
+/* Minimised: how many plates are hidden, in the toggle's corner. */
+.vb-cards__count {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  background: var(--vb-accent);
+  color: var(--vb-on-accent);
+  font-family: var(--vb-font-head);
+  font-size: 10px;
+  line-height: 15px;
+  text-align: center;
+}
+
+.vb-cards__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 6px 5px;
+  background: var(--vb-hud-bg);
+  color: var(--vb-hud-text);
+  border: 1px solid var(--vb-hud-line);
+  box-shadow: var(--vb-shadow-soft);
+  pointer-events: auto;
+}
+
+.vb-cards .vb-cards__name {
+  flex: 0 0 auto;
+  width: auto;
+  height: 18px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 4px;
+  background: transparent;
+  color: var(--vb-hud-text);
+  border: none;
+  border-radius: 0;
+  font-family: var(--vb-font-head);
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.vb-cards .vb-cards__name:hover { background: var(--vb-hud-hover); }
+.vb-cards .vb-cards__name:focus-visible { outline: 2px solid var(--vb-focus-on-band); outline-offset: 2px; }
+
+.vb-cards__row {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.vb-cards__card {
+  display: block;
+  width: 32px;
+  height: 48px;
+  border: 1px solid var(--vb-hud-line);
+  background: var(--vb-hud-bg);
+}
+.vb-cards__card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+/* A reading card that can be turned is a button: it lifts on hover. */
+.vb-cards .vb-cards__card.is-playable {
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  border-radius: 0;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.vb-cards .vb-cards__card.is-playable:hover { transform: translateY(-4px); border-color: var(--vb-accent); }
+.vb-cards .vb-cards__card.is-playable:focus-visible { outline: 2px solid var(--vb-focus-on-band); outline-offset: 2px; }
+/* A turned card of the reading shows its back, faded. */
+.vb-cards__card.is-face-down { opacity: 0.55; }
+/* The Card Slinger's last card: larger, with the accent ring. */
+.vb-cards__card.is-latest {
+  width: 40px;
+  height: 60px;
+  outline: 2px solid var(--vb-accent);
+}
+
+.vb-cards__note {
+  font-size: 11px;
+  line-height: 1.2;
+  opacity: 0.8;
+  white-space: nowrap;
 }

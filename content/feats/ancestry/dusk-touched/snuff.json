@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFDuskTouch008",
+  "name": "Snuff",
+  "type": "feat",
+  "img": "icons/magic/light/orb-shadow-blue.webp",
+  "system": {
+    "description": "The dark obeys you in small things. Once per encounter, as an action (◈), you put out every flame no bigger than a torch within 10' of you. Magical light is not affected.",
+    "source": "ancestry",
+    "belongsTo": "Dusk-touched",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "_id": "vbAncDuskTouched",
+  "name": "Dusk-touched",
+  "type": "ancestry",
+  "img": "icons/magic/light/orb-shadow-blue.webp",
+  "system": {
+    "description": "Colourless eyes and a shadow that moves a heartbeat late: the Dusk-touched are born where the light runs thin. Emberglow does not trust them, and they fear what everyone suspects: that they would make the strongest vessels of all.\nChoose one dusk-touched ancestry feat (rules 4.3A).",
+    "randomChance": "half",
+    "effects": [],
+    "automation": ""
+  }
+}

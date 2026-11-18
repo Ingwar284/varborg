@@ -43,6 +43,12 @@ import { outcomeInputs } from "../outcomes.mjs";
 import { outcomeOptions, thrallDamage } from "../rules/outcomes.mjs";
 import { ownedThralls, deleteThralls } from "../minions.mjs";
 
+/** The outcome inputs with the conditions the thrown cards give added (step 69b3c). */
+function withCardEntries(inputs, entries) {
+  if (!inputs || !entries?.length) return inputs;
+  return { ...inputs, entries: [...inputs.entries, ...entries] };
+}
+
 /** The outcome inputs with the options chosen in the dialog (GAPS 224). */
 function withChosen(inputs, chosen) {
   return inputs ? { ...inputs, chosen: chosen.filter(Boolean) } : null;
@@ -52,6 +58,9 @@ import { settleAttackCard } from "./attack.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { aimArea, keepArea } from "../areas.mjs";
+import { deckWeaponOf, deckCount, throwPowerCards, loseFromDeck, suitChoices } from "../cards.mjs";
+import { ARCANA_POWERS } from "../rules/cards.mjs";
+import { cartomancerPower } from "../reading.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -267,6 +276,16 @@ async function rollPowerTest(actor, power) {
   const turn = turnState(actor);
   const use = checkPowerUse(actor, power, turn);
   if (!use) return;
+  // A card power needs a deck with cards in it (step 69b3b). Checked before any payment.
+  // The Cartomancer's card powers draw from the Dusk Arcana after the test (step 69c2).
+  const arcanaPower = ARCANA_POWERS.includes(power.system.cards) ? power.system.cards : "";
+  const cardPower = arcanaPower ? "" : power.system.cards || "";
+  const deckItem = cardPower ? deckWeaponOf(actor) : null;
+  if (cardPower) {
+    const count = deckItem ? deckCount(deckItem) : null;
+    if (!deckItem) return void ui.notifications.warn(i18n.format("VARBORG.Cards.NoDeck", { name: actor.name, power: power.name }));
+    if (!count.left) return void ui.notifications.warn(i18n.format(count.missing ? "VARBORG.Cards.NoCardsDeck" : "VARBORG.Cards.DeckEmpty", { name: deckItem.name }));
+  }
   // Thralls the power needs must be there (GAPS 225). Checked before the dialog, so no Fortune or Ember is paid first.
   if (["one", "all"].includes(power.system.thrallDestroy) && !ownedThralls(actor).length) {
     ui.notifications.warn(i18n.format("VARBORG.Outcome.ThrallsNone", { name: actor.name, power: power.name }));
@@ -278,7 +297,8 @@ async function rollPowerTest(actor, power) {
   const target = [...game.user.targets][0]?.actor ?? null;
 
   // A power that adds weapon damage: a carried weapon, unarmed or improvised.
-  const weapons = power.system.addsWeaponDamage ? damageWeapons(actor) : [];
+  // A card power takes its dice from the cards instead.
+  const weapons = power.system.addsWeaponDamage && !cardPower ? damageWeapons(actor) : [];
 
   const automatic = actorTestModifiers(actor, ability);
   const { conditions, fatigue } = conditionsOf(actor);
@@ -310,6 +330,8 @@ async function rollPowerTest(actor, power) {
     conditionNotes: notes,
     reminders: [...reminderNotes(actor, "test"), ...itemReminderNotes(actor, effectContext)],
     optionalEffects: await optionalEffectsField(optional),
+    // Call the suit: the suit named before the card is drawn.
+    cardSuits: cardPower === "suit" ? suitChoices() : null,
     weapons: weapons.map(choice => ({
       id: choice.id,
       label: `${choice.name} (${choice.dice})${choice.equipped ? ` · ${i18n.localize("VARBORG.Item.Equipped")}` : ""}`
@@ -389,7 +411,16 @@ async function rollPowerTest(actor, power) {
   const pipNote = await spendPowerActions(turn, use);
 
   const weapon = weapons.length ? (weapons.find(choice => choice.id === options.weapon) ?? weapons[0]) : null;
-  const damage = powerDamageDice(power, weapon?.dice);
+  // The cards are drawn and thrown now (step 69b3b): their dice, or each foe's own.
+  const cardTargets = [...game.user.targets].map(token => token.actor).filter(other => other && other !== actor)
+    .map(other => ({ uuid: other.uuid, name: other.name, type: other.type, armour: other.system?.armour }));
+  const cardResult = cardPower
+    ? await throwPowerCards(actor, cardPower, deckItem, { suit: options.cardSuit || "H", targets: cardTargets })
+    : null;
+  // Card dice can be a sum ("d6 + 10" for a Royal flush pair), built here.
+  // The Council's knave with no knave left throws nothing.
+  const cardFormula = cardResult && !cardResult.noThrow ? powerDamageFormula({ weapon: cardResult.dice, power: power.system.damage }) : null;
+  const damage = cardResult ? { formula: cardFormula, text: cardFormula ?? "", invalid: false } : powerDamageDice(power, weapon?.dice);
   // Destroyed thralls add their damage (Charnel Charge, Flesh Tide).
   if (thrallExtra && damage.formula) damage.formula = `${damage.formula} + ${thrallExtra}`;
   const foe = target?.type === "foe" ? target : null;
@@ -401,6 +432,8 @@ async function rollPowerTest(actor, power) {
     // Extra damage from item effects on powers (step 49e).
     damageFormula: damage.formula ? withExtraDamage(damage.formula, [...conditionMods, ...ticked]) : damage.formula,
     damageInvalid: damage.invalid,
+    // Each foe's own card damage (Deal the table, Royal flush).
+    perTarget: cardResult?.perTarget ?? null,
     // A Ruin counts as a Failure (Field notes, GAPS 214).
     noRuin: [...conditionMods, ...ticked].some(mod => mod.noRuin),
     upgradeSuccess: [...conditionMods, ...ticked].some(mod => mod.upgradeSuccess),
@@ -412,7 +445,7 @@ async function rollPowerTest(actor, power) {
     areaDamageType: power.system.damageType ?? "",
     ignoresArmour: Boolean(power.system.ignoresArmour),
     // What each result gives the targets and user (step 51c), with the chosen options.
-    outcomes: withChosen(outcomeInputs(actor, power), [options.option, options.option2]),
+    outcomes: withChosen(withCardEntries(outcomeInputs(actor, power), cardResult?.outcomeEntries), [options.option, options.option2]),
     inflicts: target?.type !== "character",
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     attackName: power.name,
@@ -431,6 +464,7 @@ async function rollPowerTest(actor, power) {
         ...notes,
         paid.note,
         weapon ? i18n.format("VARBORG.Power.WeaponNote", { name: weapon.name }) : null,
+        ...(cardResult?.notes ?? []),
         ...notesAfter,
         emberNote(use, Boolean(turn.combatant))
       ].filter(Boolean),
@@ -449,6 +483,13 @@ async function rollPowerTest(actor, power) {
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
+  // Draw for the querent, Read the room, The Thirteenth card (step 69c2).
+  if (arcanaPower) await cartomancerPower(actor, arcanaPower, data.state.tier);
+  // Deal the table's Ruin: the cards drawn are lost until the encounter ends.
+  if (cardResult?.loseOnRuin.length && data.state.tier === "ruin") {
+    await loseFromDeck(deckItem, cardResult.loseOnRuin);
+    await postLine(actor, i18n.localize("VARBORG.Cards.RuinLost"));
+  }
   // A Sustained or lasting power's area stays on the map (lingering areas).
   await keepArea(actor, power, aimed.region, data.state.tier);
   // A magic-themed power rolls for a Photonic Surge (Autodidactism, GAPS 208).

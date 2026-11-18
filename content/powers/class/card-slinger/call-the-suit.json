@@ -53,6 +53,7 @@
     ],
     "buffEffects": [],
     "effects": [],
-    "automation": "partial"
+    "automation": "partial",
+    "cards": "suit"
   }
 }

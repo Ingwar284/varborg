@@ -13,7 +13,7 @@
     "ability": "usual",
     "damage": "d4",
     "damageType": "slashing",
-    "addsWeaponDamage": true,
+    "addsWeaponDamage": false,
     "sustained": false,
     "reaction": false,
     "outcomes": {
@@ -53,6 +53,7 @@
     ],
     "buffEffects": [],
     "effects": [],
-    "automation": "partial"
+    "automation": "partial",
+    "cards": "cut"
   }
 }

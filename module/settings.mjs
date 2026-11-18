@@ -41,6 +41,7 @@ const ENCOUNTER_PARTY = "encounterParty";
 const MISERY_MODE = "miseryMode";
 const OMENS_PER_MISERY = "omensPerMisery";
 const CARD_DRAW = "cardDraw";
+const CARDS_STRIP_OPEN = "cardsStripOpen";
 
 /** Called from the init hook. */
 export function registerSettings() {
@@ -128,6 +129,14 @@ export function registerSettings() {
     onChange: redrawTablePanels
   });
 
+  // The cards strip at the hotbar: open or minimised, for this user (step 70).
+  game.settings.register(SYSTEM, CARDS_STRIP_OPEN, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: true
+  });
+
   game.settings.register(SYSTEM, CARD_DRAW, {
     name: "VARBORG.Settings.CardDraw.Name",
     hint: "VARBORG.Settings.CardDraw.Hint",
@@ -144,6 +153,16 @@ export function registerSettings() {
       Hooks.callAll("varBorgCardDraw", value);
     }
   });
+}
+
+/** Whether the cards strip is open (not minimised), for this user. */
+export function cardsStripOpen() {
+  return Boolean(game.settings.get(SYSTEM, CARDS_STRIP_OPEN));
+}
+
+/** Open or minimise the cards strip, for this user. */
+export function setCardsStripOpen(open) {
+  return game.settings.set(SYSTEM, CARDS_STRIP_OPEN, Boolean(open));
 }
 
 /** Whether cards are drawn from Foundry Cards decks (GAPS 320), not the deck the system keeps. */

@@ -35,17 +35,27 @@ const ancestryFeats = readAll(join(root, "content", "feats", "ancestry")).map(({
 /** The ancestry names in rules 2.3, in order. */
 const RULES_ANCESTRIES = ["Dragonkin", "Dwarf", "Elf", "Gnome", "Goblin", "Halfling", "Human", "Orc"];
 
-test("all eight ancestries of rules 2.3 are there, once each", () => {
-  assert.deepEqual(ancestries.map(a => a.name).sort(), [...RULES_ANCESTRIES].sort());
+/** The ancestries of 4.3A Almanac of Ancestries (GAPS 327). */
+const ALMANAC_ANCESTRIES = ["Beastfolk", "Automaton", "Returned", "Dusk-touched"];
+
+test("all eight ancestries of rules 2.3 and the four of 4.3A are there, once each", () => {
+  assert.deepEqual(ancestries.map(a => a.name).sort(), [...RULES_ANCESTRIES, ...ALMANAC_ANCESTRIES].sort());
   for (const a of ancestries) assert.equal(a.type, "ancestry", a.name);
 });
 
 test("each ancestry has the eight optional feats of its rules section", () => {
-  for (const name of RULES_ANCESTRIES) {
+  for (const name of [...RULES_ANCESTRIES, ...ALMANAC_ANCESTRIES]) {
     const feats = ancestryFeats.filter(f => f.system.belongsTo === name);
     assert.equal(feats.length, 8, `${name} has ${feats.length} feats`);
   }
-  assert.equal(ancestryFeats.length, 64, "no feat belongs to an unknown ancestry");
+  assert.equal(ancestryFeats.length, 96, "no feat belongs to an unknown ancestry");
+});
+
+test("the 4.3A ancestries come up half as often in the Random character; the core ones normally (GAPS 327)", () => {
+  for (const a of ancestries) {
+    const expected = ALMANAC_ANCESTRIES.includes(a.name) ? "half" : undefined;
+    assert.equal(a.system.randomChance, expected, a.name);
+  }
 });
 
 test("ancestry feats are marked as ancestry feats, not gained through Improving", () => {
@@ -590,7 +600,7 @@ test("every link in a table points to an entry that exists, in the right compend
   }
 });
 
-test("every ancestry has a d20 given-name and a d20 family-name table (GAPS 258)", () => {
+test("every ancestry has a d20 given-name and a d20 family-name table (GAPS 258, 327)", () => {
   const ancestries = allContent.filter(d => d.type === "ancestry").map(d => d.name);
   assert.equal(rollTables.filter(isNameTable).length, ancestries.length * 2);
   for (const ancestry of ancestries) {

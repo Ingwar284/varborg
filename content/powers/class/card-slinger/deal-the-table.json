@@ -11,7 +11,7 @@
     "cost": 1,
     "actions": 2,
     "ability": "usual",
-    "damage": "d6",
+    "damage": "",
     "damageType": "slashing",
     "addsWeaponDamage": false,
     "sustained": false,
@@ -53,6 +53,7 @@
     ],
     "buffEffects": [],
     "effects": [],
-    "automation": "partial"
+    "automation": "partial",
+    "cards": "deal"
   }
 }

@@ -18,7 +18,7 @@ import { LASTING_ACTIONS, lastingContext, listenToLasting, optionAreasContext, l
 import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
 import { castingDr } from "../rules/spells.mjs";
-import { ClassData } from "../data/origins.mjs";
+import { ClassData, AncestryData } from "../data/origins.mjs";
 import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -503,7 +503,16 @@ export class ClassSheet extends OriginSheet {
   }
 }
 
-export class AncestrySheet extends OriginSheet {}
+export class AncestrySheet extends OriginSheet {
+  static detailsTemplate = `${TEMPLATES}/ancestry-details.hbs`;
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.randomChances = AncestryData.RANDOM_CHANCES;
+    return context;
+  }
+}
 
 export class BackgroundSheet extends OriginSheet {
   static detailsTemplate = `${TEMPLATES}/background-details.hbs`;

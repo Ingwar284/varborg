@@ -12,6 +12,48 @@
       </button>
     </p>
     {{/if}}
+    {{#if reading}}
+    <div class="reading">
+      <h3>{{localize "VARBORG.Arcana.Heading"}}
+        {{#if reading.canShuffle}}<button type="button" class="text-button" data-action="shuffleFates" data-tooltip="{{localize 'VARBORG.Arcana.ShuffleTooltip'}}">{{localize "VARBORG.Arcana.Shuffle"}}</button>{{/if}}</h3>
+      {{#if reading.empty}}
+      <p class="hint">{{localize "VARBORG.Arcana.Empty"}}
+        <button type="button" class="text-button" data-action="layReading">{{localize "VARBORG.Arcana.LayOut"}}</button></p>
+      {{/if}}
+      <ul class="item-list">
+        {{#each reading.cards}}
+        <li class="item-row feat-row{{#if turned}} used-up{{/if}}">
+          <span class="feat-text"><strong>{{name}}</strong> <span class="item-summary">{{meaning}}</span>
+            {{#if turned}} <span class="item-state used">{{localize "VARBORG.Arcana.Turned"}}</span>{{/if}}</span>
+          {{#if canTurn}}
+          <button type="button" class="icon-button" data-action="turnReading" data-index="{{index}}"
+                  data-tooltip="{{localize 'VARBORG.Arcana.TurnTooltip'}}" aria-label="{{localize 'VARBORG.Arcana.TurnTooltip'}}">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+          {{/if}}
+          {{#if canReverse}}
+          <button type="button" class="icon-button" data-action="reverseReading" data-index="{{index}}"
+                  data-tooltip="{{localize 'VARBORG.Arcana.ReverseTooltip'}}" aria-label="{{localize 'VARBORG.Arcana.ReverseTooltip'}}">
+            <i class="fa-solid fa-arrows-up-down"></i>
+          </button>
+          {{/if}}
+          {{#if canTear}}
+          <button type="button" class="icon-button" data-action="tearThirteenth"
+                  data-tooltip="{{localize 'VARBORG.Arcana.TearTooltip'}}" aria-label="{{localize 'VARBORG.Arcana.TearTooltip'}}">
+            <i class="fa-solid fa-scissors"></i>
+          </button>
+          {{/if}}
+          {{#if canDarkMaster}}
+          <button type="button" class="icon-button" data-action="dmThirteenth"
+                  data-tooltip="{{localize 'VARBORG.Arcana.DmTooltip'}}" aria-label="{{localize 'VARBORG.Arcana.DmTooltip'}}">
+            <i class="fa-solid fa-skull"></i>
+          </button>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
     <ul class="item-list">
       {{#each feats}}
       <li class="item-row feat-row" data-item-id="{{item.id}}">

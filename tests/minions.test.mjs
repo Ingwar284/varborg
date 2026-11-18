@@ -102,3 +102,17 @@ test("item effects change the minion limit, after the minimum of 1 (PLAN step 49
   assert.equal(canTakeMinion(2, 1, plus(2)), true);
   assert.equal(canTakeMinion(3, 1, plus(2)), false);
 });
+
+test("the vehicles made for a character: flagged, from their items, or an old mule by name (step 72)", async () => {
+  const { vehiclesMadeFor } = await import("../module/rules/minions.mjs");
+  const actors = [
+    { id: "m1", type: "vehicle", name: "Ada’s Mule", createdFor: "ada" },
+    { id: "r1", type: "vehicle", name: "The rig", fromItem: "ada.item1" },
+    { id: "m0", type: "vehicle", name: "Ada’s Handcart" },
+    { id: "x1", type: "vehicle", name: "Ada’s Handcart", createdFor: "bob" },
+    { id: "d1", type: "minion", name: "Dog", createdFor: "ada" },
+    { id: "c1", type: "vehicle", name: "Coach" }
+  ];
+  assert.deepEqual(vehiclesMadeFor(actors, { id: "ada", oldNames: ["Ada’s Mule", "Ada’s Handcart"] }), ["m1", "r1", "m0"]);
+  assert.deepEqual(vehiclesMadeFor(actors, { id: "" }), []);
+});

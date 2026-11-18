@@ -22,7 +22,8 @@
 
 import {
   readDeck, drawCard, reshuffle, cardsLeft, isJoker, rankOf, suitOf, FULL_DECK, JOKERS, JOKER_BITE, presetCardId,
-  SLEEVE_ACE, NAMEABLE_CARDS, suitFromText
+  SLEEVE_ACE, NAMEABLE_CARDS, suitFromText, drawCards, drawUntilKnave, loseCards, shuffleKeepingLost, cardDie,
+  betterCardIndex, pairedCards, cardsDamageFormula, CARD_POWER_DRAWS, cardHitEffects, SUITS, ownedStackIds
 } from "./rules/cards.mjs";
 import { actionSymbols } from "./rules/expendable.mjs";
 import { killedByDamage } from "./deaths-door.mjs";
@@ -77,28 +78,103 @@ function cardIdOf(card) {
  * @returns {Promise<string|null>}  The card, or null when the deck is empty.
  */
 export async function drawFromDeck(item) {
-  if (foundryCardsMode()) {
-    const stacks = cardsStacks(item);
-    if (!stacks?.deck.availableCards.length) return null;
-    const [card] = await stacks.pile.draw(stacks.deck, 1, { how: CONST.CARD_DRAW_MODES.TOP, chatNotification: false });
-    return cardIdOf(card) || null;
-  }
-  const drawn = drawCard(deckOf(item));
-  if (!drawn) return null;
-  await item.setFlag(SYSTEM, FLAG, drawn.deck);
-  return drawn.card;
+  const [card] = await drawManyFromDeck(item, 1);
+  return card ?? null;
 }
 
-/** Shuffle the whole deck back together. */
-export async function shuffleDeck(item) {
+/**
+ * Draw up to this many cards from the top (the card powers, step 69b3b).
+ * @returns {Promise<string[]>}  Fewer when the deck runs out.
+ */
+export async function drawManyFromDeck(item, count) {
+  if (foundryCardsMode()) {
+    const stacks = cardsStacks(item);
+    const number = Math.min(count, stacks?.deck.availableCards.length ?? 0);
+    if (!number) return [];
+    const cards = await stacks.pile.draw(stacks.deck, number, { how: CONST.CARD_DRAW_MODES.TOP, chatNotification: false });
+    return cards.map(cardIdOf).filter(Boolean);
+  }
+  const drawn = drawCards(deckOf(item), count);
+  if (drawn.cards.length) await item.setFlag(SYSTEM, FLAG, drawn.deck);
+  return drawn.cards;
+}
+
+/**
+ * The Council's knave: turn over cards until a knave comes up.
+ * @returns {Promise<{knave: string|null, turned: string[]}>}
+ */
+export async function drawUntilKnaveFromDeck(item) {
+  if (foundryCardsMode()) {
+    const turned = [];
+    for (;;) {
+      const card = await drawFromDeck(item);
+      if (!card) return { knave: null, turned };
+      if (rankOf(card) === "J") return { knave: card, turned };
+      turned.push(card);
+    }
+  }
+  const found = drawUntilKnave(deckOf(item));
+  await item.setFlag(SYSTEM, FLAG, found.deck);
+  return { knave: found.knave, turned: found.turned };
+}
+
+/**
+ * These drawn cards are lost until the encounter ends: a hand shuffle
+ * leaves them out. With Foundry Cards they are marked in the discard pile.
+ */
+export async function loseFromDeck(item, cards) {
+  if (!cards?.length) return;
   if (foundryCardsMode()) {
     const stacks = cardsStacks(item);
     if (!stacks) return;
-    await stacks.deck.recall({ chatNotification: false });
+    const ids = new Set(cards);
+    const updates = stacks.pile.cards.filter(card => ids.has(cardIdOf(card)))
+      .map(card => ({ _id: card.id, [`flags.${SYSTEM}.lost`]: true }));
+    if (updates.length) await stacks.pile.updateEmbeddedDocuments("Card", updates);
+    return;
+  }
+  await item.setFlag(SYSTEM, FLAG, loseCards(deckOf(item), cards));
+}
+
+/**
+ * Shuffle the deck back together. By hand (keepLost), lost cards stay out;
+ * when an encounter ends, every card comes back.
+ */
+export async function shuffleDeck(item, { keepLost = false } = {}) {
+  if (foundryCardsMode()) {
+    const stacks = cardsStacks(item);
+    if (!stacks) return;
+    if (keepLost) {
+      const back = stacks.pile.cards.filter(card => !card.getFlag(SYSTEM, "lost")).map(card => card.id);
+      if (back.length) await stacks.pile.pass(stacks.deck, back, { chatNotification: false });
+    } else await stacks.deck.recall({ chatNotification: false });
     await stacks.deck.shuffle({ chatNotification: false });
     return;
   }
-  await item.setFlag(SYSTEM, FLAG, reshuffle(random));
+  await item.setFlag(SYSTEM, FLAG, keepLost ? shuffleKeepingLost(deckOf(item), random) : reshuffle(random));
+}
+
+/**
+ * A drawn card, as thrown: Wild card may name a Joker as another card,
+ * and a Joker that stays a Joker bites the thrower (GAPS 321, 322).
+ * Court cards sets the die. Used by attacks and the card powers.
+ * @param {Actor} actor
+ * @param {string} drawn
+ * @param {object} feats  From cardFeats.
+ * @returns {Promise<{card: string, label: string, die: string, bite: object|null}>}
+ */
+export async function throwCard(actor, drawn, feats) {
+  const named = isJoker(drawn) && feats.wildCard ? await askWildCard() : "";
+  const card = named || drawn;
+  const bite = isJoker(card) ? await jokerBite(actor) : null;
+  const label = named ? game.i18n.format("VARBORG.Cards.NamedJoker", { card: cardName(named) }) : cardName(card);
+  return { card, label, die: cardDie(card, { courtCards: feats.courtCards }), bite };
+}
+
+/** A deck weapon the character carries: an equipped one first (for the card powers). */
+export function deckWeaponOf(actor) {
+  return actor.itemTypes.weapon.filter(isDeckWeapon)
+    .toSorted((a, b) => Number(b.system.equipped) - Number(a.system.equipped))[0] ?? null;
 }
 
 /** The "Razor decks" folder of the Cards sidebar, made when first needed. */
@@ -233,12 +309,12 @@ export async function shuffleDeckAction(actor, item) {
     if (turn.combatant.actionsLeft < 1) ui.notifications.warn(i18n.localize("VARBORG.Cards.NoActions"));
     await turn.combatant.adjustPips("actions", -1);
   }
-  await shuffleDeck(item);
+  await shuffleDeck(item, { keepLost: true });
   const title = i18n.format("VARBORG.Cards.ShuffleTitle", { name: item.name });
   const content = await renderTemplate(WEAPON_TEMPLATE, {
     title,
     symbols: actionSymbols(1),
-    text: i18n.format(turn.combatant ? "VARBORG.Cards.Shuffled" : "VARBORG.Cards.ShuffledOutside", { count: FULL_DECK.length })
+    text: i18n.format(turn.combatant ? "VARBORG.Cards.Shuffled" : "VARBORG.Cards.ShuffledOutside", { count: deckCount(item).left })
   });
   await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), flavor: title, content });
 }
@@ -310,4 +386,230 @@ export async function askWildCard() {
   });
   const card = String(data?.card ?? "");
   return NAMEABLE_CARDS.includes(card) ? card : "";
+}
+
+// ---------------------------------------------------------------------------
+// Card powers (step 69b3b, GAPS 323).
+
+/** The "On a hit" lines of The blue knave and Marked suit for a thrown card. */
+function hitLines(card, feats, label) {
+  const i18n = game.i18n;
+  return cardHitEffects(card, feats).map(key => `${label}: ${i18n.format("VARBORG.Cards.OnHit", { text: i18n.localize(`VARBORG.Cards.Effect.${key}`) })}`);
+}
+
+/** The choices of suit for Call the suit. */
+export function suitChoices() {
+  return SUITS.map(suit => ({ value: suit, label: `VARBORG.Cards.Suit.${suit}` }));
+}
+
+/**
+ * Royal flush with several foes: the player chooses the foe each card is
+ * thrown at. Without an answer, the cards go round the foes in turn.
+ * @returns {Promise<number[]>}  For each card, the index of its foe.
+ */
+async function assignCards(thrown, targets) {
+  const i18n = game.i18n;
+  const esc = foundry.utils.escapeHTML;
+  const rows = thrown.map((t, i) => `<div class="form-group"><label>${esc(t.label)} (${t.die})</label><select name="card${i}">${
+    targets.map((target, j) => `<option value="${j}"${j === i % targets.length ? " selected" : ""}>${esc(target.name)}</option>`).join("")
+  }</select></div>`).join("");
+  const { DialogV2 } = foundry.applications.api;
+  const { VB_DIALOG_CLASSES } = await import("./dialog.mjs");
+  const data = await DialogV2.input({
+    classes: VB_DIALOG_CLASSES,
+    window: { title: i18n.localize("VARBORG.Cards.AssignTitle") },
+    content: `<p>${esc(i18n.localize("VARBORG.Cards.AssignAsk"))}</p>${rows}`,
+    ok: { label: "VARBORG.Cards.AssignOk", icon: "fa-solid fa-hand" },
+    rejectClose: false
+  });
+  return thrown.map((t, i) => {
+    const j = Math.trunc(Number(data?.[`card${i}`]));
+    return Number.isInteger(j) && j >= 0 && j < targets.length ? j : i % targets.length;
+  });
+}
+
+/**
+ * Draw and throw the cards of a card power.
+ * @param {Actor} actor
+ * @param {string} kind  "deal", "cut", "suit", "flush" or "knave".
+ * @param {Item} item    The deck.
+ * @param {{suit?: string, targets?: {uuid, name, type, armour}[]}} [options]
+ *   targets: every targeted creature but the user.
+ * @returns {Promise<{dice: string, perTarget: object[]|null, notes: string[], loseOnRuin: string[]}>}
+ *   dice: the card dice for a single damage roll ("" for none); perTarget:
+ *   with two or more targets, each one's formula (Deal the table, Royal flush).
+ */
+export async function throwPowerCards(actor, kind, item, { suit = "", targets = [] } = {}) {
+  const i18n = game.i18n;
+  const feats = cardFeats(actor);
+  const notes = [];
+  const result = { dice: "", perTarget: null, notes, loseOnRuin: [], outcomeEntries: [] };
+  // Conditions are given for you when one foe is targeted; with several,
+  // each card's foe differs, so they stay notes (step 69b3c).
+  const single = targets.length <= 1;
+  const give = (card, extra = []) => { if (single) result.outcomeEntries.push(...cardOutcomeEntries([...cardHitEffects(card, feats), ...extra])); };
+  const thrownNote = t => {
+    notes.push(i18n.format("VARBORG.Cards.ThrownNote", { card: t.label, die: t.die }));
+    if (t.bite) notes.push(t.bite.line);
+  };
+
+  if (kind === "knave") {
+    const { knave, turned } = await drawUntilKnaveFromDeck(item);
+    await loseFromDeck(item, turned);
+    if (!knave) {
+      notes.push(i18n.localize("VARBORG.Cards.NoKnave"));
+      result.noThrow = true;
+      return result;
+    }
+    notes.push(i18n.format("VARBORG.Cards.Turned", { count: turned.length }));
+    notes.push(i18n.format("VARBORG.Cards.ThrownNote", { card: cardName(knave), die: "2d10" }));
+    notes.push(...hitLines(knave, feats, cardName(knave)));
+    give(knave);
+    return result;
+  }
+
+  const want = CARD_POWER_DRAWS[kind] ?? 1;
+  const drawn = await drawManyFromDeck(item, want);
+  if (drawn.length < want) notes.push(i18n.format("VARBORG.Cards.ShortDraw", { count: drawn.length }));
+  if (!drawn.length) return result;
+
+  if (kind === "cut") {
+    const best = betterCardIndex(drawn.map(card => cardDie(card, { courtCards: feats.courtCards })));
+    drawn.forEach((card, i) => { if (i !== best) notes.push(i18n.format("VARBORG.Cards.Discarded", { card: cardName(card) })); });
+    const t = await throwCard(actor, drawn[best], feats);
+    thrownNote(t);
+    notes.push(...hitLines(t.card, feats, t.label));
+    give(t.card);
+    result.dice = t.die;
+    return result;
+  }
+
+  if (kind === "suit") {
+    const t = await throwCard(actor, drawn[0], feats);
+    thrownNote(t);
+    const named = i18n.localize(`VARBORG.Cards.Suit.${suit}`);
+    const right = suitOf(t.card) === suit;
+    notes.push(i18n.format(right ? (single ? "VARBORG.Cards.SuitRightAuto" : "VARBORG.Cards.SuitRight") : "VARBORG.Cards.SuitWrong", { suit: named }));
+    notes.push(...hitLines(t.card, feats, t.label));
+    give(t.card, right ? ["suitRight"] : []);
+    return result;
+  }
+
+  // Deal the table and Royal flush: each card at a foe.
+  const thrown = [];
+  for (const card of drawn) {
+    const t = await throwCard(actor, card, feats);
+    if (t.bite) notes.push(t.bite.line);
+    thrown.push(t);
+  }
+  const paired = kind === "flush" ? pairedCards(thrown.map(t => t.card)) : thrown.map(() => false);
+  thrown.forEach((t, i) => { if (paired[i]) notes.push(i18n.format("VARBORG.Cards.Paired", { card: t.label })); });
+  // Deal the table: one card to each of up to three foes, in the order targeted.
+  // Royal flush: divided as the player chooses.
+  let foeOf;
+  if (kind === "deal") foeOf = thrown.map((t, i) => (i < targets.length ? i : -1));
+  else if (targets.length >= 2) foeOf = await assignCards(thrown, targets);
+  else foeOf = thrown.map(() => (targets.length ? 0 : -1));
+  thrown.forEach((t, i) => {
+    const target = targets[foeOf[i]];
+    notes.push(target ? i18n.format("VARBORG.Cards.DealtTo", { card: t.label, name: target.name, die: paired[i] ? `${t.die} (max)` : t.die })
+      : i18n.format("VARBORG.Cards.Discarded", { card: t.label }));
+    if (target) notes.push(...hitLines(t.card, feats, t.label));
+    if (target) give(t.card);
+  });
+  if (!single && thrown.some((t, i) => targets[foeOf[i]] && cardHitEffects(t.card, feats).length)) notes.push(i18n.localize("VARBORG.Cards.ByHand"));
+  if (kind === "deal") result.loseOnRuin = [...drawn];
+  const formulaFor = j => cardsDamageFormula(thrown.map((t, i) => ({ die: t.die, max: paired[i] })).filter((c, i) => foeOf[i] === j));
+  if (targets.length >= 2) result.perTarget = targets.map((target, j) => ({ uuid: target.uuid, name: target.name, formula: formulaFor(j) }));
+  else result.dice = targets.length ? formulaFor(0) : cardsDamageFormula([{ die: thrown[0].die, max: paired[0] }]);
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Conditions the cards give (step 69b3c): as power outcome entries, so the
+// usual outcome code puts them on the target (module/outcomes.mjs).
+
+/** One outcome entry on the target, on a hit (Triumph or Success). */
+function targetEntry(fields) {
+  return {
+    kind: "condition", who: "target", tiers: { triumph: true, success: true, failure: false, ruin: false },
+    condition: "", duration: { kind: "", rounds: "1" }, amount: "", option: "", when: "result", damageType: "",
+    soaked: false, nextOnly: false, test: false, whileSustained: false, note: "", ...fields
+  };
+}
+
+const ONE_ROUND = { kind: "rounds", rounds: "1" };
+
+/**
+ * The outcome entries for a thrown card's effects: The blue knave
+ * (Stupefied), Marked suit (hearts d4 persistent bleed, spades Frightened)
+ * and Call the suit's named suit (Slowed). Diamonds and clubs stay notes.
+ * @param {string[]} keys  From cardHitEffects, plus "suitRight".
+ */
+export function cardOutcomeEntries(keys) {
+  const entries = [];
+  for (const key of keys) {
+    if (key === "blueKnave") entries.push(targetEntry({ condition: "stupefied", duration: ONE_ROUND, note: "The blue knave" }));
+    if (key === "markS") entries.push(targetEntry({ condition: "frightened", duration: ONE_ROUND, note: "Marked suit: of you" }));
+    if (key === "markH") entries.push(targetEntry({ kind: "persistent", damageType: "bleed", amount: "d4", note: "Marked suit" }));
+    if (key === "suitRight") entries.push(targetEntry({ condition: "slowed", duration: ONE_ROUND, note: "Call the suit" }));
+  }
+  return entries;
+}
+
+/** The outcome inputs for a deck attack's card (a weapon attack has none of its own). */
+export function cardAttackOutcomes(actor, item, entries) {
+  if (!entries.length) return null;
+  const targets = [...game.user.targets].map(token => token.actor).filter(Boolean);
+  return {
+    entries, buffEffects: [], name: item.name, morph: false, sustained: false,
+    source: `${actor.uuid}|${item.id}`,
+    targets: targets.map(other => other.uuid),
+    allyTargets: targets.filter(other => ["character", "minion"].includes(other.type)).map(other => other.uuid),
+    foeTargets: targets.filter(other => other.type === "foe").map(other => other.uuid),
+    user: actor.uuid, partner: "", chosen: []
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Clean-up (step 71): a character's Foundry Cards stacks go with them.
+
+/** Every Cards stack with its owner flags, for ownedStackIds. */
+function stackOwners() {
+  return (game.cards?.contents ?? []).map(stack => ({
+    id: stack.id, item: stack.getFlag(SYSTEM, "item") ?? "", actor: stack.getFlag(SYSTEM, "actor") ?? ""
+  }));
+}
+
+/** Delete these Cards stacks (Dark Master only). */
+async function deleteStacks(ids) {
+  if (!ids.length) return;
+  await getDocumentClass("Cards").deleteDocuments(ids);
+}
+
+/**
+ * Called from the init hook. The Dark Master's client deletes:
+ * - a Razor deck's Cards deck and pile when the weapon is deleted (a
+ *   character rerolled deletes every item);
+ * - a Cartomancer's Dusk Arcana stacks when they no longer read it (the
+ *   class feature deleted, or the class changed);
+ * - everything a character had when the character is deleted.
+ */
+export function registerCardsCleanup() {
+  Hooks.on("deleteItem", async item => {
+    if (!game.user.isActiveGM || !(item.parent instanceof Actor)) return;
+    await deleteStacks(ownedStackIds(stackOwners(), { itemUuid: item.uuid }));
+    const actor = item.parent;
+    if (actor.system?.statBonuses?.reading?.set > 0) return;
+    const arcana = ownedStackIds(stackOwners(), { actorUuid: actor.uuid, arcana: true });
+    if (!arcana.length) return;
+    await deleteStacks(arcana);
+    for (const flag of ["arcanaDeck", "arcanaHand", "arcanaPile"]) {
+      if (actor.getFlag(SYSTEM, flag) !== undefined) await actor.unsetFlag(SYSTEM, flag);
+    }
+  });
+  Hooks.on("deleteActor", async actor => {
+    if (!game.user.isActiveGM) return;
+    await deleteStacks(ownedStackIds(stackOwners(), { actorUuid: actor.uuid }));
+  });
 }

@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFAutomaton003",
+  "name": "Phonograph Throat",
+  "type": "feat",
+  "img": "icons/commodities/tech/cog-gear-wheel-gold.webp",
+  "system": {
+    "description": "A wax cylinder turns in your throat. You can play back, word for word and in the speaker's own voice, anything you have heard since the day began. Someone who knows the speaker well tests Sanity (DR12) to tell that it is not them.",
+    "source": "ancestry",
+    "belongsTo": "Automaton",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

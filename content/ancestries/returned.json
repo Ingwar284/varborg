@@ -1,0 +1,12 @@
+{
+  "_id": "vbAncReturned000",
+  "name": "Returned",
+  "type": "ancestry",
+  "img": "icons/magic/death/grave-tombstone-glow-teal.webp",
+  "system": {
+    "description": "Grey, cold and patient, the Returned died, were led by Harkin to the edge of the Great Silence, and came back. The living are uneasy around them, and the Silence never quite lets go.\nChoose one returned ancestry feat (rules 4.3A).",
+    "randomChance": "half",
+    "effects": [],
+    "automation": ""
+  }
+}

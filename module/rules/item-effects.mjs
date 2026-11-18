@@ -254,7 +254,11 @@ export const HOOK_ACTIONS = [
   // or `amount` persistent damage of `damageType` (Burrow: d2 bleed).
   // At zeroHp: the first time, stay at 1 HP instead (Abandon Shell), and
   // lose the armour when `loseArmour` is ticked.
-  "targetCondition", "targetPersistent", "dropToOne"
+  "targetCondition", "targetPersistent", "dropToOne",
+  // At zeroHp: a card is drawn; an ace or a black eight keeps you at 1 HP with no wound (Dead man's hand, step 69b3c).
+  "deadMansHand",
+  // At longRest: lay out a new reading of the Dusk Arcana (The reading, step 69c).
+  "layReading"
 ];
 
 /**
@@ -297,7 +301,7 @@ export const USE_ACTIONS = ["roll", "heal", "gainEmber", "addCondition", "reroll
   // Step 53a: a button on the owner's d20 test cards turns the kept die
   // over, 21 minus the roll (Vex's loaded die); the party's next rest
   // cannot be interrupted (Hearth-tallow of Anashe).
-  "flip", "guardRest"];
+  "flip", "guardRest", "riffle"];
 
 /**
  * Use actions that are done on their own: an item with one of these and
@@ -390,7 +394,9 @@ export const CARD_ACTIONS = ["reroll", "success", "lowerDamage",
   "intercept",
   // The kept d20 is turned over: 21 minus the roll, not a natural 1 or 20
   // (Vex's loaded die, step 53a).
-  "flip"];
+  "flip",
+  // A card is drawn; a face card or an ace halves a ranged hit (Riffle parry, step 69b3c).
+  "riffle"];
 
 /**
  * The damage a protector takes for an ally (GAPS 229): all of it, or half
@@ -457,6 +463,8 @@ export const ACTION_EVENTS = {
   targetCondition: ["attackHits"],
   targetPersistent: ["attackHits"],
   dropToOne: ["zeroHp"],
+  deadMansHand: ["zeroHp"],
+  layReading: ["longRest"],
   auraHurt: ["aura"]
 };
 
@@ -583,7 +591,12 @@ export const STAT_TARGETS = [
   // The Card Slinger's card feats (step 69b3a, GAPS 318): Court cards,
   // Wild card, Ace up the sleeve, The blue knave, and Marked suit (whose
   // suit is the text chosen on the same feat).
-  "courtCards", "wildCard", "sleeveAce", "blueKnave", "markedSuit"
+  "courtCards", "wildCard", "sleeveAce", "blueKnave", "markedSuit",
+  // The Cartomancer (step 69c): reads the Dusk Arcana, and how many cards
+  // the reading holds (Wider spread: 4).
+  "reading", "readingSize",
+  // Step 69c2: Reversed, Foreseen, Shuffle the fates, Black sector.
+  "reversed", "foreseen", "shuffleFates", "blackSector"
 ];
 
 /**
@@ -1267,6 +1280,8 @@ export function cardButtons(effects, rollKind, card = {}) {
     if (effect.action === "lowerDamage" && !(card.taken > 1)) continue;
     if (effect.action === "lowerReroll" && !(card.taken > 0)) continue;
     if (effect.action === "intercept" && !(card.taken > 0)) continue;
+    // Riffle parry: only a ranged hit that deals damage (step 69b3c).
+    if (effect.action === "riffle" && !(card.taken > 0 && card.ranged)) continue;
     if (effect.frequency && effect.used) continue;
     if ((card.used ?? []).includes(effect.itemId)) continue;
     if (effect.ability && effect.ability !== card.ability) continue;

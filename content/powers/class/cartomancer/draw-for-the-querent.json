@@ -25,58 +25,10 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "outcomeEffects": [
-      {
-        "kind": "reminder",
-        "who": "target",
-        "tiers": {
-          "triumph": true,
-          "success": true,
-          "failure": false,
-          "ruin": false
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "test": false,
-        "whileSustained": false,
-        "note": "roll a d12 on the Dusk Arcana: its meaning takes effect on them"
-      },
-      {
-        "kind": "reminder",
-        "who": "self",
-        "tiers": {
-          "triumph": false,
-          "success": false,
-          "failure": false,
-          "ruin": true
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "test": false,
-        "whileSustained": false,
-        "note": "the Thirteenth replaces one unturned card of your reading"
-      }
-    ],
+    "outcomeEffects": [],
     "buffEffects": [],
     "effects": [],
-    "automation": "partial"
+    "automation": "auto",
+    "cards": "querent"
   }
 }

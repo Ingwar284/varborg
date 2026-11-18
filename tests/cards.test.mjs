@@ -58,10 +58,10 @@ test("a new deck is all fifty-four cards, with nothing discarded", () => {
 });
 
 test("drawing takes the top card and puts it on the discard pile", () => {
-  const deck = { draw: ["AS", "7H", "X2"], discard: ["2C"] };
+  const deck = { draw: ["AS", "7H", "X2"], discard: ["2C"], lost: [] };
   const drawn = drawCard(deck);
   assert.equal(drawn.card, "AS");
-  assert.deepEqual(drawn.deck, { draw: ["7H", "X2"], discard: ["2C", "AS"] });
+  assert.deepEqual(drawn.deck, { draw: ["7H", "X2"], discard: ["2C", "AS"], lost: [] });
   assert.equal(cardsLeft(drawn.deck), 2);
   assert.deepEqual(deck.draw, ["AS", "7H", "X2"], "the old deck is not changed");
 });
@@ -74,7 +74,8 @@ test("an empty deck draws nothing until it is shuffled", () => {
 test("a stored deck is made safe; nothing stored is a new deck", () => {
   assert.equal(cardsLeft(readDeck(undefined, seeded(1))), 54);
   assert.equal(cardsLeft(readDeck({ draw: "bad" }, seeded(1))), 54);
-  assert.deepEqual(readDeck({ draw: ["AS", "AS", "ZZ", "7H"], discard: ["7H", "2C"] }), { draw: ["AS", "7H"], discard: ["2C"] });
+  assert.deepEqual(readDeck({ draw: ["AS", "AS", "ZZ", "7H"], discard: ["7H", "2C"] }), { draw: ["AS", "7H"], discard: ["2C"], lost: [] });
+  assert.deepEqual(readDeck({ draw: ["AS"], discard: [], lost: ["AS", "QD"] }).lost, ["QD"]);
 });
 
 test("Foundry's poker deck cards read as card ids (step 69b2)", async () => {
@@ -125,4 +126,78 @@ test("a knave with The blue knave, and a card of the marked suit, add their effe
   assert.deepEqual(cardHitEffects("2S", { blueKnave: true, markedSuit: "S" }), ["markS"]);
   assert.deepEqual(cardHitEffects(SLEEVE_ACE, { markedSuit: "S" }), []);
   assert.deepEqual(cardHitEffects("X1", { blueKnave: true, markedSuit: "H" }), []);
+});
+
+test("drawing several cards stops when the deck runs out (step 69b3b)", async () => {
+  const { drawCards } = await import("../module/rules/cards.mjs");
+  const { cards, deck } = drawCards({ draw: ["AS", "7H"], discard: [], lost: [] }, 3);
+  assert.deepEqual(cards, ["AS", "7H"]);
+  assert.deepEqual(deck, { draw: [], discard: ["AS", "7H"], lost: [] });
+});
+
+test("The Council's knave turns over cards until a knave", async () => {
+  const { drawUntilKnave } = await import("../module/rules/cards.mjs");
+  const found = drawUntilKnave({ draw: ["2C", "X1", "JD", "AS"], discard: [], lost: [] });
+  assert.equal(found.knave, "JD");
+  assert.deepEqual(found.turned, ["2C", "X1"]);
+  assert.deepEqual(found.deck.draw, ["AS"]);
+  const none = drawUntilKnave({ draw: ["2C", "AS"], discard: [], lost: [] });
+  assert.equal(none.knave, null);
+  assert.deepEqual(none.turned, ["2C", "AS"]);
+});
+
+test("lost cards stay out of a hand shuffle, and come back when the encounter ends", async () => {
+  const { loseCards, shuffleKeepingLost, reshuffle, cardsLeft } = await import("../module/rules/cards.mjs");
+  const lost = loseCards({ draw: ["AS"], discard: ["2C", "3C", "4C"], lost: [] }, ["2C", "4C"]);
+  assert.deepEqual(lost, { draw: ["AS"], discard: ["3C"], lost: ["2C", "4C"] });
+  const shuffledBack = shuffleKeepingLost(lost, seeded(5));
+  assert.equal(cardsLeft(shuffledBack), 52);
+  assert.ok(!shuffledBack.draw.includes("2C"));
+  assert.deepEqual(shuffledBack.lost, ["2C", "4C"]);
+  assert.equal(cardsLeft(reshuffle(seeded(5))), 54);
+});
+
+test("Royal flush: cards sharing a rank are paired; Jokers never pair (GAPS 323)", async () => {
+  const { pairedCards, dieSize } = await import("../module/rules/cards.mjs");
+  assert.deepEqual(pairedCards(["7H", "7S", "QD", "X1", "X2"]), [true, true, false, false, false]);
+  assert.deepEqual(pairedCards(["KH", "KS", "KD", "2C", "2D"]), [true, true, true, true, true]);
+  assert.deepEqual(pairedCards(["2H", "3H", "4H", "5H", "6H"]), [false, false, false, false, false]);
+  assert.equal(dieSize("d10"), 10);
+  assert.equal(dieSize(""), 0);
+});
+
+test("card powers: the better card, and the damage of several cards (step 69b3b)", async () => {
+  const { betterCardIndex, cardsDamageFormula, CARD_POWERS, CARD_POWER_DRAWS } = await import("../module/rules/cards.mjs");
+  assert.equal(betterCardIndex(["d6", "d10"]), 1);
+  assert.equal(betterCardIndex(["d8", "d8"]), 0);
+  assert.equal(cardsDamageFormula([{ die: "d6" }, { die: "d10", max: true }, { die: "d4", max: true }]), "d6 + 10 + 4");
+  assert.equal(cardsDamageFormula([]), "");
+  assert.deepEqual(CARD_POWERS, ["", "deal", "cut", "suit", "flush", "knave", "querent", "room", "thirteenth"]);
+  assert.deepEqual(CARD_POWER_DRAWS, { deal: 3, cut: 2, suit: 1, flush: 5 });
+});
+
+test("Riffle parry and Dead man's hand read the card (step 69b3c, GAPS 324)", async () => {
+  const { parriesMissile, cheatsDeath, riffledDamage } = await import("../module/rules/cards.mjs");
+  assert.ok(parriesMissile("JH") && parriesMissile("KS") && parriesMissile("AD"));
+  assert.ok(!parriesMissile("10H") && !parriesMissile("X1"));
+  assert.ok(cheatsDeath("AH") && cheatsDeath("8C") && cheatsDeath("8S"));
+  assert.ok(!cheatsDeath("8H") && !cheatsDeath("8D") && !cheatsDeath("KS") && !cheatsDeath("X2"));
+  assert.equal(riffledDamage(7), 3);
+  assert.equal(riffledDamage(1), 1);
+  assert.equal(riffledDamage(0), 0);
+});
+
+test("a character's and an item's card stacks are found for deleting (step 71)", async () => {
+  const { ownedStackIds } = await import("../module/rules/cards.mjs");
+  const stacks = [
+    { id: "deck", item: "Actor.a1.Item.razor" },
+    { id: "pile", item: "Actor.a1.Item.razor" },
+    { id: "arcana", actor: "Actor.a1" },
+    { id: "other", item: "Actor.a2.Item.razor" },
+    { id: "loose" }
+  ];
+  assert.deepEqual(ownedStackIds(stacks, { itemUuid: "Actor.a1.Item.razor" }), ["deck", "pile"]);
+  assert.deepEqual(ownedStackIds(stacks, { actorUuid: "Actor.a1" }), ["deck", "pile", "arcana"]);
+  assert.deepEqual(ownedStackIds(stacks, { actorUuid: "Actor.a1", arcana: true }), ["arcana"]);
+  assert.deepEqual(ownedStackIds(stacks, {}), []);
 });

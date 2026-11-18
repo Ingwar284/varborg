@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFDuskTouch004",
+  "name": "Whispers in the Dark",
+  "type": "feat",
+  "img": "icons/magic/light/orb-shadow-blue.webp",
+  "system": {
+    "description": "Once per day, in complete darkness, you may listen. Ask the Dark Master one question about the place you are in; the answer is true, and short. Then roll for a random encounter: something heard you listening.",
+    "source": "ancestry",
+    "belongsTo": "Dusk-touched",
+    "improving": false,
+    "frequency": "day",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

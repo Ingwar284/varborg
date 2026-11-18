@@ -27,54 +27,6 @@
     "usedOutside": false,
     "outcomeEffects": [
       {
-        "kind": "reminder",
-        "who": "target",
-        "tiers": {
-          "triumph": true,
-          "success": true,
-          "failure": false,
-          "ruin": false
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "test": false,
-        "whileSustained": false,
-        "note": "at the end of each of its turns, d6: on a 1 it dies (a Mighty foe takes 3d10 spirit damage instead)"
-      },
-      {
-        "kind": "reminder",
-        "who": "self",
-        "tiers": {
-          "triumph": true,
-          "success": true,
-          "failure": true,
-          "ruin": true
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "test": false,
-        "whileSustained": false,
-        "note": "the Thirteenth enters your reading"
-      },
-      {
         "kind": "condition",
         "who": "self",
         "tiers": {
@@ -101,6 +53,7 @@
     ],
     "buffEffects": [],
     "effects": [],
-    "automation": "partial"
+    "automation": "auto",
+    "cards": "thirteenth"
   }
 }

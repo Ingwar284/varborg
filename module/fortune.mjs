@@ -43,7 +43,9 @@ const INTERCEPT = "intercept";
 const FLIP = "flip";
 
 /** Item buttons whose kind is written after the item id ("item:<id>:<kind>"). */
-const NAMED_KINDS = [SUCCESS, LOWER, BEND, INTERCEPT, FLIP];
+// Riffle parry: a card is drawn; a face card or an ace halves a ranged hit (step 69b3c).
+const RIFFLE = "riffle";
+const NAMED_KINDS = [SUCCESS, LOWER, BEND, INTERCEPT, FLIP, RIFFLE];
 
 /**
  * The item id and action of an item button, and the actor whose item it is
@@ -165,7 +167,7 @@ export async function fortuneSection(data, shown) {
   // Each item once per card.
   const actor = data.offered.includes(SPEND.REROLL) ? await fromUuid(data.actorUuid) : null;
   const used = data.state.log.map(entry => entry.itemId).filter(Boolean);
-  const card = { tier: shown.tier, natural: shown.natural, ability: data.inputs?.ability, used, taken: shown.taken };
+  const card = { tier: shown.tier, natural: shown.natural, ability: data.inputs?.ability, used, taken: shown.taken, ranged: Boolean(data.inputs?.ranged) };
   const items = actor?.items
     // Taking an ally's damage is only for others' cards (GAPS 229).
     ? [...cardButtons(collectEffects(actor.items).filter(effect => effect.action !== "intercept"), cardRoll(data), card), ...allyButtons(actor, cardRoll(data), card)]
@@ -176,8 +178,8 @@ export async function fortuneSection(data, shown) {
     buttons: data.offered.map(action => (action.startsWith(ITEM_PREFIX)
       ? {
         action,
-        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL], [INTERCEPT]: "fa-solid fa-shield-heart", [FLIP]: "fa-solid fa-arrows-up-down" }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
-        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton", [INTERCEPT]: "VARBORG.Effects.InterceptButton", [FLIP]: "VARBORG.Effects.FlipButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
+        icon: { [SUCCESS]: "fa-solid fa-screwdriver-wrench", [LOWER]: ICONS[SPEND.LOWER_DAMAGE], [BEND]: ICONS[SPEND.REROLL], [INTERCEPT]: "fa-solid fa-shield-heart", [FLIP]: "fa-solid fa-arrows-up-down", [RIFFLE]: "fa-solid fa-shuffle" }[itemAction(action).kind] ?? ICONS[SPEND.REROLL],
+        label: i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessButton", [LOWER]: "VARBORG.Effects.LowerButton", [BEND]: "VARBORG.Effects.BendButton", [INTERCEPT]: "VARBORG.Effects.InterceptButton", [FLIP]: "VARBORG.Effects.FlipButton", [RIFFLE]: "VARBORG.Effects.RiffleButton" }[itemAction(action).kind] ?? "VARBORG.Effects.RerollButton",
           { item: items.find(entry => action === keyOf(entry))?.item ?? "", amount: items.find(entry => action === keyOf(entry))?.amount ?? "" })
       }
       : {
@@ -191,7 +193,7 @@ export async function fortuneSection(data, shown) {
     log: data.state.log.map(entry => (entry.failedAgain
       ? i18n.format("VARBORG.Effects.FailedAgain", { item: entry.item, note: entry.note || i18n.localize("VARBORG.Effects.SeeText") })
       : entry.item
-      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog", [INTERCEPT]: "VARBORG.Effects.InterceptLog", [FLIP]: "VARBORG.Effects.FlipLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
+      ? i18n.format({ [SUCCESS]: "VARBORG.Effects.SuccessLog", [LOWER]: "VARBORG.Effects.LowerLog", [BEND]: "VARBORG.Effects.BendLog", [INTERCEPT]: "VARBORG.Effects.InterceptLog", [FLIP]: "VARBORG.Effects.FlipLog", [RIFFLE]: "VARBORG.Effects.RiffleLog" }[entry.action] ?? "VARBORG.Effects.RerollLog", { name: entry.name, item: entry.item, value: entry.value ?? "" })
       : i18n.format("VARBORG.Fortune.Spent", {
         name: entry.name,
         use: i18n.localize(entry.action === SPEND.SOFTEN ? `VARBORG.Fortune.Soften.${entry.tier}` : `VARBORG.Fortune.Use.${entry.action}`)
@@ -406,6 +408,26 @@ async function applyFortuneNow({ messageId, action, spenderUuid }) {
       entry.value = `${state.damage} / ${roll.total}`;
       state.damage = Math.min(state.damage, roll.total);
       state.noShared = true;
+      break;
+    }
+    case RIFFLE: {
+      // Riffle parry (step 69b3c): the reaction is used and a card drawn;
+      // a face card or an ace halves the damage. Once per card.
+      if (state.riffleTried) break;
+      state.riffleTried = true;
+      const { deckWeaponOf, drawFromDeck, cardName } = await import("./cards.mjs");
+      const { parriesMissile } = await import("./rules/cards.mjs");
+      const { turnState } = await import("./combat.mjs");
+      const turn = turnState(actor);
+      if (turn.combatant) await turn.combatant.adjustPips("reactions", -1);
+      const deck = deckWeaponOf(actor);
+      const card = deck ? await drawFromDeck(deck) : null;
+      if (!card) {
+        entry.value = game.i18n.localize("VARBORG.Cards.NoCardDrawn");
+        break;
+      }
+      state.riffled = parriesMissile(card);
+      entry.value = game.i18n.format(state.riffled ? "VARBORG.Cards.RiffleHalf" : "VARBORG.Cards.RiffleMiss", { card: cardName(card) });
       break;
     }
     case SPEND.SOFTEN:

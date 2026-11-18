@@ -472,8 +472,8 @@
       "BiteKilled": "The Joker bites back for {amount}: at Death's Door, {name} is killed.",
       "ShuffleTooltip": "Shuffle the deck (an Interact action)",
       "ShuffleTitle": "{name} shuffled",
-      "Shuffled": "Used an Interact action to shuffle. All {count} cards are back in the deck.",
-      "ShuffledOutside": "Shuffled: all {count} cards are back in the deck.",
+      "Shuffled": "Used an Interact action to shuffle. {count} cards are in the deck; cards lost this encounter stay out.",
+      "ShuffledOutside": "Shuffled: {count} cards are in the deck; cards lost this encounter stay out.",
       "NotYourTurn": "Shuffling uses an action, so in combat you can only do it on your own turn.",
       "NoActions": "Shuffling needs an action and you have none left this turn. Shuffling anyway; the Dark Master decides.",
       "Rank": {
@@ -513,12 +513,37 @@
       "WildOk": "Throw it",
       "OnHit": "On a hit: {text}",
       "Effect": {
-        "blueKnave": "The blue knave: the foe is Stupefied until the end of its next turn (apply it by hand).",
-        "markH": "Marked suit (hearts): d4 persistent bleed damage (apply it by hand).",
+        "blueKnave": "The blue knave: the foe is Stupefied until the end of its next turn.",
+        "markH": "Marked suit (hearts): d4 persistent bleed damage.",
         "markD": "Marked suit (diamonds): the hit reduces the foe's armour by one tier.",
         "markC": "Marked suit (clubs): the foe is pushed 5' away from you.",
-        "markS": "Marked suit (spades): the foe is Frightened of you until the end of its next turn (apply it by hand)."
-      }
+        "markS": "Marked suit (spades): the foe is Frightened of you until the end of its next turn."
+      },
+      "NoDeck": "{name} has no deck of cards to use {power} with.",
+      "NamedSuit": "Name a suit",
+      "ThrownNote": "Threw {card}: {die}.",
+      "DealtTo": "{card} at {name}: {die}.",
+      "Discarded": "Discarded {card}.",
+      "Paired": "{card} pairs: maximum damage.",
+      "Turned": "Turned over {count} cards before the knave; they are lost until the encounter ends.",
+      "NoKnave": "No knave was left in the deck: nothing is thrown, and every card turned over is lost until the encounter ends.",
+      "SuitRight": "You named {suit} and it is {suit}: the foe is Slowed until the end of its next turn (apply it by hand).",
+      "SuitWrong": "You named {suit} but it is not: you gave away your tell, and defend with +2 DR until the start of your next turn.",
+      "RuinLost": "Ruin: the cards drawn are lost until the encounter ends.",
+      "ShortDraw": "The deck ran out: only {count} cards drawn.",
+      "AssignTitle": "Royal flush: divide the cards",
+      "AssignAsk": "Choose the foe each card is thrown at.",
+      "AssignOk": "Throw",
+      "PerTarget": "by card",
+      "DamageEach": "{name}: {total}",
+      "NoCardDrawn": "no card left to draw",
+      "RiffleHalf": "drew {card}, which cuts the missile from the air: half damage",
+      "RiffleMiss": "drew {card}, which misses the missile: full damage",
+      "DeadMansHand": "{name} drops to 0 HP and draws {card}.",
+      "DeadMansSaved": "An ace or a black eight: the cards are not ready for {name}. They stay at 1 HP and gain no wound (ignore the wound test).",
+      "DeadMansNot": "Not an ace or a black eight: the wound stands.",
+      "SuitRightAuto": "You named {suit} and it is {suit}: the foe is Slowed until the end of its next turn.",
+      "ByHand": "With several foes, apply this by hand to that card's foe."
     },
     "Ammunition": {
       "CardTitle": "{name}: ammunition after combat",
@@ -552,7 +577,9 @@
       "MinionKept": "{minion} still serves this character: only its owner or the Dark Master can let it go.",
       "NoAncestryFeat": "No ancestry feat found for this ancestry.",
       "BackgroundRolled": "d100: {roll} → {background}",
-      "NoneFound": "No {type} found in the world or the compendiums."
+      "NoneFound": "No {type} found in the world or the compendiums.",
+      "VehicleGone": "{vehicle} is gone.",
+      "VehicleKept": "{vehicle} stays: you may not delete it. The Dark Master can."
     },
     "Personality": {
       "RollTooltip": "Roll on the table (rules 2.7). Replaces what is written here.",
@@ -1775,6 +1802,14 @@
       "HpSummary": "HP {base} + Toughness",
       "WoundsSummary": "{wounds} max wounds",
       "DieSummary": "starting die {die}"
+    },
+    "Ancestry": {
+      "RandomChanceLabel": "Random character chance",
+      "RandomChanceHint": "How likely the Random character button is to roll this ancestry. Half: half as likely as a normal ancestry, as for the ancestries of 4.3A Almanac of Ancestries.",
+      "RandomChance": {
+        "normal": "Normal",
+        "half": "Half"
+      }
     },
     "Background": {
       "Wealth": "Wealth",
@@ -4012,7 +4047,13 @@
         "wildCard": "Card deck: a Joker can be named as any other card (1 = yes)",
         "sleeveAce": "Card deck: throw the ace up your sleeve instead of drawing, once per encounter (1 = yes)",
         "blueKnave": "Card deck: a knave that hits Stupefies (1 = yes)",
-        "markedSuit": "Card deck: a card of the suit chosen on this item leaves its mark (1 = yes)"
+        "markedSuit": "Card deck: a card of the suit chosen on this item leaves its mark (1 = yes)",
+        "reading": "Reads the Dusk Arcana: a reading on the Feats tab (1 = yes)",
+        "readingSize": "Cards in the Dusk Arcana reading (normally 3)",
+        "reversed": "Reading: a card can be turned against a foe (Reversed) (1 = yes)",
+        "foreseen": "Reading: the first card in each combat uses no reaction (Foreseen) (1 = yes)",
+        "shuffleFates": "Reading: Shuffle the fates button, once per Long Rest (1 = yes)",
+        "blackSector": "Reading: the Thirteenth can be torn in half (Black sector) (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {
@@ -4190,7 +4231,10 @@
         "targetPersistent": "The creature it hit takes persistent damage",
         "dropToOne": "The first time: stay at 1 HP instead",
         "flip": "Card button: turn the kept d20 over (21 minus the roll)",
-        "guardRest": "The party's next rest cannot be interrupted"
+        "guardRest": "The party's next rest cannot be interrupted",
+        "riffle": "Card button: draw a card; a face card or an ace halves a ranged hit (Riffle parry)",
+        "deadMansHand": "Draw a card; an ace or a black eight keeps you at 1 HP with no wound (Dead man's hand)",
+        "layReading": "Lay out a new reading of the Dusk Arcana (The reading)"
       },
       "AmountLabel": "Amount",
       "AmountHint": "A number such as 1, or dice such as d4.",
@@ -4438,7 +4482,9 @@
       "TargetRoundsLabel": "Rounds",
       "TargetRoundsHint": "How long the condition lasts: 1 is until the end of the creature's next turn. 0: no timer.",
       "HitWeaponLabel": "Only this attack",
-      "HitWeaponHint": "The name of one of its attacks, such as Needle teeth. Empty: any of its attacks."
+      "HitWeaponHint": "The name of one of its attacks, such as Needle teeth. Empty: any of its attacks.",
+      "RiffleButton": "{item}: draw a card (↻); a face card or an ace halves the damage",
+      "RiffleLog": "{name} uses {item}: {value}"
     },
     "Companion": {
       "AskDmAgain": "{item}: your last companion is gone. Ask the Dark Master to press Use to make a new one.",
@@ -4979,6 +5025,120 @@
       "Caught": "Caught: {names}.",
       "ByHand": "No token on this scene: target the creatures caught by hand.",
       "Damage": "Damage ({formula}): {damage} {type}."
+    },
+    "Arcana": {
+      "Heading": "Your reading",
+      "Empty": "No reading yet. It is laid out after each Long Rest.",
+      "LayOut": "Lay out a reading",
+      "UseTooltip": "Lay out your reading",
+      "AlreadyLaid": "You already have a reading. A new one is laid out after your next Long Rest.",
+      "Laid": "{name} lays out a reading: {cards}.",
+      "Turned": "Turned",
+      "TurnTooltip": "Turn it for the targeted creature, or yourself with nothing targeted (↻, once per round)",
+      "TurnTitle": "{card}, turned for {name}",
+      "OncePerRound": "You have already turned a card this round.",
+      "NoReaction": "Turning a card uses your reaction, and you have none left. Turning it anyway; the Dark Master decides.",
+      "UsedReaction": "Used the reaction to turn it.",
+      "GainedFortune": "{name} gains {amount} Fortune.",
+      "FortuneByGM": "{name} gains {amount} Fortune (the Dark Master adds it: you do not own them).",
+      "ByHand": "Apply the rest of its meaning by hand.",
+      "lamplighter": {
+        "Name": "The Lamplighter",
+        "Meaning": "Boon on their next test."
+      },
+      "lastSun": {
+        "Name": "The Last Sun",
+        "Meaning": "They gain 1 Fortune."
+      },
+      "cairn": {
+        "Name": "The Cairn",
+        "Meaning": "They regain d6 HP."
+      },
+      "brazier": {
+        "Name": "The Brazier",
+        "Meaning": "They end one Persistent Damage."
+      },
+      "wick": {
+        "Name": "The Wick",
+        "Meaning": "They end Frightened or Stupefied."
+      },
+      "forgeHeart": {
+        "Name": "The Forge-Heart",
+        "Meaning": "Their next weapon hit deals +d4 damage."
+      },
+      "architect": {
+        "Name": "The Architect",
+        "Meaning": "They have light cover until the start of your next turn."
+      },
+      "coldEye": {
+        "Name": "The Cold Eye",
+        "Meaning": "They defend with -2 DR until the start of your next turn."
+      },
+      "barge": {
+        "Name": "The Barge",
+        "Meaning": "They are Quickened."
+      },
+      "wheel": {
+        "Name": "The Wheel",
+        "Meaning": "Turn it after they roll a test: they reroll it and must keep the second result."
+      },
+      "mask": {
+        "Name": "The Mask",
+        "Meaning": "For their next test, they may use Presence instead of the ability called for."
+      },
+      "shade": {
+        "Name": "The Shade",
+        "Meaning": "Their next hit deals maximum damage, and they take d4 dark damage."
+      },
+      "thirteenth": {
+        "Name": "The Thirteenth",
+        "Meaning": "Black and blank. You cannot turn it. Once before your next Long Rest, the Dark Master may turn it: you or an ally within 30' makes one test with Bane."
+      },
+      "Foreseen": "Foreseen: the first card of this combat uses no reaction.",
+      "UsedAction": "Used an action.",
+      "NotYourTurn": "Shuffling the fates uses an action, so in combat you can only do it on your own turn.",
+      "Shuffle": "Shuffle the fates",
+      "ShuffleTooltip": "Draw every unturned card anew, except the Thirteenth (an action, once per Long Rest)",
+      "ShuffledTitle": "{name} shuffles the fates",
+      "NowReading": "The reading is now: {cards}.",
+      "ReverseTooltip": "Reversed: turn it against the targeted foe; its meaning is lost, and the next attack against that foe has Boon (↻)",
+      "ReverseNoFoe": "Target a foe to turn a card against it.",
+      "ReverseTitle": "{card}, reversed against {name}",
+      "ReversedName": "{card} reversed",
+      "ReversedNote": "the next attack against it has Boon",
+      "TearTooltip": "Black sector: tear the Thirteenth in half; you take d4 mental damage",
+      "TornTitle": "{name} tears the Thirteenth in half",
+      "TornDamage": "{name} takes {amount} mental damage (HP {from} → {to}).",
+      "DmTooltip": "Dark Master: turn the Thirteenth; the creature you target (or the Cartomancer) makes its next test with Bane",
+      "DmTitle": "The Thirteenth is turned: {name} makes the next test with Bane",
+      "ChooseTitle": "Choose a card",
+      "ChooseOk": "Give it",
+      "DrawnFor": "{card} for {name}: {meaning}",
+      "Unused": "{card} goes to no one.",
+      "ThirteenthIn": "The black card falls out of the deck: the Thirteenth replaces an unturned card of your reading.",
+      "Doomed": "{name}'s fate is sealed: at the end of each of its turns this encounter, the Dark Master rolls a d6.",
+      "ThirteenthLocked": "The Thirteenth enters your reading, and cannot be torn until your next Long Rest.",
+      "PowerTitle": "{name}'s cards",
+      "DoomRoll": "The Thirteenth card: {name} rolls {total} on the d6.",
+      "DoomMighty": "A 1: {name} is Mighty, and takes {amount} spirit damage instead of dying.",
+      "DoomDies": "A 1: {name} dies where it stands.",
+      "FolderName": "Dusk Arcana",
+      "DeckName": "Dusk Arcana",
+      "StackDeck": "{actor}: Dusk Arcana",
+      "StackHand": "{actor}: reading",
+      "StackPile": "{actor}: drawn for others"
+    },
+    "CardsStrip": {
+      "Label": "Cards in play",
+      "OpenSheet": "Open the character sheet",
+      "Turned": "{card}, turned",
+      "ClickToTurn": "Click to turn it for your target (or yourself with no target).",
+      "NoReading": "No reading yet",
+      "Left": "{left}/{total} left",
+      "NoneDrawn": "None drawn",
+      "Last": "Last drawn from {item}: {card}",
+      "Minimise": "Minimise the cards",
+      "Expand": "Show the cards in play"
     }
   }
 }

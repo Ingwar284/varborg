@@ -13,7 +13,7 @@ import FoeData from "./data/foe.mjs";
 import FoeSheet from "./sheets/foe-sheet.mjs";
 import MinionData from "./data/minion.mjs";
 import MinionSheet from "./sheets/minion-sheet.mjs";
-import { registerMinions } from "./minions.mjs";
+import { registerMinions, registerCompanionCleanup } from "./minions.mjs";
 import VehicleData from "./data/vehicle.mjs";
 import VehicleSheet from "./sheets/vehicle-sheet.mjs";
 import { registerVehicles } from "./vehicles.mjs";
@@ -69,7 +69,9 @@ import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
 import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
-import { registerCards } from "./cards.mjs";
+import { registerCards, registerCardsCleanup } from "./cards.mjs";
+import { registerArcanaCards } from "./arcana-cards.mjs";
+import { registerCardsStrip } from "./cards-strip.mjs";
 import { registerMovement } from "./movement.mjs";
 import { registerChatRolls } from "./chat-rolls.mjs";
 import { registerItemChatHelpers } from "./item-chat.mjs";
@@ -244,6 +246,13 @@ Hooks.once("init", () => {
   registerSettings();
   // Foundry Cards decks for the Razor deck, when that setting is on (GAPS 320).
   registerCards();
+  // A character's card stacks go with them (step 71).
+  registerCardsCleanup();
+  // A deleted character's minions and the vehicles made for them go too (step 72).
+  registerCompanionCleanup();
+  registerArcanaCards();
+  // The cards strip above the hotbar (step 70).
+  registerCardsStrip();
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

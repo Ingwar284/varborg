@@ -32,54 +32,6 @@
         "tiers": {
           "triumph": true,
           "success": true,
-          "failure": false,
-          "ruin": false
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "test": false,
-        "whileSustained": false,
-        "note": "roll three d12 on the Dusk Arcana, one card to each ally"
-      },
-      {
-        "kind": "reminder",
-        "who": "self",
-        "tiers": {
-          "triumph": false,
-          "success": false,
-          "failure": true,
-          "ruin": false
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "test": false,
-        "whileSustained": false,
-        "note": "roll one d12 on the Dusk Arcana"
-      },
-      {
-        "kind": "reminder",
-        "who": "self",
-        "tiers": {
-          "triumph": true,
-          "success": true,
           "failure": true,
           "ruin": true
         },
@@ -101,6 +53,7 @@
     ],
     "buffEffects": [],
     "effects": [],
-    "automation": "partial"
+    "automation": "auto",
+    "cards": "room"
   }
 }

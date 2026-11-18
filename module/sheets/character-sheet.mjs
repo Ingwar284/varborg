@@ -13,6 +13,7 @@ import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
 import { isDeckWeapon, deckCount, shuffleDeckAction } from "../cards.mjs";
+import { readingContext, turnReadingCard, layOutReading, reverseReadingCard, shuffleFates, tearThirteenthCard, darkMasterThirteenth } from "../reading.mjs";
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { lightItem, canLightItem, actorLight, putOutActorLight, dimActorLight } from "../light.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton, isConsumable } from "../uses.mjs";
@@ -298,6 +299,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
       shuffleDeck: CharacterSheet.#onShuffleDeck,
+      turnReading: CharacterSheet.#onTurnReading,
+      layReading: CharacterSheet.#onLayReading,
+      reverseReading: CharacterSheet.#onReverseReading,
+      shuffleFates: CharacterSheet.#onShuffleFates,
+      tearThirteenth: CharacterSheet.#onTearThirteenth,
+      dmThirteenth: CharacterSheet.#onDmThirteenth,
       attack: CharacterSheet.#onAttack,
       recover: CharacterSheet.#onRecover,
       raiseShield: CharacterSheet.#onRaiseShield,
@@ -494,6 +501,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     });
 
     // Feats, with where each came from, such as "Class feat · Improving".
+    // The Cartomancer's reading (step 69c).
+    context.reading = readingContext(actor);
     context.feats = actor.itemTypes.feat
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({
@@ -805,6 +814,37 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onReloadWeapon(event, button) {
     const item = this.#itemFor(button);
     if (item) await reloadWeapon(this.document, item);
+  }
+
+  /** A card of the Cartomancer's reading is turned (step 69c). */
+  static async #onTurnReading(event, button) {
+    await turnReadingCard(this.document, Number(button.dataset.index));
+  }
+
+  /** Reversed: a card turned against the targeted foe (step 69c2). */
+  static async #onReverseReading(event, button) {
+    await reverseReadingCard(this.document, Number(button.dataset.index));
+  }
+
+  /** Shuffle the fates (step 69c2). */
+  static async #onShuffleFates() {
+    await shuffleFates(this.document);
+  }
+
+  /** Black sector: tear the Thirteenth (step 69c2). */
+  static async #onTearThirteenth() {
+    await tearThirteenthCard(this.document);
+  }
+
+  /** The Dark Master turns the Thirteenth (step 69c2). */
+  static async #onDmThirteenth() {
+    await darkMasterThirteenth(this.document);
+  }
+
+  /** The Lay out button: a new reading, when there is none yet (step 69c). */
+  static async #onLayReading() {
+    const line = await layOutReading(this.document);
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this.document }), content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(line)}</p></div>` });
   }
 
   /** The Shuffle button shuffles a deck of cards back together (one Interact action). */

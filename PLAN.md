@@ -1642,13 +1642,93 @@ item names its GAPS ruling where there is one.
         their effect to the chat card on a matching card. Each feat has a
         stat switch (courtCards, wildCard, sleeveAce, blueKnave,
         markedSuit).
-      - 69b3b. Card powers (planned): Deal the table, Cut the deck, Call
-        the suit, Royal flush and The Council's knave draw their cards
-        and set their damage.
-      - 69b3c. Feats outside the attack (planned): Riffle parry and Dead
-        man's hand draw a card when they trigger; The blue knave's and
-        Marked suit's conditions applied for you.
-    - 69c. The Cartomancer's reading (planned). The reading laid out
-      after a Long Rest from the Dusk Arcana (same setting as 69b), shown
-      on the sheet, with a button to turn a card for an ally; then the
-      powers and feats that draw or turn cards.
+      - 69b3b. Card powers (built, to be tested; GAPS 323). A power's
+        new "cards" field (deal, cut, suit, flush, knave) makes it draw
+        from the character's deck after its test. Cut the deck throws the
+        better of two (its die + d4); Call the suit asks the suit in the
+        dialog; The Council's knave turns cards until a knave and loses
+        them; Deal the table and Royal flush give each targeted foe its
+        own cards' damage on the power card (Royal flush pairs at maximum,
+        its cards divided in a dialog). Deal the table's Ruin loses its
+        cards. Lost cards stay out of a hand shuffle until the encounter
+        ends.
+      - 69b3c. Feats outside the attack (built, to be tested; GAPS 324).
+        Riffle parry is a button on the defence card after a ranged hit
+        (a new card action, riffle): it uses the reaction, draws a card,
+        and a face card or an ace halves the damage taken. Dead man's hand
+        is a zeroHp hook (deadMansHand): it draws a card, and an ace or a
+        black eight sets HP to 1 and takes back the wound. The blue
+        knave (Stupefied), Marked suit hearts (d4 persistent bleed) and
+        spades (Frightened), and Call the suit's Slowed are given as
+        outcome entries to a single target, on deck attacks and card
+        powers alike.
+    - 69c. The Cartomancer's reading, in parts.
+      - 69c1. The reading (built, to be tested; GAPS 325). The class
+        feature's Long Rest hook (layReading) lays out three trumps
+        (Wider spread: four), rerolling repeats (module/rules/arcana.mjs,
+        module/reading.mjs). The Feats tab shows them, with a Turn button
+        on each: once per round, with the reaction in combat, the card's
+        meaning goes to the targeted creature or the Cartomancer, through
+        the power outcome code: the Lamplighter, the Cairn, the Wick, the
+        Forge-Heart, the Cold Eye, the Barge and the Shade's damage are
+        given, the Last Sun's Fortune added; the rest by hand.
+      - 69c2. Powers and feats that draw or turn cards (built, to be
+        tested; GAPS 326). Draw for the querent, Read the room and The
+        Thirteenth card are card powers (cards querent, room, thirteenth)
+        that draw fresh trumps after their test and give them; The
+        Thirteenth card marks a foe, whose d6 the Dark Master's client rolls
+        at the end of each of its turns. Reading buttons: Reversed (Boon on
+        the next attack against a targeted foe), Shuffle the fates, Black
+        sector's tear, and the Dark Master's Thirteenth (Bane on the next
+        test). Foreseen: the first card of a combat uses no reaction.
+        Still by hand: Rewrite the reading, Not your card, Booth in the
+        Ironwall, Cross my palm.
+      - 69c3. The Dusk Arcana as Foundry Cards (built, to be tested). With
+        Drawing cards on Foundry Cards, each Cartomancer gets a deck of the
+        twelve trumps, a reading hand and a pile for cards drawn for others
+        (module/arcana-cards.mjs), in a "Dusk Arcana" folder. The reading
+        is drawn into the hand, turned cards turn face down, Shuffle the
+        fates passes cards back and draws anew, fresh cards come from the
+        deck, and the Thirteenth is a card made in the hand. The reading on
+        the character stays the record.
+70. **Cards strip** (built, to be tested; designer's request, 18 November
+    2026). With Drawing cards on Foundry Cards, a small band at the
+    hotbar's top-left corner, with a button to minimise or open it
+    (remembered for each user) (module/cards-strip.mjs, styles/stage.css
+    section 7, DESIGN.md
+    8.15) shows each Cartomancer's reading hand (turned cards face down)
+    and each Card Slinger's last drawn card with the cards left. Players
+    see their own characters, the Dark Master every player's. Hovering a
+    card names it; clicking a name opens the sheet. Clicking an unturned
+    card of a reading one owns turns it, as the sheet's turn button does
+    (designer's request, 18 November 2026); drawing stays on the sheet.
+    The reading's Use button lays out a reading while the character has
+    none (GAPS 319; module/uses.mjs).
+71. **Card stacks clean-up** (built, to be tested; designer's request, 18
+    November 2026). The Dark Master's client deletes a Razor deck's Cards
+    deck and pile when the weapon is deleted (so also when a character is
+    rerolled), a Cartomancer's Dusk Arcana stacks when they no longer have
+    The reading, and every stack of a character who is deleted
+    (module/cards.mjs registerCardsCleanup).
+72. **Companion clean-up** (built, to be tested; designer's request, 18
+    November 2026). A starting mule, handcart or dog is marked with its
+    character (flag var-borg.createdFor). Rerolling a character now
+    deletes the vehicles made for them as well as their minions; deleting
+    a character deletes both (the Dark Master's client). Vehicles made for
+    a character: the createdFor flag, a companion vehicle from one of their
+    items (fromItem), or an older mule or handcart by its name
+    (module/minions.mjs, rules/minions.mjs vehiclesMadeFor).
+73. **Almanac ancestries** (built, to be tested; GAPS 327). Beastfolk,
+    Automaton, Returned and Dusk-touched for 4.3A Almanac of Ancestries,
+    drafted on the Design Guidelines and approved (18 November 2026), each
+    with eight ancestry feats, in content/ and in the rules document.
+    Feats use the existing effects: Boons as optional ticks, reminders on
+    the right cards, Let It Out switched on with its Use button, immunities
+    (bleed, electricity, Charmed, Infected) and extra damage taken (cold,
+    light). The rest stays text for the Dark Master. An ancestry has a new
+    Random character chance, Normal or Half (rules/random.mjs
+    pickWeighted); the four Almanac ancestries are Half, so the Random
+    character button rolls each half as often as a core ancestry. Choosing
+    an ancestry by hand is not affected. Each has drafted d20 given-name
+    and family-name tables (Names: Beastfolk (given) and so on), as in
+    GAPS 258.

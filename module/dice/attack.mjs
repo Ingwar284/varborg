@@ -60,7 +60,7 @@ import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { weaponCoat, poisonFromHit } from "../poison.mjs";
 import { tossesItem, tossItem } from "../toss.mjs";
-import { isDeckWeapon, deckCount, drawFromDeck, cardName, jokerBite, cardFeats, useSleeveAce, askWildCard } from "../cards.mjs";
+import { isDeckWeapon, deckCount, drawFromDeck, cardName, jokerBite, cardFeats, useSleeveAce, askWildCard, cardOutcomeEntries, cardAttackOutcomes } from "../cards.mjs";
 import { cardDie, isJoker, cardHitEffects, SLEEVE_ACE } from "../rules/cards.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -230,6 +230,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     // Several targets: one button each (playtest feedback).
     area: several,
+    // The conditions a deck attack's card gives its one target (step 69b3c).
+    outcomes: card && !several ? cardAttackOutcomes(actor, item, cardOutcomeEntries(cardHitEffects(card, cardFeatsHad))) : null,
     areaDamageType: weapon.damageType ?? "",
     attackName: item.name,
     context: {
@@ -348,6 +350,33 @@ export async function settleAttackCard(actor, data) {
     }
   }
 
+  // Cards thrown at several foes, each with its own damage (Deal the table,
+  // Royal flush, step 69b3b): one roll per foe, kept through Fortune.
+  const perTarget = {};
+  if (outcome.hit && inputs.perTarget) {
+    if (!state.perTarget) {
+      state.perTarget = [];
+      for (const entry of inputs.perTarget) {
+        if (!entry.formula) { state.perTarget.push(0); continue; }
+        const perRoll = await new Roll(entry.formula).evaluate({ maximize: state.maximized });
+        rolls.push(perRoll);
+        state.perTarget.push(perRoll.total);
+      }
+    }
+    inputs.perTarget.forEach((entry, i) => {
+      if (entry.formula) perTarget[entry.uuid] = powerDamage(state.perTarget[i] ?? 0, tier);
+    });
+    damage = {
+      formula: i18n.localize("VARBORG.Cards.PerTarget"),
+      rolled: inputs.perTarget.filter(entry => entry.formula).map(entry => `${entry.name} ${entry.formula}`).join(", "),
+      total: inputs.perTarget.filter(entry => entry.formula)
+        .map(entry => i18n.format("VARBORG.Cards.DamageEach", { name: entry.name, total: perTarget[entry.uuid] })).join(", "),
+      doubled: false,
+      halved: false,
+      maximized: state.maximized
+    };
+  }
+
   // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
   const nowRuined = power ? Boolean(inputs.ruinedBefore) : ruinedAfterAttack(inputs.ruinedBefore, tier);
   if (nowRuined !== (applied.ruin ?? inputs.ruinedBefore)) await actor.update({ "system.attackRuin": nowRuined });
@@ -383,7 +412,8 @@ export async function settleAttackCard(actor, data) {
   // A Sustained power starts when it takes effect.
   const sustainNote = power ? await applySustain(actor, data, tier) : null;
   // What the result gives its targets and user, following Fortune (GAPS 219).
-  const given = power ? await settleOutcomes(data, tier, { damage: damage && !damage.invalid ? damage.total : 0 }) : { lines: [], rolls: [] };
+  // A deck attack's card can give conditions too (step 69b3c).
+  const given = power || inputs.outcomes ? await settleOutcomes(data, tier, { damage: damage && !damage.invalid ? damage.total : 0 }) : { lines: [], rolls: [] };
   rolls.push(...given.rolls);
 
   // Inflict damage on a foe. A Triumph's hit is soaked by the armour die
@@ -394,9 +424,9 @@ export async function settleAttackCard(actor, data) {
   if (damage && !damage.invalid && inputs.area) {
     area = {
       hint: i18n.localize(power ? "VARBORG.Area.Hint" : "VARBORG.Attack.SeveralHint"),
-      foes: inputs.area.foes.map(target => ({
+      foes: inputs.area.foes.filter(target => !inputs.perTarget || target.uuid in perTarget).map(target => ({
         key: target.uuid,
-        damage: damage.total,
+        damage: perTarget[target.uuid] ?? damage.total,
         foeUuid: target.uuid,
         armour: inputs.ignoresArmour ? "" : target.armour,
         attack: inputs.attackName,
@@ -407,15 +437,15 @@ export async function settleAttackCard(actor, data) {
         weaponTags: inputs.power?.kind === "spell" ? "spell,area" : inputs.power ? "area" : (inputs.weaponTags ?? []).join(","),
         melee: !power && Boolean(inputs.melee),
         triumph: !power && tier === "triumph",
-        label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
+        label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: perTarget[target.uuid] ?? damage.total, name: target.name })
       })),
-      defenders: inputs.area.defenders.map(target => ({
+      defenders: inputs.area.defenders.filter(target => !inputs.perTarget || target.uuid in perTarget).map(target => ({
         uuid: target.uuid,
-        damage: damage.total,
+        damage: perTarget[target.uuid] ?? damage.total,
         name: inputs.attackName,
         casterUuid: actor.uuid,
         damageType: inputs.areaDamageType ?? "",
-        label: i18n.format("VARBORG.Area.DefendAs", { name: target.name, damage: damage.total })
+        label: i18n.format("VARBORG.Area.DefendAs", { name: target.name, damage: perTarget[target.uuid] ?? damage.total })
       }))
     };
   } else if (damage && !damage.invalid && inputs.inflicts) {

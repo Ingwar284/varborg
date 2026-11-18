@@ -80,9 +80,47 @@ export function frequencyLabel(item) {
  * What a sheet needs for the Use button: shown when the item has a
  * frequency, off while it is used.
  */
+/**
+ * The Cartomancer's feature The reading (its stat switch "reading"). Its Use
+ * button lays out a reading, only while the character has none (designer's
+ * ruling, 18 November 2026); a Long Rest still lays one out by itself.
+ */
+function isReadingFeature(item) {
+  return (item?.system?.effects ?? []).some(effect => effect.kind === "stat" && effect.target === "reading");
+}
+
+/** Whether the character has no reading laid out. */
+function hasNoReading(actor) {
+  const reading = actor?.getFlag("var-borg", "reading");
+  return !Array.isArray(reading) || !reading.length;
+}
+
+/** The reading's Use: lay out a reading if there is none. */
+async function useReadingFeature(actor) {
+  const i18n = game.i18n;
+  if (!hasNoReading(actor)) {
+    ui.notifications.warn(i18n.localize("VARBORG.Arcana.AlreadyLaid"));
+    return;
+  }
+  const { layOutReading } = await import("./reading.mjs");
+  const line = await layOutReading(actor);
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(line)}</p></div>`
+  });
+}
+
 export function useButton(item) {
   if (!hasLimitedUse(item)) return { hasUse: false };
   const i18n = game.i18n;
+  if (isReadingFeature(item)) {
+    const none = hasNoReading(item.parent);
+    return {
+      hasUse: true,
+      canUse: none,
+      useTooltip: i18n.localize(none ? "VARBORG.Arcana.UseTooltip" : "VARBORG.Arcana.AlreadyLaid")
+    };
+  }
   const usable = canUseItem(item);
   if (isTossed(item.system)) {
     return {
@@ -153,6 +191,8 @@ export function useLimitedItem(actor, item) {
 /** The body of useLimitedItem, run inside the guard (REVIEW.md S2, L25). */
 async function useLimitedItemNow(actor, item) {
   if (!actor.isOwner || !hasLimitedUse(item)) return;
+  // The reading: Use lays out a reading when there is none.
+  if (isReadingFeature(item)) return useReadingFeature(actor);
   // A bomb is tossed (GAPS 314, module/toss.mjs).
   if (tossesItem(actor, item)) return tossItem(actor, item);
   const i18n = game.i18n;

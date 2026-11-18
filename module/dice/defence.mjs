@@ -52,6 +52,7 @@ import { withStat, statDrMods, masteredArmourDr } from "../rules/item-effects.mj
 import { rollResists, resistLines, takenWithResists, runItemHooks } from "../effects.mjs";
 import { useUpNextAttackMarks, giveGloomOutcomes } from "../outcomes.mjs";
 import { featLoweredDamage } from "../rules/item-effects.mjs";
+import { riffledDamage } from "../rules/cards.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 
 const { DialogV2 } = foundry.applications.api;
@@ -162,6 +163,8 @@ export async function rollDefence(actor, attack) {
     diceRule, abilityScore, dr, uncoveredDr,
     damageFormula: fixed || isDamageFormula(formula) ? formula : null,
     attackDamage: attack.system.damage,
+    // A ranged attack, thrown included (Riffle parry, step 69b3c).
+    ranged: attack.system.kind === "ranged",
     // The attack's damage type, for resistances and immunities (GAPS 289).
     damageType: attack.system.damageType ?? "",
     // The attacking foe, for its "when its attack hits" passives (step 52f),
@@ -254,7 +257,9 @@ export async function settleDefenceCard(actor, data) {
     rolls.push(...resist.rolls);
     const { taken: resistedTaken, resisted } = takenWithResists(before, usual, state.soak, state.resist);
     // Feats that lower damage taken (step 50d), then Fortune.
-    const taken = featLoweredDamage(resistedTaken, state.featLowered);
+    // Riffle parry: a face card or an ace halves it (step 69b3c, GAPS 324).
+    const lowered0 = featLoweredDamage(resistedTaken, state.featLowered);
+    const taken = state.riffled ? riffledDamage(lowered0) : lowered0;
     const featLowered = resistedTaken - taken;
     const lowered = taken - lowerDamage(taken, state.lowered);
     // For a protector taking it instead (GAPS 229).

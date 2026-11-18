@@ -384,6 +384,26 @@ export async function doEffectAction(actor, effect, context = {}) {
       button: { item, amount: effect.amount || "1" }
     };
   }
+  if (effect.action === "layReading") {
+    // The reading (step 69c): a new reading after each Long Rest.
+    const { layOutReading } = await import("./reading.mjs");
+    return { lines: [await layOutReading(actor)], rolls: [], acted: false };
+  }
+  if (effect.action === "deadMansHand") {
+    // Dead man's hand (step 69b3c): at 0 HP a card is drawn from the deck;
+    // an ace or a black eight keeps the character at 1 HP, and the wound
+    // just gained is taken back. No deck or no card: nothing happens.
+    const { deckWeaponOf, drawFromDeck, cardName } = await import("./cards.mjs");
+    const { cheatsDeath } = await import("./rules/cards.mjs");
+    const deck = deckWeaponOf(actor);
+    const card = deck ? await drawFromDeck(deck) : null;
+    if (!card) return { lines: [i18n.format("VARBORG.Cards.DeadMansHand", { name: actor.name, card: i18n.localize("VARBORG.Cards.NoCardDrawn") })], rolls: [], acted: false };
+    const lines = [i18n.format("VARBORG.Cards.DeadMansHand", { name: actor.name, card: cardName(card) })];
+    if (!cheatsDeath(card)) return { lines: [...lines, i18n.localize("VARBORG.Cards.DeadMansNot")], rolls: [], acted: true };
+    const wounds = actor.system.wounds?.value ?? 0;
+    await actor.update({ "system.hp.value": 1, "system.wounds.value": Math.max(0, wounds - 1) });
+    return { lines: [...lines, i18n.format("VARBORG.Cards.DeadMansSaved", { name: actor.name })], rolls: [], acted: true };
+  }
   if (effect.action === "stayAtOne") {
     return { lines: [i18n.format("VARBORG.Effects.StayOffer", { item, name: actor.name })], rolls: [], acted: false, stayButton: { item, itemId: effect.itemId } };
   }

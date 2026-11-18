@@ -44,6 +44,7 @@ import { restoreLoweredArmour } from "./outcomes.mjs";
 import { heldWhileInside } from "./lasting.mjs";
 import { recordStudied } from "./field-journal.mjs";
 import { shuffleDecksAfterCombat } from "./cards.mjs";
+import { thirteenthAtEndOfTurn } from "./reading.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -190,6 +191,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     await countDownWaking(combatant.actor);
     await endOfTurnSustain(combatant.actor);
     await endOfTurnTimers(combatant.actor);
+    // The Thirteenth card's d6 for a marked foe (step 69c2).
+    await thirteenthAtEndOfTurn(combatant.actor, this);
   }
 
   /**
