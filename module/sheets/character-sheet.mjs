@@ -12,6 +12,7 @@ import { rollAbilityTest, signed } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
+import { isDeckWeapon, deckCount, shuffleDeckAction } from "../cards.mjs";
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { lightItem, canLightItem, actorLight, putOutActorLight, dimActorLight } from "../light.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton, isConsumable } from "../uses.mjs";
@@ -174,6 +175,11 @@ function itemStates(item) {
   if (item.type === "armour" && system.originalTier >= 1 && system.tier < 1) {
     states.push({ key: "destroyed", label: "VARBORG.Defence.Destroyed" });
   }
+  // A deck of cards: how many are left to draw (Razor deck, GAPS 318).
+  if (isDeckWeapon(item)) {
+    const { left, total } = deckCount(item);
+    states.push({ key: left ? "cards" : "unloaded", label: game.i18n.format("VARBORG.Cards.Left", { left, total }) });
+  }
   if (system.usedUp) {
     states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
   }
@@ -291,6 +297,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       useLimited: CharacterSheet.#onUseLimited,
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
+      shuffleDeck: CharacterSheet.#onShuffleDeck,
       attack: CharacterSheet.#onAttack,
       recover: CharacterSheet.#onRecover,
       raiseShield: CharacterSheet.#onRaiseShield,
@@ -460,6 +467,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canExpendable: canRollExpendable(item.system) && !isConsumable(item) && !item.system.medicine,
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
+          canShuffle: isDeckWeapon(item),
           reloadTooltip: game.i18n.format("VARBORG.Reload.ReloadTooltip", { count: item.type === "weapon" ? effectiveWeapon(item).reload ?? 0 : 0 }),
           overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
         }))
@@ -797,6 +805,12 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onReloadWeapon(event, button) {
     const item = this.#itemFor(button);
     if (item) await reloadWeapon(this.document, item);
+  }
+
+  /** The Shuffle button shuffles a deck of cards back together (one Interact action). */
+  static async #onShuffleDeck(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await shuffleDeckAction(this.document, item);
   }
 
   /** The sword button opens the attack dialog for that weapon. */

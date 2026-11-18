@@ -163,6 +163,9 @@ export class WeaponData extends EquipmentData {
       // The ability every attack with it tests, instead of the usual one
       // (the Spirit-linked sword: Presence, GAPS 215). Blank: as usual.
       attackAbility: new StringField({ required: true, blank: true, choices: ["", ...ABILITIES], initial: "" }),
+      // A deck of cards: each attack draws a card, and the card sets the
+      // damage (the Card Slinger's Razor deck, GAPS 318, module/cards.mjs).
+      cardDeck: new BooleanField({ initial: false }),
       // A thrown weapon's area: a grenade's burst (GAPS 314, PLAN step 68).
       area: areaField()
     };

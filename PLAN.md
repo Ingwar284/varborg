@@ -1617,13 +1617,22 @@ item names its GAPS ruling where there is one.
       content/ and in the rules document. Conditions, damage, healing,
       areas and reminders work as for other powers; cards are drawn by
       hand, and the Razor deck rolls d6 until 69b.
-    - 69b. The Card Slinger's deck (planned). A world setting picks how
-      cards are drawn: a deck the system keeps on the character, or a
-      Foundry Cards deck. Each deck attack draws a card, shows it on the
-      chat card and rolls its die; the sheet shows the cards left and a
-      Shuffle button; the deck is shuffled when an encounter ends. Then
-      the card powers and feats (Deal the table, Cut the deck, Royal
-      flush, Ace up the sleeve, Court cards, Wild card and the rest).
+    - 69b. The Card Slinger's deck, in three parts.
+      - 69b1. The deck the system keeps (built, to be tested; GAPS 321).
+        A weapon can be a "Deck of cards" (the Razor deck is). Its deck
+        lives on the weapon (module/rules/cards.mjs, module/cards.mjs).
+        Each attack draws the top card, the card sets the damage die, and
+        the chat card names it; a Joker also bites the thrower for d4.
+        An empty deck cannot attack. The sheet shows "Cards 41/54" and a
+        Shuffle button (one Interact action); every deck is shuffled when
+        an encounter ends.
+      - 69b2. Foundry Cards (planned). A world setting picks the deck the
+        system keeps or a Foundry Cards deck, which is made for each Razor
+        deck and drawn from instead.
+      - 69b3. Card powers and feats (planned): Deal the table, Cut the
+        deck, Royal flush, The Council's knave, Call the suit, Ace up the
+        sleeve, Court cards, Wild card, The blue knave, Marked suit,
+        Riffle parry and Dead man's hand.
     - 69c. The Cartomancer's reading (planned). The reading laid out
       after a Long Rest from the Dusk Arcana (same setting as 69b), shown
       on the sheet, with a button to turn a card for an ally; then the

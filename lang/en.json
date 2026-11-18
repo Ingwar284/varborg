@@ -247,7 +247,9 @@
       "ZeroHint": "Leave a number at 0 if the weapon does not have that trait.",
       "AttackAbility": "Attacks with",
       "AttackAbilityHint": "The ability every attack with this weapon tests, instead of the usual one (the Spirit-linked sword: Presence).",
-      "AttackAbilityUsual": "As usual"
+      "AttackAbilityUsual": "As usual",
+      "CardDeck": "Deck of cards",
+      "CardDeckHint": "Each attack draws a card, and the card sets the damage: 2–5 d4, 6–10 d6, knave, queen or king d8, ace d10, Joker d12 and d4 to the thrower (the Card Slinger's Razor deck). The damage above is not used."
     },
     "DamageType": {
       "bludgeoning": "Bludgeoning",
@@ -459,6 +461,42 @@
       "ActionsUsed": "Used {count} Interact actions to reload. The weapon is loaded.",
       "NotYourTurn": "Reloading uses actions, so in combat you can only do it on your own turn.",
       "NoActions": "Reloading needs {count} actions and you have fewer left this turn. Reloading anyway; the Dark Master decides."
+    },
+    "Cards": {
+      "Left": "Cards {left}/{total}",
+      "DeckEmpty": "{name} has no cards left. Shuffle it first (an Interact action).",
+      "Drew": "Drew {card}: {die} damage. {left} cards left.",
+      "Name": "the {rank} of {suit}",
+      "Joker": "a Joker",
+      "Bite": "The Joker bites back: {name} takes {amount} slashing damage, armour not counted (HP {from} → {to}).",
+      "BiteKilled": "The Joker bites back for {amount}: at Death's Door, {name} is killed.",
+      "ShuffleTooltip": "Shuffle the deck (an Interact action)",
+      "ShuffleTitle": "{name} shuffled",
+      "Shuffled": "Used an Interact action to shuffle. All {count} cards are back in the deck.",
+      "ShuffledOutside": "Shuffled: all {count} cards are back in the deck.",
+      "NotYourTurn": "Shuffling uses an action, so in combat you can only do it on your own turn.",
+      "NoActions": "Shuffling needs an action and you have none left this turn. Shuffling anyway; the Dark Master decides.",
+      "Rank": {
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10",
+        "J": "knave",
+        "Q": "queen",
+        "K": "king",
+        "A": "ace"
+      },
+      "Suit": {
+        "H": "hearts",
+        "D": "diamonds",
+        "C": "clubs",
+        "S": "spades"
+      }
     },
     "Ammunition": {
       "CardTitle": "{name}: ammunition after combat",

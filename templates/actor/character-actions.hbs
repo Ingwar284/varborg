@@ -49,6 +49,12 @@
         <i class="fa-solid fa-burst"></i>
       </button>
       {{/if}}
+      {{#if canShuffle}}
+      <button type="button" class="icon-button" data-action="shuffleDeck"
+              data-tooltip="{{localize 'VARBORG.Cards.ShuffleTooltip'}}" aria-label="{{localize 'VARBORG.Cards.ShuffleTooltip'}}">
+        <i class="fa-solid fa-shuffle"></i>
+      </button>
+      {{/if}}
       {{#if canReload}}
       <button type="button" class="icon-button" data-action="reloadWeapon"
               data-tooltip="{{reloadTooltip}}" aria-label="{{reloadTooltip}}">

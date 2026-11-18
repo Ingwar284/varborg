@@ -60,6 +60,8 @@ import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { weaponCoat, poisonFromHit } from "../poison.mjs";
 import { tossesItem, tossItem } from "../toss.mjs";
+import { isDeckWeapon, deckCount, drawFromDeck, cardName, jokerBite } from "../cards.mjs";
+import { cardDie, isJoker } from "../rules/cards.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -81,6 +83,12 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const weapon = effectiveWeapon(item);
   if (needsReload(weapon) && !canFire(weapon)) {
     ui.notifications.warn(i18n.format("VARBORG.Attack.Empty", { name: item.name }));
+    return;
+  }
+  // A deck of cards with none left must be shuffled first (Razor deck, GAPS 318).
+  const deck = isDeckWeapon(item);
+  if (deck && !deckCount(item).left) {
+    ui.notifications.warn(i18n.format("VARBORG.Cards.DeckEmpty", { name: item.name }));
     return;
   }
 
@@ -137,6 +145,12 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   if (mode === "shoot" && needsReload(weapon)) await item.update({ "system.loaded": false });
   if (mode === "shoot") await markFired(actor, item);
 
+  // A deck draws its top card as you throw, and the card sets the damage
+  // (Razor deck). It stays the card if Fortune rerolls the attack. A Joker
+  // bites the thrower whatever the result (provisional, GAPS 321).
+  const card = deck ? await drawFromDeck(item) : null;
+  const bite = card && isJoker(card) ? await jokerBite(actor) : null;
+
   // Action and reaction pips, and the count for the multiple-attack Bane.
   let pipNote = null;
   // A thrall's attack: the thrall's own actions pay, but it counts toward
@@ -155,6 +169,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const title = i18n.format("VARBORG.Attack.CardTitle", { name: item.name });
   const notes = [
+    card ? i18n.format("VARBORG.Cards.Drew", { card: cardName(card), die: cardDie(card), left: deckCount(item).left }) : null,
+    bite?.line,
     extraDr ? drNote(weapon, options.oneHanded) : null,
     automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
@@ -170,7 +186,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   // Everything the card needs that Fortune cannot change.
   // An item effect can replace the weapon's dice (Couched Lance, step 50c).
   const setDamage = conditions.own.findLast(mod => mod.setDamage)?.setDamage;
-  const formula = setDamage || damageFormula(weapon.damage, options.beyondRange);
+  const weaponDie = card ? cardDie(card) : weapon.damage;
+  const formula = setDamage || damageFormula(weaponDie, options.beyondRange);
   const foe = target?.type === "foe" ? target : null;
   const inputs = {
     formula: `${diceFormula(diceRule)} + @ability`,
@@ -180,7 +197,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     damageFormula: isDamageFormula(formula) ? withExtraDamage(formula, conditions.own) : null,
     // Extra damage only on a Triumph, added after doubling (Holy smite, step 51a).
     triumphDamage: triumphDamage(conditions.own),
-    weaponDamage: weapon.damage,
+    weaponDamage: weaponDie,
     // The weapon's damage type, for the foe's resistances (step 52a).
     damageType: weapon.damageType ?? "",
     // A melee hit, for the foe's retaliation passives (step 52b).
@@ -204,7 +221,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
       abilityLabel,
       drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
       notes,
-      thrownNote: mode === "throw" ? i18n.localize("VARBORG.Attack.Retrieve") : null,
+      // A deck never needs retrieving: the next card is drawn.
+      thrownNote: mode === "throw" && !deck ? i18n.localize("VARBORG.Attack.Retrieve") : null,
       pipNote
     }
   };
@@ -216,7 +234,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content,
-    rolls: [roll, ...rolls],
+    rolls: [roll, ...(bite ? [bite.roll] : []), ...rolls],
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
