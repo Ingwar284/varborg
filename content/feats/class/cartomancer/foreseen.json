@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart06000000",
+  "name": "Foreseen",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "You saw this fight coming. When combat begins, you may turn one card of your reading without using your reaction.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

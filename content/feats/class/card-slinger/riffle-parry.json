@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCard04000000",
+  "name": "Riffle parry",
+  "type": "feat",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "When a ranged attack (thrown included) hits you, you may use your reaction ↻ to draw a card. On a face card or an ace, you cut the missile from the air with it, and take half damage. On any other card, the card is spent for nothing.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

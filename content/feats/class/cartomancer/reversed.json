@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart02000000",
+  "name": "Reversed",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "When you turn a card of your reading, you may turn it upside down against a foe you can see within 30' instead. Its meaning is lost, but the next attack against that foe before the end of your next turn has Boon.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

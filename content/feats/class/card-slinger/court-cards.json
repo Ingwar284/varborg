@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCard07000000",
+  "name": "Court cards",
+  "type": "feat",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Your face cards deal d10 damage and your aces d12.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

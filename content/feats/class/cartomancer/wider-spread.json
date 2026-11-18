@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart01000000",
+  "name": "Wider spread",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "Your reading holds four cards instead of three.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

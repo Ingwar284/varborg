@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart04000000",
+  "name": "Booth in the Ironwall",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "During Downtime, you can tell fortunes beneath the Tirelessly Turning Wheel and earn d6 × 10 s; Brother Dicer of the Unseen Deanery takes a tenth. If you roll a 1, a customer drew the Thirteenth and blamed you for it: your next reading begins with the Thirteenth in it.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "_id": "vbTableDuskArcan",
+  "name": "Dusk Arcana",
+  "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+  "description": "<p>Cartomancer: Roll a d12 when you lay out your reading, use Draw for the querent or use Read the room. A card's meaning takes effect on one creature: you, or the ally you turn it for. \"Their next\" means before the end of their next turn.</p><p>The Thirteenth is never rolled. It enters your reading only through a Ruin, a feat or a power. It is black and blank and cannot be turned by you. Once before your next Long Rest, the Dark Master may turn it at any moment: you or an ally within 30' makes one test with Bane. Then it is spent.</p>",
+  "formula": "1d12",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "vbTableDuA010000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Lamplighter</strong> Boon on their next test.</p>",
+      "weight": 1,
+      "range": [
+        1,
+        1
+      ]
+    },
+    {
+      "_id": "vbTableDuA020000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Last Sun</strong> They gain 1 Fortune.</p>",
+      "weight": 1,
+      "range": [
+        2,
+        2
+      ]
+    },
+    {
+      "_id": "vbTableDuA030000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Cairn</strong> They regain d6 HP.</p>",
+      "weight": 1,
+      "range": [
+        3,
+        3
+      ]
+    },
+    {
+      "_id": "vbTableDuA040000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Brazier</strong> They end one Persistent Damage.</p>",
+      "weight": 1,
+      "range": [
+        4,
+        4
+      ]
+    },
+    {
+      "_id": "vbTableDuA050000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Wick</strong> They end Frightened or Stupefied.</p>",
+      "weight": 1,
+      "range": [
+        5,
+        5
+      ]
+    },
+    {
+      "_id": "vbTableDuA060000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Forge-Heart</strong> Their next weapon hit deals +d4 damage.</p>",
+      "weight": 1,
+      "range": [
+        6,
+        6
+      ]
+    },
+    {
+      "_id": "vbTableDuA070000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Architect</strong> They have light cover until the start of your next turn.</p>",
+      "weight": 1,
+      "range": [
+        7,
+        7
+      ]
+    },
+    {
+      "_id": "vbTableDuA080000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Cold Eye</strong> They defend with -2 DR until the start of your next turn.</p>",
+      "weight": 1,
+      "range": [
+        8,
+        8
+      ]
+    },
+    {
+      "_id": "vbTableDuA090000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Barge</strong> They are Quickened.</p>",
+      "weight": 1,
+      "range": [
+        9,
+        9
+      ]
+    },
+    {
+      "_id": "vbTableDuA100000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Wheel</strong> Turn it after they roll a test: they reroll it and must keep the second result.</p>",
+      "weight": 1,
+      "range": [
+        10,
+        10
+      ]
+    },
+    {
+      "_id": "vbTableDuA110000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Mask</strong> For their next test, they may use Presence instead of the ability called for.</p>",
+      "weight": 1,
+      "range": [
+        11,
+        11
+      ]
+    },
+    {
+      "_id": "vbTableDuA120000",
+      "type": "text",
+      "img": "icons/sundries/gaming/card-astronomy-pink.webp",
+      "description": "<p><strong>The Shade</strong> Their next hit deals maximum damage, and they take d4 dark damage.</p>",
+      "weight": 1,
+      "range": [
+        12,
+        12
+      ]
+    }
+  ]
+}

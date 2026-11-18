@@ -1,0 +1,16 @@
+{
+  "_id": "vbFeature2400000",
+  "name": "The reading",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "You carry the Dusk Arcana, a deck of twelve painted trumps and one black card that is not supposed to exist. After each Long Rest, lay out your reading: draw three trumps (roll a d12 for each on the Dusk Arcana, and reroll repeats). Once per round, you can use your reaction ↻ to turn one card of your reading face down: its meaning takes effect on you or an ally you can see within 30'. A turned card is spent until your next Long Rest. Lose the deck, and you have no reading until you paint a new one in Downtime.",
+    "source": "feature",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "round",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "_id": "vbCPCard00000000",
+  "name": "Deal the table",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "You fan three cards from the deck and send them spinning at up to three different foes within 30', one card each. Make one deck attack (Agility, DR12) for all three; each foe hit takes the damage of its own card.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d6",
+    "damageType": "slashing",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": "The fan slips through your fingers. The three cards scatter at your feet and are lost until the end of the encounter."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the three cards are lost until the end of the encounter"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial"
+  }
+}

@@ -95,9 +95,37 @@ test("every background's wealth can be rolled", () => {
 const classes = readAll(join(root, "content", "classes")).map(({ data }) => data);
 const SPELL_LIST_WORDS = { none: "None", arcane: "Arcane", divine: "Divine", primal: "Primal", profane: "Profane", bloodline: "Pick one (bloodline)", choose: "Choose (swappable)" };
 
-test("the 20 classes of the class table and the Witch Hunter are there (GAPS 1, 183)", () => {
-  assert.equal(classes.length, 21);
-  assert.ok(classes.some(c => c.name === "Witch Hunter"));
+/** The classes of 4.5A Compendium of Classes, which are not in the class table (GAPS 183, 318, 319). */
+const COMPENDIUM_CLASSES = ["Witch Hunter", "Card Slinger", "Cartomancer"];
+
+test("the 20 classes of the class table, the Witch Hunter, the Card Slinger and the Cartomancer are there (GAPS 1, 183, 318, 319)", () => {
+  assert.equal(classes.length, 23);
+  for (const name of COMPENDIUM_CLASSES) assert.ok(classes.some(c => c.name === name), name);
+});
+
+test("the Card Slinger and the Cartomancer match their pages (GAPS 318, 319)", () => {
+  const pages = {
+    "Card Slinger": ["Agility", "agility", "d8", /You begin with a razor deck\. Roll a d8 on the weapons\/armour table\./],
+    Cartomancer: ["Presence", "presence", "d6", /You begin with the Dusk Arcana\. Roll a d6 on the weapons\/armour table\./]
+  };
+  for (const [name, [word, ability, die, kit]] of Object.entries(pages)) {
+    const s = classes.find(c => c.name === name).system;
+    const page = rules.slice(rules.indexOf(`\n# ${name}\n`));
+    assert.match(page, new RegExp(`^Boosted ability: ${word}$`, "m"), name);
+    assert.match(page, /^HP: "8 \+ Toughness"$/m, name);
+    assert.match(page, /^Max wounds: "2"$/m, name);
+    assert.match(page, /^Spell list: None$/m, name);
+    assert.match(page, kit, name);
+    assert.deepEqual([s.boostedAbility, s.hpBase, s.maxWounds, s.spellList, s.startingDie], [ability, 8, 2, "none", die], name);
+  }
+});
+
+test("the Card Slinger's feature gives the razor deck: thrown 30', agile, slashing (GAPS 318)", () => {
+  const feature = readAll(join(root, "content", "feats", "features")).map(({ data }) => data).find(f => f.name === "Razor deck");
+  const deck = readAll(join(root, "content", "weapons", "gifts")).map(({ data }) => data).find(w => w.name === "Razor deck");
+  assert.ok(feature.system.effects.some(e => e.kind === "gift" && e.gift === `Compendium.var-borg.weapons.Item.${deck._id}`));
+  const s = deck.system;
+  assert.deepEqual([s.kind, s.thrown, s.agile, s.damageType, s.equipped], ["throw", 30, true, "slashing", true]);
 });
 
 test("the Witch Hunter matches its page: Agility, 8 + Toughness, 2 wounds, rapier and pistol, d8 on armour only", () => {
@@ -117,7 +145,7 @@ test("the other classes roll on the weaponry table (no fixed weapons)", () => {
 });
 
 test("the classes of the class table each match their row", () => {
-  for (const c of classes.filter(c => c.name !== "Witch Hunter")) {
+  for (const c of classes.filter(c => !COMPENDIUM_CLASSES.includes(c.name))) {
     const s = c.system;
     const boost = s.boostedAbility[0].toUpperCase() + s.boostedAbility.slice(1);
     const row = `| ${c.name} | ${s.hpBase} + Toughness | ${s.maxWounds} | ${boost} | ${SPELL_LIST_WORDS[s.spellList]} |`;
@@ -166,8 +194,8 @@ test("every class has its additional feats (8, the Charioteer 9) and 7 powers", 
     assert.equal(feats.length, c.name === "Charioteer" ? 9 : 8, `${c.name} feats`);
     assert.equal(powers.length, 7, `${c.name} powers`);
   }
-  assert.equal(classFeats.length, 169);
-  assert.equal(classPowers.length, 147);
+  assert.equal(classFeats.length, 185);
+  assert.equal(classPowers.length, 161);
 });
 
 const classFeatures = readAll(join(root, "content", "feats", "features")).map(({ data }) => data);
@@ -216,7 +244,7 @@ test("each power's cost and actions (or reaction ↻) are as the rules write the
     const symbols = s.reaction ? "↻" : "◈".repeat(s.actions);
     assert.ok(flatRules.includes(`${p.name} 🟒${s.cost} ${symbols}`), `${p.name}: 🟒${s.cost} ${symbols}`);
   }
-  assert.equal(classPowers.filter(p => p.system.reaction).length, 7);
+  assert.equal(classPowers.filter(p => p.system.reaction).length, 8);
 });
 
 test("a power that names its own test uses that ability at DR 11 + cost", () => {
@@ -530,9 +558,9 @@ const PERSONALITY_TABLES = ["Personality traits", "Physical mark", "Idiosyncrasy
 /** The drafted name tables (GAPS 258): not from the rules. */
 const isNameTable = t => t.name.startsWith("Names: ");
 
-test("the fourteen rules roll tables are there", () => {
+test("the fifteen rules roll tables are there", () => {
   assert.deepEqual(rollTables.filter(t => !isNameTable(t)).map(t => t.name).sort(), [
-    "Backgrounds", "Call to adventure", "Harkin's Reprieve: you wake…", "Idiosyncrasy", "Personality traits",
+    "Backgrounds", "Call to adventure", "Dusk Arcana", "Harkin's Reprieve: you wake…", "Idiosyncrasy", "Personality traits",
     "Photonic Surge", "Physical mark", "Relic", "Relics 13–22", "Relics 1–12",
     "Searching the fallen", "Spoils", "Trinkets", "Valuables"
   ]);
@@ -589,7 +617,7 @@ test("the relic tables give the odds of rules 4.2: d2, then d12 or d10 + 12", ()
 
 test("the text results are word for word in the rules", () => {
   const plain = html => html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim();
-  for (const t of rollTables.filter(t => !isNameTable(t) && !["Photonic Surge", "Searching the fallen", "Valuables", ...PERSONALITY_TABLES].includes(t.name))) {
+  for (const t of rollTables.filter(t => !isNameTable(t) && !["Photonic Surge", "Dusk Arcana", "Searching the fallen", "Valuables", ...PERSONALITY_TABLES].includes(t.name))) {
     for (const r of t.results.filter(r => r.type === "text")) assert.ok(rules.includes(`| ${plain(r.description)} |`), `${t.name}: ${plain(r.description)}`);
   }
   // Rules 2.7 numbers its d100 lists: "17.  Clumsy, awkward and accident-prone".
@@ -604,6 +632,11 @@ test("the text results are word for word in the rules", () => {
   for (const r of rollTables.find(t => t.name === "Photonic Surge").results) {
     const [, name, effect] = /^<p><strong>(.+?)<\/strong> (.+)<\/p>$/.exec(r.description);
     assert.ok(rules.includes(`${plain(name)}${plain(effect)} |`), `surge ${r.range}`);
+  }
+  // The Cartomancer's Dusk Arcana (GAPS 319): "| 1 | The Lamplighter | Boon on their next test. |".
+  for (const r of rollTables.find(t => t.name === "Dusk Arcana").results) {
+    const [, name, meaning] = /^<p><strong>(.+?)<\/strong> (.+)<\/p>$/.exec(r.description);
+    assert.ok(rules.includes(`| ${r.range[0]} | ${plain(name)} | ${plain(meaning)} |`), `trump ${r.range}`);
   }
 });
 

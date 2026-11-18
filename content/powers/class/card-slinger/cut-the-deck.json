@@ -1,0 +1,58 @@
+{
+  "_id": "vbCPCard01000000",
+  "name": "Cut the deck",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Draw two cards, throw the better one at a foe within 30' as a deck attack, and discard the other. On a hit, it deals its card's damage +d4. Your eyes are on the cut, not the room: you cannot use reactions until the start of your next turn.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "d4",
+    "damageType": "slashing",
+    "addsWeaponDamage": true,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you cannot use reactions until the start of your next turn"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial"
+  }
+}

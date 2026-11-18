@@ -1,0 +1,82 @@
+{
+  "_id": "vbCPCart05000000",
+  "name": "Rewrite the reading",
+  "type": "power",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "Trigger: You or an ally within 30' rolls a test, an attack or a defence.\nYou were wrong about the cards, and you say so loud enough for fate to hear. The result becomes a Triumph. You can use this power only if you have at least 1 Fortune, and whatever the result, you lose all of it.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 0,
+    "ability": "usual",
+    "damage": "",
+    "damageType": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": true,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the triggering result becomes a Triumph"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you lose all your Fortune"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial"
+  }
+}

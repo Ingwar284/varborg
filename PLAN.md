@@ -1607,3 +1607,24 @@ item names its GAPS ruling where there is one.
       creature to enter takes d8 and the trap is sprung. Spotting it
       stays a Presence DR14 test by hand.
     Not in this step: lockpicks' two expendable dice (GAPS 55, open).
+69. **Card Slinger and Cartomancer** (in progress; GAPS 318–320). Two new
+    classes for 4.5A Compendium of Classes, drafted on the Design
+    Guidelines (18 November 2026). One sub-step at a time, each tested in
+    Foundry before the next.
+    - 69a. Content (built, to be tested). Both classes, their class
+      features, 16 class feats and 14 powers, the Razor deck weapon (given
+      by the Card Slinger's feature) and the Dusk Arcana Roll Table, in
+      content/ and in the rules document. Conditions, damage, healing,
+      areas and reminders work as for other powers; cards are drawn by
+      hand, and the Razor deck rolls d6 until 69b.
+    - 69b. The Card Slinger's deck (planned). A world setting picks how
+      cards are drawn: a deck the system keeps on the character, or a
+      Foundry Cards deck. Each deck attack draws a card, shows it on the
+      chat card and rolls its die; the sheet shows the cards left and a
+      Shuffle button; the deck is shuffled when an encounter ends. Then
+      the card powers and feats (Deal the table, Cut the deck, Royal
+      flush, Ace up the sleeve, Court cards, Wild card and the rest).
+    - 69c. The Cartomancer's reading (planned). The reading laid out
+      after a Long Rest from the Dusk Arcana (same setting as 69b), shown
+      on the sheet, with a button to turn a card for an ally; then the
+      powers and feats that draw or turn cards.

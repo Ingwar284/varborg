@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart08000000",
+  "name": "Black sector",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "When the Thirteenth enters your reading, you may tear it in half at once. It is spent, and you take d4 mental damage.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "_id": "vbCPCard06000000",
+  "name": "The Council's knave",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Somewhere in your deck is a knave with the face of a living Council lord, and you never know where. Turn over cards until you reach a knave, then throw it at a foe within 60' as a deck attack. On a hit, it deals 2d10 slashing damage, and the foe has lost everything it wagered: it fails its next Morale roll this encounter. Whatever the result, every card you turned over is lost until the end of the encounter.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d10",
+    "damageType": "slashing",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": "The knave bears your own face. You lose 1 Fortune."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "it fails its next Morale roll this encounter"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "every card you turned over is lost until the end of the encounter"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you lose 1 Fortune"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCard03000000",
+  "name": "The blue knave",
+  "type": "feat",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Every knave in your deck is painted blue, after the old card that gave the Bluejack its name. When a knave hits, the foe sees a face it knows in the card, and is Stupefied until the end of its next turn.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

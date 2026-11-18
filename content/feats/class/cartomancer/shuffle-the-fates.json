@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart05000000",
+  "name": "Shuffle the fates",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "Once per Long Rest, as an action ◈, you can discard every unturned card of your reading and draw that many anew. The Thirteenth cannot be shuffled away.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "longRest",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

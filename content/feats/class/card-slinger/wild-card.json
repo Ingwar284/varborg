@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCard08000000",
+  "name": "Wild card",
+  "type": "feat",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "When you draw a Joker, you may name it as any other card instead. It does not bite you.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

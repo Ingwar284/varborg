@@ -1,0 +1,106 @@
+{
+  "_id": "vbCPCart04000000",
+  "name": "Read the room",
+  "type": "power",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "You deal a quick spread to the whole company. Draw three cards (roll a d12 for each) and give each to a different ally within 30', or one to yourself: its meaning takes effect on them at once. You cannot use reactions until the start of your next turn.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "damageType": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "Draw one card instead of three.",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "roll three d12 on the Dusk Arcana, one card to each ally"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": true,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "roll one d12 on the Dusk Arcana"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you cannot use reactions until the start of your next turn"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial"
+  }
+}
