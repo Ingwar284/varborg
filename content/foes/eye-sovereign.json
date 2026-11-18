@@ -135,6 +135,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "mental",
         "ruinDamage": "2d10",
         "conditions": {
           "failure": "stupefied",
@@ -180,6 +181,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "dark",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "blinded",
@@ -225,6 +227,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d10",
+        "damageType": "dark",
         "ruinDamage": "3d10",
         "conditions": {
           "failure": "fatigued",
@@ -270,6 +273,7 @@
         "cost": 9,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "mental",
         "ruinDamage": "5d6",
         "conditions": {
           "failure": "frightened",

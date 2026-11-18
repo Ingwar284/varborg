@@ -43,6 +43,8 @@ import { runAuras } from "./aura.mjs";
 import { restoreLoweredArmour } from "./outcomes.mjs";
 import { heldWhileInside } from "./lasting.mjs";
 import { recordStudied } from "./field-journal.mjs";
+import { shuffleDecksAfterCombat } from "./cards.mjs";
+import { thirteenthAtEndOfTurn } from "./reading.mjs";
 
 const SYSTEM = "var-borg";
 
@@ -189,6 +191,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     await countDownWaking(combatant.actor);
     await endOfTurnSustain(combatant.actor);
     await endOfTurnTimers(combatant.actor);
+    // The Thirteenth card's d6 for a marked foe (step 69c2).
+    await thirteenthAtEndOfTurn(combatant.actor, this);
   }
 
   /**
@@ -223,6 +227,8 @@ export class VarBorgCombat extends foundry.documents.Combat {
     restoreLoweredArmour(this);
     // Field notes: what the Scholars studied is recorded (GAPS 214).
     if (this.started) recordStudied(this);
+    // Razor decks are shuffled whole at the end of every encounter (GAPS 318).
+    shuffleDecksAfterCombat(this.combatants.map(combatant => combatant.actor));
     // Items that act when a fight ends (Doomsworn, step 50a2).
     if (this.started) {
       const actors = new Set(this.combatants.map(combatant => combatant.actor).filter(Boolean));

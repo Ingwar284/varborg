@@ -1,0 +1,15 @@
+{
+  "_id": "vbClCardSlinger0",
+  "name": "Card Slinger",
+  "type": "class",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "At the Bluejack they still tell of the night the dealer's cards came back sharper than they left. You learned your trade on the green baize under the blue gas-lamps of Crown's Bluff: how to cut, how to palm, and how to send a card edged in razor-tin across a smoky room and into a throat. Every throw is a wager, and most nights the house wins. Tonight, you are the house.\n\nClass feature: Razor deck\nYou carry a deck of fifty-four cards, two of them Jokers, every edge filed and set with razor-tin. It is a thrown weapon (agile, thrown 30', slashing) that never needs retrieving: you attack with Agility, as with any thrown weapon, and you draw the top card as you throw. The card sets the damage: d4 for a 2 to 5, d6 for a 6 to 10, d8 for a knave, queen or king, and d10 for an ace. A Joker deals d12, but it bites back: you take d4 slashing damage.\nDrawn cards go to your discard pile. When the deck runs out, you cannot attack with it until you shuffle the discard back in (an Interact action ◈). The whole deck is shuffled at the end of every encounter. Lose it, and any common deck will do until you file a new one in Downtime, but every card deals d4.\n\nClass power: Deal the table 🟒1 ◈◈",
+    "boostedAbility": "agility",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d8",
+    "startingWeapons": []
+  }
+}

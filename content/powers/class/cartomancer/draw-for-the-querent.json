@@ -1,0 +1,34 @@
+{
+  "_id": "vbCPCart00000000",
+  "name": "Draw for the querent",
+  "type": "power",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "You turn a card for an ally you can see within 30', fresh from the deck rather than from your reading (roll a d12 on the Dusk Arcana). Test Presence (DR12). On a success, its meaning takes effect on them at once.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "resource": "ember",
+    "cost": 1,
+    "actions": 2,
+    "ability": "presence",
+    "damage": "",
+    "damageType": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "Draw two cards and choose one.",
+      "success": "",
+      "failure": "No effect.",
+      "ruin": "The black card falls out of the deck. The Thirteenth replaces one unturned card of your reading (your choice)."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "auto",
+    "cards": "querent"
+  }
+}

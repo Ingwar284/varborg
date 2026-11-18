@@ -68,7 +68,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "A creature damaged by its bite takes d2 persistent bleeding damage as the worm works its way in.",
+        "description": "A creature damaged by its bite takes d2 persistent bleed damage as the worm works its way in.",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

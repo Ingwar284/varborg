@@ -1,0 +1,59 @@
+{
+  "_id": "vbCPCard03000000",
+  "name": "Call the suit",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Name a suit, then make a deck attack against a foe within 30'. On a hit, it deals 2d8 slashing damage instead of the card's damage. If the card is of the suit you named, the foe is also Slowed until the end of its next turn. If it is not, you gave away your tell: you defend with +2 DR until the start of your next turn.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "2d8",
+    "damageType": "slashing",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "named suit: the foe is Slowed until the end of its next turn; wrong suit: you defend with +2 DR until the start of your next turn"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial",
+    "cards": "suit"
+  }
+}

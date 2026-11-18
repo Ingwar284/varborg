@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFReturned0003",
+  "name": "Harkin's Mark",
+  "type": "feat",
+  "img": "icons/magic/death/grave-tombstone-glow-teal.webp",
+  "system": {
+    "description": "The dead know their own. Mindless undead take no notice of you during the first round of an encounter, unless they are commanded otherwise or you harm one of them. Thinking undead and Shades know exactly what you are.",
+    "source": "ancestry",
+    "belongsTo": "Returned",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

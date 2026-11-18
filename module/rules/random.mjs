@@ -19,6 +19,40 @@ export function pickRandom(list, rng = Math.random) {
 }
 
 /**
+ * How likely an ancestry is to be rolled by the Random character button
+ * (designer, GAPS 327): normal, or half as likely as a normal one (the
+ * ancestries of 4.3A Almanac of Ancestries).
+ */
+export const RANDOM_CHANCES = { normal: 1, half: 0.5 };
+
+/** The weight of a random chance; an unknown or missing one is normal. */
+export function chanceWeight(chance) {
+  return RANDOM_CHANCES[chance] ?? RANDOM_CHANCES.normal;
+}
+
+/**
+ * One entry of a list, each as likely as its weight: an entry of weight 0.5
+ * comes up half as often as one of weight 1. Entries of weight 0 or less
+ * never come up. All the same weight: the same as pickRandom.
+ * @param {Array} list
+ * @param {(entry: *) => number} weightOf
+ * @param {() => number} [rng]  A number from 0 up to (not including) 1.
+ * @returns {*} The entry, or null when nothing can come up.
+ */
+export function pickWeighted(list, weightOf, rng = Math.random) {
+  const weighted = (list ?? []).map(entry => ({ entry, weight: Math.max(0, Number(weightOf(entry)) || 0) }))
+    .filter(({ weight }) => weight > 0);
+  const total = weighted.reduce((sum, { weight }) => sum + weight, 0);
+  if (!weighted.length || !(total > 0)) return null;
+  let point = rng() * total;
+  for (const { entry, weight } of weighted) {
+    if (point < weight) return entry;
+    point -= weight;
+  }
+  return weighted.at(-1).entry;
+}
+
+/**
  * Each name once, so an ancestry or class that is both in the world and in
  * a compendium is not twice as likely (GAPS 256). The first one is kept.
  * @param {{name: string}[]} list
@@ -85,7 +119,9 @@ export function groupForRoll(roll, groups = IMPROVING_GROUPS) {
  */
 export const NAME_TABLE_CODES = {
   dragonkin: "Drag", dwarf: "Dwar", elf: "Elf0", gnome: "Gnom",
-  goblin: "Gobl", halfling: "Half", human: "Huma", orc: "Orc0"
+  goblin: "Gobl", halfling: "Half", human: "Huma", orc: "Orc0",
+  // The 4.3A Almanac of Ancestries (GAPS 327).
+  beastfolk: "Beas", automaton: "Auto", returned: "Retu", "dusk-touched": "Dusk"
 };
 
 /** The ancestry whose names are used when an ancestry has none. */

@@ -90,6 +90,9 @@
   <p class="hint">{{localize "VARBORG.Weapon.ZeroHint"}}</p>
 
   <div class="trait-flags">
+    <label data-tooltip="{{localize 'VARBORG.Weapon.CardDeckHint'}}">
+      <input type="checkbox" name="system.cardDeck" {{checked system.cardDeck}}> {{localize "VARBORG.Weapon.CardDeck"}}
+    </label>
     {{#if system.reload}}
     <label data-tooltip="{{localize 'VARBORG.Reload.LoadedHint'}}">
       <input type="checkbox" name="system.loaded" {{checked system.loaded}}> {{localize "VARBORG.Reload.Loaded"}}

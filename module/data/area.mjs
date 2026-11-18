@@ -1,12 +1,12 @@
 /**
- * The area of effect field shared by spells, scrolls and powers
- * (playtest feedback). The rules and the text reader are in
+ * The area of effect field shared by spells, scrolls, powers, gear and
+ * weapons (playtest feedback; gear and grenades, GAPS 314). The rules and the text reader are in
  * module/rules/areas.mjs and module/rules/lasting.mjs; placing an area on
  * the map is module/areas.mjs, and lasting areas module/lasting.mjs.
  */
 
 import { AREA_SHAPES, AREA_AFFECTS, DEFAULT_AREA_WIDTH } from "../rules/areas.mjs";
-import { LASTING_DURATIONS, LASTING_TRIGGERS, LASTING_KINDS } from "../rules/lasting.mjs";
+import { LASTING_DURATIONS, LASTING_TRIGGERS, LASTING_KINDS, isLastingRounds } from "../rules/lasting.mjs";
 import { CONDITIONS } from "../rules/conditions.mjs";
 import { DAMAGE_TYPES } from "../rules/equipment.mjs";
 import { FOE_CATEGORIES } from "../rules/foe.mjs";
@@ -54,6 +54,10 @@ export function areaField() {
     affects: new StringField({ required: true, choices: AREA_AFFECTS, initial: "all" }),
     // The user is caught too ("you included").
     includesUser: new BooleanField({ initial: false }),
+    // Gear and grenades: tossed with Agility DR12 to land (GAPS 314, module/rules/toss.mjs).
+    toss: new BooleanField({ initial: false }),
+    // A tossed area's size on a Success (and a Ruin); 0 for the same size on every result.
+    successSize: feet(0),
     // An area for each option that has its own (Songs of power): it takes
     // the place of the area above when that option is chosen.
     options: new ArrayField(new SchemaField({
@@ -67,11 +71,18 @@ export function areaField() {
     })),
     // An area that stays on the map after it is used (lingering areas).
     lasting: new SchemaField({
-      // "" while Sustained (or not at all), "rounds" or "encounter".
+      // "" while Sustained (or not at all), "rounds", "encounter" or
+      // "removed" (until the Dark Master removes it, GAPS 314).
       duration: new StringField({ required: true, blank: true, choices: LASTING_DURATIONS, initial: "" }),
-      rounds: new NumberField({ required: true, nullable: false, integer: true, min: 1, initial: 1 }),
+      // A number, or dice rolled when the area is placed ("d6", GAPS 314).
+      // Old areas stored a number; it is read as text.
+      rounds: new StringField({ required: true, initial: "1", validate: value => isLastingRounds(value) }),
       // Difficult terrain while it lasts.
       difficult: new BooleanField({ initial: false }),
+      // Gone after its first effect (a Bear trap, sprung, GAPS 314).
+      once: new BooleanField({ initial: false }),
+      // Only the Dark Master sees it on the map (a Bear trap, GAPS 314).
+      hidden: new BooleanField({ initial: false }),
       effects: new ArrayField(lastingEffectField())
     })
   });

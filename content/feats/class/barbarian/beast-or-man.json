@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/weapons/axes/axe-battle-black.webp",
   "system": {
-    "description": "Your strikes become as savage as a starving wolf's bite. Your unarmed attacks deal d6 damage. On a Triumph, the foe takes an additional d4 persistent bleeding damage.",
+    "description": "Your strikes become as savage as a starving wolf's bite. Your unarmed attacks deal d6 damage. On a Triumph, the foe takes an additional d4 persistent bleed damage.",
     "source": "class",
     "belongsTo": "Barbarian",
     "improving": false,
@@ -75,7 +75,7 @@
         "resist": "half",
         "gift": "",
         "setDamage": "",
-        "note": "a Triumph with an unarmed attack also deals d4 persistent bleeding damage"
+        "note": "a Triumph with an unarmed attack also deals d4 persistent bleed damage"
       }
     ],
     "automation": "partial"

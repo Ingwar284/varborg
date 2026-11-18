@@ -11,7 +11,7 @@
  * The two small orbs sit side by side to the left of the light orb.
  *
  * - Weather (small): today's weather on the hex flower, coloured as on the
- *   flower. Hidden when weather is switched off. Opens the Calendar panel.
+ *   flower. Hidden when weather is switched off. Opens the Overland panel.
  * - Time of day (small): morning, afternoon or night. Opens the Calendar
  *   panel.
  *

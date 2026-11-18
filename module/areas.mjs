@@ -14,14 +14,19 @@
  *    target. The usual card follows: one roll for all, one button each.
  * 3. An instant area leaves nothing on the map. A Sustained one stays as a
  *    Region (an emanation moves with its user) until the power ends; a
- *    lasting one (module/lasting.mjs) stays for its rounds or encounter.
+ *    lasting one (module/lasting.mjs) stays for its rounds or encounter,
+ *    or until the Dark Master removes it.
+ * Gear and thrown weapons have areas too (GAPS 314): a square is placed
+ * like a burst, on whole grid squares; a hidden area is seen only by the
+ * Dark Master.
  *
  * A user with no token on the scene targets by hand, as before.
  */
 
-import { CONE_ANGLE, isCaught, areaAffects, hasOptionAreas, areaForOption } from "./rules/areas.mjs";
+import { CONE_ANGLE, POINT_SHAPES, isCaught, areaAffects, hasOptionAreas, areaForOption } from "./rules/areas.mjs";
 import { tokenDistance } from "./rules/movement.mjs";
-import { areaStays, endsAtRound, effectsForOption } from "./rules/lasting.mjs";
+import { areaStays, endsAtRound, effectsForOption, roundsAreDice } from "./rules/lasting.mjs";
+import { postSmallCard } from "./chat-card.mjs";
 import { buffEffectsFor } from "./rules/outcomes.mjs";
 import { LASTING_TYPE, ENDS_FLAG } from "./lasting.mjs";
 import { AREA_COLOUR } from "./canvas/region.mjs";
@@ -76,6 +81,10 @@ function regionData(area, token, name) {
     case "wall":
       shape = { type: "rectangle", x: centre.x, y: centre.y, width: pixels(area.size), height: pixels(area.width), rotation: 0, gridBased: false };
       break;
+    // A square at a point (Caltrops, the Fire pot, GAPS 314): placed by its centre.
+    case "square":
+      shape = { type: "rectangle", x: centre.x, y: centre.y, width: pixels(area.size), height: pixels(area.size), anchorX: 0.5, anchorY: 0.5, rotation: 0, gridBased: false };
+      break;
     default:
       return null;
   }
@@ -103,18 +112,19 @@ function regionData(area, token, name) {
  * @param {Item} item  A spell, scroll or power with system.area.
  * @param {object} [chosen]
  * @param {string|null} [chosen.option]  The option chosen in the dialog; undefined before it.
+ * @param {object} [chosen.area]  An area to aim instead of the item's own (a toss's, GAPS 314).
  * @returns {Promise<{go: boolean, region: object|null}>}
  *   go: false when the player cancelled; region: the placed Region's data,
  *   to keep on the map if the power is Sustained.
  */
-export async function aimArea(actor, item, { option } = {}) {
+export async function aimArea(actor, item, { option, area: given } = {}) {
   const itemArea = item.system.area;
-  const byOption = hasOptionAreas(itemArea);
+  const byOption = !given && hasOptionAreas(itemArea);
   // Before the dialog, an item with option areas waits for the option.
   if (byOption && option === undefined) return { go: true, region: null };
   // After it, only an item with option areas is aimed (the others were aimed already).
-  if (!byOption && option !== undefined) return { go: true, region: null };
-  const area = byOption ? areaForOption(itemArea, option) : itemArea;
+  if (!byOption && !given && option !== undefined) return { go: true, region: null };
+  const area = given ?? (byOption ? areaForOption(itemArea, option) : itemArea);
   if (!area?.shape || !canvas.ready) return { go: true, region: null };
   const i18n = game.i18n;
   const token = userToken(actor);
@@ -132,10 +142,10 @@ export async function aimArea(actor, item, { option } = {}) {
     ui.notifications.info(i18n.format("VARBORG.Area.Aim", { name: item.name }));
     doc = await canvas.regions.placeRegion(data, {
       create: false,
-      // A wall turns with the mouse wheel; a cone or line turns toward the mouse.
+      // A wall turns with the mouse wheel; a cone or line turns toward the mouse; a square fills whole squares.
       allowRotation: area.shape === "wall",
-      onMove: ["cone", "line"].includes(area.shape) ? pointFrom(token) : undefined,
-      preConfirm: area.shape === "burst" && area.range > 0 ? withinRange(token, area.range) : undefined
+      onMove: ["cone", "line"].includes(area.shape) ? pointFrom(token) : area.shape === "square" ? onSquares(area.size) : undefined,
+      preConfirm: POINT_SHAPES.includes(area.shape) && area.range > 0 ? withinRange(token, area.range) : undefined
     });
     // Placing an area switches to the Region layer: go back to the tokens.
     canvas.tokens.activate();
@@ -148,6 +158,37 @@ export async function aimArea(actor, item, { option } = {}) {
   return { go: true, region: { ...doc.toObject(), _tokenId: token.id, _area: area, _option: option ?? "" } };
 }
 
+/**
+ * A tossed area where it lands (GAPS 314): a burst or square at a point,
+ * or at the thrower's feet. Every creature it catches becomes a target.
+ * @param {Actor} actor
+ * @param {object} area           The area, with the size it landed at.
+ * @param {string} name
+ * @param {{x: number, y: number}|null} point  Where it was aimed; null for the thrower's feet.
+ * @returns {object|null}  The Region's data, as aimArea gives it (for keepArea), with `caught`: the tokens caught.
+ */
+export function landArea(actor, area, name, point) {
+  if (!canvas.ready) return null;
+  const token = userToken(actor);
+  if (!token) return null;
+  const data = regionData(area, token, name);
+  if (!data) return null;
+  const at = point ?? token.center;
+  data.shapes[0] = { ...data.shapes[0], x: at.x, y: at.y };
+  const doc = new CONFIG.Region.documentClass(data, { parent: canvas.scene });
+  // A Ruin at the thrower's feet catches the thrower too.
+  const caughtArea = point ? area : { ...area, includesUser: true };
+  const caught = caughtTokens(doc, token, caughtArea);
+  canvas.tokens.setTargets(caught.map(other => other.id), { mode: "replace" });
+  return { ...doc.toObject(), _tokenId: token.id, _area: caughtArea, _option: "", caught };
+}
+
+/** The point a placed area was aimed at: its shape's centre. */
+export function aimedPoint(region) {
+  const shape = region?.shapes?.[0];
+  return shape ? { x: shape.x, y: shape.y } : null;
+}
+
 /** onMove for a cone or line: it starts at the user and points at the mouse. */
 function pointFrom(token) {
   return ({ shape, position }) => {
@@ -158,7 +199,23 @@ function pointFrom(token) {
   };
 }
 
-/** preConfirm for a burst: its point no further than the range from the user. */
+/**
+ * onMove for a square: it covers whole grid squares. An odd number of
+ * squares across is centred on a square's centre, an even number on a
+ * corner. On a gridless scene it follows the mouse.
+ */
+function onSquares(size) {
+  return ({ shape, position, snap }) => {
+    if (!snap || canvas.grid.isGridless) return true;
+    const across = Math.max(1, Math.round(size / canvas.grid.distance));
+    const M = CONST.GRID_SNAPPING_MODES;
+    const { x, y } = canvas.grid.getSnappedPoint(position, { mode: across % 2 ? M.CENTER : M.VERTEX });
+    shape.updateSource({ x, y });
+    return false;
+  };
+}
+
+/** preConfirm for a burst or square: its point no further than the range from the user. */
 function withinRange(token, range) {
   return ({ shape }) => {
     const feet = tokenDistance({
@@ -226,9 +283,21 @@ export async function keepArea(actor, item, region, tier) {
   const flags = {};
   if (sustaining) flags[SOURCE_FLAG] = `${actor.uuid}|${item.id}`;
   else if (lasting.duration === "rounds" || lasting.duration === "encounter") {
-    flags[ENDS_FLAG] = { combatId: combat?.id ?? "", endsAtRound: endsAtRound(lasting, combat?.round ?? 1), encounter: lasting.duration === "encounter" };
+    // Rounds as dice ("for d6 rounds", GAPS 314) are rolled now, and said in chat.
+    let rolled;
+    if (lasting.duration === "rounds" && roundsAreDice(lasting.rounds)) {
+      const roll = await new Roll(String(lasting.rounds)).evaluate().catch(() => null);
+      if (roll) {
+        rolled = Math.max(1, roll.total);
+        await postSmallCard(actor, [game.i18n.format("VARBORG.Area.Lasting.RoundsRolled", { area: item.name, rounds: rolled, formula: lasting.rounds })], { rolls: [roll], sound: CONFIG.sounds.dice });
+      }
+    }
+    flags[ENDS_FLAG] = { combatId: combat?.id ?? "", endsAtRound: endsAtRound(lasting, combat?.round ?? 1, rolled), encounter: lasting.duration === "encounter" };
   }
+  // "Until removed" (Caltrops) has no end: the Dark Master deletes the Region.
   data.flags = { ...(data.flags ?? {}), [SYSTEM]: flags };
+  // Hidden from the players (a Bear trap, GAPS 314).
+  if (lasting.hidden) data.visibility = CONST.REGION_VISIBILITY.GAMEMASTER;
   if (area.shape === "emanation" && _tokenId) {
     data.attachment = { token: _tokenId };
     data.hidden = Boolean(canvas.scene.tokens.get(_tokenId)?.hidden);
@@ -248,6 +317,8 @@ export async function keepArea(actor, item, region, tier) {
       userUuid: actor.uuid, userTokenId: _tokenId ?? "", name: item.name, damageType: item.system.damageType ?? "",
       option: _option,
       includesUser: Boolean(area.includesUser),
+      // Gone after its first effect (a Bear trap, sprung).
+      once: Boolean(lasting.once),
       // What the buff does, from the chosen option's note ("allies in the area defend with -2 DR").
       buffNote: (item.system.outcomeEffects ?? []).find(entry => entry.note && (entry.option ?? "") === _option)?.note ?? "",
       buffEffects: buffEffectsFor(foundry.utils.deepClone(item.toObject().system.buffEffects ?? []), _option)

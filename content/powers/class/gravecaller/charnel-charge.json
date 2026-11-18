@@ -12,6 +12,7 @@
     "actions": 2,
     "ability": "sanity",
     "damage": "d12",
+    "damageType": "bludgeoning",
     "addsWeaponDamage": false,
     "sustained": false,
     "reaction": false,

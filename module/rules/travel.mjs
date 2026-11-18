@@ -17,17 +17,31 @@
  *   shown with their tag; in the Heartlands the Dark Master rolls again or
  *   picks the nearest fit.
  * - Omens: with the light die (basic rules 1.5), both Omen results show
- *   the omen of the current Misery. With Omens of Misery (GAPS 307),
- *   omenRandom moves a live Misery picked by a roll and omenNearest one
- *   picked by the Dark Master (module/misery.mjs).
+ *   the omen of the current Misery. With Omens of Misery (GAPS 307, 309),
+ *   11-12 is Omen (new): a new omen of the newest Misery starts, or the
+ *   next Misery comes when due; 13-16 is Omen (ongoing): a live omen
+ *   picked by a roll moves one stage on (module/misery.mjs).
+ *
+ * Designer rulings (GAPS 309):
+ * - Speed is counted in hexes: a phase of Trek moves the party 1 hex.
+ *   Gallop (x2) needs suitable mounts and can be used once between long
+ *   rests; Cruise (x3) needs a suitable vehicle or circumstances.
+ * - Four regions: Emberglow, the Heartlands, the Hinterlands and the
+ *   Darklands. The Hinterlands and the Darklands roll the encounter table
+ *   with Boon. A Scenery result rolls a d100 read-aloud line of the region.
+ * - Provisional (GAPS 310): in Emberglow, Hinterlands, mountain and fen hardships do
+ *   not fit; in the Hinterlands and the Darklands every hardship fits.
  */
 
 import { MODE, diceFormula } from "./test-roll.mjs";
 
-/** The travel methods and their speed. */
+/** The travel methods and their speed, in hexes per phase. */
 export const METHODS = { trek: 1, gallop: 2, cruise: 3 };
 
-export const REGIONS = ["heartlands", "hinterlands"];
+export const REGIONS = ["emberglow", "heartlands", "hinterlands", "darklands"];
+
+/** The regions whose encounter roll has Boon. */
+const BOON_REGIONS = new Set(["hinterlands", "darklands"]);
 
 /** The d20 encounter table: the highest result of each row. */
 export const ENCOUNTERS = [
@@ -35,8 +49,8 @@ export const ENCOUNTERS = [
   { upTo: 5, key: "uneventful" },
   { upTo: 8, key: "scenery" },
   { upTo: 10, key: "hardship" },
-  { upTo: 12, key: "omenRandom" },
-  { upTo: 16, key: "omenNearest" },
+  { upTo: 12, key: "omenNew" },
+  { upTo: 16, key: "omenOngoing" },
   { upTo: 17, key: "easy" },
   { upTo: 19, key: "standard" },
   { upTo: 20, key: "hard" }
@@ -74,16 +88,24 @@ export const HARDSHIPS = [
 
 export const HARDSHIP_DIE = "1d20";
 
-/** Places that do not suit the Heartlands ("roll again or pick the nearest fit"). */
-const NOT_HEARTLANDS = new Set(["hinterlands", "mountains"]);
+export const SCENERY_DIE = "1d100";
+
+/** How many read-aloud Scenery lines each region has. */
+export const SCENERY_LINES = 100;
+
+/** Places that do not suit each region ("roll again or pick the nearest fit"). */
+const MISFITS = {
+  emberglow: new Set(["hinterlands", "mountains", "fens"]),
+  heartlands: new Set(["hinterlands", "mountains"])
+};
 
 /**
- * Whether the encounter roll has Boon: by night, or in the Hinterlands.
- * Both together are still one Boon.
+ * Whether the encounter roll has Boon: by night, or in the Hinterlands or
+ * the Darklands. Both together are still one Boon.
  * @param {{phase: string, region: string}} travel
  */
 export function hasBoon({ phase, region }) {
-  return phase === "night" || region === "hinterlands";
+  return phase === "night" || BOON_REGIONS.has(region);
 }
 
 /** The encounter dice: "2d20kh" with Boon, otherwise "1d20". */
@@ -103,7 +125,7 @@ export function encounterFor(roll) {
 
 /** Whether an encounter result is an Omen. */
 export function isOmen(key) {
-  return key === "omenRandom" || key === "omenNearest";
+  return key === "omenNew" || key === "omenOngoing";
 }
 
 /**
@@ -119,7 +141,21 @@ export function hardshipFor(roll) {
 
 /** Whether a hardship does not suit the region (the Dark Master may roll again). */
 export function misfits(hardship, region) {
-  return region === "heartlands" && NOT_HEARTLANDS.has(hardship.place);
+  return !!MISFITS[region]?.has(hardship.place);
+}
+
+/** Whether a method can be used now: Gallop only if not used since the last Long rest. */
+export function canUse(method, { gallopUsed = false } = {}) {
+  return method !== "gallop" || !gallopUsed;
+}
+
+/** The overland state saved in the world, made safe. */
+export function cleanOverland(state) {
+  return {
+    region: cleanRegion(state?.region),
+    method: cleanMethod(state?.method),
+    gallopUsed: state?.gallopUsed === true
+  };
 }
 
 /** A method or region made safe (the first one if unknown). */

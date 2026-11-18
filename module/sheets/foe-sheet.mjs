@@ -14,6 +14,7 @@ import { GLOOM_ACTIONS } from "../rules/gloom.mjs";
 import { rollMorale } from "../dice/morale.mjs";
 import { canRollMorale } from "../rules/morale.mjs";
 import { sheetConditions, activateConditionControls } from "../conditions.mjs";
+import { sheetEffects, activateEffectControls } from "../ongoing.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { onPostItem } from "../item-chat.mjs";
 
@@ -95,6 +96,7 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, frequency: hasLimitedUse(item) ? frequencyLabel(item) : "", ...useButton(item) }));
     context.conditions = sheetConditions(actor);
+    context.effects = sheetEffects(actor);
     return context;
   }
 
@@ -102,6 +104,7 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
     activateConditionControls(this.element, this.document);
+    activateEffectControls(this.element, this.document);
   }
 
   /** Morale "–" comes from the menu as "", which is saved as nothing (null). */

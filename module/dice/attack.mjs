@@ -59,6 +59,9 @@ import { powerOutcomeText, powerOutcomeLines, applySustain, powerCardOutcome } f
 import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { weaponCoat, poisonFromHit } from "../poison.mjs";
+import { tossesItem, tossItem } from "../toss.mjs";
+import { isDeckWeapon, deckCount, drawFromDeck, cardName, jokerBite, cardFeats, useSleeveAce, askWildCard, cardOutcomeEntries, cardAttackOutcomes } from "../cards.mjs";
+import { cardDie, isJoker, cardHitEffects, SLEEVE_ACE } from "../rules/cards.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -73,11 +76,23 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/attack-card.hbs";
  * @param {Item} item    The weapon.
  */
 export async function rollAttack(actor, item, { spendPips = true } = {}) {
+  // A character's grenade is tossed, not attacked with (GAPS 314, module/toss.mjs).
+  if (tossesItem(actor, item)) return tossItem(actor, item);
   const i18n = game.i18n;
   // After the owner's feats: Brawler, Long shot (step 50a3).
   const weapon = effectiveWeapon(item);
   if (needsReload(weapon) && !canFire(weapon)) {
     ui.notifications.warn(i18n.format("VARBORG.Attack.Empty", { name: item.name }));
+    return;
+  }
+  // A deck of cards with none left must be shuffled first (Razor deck, GAPS 318).
+  const deck = isDeckWeapon(item);
+  const count = deck ? deckCount(item) : null;
+  // Court cards, Wild card, Ace up the sleeve, The blue knave, Marked suit (step 69b3a).
+  const cardFeatsHad = deck ? cardFeats(actor) : null;
+  // An empty deck can still throw the ace up the sleeve.
+  if (count && !count.left && !cardFeatsHad.sleeveAce) {
+    ui.notifications.warn(i18n.format(count.missing ? "VARBORG.Cards.NoCardsDeck" : "VARBORG.Cards.DeckEmpty", { name: item.name }));
     return;
   }
 
@@ -100,7 +115,11 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     targetStatuses: [...(target?.statuses ?? [])], targetUuid: target?.uuid ?? ""
   });
   const optionalEffects = await optionalEffectsField(optional);
-  const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
+  const options = await askAttackOptions(actor, item, {
+    turn, attacksBefore, target, ruined, optionalEffects,
+    // Ace up the sleeve: offered while unused; with an empty deck it is the only card (step 69b3a).
+    sleeveAce: cardFeatsHad?.sleeveAce ? { forced: !count.left } : null
+  });
   if (!options) return;
   const { mode, ability } = options;
 
@@ -134,6 +153,22 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   if (mode === "shoot" && needsReload(weapon)) await item.update({ "system.loaded": false });
   if (mode === "shoot") await markFired(actor, item);
 
+  // A deck draws its top card as you throw, and the card sets the damage
+  // (Razor deck). It stays the card if Fortune rerolls the attack. A Joker
+  // bites the thrower whatever the result (provisional, GAPS 321).
+  // Ace up the sleeve replaces the draw, once per encounter (step 69b3a).
+  const sleeve = Boolean(cardFeatsHad?.sleeveAce && (options.data.sleeveAce || !count.left));
+  if (sleeve) await useSleeveAce(cardFeatsHad.sleeveAce);
+  const drawn = sleeve ? SLEEVE_ACE : deck ? await drawFromDeck(item) : null;
+  // Wild card: a Joker may be named as any other card, and then does not bite.
+  const named = drawn && isJoker(drawn) && cardFeatsHad.wildCard ? await askWildCard() : "";
+  const card = named || drawn;
+  const bite = card && isJoker(card) ? await jokerBite(actor) : null;
+  const cardLabel = named ? i18n.format("VARBORG.Cards.NamedJoker", { card: cardName(named) }) : card ? cardName(card) : "";
+  const cardDieUsed = card ? cardDie(card, { courtCards: cardFeatsHad.courtCards }) : "";
+  // The blue knave and Marked suit: what the card does on a hit, as notes.
+  const hitNotes = card ? cardHitEffects(card, cardFeatsHad).map(key => i18n.format("VARBORG.Cards.OnHit", { text: i18n.localize(`VARBORG.Cards.Effect.${key}`) })) : [];
+
   // Action and reaction pips, and the count for the multiple-attack Bane.
   let pipNote = null;
   // A thrall's attack: the thrall's own actions pay, but it counts toward
@@ -152,6 +187,10 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const title = i18n.format("VARBORG.Attack.CardTitle", { name: item.name });
   const notes = [
+    card ? i18n.format("VARBORG.Cards.Drew", { card: cardLabel, die: cardDieUsed, left: deckCount(item).left }) : null,
+    sleeve ? i18n.localize("VARBORG.Cards.SleeveAceUsed") : null,
+    bite?.line,
+    ...hitNotes,
     extraDr ? drNote(weapon, options.oneHanded) : null,
     automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
@@ -167,7 +206,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   // Everything the card needs that Fortune cannot change.
   // An item effect can replace the weapon's dice (Couched Lance, step 50c).
   const setDamage = conditions.own.findLast(mod => mod.setDamage)?.setDamage;
-  const formula = setDamage || damageFormula(weapon.damage, options.beyondRange);
+  const weaponDie = card ? cardDieUsed : weapon.damage;
+  const formula = setDamage || damageFormula(weaponDie, options.beyondRange);
   const foe = target?.type === "foe" ? target : null;
   const inputs = {
     formula: `${diceFormula(diceRule)} + @ability`,
@@ -177,7 +217,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     damageFormula: isDamageFormula(formula) ? withExtraDamage(formula, conditions.own) : null,
     // Extra damage only on a Triumph, added after doubling (Holy smite, step 51a).
     triumphDamage: triumphDamage(conditions.own),
-    weaponDamage: weapon.damage,
+    weaponDamage: weaponDie,
     // The weapon's damage type, for the foe's resistances (step 52a).
     damageType: weapon.damageType ?? "",
     // A melee hit, for the foe's retaliation passives (step 52b).
@@ -190,6 +230,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     foe: foe ? { uuid: foe.uuid, name: foe.name, armourBefore: foe.system.armour } : null,
     // Several targets: one button each (playtest feedback).
     area: several,
+    // The conditions a deck attack's card gives its one target (step 69b3c).
+    outcomes: card && !several ? cardAttackOutcomes(actor, item, cardOutcomeEntries(cardHitEffects(card, cardFeatsHad))) : null,
     areaDamageType: weapon.damageType ?? "",
     attackName: item.name,
     context: {
@@ -201,7 +243,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
       abilityLabel,
       drNote: dr !== options.dr ? i18n.format("VARBORG.Attack.DRFrom", { dr: options.dr }) : null,
       notes,
-      thrownNote: mode === "throw" ? i18n.localize("VARBORG.Attack.Retrieve") : null,
+      // A deck never needs retrieving: the next card is drawn.
+      thrownNote: mode === "throw" && !deck ? i18n.localize("VARBORG.Attack.Retrieve") : null,
       pipNote
     }
   };
@@ -213,7 +256,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     speaker: ChatMessage.getSpeaker({ actor }),
     flavor: title,
     content,
-    rolls: [roll, ...rolls],
+    rolls: [roll, ...(bite ? [bite.roll] : []), ...rolls],
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
@@ -307,6 +350,33 @@ export async function settleAttackCard(actor, data) {
     }
   }
 
+  // Cards thrown at several foes, each with its own damage (Deal the table,
+  // Royal flush, step 69b3b): one roll per foe, kept through Fortune.
+  const perTarget = {};
+  if (outcome.hit && inputs.perTarget) {
+    if (!state.perTarget) {
+      state.perTarget = [];
+      for (const entry of inputs.perTarget) {
+        if (!entry.formula) { state.perTarget.push(0); continue; }
+        const perRoll = await new Roll(entry.formula).evaluate({ maximize: state.maximized });
+        rolls.push(perRoll);
+        state.perTarget.push(perRoll.total);
+      }
+    }
+    inputs.perTarget.forEach((entry, i) => {
+      if (entry.formula) perTarget[entry.uuid] = powerDamage(state.perTarget[i] ?? 0, tier);
+    });
+    damage = {
+      formula: i18n.localize("VARBORG.Cards.PerTarget"),
+      rolled: inputs.perTarget.filter(entry => entry.formula).map(entry => `${entry.name} ${entry.formula}`).join(", "),
+      total: inputs.perTarget.filter(entry => entry.formula)
+        .map(entry => i18n.format("VARBORG.Cards.DamageEach", { name: entry.name, total: perTarget[entry.uuid] })).join(", "),
+      doubled: false,
+      halved: false,
+      maximized: state.maximized
+    };
+  }
+
   // A Ruin leaves you with Bane on attacks until you Recover (rules 3.4).
   const nowRuined = power ? Boolean(inputs.ruinedBefore) : ruinedAfterAttack(inputs.ruinedBefore, tier);
   if (nowRuined !== (applied.ruin ?? inputs.ruinedBefore)) await actor.update({ "system.attackRuin": nowRuined });
@@ -342,7 +412,8 @@ export async function settleAttackCard(actor, data) {
   // A Sustained power starts when it takes effect.
   const sustainNote = power ? await applySustain(actor, data, tier) : null;
   // What the result gives its targets and user, following Fortune (GAPS 219).
-  const given = power ? await settleOutcomes(data, tier, { damage: damage && !damage.invalid ? damage.total : 0 }) : { lines: [], rolls: [] };
+  // A deck attack's card can give conditions too (step 69b3c).
+  const given = power || inputs.outcomes ? await settleOutcomes(data, tier, { damage: damage && !damage.invalid ? damage.total : 0 }) : { lines: [], rolls: [] };
   rolls.push(...given.rolls);
 
   // Inflict damage on a foe. A Triumph's hit is soaked by the armour die
@@ -353,9 +424,9 @@ export async function settleAttackCard(actor, data) {
   if (damage && !damage.invalid && inputs.area) {
     area = {
       hint: i18n.localize(power ? "VARBORG.Area.Hint" : "VARBORG.Attack.SeveralHint"),
-      foes: inputs.area.foes.map(target => ({
+      foes: inputs.area.foes.filter(target => !inputs.perTarget || target.uuid in perTarget).map(target => ({
         key: target.uuid,
-        damage: damage.total,
+        damage: perTarget[target.uuid] ?? damage.total,
         foeUuid: target.uuid,
         armour: inputs.ignoresArmour ? "" : target.armour,
         attack: inputs.attackName,
@@ -366,15 +437,15 @@ export async function settleAttackCard(actor, data) {
         weaponTags: inputs.power?.kind === "spell" ? "spell,area" : inputs.power ? "area" : (inputs.weaponTags ?? []).join(","),
         melee: !power && Boolean(inputs.melee),
         triumph: !power && tier === "triumph",
-        label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: damage.total, name: target.name })
+        label: i18n.format("VARBORG.FoeDamage.InflictOn", { damage: perTarget[target.uuid] ?? damage.total, name: target.name })
       })),
-      defenders: inputs.area.defenders.map(target => ({
+      defenders: inputs.area.defenders.filter(target => !inputs.perTarget || target.uuid in perTarget).map(target => ({
         uuid: target.uuid,
-        damage: damage.total,
+        damage: perTarget[target.uuid] ?? damage.total,
         name: inputs.attackName,
         casterUuid: actor.uuid,
         damageType: inputs.areaDamageType ?? "",
-        label: i18n.format("VARBORG.Area.DefendAs", { name: target.name, damage: damage.total })
+        label: i18n.format("VARBORG.Area.DefendAs", { name: target.name, damage: perTarget[target.uuid] ?? damage.total })
       }))
     };
   } else if (damage && !damage.invalid && inputs.inflicts) {
@@ -495,7 +566,7 @@ function attackConditions(actor, target, mode, ability, item) {
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
  *   dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
-async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "" }) {
+async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "", sleeveAce = null }) {
   const i18n = game.i18n;
   // After the owner's feats: Brawler, Long shot (step 50a3).
   const weapon = effectiveWeapon(item);
@@ -542,6 +613,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
     reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]), weaponId: item.id, damageType: weapon.damageType ?? "" })],
     optionalEffects,
+    sleeveAce,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")
   });

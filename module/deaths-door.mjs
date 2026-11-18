@@ -224,10 +224,11 @@ async function applyResult(actor, id) {
     rolls.push(partRoll);
     const part = bodyPart(partRoll.total);
     await actor.createEmbeddedDocuments("ActiveEffect", [{
+      type: "bodyPart",
       name: i18n.format("VARBORG.DeathsDoor.Lost", { part: partName(part) }),
       img: BODY_PART_ICON,
       description: i18n.localize("VARBORG.DeathsDoor.LostText"),
-      flags: { [SYSTEM]: { bodyPart: { part } } }
+      system: { part }
     }]);
     lines.push(i18n.format("VARBORG.DeathsDoor.BodyPart", { roll: partRoll.total, part: partName(part) }));
   }
@@ -455,7 +456,7 @@ function addDeathsDoorCardListeners(message, html) {
   }
 }
 
-/** The Death's Door part of a character's Conditions section, or null for a foe. */
+/** The Death's Door part of a character's Effects tab, or null for a foe. */
 export function sheetDeathsDoor(actor) {
   if (actor.type !== "character") return null;
   const i18n = game.i18n;
@@ -472,13 +473,11 @@ export function sheetDeathsDoor(actor) {
     isGM: game.user.isGM,
     status,
     canRoll: state?.stage === "roll",
-    canWake: state?.stage === "waking" && game.user.isGM,
-    lostParts: actor.effects.filter(effect => effect.getFlag(SYSTEM, "bodyPart"))
-      .map(effect => ({ id: effect.id, img: effect.img, label: effect.name, text: effect.description }))
+    canWake: state?.stage === "waking" && game.user.isGM
   };
 }
 
-/** The sheet's Death's Door controls. Called from activateConditionControls. */
+/** The Effects tab's Death's Door controls. Called from activateConditionControls. */
 export function activateDeathsDoorControls(element, actor) {
   element.querySelector("[data-roll-deaths-door]")?.addEventListener("click", async event => {
     if (stateOf(actor)?.stage !== "roll") return;
@@ -492,7 +491,4 @@ export function activateDeathsDoorControls(element, actor) {
       if (now?.stage === "waking") await wake(actor, now.wakeHp);
     });
   });
-  for (const button of element.querySelectorAll("[data-remove-part]")) {
-    button.addEventListener("click", () => actor.effects.get(button.dataset.removePart)?.delete());
-  }
 }

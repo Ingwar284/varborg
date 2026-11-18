@@ -13,7 +13,7 @@
     "reaction": false,
     "outcomes": {
       "triumph": "As Success, 2x damage, and the creature breaks free only on 14 or higher.",
-      "success": "The creature takes d6 damage and is Restrained. At the end of each of its turns, it tries to break free (for a foe, the Dark Master rolls a d20 and it breaks free on 12 or higher; a player character tests Strength DR12). Each failed attempt deals d4 radiant damage.",
+      "success": "The creature takes d6 damage and is Restrained. At the end of each of its turns, it tries to break free (for a foe, the Dark Master rolls a d20 and it breaks free on 12 or higher; a player character tests Strength DR12). Each failed attempt deals d4 light damage.",
       "failure": "Half damage, and the creature is not Restrained.",
       "ruin": "The chains know your sins too: you are Restrained until the end of your next turn. Roll on the Shadowblight table."
     },
@@ -44,7 +44,7 @@
         "nextOnly": false,
         "test": false,
         "whileSustained": false,
-        "note": "each failed attempt deals d4 radiant damage"
+        "note": "each failed attempt deals d4 light damage"
       },
       {
         "kind": "condition",
@@ -68,7 +68,7 @@
         "nextOnly": false,
         "test": false,
         "whileSustained": false,
-        "note": "each failed attempt deals d4 radiant damage"
+        "note": "each failed attempt deals d4 light damage"
       },
       {
         "kind": "condition",

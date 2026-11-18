@@ -23,6 +23,32 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "automation": "text"
+    "automation": "partial",
+    "outcomeEffects": [
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "stupefied",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "for the hour"
+      }
+    ]
   }
 }

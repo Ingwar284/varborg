@@ -106,6 +106,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "d6",
+        "damageType": "mental",
         "ruinDamage": "d8",
         "conditions": {
           "failure": "stupefied",
@@ -142,7 +143,7 @@
       "type": "power",
       "img": "icons/svg/terror.svg",
       "system": {
-        "description": "It retches up a whirl of razor-edged pages. Every creature within 15' of it tests Agility DR13. Failure 2d4 damage and d4 persistent bleeding damage. Ruin 2d6 damage and d6 persistent bleeding damage.",
+        "description": "It retches up a whirl of razor-edged pages. Every creature within 15' of it tests Agility DR13. Failure 2d4 damage and d4 persistent bleed damage. Ruin 2d6 damage and d6 persistent bleed damage.",
         "source": "class",
         "belongsTo": "",
         "resource": "gloom",
@@ -151,6 +152,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d4",
+        "damageType": "slashing",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "",
@@ -172,8 +174,8 @@
         "outcomes": {
           "triumph": "",
           "success": "",
-          "failure": "2d4 damage and d4 persistent bleeding damage.",
-          "ruin": "2d6 damage and d6 persistent bleeding damage."
+          "failure": "2d4 damage and d4 persistent bleed damage.",
+          "ruin": "2d6 damage and d6 persistent bleed damage."
         },
         "sustaining": false,
         "kept": false,

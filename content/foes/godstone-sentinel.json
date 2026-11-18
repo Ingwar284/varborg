@@ -188,6 +188,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "force",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "",
@@ -233,6 +234,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "force",
         "ruinDamage": "4d6",
         "conditions": {
           "failure": "",

@@ -35,6 +35,7 @@ import { runItemHooks, REST_GUARD_FLAG } from "./effects.mjs";
 import { fortuneFormula } from "./rules/item-effects.mjs";
 import { resetAndAnnounce } from "./uses.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { gallopReady } from "./travel.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -98,8 +99,9 @@ export async function rest() {
     await restFor(actor, kind, ateAndDrank, tiers.get(actor.id) ?? null);
   }
 
-  // 3. Any rest unlocks ember abilities.
+  // 3. Any rest unlocks ember abilities. A Long rest makes Gallop ready again (GAPS 309).
   await resetEmberAbilities(resting);
+  if (isLongRest(kind)) await gallopReady();
 
   // 4. New days. Characters left out of the rest count as fed and rested.
   const days = daysPassed(kind);
@@ -243,7 +245,7 @@ async function restFor(actor, kind, ate, interruptionTier) {
  */
 async function clearConditions(actor) {
   const gone = actor.effects.filter(effect => {
-    if (effect.getFlag(SYSTEM, "agony")) return false;
+    if (effect.type === "injury") return false;
     const statuses = [...effect.statuses].filter(id => id !== "fatigued");
     if (!statuses.length) return false;
     return downtimeRemoves(statuses).length === statuses.length;

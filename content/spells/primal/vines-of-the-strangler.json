@@ -9,6 +9,7 @@
     "cost": 3,
     "actions": 2,
     "damage": "d4",
+    "damageType": "bludgeoning",
     "sustained": true,
     "reaction": false,
     "outcomes": {

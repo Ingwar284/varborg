@@ -16,6 +16,40 @@
     "lightMinutes": 60,
     "lightRange": 40,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "area": {
+      "shape": "square",
+      "size": 5,
+      "range": 5,
+      "width": 5,
+      "affects": "all",
+      "includesUser": true,
+      "toss": false,
+      "successSize": 0,
+      "options": [],
+      "lasting": {
+        "duration": "removed",
+        "rounds": "1",
+        "difficult": false,
+        "once": false,
+        "hidden": false,
+        "effects": [
+          {
+            "trigger": "enter",
+            "kind": "damage",
+            "formula": "d4",
+            "damageType": "piercing",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": [],
+            "option": ""
+          }
+        ]
+      }
+    }
   }
 }

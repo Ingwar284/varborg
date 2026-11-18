@@ -15,7 +15,8 @@
  * The list itself comes from module/ongoing.mjs.
  */
 
-import { allOngoing, changeOngoing } from "./ongoing.mjs";
+import { actorEffects, changeOngoing } from "./ongoing.mjs";
+import { clickHint } from "./rules/effect-kinds.mjs";
 import { ongoingOpen, setOngoingOpen } from "./settings.mjs";
 
 const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
@@ -50,17 +51,21 @@ export class OngoingPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     const open = ongoingOpen();
     const i18n = game.i18n;
     const canChange = Boolean(actor?.isOwner);
-    // What the clicks do, added to each entry's tooltip.
+    // What the clicks do, shown in each entry's tooltip.
     const hintFor = entry => {
-      if (!canChange || !(entry.up || entry.down)) return "";
-      if (["cover", "light"].includes(entry.kind)) return i18n.localize(`VARBORG.Ongoing.Hint.${entry.kind}`);
-      return i18n.localize(entry.up ? "VARBORG.Ongoing.Hint.both" : "VARBORG.Ongoing.Hint.remove");
+      const key = canChange ? clickHint(entry) : "";
+      return key ? i18n.localize(`VARBORG.Ongoing.Hint.${key}`) : "";
     };
     return {
       shown: Boolean(actor),
       name: actor?.name ?? "",
       open,
-      entries: actor ? allOngoing(actor).map(entry => ({ ...entry, hint: hintFor(entry), clickable: Boolean(hintFor(entry)) })) : []
+      entries: actor ? actorEffects(actor).map(entry => ({
+        ...entry,
+        tagLabel: entry.tag ? i18n.localize(`VARBORG.Ongoing.Tag.${entry.tag}`) : "",
+        hint: hintFor(entry),
+        clickable: Boolean(hintFor(entry))
+      })) : []
     };
   }
 

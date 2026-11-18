@@ -112,3 +112,26 @@ export function weatherPlaylistPlan({ labels, weather, playlists }) {
     .map(p => p.id);
   return { play: match && !match.playing ? match.id : null, stop };
 }
+
+/**
+ * The playlists the "Create weather playlists" button makes: one per
+ * weather effect that has no playlist yet, named as in the Weather menu
+ * but without "VÅR BORG: " ("Silt rain", "Rain"), in the order given.
+ * @param {object} options
+ * @param {Object<string, string>} options.labels  Every weather effect: id → name in the Weather menu.
+ * @param {string[]} options.playlistNames         The names of the world's playlists.
+ * @returns {string[]} The names of the playlists to create.
+ */
+export function missingWeatherPlaylists({ labels, playlistNames }) {
+  const taken = new Set(playlistNames.map(sameName));
+  const missing = [];
+  for (const label of Object.values(labels)) {
+    const names = playlistNamesFor(label);
+    if (names.some(name => taken.has(name))) continue;
+    const name = label.startsWith(LABEL_PREFIX) ? label.slice(LABEL_PREFIX.length).trim() : label.trim();
+    if (!name) continue;
+    missing.push(name);
+    names.forEach(n => taken.add(n));
+  }
+  return missing;
+}

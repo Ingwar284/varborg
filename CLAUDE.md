@@ -28,6 +28,8 @@ language. Work in small steps and tell me how to test each one in Foundry.
 ## Project documents
 - PLAN.md: the build plan, milestones and what was built after them.
 - GAPS.md: every rules question and its ruling, numbered.
+- UNTYPED_DAMAGE_REVIEW.md: the types given to untyped damage (GAPS 313,
+  17 November 2026); the designer checks the judgement calls.
 - REVIEW.md, DAMAGE_TYPES_REVIEW.md: one-off reviews (14 and 15 November
   2026); check their status before acting on them.
 - styles/DESIGN.md: the visual spec (light and dark mood, tokens, which

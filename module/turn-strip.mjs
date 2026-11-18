@@ -9,6 +9,8 @@
  * the round ends and, faded, who acts first in the next round.
  * The players' side has an orange ring, foes an ink one; the defeated are
  * greyed out. Clicking a portrait pans the map to that token.
+ * Underneath, the player whose turn it is gets an End turn button; the
+ * Dark Master gets End turn with previous and next turn on either side.
  *
  * It only shows what Foundry's Combat Tracker holds; turn order itself is
  * worked out in module/combat.mjs.
@@ -135,4 +137,57 @@ export function renderTurnStrip(strip, combat) {
   }
 
   strip.append(left, middle, right);
+  const controls = turnControls(combat, current);
+  if (controls) strip.append(controls);
+}
+
+/** One button under the strip. */
+function controlButton(kind, labelKey, icon, action) {
+  const el = document.createElement("button");
+  el.type = "button";
+  el.className = `vb-turns__control vb-turns__control--${kind}`;
+  const label = game.i18n.localize(labelKey);
+  el.dataset.tooltip = label;
+  el.setAttribute("aria-label", label);
+  if (icon) {
+    const i = document.createElement("i");
+    i.className = icon;
+    i.setAttribute("aria-hidden", "true");
+    el.append(i);
+  } else {
+    el.textContent = label;
+  }
+  el.addEventListener("click", async () => {
+    // One click is one turn: the buttons stay off until the strip redraws.
+    for (const button of el.parentElement?.querySelectorAll("button") ?? []) button.disabled = true;
+    try {
+      await action();
+    } finally {
+      for (const button of el.parentElement?.querySelectorAll("button") ?? []) button.disabled = false;
+    }
+  });
+  return el;
+}
+
+/**
+ * The buttons under the strip. The Dark Master gets previous turn, End
+ * turn and next turn; a player gets End turn only on a turn they own.
+ * Nobody else sees any buttons.
+ * @returns {HTMLElement|null}
+ */
+function turnControls(combat, current) {
+  const isGM = game.user.isGM;
+  if (!isGM && !current.isOwner) return null;
+  const row = document.createElement("div");
+  row.className = "vb-turns__controls";
+  if (isGM) {
+    row.append(controlButton("previous", "VARBORG.Combat.Strip.PreviousTurn", "fa-solid fa-chevron-left",
+      () => combat.previousTurn()));
+  }
+  row.append(controlButton("end", "VARBORG.Combat.Strip.EndTurn", null, () => combat.nextTurn()));
+  if (isGM) {
+    row.append(controlButton("next", "VARBORG.Combat.Strip.NextTurn", "fa-solid fa-chevron-right",
+      () => combat.nextTurn()));
+  }
+  return row;
 }

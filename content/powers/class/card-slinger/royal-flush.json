@@ -1,0 +1,83 @@
+{
+  "_id": "vbCPCard05000000",
+  "name": "Royal flush",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Draw five cards and throw them all at foes within 30', divided as you choose. Make one deck attack (Agility, DR18); each card that hits deals its damage. Cards that share a rank with another of the five (a pair, three or four of a kind) deal their maximum damage instead. Whatever the result, your hand is empty: you cannot attack with the deck until the end of your next turn.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 3,
+    "ability": "usual",
+    "damage": "",
+    "damageType": "slashing",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "each card that hits deals its damage; cards sharing a rank deal their maximum"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you cannot attack with the deck until the end of your next turn"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial",
+    "cards": "flush"
+  }
+}

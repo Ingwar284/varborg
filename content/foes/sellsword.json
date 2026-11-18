@@ -180,6 +180,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "d8",
+        "damageType": "slashing",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "slowed",

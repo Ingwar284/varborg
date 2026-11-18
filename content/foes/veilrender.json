@@ -151,6 +151,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "d8",
+        "damageType": "mental",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "frightened",
@@ -247,7 +248,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "The Veilrender is immune to necrotic damage and is Blinded by direct sunlight.",
+        "description": "The Veilrender is immune to dark damage and is Blinded by direct sunlight.",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

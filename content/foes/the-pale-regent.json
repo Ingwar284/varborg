@@ -135,6 +135,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "mental",
         "ruinDamage": "3d8",
         "conditions": {
           "failure": "",
@@ -317,6 +318,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "cold",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "restrained",
@@ -396,6 +398,7 @@
         "cost": 9,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "cold",
         "ruinDamage": "5d6",
         "conditions": {
           "failure": "",

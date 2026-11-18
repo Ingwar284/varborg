@@ -1,0 +1,12 @@
+{
+  "_id": "vbAncBeastfolk00",
+  "name": "Beastfolk",
+  "type": "ancestry",
+  "img": "icons/creatures/mammals/humanoid-wolf-dog-blue.webp",
+  "system": {
+    "description": "Furred, scaled and changed by the Gaslake's runoff, the Beastfolk keep to the pack in the Guttermaze. The rest of Emberglow calls them mongrels; what they fear is the change itself, which never stops.\nChoose one beastfolk ancestry feat (rules 4.3A).",
+    "randomChance": "half",
+    "effects": [],
+    "automation": ""
+  }
+}

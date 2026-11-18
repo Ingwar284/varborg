@@ -4,9 +4,11 @@
  * - Calendar & Time: the date, weekday, phase and hour, and the Dark
  *   Master's clock, New day and Rest buttons (module/calendar.mjs,
  *   days.mjs, rest.mjs).
- * - Weather: today's weather and Set weather (module/weather.mjs).
- * - Misery: the Misery, Set Misery and Travel (module/misery.mjs,
- *   travel.mjs).
+ * - Overland: today's weather and Set weather (module/weather.mjs), and
+ *   overland travel: the party's region and method, and Travel
+ *   (module/travel.mjs; GAPS 309).
+ * - Misery: every Misery, its omens and their stages, and Set Misery
+ *   (module/misery.mjs).
  * - Light: the light timer (module/light.mjs).
  * - Ember and Gloom: the pools and Reset ember abilities (module/pools.mjs).
  *
@@ -34,7 +36,7 @@ import { registerDayLog, recordToday } from "./day-log.mjs";
 import { registerWeather, weatherContext, setWeatherByHand, currentWeather } from "./weather.mjs";
 import { followTodaysWeather } from "./scene-weather.mjs";
 import { registerMisery, miseryContext, setMiseryByHand } from "./misery.mjs";
-import { travel } from "./travel.mjs";
+import { registerTravel, overlandContext, travel, setRegion, setMethod, gallopReady } from "./travel.mjs";
 import { registerPoolOrbs, refreshPoolOrbs } from "./pool-orbs.mjs";
 import { registerTorch, refreshTorch } from "./torch.mjs";
 import {
@@ -223,23 +225,28 @@ class CalendarPanel extends SharedPanel {
   }
 }
 
-/** Today's weather on the hex flower (step 38). */
-class WeatherPanel extends SharedPanel {
+/** Today's weather on the hex flower and overland travel (steps 38, 40; GAPS 309). */
+class OverlandPanel extends SharedPanel {
 
   static DEFAULT_OPTIONS = {
-    id: "var-borg-weather-panel",
-    window: { title: "VARBORG.Weather.Title", icon: "fa-solid fa-cloud-sun-rain" },
+    id: "var-borg-overland-panel",
+    window: { title: "VARBORG.Overland.Title", icon: "fa-solid fa-map-location-dot" },
+    position: { width: 340 },
     actions: {
-      setWeather: WeatherPanel.#onSetWeather
+      setWeather: OverlandPanel.#onSetWeather,
+      setRegion: OverlandPanel.#onSetRegion,
+      setMethod: OverlandPanel.#onSetMethod,
+      gallopReady: OverlandPanel.#onGallopReady,
+      travel: OverlandPanel.#onTravel
     }
   };
 
   static PARTS = {
-    main: { template: "systems/var-borg/templates/apps/weather-panel.hbs" }
+    main: { template: "systems/var-borg/templates/apps/overland-panel.hbs" }
   };
 
   async _prepareContext(options) {
-    return { weather: weatherContext(), isGM: game.user.isGM };
+    return { weather: weatherContext(), travel: overlandContext(), isGM: game.user.isGM };
   }
 
   /** Dark Master only: pick today's weather on the hex flower. */
@@ -247,17 +254,42 @@ class WeatherPanel extends SharedPanel {
     if (!game.user.isGM) return;
     await whileDisabled(button, setWeatherByHand);
   }
+
+  /** Dark Master only: the party's region. */
+  static async #onSetRegion(event, button) {
+    if (!game.user.isGM) return;
+    await setRegion(button.dataset.region);
+  }
+
+  /** Dark Master only: the travel method. */
+  static async #onSetMethod(event, button) {
+    if (!game.user.isGM) return;
+    await setMethod(button.dataset.method);
+  }
+
+  /** Dark Master only: Gallop is ready again. */
+  static async #onGallopReady(event, button) {
+    event.stopPropagation();
+    if (!game.user.isGM) return;
+    await gallopReady();
+  }
+
+  /** Dark Master only: travel for a phase and roll the encounter table. */
+  static async #onTravel(event, button) {
+    if (!game.user.isGM) return;
+    await whileDisabled(button, travel);
+  }
 }
 
-/** The Misery and overland travel (steps 39, 40). */
+/** Every Misery, its omens and their stages (step 39; GAPS 307, 309). */
 class MiseryPanel extends SharedPanel {
 
   static DEFAULT_OPTIONS = {
     id: "var-borg-misery-panel",
     window: { title: "VARBORG.Misery.Title", icon: "fa-solid fa-skull" },
+    position: { width: 340 },
     actions: {
-      setMisery: MiseryPanel.#onSetMisery,
-      travel: MiseryPanel.#onTravel
+      setMisery: MiseryPanel.#onSetMisery
     }
   };
 
@@ -273,12 +305,6 @@ class MiseryPanel extends SharedPanel {
   static async #onSetMisery(event, button) {
     if (!game.user.isGM) return;
     await whileDisabled(button, setMiseryByHand);
-  }
-
-  /** Dark Master only: travel for a phase and roll the encounter table. */
-  static async #onTravel(event, button) {
-    if (!game.user.isGM) return;
-    await whileDisabled(button, travel);
   }
 }
 
@@ -401,13 +427,13 @@ export class PoolsPanel extends SharedPanel {
 
 /** The five panels, by key. */
 const PANELS = {
-  calendar: CalendarPanel, weather: WeatherPanel, misery: MiseryPanel, light: LightPanel, pools: PoolsPanel
+  calendar: CalendarPanel, overland: OverlandPanel, misery: MiseryPanel, light: LightPanel, pools: PoolsPanel
 };
 
 /** The toolbar buttons: name, tooltip and icon. */
 const BUTTONS = [
   { key: "calendar", name: "varBorgCalendar", title: "VARBORG.Calendar.Open", icon: "fa-solid fa-calendar-days" },
-  { key: "weather", name: "varBorgWeather", title: "VARBORG.Weather.Open", icon: "fa-solid fa-cloud-sun-rain" },
+  { key: "overland", name: "varBorgOverland", title: "VARBORG.Overland.Open", icon: "fa-solid fa-map-location-dot" },
   { key: "misery", name: "varBorgMisery", title: "VARBORG.Misery.Open", icon: "fa-solid fa-skull" },
   { key: "light", name: "varBorgLight", title: "VARBORG.Light.Open", icon: "fa-solid fa-fire-flame-curved" },
   { key: "pools", name: "varBorgTable", title: "VARBORG.Pools.Open", icon: "fa-solid fa-fire" }
@@ -428,7 +454,7 @@ export function registerPanels() {
   registerTorch({
     openLight: () => openIfClosed("light"),
     openCalendar: () => openIfClosed("calendar"),
-    openWeather: () => openIfClosed("weather")
+    openWeather: () => openIfClosed("overland")
   });
   // The panel and the sun and moon orbs at the top of the screen (module/pool-orbs.mjs).
   const refreshPools = () => {
@@ -446,7 +472,11 @@ export function registerPanels() {
     refreshCalendar();
     recordToday();
   });
-  registerCalendar(refreshCalendar);
+  // The clock changes the phase the Overland panel's travel line names.
+  registerCalendar(() => {
+    refreshCalendar();
+    refresh(OverlandPanel);
+  });
   registerDayLog(() => refresh(CalendarPanel));
   // Notes on calendar days (module/calendar-notes.mjs).
   registerCalendarNotes(() => refresh(CalendarPanel));
@@ -454,7 +484,7 @@ export function registerPanels() {
   // A change of weather can change the pools (Day of ember, Day of gloom)
   // and the light (Blackburn) too (step 41).
   registerWeather(() => {
-    refresh(WeatherPanel);
+    refresh(OverlandPanel);
     recordToday();
     refreshTorch();
     refreshPools();
@@ -468,6 +498,8 @@ export function registerPanels() {
     refresh(MiseryPanel);
     recordToday();
   });
+  // The party's region and travel method (module/travel.mjs).
+  registerTravel(() => refresh(OverlandPanel));
   // The light timer (module/light.mjs).
   registerLight(refreshLight);
 

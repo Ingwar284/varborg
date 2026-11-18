@@ -225,6 +225,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "fire",
         "ruinDamage": "4d6",
         "conditions": {
           "failure": "blinded",
@@ -285,6 +286,7 @@
         "cost": 9,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "force",
         "ruinDamage": "5d6",
         "conditions": {
           "failure": "",

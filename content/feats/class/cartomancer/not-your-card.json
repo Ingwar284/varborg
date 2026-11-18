@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart07000000",
+  "name": "Not your card",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "When an ally within 30' reaches Death's Door, you may turn any card of your reading face down for them, whatever its meaning: they roll on the Death's Door table twice and keep the better result. Whatever the result, you gain one level of Fatigued.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

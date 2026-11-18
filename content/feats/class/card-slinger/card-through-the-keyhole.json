@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCard05000000",
+  "name": "Card through the keyhole",
+  "type": "feat",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "A thrown card does the work of a hand at 30'. As an Interact action ◈, you can cut a rope or a purse-string, snuff a candle, or trip a latch or lever you can see within 30'.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

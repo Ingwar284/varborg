@@ -9,6 +9,7 @@
     "cost": 5,
     "actions": 2,
     "damage": "2d6",
+    "damageType": "cold",
     "sustained": false,
     "reaction": false,
     "outcomes": {

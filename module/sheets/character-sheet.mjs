@@ -12,6 +12,8 @@ import { rollAbilityTest, signed } from "../dice/ability-test.mjs";
 import { rollContestedTest } from "../dice/contested-test.mjs";
 import { rollChanceDie } from "../dice/chance-die.mjs";
 import { rollExpendable, fireWeapon, reloadWeapon } from "../dice/expendable.mjs";
+import { isDeckWeapon, deckCount, shuffleDeckAction } from "../cards.mjs";
+import { readingContext, turnReadingCard, layOutReading, reverseReadingCard, shuffleFates, tearThirteenthCard, darkMasterThirteenth } from "../reading.mjs";
 import { useMedicineBox, canUseMedicine } from "../medicine.mjs";
 import { lightItem, canLightItem, actorLight, putOutActorLight, dimActorLight } from "../light.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton, isConsumable } from "../uses.mjs";
@@ -43,7 +45,7 @@ import { improveCharacter, choosingFeat, skipFeatChoice, rollImprovingFeat, canI
 import { openCreationHelper, applyClassWithStarting, postCard } from "../creation.mjs";
 import { creationHelperOn } from "../settings.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
-import { ongoingEffects } from "../ongoing.mjs";
+import { sheetEffects, activateEffectControls } from "../ongoing.mjs";
 import { rollDetail } from "../personality.mjs";
 import { randomCharacter, chosenRandomCharacter } from "../random-character.mjs";
 import { onPostItem } from "../item-chat.mjs";
@@ -174,6 +176,11 @@ function itemStates(item) {
   if (item.type === "armour" && system.originalTier >= 1 && system.tier < 1) {
     states.push({ key: "destroyed", label: "VARBORG.Defence.Destroyed" });
   }
+  // A deck of cards: how many are left to draw (Razor deck, GAPS 318).
+  if (isDeckWeapon(item)) {
+    const { left, total } = deckCount(item);
+    states.push({ key: left ? "cards" : "unloaded", label: game.i18n.format("VARBORG.Cards.Left", { left, total }) });
+  }
   if (system.usedUp) {
     states.push({ key: "used-up", label: item.type === "weapon" ? "VARBORG.Expendable.OutOfAmmo" : "VARBORG.Expendable.UsedUp" });
   }
@@ -291,6 +298,13 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       useLimited: CharacterSheet.#onUseLimited,
       fireWeapon: CharacterSheet.#onFireWeapon,
       reloadWeapon: CharacterSheet.#onReloadWeapon,
+      shuffleDeck: CharacterSheet.#onShuffleDeck,
+      turnReading: CharacterSheet.#onTurnReading,
+      layReading: CharacterSheet.#onLayReading,
+      reverseReading: CharacterSheet.#onReverseReading,
+      shuffleFates: CharacterSheet.#onShuffleFates,
+      tearThirteenth: CharacterSheet.#onTearThirteenth,
+      dmThirteenth: CharacterSheet.#onDmThirteenth,
       attack: CharacterSheet.#onAttack,
       recover: CharacterSheet.#onRecover,
       raiseShield: CharacterSheet.#onRaiseShield,
@@ -460,6 +474,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
           canExpendable: canRollExpendable(item.system) && !isConsumable(item) && !item.system.medicine,
           canFire: item.type === "weapon" && canFire(item.system),
           canReload: item.type === "weapon" && canReload(item.system),
+          canShuffle: isDeckWeapon(item),
           reloadTooltip: game.i18n.format("VARBORG.Reload.ReloadTooltip", { count: item.type === "weapon" ? effectiveWeapon(item).reload ?? 0 : 0 }),
           overCapacity: type === "container" && isOverCapacity(stored.get(item.id) ?? 0, item.system.capacity)
         }))
@@ -486,6 +501,8 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
     });
 
     // Feats, with where each came from, such as "Class feat · Improving".
+    // The Cartomancer's reading (step 69c).
+    context.reading = readingContext(actor);
     context.feats = actor.itemTypes.feat
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({
@@ -590,19 +607,16 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
       }))
     };
     context.conditions = sheetConditions(actor);
-    // The Conditions tab shows how many are active, such as "Conditions (2)".
-    // The Character tab shows a small icon for each one, as a reminder.
-    context.conditionIcons = [
-      ...context.conditions.list,
-      ...context.conditions.persistent.list,
-      ...context.conditions.panic.list,
-      ...context.conditions.injuries
-    ].map(({ img, label }) => ({ img, label }));
-    // Ongoing effects that are not conditions: buffs, cover, light… (player feedback).
-    context.ongoing = ongoingEffects(actor);
-    const conditionCount = context.conditionIcons.length;
-    if (conditionCount && context.tabs?.conditions) {
-      context.tabs.conditions.label = i18n.format("VARBORG.Sheet.Tab.ConditionsCount", { count: conditionCount });
+    // One list of everything ongoing (unified effects): the Effects tab shows
+    // it in full and how many, such as "Effects (2)"; the Character tab shows
+    // a small icon for each one, as a reminder.
+    context.effects = sheetEffects(actor);
+    context.conditionIcons = context.effects.rows.map(({ img, icon, label, tagLabel }) => ({
+      img, icon, label: tagLabel ? `${tagLabel} · ${label}` : label
+    }));
+    const effectCount = context.effects.rows.length;
+    if (effectCount && context.tabs?.conditions) {
+      context.tabs.conditions.label = i18n.format("VARBORG.Sheet.Tab.ConditionsCount", { count: effectCount });
     }
 
     // A raised shield: which one counts, and its cover (GAPS 46).
@@ -620,6 +634,7 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   async _onRender(context, options) {
     await super._onRender(context, options);
     activateConditionControls(this.element, this.document);
+    activateEffectControls(this.element, this.document);
     // The "Stored in" menus and quantity boxes have no form name, so they
     // change the item, not the character. For weapons, armour and shields
     // the menu also equips: "Equipped" takes the item out of any container,
@@ -799,6 +814,43 @@ export default class CharacterSheet extends HandlebarsApplicationMixin(ActorShee
   static async #onReloadWeapon(event, button) {
     const item = this.#itemFor(button);
     if (item) await reloadWeapon(this.document, item);
+  }
+
+  /** A card of the Cartomancer's reading is turned (step 69c). */
+  static async #onTurnReading(event, button) {
+    await turnReadingCard(this.document, Number(button.dataset.index));
+  }
+
+  /** Reversed: a card turned against the targeted foe (step 69c2). */
+  static async #onReverseReading(event, button) {
+    await reverseReadingCard(this.document, Number(button.dataset.index));
+  }
+
+  /** Shuffle the fates (step 69c2). */
+  static async #onShuffleFates() {
+    await shuffleFates(this.document);
+  }
+
+  /** Black sector: tear the Thirteenth (step 69c2). */
+  static async #onTearThirteenth() {
+    await tearThirteenthCard(this.document);
+  }
+
+  /** The Dark Master turns the Thirteenth (step 69c2). */
+  static async #onDmThirteenth() {
+    await darkMasterThirteenth(this.document);
+  }
+
+  /** The Lay out button: a new reading, when there is none yet (step 69c). */
+  static async #onLayReading() {
+    const line = await layOutReading(this.document);
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor: this.document }), content: `<div class="var-borg-card"><p>${foundry.utils.escapeHTML(line)}</p></div>` });
+  }
+
+  /** The Shuffle button shuffles a deck of cards back together (one Interact action). */
+  static async #onShuffleDeck(event, button) {
+    const item = this.#itemFor(button);
+    if (item) await shuffleDeckAction(this.document, item);
   }
 
   /** The sword button opens the attack dialog for that weapon. */

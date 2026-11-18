@@ -15,14 +15,20 @@
  * Players improve (player feedback): with it on, a player sees the Improve
  * button on their own character too. The Dark Master still says when.
  *
- * Dying of the light (GAPS 307): the Miseries come by the light die of
- * rules 1.5 (the default), or by the Omens of Misery, where the Omen
- * results on the road move each Misery through its six omens. With Omens,
- * "Omens before the next Misery" (1 to 6) sets when the next one is due.
+ * Dying of the light (GAPS 307, 309): the Miseries come by the light die
+ * of rules 1.5 (the default), or by the Omens of Misery, where the Omen
+ * results on the road start each Misery's omens and move them through
+ * their six stages. With Omens, "Omens before the next Misery" (1 to 6) is
+ * the stage an omen of the newest Misery must reach before the next is due.
  *
  * Improving feat group (player feedback; rules 2.8 "choose or roll"):
  * "roll" rolls the d3 for general / ancestry / class; "choose" lets whoever
  * improves pick the group, and the feat inside it is still rolled.
+ *
+ * Drawing cards (GAPS 320, PLAN step 69b2): the Card Slinger's Razor deck
+ * is a deck the system keeps on the weapon (the default), or a Foundry
+ * Cards deck with a discard pile, made by the Dark Master's client for
+ * each Razor deck and shown in the Cards sidebar (module/cards.mjs).
  */
 
 const SYSTEM = "var-borg";
@@ -34,6 +40,8 @@ const ONGOING_OPEN = "ongoingOpen";
 const ENCOUNTER_PARTY = "encounterParty";
 const MISERY_MODE = "miseryMode";
 const OMENS_PER_MISERY = "omensPerMisery";
+const CARD_DRAW = "cardDraw";
+const CARDS_STRIP_OPEN = "cardsStripOpen";
 
 /** Called from the init hook. */
 export function registerSettings() {
@@ -120,6 +128,46 @@ export function registerSettings() {
     default: 4,
     onChange: redrawTablePanels
   });
+
+  // The cards strip at the hotbar: open or minimised, for this user (step 70).
+  game.settings.register(SYSTEM, CARDS_STRIP_OPEN, {
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register(SYSTEM, CARD_DRAW, {
+    name: "VARBORG.Settings.CardDraw.Name",
+    hint: "VARBORG.Settings.CardDraw.Hint",
+    scope: "world",
+    config: true,
+    type: String,
+    choices: {
+      system: "VARBORG.Settings.CardDraw.system",
+      foundry: "VARBORG.Settings.CardDraw.foundry"
+    },
+    default: "system",
+    onChange: value => {
+      redrawCharacterSheets();
+      Hooks.callAll("varBorgCardDraw", value);
+    }
+  });
+}
+
+/** Whether the cards strip is open (not minimised), for this user. */
+export function cardsStripOpen() {
+  return Boolean(game.settings.get(SYSTEM, CARDS_STRIP_OPEN));
+}
+
+/** Open or minimise the cards strip, for this user. */
+export function setCardsStripOpen(open) {
+  return game.settings.set(SYSTEM, CARDS_STRIP_OPEN, Boolean(open));
+}
+
+/** Whether cards are drawn from Foundry Cards decks (GAPS 320), not the deck the system keeps. */
+export function foundryCardsMode() {
+  return game.settings.get(SYSTEM, CARD_DRAW) === "foundry";
 }
 
 /** Whether the Miseries come by the Omens of Misery (GAPS 307), not the light die. */

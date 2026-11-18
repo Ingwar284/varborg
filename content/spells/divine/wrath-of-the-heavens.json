@@ -15,7 +15,7 @@
       "triumph": "As Success, 2x damage, and the pillar leaps to a second foe within 15'.",
       "success": "The foe takes 2d10 damage.",
       "failure": "Half damage.",
-      "ruin": "The pillar falls short, at your feet: you take d6 radiant damage. Roll on the Shadowblight table."
+      "ruin": "The pillar falls short, at your feet: you take d6 light damage. Roll on the Shadowblight table."
     },
     "sustaining": false,
     "kept": false,

@@ -71,6 +71,30 @@
         "test": false,
         "whileSustained": false,
         "note": ""
+      },
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "infected",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the corruption crawls into you"
       }
     ],
     "automation": "partial"

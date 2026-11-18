@@ -29,12 +29,14 @@ export function automationEntries(files) {
     const ownConditions = Object.values(item.system?.conditions ?? {}).filter(Boolean).length;
     // A relic's Ember pool gain, which its Use button adds (the Shard of the Great Brazier, step 53a).
     const ownEmber = item.type === "relic" && item.system?.emberGain > 0 ? 1 : 0;
+    // A card power's draws, which its card makes (Card Slinger and Cartomancer, step 69).
+    const ownCards = item.type === "power" && item.system?.cards ? 1 : 0;
     entries.push({
       folder,
       name: owner ? `${owner}: ${item.name}` : item.name,
       type: item.type,
       status: item.system?.automation ?? "",
-      effects: effects.length + outcomes.length + ownDamage + ownConditions + ownEmber,
+      effects: effects.length + outcomes.length + ownDamage + ownConditions + ownEmber + ownCards,
       rawEffects: effects
     });
   };

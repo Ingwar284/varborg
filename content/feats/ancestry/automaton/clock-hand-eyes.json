@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFAutomaton008",
+  "name": "Clock-Hand Eyes",
+  "type": "feat",
+  "img": "icons/commodities/tech/cog-gear-wheel-gold.webp",
+  "system": {
+    "description": "A clock face turns behind your lens. You always know the time of day, even in the dark, and you know to the minute how long a lit light source within 30' has left to burn.",
+    "source": "ancestry",
+    "belongsTo": "Automaton",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

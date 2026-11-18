@@ -106,6 +106,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "2d10",
+        "damageType": "force",
         "ruinDamage": "2d12",
         "conditions": {
           "failure": "prone",
@@ -151,6 +152,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "acid",
         "ruinDamage": "4d6",
         "conditions": {
           "failure": "",
@@ -230,6 +232,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d10",
+        "damageType": "mental",
         "ruinDamage": "3d10",
         "conditions": {
           "failure": "slowed",
@@ -275,6 +278,7 @@
         "cost": 9,
         "actions": 2,
         "damage": "4d6",
+        "damageType": "bludgeoning",
         "ruinDamage": "6d6",
         "conditions": {
           "failure": "prone",

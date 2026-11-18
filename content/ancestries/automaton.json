@@ -1,0 +1,12 @@
+{
+  "_id": "vbAncAutomaton00",
+  "name": "Automaton",
+  "type": "ancestry",
+  "img": "icons/commodities/tech/cog-gear-wheel-gold.webp",
+  "system": {
+    "description": "Brass, rivets and a mainspring that never quite stops ticking: a few of the Spindlecore's machines woke up, and nobody agrees how. Coal and oil take the place of food, winding down the place of sleep, and a tinker's tools the place of bandages.\nChoose one automaton ancestry feat (rules 4.3A).",
+    "randomChance": "half",
+    "effects": [],
+    "automation": ""
+  }
+}

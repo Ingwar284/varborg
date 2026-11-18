@@ -13,7 +13,7 @@
     "reaction": false,
     "outcomes": {
       "triumph": "As Success, 2x damage.",
-      "success": "The foe takes 3d10 radiant damage. If it survives, it is permanently Blinded and Deafened until healed by a miracle.",
+      "success": "The foe takes 3d10 light damage. If it survives, it is permanently Blinded and Deafened until healed by a miracle.",
       "failure": "Half damage, and nothing lasts.",
       "ruin": "The Name echoes back: you are Deafened until your next Long Rest. Roll on the Shadowblight table."
     },

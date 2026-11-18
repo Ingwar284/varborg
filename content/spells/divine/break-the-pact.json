@@ -9,6 +9,7 @@
     "cost": 5,
     "actions": 2,
     "damage": "2d8",
+    "damageType": "spirit",
     "sustained": false,
     "reaction": false,
     "outcomes": {

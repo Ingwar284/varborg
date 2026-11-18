@@ -9,6 +9,7 @@
     "cost": 5,
     "actions": 2,
     "damage": "d6",
+    "damageType": "piercing",
     "sustained": true,
     "reaction": false,
     "outcomes": {

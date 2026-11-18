@@ -1,0 +1,62 @@
+{{!-- One creature's list of effects (module/ongoing.mjs, sheetEffects): the
+     same rows as the Ongoing panel, each with its type tag and buttons that
+     do what the panel's clicks do. --}}
+<ul class="condition-list effects-list">
+  {{#each effects.rows}}
+  <li class="condition-row effect-row" data-tag="{{tag}}">
+    {{#if img}}<img src="{{img}}" alt="">{{else}}<i class="fa-solid {{icon}} ongoing-icon" aria-hidden="true"></i>{{/if}}
+    <span class="condition-text">
+      <strong>{{label}}</strong>
+      {{#if tagLabel}}<span class="effect-tag">{{tagLabel}}</span>{{/if}}
+      {{#if detail}} {{detail}}{{/if}}
+    </span>
+    {{#if ../effects.canChange}}
+    {{#if timerFor}}
+    <button type="button" class="icon-button" data-time-condition="{{timerFor}}"
+            data-tooltip="{{localize 'VARBORG.Timer.Button'}}" aria-label="{{localize 'VARBORG.Timer.Button'}}">
+      <i class="fa-solid fa-hourglass-half"></i>
+    </button>
+    {{/if}}
+    {{#if buttons.minus}}
+    <button type="button" class="icon-button" data-effect-step="-1" data-kind="{{kind}}" data-ref="{{ref}}"
+            data-tooltip="{{localize 'VARBORG.Ongoing.Lower'}}" aria-label="{{localize 'VARBORG.Ongoing.Lower'}}">
+      <i class="fa-solid fa-minus"></i>
+    </button>
+    {{/if}}
+    {{#if buttons.plus}}
+    <button type="button" class="icon-button" data-effect-step="1" data-kind="{{kind}}" data-ref="{{ref}}"
+            data-tooltip="{{localize 'VARBORG.Ongoing.Raise'}}" aria-label="{{localize 'VARBORG.Ongoing.Raise'}}">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    {{/if}}
+    {{#if buttons.remove}}
+    <button type="button" class="icon-button" data-effect-step="-1" data-kind="{{kind}}" data-ref="{{ref}}"
+            data-tooltip="{{localize 'VARBORG.Ongoing.Remove'}}" aria-label="{{localize 'VARBORG.Ongoing.Remove'}}">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    {{/if}}
+    {{/if}}
+  </li>
+  {{else}}
+  <li class="empty">{{localize "VARBORG.Ongoing.None"}}</li>
+  {{/each}}
+</ul>
+{{#if effects.canChange}}
+<div class="condition-controls">
+  <select data-add-effect aria-label="{{localize 'VARBORG.Ongoing.Add'}}">
+    <option value="">{{localize "VARBORG.Ongoing.Add"}}</option>
+    <option value="persistent">{{localize "VARBORG.Ongoing.AddPersistent"}}</option>
+    <optgroup label="{{localize 'VARBORG.Ongoing.Tag.condition'}}">
+      {{#each effects.conditions}}<option value="condition:{{id}}">{{label}}</option>{{/each}}
+    </optgroup>
+    {{#if effects.panic}}
+    <optgroup label="{{localize 'VARBORG.Ongoing.PanicGroup'}}">
+      {{#each effects.panic}}<option value="panic:{{id}}">{{label}}</option>{{/each}}
+    </optgroup>
+    {{/if}}
+  </select>
+  {{#if effects.canTick}}
+  <button type="button" data-tick-persistent data-tooltip="{{localize 'VARBORG.Persistent.TickHint'}}">{{localize "VARBORG.Persistent.Tick"}}</button>
+  {{/if}}
+</div>
+{{/if}}

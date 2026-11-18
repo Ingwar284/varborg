@@ -276,6 +276,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d10",
+        "damageType": "piercing",
         "ruinDamage": "3d10",
         "conditions": {
           "failure": "prone",
@@ -321,6 +322,7 @@
         "cost": 9,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "slashing",
         "ruinDamage": "4d6",
         "conditions": {
           "failure": "",

@@ -68,7 +68,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "It is immune to Frightened, and takes double damage from blunt weapons (cudgels, maces, mauls, hammers and unarmed attacks).",
+        "description": "It is immune to Frightened, and takes double damage from bludgeoning weapons (cudgels, maces, mauls, hammers and unarmed attacks).",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

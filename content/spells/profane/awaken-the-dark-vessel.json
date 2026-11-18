@@ -9,6 +9,7 @@
     "cost": 9,
     "actions": 2,
     "damage": "2d10",
+    "damageType": "mental",
     "sustained": false,
     "reaction": false,
     "outcomes": {

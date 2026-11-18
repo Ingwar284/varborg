@@ -135,6 +135,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "d10",
+        "damageType": "bludgeoning",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "prone",
@@ -180,6 +181,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d4",
+        "damageType": "mental",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "frightened",
@@ -233,6 +235,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "spirit",
         "ruinDamage": "2d10",
         "conditions": {
           "failure": "slowed",

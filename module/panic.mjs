@@ -7,7 +7,7 @@
  *
  * A lasting result is an Active Effect on the character, with its result
  * id as a status (so "sluggish" shows on the token and counts in
- * module/rules/conditions.mjs) and its details in flags.var-borg.panic:
+ * module/rules/conditions.mjs) and its details in a panic-type effect's system data:
  *   result     the result id, such as "sluggish"
  *   turns      turns left (1d10 turns), counted down at the end of the
  *              character's own turns in combat (GAPS 79)
@@ -72,8 +72,8 @@ export function panicName(id) {
  */
 export function panicEffects(actor) {
   return (actor?.effects ?? [])
-    .filter(effect => effect.getFlag(SYSTEM, "panic"))
-    .map(effect => ({ id: effect.id, ...effect.getFlag(SYSTEM, "panic"), effect }));
+    .filter(effect => effect.type === "panic")
+    .map(effect => ({ id: effect.id, ...effect.system.toObject(), effect }));
 }
 
 /**
@@ -436,11 +436,12 @@ async function createPanicEffect(actor, id, duration) {
   const freshTurn = Boolean(duration.turns) && turnState(actor).onOwnTurn;
   if (duration.hours) duration = { ...duration, endsAt: endsAfterHours(game.time.worldTime, duration.hours) };
   await actor.createEmbeddedDocuments("ActiveEffect", [{
+    type: "panic",
     name: panicName(id),
     img: PANIC_ICONS[id],
     statuses: [id],
     description: game.i18n.localize(`VARBORG.Panic.Result.${id}.text`),
-    flags: { [SYSTEM]: { panic: { result: id, ...duration, freshTurn } } }
+    system: { result: id, turns: duration.turns ?? null, hours: duration.hours ?? null, endsAt: duration.endsAt ?? null, freshTurn }
   }]);
 }
 
@@ -476,7 +477,7 @@ export async function countDownPanic(actor) {
       await effect.delete();
       await postLine(actor, game.i18n.format("VARBORG.Panic.Ends", { name: actor.name, result: panicName(result) }));
     } else {
-      await effect.update({ [`flags.${SYSTEM}.panic.turns`]: next.turnsLeft, [`flags.${SYSTEM}.panic.freshTurn`]: false });
+      await effect.update({ "system.turns": next.turnsLeft, "system.freshTurn": false });
     }
   }
 }
@@ -508,9 +509,9 @@ export async function endPanicByClock(actor, now) {
  */
 export async function useUpNextTest(actor, { quiet = false } = {}) {
   const used = (actor?.effects ?? []).filter(effect => {
-    const panic = effect.getFlag(SYSTEM, "panic");
-    const agony = effect.getFlag(SYSTEM, "agony");
-    return PANIC_RESULTS[panic?.result]?.next || AGONY_RESULTS[agony?.result]?.next;
+    if (effect.type === "panic") return PANIC_RESULTS[effect.system.result]?.next;
+    if (effect.type === "injury") return AGONY_RESULTS[effect.system.result]?.next;
+    return false;
   });
   if (!used.length) return null;
   await actor.deleteEmbeddedDocuments("ActiveEffect", used.map(effect => effect.id));
@@ -537,35 +538,21 @@ function hoursText(key, count) {
   return game.i18n.format(key, { count, unit: game.i18n.localize(count === 1 ? "VARBORG.Panic.Hour" : "VARBORG.Panic.Hours") });
 }
 
-/** The Panic rows of a character's Conditions section, or null for a foe. */
-export function sheetPanic(actor) {
-  if (actor.type !== "character") return null;
-  const i18n = game.i18n;
-  return {
-    list: panicEffects(actor).map(({ id, result, turns, hours, endsAt, effect }) => ({
-      id,
-      img: effect.img,
-      label: turns ? `${effect.name} (${turnsText("VARBORG.Panic.Left", turns)})`
-        : hours ? `${effect.name} (${hoursText("VARBORG.Panic.Left", Number.isFinite(endsAt) ? hoursLeft(endsAt, game.time.worldTime) : hours)})`
-        : effect.name,
-      text: i18n.localize(`VARBORG.Panic.Result.${result}.text`)
-    })),
-    choices: game.user.isGM ? PANIC_EFFECTS.map(id => ({ id, label: panicName(id) })) : null
-  };
+/**
+ * Give a character a Panic result chosen by the Dark Master (the Effects
+ * tab's Add menu), with its card.
+ */
+export async function addPanicResult(actor, id) {
+  if (!game.user.isGM || !PANIC_EFFECTS.includes(id)) return;
+  const { lines, rolls } = await applyPanicResult(actor, id);
+  await postResult(actor, id, lines, rolls);
 }
 
-/**
- * The sheet's Panic controls: each row's remove button and the Dark
- * Master's "Add a Panic result" menu. Called from activateConditionControls.
- */
-export function activatePanicControls(element, actor) {
-  for (const button of element.querySelectorAll("[data-remove-panic]")) {
-    button.addEventListener("click", () => actor.effects.get(button.dataset.removePanic)?.delete());
-  }
-  element.querySelector("select[data-add-panic]")?.addEventListener("change", async event => {
-    const id = event.currentTarget.value;
-    if (!PANIC_EFFECTS.includes(id)) return;
-    const { lines, rolls } = await applyPanicResult(actor, id);
-    await postResult(actor, id, lines, rolls);
-  });
+/** A Panic result's name with the time it has left: "Sluggish (3 turns left)". */
+export function panicLabel(effect) {
+  const { turns, hours, endsAt } = effect.system;
+  if (turns) return `${effect.name} (${turnsText("VARBORG.Panic.Left", turns)})`;
+  if (hours) return `${effect.name} (${hoursText("VARBORG.Panic.Left", Number.isFinite(endsAt) ? hoursLeft(endsAt, game.time.worldTime) : hours)})`;
+  return effect.name;
 }
+

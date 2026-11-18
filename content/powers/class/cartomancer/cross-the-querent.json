@@ -1,0 +1,124 @@
+{
+  "_id": "vbCPCart02000000",
+  "name": "Cross the querent",
+  "type": "power",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "Sustained. You hold a card over an ally within 30' and keep it there. The first time in each round that the ally is hit, the damage is reduced by d6. While you sustain it, you cannot turn cards of your reading.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "damageType": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "buff",
+        "who": "target",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the first hit each round only"
+      },
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you cannot turn cards of your reading while you sustain it"
+      }
+    ],
+    "buffEffects": [
+      {
+        "kind": "resist",
+        "target": "hpMax",
+        "op": "add",
+        "value": 0,
+        "roll": "test",
+        "ability": "",
+        "against": "",
+        "weapon": "",
+        "vs": "anyDamage",
+        "damageType": "",
+        "mode": "auto",
+        "grant": "",
+        "dr": 0,
+        "damage": "",
+        "per": "",
+        "rerollOnes": false,
+        "choose": "weapon",
+        "from": "any",
+        "chosen": "",
+        "chosenName": "",
+        "event": "turnStart",
+        "action": "reminder",
+        "amount": "d6",
+        "condition": "",
+        "keep": "better",
+        "requires": "",
+        "failAgain": "",
+        "resist": "reduce",
+        "gift": "",
+        "setDamage": "",
+        "companion": "minion",
+        "armour": "",
+        "power": "",
+        "option": "",
+        "radius": 0,
+        "allyCount": 0,
+        "unlessDamaged": "",
+        "loseArmour": false,
+        "note": "the first hit each round"
+      }
+    ],
+    "effects": [],
+    "automation": "partial"
+  }
+}

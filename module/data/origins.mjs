@@ -12,6 +12,7 @@ import { SPELL_LISTS, STARTING_DICE } from "../rules/origins.mjs";
 import { WEAPONRY_KEYS } from "../rules/creation.mjs";
 import { effectFields } from "./effects.mjs";
 import { migrateDamageTypes } from "../rules/equipment.mjs";
+import { RANDOM_CHANCES } from "../rules/random.mjs";
 
 const { ArrayField, NumberField, StringField } = foundry.data.fields;
 
@@ -75,9 +76,14 @@ export class AncestryData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       description: new StringField({ required: true, initial: "" }),
+      // How likely the Random character button rolls it: normal, or half
+      // (the ancestries of 4.3A Almanac of Ancestries, GAPS 327).
+      randomChance: choice(Object.keys(RANDOM_CHANCES)),
       ...effectFields()
     };
   }
+
+  static RANDOM_CHANCES = labels(Object.keys(RANDOM_CHANCES), "Ancestry.RandomChance");
 }
 
 /** A background's wealth and keepsake (rules 2.4). */

@@ -1,0 +1,59 @@
+{
+  "_id": "vbCPCart06000000",
+  "name": "The Thirteenth card",
+  "type": "power",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "You turn the black card for a foe you can see within 60'. Until the end of the encounter, at the end of each of its turns, the Dark Master rolls a d6: on a 1, it dies where it stands (a Mighty foe takes 3d10 spirit damage instead). Whatever the result, the Thirteenth then enters your reading in place of an unturned card, and cannot be torn (Black sector) until your next Long Rest.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "resource": "ember",
+    "cost": 7,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "damageType": "",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": "The card was yours. You are Frightened of the foe until the end of the encounter."
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "frightened",
+        "duration": {
+          "kind": "encounter",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "of the foe"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "auto",
+    "cards": "thirteenth"
+  }
+}

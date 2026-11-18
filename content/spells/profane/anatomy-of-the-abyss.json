@@ -9,13 +9,14 @@
     "cost": 7,
     "actions": 2,
     "damage": "2d10",
+    "damageType": "dark",
     "sustained": false,
     "reaction": false,
     "outcomes": {
       "triumph": "As Success, 2x damage.",
-      "success": "The foe takes 2d10 damage. If it survives, it takes d6 persistent bleeding damage and is Slowed until the bleeding stops.",
+      "success": "The foe takes 2d10 damage. If it survives, it takes d6 persistent bleed damage and is Slowed until the bleeding stops.",
       "failure": "Half damage, and no bleeding.",
-      "ruin": "Your hand comes back wet with your own blood: you take d6 persistent bleeding damage. Roll on the Shadowblight table."
+      "ruin": "Your hand comes back wet with your own blood: you take d6 persistent bleed damage. Roll on the Shadowblight table."
     },
     "sustaining": false,
     "kept": false,

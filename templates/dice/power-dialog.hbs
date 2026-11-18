@@ -2,6 +2,14 @@
   <p class="hint automatic">{{how}}</p>
   <p class="hint automatic">{{useNote}}</p>
   <p class="hint automatic">{{target}}</p>
+  {{#if cardSuits}}
+  <div class="form-group">
+    <label for="var-borg-power-suit">{{localize "VARBORG.Cards.NamedSuit"}}</label>
+    <select id="var-borg-power-suit" name="cardSuit">
+      {{#each cardSuits}}<option value="{{value}}">{{localize label}}</option>{{/each}}
+    </select>
+  </div>
+  {{/if}}
   {{#if weapons}}
   <div class="form-group">
     <label for="var-borg-power-weapon">{{localize "VARBORG.Power.Weapon"}}</label>

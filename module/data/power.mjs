@@ -16,6 +16,7 @@ import { endChoiceWith } from "../improving.mjs";
 import { effectFields } from "./effects.mjs";
 import { outcomeFields } from "./outcomes.mjs";
 import { DAMAGE_TYPES, migrateDamageTypes } from "../rules/equipment.mjs";
+import { CARD_POWERS } from "../rules/cards.mjs";
 
 const { NumberField, StringField, BooleanField, SchemaField } = foundry.data.fields;
 
@@ -79,6 +80,9 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       sustained: new BooleanField({ initial: false }),
       // Its area of effect, if it names one (playtest feedback).
       area: areaField(),
+      // How it uses the Card Slinger's deck (step 69b3b): "" none, or
+      // "deal", "cut", "suit", "flush" or "knave" (module/rules/cards.mjs).
+      cards: new StringField({ required: true, blank: true, choices: CARD_POWERS, initial: "" }),
       // A reaction (↻): used on any turn, with the reaction instead of actions (GAPS 184).
       reaction: new BooleanField({ initial: false }),
       // What each result does, when the power says. Empty uses the usual text.

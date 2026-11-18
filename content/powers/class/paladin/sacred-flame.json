@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
   "system": {
-    "description": "A pillar of holy fire falls on a foe you can see within 60'. Deal 2d10 radiant damage, ignoring armour. An undead, duskborn or fiend of Weak tier or lower is destroyed outright.",
+    "description": "A pillar of holy fire falls on a foe you can see within 60'. Deal 2d10 light damage, ignoring armour. An undead, duskborn or fiend of Weak tier or lower is destroyed outright.",
     "source": "class",
     "belongsTo": "Paladin",
     "resource": "ember",

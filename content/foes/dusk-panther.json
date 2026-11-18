@@ -151,6 +151,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "piercing",
         "ruinDamage": "2d8",
         "conditions": {
           "failure": "silenced",
@@ -213,7 +214,7 @@
       "type": "power",
       "img": "icons/svg/terror.svg",
       "system": {
-        "description": "It makes a Claws attack and a Bite attack against one Prone or Restrained creature. The creature defends against both with Bane, and each Ruin also deals d6 persistent bleeding damage.",
+        "description": "It makes a Claws attack and a Bite attack against one Prone or Restrained creature. The creature defends against both with Bane, and each Ruin also deals d6 persistent bleed damage.",
         "source": "class",
         "belongsTo": "",
         "resource": "gloom",

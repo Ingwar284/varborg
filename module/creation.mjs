@@ -61,18 +61,18 @@ export async function gatherSources() {
     list.push({
       uuid: item.uuid, name: item.name, type: item.type, from: "",
       source: item.system.source, cost: item.system.cost, spellList: item.system.spellList, ritual: Boolean(item.system.ritual),
-      belongsTo: item.system.belongsTo
+      belongsTo: item.system.belongsTo, randomChance: item.system.randomChance
     });
   }
   for (const pack of game.packs) {
     if (pack.documentName !== "Item" || !pack.visible) continue;
-    const index = await pack.getIndex({ fields: ["system.source", "system.cost", "system.spellList", "system.belongsTo", "system.ritual"] });
+    const index = await pack.getIndex({ fields: ["system.source", "system.cost", "system.spellList", "system.belongsTo", "system.ritual", "system.randomChance"] });
     for (const entry of index) {
       if (!OFFERED_TYPES.includes(entry.type)) continue;
       list.push({
         uuid: entry.uuid, name: entry.name, type: entry.type, from: pack.metadata.label,
         source: entry.system?.source, cost: entry.system?.cost, spellList: entry.system?.spellList, ritual: Boolean(entry.system?.ritual),
-        belongsTo: entry.system?.belongsTo
+        belongsTo: entry.system?.belongsTo, randomChance: entry.system?.randomChance
       });
     }
   }
@@ -173,6 +173,8 @@ export async function addDog(actor) {
   delete data._id;
   data.system.owner = actor.id;
   data.folder = null;
+  // Made for this character: it goes when they are deleted (step 72).
+  data.flags = { ...data.flags, [SYSTEM]: { ...(data.flags?.[SYSTEM] ?? {}), createdFor: actor.id } };
   // Refused when the character has no room under their minion limit (GAPS 171).
   const dog = await Actor.create(data);
   if (!dog) return i18n.format("VARBORG.Creation.Equipment.DogRefused", { name: actor.name });
@@ -196,6 +198,8 @@ export async function addVehicle(actor, spec) {
   delete data._id;
   data.folder = null;
   data.name = i18n.format("VARBORG.Creation.Equipment.VehicleName", { name: actor.name, vehicle: source.name });
+  // Made for this character: it goes when they are rerolled or deleted (step 72).
+  data.flags = { ...data.flags, [SYSTEM]: { ...(data.flags?.[SYSTEM] ?? {}), createdFor: actor.id } };
   if (data.prototypeToken) data.prototypeToken.name = data.name;
   // The character's owners own it too, so they can drive and load it.
   const OWNER = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;

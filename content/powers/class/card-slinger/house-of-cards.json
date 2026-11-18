@@ -1,0 +1,84 @@
+{
+  "_id": "vbCPCard04000000",
+  "name": "House of cards",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "Sustained. Cards whirl around you in a 5' emanation, a storm of painted faces. A creature that enters it or starts its turn in it takes d6 slashing damage, once per turn. While you sustain it, you cannot attack with the deck.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 5,
+    "actions": 2,
+    "ability": "usual",
+    "damage": "",
+    "damageType": "",
+    "addsWeaponDamage": false,
+    "sustained": true,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": false,
+          "ruin": false
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "you cannot attack with the deck while you sustain it"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial",
+    "area": {
+      "shape": "emanation",
+      "size": 5,
+      "width": 5,
+      "affects": "all",
+      "lasting": {
+        "duration": "",
+        "rounds": "1",
+        "effects": [
+          {
+            "trigger": "enterOrStart",
+            "kind": "damage",
+            "formula": "d6",
+            "damageType": "slashing",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": [],
+            "option": ""
+          }
+        ]
+      }
+    }
+  }
+}

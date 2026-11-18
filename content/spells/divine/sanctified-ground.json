@@ -13,7 +13,7 @@
     "reaction": false,
     "outcomes": {
       "triumph": "As Success, but the radius is 30'.",
-      "success": "Allies standing in the area defend with -2 DR. An Undead or Fiend that enters the area or starts its turn inside takes d6 radiant damage.",
+      "success": "Allies standing in the area defend with -2 DR. An Undead or Fiend that enters the area or starts its turn inside takes d6 light damage.",
       "failure": "The ground holds only until the end of your next turn, and cannot be sustained.",
       "ruin": "The ground rejects you: you are knocked Prone. Roll on the Shadowblight table."
     },
@@ -44,7 +44,7 @@
         "nextOnly": false,
         "test": false,
         "whileSustained": false,
-        "note": "allies standing in the area; moving ends the spell; an Undead or Fiend entering or starting its turn inside takes d6 radiant"
+        "note": "allies standing in the area; moving ends the spell; an Undead or Fiend entering or starting its turn inside takes d6 light"
       },
       {
         "kind": "buff",

@@ -23,6 +23,32 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "automation": "text"
+    "automation": "partial",
+    "outcomeEffects": [
+      {
+        "kind": "condition",
+        "who": "target",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "frightened",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "of you, until their next Long Rest"
+      }
+    ]
   }
 }

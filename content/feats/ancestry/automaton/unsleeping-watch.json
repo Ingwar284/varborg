@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFAutomaton007",
+  "name": "Unsleeping Watch",
+  "type": "feat",
+  "img": "icons/commodities/tech/cog-gear-wheel-gold.webp",
+  "system": {
+    "description": "You do not sleep; you wind down, lens open, ticking. You can keep watch through a whole Long Rest and still gain its benefits, and you are never caught napping: when a fight interrupts your rest, you act first in its first round.",
+    "source": "ancestry",
+    "belongsTo": "Automaton",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

@@ -1,7 +1,8 @@
 /**
  * Condition timers in Foundry (GAPS 129–131).
  *
- * A timer is kept on the condition's status effect (flags.var-borg.timer).
+ * A timer is kept on the condition's effect (effect.system.timer, a
+ * condition-type effect) or on a buff item (flags.var-borg.timer).
  * In combat the Dark Master's client counts it down: rounds at the end of
  * the creature's own turns, "until the start of its next turn" when its
  * turn starts (module/combat.mjs). When combat ends, every timed condition
@@ -28,14 +29,27 @@ const FLAG = "timer";
 
 const { DialogV2 } = foundry.applications.api;
 
-/** The status effect that gives this condition, if the actor has it. */
+/** The condition effect that gives this condition, if the actor has it. */
 export function conditionEffect(actor, id) {
-  return actor?.effects.find(effect => effect.statuses.has(id) && !effect.getFlag(SYSTEM, "panic") && !effect.getFlag(SYSTEM, "agony")) ?? null;
+  return actor?.effects.find(effect => effect.type === "condition" && effect.statuses.has(id)) ?? null;
+}
+
+/** The timer of a condition effect or a buff item, or null when it has none. */
+export function timerOf(doc) {
+  if (!doc) return null;
+  if (doc.documentName === "ActiveEffect") return doc.type === "condition" ? doc.system.timer ?? null : null;
+  return doc.getFlag(SYSTEM, FLAG) ?? null;
+}
+
+/** Set (or with null, clear) the timer of a condition effect or a buff item. */
+export function setTimer(doc, timer) {
+  if (doc.documentName === "ActiveEffect") return doc.update({ "system.timer": timer ?? null });
+  return timer ? doc.setFlag(SYSTEM, FLAG, timer) : doc.unsetFlag(SYSTEM, FLAG);
 }
 
 /** The condition's timer, or null when it has none. */
 export function conditionTimer(actor, id) {
-  return conditionEffect(actor, id)?.getFlag(SYSTEM, FLAG) ?? null;
+  return timerOf(conditionEffect(actor, id));
 }
 
 /** "3 rounds left", "until the start of its next turn"... for the sheet and chat. */
@@ -89,7 +103,7 @@ export async function addTimedCondition(actor, id, spec) {
   if (!had) await actor.toggleStatusEffect(id, { active: true });
   const keep = had ? longerTimer(current, timer) : timer;
   const effect = conditionEffect(actor, id);
-  if (effect && keep && keep !== current) await effect.setFlag(SYSTEM, FLAG, keep);
+  if (effect && keep && keep !== current) await setTimer(effect, keep);
 
   const parts = [i18n.format("VARBORG.Gloom.Became", { name: actor.name, condition })];
   if (keep) parts.push(i18n.format(roll && !roll.isDeterministic ? "VARBORG.Timer.ForRolled" : "VARBORG.Timer.For", {
@@ -113,16 +127,16 @@ async function endCondition(actor, effect) {
 
 /**
  * Every timed condition the actor has, and its timed buffs (temporary
- * items from powers and spells, step 51c): both have the timer flag.
+ * items from powers and spells, step 51c): both have a timer.
  */
 function timedEffects(actor) {
-  return [...(actor?.effects ?? []), ...(actor?.items ?? [])].filter(doc => doc.getFlag(SYSTEM, FLAG));
+  return [...(actor?.effects ?? []), ...(actor?.items ?? [])].filter(doc => timerOf(doc));
 }
 
 /** Start of the creature's turn: "until the start of its next turn" ends; escape rolls (GAPS 234). */
 export async function startOfTurnTimers(actor) {
   for (const effect of timedEffects(actor)) {
-    const timer = effect.getFlag(SYSTEM, FLAG);
+    const timer = timerOf(effect);
     if (timer.kind === "escapeStart") await escapeRoll(actor, effect, timer);
     else if (timerAtStartOfTurn(timer).ends) await endCondition(actor, effect);
   }
@@ -135,7 +149,7 @@ export async function startOfTurnTimers(actor) {
  */
 async function escapeRoll(actor, effect, timer) {
   if (timer.freshTurn) {
-    await effect.setFlag(SYSTEM, FLAG, { ...timer, freshTurn: false });
+    await setTimer(effect, { ...timer, freshTurn: false });
     return;
   }
   const i18n = game.i18n;
@@ -173,14 +187,15 @@ export function addEscapeListeners(message, html) {
 /** End of the creature's turn: rounds count down (GAPS 129); escape rolls at the end (GAPS 234). */
 export async function endOfTurnTimers(actor) {
   for (const effect of timedEffects(actor)) {
-    if (effect.getFlag(SYSTEM, FLAG)?.kind === "escapeEnd") {
-      await escapeRoll(actor, effect, effect.getFlag(SYSTEM, FLAG));
+    const timer = timerOf(effect);
+    if (timer?.kind === "escapeEnd") {
+      await escapeRoll(actor, effect, timer);
       continue;
     }
-    if (ESCAPE_KINDS.includes(effect.getFlag(SYSTEM, FLAG)?.kind)) continue;
-    const next = timerAtEndOfTurn(effect.getFlag(SYSTEM, FLAG));
+    if (ESCAPE_KINDS.includes(timer?.kind)) continue;
+    const next = timerAtEndOfTurn(timer);
     if (next.ends) await endCondition(actor, effect);
-    else await effect.setFlag(SYSTEM, FLAG, next.timer);
+    else await setTimer(effect, next.timer);
   }
 }
 
@@ -188,7 +203,7 @@ export async function endOfTurnTimers(actor) {
 export async function endCombatTimers(actors) {
   for (const actor of new Set(actors)) {
     for (const effect of timedEffects(actor)) {
-      if (timerEndsWithCombat(effect.getFlag(SYSTEM, FLAG))) await endCondition(actor, effect);
+      if (timerEndsWithCombat(timerOf(effect))) await endCondition(actor, effect);
     }
   }
 }
@@ -197,7 +212,7 @@ export async function endCombatTimers(actors) {
 export async function endNewDayTimers(actors) {
   for (const actor of new Set(actors)) {
     for (const effect of timedEffects(actor)) {
-      if (timerEndsWithNewDay(effect.getFlag(SYSTEM, FLAG))) await endCondition(actor, effect);
+      if (timerEndsWithNewDay(timerOf(effect))) await endCondition(actor, effect);
     }
   }
 }
@@ -230,12 +245,12 @@ export async function askConditionTimer(actor, id) {
   const effect = conditionEffect(actor, id);
   if (!effect) return;
   if (!data.kind) {
-    await effect.unsetFlag(SYSTEM, FLAG);
+    await setTimer(effect, null);
     return;
   }
   const rolled = await rollTimer(actor, { kind: data.kind, rounds: data.rounds });
   if (!rolled.timer) return;
-  await effect.setFlag(SYSTEM, FLAG, rolled.timer);
+  await setTimer(effect, rolled.timer);
   if (rolled.roll && !rolled.roll.isDeterministic) {
     await rolled.roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor }),

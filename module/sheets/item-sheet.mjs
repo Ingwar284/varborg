@@ -13,11 +13,12 @@ import { BELONGING_SOURCES, canBeImproving } from "../rules/feats.mjs";
 import PowerData from "../data/power.mjs";
 import SpellData from "../data/spell.mjs";
 import { AREA_SHAPE_LABELS, AREA_AFFECTS_LABELS } from "../data/area.mjs";
+import { POINT_SHAPES } from "../rules/areas.mjs";
 import { LASTING_ACTIONS, lastingContext, listenToLasting, optionAreasContext, listenToOptionAreas } from "./lasting-part.mjs";
 import { powerDr } from "../rules/powers.mjs";
 import { gloomTest } from "../rules/gloom.mjs";
 import { castingDr } from "../rules/spells.mjs";
-import { ClassData } from "../data/origins.mjs";
+import { ClassData, AncestryData } from "../data/origins.mjs";
 import { FREQUENCY_LABELS } from "../data/uses.mjs";
 import { ARMOUR_TIER_MIN, ARMOUR_TIER_MAX } from "../rules/equipment.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
@@ -37,7 +38,7 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     position: { width: 480, height: "auto" },
     window: { resizable: true },
     form: { submitOnChange: true },
-    actions: EFFECT_ACTIONS
+    actions: { ...EFFECT_ACTIONS, ...LASTING_ACTIONS }
   };
 
   /** Each sheet below names its own middle part. */
@@ -46,13 +47,36 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   /** Containers and scrolls have no effects (PLAN step 49a). */
   static hasEffects = true;
 
+  /** Gear and thrown weapons have an area (GAPS 314, PLAN step 68). */
+  static hasArea = false;
+
   static get PARTS() {
     return {
       header: { template: `${TEMPLATES}/item-header.hbs` },
       details: { template: this.detailsTemplate },
+      ...(this.hasArea ? { area: { template: `${TEMPLATES}/item-area.hbs` } } : {}),
       description: { template: `${TEMPLATES}/item-description.hbs` },
       ...(this.hasEffects ? { effects: { template: EFFECTS_TEMPLATE } } : {})
     };
+  }
+
+  /**
+   * Whether the Area part has anything in it now. A weapon's is empty
+   * unless it can be thrown; the part itself is always there, so it keeps
+   * its place on the sheet when the weapon changes.
+   */
+  get showsArea() {
+    return this.constructor.hasArea;
+  }
+
+  /** @override */
+  async _preparePartContext(partId, context, options) {
+    const part = await super._preparePartContext(partId, context, options);
+    if (partId !== "area") return part;
+    if (!this.showsArea) return { ...part, hideArea: true };
+    const damageTypes = { "": "VARBORG.DamageType.none", ...WeaponData.DAMAGE_TYPES };
+    // Gear and grenades can be tossed (GAPS 314).
+    return { ...part, canToss: true, ...areaContext(this.document.system), ...lastingContext(this.document.system, damageTypes) };
   }
 
   /** @override */
@@ -73,6 +97,7 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   async _onRender(context, options) {
     await super._onRender(context, options);
     listenToEffects(this);
+    if (this.showsArea) listenToLasting(this);
     // The Equipped box puts the item where it usually goes, taking off
     // what is in the way, like the Inventory tab's tick (GAPS 287).
     this.element.querySelector("input[data-equip-toggle]")?.addEventListener("change", event => {
@@ -84,6 +109,13 @@ class EquipmentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
 
 export class WeaponSheet extends EquipmentSheet {
   static detailsTemplate = `${TEMPLATES}/weapon-details.hbs`;
+  static hasArea = true;
+
+  /** Only a weapon that can be thrown (a grenade) has an area; a foe's attack never does. */
+  get showsArea() {
+    const system = this.document.system;
+    return !["foe", "minion"].includes(this.document.actor?.type) && (system.kind === "throw" || system.thrown > 0);
+  }
 
   /** @override */
   async _prepareContext(options) {
@@ -126,6 +158,7 @@ export class ShieldSheet extends EquipmentSheet {
 
 export class GearSheet extends EquipmentSheet {
   static detailsTemplate = `${TEMPLATES}/gear-details.hbs`;
+  static hasArea = true;
 
   /** @override */
   async _prepareContext(options) {
@@ -470,7 +503,16 @@ export class ClassSheet extends OriginSheet {
   }
 }
 
-export class AncestrySheet extends OriginSheet {}
+export class AncestrySheet extends OriginSheet {
+  static detailsTemplate = `${TEMPLATES}/ancestry-details.hbs`;
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    context.randomChances = AncestryData.RANDOM_CHANCES;
+    return context;
+  }
+}
 
 export class BackgroundSheet extends OriginSheet {
   static detailsTemplate = `${TEMPLATES}/background-details.hbs`;
@@ -483,7 +525,8 @@ function areaContext(system) {
   return {
     areaShapes: AREA_SHAPE_LABELS,
     areaAffects: AREA_AFFECTS_LABELS,
-    areaIsBurst: shape === "burst",
+    // A burst or square is placed at a point: it has a range (GAPS 314).
+    areaIsBurst: POINT_SHAPES.includes(shape),
     areaHasWidth: shape === "line" || shape === "wall"
   };
 }

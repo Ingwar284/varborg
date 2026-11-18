@@ -1,0 +1,16 @@
+{
+  "_id": "vbCFCart03000000",
+  "name": "Cross my palm",
+  "type": "feat",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "Ten minutes, a candle and a silver coin are all you need to read a stranger. Test Presence (DR12). Triumph: they tell you a secret they have never told anyone, and think kindly of you. Success: they answer one question honestly, believing the cards asked it. Failure: they pay, shrug and leave. Ruin: you tell them something true that you should not know. They think you a witch, and the Candle-Wicked Men may hear of it.",
+    "source": "class",
+    "belongsTo": "Cartomancer",
+    "improving": false,
+    "frequency": "",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

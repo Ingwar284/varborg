@@ -14,22 +14,23 @@
  * Misery button picks the level, the omen (or rolls it), the light die,
  * and whether the sun rose.
  *
- * Omens of Misery (GAPS 307): with the world setting "Dying of the light"
- * on Omens of Misery, the light die is not rolled. Each Misery that has
- * come keeps a track of its six omens, saved in its own setting (so the
- * light-die Misery is kept for switching back). The Omen results of the
- * travel table call omenForTravel: it brings the next Misery when it is
- * due, or moves a live Misery on (random: a roll; nearest: the Dark Master
- * picks). At dawn only the newest Misery's sunrise die is rolled. Set
- * Misery sets every Misery's result and omens.
+ * Omens of Misery (GAPS 307, 309): with the world setting "Dying of the
+ * light" on Omens of Misery, the light die is not rolled. Each Misery that
+ * has come keeps its omens (its d6 results) and the stage each has
+ * reached, saved in their own setting (so the light-die Misery is kept for
+ * switching back). The Omen results of the travel table call
+ * omenForTravel: Omen (new) starts a new omen of the newest Misery, or
+ * brings the next Misery when it is due; Omen (ongoing) moves a live omen,
+ * picked by a roll, one stage on. At dawn only the newest Misery's sunrise
+ * die is rolled. Set Misery sets every omen's stage.
  *
  * The maths lives in module/rules/misery.mjs.
  */
 
 import {
   LIGHT_DICE, OMEN_DIE, END_LEVEL, numeral, sunriseDie, isEnd, isOne, cleanMisery, afterLightDie,
-  OMENS_PER_RESULT, cleanTrack, newestLevel, isDue, omenOutcome, bringNext, advance,
-  miseryFromTrack, cleanPerMisery
+  STAGES, cleanTrack, newestLevel, isDue, newOmenOutcome, ongoingOutcome, bringNext, startOmen, advanceOmen,
+  stageOf, miseryFromTrack, cleanPerMisery
 } from "./rules/misery.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 import { omensMode, omensPerMisery } from "./settings.mjs";
@@ -127,8 +128,8 @@ function omenStepText(level, result, step) {
 }
 
 /**
- * Where the omens stand: "Misery II is due…", "Misery II comes after 2
- * more omens of Misery I.", or "" once the world has ended.
+ * Where the omens stand: "Misery II is due…", "Misery II comes once an
+ * omen of Misery I reaches stage 4.", or "" once the world has ended.
  */
 function nextLine(track, perMisery) {
   const i18n = game.i18n;
@@ -139,11 +140,34 @@ function nextLine(track, perMisery) {
     return level >= 6 ? i18n.localize("VARBORG.Misery.Omens.EndDue")
       : i18n.format("VARBORG.Misery.Omens.Due", { name: miseryName(level + 1) });
   }
-  const count = cleanPerMisery(perMisery) - track.miseries[level - 1].omens;
-  const next = level >= 6 ? numeral(END_LEVEL) : miseryName(level + 1);
-  return i18n.format(count === 1 ? "VARBORG.Misery.Omens.NextAfterOne" : "VARBORG.Misery.Omens.NextAfterMany", {
-    name: next, count, current: miseryName(level)
+  return i18n.format("VARBORG.Misery.Omens.NextAt", {
+    name: level >= 6 ? numeral(END_LEVEL) : miseryName(level + 1),
+    current: miseryName(level),
+    stage: cleanPerMisery(perMisery)
   });
+}
+
+/** One omen for the Misery panel: its name, stage pips and the text of each stage so far. */
+function omenContext(level, { result, stage }) {
+  return {
+    level,
+    result,
+    title: resultTitle(level, result),
+    name: game.i18n.localize(`VARBORG.Misery.ResultName.${numeral(level)}${result}`),
+    stage,
+    done: stage >= STAGES,
+    hasEarlier: stage > 1,
+    stageLabel: game.i18n.format("VARBORG.Misery.Omens.Step", { step: stage }),
+    pips: Array.from({ length: STAGES }, (_, i) => ({
+      n: i + 1,
+      state: i + 1 < stage ? "past" : i + 1 === stage ? "current" : "future"
+    })),
+    stages: Array.from({ length: stage }, (_, i) => ({
+      n: i + 1,
+      current: i + 1 === stage,
+      text: omenStepText(level, result, i + 1)
+    }))
+  };
 }
 
 /** The Misery panel. */
@@ -151,10 +175,12 @@ export function miseryContext() {
   const { level, omen, light, sunless } = currentMisery();
   const context = {
     level,
+    numeral: numeral(level),
     name: miseryName(level),
     omen: level && omen ? omenText(level, omen) : "",
     end: isEnd(level),
     sunless,
+    sunDie: sunriseDie(level)?.replace(/^1/, "") ?? "",
     light: lightName(light),
     omensMode: omensMode()
   };
@@ -162,11 +188,19 @@ export function miseryContext() {
   const track = currentTrack();
   const perMisery = omensPerMisery();
   context.omen = "";
-  context.tracks = track.miseries.map((misery, index) => ({
-    title: resultTitle(index + 1, misery.result),
-    count: game.i18n.format("VARBORG.Misery.Omens.Track", { step: misery.omens }),
-    done: misery.omens >= OMENS_PER_RESULT
-  }));
+  context.miseries = track.miseries.map((misery, index) => {
+    const omens = misery.omens.map(o => omenContext(index + 1, o));
+    return {
+      level: index + 1,
+      numeral: numeral(index + 1),
+      name: miseryName(index + 1),
+      newest: index + 1 === track.miseries.length && !track.ended,
+      done: omens.every(o => o.done),
+      count: game.i18n.format(omens.length === 1 ? "VARBORG.Misery.Omens.CountOne" : "VARBORG.Misery.Omens.Count",
+        { count: omens.length }),
+      omens
+    };
+  }).reverse();
   context.next = nextLine(track, perMisery);
   context.mode = game.i18n.format("VARBORG.Misery.Omens.Mode", { count: cleanPerMisery(perMisery) });
   return context;
@@ -265,43 +299,46 @@ async function omensForNewDay() {
 /*  An omen on the road (Omens of Misery)        */
 /* -------------------------------------------- */
 
-/** Ask the Dark Master which live Misery is nearest. Closing picks the newest. */
-async function pickNearest(choices, track) {
-  const i18n = game.i18n;
-  const newest = choices.at(-1);
-  const entries = choices.map(level => [level, `${resultTitle(level, track.miseries[level - 1].result)} (${
-    i18n.format("VARBORG.Misery.Omens.Track", { step: track.miseries[level - 1].omens })})`]);
-  const data = await DialogV2.input({
-    classes: VB_DIALOG_CLASSES,
-    window: { title: "VARBORG.Misery.Omens.PickTitle", icon: "fa-solid fa-skull" },
-    position: { width: 380 },
-    content: `<p class="hint">${i18n.localize("VARBORG.Misery.Omens.PickHint")}</p>`
-      + `<div class="form-group"><label>${i18n.localize("VARBORG.Misery.Omens.PickLabel")}</label>`
-      + `<select name="level">${options(entries, newest)}</select></div>`,
-    ok: { label: "VARBORG.Travel.Go", icon: "fa-solid fa-check" },
-    rejectClose: false
-  });
-  const level = Number(data?.level);
-  return choices.includes(level) ? level : newest;
+/** Roll a die and keep it as a card roll. */
+async function rollInto(rolls, formula) {
+  const roll = await rollDie(formula);
+  rolls.push(roll);
+  return roll.total;
+}
+
+/** "II:3 Shattered mirrors · Stage 2 of 6" and the stage's text. */
+function stageLines(track, level, result) {
+  const stage = stageOf(track, level, result);
+  return [
+    { text: `${resultTitle(level, result)} · ${game.i18n.format("VARBORG.Misery.Omens.Step", { step: stage })}`, cls: "misery-omen" },
+    { text: omenStepText(level, result, stage) }
+  ];
 }
 
 /**
  * Dark Master only: an Omen result on the travel table, with Omens of
- * Misery in use (GAPS 307). Brings the next Misery if it is due, or moves
- * a live Misery on to its next omen, and saves the track.
- * @param {"random"|"nearest"} kind  Which Omen result was rolled.
+ * Misery in use (GAPS 307, 309), and save the track.
+ * - "new" (11-12): the next Misery comes if it is due; otherwise a new
+ *   omen of the newest Misery starts at stage 1 (its d6 rolled again on a
+ *   result already started); with all six started, a live omen moves on.
+ * - "ongoing" (13-16): a live omen, picked by a roll, moves one stage on;
+ *   with none live, it works as "new".
+ * @param {"new"|"ongoing"} kind  Which Omen result was rolled.
  * @returns {Promise<{lines: Array<{text: string, cls?: string}>, rolls: Roll[], end: boolean}>}
  */
 export async function omenForTravel(kind) {
   const i18n = game.i18n;
   const track = currentTrack();
   const perMisery = omensPerMisery();
-  const outcome = omenOutcome(track, perMisery);
+  const outcome = kind === "new" ? newOmenOutcome(track, perMisery) : ongoingOutcome(track, perMisery);
   const lines = [];
   const rolls = [];
 
   if (outcome.kind === "none") {
     return { lines: [{ text: i18n.localize("VARBORG.Misery.Omens.Over") }], rolls, end: false };
+  }
+  if (kind === "ongoing" && outcome.kind !== "advance") {
+    lines.push({ text: i18n.localize("VARBORG.Misery.Omens.NoneLive"), cls: "hint" });
   }
 
   if (outcome.kind === "ends") {
@@ -311,37 +348,46 @@ export async function omenForTravel(kind) {
     return { lines, rolls, end: true };
   }
 
-  let level;
   let after;
+  let level;
+  let result;
   if (outcome.kind === "comes") {
-    const resultRoll = await rollDie(OMEN_DIE);
-    rolls.push(resultRoll);
     level = outcome.level;
-    after = bringNext(track, resultRoll.total);
+    result = await rollInto(rolls, OMEN_DIE);
+    after = bringNext(track, result);
     lines.push({ text: i18n.format("VARBORG.Misery.Omens.Comes", { name: miseryName(level) }) });
-    lines.push({ text: i18n.format("VARBORG.Misery.Omens.ResultRolled", { result: resultRoll.total }) });
+    lines.push({ text: i18n.format("VARBORG.Misery.Omens.FirstOmen", { result }) });
+  } else if (outcome.kind === "start") {
+    level = outcome.level;
+    // A result already started is rolled again.
+    const seen = [];
+    do {
+      result = await rollInto(rolls, OMEN_DIE);
+      seen.push(result);
+    } while (!outcome.results.includes(result));
+    after = startOmen(track, result);
+    lines.push({
+      text: seen.length > 1
+        ? i18n.format("VARBORG.Misery.Omens.NewRerolled", { name: miseryName(level), rolls: seen.join(", "), result })
+        : i18n.format("VARBORG.Misery.Omens.New", { name: miseryName(level), result })
+    });
   } else {
-    const { choices } = outcome;
-    if (choices.length === 1) {
-      level = choices[0];
-    } else if (kind === "nearest") {
-      level = await pickNearest(choices, track);
-      lines.push({ text: i18n.format("VARBORG.Misery.Omens.Nearest", { name: miseryName(level) }) });
-    } else {
-      const pick = await rollDie(`1d${choices.length}`);
-      rolls.push(pick);
-      level = choices[pick.total - 1];
-      lines.push({ text: i18n.format("VARBORG.Misery.Omens.Random", { die: choices.length, result: miseryName(level) }) });
+    if (kind === "new") {
+      lines.push({ text: i18n.format("VARBORG.Misery.Omens.AllBegun", { name: miseryName(track.miseries.length) }), cls: "hint" });
     }
-    after = advance(track, level);
+    const { choices } = outcome;
+    let pick = choices[0];
+    if (choices.length > 1) {
+      pick = choices[(await rollInto(rolls, `1d${choices.length}`)) - 1];
+      lines.push({
+        text: i18n.format("VARBORG.Misery.Omens.Random", { die: choices.length, result: resultTitle(pick.level, pick.result) })
+      });
+    }
+    ({ level, result } = pick);
+    after = advanceOmen(track, level, result);
   }
 
-  const { result, omens } = after.miseries[level - 1];
-  lines.push({
-    text: `${resultTitle(level, result)} · ${i18n.format("VARBORG.Misery.Omens.Step", { step: omens })}`,
-    cls: "misery-omen"
-  });
-  lines.push({ text: omenStepText(level, result, omens) });
+  lines.push(...stageLines(after, level, result));
   const next = isDue(after, perMisery) ? nextLine(after, perMisery) : "";
   if (next) lines.push({ text: next, cls: "hint" });
   // Today's sky stays as it was; a new Misery's sunrise die is first rolled at the next dawn.
@@ -426,31 +472,29 @@ export async function setMiseryByHand() {
 }
 
 /**
- * Dark Master only, Omens of Misery: set each Misery's d6 result (or roll
- * it) and how many of its omens have happened, whether VII has come, and
- * whether the sun rose today. Miseries come in order, so the list stops at
- * the first one set to None.
+ * Dark Master only, Omens of Misery: set the stage of every omen of every
+ * Misery (0: not begun), whether VII has come, and whether the sun rose
+ * today. Miseries come in order, so the list stops at the first Misery
+ * with no omen begun.
  * @returns {Promise<boolean>}  Whether the Miseries were set.
  */
 async function setOmensByHand() {
   const i18n = game.i18n;
+  const escape = foundry.utils.escapeHTML;
   const now = currentTrack();
-  const steps = [0, 1, 2, 3, 4, 5, 6].map(n => [n, String(n)]);
+  const stages = [0, 1, 2, 3, 4, 5, 6].map(n => [n, n ? String(n) : "–"]);
+  const head = [1, 2, 3, 4, 5, 6].map(result => `<th>${result}</th>`).join("");
   const rows = [1, 2, 3, 4, 5, 6].map(level => {
-    const misery = now.miseries[level - 1];
-    const levelResults = [
-      ["", i18n.localize("VARBORG.Misery.Omens.NoResult")],
-      ["roll", i18n.localize("VARBORG.Misery.RollOmen")],
-      ...[1, 2, 3, 4, 5, 6].map(n => [n, resultTitle(level, n)])
-    ];
-    return `<tr><th>${foundry.utils.escapeHTML(miseryName(level))}</th>`
-      + `<td><select name="result${level}">${options(levelResults, misery?.result ?? "")}</select></td>`
-      + `<td><select name="omens${level}">${options(steps, misery?.omens ?? 1)}</select></td></tr>`;
+    const cells = [1, 2, 3, 4, 5, 6].map(result => {
+      const title = resultTitle(level, result);
+      return `<td data-tooltip="${escape(title)}">`
+        + `<select name="stage${level}_${result}" aria-label="${escape(title)}">${options(stages, stageOf(now, level, result))}</select></td>`;
+    }).join("");
+    return `<tr><th>${escape(miseryName(level))}</th>${cells}</tr>`;
   }).join("");
   const content = `<p class="hint">${i18n.localize("VARBORG.Misery.Omens.SetHint")}</p>`
-    + `<table class="misery-set-table"><thead><tr><th></th>`
-    + `<th>${i18n.localize("VARBORG.Misery.Omens.ResultLabel")}</th>`
-    + `<th>${i18n.localize("VARBORG.Misery.Omens.OmensLabel")}</th></tr></thead><tbody>${rows}</tbody></table>`
+    + `<table class="misery-set-table"><thead><tr><th>${i18n.localize("VARBORG.Misery.Omens.OmenLabel")}</th>${head}</tr></thead>`
+    + `<tbody>${rows}</tbody></table>`
     + `<div class="form-group"><label>${i18n.localize("VARBORG.Misery.Omens.EndedLabel")}</label>`
     + `<input type="checkbox" name="ended" ${now.ended ? "checked" : ""}></div>`
     + `<div class="form-group"><label>${i18n.localize("VARBORG.Misery.SunlessLabel")}</label>`
@@ -458,26 +502,20 @@ async function setOmensByHand() {
   const data = await DialogV2.input({
     classes: VB_DIALOG_CLASSES,
     window: { title: "VARBORG.Misery.SetTitle", icon: "fa-solid fa-skull" },
-    position: { width: 520 },
+    position: { width: 560 },
     content,
     ok: { label: "VARBORG.Misery.Set", icon: "fa-solid fa-check" },
     rejectClose: false
   });
   if (!data) return false;
 
-  const rolls = [];
-  const miseries = [];
-  for (const level of [1, 2, 3, 4, 5, 6]) {
-    const chosen = data[`result${level}`];
-    if (!chosen) break;
-    let result = Number(chosen);
-    if (chosen === "roll") {
-      const resultRoll = await rollDie(OMEN_DIE);
-      rolls.push(resultRoll);
-      result = resultRoll.total;
-    }
-    miseries.push({ result, omens: Number(data[`omens${level}`]) });
-  }
+  const miseries = [1, 2, 3, 4, 5, 6].map(level => {
+    const stageFor = result => Number(data[`stage${level}_${result}`]) || 0;
+    // Omens already begun keep their order; newly set ones follow by result.
+    const before = now.miseries[level - 1]?.omens.map(o => o.result) ?? [];
+    const order = [...before, ...[1, 2, 3, 4, 5, 6].filter(r => !before.includes(r))];
+    return { omens: order.filter(r => stageFor(r) > 0).map(result => ({ result, stage: stageFor(result) })) };
+  });
   const track = cleanTrack({ miseries, ended: !!data.ended });
   await saveTrack(track, !!data.sunless);
   const saved = currentTrack();
@@ -487,13 +525,13 @@ async function setOmensByHand() {
     omen: null,
     lines: [
       i18n.format("VARBORG.Misery.SetCard", { name: miseryName(level) }),
-      ...saved.miseries.map((misery, index) => `${resultTitle(index + 1, misery.result)} · ${
-        i18n.format("VARBORG.Misery.Omens.Track", { step: misery.omens })}`),
+      ...saved.miseries.flatMap((misery, index) => misery.omens.map(o => `${resultTitle(index + 1, o.result)} · ${
+        i18n.format("VARBORG.Misery.Omens.Track", { step: o.stage })}`)),
       nextLine(saved, omensPerMisery())
     ].filter(Boolean),
     sunLine: saved.sunless ? i18n.localize("VARBORG.Misery.NoSunToday") : "",
     sunless: saved.sunless,
-    rolls
+    rolls: []
   });
   return true;
 }

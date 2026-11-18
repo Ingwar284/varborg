@@ -1,0 +1,30 @@
+{
+  "_id": "vbWeapRazorDeck0",
+  "name": "Razor deck",
+  "type": "weapon",
+  "img": "icons/sundries/gaming/game-playing-cards-deck.webp",
+  "system": {
+    "description": "Fifty-four cards, two of them Jokers, every edge filed and set with razor-tin (the Card Slinger's class feature Razor deck). It never needs retrieving. Each throw draws a card, and the card sets the damage: d4 for a 2 to 5, d6 for a 6 to 10, d8 for a knave, queen or king, d10 for an ace, d12 for a Joker (and you take d4 slashing damage). Shuffle it with its button (an Interact action); it is shuffled whole when an encounter ends.",
+    "price": 0,
+    "cumbersome": false,
+    "storedIn": "",
+    "equipped": true,
+    "damage": "d6",
+    "kind": "throw",
+    "damageType": "slashing",
+    "agile": true,
+    "finesse": false,
+    "heavy": false,
+    "twoHanded": false,
+    "versatile": false,
+    "reach": 0,
+    "thrown": 30,
+    "ranged": 0,
+    "reload": 0,
+    "expendable": "",
+    "loaded": true,
+    "usedUp": false,
+    "attackAbility": "",
+    "cardDeck": true
+  }
+}

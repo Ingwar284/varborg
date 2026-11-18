@@ -10,6 +10,8 @@
  * - Cone ("a 30' cone"): a quarter-circle from the user, as long as stated.
  * - Line ("a 40' line"): straight from the user, 5' wide unless stated.
  * - Wall ("a wall, 10' by 10'"): the stated length, 5' thick.
+ * - Square ("a 5-foot square", gear such as Caltrops and the Fire pot,
+ *   GAPS 314): a square of the stated side at a point, like a burst.
  * A creature is caught if the area covers at least half of its tile.
  *
  * "Several targets" ("up to three creatures within 30'") is not an area:
@@ -19,7 +21,10 @@
  */
 
 /** The shapes, in the rules' order. */
-export const AREA_SHAPES = ["emanation", "burst", "cone", "line", "wall"];
+export const AREA_SHAPES = ["emanation", "burst", "cone", "line", "wall", "square"];
+
+/** Shapes placed at a point within a range of the user (not spread from the user). */
+export const POINT_SHAPES = ["burst", "square"];
 
 /** Who an area affects: everyone (the rules' default), or only foes or allies. */
 export const AREA_AFFECTS = ["all", "foes", "allies"];

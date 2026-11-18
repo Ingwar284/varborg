@@ -14,7 +14,7 @@
  * The maths lives in module/rules/minions.mjs.
  */
 
-import { minionLimit, canTakeMinion, minionTurn, COMMAND_ACTIONS, MINION_TIER_STATS } from "./rules/minions.mjs";
+import { minionLimit, canTakeMinion, minionTurn, COMMAND_ACTIONS, MINION_TIER_STATS, vehiclesMadeFor } from "./rules/minions.mjs";
 import { minionTierFor } from "./rules/item-effects.mjs";
 import { turnState } from "./combat.mjs";
 import { markDefeated } from "./dice/morale.mjs";
@@ -29,6 +29,36 @@ const COMMANDED = "commanded";
 export function ownedMinions(character, { except = null } = {}) {
   if (!character) return [];
   return game.actors.filter(actor => actor.type === "minion" && actor.system.owner === character.id && actor.id !== except);
+}
+
+/**
+ * The vehicles the system made for this character (step 72): their starting
+ * mule or handcart, and companion vehicles from their items. Old mules and
+ * handcarts, made before they were marked, are known by their name.
+ * @param {Actor} character
+ * @returns {Actor[]}
+ */
+export function vehiclesMadeForCharacter(character) {
+  if (!character) return [];
+  const i18n = game.i18n;
+  const oldNames = ["Mule", "Handcart"].map(vehicle => i18n.format("VARBORG.Creation.Equipment.VehicleName", { name: character.name, vehicle }));
+  const list = game.actors.filter(actor => actor.type === "vehicle").map(actor => ({
+    id: actor.id, type: actor.type, name: actor.name,
+    createdFor: actor.getFlag(SYSTEM, "createdFor") ?? "", fromItem: actor.getFlag(SYSTEM, "fromItem") ?? ""
+  }));
+  return vehiclesMadeFor(list, { id: character.id, oldNames }).map(id => game.actors.get(id)).filter(Boolean);
+}
+
+/**
+ * When a character is deleted, the Dark Master's client deletes their
+ * minions (as rerolling does) and the vehicles made for them (step 72).
+ */
+export function registerCompanionCleanup() {
+  Hooks.on("deleteActor", async actor => {
+    if (!game.user.isActiveGM || actor.type !== "character") return;
+    const gone = [...ownedMinions(actor), ...vehiclesMadeForCharacter(actor)].map(other => other.id);
+    if (gone.length) await getDocumentClass("Actor").deleteDocuments(gone);
+  });
 }
 
 /**

@@ -1,0 +1,15 @@
+{
+  "_id": "vbClCartomancer0",
+  "name": "Cartomancer",
+  "type": "class",
+  "img": "icons/sundries/gaming/rune-card.webp",
+  "system": {
+    "description": "In the Ironwall Market the wheel of Vex never stops turning, and in its shadow sit the readers: old women in shawls, young men with kohl-dark eyes, each with a deck of trumps worn soft as cloth. You are one of them. You do not see the future; nobody does. You see the fear in a face and the hope in a hand, and you tell people what they need to hear to live through the night. Sometimes the cards agree with you. Sometimes the thirteenth card turns up, black as the inside of a coffin, and then you say nothing at all.\n\nClass feature: The reading\nYou carry the Dusk Arcana, a deck of twelve painted trumps and one black card that is not supposed to exist. After each Long Rest, lay out your reading: draw three trumps (roll a d12 for each on the Dusk Arcana, and reroll repeats). Once per round, you can use your reaction ↻ to turn one card of your reading face down: its meaning takes effect on you or an ally you can see within 30'. A turned card is spent until your next Long Rest. Lose the deck, and you have no reading until you paint a new one in Downtime.\n\nClass power: Draw for the querent 🟒1 ◈◈",
+    "boostedAbility": "presence",
+    "hpBase": 8,
+    "maxWounds": 2,
+    "spellList": "none",
+    "startingDie": "d6",
+    "startingWeapons": []
+  }
+}

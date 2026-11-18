@@ -4,8 +4,8 @@
   "type": "relic",
   "img": "icons/commodities/treasure/lense-pipe-bronze.webp",
   "system": {
-    "description": "A brass-ringed Solar Conclave lens said to have caught the last noon of Ati. Once per day, while you stand in light, as ◈, focus it on a creature within 30' and test Presence DR14. Success: it is Blinded until the end of its next turn; Duskborn and undead also take d6 radiant damage. Failure: no effect. Ruin: the light turns back on you, and you are Blinded until the end of your next turn. Expendable d20.",
-    "lastRite": "◈◈ Turn it to the sky, even where the sun cannot reach: a 15' burst within 120' is lit as by noon for 10 rounds. Duskborn and undead that start their turn inside take 2d6 radiant damage and are Blinded until the end of their turn.",
+    "description": "A brass-ringed Solar Conclave lens said to have caught the last noon of Ati. Once per day, while you stand in light, as ◈, focus it on a creature within 30' and test Presence DR14. Success: it is Blinded until the end of its next turn; Duskborn and undead also take d6 light damage. Failure: no effect. Ruin: the light turns back on you, and you are Blinded until the end of your next turn. Expendable d20.",
+    "lastRite": "◈◈ Turn it to the sky, even where the sun cannot reach: a 15' burst within 120' is lit as by noon for 10 rounds. Duskborn and undead that start their turn inside take 2d6 light damage and are Blinded until the end of their turn.",
     "drawback": "Sol's gaze finds the thief: the first time each day you stand under open sky while the sun is up, take d4 damage, until it is recovered.",
     "alwaysOn": false,
     "frequency": "day",

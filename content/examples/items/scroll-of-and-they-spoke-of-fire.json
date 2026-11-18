@@ -12,6 +12,7 @@
     "cost": 3,
     "actions": 2,
     "damage": "d8",
+    "damageType": "fire",
     "sustained": false,
     "outcomes": {
       "triumph": "As Success, 2x damage, and creatures in the cone take d4 persistent fire damage.",

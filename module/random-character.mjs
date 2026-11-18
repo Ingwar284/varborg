@@ -5,7 +5,8 @@
  * portrait and token image stay), rolls starting Fortune again, then rolls
  * every step of rules 2.1:
  * 1. Abilities: 3d6 for each ability (rules 2.2, Roll individually).
- * 2. Ancestry, each equally likely, a name from that ancestry's name tables
+ * 2. Ancestry, each equally likely (those marked "half" half as likely,
+ *    GAPS 327), a name from that ancestry's name tables
  *    (GAPS 258), and one ancestry feat of that ancestry.
  * 3. Background: d100 on the Backgrounds table (rules 2.4), which rolls
  *    its wealth and adds its keepsake.
@@ -25,7 +26,7 @@
 import { ROLL_SUM_FORMULA, scoresFromSums, learnableSpells } from "./rules/creation.mjs";
 import { ABILITIES } from "./rules/abilities.mjs";
 import { belongsTo } from "./rules/feats.mjs";
-import { pickRandom, uniqueByName } from "./rules/random.mjs";
+import { pickRandom, pickWeighted, chanceWeight, uniqueByName } from "./rules/random.mjs";
 import { signed } from "./dice/ability-test.mjs";
 import { addOrigin } from "./origins.mjs";
 import {
@@ -34,7 +35,7 @@ import {
 } from "./creation.mjs";
 import { rollAllDetails } from "./personality.mjs";
 import { rollName } from "./names.mjs";
-import { ownedMinions } from "./minions.mjs";
+import { ownedMinions, vehiclesMadeForCharacter } from "./minions.mjs";
 import { STARTING_FORTUNE_FORMULA } from "./rules/fortune.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 
@@ -91,6 +92,13 @@ async function wipeCharacter(actor, rolls) {
       continue;
     }
     lines.push(i18n.format("VARBORG.Random.MinionGone", { minion: minion.name }));
+  }
+  // The starting mule or handcart, and companion vehicles, go too (step 72).
+  for (const vehicle of vehiclesMadeForCharacter(actor)) {
+    if (vehicle.canUserModify(game.user, "delete")) {
+      await vehicle.delete();
+      lines.push(i18n.format("VARBORG.Random.VehicleGone", { vehicle: vehicle.name }));
+    } else lines.push(i18n.format("VARBORG.Random.VehicleKept", { vehicle: vehicle.name }));
   }
 
   // A blank character's data. HP is left to the class, which sets it: dropping
@@ -201,7 +209,9 @@ export async function randomCharacter(actor, { ancestryUuid = null, classUuid = 
   // 2. Ancestry, then a name from its name tables (GAPS 258), then its one
   //    ancestry feat (rules 2.1, Step 2). Without an ancestry, human names.
   const ancestryLines = section("ancestry");
-  const ancestry = ancestryUuid ? await itemData(ancestryUuid) : await randomData(uniqueByName(sources.filter(s => s.type === "ancestry")));
+  // An ancestry marked "half" is half as likely as the others (GAPS 327).
+  const ancestryPick = pickWeighted(uniqueByName(sources.filter(s => s.type === "ancestry")), s => chanceWeight(s.randomChance));
+  const ancestry = ancestryUuid ? await itemData(ancestryUuid) : (ancestryPick ? await itemData(ancestryPick.uuid) : null);
   const name = await rollName(ancestry?.name ?? "", rolls);
   if (name) {
     await actor.update({ name, "prototypeToken.name": name });

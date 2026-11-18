@@ -30,18 +30,63 @@
  * Defend (Agility DR12); armour soaks lasting damage, for characters and
  * foes alike; it lasts on a Triumph or Success only (a Failure's shorter
  * area is left to the card's text).
+ * For gear (GAPS 314, PLAN step 68b) an area can also:
+ * - last a number of rounds rolled when it is placed ("for d6 rounds");
+ * - stay until the Dark Master removes it (Caltrops);
+ * - be gone after its first effect (a Bear trap, sprung);
+ * - be hidden from the players (a Bear trap);
+ * - give persistent damage (the Fire pot's d4 persistent fire).
  *
  * Plain maths, no Foundry.
  */
 
-/** How long an area lasts beyond the moment it is used. "" = while Sustained, or not at all. */
-export const LASTING_DURATIONS = ["", "rounds", "encounter"];
+import { isRoundsFormula } from "./timers.mjs";
+import { PERSISTENT_TYPES } from "./persistent.mjs";
+
+/**
+ * How long an area lasts beyond the moment it is used. "" = while
+ * Sustained, or not at all; "removed" = until the Dark Master removes it.
+ */
+export const LASTING_DURATIONS = ["", "rounds", "encounter", "removed"];
 
 /** When a lasting effect happens. */
 export const LASTING_TRIGGERS = ["enterOrStart", "enter", "turnStart", "userTurn", "roundStart", "whileInside"];
 
-/** What a lasting effect does. */
-export const LASTING_KINDS = ["damage", "condition", "heal", "buff"];
+/** What a lasting effect does. "persistent": persistent damage of a persistent type (GAPS 314). */
+export const LASTING_KINDS = ["damage", "condition", "heal", "buff", "persistent"];
+
+/** The types a lasting persistent-damage effect can give. */
+export const LASTING_PERSISTENT_TYPES = PERSISTENT_TYPES;
+
+/**
+ * Whether an area's rounds are a valid number or dice: "3", "d6", "2d4".
+ * Old areas stored a plain number, which counts too.
+ */
+export function isLastingRounds(rounds) {
+  return isRoundsFormula(String(rounds ?? ""));
+}
+
+/** Whether the area's rounds are dice to roll when it is placed ("d6"), not a fixed number. */
+export function roundsAreDice(rounds) {
+  return /d/i.test(String(rounds ?? ""));
+}
+
+/**
+ * Whether a lasting effect is complete enough to do anything: damage,
+ * healing and persistent damage need dice; persistent damage needs a
+ * persistent type; a condition needs a condition.
+ * @param {object} effect
+ * @returns {string[]} The problems, empty when none.
+ */
+export function lastingEffectProblems(effect) {
+  const problems = [];
+  if (!LASTING_TRIGGERS.includes(effect?.trigger)) problems.push(`trigger: ${effect?.trigger}`);
+  if (!LASTING_KINDS.includes(effect?.kind)) problems.push(`kind: ${effect?.kind}`);
+  if (["damage", "heal", "persistent"].includes(effect?.kind) && !isRoundsFormula(effect.formula ?? "")) problems.push(`formula: ${effect.formula}`);
+  if (effect?.kind === "persistent" && !PERSISTENT_TYPES.includes(effect.damageType)) problems.push(`persistent type: ${effect.damageType}`);
+  if (effect?.kind === "condition" && !effect.condition) problems.push("condition: none");
+  return problems;
+}
 
 /** The results on which an area lasts. */
 export const LASTING_TIERS = ["triumph", "success"];
@@ -60,17 +105,21 @@ export function blankLastingEffect() {
 export function areaStays(lasting, sustaining, tier) {
   if (sustaining) return true;
   if (!LASTING_TIERS.includes(tier)) return false;
-  return lasting?.duration === "rounds" || lasting?.duration === "encounter";
+  return ["rounds", "encounter", "removed"].includes(lasting?.duration);
 }
 
 /**
  * The round at whose start a timed area ends: cast in round 2 to burn for
  * three rounds, it burns through rounds 2, 3 and 4 and ends as round 5
  * begins. null when it is not timed in rounds.
+ * @param {object} lasting       area.lasting
+ * @param {number} castRound
+ * @param {number} [rolled]      The rounds rolled when the area was placed, when they are dice ("d6").
  */
-export function endsAtRound(lasting, castRound) {
+export function endsAtRound(lasting, castRound, rolled) {
   if (lasting?.duration !== "rounds") return null;
-  return (castRound || 1) + Math.max(1, Number(lasting.rounds) || 1);
+  const rounds = Number.isFinite(rolled) ? rolled : Number(lasting.rounds);
+  return (castRound || 1) + Math.max(1, Math.floor(rounds) || 1);
 }
 
 /**

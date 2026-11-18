@@ -13,7 +13,7 @@
     "reaction": false,
     "outcomes": {
       "triumph": "As Success, and the first pulse strikes as soon as you cast the spell.",
-      "success": "At the start of each of your turns while you sustain the prayer, every foe within 30' takes 3d6 radiant damage.",
+      "success": "At the start of each of your turns while you sustain the prayer, every foe within 30' takes 3d6 light damage.",
       "failure": "The aura pulses once at the start of your next turn for half damage, then fades.",
       "ruin": "Your god looks closely at you: you cannot lie until your next Long Rest. Roll on the Shadowblight table."
     },
@@ -44,7 +44,7 @@
         "nextOnly": false,
         "test": false,
         "whileSustained": false,
-        "note": "the aura strikes every foe within 30' for 3d6 radiant at the start of each of your turns while you sustain it; on a Triumph the first pulse strikes now (Inflict it by hand); you cannot move or lie"
+        "note": "the aura strikes every foe within 30' for 3d6 light at the start of each of your turns while you sustain it; on a Triumph the first pulse strikes now (Inflict it by hand); you cannot move or lie"
       },
       {
         "kind": "reminder",

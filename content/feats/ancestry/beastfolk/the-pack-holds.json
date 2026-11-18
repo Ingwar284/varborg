@@ -1,0 +1,16 @@
+{
+  "_id": "vbAFBeastfolk007",
+  "name": "The Pack Holds",
+  "type": "feat",
+  "img": "icons/creatures/mammals/humanoid-wolf-dog-blue.webp",
+  "system": {
+    "description": "You were raised to carry the weak. Once per encounter, when an ally within 30' who can see you fails a Panic test, you may take the failure in their place: they pass, and you suffer the result.",
+    "source": "ancestry",
+    "belongsTo": "Beastfolk",
+    "improving": false,
+    "frequency": "encounter",
+    "frequencyUsed": false,
+    "effects": [],
+    "automation": "text"
+  }
+}

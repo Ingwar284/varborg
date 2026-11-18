@@ -1,0 +1,69 @@
+{
+  "_id": "vbCPCard02000000",
+  "name": "Fifty-two pickup",
+  "type": "power",
+  "img": "icons/sundries/gaming/playing-cards-black.webp",
+  "system": {
+    "description": "You fling the whole deck in a 15' cone. Test Agility (DR14). Everyone in the cone takes d8 slashing damage, and razor-cards litter the floor: the cone is difficult terrain until the end of the encounter. Whatever the result, your deck is on the floor too: you must spend an Interact action ◈ gathering it before you can attack with it again.",
+    "source": "class",
+    "belongsTo": "Card Slinger",
+    "resource": "ember",
+    "cost": 3,
+    "actions": 2,
+    "ability": "agility",
+    "damage": "d8",
+    "damageType": "slashing",
+    "addsWeaponDamage": false,
+    "sustained": false,
+    "reaction": false,
+    "outcomes": {
+      "triumph": "",
+      "success": "",
+      "failure": "",
+      "ruin": ""
+    },
+    "sustaining": false,
+    "kept": false,
+    "usedOutside": false,
+    "outcomeEffects": [
+      {
+        "kind": "reminder",
+        "who": "self",
+        "tiers": {
+          "triumph": true,
+          "success": true,
+          "failure": true,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "spend an Interact action ◈ gathering your deck before you can attack with it again"
+      }
+    ],
+    "buffEffects": [],
+    "effects": [],
+    "automation": "partial",
+    "area": {
+      "shape": "cone",
+      "size": 15,
+      "width": 5,
+      "affects": "all",
+      "lasting": {
+        "duration": "encounter",
+        "rounds": "1",
+        "difficult": true
+      }
+    }
+  }
+}

@@ -4,7 +4,7 @@
   "type": "feat",
   "img": "icons/sundries/books/book-worn-brown.webp",
   "system": {
-    "description": "Your weapon burns with light. Whenever you score a Triumph on an attack, you deal an additional d6 radiant damage.",
+    "description": "Your weapon burns with light. Whenever you score a Triumph on an attack, you deal an additional d6 light damage.",
     "source": "feature",
     "belongsTo": "Paladin",
     "improving": false,
@@ -44,7 +44,7 @@
         "setDamage": "",
         "companion": "minion",
         "armour": "",
-        "note": "radiant"
+        "note": "light"
       }
     ],
     "automation": "auto"

@@ -64,6 +64,12 @@
  * the compendium's new damage type (so a spear that was "bleeding" becomes
  * piercing, not the slashing guess), and persistent bleeding on actors
  * becomes bleed.
+ *
+ * Version 16 (unified effects): conditions, persistent damage, Panic
+ * results, injuries and lost body parts are saved as Active Effects of
+ * their own type, their details in the effect's system data instead of
+ * flags (module/rules/effect-types.mjs). The effects already load that way
+ * (module/active-effect.mjs); this saves it and drops the old flags.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -74,12 +80,13 @@ import { MIGRATION_OPTION } from "./data/character.mjs";
 import { lightFromName, DEFAULT_LIGHT_RANGE } from "./rules/light.mjs";
 import { dawnOf, dayAt, endsAfterHours } from "./rules/calendar.mjs";
 import { currentDay } from "./days.mjs";
+import { EFFECT_TYPES } from "./rules/effect-types.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 15;
+export const DATA_VERSION = 16;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -116,6 +123,7 @@ export async function migrateWorld() {
   if (version < 13) await clearStudyTheSpecimenDamage();
   if (version < 14) await placeEquippedItems();
   if (version < 15) await takeNewDamageTypes();
+  if (version < 16) await saveEffectTypes();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -250,11 +258,9 @@ async function startClock() {
   const now = dayAt(game.time.worldTime) === day ? game.time.worldTime : await game.time.set(dawnOf(day));
   for (const actor of game.actors.filter(actor => actor.type === "character")) {
     const updates = actor.effects
-      .filter(effect => {
-        const panic = effect.getFlag(SYSTEM, "panic");
-        return panic?.hours && !Number.isFinite(panic.endsAt);
-      })
-      .map(effect => ({ _id: effect.id, [`flags.${SYSTEM}.panic.endsAt`]: endsAfterHours(now, effect.getFlag(SYSTEM, "panic").hours) }));
+      // Effects load with their type (version 16), so the details are in system data.
+      .filter(effect => effect.type === "panic" && effect.system.hours && !Number.isFinite(effect.system.endsAt))
+      .map(effect => ({ _id: effect.id, "system.endsAt": endsAfterHours(now, effect.system.hours) }));
     if (updates.length) await actor.updateEmbeddedDocuments("ActiveEffect", updates);
   }
 }
@@ -345,8 +351,44 @@ async function takeNewDamageTypes() {
       if (updates.length) await actor.updateEmbeddedDocuments("Item", updates);
     }
     const bleeding = actor.effects
-      .filter(effect => effect.getFlag(SYSTEM, "persistent")?.type === "bleeding")
-      .map(effect => ({ _id: effect.id, [`flags.${SYSTEM}.persistent.type`]: "bleed" }));
+      .filter(effect => effect.type === "persistent" && effect.system.damageType === "bleeding")
+      .map(effect => ({ _id: effect.id, "system.damageType": "bleed" }));
     if (bleeding.length) await actor.updateEmbeddedDocuments("ActiveEffect", bleeding);
+  }
+}
+
+/** The flags that effect types replace (version 16). */
+const OLD_EFFECT_FLAGS = ["panic", "agony", "persistent", "bodyPart", "timer", "source", "testedOn"];
+
+/**
+ * Version 16: save each typed effect's type and system data, and remove
+ * the old flags. Effects already show their type when they load, so the
+ * update is sent in full (diff: false) for the database to take it.
+ * Covers every actor and the effects of every unlinked token on a scene.
+ */
+async function saveEffectTypes() {
+  const updatesFor = effects => effects
+    .filter(effect => EFFECT_TYPES.includes(effect.type))
+    .map(effect => {
+      const flags = effect._source.flags?.[SYSTEM] ?? {};
+      const drop = Object.fromEntries(OLD_EFFECT_FLAGS.filter(key => key in flags).map(key => [key, _del]));
+      return {
+        _id: effect.id,
+        type: effect.type,
+        system: _replace(effect.system.toObject()),
+        ...(Object.keys(drop).length ? { flags: { [SYSTEM]: drop } } : {})
+      };
+    });
+  const save = async (actor, effects) => {
+    const updates = updatesFor(effects);
+    if (updates.length) await actor.updateEmbeddedDocuments("ActiveEffect", updates, { diff: false });
+  };
+  for (const actor of game.actors) await save(actor, actor.effects);
+  for (const scene of game.scenes) {
+    for (const token of scene.tokens) {
+      const actor = token.actor;
+      if (token.actorLink || !actor || !token.delta?.effects?.size) continue;
+      await save(actor, actor.effects.filter(effect => token.delta.effects.has(effect.id)));
+    }
   }
 }

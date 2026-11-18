@@ -1539,3 +1539,196 @@ item names its GAPS ruling where there is one.
     lightning than Lightstrike). Scenes can follow today’s weather, with
     rain or snow (module/scene-weather.mjs). A playlist named after the
     active scene’s weather effect plays, and other weather playlists stop.
+    A “Create weather playlists” button in Configure Settings makes an
+    empty playlist for each effect that has none, in a folder “Weather”.
+64. **Overland panel and omen stages** (built, to be tested; GAPS 309, 310).
+    The Weather panel becomes the Overland panel: weather on top, and
+    below it the party's region (Emberglow, Heartlands, Hinterlands,
+    Darklands) and method (Trek, Gallop, Cruise, in hexes per phase), with
+    the Travel button; Gallop is spent until a Long rest. The encounter
+    table's Omen results become Omen (new) and Omen (ongoing); a Misery
+    can hold several omens, each with six stages. Scenery rolls a d100
+    read-aloud line, 100 per region. The Misery panel shows every Misery,
+    its omens and their past and current stages.
+65. **Scene darkness by the time of day** (built, to be tested; GAPS 311).
+    A checkbox under Scene Configuration's Darkness Level slider, for
+    outdoor maps: the scene's darkness follows the world clock, day 0,
+    night 1, with a one-hour twilight round dawn and dusk
+    (module/scene-darkness.mjs). Global Illumination decides whether night
+    counts as darkness for the rules.
+66. **One list of effects** (done; GAPS 312). Conditions,
+    persistent damage, Panic results, injuries and lost body parts are
+    Active Effects with a type of their own (module/data/active-effects.mjs,
+    module/rules/effect-types.mjs); world data version 16 converts old
+    worlds. The Conditions tab becomes the Effects tab: one list with a
+    type tag on each row, − / + / × buttons and one Add menu, the same
+    list as the Ongoing panel and the icon strip (module/ongoing.mjs,
+    module/rules/effect-kinds.mjs, templates/actor/effects-list.hbs).
+    Fatigue level, days without food, lost body parts, Death's Door stage
+    and In Darkness are rows too.
+67. **Compendium review: damage types and conditions** (done, to be
+    checked; GAPS 289, 313). Rules text that still used old damage names
+    now uses the fifteen types (radiant light, lightning electricity,
+    necrotic dark, psychic mental, blunt bludgeoning, persistent bleeding
+    persistent bleed), in the compendium and the rules document. 252
+    untyped powers, spells and gloom abilities got a type from their text
+    (UNTYPED_DAMAGE_REVIEW.md). Conditions the text gives but the system
+    did not apply are now applied: Coil's Silenced on a Ruin, and the
+    conditions eleven rituals give (mostly to the caster on a Ruin, and
+    The Scold's Silent Tongue to its target). Hours and minutes are not
+    timed, so those conditions stay until removed, with the time in their
+    note. Still by hand: gear (poison, smoke bomb), conditions on a set
+    trigger the system cannot see (sunlight, traps, a dropped head, a
+    thrown rider), Ruin riders on a foe's attack (Stooping Dive, Lunging
+    Snap), stance changes to Primal Blast, and Divine radiance's area.
+68. **Gear effects** (planned; GAPS 283, 314). Finishes step 53b. One
+    sub-step at a time, each tested in Foundry before the next.
+    - 68a. Black poison (built, to be tested). Added beside red poison (module/rules/poison.mjs):
+      Toughness DR14; Failure d6 and Blinded for 1 round, Ruin d6 and
+      Blinded for d4 rounds. Same Use button, coating and Resist card;
+      the card also applies Blinded with its timer.
+    - 68b. Gear can hold an area (built, to be tested). Gear and thrown weapons get the area box that
+      powers and spells have. Lasting areas learn what gear needs: rounds
+      as dice (d6), persistent damage as an effect (Fire pot), a "square"
+      shape for one 5' tile, "until removed" (Caltrops), "once, then
+      gone" (Bear trap), and an area hidden from players.
+    - 68c. The toss (built, to be tested; GAPS 315). Using a Fire pot, Smoke bomb or grenade asks for a
+      point within its throw range and rolls Agility DR12. Triumph or
+      Success: it lands there; Failure: nothing; Ruin: it lands at your
+      feet. Grenades: a 10' burst on a Triumph, 5' on a Success, and
+      everyone caught takes the damage as from any area (characters
+      defend, GAPS 284). The item's quantity drops by one.
+    - 68d. Smoke bomb and Fire pot (built, to be tested; GAPS 316). Smoke: a 10' radius for d6 rounds,
+      Blinded while inside. Fire: one 5' square for d6 rounds, d4
+      persistent fire damage on entering or starting a turn inside.
+    - 68e. Caltrops and Bear trap (built, to be tested). Placed on a square within reach, no
+      toss. Caltrops: d4 to each creature that enters, until the Dark
+      Master removes them. Bear trap: hidden from players; the first
+      creature to enter takes d8 and the trap is sprung. Spotting it
+      stays a Presence DR14 test by hand.
+    Not in this step: lockpicks' two expendable dice (GAPS 55, open).
+69. **Card Slinger and Cartomancer** (in progress; GAPS 318–320). Two new
+    classes for 4.5A Compendium of Classes, drafted on the Design
+    Guidelines (18 November 2026). One sub-step at a time, each tested in
+    Foundry before the next.
+    - 69a. Content (built, to be tested). Both classes, their class
+      features, 16 class feats and 14 powers, the Razor deck weapon (given
+      by the Card Slinger's feature) and the Dusk Arcana Roll Table, in
+      content/ and in the rules document. Conditions, damage, healing,
+      areas and reminders work as for other powers; cards are drawn by
+      hand, and the Razor deck rolls d6 until 69b.
+    - 69b. The Card Slinger's deck, in three parts.
+      - 69b1. The deck the system keeps (built, to be tested; GAPS 321).
+        A weapon can be a "Deck of cards" (the Razor deck is). Its deck
+        lives on the weapon (module/rules/cards.mjs, module/cards.mjs).
+        Each attack draws the top card, the card sets the damage die, and
+        the chat card names it; a Joker also bites the thrower for d4.
+        An empty deck cannot attack. The sheet shows "Cards 41/54" and a
+        Shuffle button (one Interact action); every deck is shuffled when
+        an encounter ends.
+      - 69b2. Foundry Cards (built, to be tested). The world setting
+        "Drawing cards" picks the system's deck (the default) or Foundry
+        Cards. With Foundry Cards, the Dark Master's client makes a Cards
+        deck (Foundry's dark poker deck and two Jokers) and a discard pile
+        for each Razor deck, in a "Razor decks" folder, owned by the
+        character's owners. Attacks pass the top card to the pile; Shuffle
+        and the end of an encounter recall and shuffle. Switching keeps
+        both decks.
+      - 69b3a. Feats on deck attacks (built, to be tested; GAPS 322).
+        Court cards (knave, queen, king d10, ace d12) and Wild card (a
+        Joker named as any other card, chosen in a dialog) change the die;
+        Ace up the sleeve is a tick in the attack dialog, once per
+        encounter, instead of drawing. The blue knave and Marked suit add
+        their effect to the chat card on a matching card. Each feat has a
+        stat switch (courtCards, wildCard, sleeveAce, blueKnave,
+        markedSuit).
+      - 69b3b. Card powers (built, to be tested; GAPS 323). A power's
+        new "cards" field (deal, cut, suit, flush, knave) makes it draw
+        from the character's deck after its test. Cut the deck throws the
+        better of two (its die + d4); Call the suit asks the suit in the
+        dialog; The Council's knave turns cards until a knave and loses
+        them; Deal the table and Royal flush give each targeted foe its
+        own cards' damage on the power card (Royal flush pairs at maximum,
+        its cards divided in a dialog). Deal the table's Ruin loses its
+        cards. Lost cards stay out of a hand shuffle until the encounter
+        ends.
+      - 69b3c. Feats outside the attack (built, to be tested; GAPS 324).
+        Riffle parry is a button on the defence card after a ranged hit
+        (a new card action, riffle): it uses the reaction, draws a card,
+        and a face card or an ace halves the damage taken. Dead man's hand
+        is a zeroHp hook (deadMansHand): it draws a card, and an ace or a
+        black eight sets HP to 1 and takes back the wound. The blue
+        knave (Stupefied), Marked suit hearts (d4 persistent bleed) and
+        spades (Frightened), and Call the suit's Slowed are given as
+        outcome entries to a single target, on deck attacks and card
+        powers alike.
+    - 69c. The Cartomancer's reading, in parts.
+      - 69c1. The reading (built, to be tested; GAPS 325). The class
+        feature's Long Rest hook (layReading) lays out three trumps
+        (Wider spread: four), rerolling repeats (module/rules/arcana.mjs,
+        module/reading.mjs). The Feats tab shows them, with a Turn button
+        on each: once per round, with the reaction in combat, the card's
+        meaning goes to the targeted creature or the Cartomancer, through
+        the power outcome code: the Lamplighter, the Cairn, the Wick, the
+        Forge-Heart, the Cold Eye, the Barge and the Shade's damage are
+        given, the Last Sun's Fortune added; the rest by hand.
+      - 69c2. Powers and feats that draw or turn cards (built, to be
+        tested; GAPS 326). Draw for the querent, Read the room and The
+        Thirteenth card are card powers (cards querent, room, thirteenth)
+        that draw fresh trumps after their test and give them; The
+        Thirteenth card marks a foe, whose d6 the Dark Master's client rolls
+        at the end of each of its turns. Reading buttons: Reversed (Boon on
+        the next attack against a targeted foe), Shuffle the fates, Black
+        sector's tear, and the Dark Master's Thirteenth (Bane on the next
+        test). Foreseen: the first card of a combat uses no reaction.
+        Still by hand: Rewrite the reading, Not your card, Booth in the
+        Ironwall, Cross my palm.
+      - 69c3. The Dusk Arcana as Foundry Cards (built, to be tested). With
+        Drawing cards on Foundry Cards, each Cartomancer gets a deck of the
+        twelve trumps, a reading hand and a pile for cards drawn for others
+        (module/arcana-cards.mjs), in a "Dusk Arcana" folder. The reading
+        is drawn into the hand, turned cards turn face down, Shuffle the
+        fates passes cards back and draws anew, fresh cards come from the
+        deck, and the Thirteenth is a card made in the hand. The reading on
+        the character stays the record.
+70. **Cards strip** (built, to be tested; designer's request, 18 November
+    2026). With Drawing cards on Foundry Cards, a small band at the
+    hotbar's top-left corner, with a button to minimise or open it
+    (remembered for each user) (module/cards-strip.mjs, styles/stage.css
+    section 7, DESIGN.md
+    8.15) shows each Cartomancer's reading hand (turned cards face down)
+    and each Card Slinger's last drawn card with the cards left. Players
+    see their own characters, the Dark Master every player's. Hovering a
+    card names it; clicking a name opens the sheet. Clicking an unturned
+    card of a reading one owns turns it, as the sheet's turn button does
+    (designer's request, 18 November 2026); drawing stays on the sheet.
+    The reading's Use button lays out a reading while the character has
+    none (GAPS 319; module/uses.mjs).
+71. **Card stacks clean-up** (built, to be tested; designer's request, 18
+    November 2026). The Dark Master's client deletes a Razor deck's Cards
+    deck and pile when the weapon is deleted (so also when a character is
+    rerolled), a Cartomancer's Dusk Arcana stacks when they no longer have
+    The reading, and every stack of a character who is deleted
+    (module/cards.mjs registerCardsCleanup).
+72. **Companion clean-up** (built, to be tested; designer's request, 18
+    November 2026). A starting mule, handcart or dog is marked with its
+    character (flag var-borg.createdFor). Rerolling a character now
+    deletes the vehicles made for them as well as their minions; deleting
+    a character deletes both (the Dark Master's client). Vehicles made for
+    a character: the createdFor flag, a companion vehicle from one of their
+    items (fromItem), or an older mule or handcart by its name
+    (module/minions.mjs, rules/minions.mjs vehiclesMadeFor).
+73. **Almanac ancestries** (built, to be tested; GAPS 327). Beastfolk,
+    Automaton, Returned and Dusk-touched for 4.3A Almanac of Ancestries,
+    drafted on the Design Guidelines and approved (18 November 2026), each
+    with eight ancestry feats, in content/ and in the rules document.
+    Feats use the existing effects: Boons as optional ticks, reminders on
+    the right cards, Let It Out switched on with its Use button, immunities
+    (bleed, electricity, Charmed, Infected) and extra damage taken (cold,
+    light). The rest stays text for the Dark Master. An ancestry has a new
+    Random character chance, Normal or Half (rules/random.mjs
+    pickWeighted); the four Almanac ancestries are Half, so the Random
+    character button rolls each half as often as a core ancestry. Choosing
+    an ancestry by hand is not affected. Each has drafted d20 given-name
+    and family-name tables (Names: Beastfolk (given) and so on), as in
+    GAPS 258.

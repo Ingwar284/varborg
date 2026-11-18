@@ -4,6 +4,8 @@
  */
 
 import VarBorgActor from "./actor.mjs";
+import VarBorgActiveEffect from "./active-effect.mjs";
+import { EFFECT_DATA_MODELS } from "./data/active-effects.mjs";
 import VarBorgRegion from "./canvas/region.mjs";
 import CharacterData from "./data/character.mjs";
 import CharacterSheet from "./sheets/character-sheet.mjs";
@@ -11,7 +13,7 @@ import FoeData from "./data/foe.mjs";
 import FoeSheet from "./sheets/foe-sheet.mjs";
 import MinionData from "./data/minion.mjs";
 import MinionSheet from "./sheets/minion-sheet.mjs";
-import { registerMinions } from "./minions.mjs";
+import { registerMinions, registerCompanionCleanup } from "./minions.mjs";
 import VehicleData from "./data/vehicle.mjs";
 import VehicleSheet from "./sheets/vehicle-sheet.mjs";
 import { registerVehicles } from "./vehicles.mjs";
@@ -67,6 +69,9 @@ import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
 import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
+import { registerCards, registerCardsCleanup } from "./cards.mjs";
+import { registerArcanaCards } from "./arcana-cards.mjs";
+import { registerCardsStrip } from "./cards-strip.mjs";
 import { registerMovement } from "./movement.mjs";
 import { registerChatRolls } from "./chat-rolls.mjs";
 import { registerItemChatHelpers } from "./item-chat.mjs";
@@ -74,6 +79,7 @@ import { registerStage } from "./stage.mjs";
 import { registerMood } from "./mood.mjs";
 import { registerWeatherFx } from "./weather-fx/config.mjs";
 import { registerSceneWeather } from "./scene-weather.mjs";
+import { registerSceneDarkness } from "./scene-darkness.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -113,6 +119,11 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.ancestry = AncestryData;
   CONFIG.Item.dataModels.background = BackgroundData;
   CONFIG.Item.dataModels.relic = RelicData;
+
+  // Active Effects: each lasting state has a type (conditions, persistent
+  // damage, Panic, injuries, lost body parts) with its own data.
+  CONFIG.ActiveEffect.documentClass = VarBorgActiveEffect;
+  Object.assign(CONFIG.ActiveEffect.dataModels, EFFECT_DATA_MODELS);
 
   const Items = foundry.documents.collections.Items;
   Items.registerSheet("var-borg", WeaponSheet, { types: ["weapon"], makeDefault: true, label: "VARBORG.Sheet.Weapon" });
@@ -154,6 +165,8 @@ Hooks.once("init", () => {
   // that follow today's weather (step 63).
   registerWeatherFx();
   registerSceneWeather();
+  // Outdoor scenes whose darkness follows the time of day (GAPS 311).
+  registerSceneDarkness();
   // Wounds at 0 HP: the wound test and the Table of Agony (rules 3.5).
   registerAgony();
   // Death's Door and Dark Vessel (rules 3.6).
@@ -231,6 +244,15 @@ Hooks.once("init", () => {
 
   // World settings: the Creation Helper toggle.
   registerSettings();
+  // Foundry Cards decks for the Razor deck, when that setting is on (GAPS 320).
+  registerCards();
+  // A character's card stacks go with them (step 71).
+  registerCardsCleanup();
+  // A deleted character's minions and the vehicles made for them go too (step 72).
+  registerCompanionCleanup();
+  registerArcanaCards();
+  // The cards strip above the hotbar (step 70).
+  registerCardsStrip();
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

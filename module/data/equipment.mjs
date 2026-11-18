@@ -18,6 +18,7 @@ import { usedUpForQuantity } from "../rules/expendable.mjs";
 import { LIGHT_KINDS, DEFAULT_LIGHT_MINUTES, DEFAULT_LIGHT_RANGE } from "../rules/light.mjs";
 import { frequencyFields, presetFrequency } from "./uses.mjs";
 import { effectFields } from "./effects.mjs";
+import { areaField } from "./area.mjs";
 import { ABILITIES } from "../rules/abilities.mjs";
 import { WORN_AS_CHOICES, PLACES, defaultSlot, placeFor } from "../rules/slots.mjs";
 
@@ -161,7 +162,12 @@ export class WeaponData extends EquipmentData {
       usedUp: new BooleanField({ initial: false }),
       // The ability every attack with it tests, instead of the usual one
       // (the Spirit-linked sword: Presence, GAPS 215). Blank: as usual.
-      attackAbility: new StringField({ required: true, blank: true, choices: ["", ...ABILITIES], initial: "" })
+      attackAbility: new StringField({ required: true, blank: true, choices: ["", ...ABILITIES], initial: "" }),
+      // A deck of cards: each attack draws a card, and the card sets the
+      // damage (the Card Slinger's Razor deck, GAPS 318, module/cards.mjs).
+      cardDeck: new BooleanField({ initial: false }),
+      // A thrown weapon's area: a grenade's burst (GAPS 314, PLAN step 68).
+      area: areaField()
     };
   }
 
@@ -246,7 +252,9 @@ export class GearData extends CarriedData {
       lightRange: wholeNumber({ min: 1, initial: DEFAULT_LIGHT_RANGE }),
       // Once per round, encounter or day, and whether it is used (GAPS 161).
       ...frequencyFields(),
-      ...effectFields()
+      ...effectFields(),
+      // The area it fills when thrown or placed: smoke, fire, caltrops, a trap (GAPS 314, PLAN step 68).
+      area: areaField()
     };
   }
 

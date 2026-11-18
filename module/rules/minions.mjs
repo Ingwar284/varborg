@@ -94,3 +94,22 @@ export function minionTurn(commanded) {
 export function minionAbilities(abilities) {
   return Object.fromEntries(abilities.map(key => [key, MINION_ABILITY_SCORE]));
 }
+
+/**
+ * The vehicles the system made for a character (step 72): a starting mule
+ * or handcart (flag var-borg.createdFor, the character's id) or a companion
+ * vehicle from one of their items (flag var-borg.fromItem, "<id>.<item>").
+ * Mules and handcarts made before step 72 carry no flag; they are known by
+ * their name, "<character>’s Mule" or "<character>’s Handcart".
+ * @param {{id: string, type: string, name: string, createdFor?: string, fromItem?: string}[]} actors
+ * @param {{id: string, oldNames?: string[]}} character  oldNames: the names an old mule or handcart would have.
+ * @returns {string[]}  The vehicles' ids.
+ */
+export function vehiclesMadeFor(actors, { id, oldNames = [] }) {
+  if (!id) return [];
+  return (actors ?? []).filter(actor => actor.type === "vehicle" && (
+    actor.createdFor === id
+    || String(actor.fromItem ?? "").startsWith(`${id}.`)
+    || (!actor.createdFor && !actor.fromItem && oldNames.includes(actor.name))
+  )).map(actor => actor.id);
+}

@@ -428,6 +428,17 @@ body[data-vb-mood="dark"] .var-borg-card .action-symbols {
   border-top: 1px solid var(--vb-line-soft);
 }
 
+/* Scenery: a read-aloud box, set apart for the Dark Master to read out (GAPS 309). */
+.var-borg-card.travel-card .travel-read-aloud {
+  margin: 0.3rem 0;
+  padding: 0.35rem 0.5rem;
+  border: none;
+  border-left: 3px solid var(--vb-line);
+  background: var(--vb-surface-raised);
+  color: var(--vb-text);
+  font-style: italic;
+}
+
 .var-borg-card.travel-card .hardship-name {
   color: var(--vb-alert);
   margin: 0.1rem 0;
