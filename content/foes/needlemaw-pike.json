@@ -106,6 +106,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "d6",
+        "damageType": "bludgeoning",
         "ruinDamage": "d8",
         "conditions": {
           "failure": "prone",
@@ -151,6 +152,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "d12",
+        "damageType": "piercing",
         "ruinDamage": "2d8",
         "conditions": {
           "failure": "restrained",
@@ -202,7 +204,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "A creature damaged by its Needle teeth takes d4 persistent bleeding damage.",
+        "description": "A creature damaged by its Needle teeth takes d4 persistent bleed damage.",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

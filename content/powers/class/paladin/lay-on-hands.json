@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
   "system": {
-    "description": "Touch a creature and channel your faith. Heal a living creature for d8 HP, or deal d8 radiant damage to an undead, duskborn or fiend.",
+    "description": "Touch a creature and channel your faith. Heal a living creature for d8 HP, or deal d8 light damage to an undead, duskborn or fiend.",
     "source": "class",
     "belongsTo": "Paladin",
     "resource": "ember",

@@ -9,6 +9,7 @@
     "cost": 9,
     "actions": 2,
     "damage": "3d10",
+    "damageType": "force",
     "sustained": false,
     "reaction": false,
     "outcomes": {

@@ -1,11 +1,11 @@
 /**
- * The Lasting area part of the spell and power sheets (lingering areas,
- * GAPS 284): how long the area stays, whether it is difficult terrain, and
+ * The Lasting area part of the spell, power, gear and thrown weapon
+ * sheets (lingering areas, GAPS 284 and 314): how long the area stays, whether it is difficult terrain, and
  * a list of effects. Like the outcome list, each change saves the whole
  * list (module/sheets/outcomes-part.mjs).
  */
 
-import { blankLastingEffect } from "../rules/lasting.mjs";
+import { blankLastingEffect, LASTING_PERSISTENT_TYPES } from "../rules/lasting.mjs";
 import { outcomeOptions } from "../rules/outcomes.mjs";
 import { DEFAULT_AREA_WIDTH } from "../rules/areas.mjs";
 import { FOE_CATEGORIES } from "../rules/foe.mjs";
@@ -30,14 +30,17 @@ export function lastingContext(system, damageTypes) {
       conditions: labels(CONDITIONS, "Condition"),
       timers: { "": "VARBORG.Timer.None", ...labels(TIMER_KINDS, "Timer.Kind") },
       damageTypes,
+      persistentTypes: labels(LASTING_PERSISTENT_TYPES, "DamageType"),
       // An effect can belong to one option (Songs of power: Allegro).
       options: names.length ? { "": "VARBORG.Area.Lasting.AnyOption", ...Object.fromEntries(names.map(name => [name, name])) } : null,
       list: lasting.effects.map((effect, index) => ({
         ...effect,
         index,
         isCondition: effect.kind === "condition",
-        hasFormula: effect.kind === "damage" || effect.kind === "heal",
+        hasFormula: ["damage", "heal", "persistent"].includes(effect.kind),
         isDamage: effect.kind === "damage",
+        // Persistent damage of a persistent type (the Fire pot, GAPS 314).
+        isPersistent: effect.kind === "persistent",
         hasTimer: effect.kind === "condition" && effect.trigger !== "whileInside",
         isTimerRounds: ["rounds", "escapeStart", "escapeEnd"].includes(effect.duration?.kind),
         categoryList: FOE_CATEGORIES.filter(Boolean).map(key => ({

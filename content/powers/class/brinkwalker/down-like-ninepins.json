@@ -12,6 +12,7 @@
     "actions": 3,
     "ability": "usual",
     "damage": "3d6",
+    "damageType": "bludgeoning",
     "addsWeaponDamage": false,
     "sustained": false,
     "reaction": false,

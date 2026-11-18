@@ -91,3 +91,13 @@ test("a radius with no point or distance spreads from the user; a cone can be 'N
   assert.equal(read("a 20' radius at a point within 60'").shape, "burst");
   assert.deepEqual([read("The Wyrm exhales a cone of pure absence, 60' long.").shape, read("The Wyrm exhales a cone of pure absence, 60' long.").size], ["cone", 60]);
 });
+
+// Gear areas (GAPS 314, PLAN step 68b): a square is placed at a point, like a burst.
+import { AREA_SHAPES, POINT_SHAPES } from "../module/rules/areas.mjs";
+
+test("a square is a shape, placed at a point like a burst", () => {
+  assert.ok(AREA_SHAPES.includes("square"));
+  assert.deepEqual(POINT_SHAPES, ["burst", "square"]);
+  // The text reader never makes a square: gear's areas are set on the sheet.
+  assert.notEqual(areaFromText("Scatter 5-foot square: d4 damage to anyone entering the square.")?.shape, "square");
+});

@@ -180,6 +180,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "poison",
         "ruinDamage": "2d8",
         "conditions": {
           "failure": "infected",
@@ -225,6 +226,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "bludgeoning",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "restrained",

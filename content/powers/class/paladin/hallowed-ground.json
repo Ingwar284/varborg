@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
   "system": {
-    "description": "Sanctify a 10' radius within 30'. Sustained. Undead, fiends and duskborn take d6 radiant damage when they enter the area or start their turn in it.",
+    "description": "Sanctify a 10' radius within 30'. Sustained. Undead, fiends and duskborn take d6 light damage when they enter the area or start their turn in it.",
     "source": "class",
     "belongsTo": "Paladin",
     "resource": "ember",
@@ -46,7 +46,7 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "undead, fiends and duskborn take d6 radiant damage when they enter the area or start their turn in it: Inflict it then"
+        "note": "undead, fiends and duskborn take d6 light damage when they enter the area or start their turn in it: Inflict it then"
       }
     ],
     "automation": "partial",

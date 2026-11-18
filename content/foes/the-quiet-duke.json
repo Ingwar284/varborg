@@ -135,6 +135,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "mental",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "silenced",
@@ -195,6 +196,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d10",
+        "damageType": "mental",
         "ruinDamage": "3d10",
         "conditions": {
           "failure": "",
@@ -294,6 +296,7 @@
         "cost": 9,
         "actions": 2,
         "damage": "3d6",
+        "damageType": "mental",
         "ruinDamage": "5d6",
         "conditions": {
           "failure": "frightened",
@@ -364,7 +367,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "The Quiet Duke is immune to necrotic damage and poison and ignores difficult terrain.",
+        "description": "The Quiet Duke is immune to dark damage and poison and ignores difficult terrain.",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

@@ -15,7 +15,7 @@
       "triumph": "You defend with Boon against every attack made against you until the start of your next turn.",
       "success": "The smoke lingers as your shape: you defend with Boon against the first attack made against you before your next turn.",
       "failure": "You reappear, but the smoke scatters at once.",
-      "ruin": "You arrive with d4 persistent bleeding damage and are Slowed on your next turn. Roll on the Shadowblight table."
+      "ruin": "You arrive with d4 persistent bleed damage and are Slowed on your next turn. Roll on the Shadowblight table."
     },
     "sustaining": false,
     "kept": false,

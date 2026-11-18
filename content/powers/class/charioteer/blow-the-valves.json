@@ -12,6 +12,7 @@
     "actions": 2,
     "ability": "agility",
     "damage": "d10",
+    "damageType": "fire",
     "addsWeaponDamage": false,
     "sustained": false,
     "reaction": false,

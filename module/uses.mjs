@@ -25,6 +25,9 @@ import { turnState } from "./combat.mjs";
 import { CONSUME_ACTIONS, isConsumableGear } from "./rules/expendable.mjs";
 import { poisonOf, askPoisonUse, applyPoisonUse } from "./poison.mjs";
 import { oneAtATime } from "./busy.mjs";
+import { isTossed, canToss } from "./rules/toss.mjs";
+import { tossesItem, tossItem, placesItem } from "./toss.mjs";
+import { aimArea, keepArea } from "./areas.mjs";
 
 /** Load the Use button the sheets share. */
 export function registerUses() {
@@ -56,12 +59,14 @@ export function isConsumable(item) {
  * or Use effects (step 49g).
  */
 export function hasLimitedUse(item) {
-  return TYPES.includes(item.type) && (hasFrequency(item.system) || itemUseEffects(item).length > 0 || isConsumable(item));
+  return TYPES.includes(item.type) && (hasFrequency(item.system) || itemUseEffects(item).length > 0 || isConsumable(item) || isTossed(item.system));
 }
 
 /** Whether the Use button can be pressed now: unspent, or with no limit. */
 export function canUseItem(item) {
   if (!TYPES.includes(item.type)) return false;
+  // A bomb (Fire pot, Smoke bomb): while one is left (GAPS 314).
+  if (isTossed(item.system)) return canToss(item.system);
   if (isConsumable(item)) return !item.system.usedUp && (!hasFrequency(item.system) || canUseOnce(item.system));
   return hasFrequency(item.system) ? canUseOnce(item.system) : itemUseEffects(item).length > 0;
 }
@@ -79,6 +84,14 @@ export function useButton(item) {
   if (!hasLimitedUse(item)) return { hasUse: false };
   const i18n = game.i18n;
   const usable = canUseItem(item);
+  if (isTossed(item.system)) {
+    return {
+      hasUse: true,
+      canUse: usable,
+      useInteract: true,
+      useTooltip: usable ? i18n.localize("VARBORG.Toss.Tooltip") : i18n.localize("VARBORG.Expendable.UsedUp")
+    };
+  }
   if (isConsumable(item)) {
     return {
       hasUse: true,
@@ -140,6 +153,8 @@ export function useLimitedItem(actor, item) {
 /** The body of useLimitedItem, run inside the guard (REVIEW.md S2, L25). */
 async function useLimitedItemNow(actor, item) {
   if (!actor.isOwner || !hasLimitedUse(item)) return;
+  // A bomb is tossed (GAPS 314, module/toss.mjs).
+  if (tossesItem(actor, item)) return tossItem(actor, item);
   const i18n = game.i18n;
   if (!canUseItem(item)) {
     ui.notifications.warn(i18n.format("VARBORG.Uses.AlreadyUsed", { item: item.name, frequency: frequencyLabel(item).toLowerCase() }));
@@ -152,6 +167,9 @@ async function useLimitedItemNow(actor, item) {
     ui.notifications.warn(i18n.localize("VARBORG.Manual.NotYourTurn"));
     return;
   }
+  // Caltrops or a Bear trap: place the area first; cancelling spends nothing (GAPS 314, step 68e).
+  const placed = placesItem(actor, item) ? await aimArea(actor, item) : null;
+  if (placed && !placed.go) return;
   // A poison: on the targets, or on a weapon (GAPS 283).
   const poison = poisonOf(item.name) ? await askPoisonUse(actor, item) : null;
   if (poisonOf(item.name) && !poison) return;
@@ -189,6 +207,11 @@ async function useLimitedItemNow(actor, item) {
   if (poison?.mode === "target") await applyPoisonUse(actor, item, poison);
   // Then the expendable die: on a 1 one is used up (GAPS 260).
   if (consumable) await rollExpendable(actor, item);
+  // The placed area stays on the map until it is sprung or removed.
+  if (placed?.region) {
+    canvas.tokens.setTargets([], { mode: "replace" });
+    await keepArea(actor, item, placed.region, "success");
+  }
 }
 
 /**

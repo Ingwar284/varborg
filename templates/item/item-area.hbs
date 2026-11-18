@@ -1,5 +1,6 @@
-{{!-- The area of effect of a spell, scroll or power (playtest feedback). --}}
+{{!-- The area of effect of a spell, scroll, power, gear or thrown weapon (playtest feedback, GAPS 314). --}}
 <section class="var-borg-item-details var-borg-item-area">
+{{#unless hideArea}}
   <fieldset>
     <legend>{{localize "VARBORG.Area.Legend"}}</legend>
     <p class="hint">{{localize "VARBORG.Area.SheetHint"}}</p>
@@ -33,6 +34,18 @@
         <input type="checkbox" name="system.area.includesUser" {{checked system.area.includesUser}}>
         <span>{{localize "VARBORG.Area.IncludesUser"}}</span>
       </label>
+      {{#if canToss}}
+      <label data-tooltip="{{localize 'VARBORG.Area.TossHint'}}">
+        <input type="checkbox" name="system.area.toss" {{checked system.area.toss}}>
+        <span>{{localize "VARBORG.Area.Toss"}}</span>
+      </label>
+      {{#if system.area.toss}}
+      <label data-tooltip="{{localize 'VARBORG.Area.SuccessSizeHint'}}">
+        <span>{{localize "VARBORG.Area.SuccessSize"}}</span>
+        <input type="number" name="system.area.successSize" value="{{system.area.successSize}}" min="0" step="5">
+      </label>
+      {{/if}}
+      {{/if}}
       {{/if}}
     </div>
   </fieldset>
@@ -81,14 +94,22 @@
         <select name="system.area.lasting.duration">{{selectOptions lastingPart.durations selected=system.area.lasting.duration localize=true}}</select>
       </label>
       {{#if lastingPart.isRounds}}
-      <label>
+      <label data-tooltip="{{localize 'VARBORG.Area.Lasting.RoundsHint'}}">
         <span>{{localize "VARBORG.Area.Lasting.Rounds"}}</span>
-        <input type="number" name="system.area.lasting.rounds" value="{{system.area.lasting.rounds}}" min="1" step="1">
+        <input type="text" name="system.area.lasting.rounds" value="{{system.area.lasting.rounds}}" placeholder="1">
       </label>
       {{/if}}
       <label>
         <input type="checkbox" name="system.area.lasting.difficult" {{checked system.area.lasting.difficult}}>
         <span>{{localize "VARBORG.Area.Lasting.Difficult"}}</span>
+      </label>
+      <label data-tooltip="{{localize 'VARBORG.Area.Lasting.OnceHint'}}">
+        <input type="checkbox" name="system.area.lasting.once" {{checked system.area.lasting.once}}>
+        <span>{{localize "VARBORG.Area.Lasting.Once"}}</span>
+      </label>
+      <label data-tooltip="{{localize 'VARBORG.Area.Lasting.HiddenHint'}}">
+        <input type="checkbox" name="system.area.lasting.hidden" {{checked system.area.lasting.hidden}}>
+        <span>{{localize "VARBORG.Area.Lasting.Hidden"}}</span>
       </label>
     </div>
     <h4>{{localize "VARBORG.Area.Lasting.Effects"}}</h4>
@@ -113,6 +134,15 @@
         <label>
           <span>{{localize "VARBORG.Power.DamageType"}}</span>
           <select data-lasting-field="damageType">{{selectOptions @root.lastingPart.damageTypes selected=damageType localize=true}}</select>
+        </label>
+        {{/if}}
+        {{#if isPersistent}}
+        <label>
+          <span>{{localize "VARBORG.Power.DamageType"}}</span>
+          <select data-lasting-field="damageType">
+            <option value=""></option>
+            {{selectOptions @root.lastingPart.persistentTypes selected=damageType localize=true}}
+          </select>
         </label>
         {{/if}}
         {{#if isCondition}}
@@ -164,4 +194,5 @@
     </button>
   </fieldset>
   {{/if}}
+{{/unless}}
 </section>

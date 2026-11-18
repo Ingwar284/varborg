@@ -58,7 +58,7 @@
       "type": "feat",
       "img": "icons/svg/break.svg",
       "system": {
-        "description": "Takes double damage from bleeding damage (blades).",
+        "description": "Takes double damage from slashing damage (blades).",
         "source": "passive",
         "improving": false,
         "effects": [

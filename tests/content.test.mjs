@@ -661,3 +661,90 @@ test("what powers and spells give their targets has no problems (step 51c)", asy
     if ((item.system.buffEffects ?? []).length) assert.ok(usesBuff, `${item.name}: buff effects but no buff`);
   }
 });
+
+// Step 68b (GAPS 314): every lasting area in the content is complete, with valid rounds.
+test("every lasting area's rounds and effects have no problems (step 68b)", async () => {
+  const { lastingEffectProblems, isLastingRounds } = await import("../module/rules/lasting.mjs");
+  const items = readAll(join(root, "content")).filter(({ file }) => !file.endsWith("index.json"))
+    .flatMap(({ data }) => [data, ...(data.items ?? [])]);
+  for (const item of items) {
+    const lasting = item.system?.area?.lasting;
+    if (!lasting) continue;
+    assert.ok(isLastingRounds(lasting.rounds ?? 1), `${item.name}: rounds ${lasting.rounds}`);
+    for (const effect of lasting.effects ?? []) assert.deepEqual(lastingEffectProblems(effect), [], `${item.name}: ${JSON.stringify(effect)}`);
+  }
+});
+
+// Step 68c (GAPS 314): the three grenades are tossed: a 10' burst, 5' on a Success, within 20'.
+test("the grenades are tossed, with a 10' burst and 5' on a Success (step 68c)", async () => {
+  const { isTossed, tossRange } = await import("../module/rules/toss.mjs");
+  const grenades = readAll(join(root, "content", "weapons")).map(({ data }) => data).filter(item => /^Grenade/.test(item.name));
+  assert.equal(grenades.length, 3);
+  for (const grenade of grenades) {
+    assert.ok(isTossed(grenade.system), grenade.name);
+    assert.equal(grenade.system.area.shape, "burst", grenade.name);
+    assert.equal(grenade.system.area.size, 10, grenade.name);
+    assert.equal(grenade.system.area.successSize, 5, grenade.name);
+    assert.equal(tossRange(grenade.system), 20, grenade.name);
+  }
+});
+
+test("the starting improvised grenade is tossed like the compendium's (step 68c)", async () => {
+  const { TOOLS_TABLE } = await import("../module/rules/creation.mjs");
+  const { isTossed } = await import("../module/rules/toss.mjs");
+  const grenade = TOOLS_TABLE.flat().find(entry => entry.key === "grenade");
+  assert.ok(isTossed(grenade.system));
+  assert.equal(grenade.system.area.successSize, 5);
+});
+
+// Step 68d (GAPS 314): the Smoke bomb and Fire pot are tossed and leave a lasting area for d6 rounds.
+test("the Smoke bomb blinds in a 10' radius and the Fire pot burns one 5' square, each for d6 rounds (step 68d)", async () => {
+  const { isTossed, tossLanding } = await import("../module/rules/toss.mjs");
+  const gear = Object.fromEntries(readAll(join(root, "content", "gear")).map(({ data }) => [data.name, data]));
+  const smoke = gear["Smoke bomb"].system.area;
+  assert.ok(isTossed(gear["Smoke bomb"].system));
+  assert.equal(smoke.shape, "burst");
+  assert.equal(smoke.size, 10);
+  // Its own size on every result (GAPS 314 b).
+  assert.equal(tossLanding("success", smoke).size, 10);
+  assert.equal(smoke.lasting.duration, "rounds");
+  assert.equal(smoke.lasting.rounds, "d6");
+  assert.deepEqual(smoke.lasting.effects.map(e => [e.trigger, e.kind, e.condition]), [["whileInside", "condition", "blinded"]]);
+  // "Anyone within the area": the thrower too.
+  assert.equal(smoke.includesUser, true);
+
+  const fire = gear["Fire pot"].system.area;
+  assert.ok(isTossed(gear["Fire pot"].system));
+  assert.equal(fire.shape, "square");
+  assert.equal(fire.size, 5);
+  assert.equal(fire.lasting.rounds, "d6");
+  assert.deepEqual(fire.lasting.effects.map(e => [e.trigger, e.kind, e.formula, e.damageType]), [["enterOrStart", "persistent", "d4", "fire"]]);
+  assert.equal(fire.includesUser, true);
+});
+
+// Step 68e (GAPS 314): Caltrops and the Bear trap are placed, not tossed, and stay until removed or sprung.
+test("Caltrops hurt everyone who enters until removed; the Bear trap is hidden and springs once (step 68e)", async () => {
+  const { isPlaced, isTossed } = await import("../module/rules/toss.mjs");
+  const gear = Object.fromEntries(readAll(join(root, "content", "gear")).map(({ data }) => [data.name, data]));
+  const caltrops = gear["Caltrops"].system;
+  assert.ok(isPlaced(caltrops) && !isTossed(caltrops));
+  assert.equal(caltrops.area.shape, "square");
+  assert.equal(caltrops.area.size, 5);
+  assert.equal(caltrops.area.lasting.duration, "removed");
+  assert.equal(caltrops.area.lasting.once, false);
+  assert.deepEqual(caltrops.area.lasting.effects.map(e => [e.trigger, e.kind, e.formula]), [["enter", "damage", "d4"]]);
+
+  const trap = gear["Bear trap"].system;
+  assert.ok(isPlaced(trap));
+  assert.equal(trap.area.lasting.duration, "removed");
+  assert.equal(trap.area.lasting.once, true);
+  assert.equal(trap.area.lasting.hidden, true);
+  assert.deepEqual(trap.area.lasting.effects.map(e => [e.trigger, e.kind, e.formula]), [["enter", "damage", "d8"]]);
+
+  // The starting Bear trap of character creation is the same.
+  const { TOOLS_TABLE } = await import("../module/rules/creation.mjs");
+  const starting = TOOLS_TABLE.flat().find(entry => entry.key === "bearTrap");
+  assert.ok(isPlaced(starting.system));
+  assert.equal(starting.system.area.lasting.once, true);
+  assert.equal(starting.system.area.lasting.hidden, true);
+});

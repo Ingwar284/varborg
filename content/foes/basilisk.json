@@ -151,6 +151,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "poison",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "blinded",

@@ -23,6 +23,56 @@
     "sustaining": false,
     "kept": false,
     "usedOutside": false,
-    "automation": "text"
+    "automation": "partial",
+    "outcomeEffects": [
+      {
+        "kind": "damage",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "d6",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": true,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "the portal slams shut on you"
+      },
+      {
+        "kind": "condition",
+        "who": "self",
+        "tiers": {
+          "triumph": false,
+          "success": false,
+          "failure": false,
+          "ruin": true
+        },
+        "condition": "restrained",
+        "duration": {
+          "kind": "",
+          "rounds": "1"
+        },
+        "amount": "",
+        "option": "",
+        "when": "result",
+        "damageType": "",
+        "soaked": false,
+        "nextOnly": false,
+        "test": false,
+        "whileSustained": false,
+        "note": "in the wall, until someone spends ◈ to pull you free"
+      }
+    ]
   }
 }

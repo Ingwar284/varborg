@@ -9,6 +9,7 @@
     "cost": 7,
     "actions": 2,
     "damage": "d12",
+    "damageType": "mental",
     "sustained": false,
     "reaction": false,
     "outcomes": {

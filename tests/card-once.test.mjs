@@ -122,3 +122,11 @@ test("the Shadowblight roll numbers: one roll, or two with Wild surge", () => {
   assert.equal(nextSlot("junk", 1), "1");
   assert.equal(nextSlot([true], 1), "1");
 });
+
+// GAPS 316: the Defend button against a lasting area's persistent damage works once per card.
+test("the persistent-damage Defend is a once-per-card claim, with its button on the card", () => {
+  const { spec } = ask({ flag: "persistentDefended" });
+  assert.equal(spec.shape, "flag");
+  assert.deepEqual(spec.actions, ["defendPersistent"]);
+  assert.equal(cardHasButton(`<button type="button" data-action="defendPersistent" data-actor-uuid="${UUID}">`, spec, UUID), true);
+});

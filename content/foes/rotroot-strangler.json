@@ -135,6 +135,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "d6",
+        "damageType": "bludgeoning",
         "ruinDamage": "d8",
         "conditions": {
           "failure": "restrained",
@@ -188,6 +189,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "d8",
+        "damageType": "poison",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "",

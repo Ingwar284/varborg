@@ -9,6 +9,7 @@
     "cost": 9,
     "actions": 2,
     "damage": "2d12",
+    "damageType": "dark",
     "sustained": true,
     "reaction": false,
     "outcomes": {

@@ -12,6 +12,7 @@
     "actions": 2,
     "ability": "usual",
     "damage": "d6",
+    "damageType": "slashing",
     "addsWeaponDamage": true,
     "sustained": false,
     "reaction": false,

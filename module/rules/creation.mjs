@@ -160,10 +160,16 @@ export const TOOLS_TABLE = [
     { price: 1, quantity: "sanity4", light: "fuel", lightMinutes: 60 })],
   [gear("redPoison", "icons/consumables/potions/bottle-round-corked-red.webp", { price: 20, expendable: "d4" })],
   [gear("holySymbol", "icons/commodities/treasure/token-silver-blue.webp", { price: 60 })],
+  // Tossed like the compendium's grenades (GAPS 314): a 10' burst, 5' on a Success.
   [weapon("grenade", "icons/weapons/thrown/bomb-fuse-black.webp",
-    { damage: "d6", price: 15, kind: "throw", thrown: 20, damageType: "fire" })],
+    { damage: "d6", price: 15, kind: "throw", thrown: 20, damageType: "fire",
+      area: { shape: "burst", size: 10, range: 20, affects: "all", toss: true, successSize: 5 } })],
   [gear("fileAndLockpicks", "icons/tools/hand/lockpicks-steel-grey.webp", { price: 5 })],
-  [gear("bearTrap", "icons/environment/traps/trap-jaw-steel.webp", { price: 20, expendable: "d2" })]
+  // Placed like the compendium's Bear trap (GAPS 314): hidden, d8 to the first creature to step in, then sprung.
+  [gear("bearTrap", "icons/environment/traps/trap-jaw-steel.webp", { price: 20, expendable: "d2",
+    area: { shape: "square", size: 5, range: 5, affects: "all", includesUser: true,
+      lasting: { duration: "removed", rounds: "1", once: true, hidden: true,
+        effects: [{ trigger: "enter", kind: "damage", formula: "d8", damageType: "piercing", condition: "", duration: { kind: "", rounds: "1" }, affects: "all", categories: [], option: "" }] } } })]
 ];
 
 /** The dog of Odds and ends 3 is the example minion, not an item. */

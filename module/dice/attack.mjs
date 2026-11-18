@@ -59,6 +59,7 @@ import { powerOutcomeText, powerOutcomeLines, applySustain, powerCardOutcome } f
 import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { weaponCoat, poisonFromHit } from "../poison.mjs";
+import { tossesItem, tossItem } from "../toss.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -73,6 +74,8 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/attack-card.hbs";
  * @param {Item} item    The weapon.
  */
 export async function rollAttack(actor, item, { spendPips = true } = {}) {
+  // A character's grenade is tossed, not attacked with (GAPS 314, module/toss.mjs).
+  if (tossesItem(actor, item)) return tossItem(actor, item);
   const i18n = game.i18n;
   // After the owner's feats: Brawler, Long shot (step 50a3).
   const weapon = effectiveWeapon(item);

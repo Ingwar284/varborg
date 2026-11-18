@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/magic/holy/barrier-shield-winged-cross.webp",
   "system": {
-    "description": "Brand a foe within 60' as wicked. Sustained. Your attacks against it deal an additional d8 radiant damage, and it cannot hide: it remains visible even if invisible or in darkness.",
+    "description": "Brand a foe within 60' as wicked. Sustained. Your attacks against it deal an additional d8 light damage, and it cannot hide: it remains visible even if invisible or in darkness.",
     "source": "class",
     "belongsTo": "Paladin",
     "resource": "ember",

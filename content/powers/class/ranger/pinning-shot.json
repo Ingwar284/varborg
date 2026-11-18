@@ -12,6 +12,7 @@
     "actions": 2,
     "ability": "usual",
     "damage": "d6",
+    "damageType": "piercing",
     "addsWeaponDamage": false,
     "sustained": false,
     "reaction": false,

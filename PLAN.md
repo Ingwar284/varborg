@@ -1566,3 +1566,44 @@ item names its GAPS ruling where there is one.
     module/rules/effect-kinds.mjs, templates/actor/effects-list.hbs).
     Fatigue level, days without food, lost body parts, Death's Door stage
     and In Darkness are rows too.
+67. **Compendium review: damage types and conditions** (done, to be
+    checked; GAPS 289, 313). Rules text that still used old damage names
+    now uses the fifteen types (radiant light, lightning electricity,
+    necrotic dark, psychic mental, blunt bludgeoning, persistent bleeding
+    persistent bleed), in the compendium and the rules document. 252
+    untyped powers, spells and gloom abilities got a type from their text
+    (UNTYPED_DAMAGE_REVIEW.md). Conditions the text gives but the system
+    did not apply are now applied: Coil's Silenced on a Ruin, and the
+    conditions eleven rituals give (mostly to the caster on a Ruin, and
+    The Scold's Silent Tongue to its target). Hours and minutes are not
+    timed, so those conditions stay until removed, with the time in their
+    note. Still by hand: gear (poison, smoke bomb), conditions on a set
+    trigger the system cannot see (sunlight, traps, a dropped head, a
+    thrown rider), Ruin riders on a foe's attack (Stooping Dive, Lunging
+    Snap), stance changes to Primal Blast, and Divine radiance's area.
+68. **Gear effects** (planned; GAPS 283, 314). Finishes step 53b. One
+    sub-step at a time, each tested in Foundry before the next.
+    - 68a. Black poison (built, to be tested). Added beside red poison (module/rules/poison.mjs):
+      Toughness DR14; Failure d6 and Blinded for 1 round, Ruin d6 and
+      Blinded for d4 rounds. Same Use button, coating and Resist card;
+      the card also applies Blinded with its timer.
+    - 68b. Gear can hold an area (built, to be tested). Gear and thrown weapons get the area box that
+      powers and spells have. Lasting areas learn what gear needs: rounds
+      as dice (d6), persistent damage as an effect (Fire pot), a "square"
+      shape for one 5' tile, "until removed" (Caltrops), "once, then
+      gone" (Bear trap), and an area hidden from players.
+    - 68c. The toss (built, to be tested; GAPS 315). Using a Fire pot, Smoke bomb or grenade asks for a
+      point within its throw range and rolls Agility DR12. Triumph or
+      Success: it lands there; Failure: nothing; Ruin: it lands at your
+      feet. Grenades: a 10' burst on a Triumph, 5' on a Success, and
+      everyone caught takes the damage as from any area (characters
+      defend, GAPS 284). The item's quantity drops by one.
+    - 68d. Smoke bomb and Fire pot (built, to be tested; GAPS 316). Smoke: a 10' radius for d6 rounds,
+      Blinded while inside. Fire: one 5' square for d6 rounds, d4
+      persistent fire damage on entering or starting a turn inside.
+    - 68e. Caltrops and Bear trap (built, to be tested). Placed on a square within reach, no
+      toss. Caltrops: d4 to each creature that enters, until the Dark
+      Master removes them. Bear trap: hidden from players; the first
+      creature to enter takes d8 and the trap is sprung. Spotting it
+      stays a Presence DR14 test by hand.
+    Not in this step: lockpicks' two expendable dice (GAPS 55, open).

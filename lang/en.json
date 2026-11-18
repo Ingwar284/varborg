@@ -4419,12 +4419,13 @@
       },
       "Lasting": {
         "Legend": "Lasting area",
-        "Hint": "On a Triumph or Success the area stays on the map: while Sustained, for some rounds, or until the encounter ends. A creature is affected when it enters or starts its turn there, no more than once per turn, unless an effect says otherwise. Foes take damage with Inflict damage; characters defend at Agility DR12. Armour soaks it.",
+        "Hint": "On a Triumph or Success the area stays on the map: while Sustained, for some rounds (a number or dice such as d6), until the encounter ends, or until the Dark Master removes it. A creature is affected when it enters or starts its turn there, no more than once per turn, unless an effect says otherwise. Foes take damage with Inflict damage; characters defend at Agility DR12. Armour soaks it. An area can work once and then leave the map, and can be hidden from the players.",
         "DurationLabel": "Lasts",
         "Duration": {
           "none": "While Sustained (or not at all)",
           "rounds": "For a number of rounds",
-          "encounter": "Until the encounter ends"
+          "encounter": "Until the encounter ends",
+          "removed": "Until the Dark Master removes it"
         },
         "Rounds": "Rounds",
         "Difficult": "Difficult terrain",
@@ -4445,7 +4446,8 @@
           "damage": "Damage",
           "condition": "Condition",
           "heal": "Healing",
-          "buff": "The power's buff"
+          "buff": "The power's buff",
+          "persistent": "Persistent damage"
         },
         "OptionLabel": "Option",
         "AnyOption": "Any option",
@@ -4460,7 +4462,19 @@
         "WhileInsideShort": "while inside the area",
         "Behavior": {
           "FIELDS": {}
-        }
+        },
+        "RoundsHint": "A number, or dice rolled when the area is placed, such as d6.",
+        "Once": "Works once",
+        "OnceHint": "The area leaves the map after its first effect, like a sprung bear trap.",
+        "Hidden": "Hidden from players",
+        "HiddenHint": "Only the Dark Master sees the area on the map, like a hidden bear trap.",
+        "RoundsRolled": "{area} lasts {rounds} rounds ({formula}).",
+        "Spent": "{area} is spent and leaves the map.",
+        "Persistent": "{name} is caught in {area}: {formula} persistent {type} damage.",
+        "PersistentThreat": "{name} is caught in {area}: defend (Agility DR12) or take {formula} persistent {type} damage.",
+        "DefendPersistent": "{name} defends (Agility DR{dr})",
+        "DefendPurpose": "Defend against {area}",
+        "PersistentAvoided": "{name} escapes the {type} of {area}."
       },
       "NoToken": "{name} has no token on this scene: target the creatures in the area by hand.",
       "Aim": "{name}: place the area and left-click. Right-click or Escape cancels.",
@@ -4476,12 +4490,13 @@
         "burst": "Burst (at a point)",
         "cone": "Cone",
         "line": "Line",
-        "wall": "Wall"
+        "wall": "Wall",
+        "square": "Square (at a point)"
       },
       "Size": "Size (feet)",
-      "SizeHint": "The radius of an emanation or burst; the length of a cone, line or wall.",
+      "SizeHint": "The radius of an emanation or burst; the length of a cone, line or wall; the side of a square.",
       "Range": "Range (feet)",
-      "RangeHint": "How far away the burst's point may be. 0 for no limit.",
+      "RangeHint": "How far away the burst's or square's point may be. 0 for no limit.",
       "Width": "Width (feet)",
       "AffectsLabel": "Affects",
       "Affects": {
@@ -4493,7 +4508,11 @@
       "IncludesUserHint": "The user is caught in their own area (\"you included\").",
       "Hint": "An area: every targeted creature shares the one damage roll. Foes take it with Inflict damage (their armour soaks); characters and minions defend.",
       "DefendAs": "{name} defends ({damage} damage)",
-      "SharedGloom": "Damage rolled once for every target: {rolls}."
+      "SharedGloom": "Damage rolled once for every target: {rolls}.",
+      "Toss": "Tossed (Agility DR12)",
+      "TossHint": "Used by tossing it: aim at a point within its range, then test Agility DR12. Triumph or Success: it lands there; Failure: it misses; Ruin: it lands at your feet (rules 4.1, Bombs).",
+      "SuccessSize": "Size on a Success (feet)",
+      "SuccessSizeHint": "The area's size on a Success or Ruin, such as a grenade's 5' burst. 0 for the same size on every result."
     },
     "Outcome": {
       "Title": "What it gives",
@@ -4878,6 +4897,17 @@
     "Overland": {
       "Title": "Overland",
       "Open": "Overland: weather and travel"
+    },
+    "Toss": {
+      "Purpose": "Toss {item}",
+      "Tooltip": "Toss it (Interact ◈, Agility DR12)",
+      "NoneLeft": "No {item} left to toss.",
+      "Missed": "{name}'s {item} misses or is inert.",
+      "Landed": "{name}'s {item} lands where it was aimed ({size} ft).",
+      "AtFeet": "{name} drops the {item}: it goes off at their feet ({size} ft).",
+      "Caught": "Caught: {names}.",
+      "ByHand": "No token on this scene: target the creatures caught by hand.",
+      "Damage": "Damage ({formula}): {damage} {type}."
     }
   }
 }

@@ -68,7 +68,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "It can move into and share other creatures' tiles. It takes double damage from blunt weapons.",
+        "description": "It can move into and share other creatures' tiles. It takes double damage from bludgeoning weapons.",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

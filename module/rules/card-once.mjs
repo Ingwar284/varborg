@@ -40,7 +40,9 @@ export const CLAIMS = Object.freeze({
   // Poison Resist: one per creature, stored as its uuid (poison.mjs).
   poisonResisted: { shape: "list", actions: ["resistPoison"], sub: ACTOR_UUID, bind: "uuid" },
   // The Shadowblight button: roll number "1", or "2" with Wild surge (shadowblight.mjs).
-  shadowblightRolled: { shape: "map", actions: ["rollShadowblight"], sub: /^[12]$/ }
+  shadowblightRolled: { shape: "map", actions: ["rollShadowblight"], sub: /^[12]$/ },
+  // Defending against a lasting area's persistent damage, the Fire pot (lasting.mjs, GAPS 316).
+  persistentDefended: { shape: "flag", actions: ["defendPersistent"] }
 });
 
 /**

@@ -151,6 +151,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d4",
+        "damageType": "slashing",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "prone",
@@ -187,7 +188,7 @@
       "type": "feat",
       "img": "icons/svg/aura.svg",
       "system": {
-        "description": "It takes double damage from blunt weapons (cudgels, maces, mauls, hammers and unarmed attacks).",
+        "description": "It takes double damage from bludgeoning weapons (cudgels, maces, mauls, hammers and unarmed attacks).",
         "source": "passive",
         "belongsTo": "",
         "improving": false,

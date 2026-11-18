@@ -188,6 +188,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d8",
+        "damageType": "piercing",
         "ruinDamage": "2d10",
         "conditions": {
           "failure": "prone",
@@ -233,6 +234,7 @@
         "cost": 7,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "bludgeoning",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "prone",

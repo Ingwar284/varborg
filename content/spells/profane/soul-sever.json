@@ -9,6 +9,7 @@
     "cost": 5,
     "actions": 2,
     "damage": "d12",
+    "damageType": "spirit",
     "sustained": false,
     "reaction": false,
     "outcomes": {

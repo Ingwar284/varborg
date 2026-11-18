@@ -180,6 +180,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "mental",
         "ruinDamage": "2d8",
         "conditions": {
           "failure": "",

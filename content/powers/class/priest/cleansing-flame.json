@@ -4,7 +4,7 @@
   "type": "power",
   "img": "icons/environment/people/cleric-grey.webp",
   "system": {
-    "description": "Burn away corruption. Touch an ally to heal d6 HP and end one condition on them. Or deal d6 radiant damage to a foe within 30'; double damage to fiends.",
+    "description": "Burn away corruption. Touch an ally to heal d6 HP and end one condition on them. Or deal d6 light damage to a foe within 30'; double damage to fiends.",
     "source": "class",
     "belongsTo": "Priest",
     "resource": "ember",

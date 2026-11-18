@@ -16,6 +16,40 @@
     "lightMinutes": 60,
     "lightRange": 40,
     "frequency": "",
-    "frequencyUsed": false
+    "frequencyUsed": false,
+    "area": {
+      "shape": "square",
+      "size": 5,
+      "range": 20,
+      "width": 5,
+      "affects": "all",
+      "includesUser": true,
+      "toss": true,
+      "successSize": 0,
+      "options": [],
+      "lasting": {
+        "duration": "rounds",
+        "rounds": "d6",
+        "difficult": false,
+        "once": false,
+        "hidden": false,
+        "effects": [
+          {
+            "trigger": "enterOrStart",
+            "kind": "persistent",
+            "formula": "d4",
+            "damageType": "fire",
+            "condition": "",
+            "duration": {
+              "kind": "",
+              "rounds": "1"
+            },
+            "affects": "all",
+            "categories": [],
+            "option": ""
+          }
+        ]
+      }
+    }
   }
 }

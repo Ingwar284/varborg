@@ -9,9 +9,11 @@
  *   same Resist buttons on a Poison card for the creatures hit, and the
  *   coating is gone.
  * The Resist button is pressed by whoever owns the creature (the Dark
- * Master for foes). A character tests Toughness DR12; a foe rolls a plain
- * d20 against 12. Failure: d10 damage. Ruin: d10 damage and d4 persistent
- * poison damage. Armour does not soak it; poison immunities and
+ * Master for foes). A character tests Toughness at the poison's DR; a foe
+ * rolls a plain d20 against it. Red poison (DR12): Failure d10 damage, Ruin
+ * d10 damage and d4 persistent poison damage. Black poison (DR14, GAPS
+ * 314): Failure d6 damage and Blinded for 1 round, Ruin d6 damage and
+ * Blinded for d4 rounds. Armour does not soak it; poison immunities and
  * resistances count.
  */
 
@@ -24,6 +26,7 @@ import { addPersistentDamage } from "./persistent.mjs";
 import { rollResists, takenWithResists } from "./effects.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
 import { isClaimed, claimOnce } from "./card-once.mjs";
+import { addTimedCondition } from "./timers.mjs";
 
 const SYSTEM = "var-borg";
 const COAT_FLAG = "poisonCoat";
@@ -203,6 +206,8 @@ export async function resistPoison(target, id, poisonName) {
   if (result.persistent && !killed && await addPersistentDamage(target, POISON_DAMAGE_TYPE, result.persistent)) {
     lines.push(i18n.format("VARBORG.Poison.Persistent", { name: target.name, formula: result.persistent }));
   }
+  // Black poison: Blinded with its timer (GAPS 314).
+  if (result.condition && !killed) lines.push(await addTimedCondition(target, result.condition.id, result.condition.timer));
   await ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: target }),
     content: `<div class="var-borg-card poison-card"><h3>${esc(i18n.format("VARBORG.Poison.ResistTitle", { name: target.name, poison: poisonName }))}</h3>`

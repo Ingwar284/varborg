@@ -122,6 +122,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "d8",
+        "damageType": "fire",
         "ruinDamage": "2d6",
         "conditions": {
           "failure": "blinded",

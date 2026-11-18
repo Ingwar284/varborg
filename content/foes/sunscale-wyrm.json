@@ -135,6 +135,7 @@
         "cost": 3,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "bludgeoning",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "prone",
@@ -188,6 +189,7 @@
         "cost": 5,
         "actions": 2,
         "damage": "2d6",
+        "damageType": "light",
         "ruinDamage": "3d6",
         "conditions": {
           "failure": "blinded",

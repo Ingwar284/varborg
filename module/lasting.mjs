@@ -14,12 +14,21 @@
  * foe takes damage with Inflict damage (its armour soaks); a character or
  * minion gets a Defend button (Agility DR12; its armour soaks).
  * A timed area ends when its round comes or its encounter ends; a
- * Sustained one ends with the power (module/areas.mjs).
+ * Sustained one ends with the power (module/areas.mjs); one that lasts
+ * until removed stays until the Dark Master deletes it.
+ * For gear (GAPS 314): an effect can give persistent damage (the Fire
+ * pot), and an area can work once and then leave the map (a Bear trap).
  */
 
-import { lastingReaches, oncePerTurn, triggersFor } from "./rules/lasting.mjs";
+import { lastingReaches, oncePerTurn, triggersFor, LASTING_PERSISTENT_TYPES } from "./rules/lasting.mjs";
 import { addTimedCondition } from "./timers.mjs";
 import { inflictDamage } from "./dice/morale.mjs";
+import { addPersistentDamage } from "./persistent.mjs";
+import { rollAbilityTest } from "./dice/ability-test.mjs";
+import { isClaimed, claimOnce } from "./card-once.mjs";
+
+/** The Defend against a lasting area's persistent damage: Agility DR12, as for lasting damage (GAPS 284, 316). */
+const PERSISTENT_DEFEND_DR = 12;
 
 const SYSTEM = "var-borg";
 /** The behaviour type, declared in system.json. */
@@ -60,6 +69,8 @@ export function registerLasting() {
         option: new fields.StringField({ required: true, blank: true, initial: "" }),
         // The user is affected by their own area only when it says so ("you included").
         includesUser: new fields.BooleanField({ initial: false }),
+        // Gone after its first effect (a Bear trap, sprung, GAPS 314).
+        once: new fields.BooleanField({ initial: false }),
         buffNote: new fields.StringField({ required: true, blank: true, initial: "" }),
         buffEffects: new fields.ArrayField(new fields.ObjectField())
       };
@@ -79,6 +90,44 @@ export function registerLasting() {
   Hooks.on("updateCombat", onCombatUpdate);
   Hooks.on("deleteCombat", onCombatEnd);
   Hooks.on("deleteRegion", onRegionDeleted);
+  Hooks.on("renderChatMessageHTML", addPersistentDefendListeners);
+}
+
+/** The Defend button against a lasting area's persistent damage: once per card, by the creature's owner (GAPS 316). */
+function addPersistentDefendListeners(message, html) {
+  const button = html.querySelector("button[data-action='defendPersistent']");
+  if (!button) return;
+  const target = fromUuidSync(button.dataset.actorUuid);
+  if (isClaimed(message, "persistentDefended") || !target?.isOwner) {
+    button.disabled = true;
+    return;
+  }
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    const claim = await claimOnce(message, "persistentDefended", { actor: target });
+    if (!claim) {
+      button.disabled = isClaimed(message, "persistentDefended");
+      return;
+    }
+    const { formula, type, name } = button.dataset;
+    const i18n = game.i18n;
+    const result = await rollAbilityTest(target, "agility", {
+      dr: PERSISTENT_DEFEND_DR, kind: "defence",
+      purpose: i18n.format("VARBORG.Area.Lasting.DefendPurpose", { area: name })
+    });
+    // The dialog closed: the button can be pressed again.
+    if (!result) {
+      await claim.release();
+      button.disabled = false;
+      return;
+    }
+    const typeLabel = i18n.localize(`VARBORG.DamageType.${type}`).toLowerCase();
+    if (["failure", "ruin"].includes(result.tier) && await addPersistentDamage(target, type, formula)) {
+      await postLine(target, i18n.format("VARBORG.Area.Lasting.Persistent", { name: target.name, area: name, formula, type: typeLabel }));
+    } else {
+      await postLine(target, i18n.format("VARBORG.Area.Lasting.PersistentAvoided", { name: target.name, area: name, type: typeLabel }));
+    }
+  });
 }
 
 /* -------------------------------------------- */
@@ -104,7 +153,17 @@ async function onTokenEvent(behavior, event, name) {
     if (!oncePerTurn(lastHit.get(key), now)) return;
     lastHit.set(key, now);
   }
-  for (const effect of effects) await applyEffect(behavior, token, effect);
+  let done = false;
+  for (const effect of effects) done = (await applyEffect(behavior, token, effect)) || done;
+  if (done) await spendIfOnce(behavior, region);
+}
+
+/** An area that works once (a Bear trap) leaves the map after its first effect, with a chat line. */
+async function spendIfOnce(behavior, region) {
+  if (!behavior.once || !region?.parent?.regions.has(region.id)) return;
+  const name = behavior.name || region.name;
+  await region.delete();
+  await postLine(null, game.i18n.format("VARBORG.Area.Lasting.Spent", { area: name }));
 }
 
 /** A creature left: its while-inside conditions from this area end. */
@@ -128,9 +187,11 @@ async function onCombatUpdate(combat, changes) {
     for (const behavior of region.behaviors.filter(b => b.type === LASTING_TYPE && !b.disabled)) {
       if (behavior.system.userTokenId !== tokenId) continue;
       const effects = behavior.system.effects.filter(effect => effect.trigger === "userTurn");
+      let done = false;
       for (const token of region.tokens) {
-        for (const effect of effects) await applyEffect(behavior.system, token, effect);
+        for (const effect of effects) done = (await applyEffect(behavior.system, token, effect)) || done;
       }
+      if (done) await spendIfOnce(behavior.system, region);
     }
   }
 }
@@ -183,37 +244,61 @@ function sparesUser(behavior, token) {
   return token.id === behavior.userTokenId && !behavior.includesUser;
 }
 
-/** Do one lasting effect to one creature. */
+/**
+ * Do one lasting effect to one creature.
+ * @returns {Promise<boolean>} Whether it did anything (for an area that works once).
+ */
 async function applyEffect(behavior, token, effect) {
   const actor = token.actor;
-  if (!actor || sparesUser(behavior, token) || !lastingReaches(effect, relation(behavior, token))) return;
+  if (!actor || sparesUser(behavior, token) || !lastingReaches(effect, relation(behavior, token))) return false;
   const i18n = game.i18n;
   const esc = foundry.utils.escapeHTML;
   const name = behavior.name || behavior.parent?.region?.name || "";
   if (effect.kind === "condition" && effect.condition && effect.trigger !== "whileInside") {
     const line = await addTimedCondition(actor, effect.condition, effect.duration?.kind ? effect.duration : null);
     await postLine(actor, i18n.format("VARBORG.Area.Lasting.Caught", { name: actor.name, area: name }), line);
-    return;
+    return true;
   }
-  if (!effect.formula) return;
+  // Persistent damage (the Fire pot's d4 persistent fire, GAPS 314, 316):
+  // a foe takes it; a character or minion first defends at Agility DR12,
+  // and takes it on a Failure or Ruin. Added like any other, keeping the
+  // stronger of each type (GAPS 19).
+  if (effect.kind === "persistent") {
+    if (!LASTING_PERSISTENT_TYPES.includes(effect.damageType) || !effect.formula || !actor.system?.hp) return false;
+    const type = i18n.localize(`VARBORG.DamageType.${effect.damageType}`).toLowerCase();
+    if (["character", "minion"].includes(actor.type)) {
+      const button = `<button type="button" data-action="defendPersistent" data-actor-uuid="${actor.uuid}" data-formula="${esc(effect.formula)}"`
+        + ` data-type="${effect.damageType}" data-name="${esc(name)}">`
+        + `<i class="fa-solid fa-shield-halved"></i> ${esc(i18n.format("VARBORG.Area.Lasting.DefendPersistent", { name: actor.name, dr: PERSISTENT_DEFEND_DR }))}</button>`;
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content: `<div class="var-borg-card"><p>${esc(i18n.format("VARBORG.Area.Lasting.PersistentThreat", { name: actor.name, area: name, formula: effect.formula, type }))}</p>${button}</div>`
+      });
+      return true;
+    }
+    if (!(await addPersistentDamage(actor, effect.damageType, effect.formula))) return false;
+    await postLine(actor, i18n.format("VARBORG.Area.Lasting.Persistent", { name: actor.name, area: name, formula: effect.formula, type }));
+    return true;
+  }
+  if (!effect.formula) return false;
   const roll = await new Roll(effect.formula).evaluate().catch(() => null);
-  if (!roll) return;
+  if (!roll) return false;
   if (effect.kind === "heal") {
     const hp = actor.system.hp;
-    if (!hp) return;
+    if (!hp) return false;
     const to = Math.min(hp.max ?? Infinity, hp.value + roll.total);
     if (to !== hp.value) await actor.update({ "system.hp.value": to });
     await postLine(actor, i18n.format("VARBORG.Area.Lasting.Healed", { name: actor.name, area: name, amount: to - hp.value, formula: effect.formula }), "", [roll]);
-    return;
+    return true;
   }
   // Damage: a foe takes it with Inflict damage (its armour soaks); a
   // character or minion defends at Agility DR12 (GAPS 284).
   const type = effect.damageType || behavior.damageType || "";
   if (actor.type === "foe") {
     await inflictDamage(actor, roll.total, actor.system.armour ?? "", name, type, ["area"]);
-    return;
+    return true;
   }
-  if (!["character", "minion"].includes(actor.type)) return;
+  if (!["character", "minion"].includes(actor.type)) return false;
   const userActor = behavior.userUuid ? fromUuidSync(behavior.userUuid) : null;
   const button = `<button type="button" data-action="areaDefend" data-actor-uuid="${actor.uuid}" data-damage="${roll.total}" data-name="${esc(name)}"`
     + ` data-caster-uuid="${userActor?.uuid ?? ""}" data-damage-type="${type}">`
@@ -224,6 +309,7 @@ async function applyEffect(behavior, token, effect) {
     rolls: [roll],
     sound: CONFIG.sounds.dice
   });
+  return true;
 }
 
 /**
