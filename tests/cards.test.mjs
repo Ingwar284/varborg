@@ -76,3 +76,53 @@ test("a stored deck is made safe; nothing stored is a new deck", () => {
   assert.equal(cardsLeft(readDeck({ draw: "bad" }, seeded(1))), 54);
   assert.deepEqual(readDeck({ draw: ["AS", "AS", "ZZ", "7H"], discard: ["7H", "2C"] }), { draw: ["AS", "7H"], discard: ["2C"] });
 });
+
+test("Foundry's poker deck cards read as card ids (step 69b2)", async () => {
+  const { presetCardId } = await import("../module/rules/cards.mjs");
+  assert.equal(presetCardId(1, "clubs"), "AC");
+  assert.equal(presetCardId(10, "Hearts"), "10H");
+  assert.equal(presetCardId(11, "spades"), "JS");
+  assert.equal(presetCardId(13, "diamonds"), "KD");
+  assert.equal(presetCardId(0, ""), "");
+  assert.equal(presetCardId(14, "clubs"), "");
+  assert.equal(presetCardId(5, "stars"), "");
+});
+
+test("Court cards: knaves, queens and kings d10, aces d12; others as usual (step 69b3a)", async () => {
+  const { cardDie, SLEEVE_ACE } = await import("../module/rules/cards.mjs");
+  assert.equal(cardDie("QH", { courtCards: true }), "d10");
+  assert.equal(cardDie("AH", { courtCards: true }), "d12");
+  assert.equal(cardDie("7H", { courtCards: true }), "d6");
+  assert.equal(cardDie("X1", { courtCards: true }), "d12");
+  assert.equal(cardDie(SLEEVE_ACE), "d10");
+  assert.equal(cardDie(SLEEVE_ACE, { courtCards: true }), "d12");
+});
+
+test("the ace up the sleeve is an ace with no suit (GAPS 322)", async () => {
+  const { rankOf, suitOf, SLEEVE_ACE } = await import("../module/rules/cards.mjs");
+  assert.deepEqual([rankOf(SLEEVE_ACE), suitOf(SLEEVE_ACE)], ["A", ""]);
+});
+
+test("a Wild card Joker can be named as any of the 52 other cards", async () => {
+  const { NAMEABLE_CARDS } = await import("../module/rules/cards.mjs");
+  assert.equal(NAMEABLE_CARDS.length, 52);
+  assert.ok(!NAMEABLE_CARDS.includes("X1"));
+});
+
+test("Marked suit reads the suit the player wrote", async () => {
+  const { suitFromText } = await import("../module/rules/cards.mjs");
+  assert.equal(suitFromText("Hearts"), "H");
+  assert.equal(suitFromText("my suit: spades"), "S");
+  assert.equal(suitFromText("club"), "C");
+  assert.equal(suitFromText(""), "");
+  assert.equal(suitFromText("stars"), "");
+});
+
+test("a knave with The blue knave, and a card of the marked suit, add their effects", async () => {
+  const { cardHitEffects, SLEEVE_ACE } = await import("../module/rules/cards.mjs");
+  assert.deepEqual(cardHitEffects("JH", { blueKnave: true, markedSuit: "H" }), ["blueKnave", "markH"]);
+  assert.deepEqual(cardHitEffects("JH", { markedSuit: "S" }), []);
+  assert.deepEqual(cardHitEffects("2S", { blueKnave: true, markedSuit: "S" }), ["markS"]);
+  assert.deepEqual(cardHitEffects(SLEEVE_ACE, { markedSuit: "S" }), []);
+  assert.deepEqual(cardHitEffects("X1", { blueKnave: true, markedSuit: "H" }), []);
+});

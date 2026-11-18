@@ -37,6 +37,13 @@
     <p class="hint">{{localize "VARBORG.Attack.BeyondRangeHint" distance=distance}}</p>
   </div>
   {{/if}}
+  {{#if sleeveAce}}
+  <div class="form-group">
+    <label for="var-borg-attack-sleeve">{{localize "VARBORG.Cards.SleeveAce"}}</label>
+    <input id="var-borg-attack-sleeve" type="checkbox" name="sleeveAce" {{#if sleeveAce.forced}}checked disabled{{/if}}>
+    <p class="hint">{{localize "VARBORG.Cards.SleeveAceHint"}}</p>
+  </div>
+  {{/if}}
   <div class="form-group">
     <label for="var-borg-attack-dr">{{localize "VARBORG.Test.DR"}}</label>
     <select id="var-borg-attack-dr" name="dr">

@@ -496,6 +496,28 @@
         "D": "diamonds",
         "C": "clubs",
         "S": "spades"
+      },
+      "NoCardsDeck": "{name} has no Foundry Cards deck yet. The Dark Master's client makes it; ask them to be logged in, or to switch Drawing cards back to the system's deck.",
+      "FolderName": "Razor decks",
+      "DeckName": "{actor}: {item}",
+      "PileName": "{actor}: {item} (discard)",
+      "JokerName": "Joker",
+      "SleeveAce": "Throw the ace up your sleeve instead of drawing",
+      "SleeveAceHint": "Ace up the sleeve: once per encounter. It comes back to your sleeve when the encounter ends.",
+      "SleeveAceName": "the ace up your sleeve",
+      "SleeveAceUsed": "Ace up the sleeve is used until the encounter ends.",
+      "NamedJoker": "a Joker, named {card}",
+      "WildTitle": "Wild card",
+      "WildAsk": "You drew a Joker. Name it as any other card, or keep the Joker (d12, and it bites you for d4).",
+      "KeepJoker": "Keep the Joker",
+      "WildOk": "Throw it",
+      "OnHit": "On a hit: {text}",
+      "Effect": {
+        "blueKnave": "The blue knave: the foe is Stupefied until the end of its next turn (apply it by hand).",
+        "markH": "Marked suit (hearts): d4 persistent bleed damage (apply it by hand).",
+        "markD": "Marked suit (diamonds): the hit reduces the foe's armour by one tier.",
+        "markC": "Marked suit (clubs): the foe is pushed 5' away from you.",
+        "markS": "Marked suit (spades): the foe is Frightened of you until the end of its next turn (apply it by hand)."
       }
     },
     "Ammunition": {
@@ -595,6 +617,12 @@
         "Follow": "Follow my character",
         "Light": "Always light",
         "Dark": "Always dark"
+      },
+      "CardDraw": {
+        "Name": "Drawing cards",
+        "Hint": "How the Card Slinger's Razor deck is drawn. The system's deck: kept on the weapon, out of sight. Foundry Cards: a Cards deck and a discard pile for each Razor deck, in the Cards sidebar, so the table can see and handle the cards. Switching keeps both; each starts full.",
+        "system": "The system's deck",
+        "foundry": "Foundry Cards"
       }
     },
     "Examples": {
@@ -3979,7 +4007,12 @@
         "spellbookNoBane": "Spells ticked In spellbook have no off-list Bane (1 = yes)",
         "armourIgnored": "Tiers of this foe's armour ignored when it is hit (4 = all)",
         "spellFree": "Spells cost no ember (1 = yes)",
-        "morale": "Morale (foes)"
+        "morale": "Morale (foes)",
+        "courtCards": "Card deck: knaves, queens and kings d10, aces d12 (1 = yes)",
+        "wildCard": "Card deck: a Joker can be named as any other card (1 = yes)",
+        "sleeveAce": "Card deck: throw the ace up your sleeve instead of drawing, once per encounter (1 = yes)",
+        "blueKnave": "Card deck: a knave that hits Stupefies (1 = yes)",
+        "markedSuit": "Card deck: a card of the suit chosen on this item leaves its mark (1 = yes)"
       },
       "OpLabel": "How",
       "Op": {

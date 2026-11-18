@@ -579,7 +579,11 @@ export const STAT_TARGETS = [
   // A foe's Morale (step 52b, GAPS 239): its own (Mob Courage, with an
   // ally count and radius), or its allies' within a radius (Desecrated
   // Symbol, vs "allies"). Used only by the Morale roll.
-  "morale"
+  "morale",
+  // The Card Slinger's card feats (step 69b3a, GAPS 318): Court cards,
+  // Wild card, Ace up the sleeve, The blue knave, and Marked suit (whose
+  // suit is the text chosen on the same feat).
+  "courtCards", "wildCard", "sleeveAce", "blueKnave", "markedSuit"
 ];
 
 /**

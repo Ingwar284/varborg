@@ -60,8 +60,8 @@ import { settleOutcomes } from "../outcomes.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { weaponCoat, poisonFromHit } from "../poison.mjs";
 import { tossesItem, tossItem } from "../toss.mjs";
-import { isDeckWeapon, deckCount, drawFromDeck, cardName, jokerBite } from "../cards.mjs";
-import { cardDie, isJoker } from "../rules/cards.mjs";
+import { isDeckWeapon, deckCount, drawFromDeck, cardName, jokerBite, cardFeats, useSleeveAce, askWildCard } from "../cards.mjs";
+import { cardDie, isJoker, cardHitEffects, SLEEVE_ACE } from "../rules/cards.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -87,8 +87,12 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   }
   // A deck of cards with none left must be shuffled first (Razor deck, GAPS 318).
   const deck = isDeckWeapon(item);
-  if (deck && !deckCount(item).left) {
-    ui.notifications.warn(i18n.format("VARBORG.Cards.DeckEmpty", { name: item.name }));
+  const count = deck ? deckCount(item) : null;
+  // Court cards, Wild card, Ace up the sleeve, The blue knave, Marked suit (step 69b3a).
+  const cardFeatsHad = deck ? cardFeats(actor) : null;
+  // An empty deck can still throw the ace up the sleeve.
+  if (count && !count.left && !cardFeatsHad.sleeveAce) {
+    ui.notifications.warn(i18n.format(count.missing ? "VARBORG.Cards.NoCardsDeck" : "VARBORG.Cards.DeckEmpty", { name: item.name }));
     return;
   }
 
@@ -111,7 +115,11 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     targetStatuses: [...(target?.statuses ?? [])], targetUuid: target?.uuid ?? ""
   });
   const optionalEffects = await optionalEffectsField(optional);
-  const options = await askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects });
+  const options = await askAttackOptions(actor, item, {
+    turn, attacksBefore, target, ruined, optionalEffects,
+    // Ace up the sleeve: offered while unused; with an empty deck it is the only card (step 69b3a).
+    sleeveAce: cardFeatsHad?.sleeveAce ? { forced: !count.left } : null
+  });
   if (!options) return;
   const { mode, ability } = options;
 
@@ -148,8 +156,18 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   // A deck draws its top card as you throw, and the card sets the damage
   // (Razor deck). It stays the card if Fortune rerolls the attack. A Joker
   // bites the thrower whatever the result (provisional, GAPS 321).
-  const card = deck ? await drawFromDeck(item) : null;
+  // Ace up the sleeve replaces the draw, once per encounter (step 69b3a).
+  const sleeve = Boolean(cardFeatsHad?.sleeveAce && (options.data.sleeveAce || !count.left));
+  if (sleeve) await useSleeveAce(cardFeatsHad.sleeveAce);
+  const drawn = sleeve ? SLEEVE_ACE : deck ? await drawFromDeck(item) : null;
+  // Wild card: a Joker may be named as any other card, and then does not bite.
+  const named = drawn && isJoker(drawn) && cardFeatsHad.wildCard ? await askWildCard() : "";
+  const card = named || drawn;
   const bite = card && isJoker(card) ? await jokerBite(actor) : null;
+  const cardLabel = named ? i18n.format("VARBORG.Cards.NamedJoker", { card: cardName(named) }) : card ? cardName(card) : "";
+  const cardDieUsed = card ? cardDie(card, { courtCards: cardFeatsHad.courtCards }) : "";
+  // The blue knave and Marked suit: what the card does on a hit, as notes.
+  const hitNotes = card ? cardHitEffects(card, cardFeatsHad).map(key => i18n.format("VARBORG.Cards.OnHit", { text: i18n.localize(`VARBORG.Cards.Effect.${key}`) })) : [];
 
   // Action and reaction pips, and the count for the multiple-attack Bane.
   let pipNote = null;
@@ -169,8 +187,10 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
   const title = i18n.format("VARBORG.Attack.CardTitle", { name: item.name });
   const notes = [
-    card ? i18n.format("VARBORG.Cards.Drew", { card: cardName(card), die: cardDie(card), left: deckCount(item).left }) : null,
+    card ? i18n.format("VARBORG.Cards.Drew", { card: cardLabel, die: cardDieUsed, left: deckCount(item).left }) : null,
+    sleeve ? i18n.localize("VARBORG.Cards.SleeveAceUsed") : null,
     bite?.line,
+    ...hitNotes,
     extraDr ? drNote(weapon, options.oneHanded) : null,
     automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
     automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,
@@ -186,7 +206,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   // Everything the card needs that Fortune cannot change.
   // An item effect can replace the weapon's dice (Couched Lance, step 50c).
   const setDamage = conditions.own.findLast(mod => mod.setDamage)?.setDamage;
-  const weaponDie = card ? cardDie(card) : weapon.damage;
+  const weaponDie = card ? cardDieUsed : weapon.damage;
   const formula = setDamage || damageFormula(weaponDie, options.beyondRange);
   const foe = target?.type === "foe" ? target : null;
   const inputs = {
@@ -516,7 +536,7 @@ function attackConditions(actor, target, mode, ability, item) {
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
  *   dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
-async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "" }) {
+async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "", sleeveAce = null }) {
   const i18n = game.i18n;
   // After the owner's feats: Brawler, Long shot (step 50a3).
   const weapon = effectiveWeapon(item);
@@ -563,6 +583,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
     conditionNotes: [...conditionNotes(conditions.own), ...conditionNotes(conditions.target, target?.name)],
     reminders: [...reminderNotes(actor, "attack"), ...itemReminderNotes(actor, { roll: "attack", ability: abilities[0], weapon: weaponTags(weapon, modes[0]), weaponId: item.id, damageType: weapon.damageType ?? "" })],
     optionalEffects,
+    sleeveAce,
     target: target ? i18n.format("VARBORG.Attack.Against", { name: target.name }) : i18n.localize("VARBORG.Attack.NoTarget"),
     fortuneFields: await fortuneFields(actor, "attack")
   });

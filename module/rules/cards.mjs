@@ -30,6 +30,12 @@ export const JOKER_BITE = "d4";
 
 const CARDS = new Set(FULL_DECK);
 
+/**
+ * The ace up the sleeve (Ace up the sleeve, step 69b3a): never in the deck,
+ * an ace with no suit (provisional, GAPS 322).
+ */
+export const SLEEVE_ACE = "A*";
+
 /** Whether this is one of the fifty-four cards. */
 export function isCard(card) {
   return CARDS.has(card);
@@ -41,6 +47,7 @@ export function isJoker(card) {
 
 /** The card's rank ("10", "Q" …), or "" for a Joker. */
 export function rankOf(card) {
+  if (card === SLEEVE_ACE) return "A";
   return isCard(card) && !isJoker(card) ? card.slice(0, -1) : "";
 }
 
@@ -55,17 +62,45 @@ export function isFace(card) {
 }
 
 /**
- * The damage die a card deals with the razor deck.
+ * The damage die a card deals with the razor deck. Court cards (feat):
+ * knaves, queens and kings d10, aces d12.
  * @param {string} card
+ * @param {{courtCards?: boolean}} [feats]
  * @returns {string}  "d4", "d6", "d8", "d10" or "d12"; "" for no card.
  */
-export function cardDie(card) {
-  if (!isCard(card)) return "";
+export function cardDie(card, { courtCards = false } = {}) {
+  if (!isCard(card) && card !== SLEEVE_ACE) return "";
   if (isJoker(card)) return "d12";
   const rank = rankOf(card);
-  if (rank === "A") return "d10";
-  if (isFace(card)) return "d8";
+  if (rank === "A") return courtCards ? "d12" : "d10";
+  if (isFace(card)) return courtCards ? "d10" : "d8";
   return Number(rank) <= 5 ? "d4" : "d6";
+}
+
+/** The 52 cards a Wild card Joker can be named as (Wild card): every card but the Jokers. */
+export const NAMEABLE_CARDS = Object.freeze(FULL_DECK.filter(card => !JOKERS.includes(card)));
+
+/**
+ * The suit a Marked suit feat names, read from what the player wrote when
+ * gaining it ("hearts", "Spades" …).
+ * @returns {string}  "H", "D", "C", "S" or "".
+ */
+export function suitFromText(text) {
+  const match = /\b(heart|diamond|club|spade)s?\b/i.exec(String(text ?? ""));
+  return match ? { heart: "H", diamond: "D", club: "C", spade: "S" }[match[1].toLowerCase()] : "";
+}
+
+/**
+ * What a card that hits does beyond its damage (The blue knave, Marked suit).
+ * @param {string} card
+ * @param {{blueKnave?: boolean, markedSuit?: string}} feats  markedSuit: "H", "D", "C", "S" or "".
+ * @returns {string[]}  Keys: "blueKnave", and "markH", "markD", "markC" or "markS".
+ */
+export function cardHitEffects(card, { blueKnave = false, markedSuit = "" } = {}) {
+  const effects = [];
+  if (blueKnave && rankOf(card) === "J") effects.push("blueKnave");
+  if (markedSuit && suitOf(card) === markedSuit) effects.push(`mark${markedSuit}`);
+  return effects;
 }
 
 /**
@@ -113,6 +148,19 @@ export function drawCard(deck) {
   if (!cardsLeft(deck)) return null;
   const [card, ...rest] = deck.draw;
   return { card, deck: { draw: rest, discard: [...deck.discard, card] } };
+}
+
+/**
+ * The card id of a card from Foundry's poker deck presets (GAPS 320,
+ * step 69b2), which give a value (1 for the ace, 11 to 13 for knave, queen
+ * and king) and a suit ("clubs", "hearts" …).
+ * @returns {string}  Such as "QH", or "" when it is not a poker card.
+ */
+export function presetCardId(value, suit) {
+  const rank = { 1: "A", 11: "J", 12: "Q", 13: "K" }[value] ?? (value >= 2 && value <= 10 ? String(value) : "");
+  const letter = { hearts: "H", diamonds: "D", clubs: "C", spades: "S" }[String(suit ?? "").toLowerCase()] ?? "";
+  const card = rank && letter ? `${rank}${letter}` : "";
+  return isCard(card) ? card : "";
 }
 
 /** The whole deck shuffled together again (by hand, or when an encounter ends). */

@@ -69,6 +69,7 @@ import { registerUses } from "./uses.mjs";
 import { registerChoices } from "./choices.mjs";
 import { registerDialogControls } from "./dialog.mjs";
 import { registerSettings } from "./settings.mjs";
+import { registerCards } from "./cards.mjs";
 import { registerMovement } from "./movement.mjs";
 import { registerChatRolls } from "./chat-rolls.mjs";
 import { registerItemChatHelpers } from "./item-chat.mjs";
@@ -241,6 +242,8 @@ Hooks.once("init", () => {
 
   // World settings: the Creation Helper toggle.
   registerSettings();
+  // Foundry Cards decks for the Razor deck, when that setting is on (GAPS 320).
+  registerCards();
 
   // GM-only "Import examples" button in Game Settings → Configure Settings.
   game.settings.registerMenu("var-borg", "importExamples", {

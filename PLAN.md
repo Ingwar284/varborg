@@ -1626,13 +1626,28 @@ item names its GAPS ruling where there is one.
         An empty deck cannot attack. The sheet shows "Cards 41/54" and a
         Shuffle button (one Interact action); every deck is shuffled when
         an encounter ends.
-      - 69b2. Foundry Cards (planned). A world setting picks the deck the
-        system keeps or a Foundry Cards deck, which is made for each Razor
-        deck and drawn from instead.
-      - 69b3. Card powers and feats (planned): Deal the table, Cut the
-        deck, Royal flush, The Council's knave, Call the suit, Ace up the
-        sleeve, Court cards, Wild card, The blue knave, Marked suit,
-        Riffle parry and Dead man's hand.
+      - 69b2. Foundry Cards (built, to be tested). The world setting
+        "Drawing cards" picks the system's deck (the default) or Foundry
+        Cards. With Foundry Cards, the Dark Master's client makes a Cards
+        deck (Foundry's dark poker deck and two Jokers) and a discard pile
+        for each Razor deck, in a "Razor decks" folder, owned by the
+        character's owners. Attacks pass the top card to the pile; Shuffle
+        and the end of an encounter recall and shuffle. Switching keeps
+        both decks.
+      - 69b3a. Feats on deck attacks (built, to be tested; GAPS 322).
+        Court cards (knave, queen, king d10, ace d12) and Wild card (a
+        Joker named as any other card, chosen in a dialog) change the die;
+        Ace up the sleeve is a tick in the attack dialog, once per
+        encounter, instead of drawing. The blue knave and Marked suit add
+        their effect to the chat card on a matching card. Each feat has a
+        stat switch (courtCards, wildCard, sleeveAce, blueKnave,
+        markedSuit).
+      - 69b3b. Card powers (planned): Deal the table, Cut the deck, Call
+        the suit, Royal flush and The Council's knave draw their cards
+        and set their damage.
+      - 69b3c. Feats outside the attack (planned): Riffle parry and Dead
+        man's hand draw a card when they trigger; The blue knave's and
+        Marked suit's conditions applied for you.
     - 69c. The Cartomancer's reading (planned). The reading laid out
       after a Long Rest from the Dusk Arcana (same setting as 69b), shown
       on the sheet, with a button to turn a card for an ally; then the
