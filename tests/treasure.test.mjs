@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   coinForRegion, coinFormula, damagedTier, scrollDr, relicNumber, rollSpoils, rollTreasure,
-  lootWeapons, splitSilver, SPELLS_BY_LIST, SPOILS
+  lootWeapons, splitSilver, SPELLS_BY_LIST, SPOILS, fallenKind, searchResult, searchFallen
 } from "../module/rules/treasure.mjs";
 
 /** A roller that gives these numbers in order, and records the formulas. */
@@ -151,4 +151,44 @@ test("splitting silver evenly leaves the remainder behind", () => {
   assert.deepEqual(splitSilver(100, 3), { each: 33, left: 1 });
   assert.deepEqual(splitSilver(2, 3), { each: 0, left: 2 });
   assert.deepEqual(splitSilver(50, 0), { each: 0, left: 50 });
+});
+
+/* Searching the fallen (GAPS 328) */
+
+test("beasts carry nothing; every other foe is searched (GAPS 328)", () => {
+  assert.equal(fallenKind("beast"), "nothing");
+  for (const category of ["", "humanoid", "construct", "fiend", "dragon"]) assert.equal(fallenKind(category), "search");
+});
+
+test("the search d6: 1–3 nothing, 4–5 coin, 6 spoils", () => {
+  assert.deepEqual([1, 2, 3, 4, 5, 6].map(searchResult), ["nothing", "nothing", "nothing", "coin", "coin", "spoils"]);
+});
+
+test("searching: 1–3 finds nothing and rolls nothing more", async () => {
+  const roll = loaded(3);
+  assert.deepEqual(await searchFallen(roll), { d6: 3, result: "nothing", silver: 0, finds: [] });
+  assert.deepEqual(roll.asked, ["1d6"]);
+});
+
+test("searching: 4–5 finds d10 s", async () => {
+  const roll = loaded(5, 7);
+  assert.deepEqual(await searchFallen(roll), { d6: 5, result: "coin", silver: 7, finds: [] });
+  assert.deepEqual(roll.asked, ["1d6", "1d10"]);
+});
+
+test("searching: 6 makes one Spoils roll, and a purse counts as silver", async () => {
+  const roll = loaded(6, 14, 22);
+  const found = await searchFallen(roll);
+  assert.equal(found.result, "spoils");
+  assert.equal(found.silver, 22);
+  assert.equal(found.finds.length, 1);
+  assert.equal(found.finds[0].kind, "purse");
+});
+
+test("searching: 6 then a Spoils weapon uses the weapon count", async () => {
+  const roll = loaded(6, 2, 9);
+  const found = await searchFallen(roll, { weapons: 40 });
+  assert.equal(found.finds[0].kind, "weapon");
+  assert.equal(found.finds[0].number, 9);
+  assert.deepEqual(roll.asked, ["1d6", "1d20", "1d40"]);
 });

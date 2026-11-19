@@ -268,3 +268,46 @@ export async function rollTreasure({ size, region = "usual", mighty = false, wea
 
   return { size, region, mighty, rolledCoin, silver, spoilsRolls, finds };
 }
+
+/* -------------------------------------------- */
+/*  Searching the fallen                         */
+/* -------------------------------------------- */
+
+/**
+ * Who can be searched (rules 5, Searching the fallen; GAPS 328): beasts
+ * carry nothing. Every other foe is searched, whatever its category (no
+ * category counts as mindless for now).
+ * @param {string} category  The foe's category.
+ * @returns {"search"|"nothing"}
+ */
+export function fallenKind(category) {
+  return category === "beast" ? "nothing" : "search";
+}
+
+/** What the search d6 finds: 1–3 nothing, 4–5 d10 s, 6 one Spoils roll. */
+export function searchResult(d6) {
+  if (d6 <= 3) return "nothing";
+  if (d6 <= 5) return "coin";
+  return "spoils";
+}
+
+/**
+ * Search a fallen humanoid: roll a d6, then d10 s or one Spoils roll.
+ * @param {(formula: string) => Promise<number>} roll
+ * @param {object} [options]
+ * @param {number} [options.weapons]  How many weapons a "weapon" is rolled from.
+ * @returns {Promise<{d6: number, result: string, silver: number, finds: object[]}>}
+ *   silver is the coin found, purses from the Spoils table included.
+ */
+export async function searchFallen(roll, { weapons = 0 } = {}) {
+  const d6 = await roll("1d6");
+  const result = searchResult(d6);
+  let silver = 0;
+  let finds = [];
+  if (result === "coin") silver = await roll("1d10");
+  if (result === "spoils") {
+    finds = await rollSpoils(roll, { weapons });
+    silver = finds.reduce((sum, find) => sum + (find.silver ?? 0), 0);
+  }
+  return { d6, result, silver, finds };
+}

@@ -803,7 +803,7 @@
       "AddPassive": "Add passive",
       "NewAttack": "New attack",
       "NewPassive": "New passive",
-      "DropHint": "Drag weapons (attacks) and feats (passives) from the Items sidebar onto this sheet, or use the Add buttons.",
+      "DropHint": "Drag weapons (attacks) and feats (passives) from the Items sidebar onto this sheet, or use the Add buttons. Drop items on the Loot section to make them loot.",
       "ArmourName": "Armour name",
       "ArmourNamePlaceholder": "Rusted mail",
       "AttackHint": "A foe’s attack: melee or ranged, its damage, and its reach or range. Foe attacks have no other traits and no expendable die.",
@@ -4916,6 +4916,23 @@
       "NoScene": "There is no scene to place the foes on.",
       "Placed": "{count} foes placed on {scene}.",
       "Folder": "Encounter foes"
+    },
+    "FoeLoot": {
+      "Loot": "Loot",
+      "Hint": "What the foe carries. Loot is set aside: a weapon here is not an attack, and its effects are off. When the foe drops to 0 HP, its loot and silver drop in a chest on its square.",
+      "Silver": "Silver",
+      "Spoils": "Spoils",
+      "SpoilsTooltip": "Search the fallen (rules 5): roll a d6. 1–3 nothing worth taking, 4–5 d10 s, 6 one roll on the Spoils table. Beasts carry nothing; every other foe is searched.",
+      "Empty": "Carries nothing.",
+      "DropHint": "Drag items onto this section to make them loot.",
+      "Heading": "Searching {name}",
+      "Nothing": "d6 {d6}: nothing worth taking.",
+      "Coin": "d6 {d6}: {silver} s.",
+      "SpoilsRoll": "d6 {d6}: one roll on the Spoils table.",
+      "Added": "Added to the loot of {name}.",
+      "Beast": "{name} is a beast and carries nothing, though a Ranger or Scholar may harvest it.",
+      "ChestName": "Loot of {name}",
+      "Dropped": "{name} dropped its loot in a chest on its square."
     },
     "Treasure": {
       "Open": "Roll treasure (Dark Master)",

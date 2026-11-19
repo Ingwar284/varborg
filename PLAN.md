@@ -1732,3 +1732,12 @@ item names its GAPS ruling where there is one.
     an ancestry by hand is not affected. Each has drafted d20 given-name
     and family-name tables (Names: Beastfolk (given) and so on), as in
     GAPS 258.
+74. **Foe loot and the Spoils button** (built, to be tested; GAPS 328, 329).
+    The foe sheet has a Loot section: a Silver number, the items the foe
+    carries, and a Spoils button (Dark Master only) that searches the
+    fallen as in rules 5 (d6: 1–3 nothing, 4–5 d10 s, 6 one Spoils roll),
+    reusing the treasure generator's Spoils rolls (rules/treasure.mjs
+    searchFallen, module/foe-loot.mjs). Loot is stored as "dropped", so it
+    is never an attack and its effects are off. Items dropped on the Loot
+    section become loot. At 0 HP the loot and silver drop in a chest token
+    on the foe's square (placeChest in module/chests.mjs).

@@ -17,6 +17,9 @@ import { sheetConditions, activateConditionControls } from "../conditions.mjs";
 import { sheetEffects, activateEffectControls } from "../ongoing.mjs";
 import { useLimitedItem, hasLimitedUse, frequencyLabel, useButton } from "../uses.mjs";
 import { onPostItem } from "../item-chat.mjs";
+import { isLoot, lootOf, asLoot, searchFoe } from "../foe-loot.mjs";
+import { canHold } from "../rules/chests.mjs";
+import { movedItemData } from "../vehicles.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -54,6 +57,7 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       useGloom: FoeSheet.#onUseGloom,
       rollMorale: FoeSheet.#onRollMorale,
       useLimited: FoeSheet.#onUseLimited,
+      searchFoe: FoeSheet.#onSearchFoe,
       toggleDescription: FoeSheet.#onToggleDescription
     }
   };
@@ -85,7 +89,9 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.morale = String(system.morale ?? "");
     context.canRollMorale = canRollMorale(system);
     context.moraleTooltip = game.i18n.localize(context.canRollMorale ? "VARBORG.MoraleRoll.Tooltip" : "VARBORG.MoraleRoll.NeverTooltip");
+    // Loot weapons are not attacks (GAPS 328).
     context.attacks = actor.itemTypes.weapon
+      .filter(item => !isLoot(item))
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, summary: attackSummary(item) }));
     context.gloomAbilities = actor.itemTypes.power
@@ -95,6 +101,9 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.passives = actor.itemTypes.feat
       .toSorted((a, b) => a.sort - b.sort)
       .map(item => ({ item, frequency: hasLimitedUse(item) ? frequencyLabel(item) : "", ...useButton(item) }));
+    // What it carries, dropped in a chest at 0 HP (GAPS 328).
+    context.loot = lootOf(actor).map(item => ({ item, quantity: item.system.quantity > 1 ? item.system.quantity : 0 }));
+    context.isGM = game.user.isGM;
     context.conditions = sheetConditions(actor);
     context.effects = sheetEffects(actor);
     return context;
@@ -112,6 +121,36 @@ export default class FoeSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const data = super._processFormData(event, form, formData);
     if (data.system?.morale === "") data.system.morale = null;
     return data;
+  }
+
+  /**
+   * An item dropped on the Loot section becomes loot: set aside, not an
+   * attack, its effects off. One of the foe's own items is moved there.
+   * Anywhere else, the drop works as usual.
+   */
+  async _onDropItem(event, item) {
+    if (!event.target?.closest?.(".foe-loot") || !canHold(item.type)) return super._onDropItem(event, item);
+    const actor = this.document;
+    if (!actor.isOwner) return null;
+    if (item.parent === actor) {
+      const system = { storedIn: item.system.storedIn, equipped: item.system.equipped, place: item.system.place };
+      return item.update({ system: asLoot({ system }).system });
+    }
+    let data;
+    if (item.parent) data = movedItemData(item);
+    else if (item.pack) data = game.items.fromCompendium(item);
+    else {
+      data = item.toObject();
+      delete data._id;
+      data.folder = null;
+    }
+    const [created] = await actor.createEmbeddedDocuments("Item", [asLoot(data)]);
+    return created ?? null;
+  }
+
+  /** The Spoils button searches the fallen foe (rules 5) and adds what is found to its loot. */
+  static async #onSearchFoe() {
+    await searchFoe(this.document);
   }
 
   /** The Add buttons make a new attack (weapon), gloom ability (power) or passive (feat) and open it. */

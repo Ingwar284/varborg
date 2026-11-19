@@ -56,7 +56,7 @@ const SPELLS_PACK = "var-borg.spells";
 const WEAPONS_PACK = "var-borg.weapons";
 
 /** The weapons a Spoils "weapon" is rolled from (GAPS 270). */
-function weaponList() {
+export function weaponList() {
   return lootWeapons([...game.packs.get(WEAPONS_PACK)?.index ?? []]);
 }
 
@@ -189,7 +189,7 @@ export async function generateTreasure({ size, region = "usual", mighty = false,
 }
 
 /** The item data for one find (none for coin, nothing or a re-roll). */
-async function itemsFor(find, weapons) {
+export async function itemsFor(find, weapons) {
   switch (find.kind) {
     case "weapon": {
       const entry = weapons[find.number - 1];
@@ -296,7 +296,7 @@ async function spellItem(spell, tome) {
 }
 
 /** One line of the card for a find. */
-function findLine(find, items) {
+export function findLine(find, items) {
   const i18n = game.i18n;
   const names = items.map(item => (item.system?.quantity > 1 ? `${item.name} ×${item.system.quantity}` : item.name)).join(", ");
   let what;

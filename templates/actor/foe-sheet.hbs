@@ -156,5 +156,39 @@
       <i class="fa-solid fa-plus"></i> {{localize "VARBORG.Foe.AddPassive"}}
     </button>
   </section>
+  <section class="inventory-section foe-loot">
+    <h2 data-tooltip="{{localize 'VARBORG.FoeLoot.Hint'}}">{{localize "VARBORG.FoeLoot.Loot"}}</h2>
+    <div class="foe-loot-bar">
+      <label>
+        <span>{{localize "VARBORG.FoeLoot.Silver"}}</span>
+        <input type="number" name="system.silver" value="{{system.silver}}" min="0" step="1">
+      </label>
+      {{#if isGM}}
+      <button type="button" data-action="searchFoe" data-tooltip="{{localize 'VARBORG.FoeLoot.SpoilsTooltip'}}">
+        <i class="fa-solid fa-sack-dollar"></i> {{localize "VARBORG.FoeLoot.Spoils"}}
+      </button>
+      {{/if}}
+    </div>
+    <ul class="item-list">
+      {{#each loot}}
+      <li class="item-row draggable" data-item-id="{{item.id}}">
+        <button type="button" class="item-icon" data-action="postItem" data-tooltip="{{localize 'VARBORG.Sheet.PostItem'}}" aria-label="{{localize 'VARBORG.Sheet.PostItem'}}"><img src="{{item.img}}" alt=""></button>
+        {{#if quantity}}<span class="item-summary">×{{quantity}}</span>{{/if}}
+        <span class="item-name">{{item.name}}</span>
+        <button type="button" class="icon-button" data-action="editItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Edit'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Edit'}}">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="icon-button" data-action="deleteItem"
+                data-tooltip="{{localize 'VARBORG.Sheet.Equipment.Delete'}}" aria-label="{{localize 'VARBORG.Sheet.Equipment.Delete'}}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </li>
+      {{else}}
+      <li class="empty">{{localize "VARBORG.FoeLoot.Empty"}}</li>
+      {{/each}}
+    </ul>
+    <p class="hint">{{localize "VARBORG.FoeLoot.DropHint"}}</p>
+  </section>
   <p class="hint">{{localize "VARBORG.Foe.DropHint"}}</p>
 </section>
