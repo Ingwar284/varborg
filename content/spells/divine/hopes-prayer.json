@@ -44,7 +44,7 @@
         "nextOnly": false,
         "test": false,
         "whileSustained": false,
-        "note": "the card's damage is the healing: do not Inflict it"
+        "note": "the card's damage is the healing"
       },
       {
         "kind": "reminder",

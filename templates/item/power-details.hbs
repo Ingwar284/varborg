@@ -86,6 +86,24 @@
       <input type="checkbox" name="system.addsWeaponDamage" {{checked system.addsWeaponDamage}}>
       <span>{{localize "VARBORG.Power.AddsWeapon"}}</span>
     </label>
+    <label data-tooltip="{{localize 'VARBORG.Power.WeaponAttackHint'}}">
+      <input type="checkbox" name="system.weaponAttack" {{checked system.weaponAttack}}>
+      <span>{{localize "VARBORG.Power.WeaponAttack"}}</span>
+    </label>
+    {{#if system.weaponAttack}}
+    <label>
+      <input type="checkbox" name="system.attackBoon" {{checked system.attackBoon}}>
+      <span>{{localize "VARBORG.Power.AttackBoon"}}</span>
+    </label>
+    <label>
+      <input type="checkbox" name="system.maximumDamage" {{checked system.maximumDamage}}>
+      <span>{{localize "VARBORG.Power.MaximumDamage"}}</span>
+    </label>
+    {{/if}}
+    <label data-tooltip="{{localize 'VARBORG.Power.FaithfulPrayerHint'}}">
+      <input type="checkbox" name="system.faithfulPrayer" {{checked system.faithfulPrayer}}>
+      <span>{{localize "VARBORG.Power.FaithfulPrayer"}}</span>
+    </label>
     <label data-tooltip="{{localize 'VARBORG.Power.SustainedHint'}}">
       <input type="checkbox" name="system.sustained" {{checked system.sustained}}>
       <span>{{localize "VARBORG.Power.SustainedLabel"}}</span>

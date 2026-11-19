@@ -70,6 +70,21 @@
  * their own type, their details in the effect's system data instead of
  * flags (module/rules/effect-types.mjs). The effects already load that way
  * (module/active-effect.mjs); this saves it and drops the old flags.
+ *
+ * Version 17 (player feedback, GAPS 331): Colossal smash is a melee weapon
+ * attack with Boon and maximum damage, not a power test. Copies in the
+ * world take the compendium's new settings and outcome entries.
+ *
+ * Version 18 (player feedback, GAPS 333): every character gets the
+ * starting weapons it lacks: Unarmed, Improvised weapon and Grave insult.
+ *
+ * Version 19 (player feedback, GAPS 334): Lay on hands rolls one d8, used
+ * as the healing or the damage. Copies in the world take the compendium's
+ * outcome entries.
+ *
+ * Version 20 (player feedback, GAPS 332): Prayer of the faithful casts a
+ * Divine spell or demands the impossible. Copies in the world take the
+ * compendium's new setting, and lose the reminders that stood in for it.
  */
 
 import { rolledAbilities } from "./rules/origins.mjs";
@@ -81,12 +96,13 @@ import { lightFromName, DEFAULT_LIGHT_RANGE } from "./rules/light.mjs";
 import { dawnOf, dayAt, endsAfterHours } from "./rules/calendar.mjs";
 import { currentDay } from "./days.mjs";
 import { EFFECT_TYPES } from "./rules/effect-types.mjs";
+import { giveStartingWeapons } from "./starting-weapons.mjs";
 
 const SYSTEM = "var-borg";
 const SETTING = "dataVersion";
 
 /** The data version this code expects. */
-export const DATA_VERSION = 16;
+export const DATA_VERSION = 20;
 
 /** The old flag on a class item: how much it had added to its ability. */
 const OLD_BOOST_FLAG = "classBoost";
@@ -124,6 +140,12 @@ export async function migrateWorld() {
   if (version < 14) await placeEquippedItems();
   if (version < 15) await takeNewDamageTypes();
   if (version < 16) await saveEffectTypes();
+  if (version < 17) await refreshColossalSmash();
+  if (version < 18) {
+    for (const actor of game.actors.filter(actor => actor.type === "character")) await giveStartingWeapons(actor);
+  }
+  if (version < 19) await refreshLayOnHands();
+  if (version < 20) await refreshPrayerOfTheFaithful();
   await game.settings.set(SYSTEM, SETTING, DATA_VERSION);
   console.log(`VÅR BORG | World data brought up to version ${DATA_VERSION}`);
 }
@@ -174,6 +196,39 @@ async function refreshAuraOfTheIncorruptible() {
   const stored = source.toObject().system;
   return updateItems(["spell", "scroll"], item => item.name === source.name
     ? { "system.damage": stored.damage, "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.area": foundry.utils.deepClone(stored.area) }
+    : null);
+}
+
+/** Version 20: Prayer of the faithful casts or demands (GAPS 332). */
+async function refreshPrayerOfTheFaithful() {
+  const source = await fromUuid("Compendium.var-borg.powers.Item.vbCPPrie00000000").catch(() => null);
+  if (!source) return;
+  const stored = source.toObject().system;
+  return updateItems(["power"], item => item.name === source.name && !item.system.faithfulPrayer
+    ? { "system.faithfulPrayer": true, "system.outcomeEffects": [], "system.automation": stored.automation }
+    : null);
+}
+
+/** Version 19: Lay on hands heals with the card's d8 (GAPS 334). */
+async function refreshLayOnHands() {
+  const source = await fromUuid("Compendium.var-borg.powers.Item.vbCPPala00000000").catch(() => null);
+  if (!source) return;
+  const stored = source.toObject().system;
+  return updateItems(["power"], item => item.name === source.name
+    ? { "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.automation": stored.automation }
+    : null);
+}
+
+/** Version 17: Colossal smash becomes a melee weapon attack (GAPS 331). */
+async function refreshColossalSmash() {
+  const source = await fromUuid("Compendium.var-borg.powers.Item.vbCPBarb00000000").catch(() => null);
+  if (!source) return;
+  const stored = source.toObject().system;
+  return updateItems(["power"], item => item.name === source.name && !item.system.weaponAttack
+    ? {
+      "system.weaponAttack": true, "system.attackBoon": stored.attackBoon, "system.maximumDamage": stored.maximumDamage,
+      "system.outcomeEffects": foundry.utils.deepClone(stored.outcomeEffects), "system.automation": stored.automation
+    }
     : null);
 }
 

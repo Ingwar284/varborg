@@ -128,15 +128,19 @@ function diceShown(roll) {
  * The Cast button on a spell, or the read button on a scroll.
  * @param {Actor} actor  The character.
  * @param {Item} spell   The spell or scroll item.
+ * @param {object} [options]
+ * @param {{item: Item, use: object}} [options.prayer]  Cast through Prayer of
+ *   the faithful (GAPS 332): the prayer's use (from checkPowerUse) pays
+ *   instead of the spell's cost, and its free use outside combat is marked.
  */
-export async function castSpell(actor, spell) {
+export async function castSpell(actor, spell, { prayer = null } = {}) {
   const i18n = game.i18n;
   const scroll = spell.type === "scroll";
   const ritual = !scroll && Boolean(spell.system.ritual);
   const turn = turnState(actor);
   // Perfect casting: the next spell costs no ember (GAPS 231).
   const free = actor.system.statBonuses?.spellFree?.set > 0;
-  const use = scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn, { free });
+  const use = prayer ? prayer.use : scroll ? checkScrollUse(spell, turn) : ritual ? checkRitualUse(spell, turn) : checkPowerUse(actor, spell, turn, { free });
   if (!use) return;
   // An area of effect: aim it, and every creature it catches is targeted (playtest feedback).
   let aimed = await aimArea(actor, spell);
@@ -216,7 +220,8 @@ export async function castSpell(actor, spell) {
   if (!paid) return;
   if (!(await payPowerEmber(actor, use, paid))) return;
   // Outside combat: this was the one free use (rules 3.10). Never for a scroll.
-  if (use.marksUsed) await spell.update({ "system.usedOutside": true });
+  // Through the prayer, it is the prayer's use (GAPS 332).
+  if (use.marksUsed) await (prayer ? prayer.item : spell).update({ "system.usedOutside": true });
 
   // Life force: Toughness instead of Sanity, and the DR drops by d4 per wound.
   const lifeWounds = scroll ? 0 : lifeForceWounds(options.lifeForce, wounds.value, wounds.max);
@@ -312,6 +317,7 @@ export async function castSpell(actor, spell) {
       abilityLabel,
       drNote: dr !== chosenDr ? i18n.format("VARBORG.Attack.DRFrom", { dr: chosenDr }) : null,
       notes: [
+        prayer ? i18n.format("VARBORG.Prayer.CastNote", { name: prayer.item.name }) : null,
         ...castingNotes,
         automatic.armourDr ? i18n.format("VARBORG.Attack.ArmourNote", { armour: signed(automatic.armourDr), name: automatic.armourName }) : null,
         automatic.encumberedBane ? i18n.localize("VARBORG.Test.EncumberedBane") : null,

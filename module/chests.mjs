@@ -292,7 +292,8 @@ function onDropCanvasData(board, data) {
   const point = canvas.grid.isGridless
     ? { x: data.x - canvas.grid.size / 2, y: data.y - canvas.grid.size / 2 }
     : canvas.grid.getTopLeftPoint({ x: data.x, y: data.y });
-  const message = { action: "dropItem", itemUuid: data.uuid, sceneId: canvas.scene.id, x: point.x, y: point.y, userId: game.user.id };
+  // On a map with levels, the chest goes on the level being viewed.
+  const message = { action: "dropItem", itemUuid: data.uuid, sceneId: canvas.scene.id, x: point.x, y: point.y, ...viewedLevel(), userId: game.user.id };
   if (game.user.isGM) dropItemChest(message);
   else game.socket.emit(SOCKET, message);
   return false;
@@ -302,7 +303,7 @@ function onDropCanvasData(board, data) {
  * Make the chest token with the item in it (on the Dark Master's
  * Foundry). An item on an actor is moved; any other is copied.
  */
-async function dropItemChest({ itemUuid, sceneId, x, y, userId }) {
+async function dropItemChest({ itemUuid, sceneId, x, y, level, elevation, userId }) {
   const user = game.users.get(userId);
   const scene = game.scenes.get(sceneId);
   const item = await fromUuid(itemUuid);
@@ -319,7 +320,7 @@ async function dropItemChest({ itemUuid, sceneId, x, y, userId }) {
     data.folder = null;
   }
 
-  const token = await placeChest(scene, { x, y, name: data.name, img: data.img, items: [data] });
+  const token = await placeChest(scene, { x, y, level, elevation, name: data.name, img: data.img, items: [data] });
   if (token?.actor?.items.size && source) await item.delete();
 }
 
@@ -331,23 +332,37 @@ async function dropItemChest({ itemUuid, sceneId, x, y, userId }) {
  * @param {object} chest
  * @param {number} chest.x       The token's top-left corner.
  * @param {number} chest.y
+ * @param {string} [chest.level]      The scene level to put it on (default: the scene's first).
+ * @param {number} [chest.elevation]  Its elevation (default: that level's floor).
  * @param {string} chest.name
  * @param {string} chest.img     The token's picture.
  * @param {object[]} [chest.items]  Item data to put inside.
  * @param {number} [chest.silver]
  * @returns {Promise<TokenDocument|null>}
  */
-export async function placeChest(scene, { x, y, name, img, items = [], silver = 0 }) {
+export async function placeChest(scene, { x, y, level, elevation, name, img, items = [], silver = 0 }) {
   const base = await droppedItemsActor();
   if (!base) return null;
+  const onLevel = level && scene.levels?.get(level) ? { level, elevation: elevation ?? scene.levels.get(level).elevation.bottom ?? 0 } : {};
   const tokenDoc = await base.getTokenDocument({
-    x, y, name, texture: { src: img },
+    x, y, ...onLevel, name, texture: { src: img },
     delta: { name, img, system: { silver } }
   }, { parent: scene });
   const [token] = await scene.createEmbeddedDocuments("Token", [tokenDoc.toObject()]);
   if (!token?.actor) return null;
   if (items.length) await token.actor.createEmbeddedDocuments("Item", items);
   return token;
+}
+
+/**
+ * The level being viewed on the canvas and its floor, for a chest placed
+ * there ({} on a map without levels).
+ * @returns {{level?: string, elevation?: number}}
+ */
+export function viewedLevel() {
+  const level = canvas.level;
+  if (!level) return {};
+  return { level: level.id, elevation: level.elevation?.bottom ?? 0 };
 }
 
 /** The world chest actor that dropped items are placed from, made if missing. */

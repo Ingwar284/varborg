@@ -13,6 +13,9 @@
     "ability": "usual",
     "damage": "",
     "addsWeaponDamage": false,
+    "weaponAttack": true,
+    "attackBoon": true,
+    "maximumDamage": true,
     "sustained": false,
     "reaction": false,
     "outcomes": {
@@ -25,28 +28,6 @@
     "kept": false,
     "usedOutside": false,
     "outcomeEffects": [
-      {
-        "kind": "reminder",
-        "who": "target",
-        "tiers": {
-          "triumph": true,
-          "success": true,
-          "failure": false,
-          "ruin": false
-        },
-        "condition": "",
-        "duration": {
-          "kind": "",
-          "rounds": "1"
-        },
-        "amount": "",
-        "option": "",
-        "when": "result",
-        "damageType": "",
-        "soaked": false,
-        "nextOnly": false,
-        "note": "gain Boon on the attack and deal maximum weapon damage: roll your weapon's attack with Boon and take its highest damage"
-      },
       {
         "kind": "buff",
         "who": "self",
@@ -108,6 +89,6 @@
         "note": ""
       }
     ],
-    "automation": "partial"
+    "automation": "auto"
   }
 }

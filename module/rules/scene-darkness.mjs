@@ -4,8 +4,11 @@
  *
  * Designer rulings (GAPS 311):
  * - Full daylight (darkness 0) by day, full night (darkness 1) at night.
- * - A one-hour twilight centred on dawn (6) and on dusk (18): the darkness
- *   fades out from 5:30 to 6:30 and in from 17:30 to 18:30 (GAPS 158).
+ * - A one-hour twilight just before dawn (6) and just before dusk (18):
+ *   the darkness fades out from 5:00 to 6:00 and in from 17:00 to 18:00
+ *   (GAPS 158). So Morning starts fully light and Night fully dark, even
+ *   when Next phase jumps the clock straight there (player feedback,
+ *   19 November 2026; it was centred on 6 and 18 before).
  * - The darkness is a look. Whether night counts as darkness for the rules
  *   (the In Darkness marker) is up to each scene's Global Illumination
  *   setting in Foundry, as for any scene.
@@ -13,7 +16,7 @@
 
 import { DAWN, DUSK, dayFraction, HOURS_PER_DAY } from "./calendar.mjs";
 
-/** How long the twilight lasts, in hours, centred on dawn and on dusk. */
+/** How long the twilight lasts, in hours, ending at dawn and at dusk. */
 export const TWILIGHT_HOURS = 1;
 
 /** Darkness is kept to two decimals, so the clock ticking by seconds does not update the scene every time. */
@@ -25,12 +28,11 @@ const STEP = 100;
  */
 export function darknessAt(time) {
   const hour = dayFraction(time) * HOURS_PER_DAY;
-  const half = TWILIGHT_HOURS / 2;
   let darkness;
-  if (hour < DAWN - half) darkness = 1;
-  else if (hour < DAWN + half) darkness = (DAWN + half - hour) / TWILIGHT_HOURS;
-  else if (hour < DUSK - half) darkness = 0;
-  else if (hour < DUSK + half) darkness = (hour - (DUSK - half)) / TWILIGHT_HOURS;
+  if (hour < DAWN - TWILIGHT_HOURS) darkness = 1;
+  else if (hour < DAWN) darkness = (DAWN - hour) / TWILIGHT_HOURS;
+  else if (hour < DUSK - TWILIGHT_HOURS) darkness = 0;
+  else if (hour < DUSK) darkness = (hour - (DUSK - TWILIGHT_HOURS)) / TWILIGHT_HOURS;
   else darkness = 1;
   return Math.round(darkness * STEP) / STEP;
 }

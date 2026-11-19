@@ -55,8 +55,11 @@ import { conditionsOf, conditionNotes, reminderNotes } from "../conditions.mjs";
 import { itemRollMods, itemReminderNotes, itemOptionalMods, optionalEffectsField, tickedMods, effectiveWeapon } from "../effects.mjs";
 import { weaponTags, withExtraDamage, triumphDamage } from "../rules/item-effects.mjs";
 import { powerDamage, areaTargets } from "../rules/powers.mjs";
-import { powerOutcomeText, powerOutcomeLines, applySustain, powerCardOutcome } from "./power.mjs";
-import { settleOutcomes } from "../outcomes.mjs";
+import { powerOutcomeText, powerOutcomeLines, applySustain, powerCardOutcome, payPowerEmber, spendPowerActions, emberNote } from "./power.mjs";
+import { settleOutcomes, outcomeInputs } from "../outcomes.mjs";
+import { damageIsHealing } from "../rules/outcomes.mjs";
+import { triumphGlows } from "../rules/glow.mjs";
+import { startGlow } from "../glow.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { weaponCoat, poisonFromHit } from "../poison.mjs";
 import { tossesItem, tossItem } from "../toss.mjs";
@@ -74,8 +77,14 @@ const CARD_TEMPLATE = "systems/var-borg/templates/chat/attack-card.hbs";
  * Ask for the attack's options, roll it and post the chat card.
  * @param {Actor} actor  The character attacking.
  * @param {Item} item    The weapon.
+ * @param {object} [options]
+ * @param {boolean} [options.spendPips]  Whether the attack spends the attacker's pips.
+ * @param {{item: Item, use: object}} [options.power]  A power that is this
+ *   melee attack (Colossal smash, GAPS 331), with its use from checkPowerUse:
+ *   its ember and actions are paid instead of one action, its Boon and
+ *   maximum damage count, and its outcome effects follow the result.
  */
-export async function rollAttack(actor, item, { spendPips = true } = {}) {
+export async function rollAttack(actor, item, { spendPips = true, power = null } = {}) {
   // A character's grenade is tossed, not attacked with (GAPS 314, module/toss.mjs).
   if (tossesItem(actor, item)) return tossItem(actor, item);
   const i18n = game.i18n;
@@ -108,15 +117,16 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   const ruined = actor.system.attackRuin;
   // Item effects for the player to tick when they apply (PLAN step 49d),
   // for the weapon's usual ability.
-  const usualMode = attackModes(weapon)[0];
+  const usualMode = power ? "melee" : attackModes(weapon)[0];
   const optional = itemOptionalMods(actor, {
     roll: "attack", ability: attackAbilities(weapon, usualMode)[0], weapon: weaponTags(weapon, usualMode),
     weaponId: item.id, targetCategory: target?.system?.category ?? "", damageType: weapon.damageType ?? "",
     targetStatuses: [...(target?.statuses ?? [])], targetUuid: target?.uuid ?? ""
   });
   const optionalEffects = await optionalEffectsField(optional);
+  const powerNote = power ? powerAttackNote(power.item) : null;
   const options = await askAttackOptions(actor, item, {
-    turn, attacksBefore, target, ruined, optionalEffects,
+    turn, attacksBefore, target, ruined, optionalEffects, powerNote, meleeOnly: Boolean(power),
     // Ace up the sleeve: offered while unused; with an empty deck it is the only card (step 69b3a).
     sleeveAce: cardFeatsHad?.sleeveAce ? { forced: !count.left } : null
   });
@@ -126,6 +136,11 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   // Fortune can buy a Boon or Bane before rolling (rule 3.9).
   const paid = await payDialogFortune(actor, options.data);
   if (!paid) return;
+  // A power that is this attack pays its ember now (GAPS 331).
+  if (power) {
+    if (!(await payPowerEmber(actor, power.use, paid))) return;
+    if (power.use.marksUsed) await power.item.update({ "system.usedOutside": true });
+  }
 
   // Everything that changes the test.
   const automatic = actorTestModifiers(actor, ability);
@@ -134,7 +149,7 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   conditions.own.push(...tickedMods(optional, options.data));
   const fromConditions = totalModifiers([...conditions.own, ...conditions.target]);
   const { boons: boonCount, banes: baneCount, mode: diceRule } = tallyBoonsAndBanes({
-    boonFlags: [options.boon, paid.boon],
+    boonFlags: [options.boon, paid.boon, Boolean(power?.item.system.attackBoon)],
     baneFlags: [options.bane, paid.bane, automatic.encumberedBane, banes.multiple, banes.range, banes.ruin],
     counts: [fromConditions]
   });
@@ -171,9 +186,14 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
 
   // Action and reaction pips, and the count for the multiple-attack Bane.
   let pipNote = null;
+  // A power that is this attack spends the power's actions (GAPS 331).
+  if (power) {
+    pipNote = await spendPowerActions(turn, power.use);
+    if (turn.combatant && countsAsTurnAttack(turn.onOwnTurn)) await turn.combatant.recordAttack();
+  }
   // A thrall's attack: the thrall's own actions pay, but it counts toward
   // the Gravecaller's multiple-attack Bane (GAPS 213).
-  if (turn.combatant && !spendPips) {
+  else if (turn.combatant && !spendPips) {
     if (countsAsTurnAttack(turn.onOwnTurn)) await turn.combatant.recordAttack();
   } else if (turn.combatant) {
     const kind = turn.onOwnTurn ? "actions" : "reactions";
@@ -185,8 +205,10 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
   }
 
   const abilityLabel = i18n.localize(`VARBORG.Ability.${ability}`);
-  const title = i18n.format("VARBORG.Attack.CardTitle", { name: item.name });
+  const title = i18n.format("VARBORG.Attack.CardTitle", { name: power ? `${power.item.name}: ${item.name}` : item.name });
   const notes = [
+    powerNote,
+    power ? emberNote(power.use, Boolean(turn.combatant)) : null,
     card ? i18n.format("VARBORG.Cards.Drew", { card: cardLabel, die: cardDieUsed, left: deckCount(item).left }) : null,
     sleeve ? i18n.localize("VARBORG.Cards.SleeveAceUsed") : null,
     bite?.line,
@@ -215,6 +237,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     diceRule, abilityScore, dr,
     // Extra damage from item effects (step 49e), such as "d8 + 2".
     damageFormula: isDamageFormula(formula) ? withExtraDamage(formula, conditions.own) : null,
+    // A power's maximum weapon damage (Colossal smash, GAPS 331).
+    maximumDamage: Boolean(power?.item.system.maximumDamage),
     // Extra damage only on a Triumph, added after doubling (Holy smite, step 51a).
     triumphDamage: triumphDamage(conditions.own),
     weaponDamage: weaponDie,
@@ -231,7 +255,9 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     // Several targets: one button each (playtest feedback).
     area: several,
     // The conditions a deck attack's card gives its one target (step 69b3c).
-    outcomes: card && !several ? cardAttackOutcomes(actor, item, cardOutcomeEntries(cardHitEffects(card, cardFeatsHad))) : null,
+    // A power that is this attack: its outcome effects follow the result (GAPS 331).
+    outcomes: power ? outcomeInputs(actor, power.item)
+      : card && !several ? cardAttackOutcomes(actor, item, cardOutcomeEntries(cardHitEffects(card, cardFeatsHad))) : null,
     areaDamageType: weapon.damageType ?? "",
     attackName: item.name,
     context: {
@@ -260,6 +286,8 @@ export async function rollAttack(actor, item, { spendPips = true } = {}) {
     sound: CONFIG.sounds.dice,
     flags: fortuneFlags(data)
   });
+  // Holy smite: a Triumph with extra light damage lights the weapon up (GAPS 330).
+  if (data.state.tier === "triumph" && triumphGlows(conditions.own)) await startGlow(actor, item);
   // A poisoned weapon: its next hit poisons the creatures hit (GAPS 283).
   if (weaponCoat(item) && attackOutcome(data.state.tier).hit) await poisonFromHit(actor, item, targets);
 }
@@ -325,7 +353,7 @@ export async function settleAttackCard(actor, data) {
   if (outcome.hit && invalid) damage = { invalid: true, formula: inputs.weaponDamage };
   else if (outcome.hit && inputs.damageFormula) {
     if (state.damage === null) {
-      const damageRoll = await new Roll(inputs.damageFormula).evaluate({ maximize: state.maximized });
+      const damageRoll = await new Roll(inputs.damageFormula).evaluate({ maximize: state.maximized || Boolean(inputs.maximumDamage) });
       rolls.push(damageRoll);
       state.damage = damageRoll.total;
       state.triumphExtra = null;
@@ -336,7 +364,7 @@ export async function settleAttackCard(actor, data) {
       total: power ? powerDamage(state.damage, tier) : attackDamage(state.damage, tier),
       doubled: outcome.multiplier === 2,
       halved: outcome.multiplier === 0.5,
-      maximized: state.maximized
+      maximized: state.maximized || Boolean(inputs.maximumDamage)
     };
     // Holy smite: an extra die on a Triumph, after doubling (step 51a).
     if (!power && tier === "triumph" && inputs.triumphDamage) {
@@ -349,6 +377,10 @@ export async function settleAttackCard(actor, data) {
       damage.total += state.triumphExtra;
     }
   }
+
+  // A power's damage chosen as healing (Lay on hands, GAPS 334): no
+  // Inflict or Defend buttons, and the card calls it healing.
+  if (damage && !damage.invalid && power && damageIsHealing(inputs.outcomes?.entries, tier, inputs.outcomes?.chosen)) damage.healing = true;
 
   // Cards thrown at several foes, each with its own damage (Deal the table,
   // Royal flush, step 69b3b): one roll per foe, kept through Fortune.
@@ -421,7 +453,7 @@ export async function settleAttackCard(actor, data) {
   let inflict = null;
   // An area power or spell: one button per target, one damage (GAPS 141, 218).
   let area = null;
-  if (damage && !damage.invalid && inputs.area) {
+  if (damage && !damage.invalid && !damage.healing && inputs.area) {
     area = {
       hint: i18n.localize(power ? "VARBORG.Area.Hint" : "VARBORG.Attack.SeveralHint"),
       foes: inputs.area.foes.filter(target => !inputs.perTarget || target.uuid in perTarget).map(target => ({
@@ -448,7 +480,7 @@ export async function settleAttackCard(actor, data) {
         label: i18n.format("VARBORG.Area.DefendAs", { name: target.name, damage: perTarget[target.uuid] ?? damage.total })
       }))
     };
-  } else if (damage && !damage.invalid && inputs.inflicts) {
+  } else if (damage && !damage.invalid && !damage.healing && inputs.inflicts) {
     inflict = {
       damage: damage.total,
       foeUuid: inputs.foe?.uuid ?? "",
@@ -494,7 +526,7 @@ export async function settleAttackCard(actor, data) {
     ruinNote: nowRuined && !inputs.ruinedBefore ? i18n.localize("VARBORG.Attack.RuinedNow") : null,
     // Powers are not weapon attacks: no maximum damage (GAPS 119).
     fortune: await fortuneSection(data, {
-      tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), maximized: state.maximized, attack: !power
+      tier, natural: result.natural, damage: Boolean(damage && !damage.invalid), maximized: state.maximized || Boolean(inputs.maximumDamage), attack: !power
     })
   });
   return { content, rolls };
@@ -566,11 +598,12 @@ function attackConditions(actor, target, mode, ability, item) {
  * @returns {Promise<{mode: string, ability: string, oneHanded: boolean, beyondRange: boolean,
  *   dr: number, boon: boolean, bane: boolean, data: object}|null>}  data is the whole form.
  */
-async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "", sleeveAce = null }) {
+async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruined, optionalEffects = "", sleeveAce = null, powerNote = null, meleeOnly = false }) {
   const i18n = game.i18n;
   // After the owner's feats: Brawler, Long shot (step 50a3).
   const weapon = effectiveWeapon(item);
-  const modes = attackModes(weapon);
+  // A power that is a melee attack attacks in melee only (GAPS 331).
+  const modes = meleeOnly ? ["melee"] : attackModes(weapon);
   // Finesse gives the same choice whichever way you attack.
   const abilities = attackAbilities(weapon, modes[0]);
   const distances = modes
@@ -591,6 +624,7 @@ async function askAttackOptions(actor, item, { turn, attacksBefore, target, ruin
   const conditions = attackConditions(actor, target, modes[0], abilities[0], item);
 
   const content = await renderTemplate(DIALOG_TEMPLATE, {
+    powerNote,
     modes: modes.length > 1 ? modes.map(mode => ({ value: mode, label: `VARBORG.Weapon.Kind.${mode}` })) : null,
     abilities: abilities.length > 1 ? abilities.map(a => ({ value: a, label: `VARBORG.Ability.${a}` })) : null,
     // With two ways of attacking, "as usual" picks the ability that way normally uses.
@@ -776,4 +810,19 @@ function drNote(weapon, oneHanded) {
   if (weapon.heavy) parts.push(i18n.localize("VARBORG.Attack.HeavyDR"));
   if (weapon.versatile && oneHanded) parts.push(i18n.localize("VARBORG.Attack.OneHandedDR"));
   return parts.join(" · ");
+}
+
+/**
+ * The line saying what a power that is a melee attack adds (GAPS 331),
+ * such as "Colossal smash: Boon, maximum weapon damage."
+ * @param {Item} power
+ * @returns {string}
+ */
+function powerAttackNote(power) {
+  const i18n = game.i18n;
+  const parts = [
+    power.system.attackBoon ? i18n.localize("VARBORG.Power.AttackNoteBoon") : null,
+    power.system.maximumDamage ? i18n.localize("VARBORG.Power.AttackNoteMaximum") : null
+  ].filter(Boolean);
+  return parts.length ? i18n.format("VARBORG.Power.AttackNote", { name: power.name, parts: parts.join(", ") }) : power.name;
 }

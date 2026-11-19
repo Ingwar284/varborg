@@ -77,6 +77,17 @@ export default class PowerData extends foundry.abstract.TypeDataModel {
       // Also rolls a chosen weapon's damage dice, such as Power strike's
       // "additional d6" (GAPS 121). Only the dice: no traits, not an attack.
       addsWeaponDamage: new BooleanField({ initial: false }),
+      // Using it is a melee weapon attack (Colossal smash, GAPS 331): no
+      // power test; the chosen melee weapon attacks as usual, with Boon
+      // and maximum weapon damage when ticked. The power's cost and
+      // actions are paid instead of the attack's one action, and its
+      // outcome effects follow the attack's result.
+      weaponAttack: new BooleanField({ initial: false }),
+      // Prayer of the faithful (GAPS 332): using it casts a Divine spell of
+      // 3 ember or less for its cost, or demands the impossible (module/prayer.mjs).
+      faithfulPrayer: new BooleanField({ initial: false }),
+      attackBoon: new BooleanField({ initial: false }),
+      maximumDamage: new BooleanField({ initial: false }),
       sustained: new BooleanField({ initial: false }),
       // Its area of effect, if it names one (playtest feedback).
       area: areaField(),

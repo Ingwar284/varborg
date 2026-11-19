@@ -24,7 +24,7 @@ import {
   powerDr, powerAbility, powerOutcome, powerUse, sustainCost, sustainAtEndOfTurn, startsSustaining,
   powerDamageFormula, BARE_WEAPONS
 } from "../rules/powers.mjs";
-import { damageFormula } from "../rules/attack.mjs";
+import { damageFormula, attackModes } from "../rules/attack.mjs";
 import { isDamageFormula } from "../rules/equipment.mjs";
 import { DR_TABLE, tallyBoonsAndBanes, diceFormula } from "../rules/test-roll.mjs";
 import { modifiedDr } from "../rules/test-modifiers.mjs";
@@ -54,7 +54,8 @@ function withChosen(inputs, chosen) {
   return inputs ? { ...inputs, chosen: chosen.filter(Boolean) } : null;
 }
 import { newFortuneData, fortuneFlags, fortuneFields, payDialogFortune } from "../fortune.mjs";
-import { settleAttackCard } from "./attack.mjs";
+import { settleAttackCard, rollAttack } from "./attack.mjs";
+import { usePrayer } from "../prayer.mjs";
 import { actorTestModifiers, signed, modeLabel, diceOf } from "./ability-test.mjs";
 import { VB_DIALOG_CLASSES } from "../dialog.mjs";
 import { aimArea, keepArea } from "../areas.mjs";
@@ -78,7 +79,46 @@ export async function usePower(actor, power) {
     ui.notifications.warn(game.i18n.format("VARBORG.Power.GloomOnCharacter", { name: power.name }));
     return;
   }
+  // A power that is a melee weapon attack (Colossal smash, GAPS 331).
+  if (power.system.weaponAttack) return usePowerAsAttack(actor, power);
+  // Prayer of the faithful: a Divine spell or a demand (GAPS 332).
+  if (power.system.faithfulPrayer) return usePrayer(actor, power);
   return rollPowerTest(actor, power);
+}
+
+/**
+ * A power that is a melee weapon attack (Colossal smash, GAPS 331): no
+ * power test. The player picks a carried melee weapon, which attacks as
+ * usual (module/dice/attack.mjs), with the power's Boon and maximum damage.
+ * The attack pays the power's ember and actions.
+ */
+async function usePowerAsAttack(actor, power) {
+  const i18n = game.i18n;
+  const turn = turnState(actor);
+  const use = checkPowerUse(actor, power, turn);
+  if (!use) return;
+  const melee = actor.itemTypes.weapon
+    .filter(item => attackModes(effectiveWeapon(item)).includes("melee"))
+    .toSorted((a, b) => Number(b.system.equipped) - Number(a.system.equipped) || a.sort - b.sort);
+  if (!melee.length) {
+    ui.notifications.warn(i18n.format("VARBORG.Power.NoMeleeWeapon", { name: power.name, actor: actor.name }));
+    return;
+  }
+  let weapon = melee[0];
+  if (melee.length > 1) {
+    const escape = foundry.utils.escapeHTML;
+    const options = melee.map(item => `<option value="${item.id}">${escape(item.name)} (${escape(String(item.system.damage ?? ""))})${item.system.equipped ? ` · ${i18n.localize("VARBORG.Item.Equipped")}` : ""}</option>`).join("");
+    const chosen = await DialogV2.input({
+      classes: VB_DIALOG_CLASSES,
+      window: { title: i18n.format("VARBORG.Power.PickWeaponTitle", { name: power.name }) },
+      content: `<div class="form-group"><label for="var-borg-power-weapon">${i18n.localize("VARBORG.Power.PickWeapon")}</label><select id="var-borg-power-weapon" name="weapon">${options}</select></div>`,
+      ok: { label: "VARBORG.Power.Use", icon: "fa-solid fa-fire" },
+      rejectClose: false
+    });
+    if (!chosen) return;
+    weapon = melee.find(item => item.id === chosen.weapon) ?? weapon;
+  }
+  return rollAttack(actor, weapon, { power: { item: power, use } });
 }
 
 /**

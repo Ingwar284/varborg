@@ -713,6 +713,29 @@ body[data-vb-mood="dark"] .var-borg.character .sheet-header .portrait-sun__stars
   margin-top: 0.2rem;
 }
 
+/* A foe's loot (GAPS 328): its silver and the Spoils button on one line. */
+.var-borg-sheet .foe-loot .foe-loot-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.var-borg-sheet .foe-loot .foe-loot-bar label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.var-borg-sheet .foe-loot .foe-loot-bar input[type="number"] {
+  width: 5rem;
+}
+
+.var-borg-sheet .foe-loot .foe-loot-bar button {
+  width: auto;
+}
+
 /* Death's Door on the character sheet: where the character stands, the Dark Vessel count and lost body parts. */
 .var-borg-sheet .deaths-door-panel {
   margin-top: 0.5rem;

@@ -25,7 +25,7 @@ import { ARMOUR_TABLE } from "./rules/creation.mjs";
 import { equipmentItem, itemData } from "./creation.mjs";
 import { scrollOfSpell } from "./sheets/character-sheet.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
-import { placeChest } from "./chests.mjs";
+import { placeChest, viewedLevel } from "./chests.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -56,7 +56,7 @@ const SPELLS_PACK = "var-borg.spells";
 const WEAPONS_PACK = "var-borg.weapons";
 
 /** The weapons a Spoils "weapon" is rolled from (GAPS 270). */
-function weaponList() {
+export function weaponList() {
   return lootWeapons([...game.packs.get(WEAPONS_PACK)?.index ?? []]);
 }
 
@@ -189,7 +189,7 @@ export async function generateTreasure({ size, region = "usual", mighty = false,
 }
 
 /** The item data for one find (none for coin, nothing or a re-roll). */
-async function itemsFor(find, weapons) {
+export async function itemsFor(find, weapons) {
   switch (find.kind) {
     case "weapon": {
       const entry = weapons[find.number - 1];
@@ -296,7 +296,7 @@ async function spellItem(spell, tome) {
 }
 
 /** One line of the card for a find. */
-function findLine(find, items) {
+export function findLine(find, items) {
   const i18n = game.i18n;
   const names = items.map(item => (item.system?.quantity > 1 ? `${item.name} ×${item.system.quantity}` : item.name)).join(", ");
   let what;
@@ -354,7 +354,7 @@ async function placeTreasure({ name, items = [], silver = 0 }) {
   const point = canvas.grid.isGridless
     ? { x: centre.x - canvas.grid.size / 2, y: centre.y - canvas.grid.size / 2 }
     : canvas.grid.getTopLeftPoint({ x: centre.x, y: centre.y });
-  const token = await placeChest(scene, { x: point.x, y: point.y, name, img: CHEST_IMG, items, silver });
+  const token = await placeChest(scene, { x: point.x, y: point.y, ...viewedLevel(), name, img: CHEST_IMG, items, silver });
   if (!token) return false;
   ui.notifications.info(game.i18n.format("VARBORG.Treasure.PlacedOn", { name, scene: scene.name }));
   return true;

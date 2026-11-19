@@ -791,3 +791,29 @@ test("Caltrops hurt everyone who enters until removed; the Bear trap is hidden a
   assert.equal(starting.system.area.lasting.once, true);
   assert.equal(starting.system.area.lasting.hidden, true);
 });
+
+test("Colossal smash is a melee weapon attack with Boon and maximum damage (GAPS 331)", () => {
+  const smash = JSON.parse(readFileSync(join(root, "content", "powers", "class", "barbarian", "colossal-smash.json"), "utf8")).system;
+  assert.equal(smash.weaponAttack, true);
+  assert.equal(smash.attackBoon, true);
+  assert.equal(smash.maximumDamage, true);
+  assert.equal(smash.cost, 1);
+  assert.equal(smash.actions, 2);
+  // Only the Bane on defence is left, and only on a hit.
+  assert.deepEqual(smash.outcomeEffects.map(entry => entry.kind), ["buff"]);
+  assert.deepEqual(smash.outcomeEffects[0].tiers, { triumph: true, success: true, failure: false, ruin: false });
+  assert.equal(smash.buffEffects[0].roll, "defence");
+  assert.equal(smash.buffEffects[0].grant, "bane");
+});
+
+test("Lay on hands heals with the card's d8, the target or the Paladin (GAPS 334)", () => {
+  const lay = JSON.parse(readFileSync(join(root, "content", "powers", "class", "paladin", "lay-on-hands.json"), "utf8")).system;
+  assert.equal(lay.damage, "d8");
+  assert.equal(lay.damageType, "light");
+  const heal = lay.outcomeEffects.find(entry => entry.kind === "heal");
+  assert.equal(heal.amount, "damage");
+  assert.equal(heal.who, "targetOrSelf");
+  assert.equal(heal.option, "Heal");
+  assert.deepEqual(heal.tiers, { triumph: true, success: true, failure: true, ruin: false });
+  assert.ok(lay.outcomeEffects.some(entry => entry.option === "Harm"));
+});

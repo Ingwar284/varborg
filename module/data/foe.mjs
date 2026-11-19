@@ -62,6 +62,9 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
       initiative: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
       // A mook has 1 HP, fails every test and never rolls Morale.
       mook: new BooleanField({ initial: false }),
+      // Coin the foe carries, as loot (GAPS 328). It drops in a chest with
+      // its loot items when it drops to 0 HP (module/foe-loot.mjs).
+      silver: wholeNumber(),
       // Levels of the Fatigued condition, no maximum (rules 3.13, GAPS 20).
       fatigue: wholeNumber(),
       // Feet per Move action for each way of moving (rules 3.7). A blank
@@ -136,6 +139,10 @@ export default class FoeData extends foundry.abstract.TypeDataModel {
    */
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
+    // At 0 HP its loot drops in a chest (GAPS 328), on the Dark Master's Foundry.
+    if (changed.system?.hp?.value === 0 && game.user === game.users.activeGM) {
+      import("../foe-loot.mjs").then(({ dropFoeLoot }) => dropFoeLoot(this.parent));
+    }
     if (userId !== game.user.id) return;
     const stayed = options[STAYED_OPTION];
     if (stayed) {
