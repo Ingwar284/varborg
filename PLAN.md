@@ -1741,3 +1741,60 @@ item names its GAPS ruling where there is one.
     is never an attack and its effects are off. Items dropped on the Loot
     section become loot. At 0 HP the loot and silver drop in a chest token
     on the foe's square (placeChest in module/chests.mjs).
+75. **Dropped chests on the viewed level** (built, to be tested; player
+    feedback). On a map with levels (Foundry v14), an item dropped on the
+    map, a treasure chest and a foe's loot chest went to the scene's first
+    level. Now a dropped item or treasure goes on the level being viewed,
+    and a foe's loot on the foe's own level (placeChest and viewedLevel in
+    module/chests.mjs).
+76. **Colossal smash in one roll** (built, to be tested; GAPS 331). A power
+    can be marked "Is a melee weapon attack", with "Attack with Boon" and
+    "Maximum weapon damage". Using it opens no power test: the player picks
+    a carried melee weapon (equipped first) and makes that attack through
+    the usual attack dialog and card, melee only. The power's ember and
+    actions are paid instead of the attack's one action, and it counts for
+    the multiple-attack Bane. The damage dice roll their maximum (Fortune's
+    maximum-damage button is hidden); a Triumph doubles it as usual. The
+    power's outcome entries follow the attack's result, so Bane on defence
+    comes only with a hit. Data version 17 updates copies in the world.
+77. **Starting weapons** (built, to be tested; GAPS 333). Every character
+    has Unarmed, Improvised weapon and Grave insult from the Weapons
+    compendium: added when a character is created (by the client that made
+    it), after a Random character wipe, and once to existing characters
+    (data version 18). Only the missing ones are added, matched by
+    compendium source or name (rules/starting-weapons.mjs,
+    module/starting-weapons.mjs). They can be deleted like any item.
+78. **Lay on hands with one d8** (built, to be tested; GAPS 334). The heal
+    entry's amount is the card's damage, so one d8 is either the healing
+    or the light damage (doubled on a Triumph, halved on a Failure). A new
+    recipient, "Each target, or the user if none" (targetOrSelf), heals
+    the Paladin when nothing is targeted. When the chosen option heals by
+    the card's damage, the card says Healing and has no Inflict damage or
+    Defend buttons (rules/outcomes.mjs damageIsHealing); Hope's Prayer
+    gets this too. Data version 19 updates copies in the world.
+79. **Prayer of the faithful** (built, to be tested; GAPS 332, 335). A power
+    can be marked "Prayer of the faithful". Its Use button opens a choice:
+    cast a Divine spell of 3 ember or less (the Priest's own and the Spells
+    compendium's, no rituals: GAPS 335) or demand the impossible at DR
+    16, 18 or 20. The spell is cast through the usual spell dialog and
+    card at its own DR; the prayer's 1 ember and 2 actions pay instead of
+    the spell's cost (castSpell's prayer option). A spell the Priest does
+    not know is added for the casting (flag var-borg.prayerCopy) and
+    removed once it is not being sustained. A demand is a Sanity test with
+    a line for its result; a Ruin puts the Priest at Death's Door
+    (module/prayer.mjs, rules/prayer.mjs). Data version 20.
+80. **Holy smite glow** (built, to be tested; GAPS 330). An attack Triumph
+    whose extra Triumph damage is noted as light (Holy smite) gives the
+    attacker a buff item, "Holy smite: glowing <weapon>", with an
+    encounter timer. The item carries a Foundry v14 Active Effect with
+    token changes: dim light upgraded to 10 feet and a pale gold colour,
+    so a longer torch or lantern light is kept. It is real light for In
+    Darkness. A new glow replaces the old; deleting the item puts it out
+    (rules/glow.mjs, module/glow.mjs).
+81. **Scene darkness at the phase changes** (built, to be tested; GAPS 311,
+    player feedback). The one-hour twilight was centred on 6:00 and 18:00,
+    so Next phase to Night or Morning left a following scene half dark.
+    The twilight now comes in the hour before dawn and dusk (5–6, 17–18),
+    so Morning starts fully light and Night fully dark. A following scene
+    with Foundry's Darkness Lock on is skipped with a warning to the Dark
+    Master, once per scene per session (module/scene-darkness.mjs).

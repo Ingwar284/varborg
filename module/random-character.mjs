@@ -38,6 +38,7 @@ import { rollName } from "./names.mjs";
 import { ownedMinions, vehiclesMadeForCharacter } from "./minions.mjs";
 import { STARTING_FORTUNE_FORMULA } from "./rules/fortune.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
+import { giveStartingWeapons } from "./starting-weapons.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 
@@ -83,6 +84,8 @@ async function wipeCharacter(actor, rolls) {
   const lines = [];
   if (actor.items.size) await actor.deleteEmbeddedDocuments("Item", actor.items.map(item => item.id));
   if (actor.effects.size) await actor.deleteEmbeddedDocuments("ActiveEffect", actor.effects.map(effect => effect.id));
+  // Every character keeps Unarmed, Improvised weapon and Grave insult (GAPS 333).
+  await giveStartingWeapons(actor);
 
   for (const minion of ownedMinions(actor)) {
     if (minion.canUserModify(game.user, "delete")) await minion.delete();

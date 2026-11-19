@@ -31,12 +31,15 @@ export function automationEntries(files) {
     const ownEmber = item.type === "relic" && item.system?.emberGain > 0 ? 1 : 0;
     // A card power's draws, which its card makes (Card Slinger and Cartomancer, step 69).
     const ownCards = item.type === "power" && item.system?.cards ? 1 : 0;
+    // A power whose Use button does its own work: a melee weapon attack
+    // (Colossal smash, GAPS 331) or Prayer of the faithful (GAPS 332).
+    const ownUse = item.type === "power" && (item.system?.weaponAttack || item.system?.faithfulPrayer) ? 1 : 0;
     entries.push({
       folder,
       name: owner ? `${owner}: ${item.name}` : item.name,
       type: item.type,
       status: item.system?.automation ?? "",
-      effects: effects.length + outcomes.length + ownDamage + ownConditions + ownEmber + ownCards,
+      effects: effects.length + outcomes.length + ownDamage + ownConditions + ownEmber + ownCards + ownUse,
       rawEffects: effects
     });
   };

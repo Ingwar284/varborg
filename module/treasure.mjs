@@ -25,7 +25,7 @@ import { ARMOUR_TABLE } from "./rules/creation.mjs";
 import { equipmentItem, itemData } from "./creation.mjs";
 import { scrollOfSpell } from "./sheets/character-sheet.mjs";
 import { VB_DIALOG_CLASSES } from "./dialog.mjs";
-import { placeChest } from "./chests.mjs";
+import { placeChest, viewedLevel } from "./chests.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const { renderTemplate } = foundry.applications.handlebars;
@@ -354,7 +354,7 @@ async function placeTreasure({ name, items = [], silver = 0 }) {
   const point = canvas.grid.isGridless
     ? { x: centre.x - canvas.grid.size / 2, y: centre.y - canvas.grid.size / 2 }
     : canvas.grid.getTopLeftPoint({ x: centre.x, y: centre.y });
-  const token = await placeChest(scene, { x: point.x, y: point.y, name, img: CHEST_IMG, items, silver });
+  const token = await placeChest(scene, { x: point.x, y: point.y, ...viewedLevel(), name, img: CHEST_IMG, items, silver });
   if (!token) return false;
   ui.notifications.info(game.i18n.format("VARBORG.Treasure.PlacedOn", { name, scene: scene.name }));
   return true;

@@ -28,11 +28,11 @@
     "outcomeEffects": [
       {
         "kind": "heal",
-        "who": "target",
+        "who": "targetOrSelf",
         "tiers": {
           "triumph": true,
           "success": true,
-          "failure": false,
+          "failure": true,
           "ruin": false
         },
         "condition": "",
@@ -40,13 +40,13 @@
           "kind": "",
           "rounds": "1"
         },
-        "amount": "d8",
+        "amount": "damage",
         "option": "Heal",
         "when": "result",
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "a living creature"
+        "note": "a living creature: the card's d8 is the healing (doubled on a Triumph, halved on a Failure)"
       },
       {
         "kind": "reminder",
@@ -54,7 +54,7 @@
         "tiers": {
           "triumph": true,
           "success": true,
-          "failure": false,
+          "failure": true,
           "ruin": false
         },
         "condition": "",
@@ -68,9 +68,9 @@
         "damageType": "",
         "soaked": false,
         "nextOnly": false,
-        "note": "against an undead, duskborn or fiend: Inflict the damage"
+        "note": "against an undead, duskborn or fiend: Inflict the card's d8 as light damage"
       }
     ],
-    "automation": "partial"
+    "automation": "auto"
   }
 }

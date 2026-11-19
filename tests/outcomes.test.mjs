@@ -5,7 +5,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { blankOutcome, outcomeProblems, wantedOutcomes, outcomeDiff, isHealFormula } from "../module/rules/outcomes.mjs";
+import { blankOutcome, outcomeProblems, wantedOutcomes, outcomeDiff, isHealFormula, damageIsHealing } from "../module/rules/outcomes.mjs";
 
 test("a new entry works on a Triumph or Success, on the targets", () => {
   const entry = blankOutcome("condition");
@@ -78,4 +78,27 @@ test("allies and foes among the targets; healing as much as the damage (step 51f
   assert.deepEqual(wantedOutcomes([heal], "success", who).map(w => w.actorUuid), ["a"]);
   assert.deepEqual(wantedOutcomes([{ ...heal, who: "foes" }], "success", who).map(w => w.actorUuid), ["f"]);
   assert.deepEqual(outcomeProblems(heal), []);
+});
+
+test("targetOrSelf gives each target, or the user when nothing is targeted (GAPS 334)", () => {
+  const entries = [{ kind: "heal", who: "targetOrSelf", tiers: { success: true }, when: "result", option: "" }];
+  assert.deepEqual(wantedOutcomes(entries, "success", { targets: [], user: "U" }).map(w => w.actorUuid), ["U"]);
+  assert.deepEqual(wantedOutcomes(entries, "success", { targets: ["A", "B"], user: "U" }).map(w => w.actorUuid), ["A", "B"]);
+  assert.equal(outcomeProblems({ ...blankOutcome(), who: "targetOrSelf" }).length, 0);
+});
+
+test("the card's damage is healing when the chosen option heals by it (GAPS 334)", () => {
+  const entries = [
+    { kind: "heal", amount: "damage", option: "Heal", tiers: { triumph: true, success: true, failure: true, ruin: false } },
+    { kind: "reminder", option: "Harm", tiers: { triumph: true, success: true, failure: true, ruin: false } }
+  ];
+  assert.equal(damageIsHealing(entries, "success", ["Heal"]), true);
+  assert.equal(damageIsHealing(entries, "failure", ["Heal"]), true);
+  assert.equal(damageIsHealing(entries, "success", ["Harm"]), false);
+  assert.equal(damageIsHealing(entries, "ruin", ["Heal"]), false);
+  // The second option counts only on a Triumph.
+  assert.equal(damageIsHealing(entries, "success", ["Harm", "Heal"]), false);
+  assert.equal(damageIsHealing(entries, "triumph", ["Harm", "Heal"]), true);
+  // A heal with its own dice is not the card's damage.
+  assert.equal(damageIsHealing([{ ...entries[0], amount: "d8" }], "success", ["Heal"]), false);
 });

@@ -132,7 +132,8 @@ async function dropLoot(actor) {
 
   const name = game.i18n.format("VARBORG.FoeLoot.ChestName", { name: token.name || actor.name });
   const placed = await placeChest(scene, {
-    x: token.x, y: token.y, name, img: LOOT_IMG,
+    // On the foe's own level, on a map with levels.
+    x: token.x, y: token.y, level: token.level, elevation: token.elevation, name, img: LOOT_IMG,
     items: loot.map(item => movedItemData(item)),
     silver
   });

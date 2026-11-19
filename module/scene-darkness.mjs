@@ -8,10 +8,11 @@
  * Whenever the world clock moves (Next phase, +1 h, a rest, travel, a
  * module), the active Dark Master's client sets every following scene's
  * darkness for the hour, all in one update: 0 by day, 1 at night, with a
- * one-hour twilight round dawn and dusk (module/rules/scene-darkness.mjs).
+ * one-hour twilight just before dawn and dusk (module/rules/scene-darkness.mjs).
  * The same happens to a scene when it is set to follow, and to all of them
  * when the world loads. Moving the slider by hand lasts until the clock
- * moves again.
+ * moves again. A following scene with Foundry's Darkness Lock on is left
+ * alone, and the Dark Master is warned once per scene (player feedback).
  *
  * Whether night counts as darkness for the rules (In Darkness, Bane) is up
  * to the scene's Global Illumination setting, as for any scene
@@ -22,6 +23,9 @@ import { darknessAt } from "./rules/scene-darkness.mjs";
 
 const SYSTEM = "var-borg";
 const FOLLOW = "followTimeOfDay";
+
+/** Locked scenes the Dark Master has been warned about this session. */
+const warnedLocked = new Set();
 
 /** Set up the scene field and the following. Called at init. */
 export function registerSceneDarkness() {
@@ -49,6 +53,15 @@ export async function followTimeOfDay(scenes = game.scenes.contents) {
   const updates = [];
   for (const scene of scenes) {
     if (!follows(scene)) continue;
+    // Foundry's Darkness Lock wins; say so once (player feedback).
+    if (scene.environment.darknessLock) {
+      if (!warnedLocked.has(scene.id)) {
+        warnedLocked.add(scene.id);
+        ui.notifications.warn(game.i18n.format("VARBORG.SceneDarkness.Locked", { name: scene.name }));
+      }
+      continue;
+    }
+    warnedLocked.delete(scene.id);
     if (scene.environment.darknessLevel !== darknessLevel) {
       updates.push({ _id: scene.id, "environment.darknessLevel": darknessLevel });
     }

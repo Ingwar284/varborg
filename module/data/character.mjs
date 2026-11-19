@@ -21,6 +21,7 @@ import { wakesFromHealing } from "../rules/deaths-door.mjs";
 import { atDeathsDoor, isDead, healedAtDeathsDoor } from "../deaths-door.mjs";
 import { collectEffects, statBonuses, withStat, withAbilityBonuses } from "../rules/item-effects.mjs";
 import { runItemHooks } from "../effects.mjs";
+import { giveStartingWeapons } from "../starting-weapons.mjs";
 
 /** Passes "gained HP at Death's Door" from _preUpdate to _onUpdate (GAPS 163). */
 const HEALED_AT_DOOR_OPTION = "varBorgHealedAtDeathsDoor";
@@ -162,10 +163,15 @@ export default class CharacterData extends foundry.abstract.TypeDataModel {
     }
   }
 
-  /** The client that created the character posts its starting Fortune. */
+  /**
+   * The client that created the character posts its starting Fortune and
+   * gives it the starting weapons it lacks (GAPS 333).
+   */
   _onCreate(data, options, userId) {
     super._onCreate(data, options, userId);
-    if (userId === game.user.id && options[STARTING_FORTUNE_OPTION]) postStartingFortune(this.parent, options[STARTING_FORTUNE_OPTION]);
+    if (userId !== game.user.id) return;
+    if (options[STARTING_FORTUNE_OPTION]) postStartingFortune(this.parent, options[STARTING_FORTUNE_OPTION]);
+    giveStartingWeapons(this.parent).catch(error => console.error("VÅR BORG | Could not give the starting weapons", error));
   }
 
   /**

@@ -1846,6 +1846,33 @@
       "Wealth": "Wealth: {silver} s added. Silver is now {total} s.",
       "NoWealth": "No wealth rolled: the wealth is not written as dice, such as 2d6 × 10 s."
     },
+    "Glow": {
+      "Name": "Holy smite: glowing {weapon}",
+      "Weapon": "weapon",
+      "Description": "Your weapon burns with light after a Triumph. It sheds dim light out to {range} feet until the encounter ends. Delete this to put it out.",
+      "Started": "{name}'s {weapon} burns with holy light: dim light out to {range} feet until the encounter ends."
+    },
+    "Prayer": {
+      "CastLabel": "Cast a Divine spell",
+      "CastHint": "Any Divine spell of 3 ember or less, known or not, for this power's cost. It is cast as usual, at its own DR.",
+      "NoSpells": "No Divine spell of 3 ember or less was found.",
+      "NotKnown": "not known",
+      "CastNote": "Cast through {name}.",
+      "DemandLabel": "Demand the impossible",
+      "DemandHint": "Test Sanity at the DR the Dark Master sets, never below 16. The Dark Master may refuse the request outright.",
+      "DemandDr": "DR {dr}: {name}",
+      "DemandSize": {
+        "16": "a small mercy",
+        "18": "a great one",
+        "20": "a miracle"
+      },
+      "DemandPurpose": "{name}: demand the impossible",
+      "Outcome": {
+        "fulfilled": "Your request is fulfilled.",
+        "unheard": "Your request goes unheard.",
+        "smitten": "Your deity smites you for your insolence. You are at Death's Door."
+      }
+    },
     "Power": {
       "Source": {
         "class": "Class power",
@@ -1915,6 +1942,19 @@
       "Weapon": "Weapon",
       "WeaponHint": "Adds this weapon's damage dice to the power's. Its traits do not apply. Without a weapon: unarmed (d2) or an improvised weapon (d4).",
       "WeaponNote": "Weapon damage from {name}.",
+      "Healing": "Healing",
+      "FaithfulPrayer": "Prayer of the faithful",
+      "FaithfulPrayerHint": "Tick for Prayer of the faithful: using it casts a Divine spell of 3 ember or less for this power's cost, or demands the impossible with a Sanity test at DR 16 or more. There is no power test.",
+      "WeaponAttack": "Is a melee weapon attack",
+      "WeaponAttackHint": "Tick for powers such as Colossal smash: using the power is an attack with a chosen melee weapon, with no power test. The power's ember and actions are paid instead of the attack's one action. What it gives (below) follows the attack's result.",
+      "AttackBoon": "Attack with Boon",
+      "MaximumDamage": "Maximum weapon damage",
+      "PickWeapon": "Attack with",
+      "PickWeaponTitle": "{name}: choose a melee weapon",
+      "NoMeleeWeapon": "{name} needs a melee weapon. {actor} carries none.",
+      "AttackNote": "{name}: {parts}.",
+      "AttackNoteBoon": "Boon",
+      "AttackNoteMaximum": "maximum weapon damage",
       "Bare": {
         "unarmed": "Unarmed",
         "improvised": "Improvised weapon"
@@ -2500,8 +2540,9 @@
       "PlaylistsFolder": "Weather"
     },
     "SceneDarkness": {
+      "Locked": "{name} follows the time of day, but its Darkness Lock is on, so its darkness was not changed. Turn the lock off in Scene Configuration to let it follow the clock.",
       "Follow": "Darkness follows the time of day",
-      "FollowHint": "For outdoor maps. Each time the clock moves, this scene’s darkness is set for the hour: daylight from 6:30 to 17:30, night from 18:30 to 5:30, fading over an hour round dawn and dusk. Moving the slider by hand lasts until the clock moves again. Whether night counts as darkness for the rules is set by Global Illumination’s darkness threshold."
+      "FollowHint": "For outdoor maps. Each time the clock moves, this scene’s darkness is set for the hour: daylight from 6:00 to 17:00, night from 18:00 to 5:00, fading over the hour before dawn and before dusk. The Darkness Lock above stops it. Moving the slider by hand lasts until the clock moves again. Whether night counts as darkness for the rules is set by Global Illumination’s darkness threshold."
     },
     "Misery": {
       "Title": "The Misery",
@@ -4662,7 +4703,8 @@
         "self": "The user",
         "partner": "The dance partner",
         "allies": "Each targeted ally",
-        "foes": "Each targeted foe"
+        "foes": "Each targeted foe",
+        "targetOrSelf": "Each target, or the user if none"
       },
       "DurationHint": "How long a condition or buff lasts. On the user of a Sustained power: until the power ends.",
       "HealLabel": "Amount",

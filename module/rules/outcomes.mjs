@@ -78,7 +78,9 @@ export function thrallDamage(count, { per = "", max = 0, skip = 0 } = {}) {
 /** Who gets it: each targeted creature, the user, or the user's dance partner (GAPS 222). */
 export const OUTCOME_WHO = ["target", "self", "partner",
   // Only the targeted characters and minions, or only the targeted foes (The Rapture, step 51f).
-  "allies", "foes"];
+  "allies", "foes",
+  // Each targeted creature, or the user when nothing is targeted (Lay on hands, GAPS 334).
+  "targetOrSelf"];
 
 /** When: on the card's result, or when the Sustained power ends (Beast Unleashed's Fatigued). */
 export const OUTCOME_WHEN = ["result", "end"];
@@ -175,10 +177,26 @@ export function wantedOutcomes(entries, tier, { targets = [], user = "", partner
       : entry.who === "partner" ? [partner].filter(Boolean)
         : entry.who === "allies" ? [...new Set(allyTargets ?? [])]
           : entry.who === "foes" ? [...new Set(foeTargets ?? [])]
-            : [...new Set(targets ?? [])];
+            : entry.who === "targetOrSelf" && !(targets ?? []).length ? [user].filter(Boolean)
+              : [...new Set(targets ?? [])];
     for (const actorUuid of actors) wanted.push({ key: `${index}|${actorUuid}`, index, actorUuid });
   });
   return wanted;
+}
+
+/**
+ * Whether the card's damage is healing instead (Lay on hands, Hope's
+ * Prayer, GAPS 334): an option chosen for this result has a heal entry
+ * whose amount is the card's damage. The card then shows no Inflict or
+ * Defend buttons.
+ * @param {object[]} entries  The power's outcome entries.
+ * @param {string} tier       The card's result.
+ * @param {string[]} chosen   The chosen options (the second counts only on a Triumph).
+ */
+export function damageIsHealing(entries, tier, chosen = []) {
+  const options = tier === "triumph" ? chosen : (chosen ?? []).slice(0, 1);
+  return (entries ?? []).some(entry => entry?.kind === "heal" && entry.amount === "damage"
+    && entry.tiers?.[tier] && entry.option && options.includes(entry.option));
 }
 
 /**

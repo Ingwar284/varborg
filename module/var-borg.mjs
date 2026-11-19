@@ -80,6 +80,7 @@ import { registerMood } from "./mood.mjs";
 import { registerWeatherFx } from "./weather-fx/config.mjs";
 import { registerSceneWeather } from "./scene-weather.mjs";
 import { registerSceneDarkness } from "./scene-darkness.mjs";
+import { registerPrayer } from "./prayer.mjs";
 
 Hooks.once("init", () => {
   console.log("VÅR BORG | Initialising system");
@@ -167,6 +168,7 @@ Hooks.once("init", () => {
   registerSceneWeather();
   // Outdoor scenes whose darkness follows the time of day (GAPS 311).
   registerSceneDarkness();
+  registerPrayer();
   // Wounds at 0 HP: the wound test and the Table of Agony (rules 3.5).
   registerAgony();
   // Death's Door and Dark Vessel (rules 3.6).
